@@ -6,9 +6,6 @@
 bundle = ""
 module = "babel"
 
--- Location of main directory: use Unix-style path separators
-maindir = "../.."
-
 -- Minor modifications to file types
 installfiles = {"*.def", "*.ldf", "*.sty", "*.tex"}
 sourcefiles  = {"*.dtx", "*.ins"}
@@ -28,8 +25,12 @@ asciiengines = {"pdftex"}
 stdengine    = "pdftex"
 checkengines = {"pdftex"}
 
--- Load the common settings for the LaTeX2e repo
-dofile (maindir .. "/build-config.lua")
+-- Set up the check system
+checkruns      = 2
+checksuppfiles = {"test2e.tex"}
+
+-- Build TDS-style zips
+packtdszip = true
 
 -- Find and run the build system
 kpse.set_program_name ("kpsewhich")
