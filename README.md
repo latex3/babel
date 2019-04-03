@@ -1,4 +1,4 @@
-## Babel 3.28
+## Babel 3.29
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -27,7 +27,7 @@ be improved in next releases.
 
 If you wish to report a problem or bug in any of these packages please
 use the
-[Issue Tracker for LaTeX2e on GitHub](https://github.com/latex3/latex2e/issues)
+[Issue Tracker for LaTeX2e on GitHub](https://github.com/latex3/babel/issues)
 and follow the guidelines that pop up if you press the `New issue`
 button.
 
@@ -51,7 +51,10 @@ respective authors.
 ### Latest changes
 
 ```
-3.28 -   Fixes - wrong dir after math, in math inside tabular, in weak L
+3.29   - The fix for boxes inside math is incompatible with ams.
+         Removed (a better fix is under study).
+       - Options bidi-l and bidi-r (for the bidi package).
+3.28   - Fixes - wrong dir after math, in math inside tabular, in weak L
          inside R inside L, and in boxes inside math.
        - \babelfont now takes into account \defaultfontfeatures. This
          is a potential source of backwards incompatibilities, but
@@ -125,5 +128,5 @@ respective authors.
 ```
 
 Javier Bezos
-2019/04/01
+2019/04/03
 

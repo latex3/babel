@@ -1,7 +1,7 @@
 % \iffalse
 % This document requires lualatex
 %%
-%% Copyright (C) 2012-2018 Javier Bezos and Johannes L. Braams.
+%% Copyright (C) 2012-2019 Javier Bezos and Johannes L. Braams.
 %% Copyright (C) 1989-2012 Johannes L. Braams and
 %%           any individual authors listed elsewhere in this file.
 %% All rights reserved.
@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/04/01 v3.28 The Babel package]
+\ProvidesFile{babel.dtx}[2019/04/03 v3.29 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -236,15 +236,15 @@ Javier Bezos
 \item  Changes and new features with relation to version 3.8 are
   highlighted with \New{X.XX}\hspace{-.5em}. The most recent features
   could be still unstable. Please, report any issues you find on      
-  \texttt{https://github.com/latex3/latex2e/issues}, which is better 
+  \texttt{https://github.com/latex3/babel/issues}, which is better 
   than just complaining on an e-mail list or a web forum.
 
 \item If you are interested in the \TeX{} multilingual support, please
   join the \textsf{kadingira} list on
-  \texttt{http://tug.org/mailman/listinfo/kadingira}.  You can follow
+  \texttt{http://tug.org/mailman/listinfo/kadingira}. You can follow
   the development of \babel{} on
-  \texttt{https://github.com/latex3/latex2e/tree/master/required/babel}
-  (which provides some sample files, too).
+  \texttt{https://github.com/latex3/babel} (which provides some sample
+  files, too).
 
 \item  See section \ref{contribute} for contributing a language.
 
@@ -3917,8 +3917,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.28>>
-%<<date=2019/04/01>>
+%<<version=3.29>>
+%<<date=2019/04/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9294,16 +9294,14 @@ help from Bernd Raichle, for which I am grateful.
   \def\bbl@bodydir{\bbl@setluadir{body}\bodydir}
   \def\bbl@pagedir{\bbl@setluadir{page}\pagedir}
   \def\bbl@dirparastext{\pardir\the\textdir\relax}%   %%%%
-  % Sadly, we have to deal with boxes in math with basic:
+  % Sadly, we have to deal with boxes in math with basic.
+  % Activated every math with the package option bidi=:
   \def\bbl@mathboxdir{%
     \ifcase\bbl@thetextdir\relax
       \everyhbox{\bgroup\aftergroup\egroup\textdir TLT\relax}%
     \else
       \everyhbox{\bgroup\aftergroup\egroup\textdir TRT\relax}%
     \fi}
-  % TODO - the same trick as bbl@severypar
-  \everymath{\bbl@mathboxdir}
-  \everydisplay{\bbl@mathboxdir}
 \else % pdftex=0, xetex=2
   \AddBabelHook{babel-bidi}{afterextras}{\bbl@switchdir}
   \DisableBabelHook{babel-bidi}
@@ -10805,6 +10803,9 @@ help from Bernd Raichle, for which I am grateful.
   \DeclareOption{bidi=basic}%
     {\let\bbl@beforeforeign\leavevmode
      \newattribute\bbl@attr@dir
+     % TODO - the same trick as bbl@severypar
+     % \everymath{\bbl@mathboxdir}%
+     % \everydisplay{\bbl@mathboxdir}%
      \bbl@exp{\output{\bodydir\pagedir\the\output}}%
      \AtEndOfPackage{\EnableBabelHook{babel-bidi}}}
 \else
@@ -10820,16 +10821,24 @@ help from Bernd Raichle, for which I am grateful.
     \AtEndOfPackage{%
       \EnableBabelHook{babel-bidi}%
       \bbl@xebidipar}}
+  \def\bbl@loadxebidi#1{%
+    \ifx\RTLfootnotetext\@undefined
+      \AtEndOfPackage{% 
+        \EnableBabelHook{babel-bidi}%
+        \ifx\fontspec\@undefined
+          \usepackage{fontspec}% bidi needs fontspec 
+        \fi
+        \usepackage#1{bidi}}%
+    \fi}
   \DeclareOption{bidi=bidi}%
     {\bbl@tentative{bidi=bidi}%
-     \ifx\RTLfootnotetext\@undefined
-       \AtEndOfPackage{%
-         \EnableBabelHook{babel-bidi}%
-         \ifx\fontspec\@undefined
-           \usepackage{fontspec}% bidi needs fontspec 
-         \fi
-         \usepackage{bidi}}%
-     \fi}
+     \bbl@loadxebidi{}}
+  \DeclareOption{bidi=bidi-r}%
+    {\bbl@tentative{bidi=bidi-r}%
+     \bbl@loadxebidi{[rldocument]}}
+  \DeclareOption{bidi=bidi-l}%
+    {\bbl@tentative{bidi=bidi-l}%
+     \bbl@loadxebidi{}}
 \fi
 \DeclareOption{bidi=default}%
   {\let\bbl@beforeforeign\leavevmode
