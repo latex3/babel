@@ -1,4 +1,4 @@
-## Babel 3.30
+## Babel 3.31
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,35 +51,49 @@ respective authors.
 ### Latest changes
 
 ```
-3.30   - Fix - dir in boxes inside math (hopefully now it works).
-       - Option mapdigits for \babelprovide (only luatex).
+3.31   2019-05-04
+       - Basic support for line breaking with CJK scripts.
+       - layout=tabular now works with the 'array' package (and some
+         others).
 
-3.29   - The fix for boxes inside math is incompatible with ams.
+3.30   2019-04-22
+       - Fix - dir in boxes inside math (hopefully now it works).
+       - Option mapdigits for \babelprovide (only luatex), which
+         converts European digits to local ones.
+
+3.29    2019-04-03
+       - The fix for boxes inside math is incompatible with ams.
          Removed (a better fix is under study).
        - Options bidi-l and bidi-r (for the bidi package).
 
-3.28   - Fixes - wrong dir after math, in math inside tabular, in weak L
+3.28    2019-04-01
+       - Fixes - wrong dir after math, in math inside tabular, in weak L
          inside R inside L, and in boxes inside math.
        - \babelfont now takes into account \defaultfontfeatures. This
          is a potential source of backwards incompatibilities, but
          very likely the risks are very low, and it is, I think, the
          expected behavior.
 
-3.27   - Preliminary support for bidi (by Vafa Khalighi) with xetex.
+3.27   2018-11-13
+       - Preliminary support for bidi (by Vafa Khalighi) with xetex.
        - Fix for 3.23 - \ensureascii was redefined even when not 
          necessary.
        - Minor improvements in babel-vi.ini.
 
-3.26   - Fix for 3.25 - \babelprovide raised an error with xetex. 
+3.26   2018-10-16
+       - Fix for 3.25 - \babelprovide raised an error with xetex. 
 
-3.25   - Fixes for 3.23 - mapfont=direction could raise an error.
+3.25   2018-10-03
+       - Fixes for 3.23 - mapfont=direction could raise an error.
          Language and Script were not always defined correctly.
        - Improved tentative support for Thai, Lao and Khmer in both 
          luatex and xetex.
 
-3.24   - Prelimimary support for Thai interword spacing with luatex.
+3.24   2018-09-26
+       - Prelimimary support for Thai interword spacing with luatex.
 
-3.23   - After extensive tests and fixing some issues, bidi=basic is 
+3.23   2018-09-02
+       - After extensive tests and fixing some issues, bidi=basic is 
          not experimental any longer.
        - import in \babelprovide does not require a language code if
          the language name is a recognized one.
@@ -91,17 +105,20 @@ respective authors.
        - Set the \thepage bidi bahavior in foots/heads.
        - Fix - Undefined \bbl@stripslash in Plain.
 
-3.22   - Fix - Error with \chapter if empty in ini
+3.22   2018-06-05
+       - Fix - Error with \chapter if empty in ini
        - Prelimimary support for Sanskrit
        - Unknown languages in aux files do not raise an error
          any more (only show a warning).
 
-3.21   - Fix - equation numbers raised an error.
+3.21   2018-05-10
+       - Fix - equation numbers raised an error.
        - Two minor changes: if no language is requested load nil 
          instead of raising an error, and the message 'babel <x.x>...'
          is not printed to the log any more.
 
-3.20   - ini files with the field digits.native define
+3.20   2018-05-02
+       - ini files with the field digits.native define
          \<language>digits and \<language>counters. \arabic can be
          redefined to use native digits.
        - Fix - mapfont in bidi=basic didn't take into account combining
@@ -112,7 +129,8 @@ respective authors.
          bidi at 'automatic' hyphens.
        - Fix for latest latex - babel.ins raised an error.
 
-3.19   - Most changes are for luatex:
+3.19    2018-04-25
+       - Most changes are for luatex:
          . The main new feature is a bidi method for both implicit L in
            R text, and implicit R in L text, with the possibility of
            switching the font automatically. Still somewhat
@@ -122,23 +140,7 @@ respective authors.
        - Also, for all engines, new field in some ini files:
          digits.native (to be used in future releases).  
 
-3.18   - More bidi in luatex: captions (required only in multilingual
-         docs) and tabular (required for R tables). Also an experimental
-         support for captions in xetex and pdftex (tabular is not yet
-         supported).
-       - New ini files: ar-DZ, ar-MA, ar-SY
-       - Fix - \begin{hyphenrules} didn't work with polyglossia.
-       - Fix - switch.def was loaded twice.
-
-3.17   - A tool for bidi footnotes.
-       - Fix - \ragged... didn't work for bidi.
-
-3.16   - New package option layout for bidi documents.
-       - Quotes in TU encoding
-       - Fix - \<language>date did not work correctly
-       - Fix - with some languages (eg, british), using
-         \babelfont raised an error.
 ```
 
 Javier Bezos
-2019/04/22
+2019/05/04

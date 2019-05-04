@@ -26,7 +26,7 @@
 %% and covered by LPPL is defined by the unpacking scripts (with
 %% extension .ins) which are part of the distribution.
 %%
-\def\filedate{2019/04/22}
+\def\filedate{2019/05/04}
 \def\batchfile{babel.ins}
 \input docstrip.tex
 
@@ -221,7 +221,8 @@
 \def\MetaPrefix{--}
 \usepreamble\luapreamble
 \nopostamble
-\generate{\file{babel-bidi.lua}{\from{babel.dtx}{bidi}}}
+\generate{\file{babel-data-bidi.lua}{\from{babel.dtx}{bididata}}}
+\generate{\file{babel-data-cjk.lua}{\from{babel.dtx}{cjkdata}}}
 \generate{\file{babel-bidi-basic-r.lua}{\from{babel.dtx}{basic-r}}}
 \generate{\file{babel-bidi-basic.lua}{\from{babel.dtx}{basic}}}
 

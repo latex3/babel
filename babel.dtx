@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/04/22 v3.30 The Babel package]
+\ProvidesFile{babel.dtx}[2019/05/04 v3.31 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -202,20 +202,18 @@ Javier Bezos
   texts.
 
   This manual describes \babel{}, a package that makes use of the
-  capabilities of \TeX\ version 3 and, to some extent, \xetex{} and
-  \luatex, to provide an environment in which documents can be typeset
-  in a language other than US English, or in more than one language or
-  script.
+  capabilities of \TeX, \xetex{} and \luatex{} to provide an
+  environment in which documents can be typeset in a language other
+  than US English, or in more than one language or script.
 
   Current development is focused on Unicode engines (Xe\TeX{} and
-  Lua\TeX) and the so-called \textit{complex scripts}.  New features
-  related to font selection, bidi writing and the like will be added
-  incrementally.
+  Lua\TeX) and the so-called \textit{complex scripts}. New features
+  related to font selection, bidi writing, line breaking and so on are
+  being added incrementally.
 
-  \Babel{} provides support (total or partial) for about 200
-  languages, either as a “classical” package option or as an
-  |ini| file. Furthermore, new languages can be created from scratch
-  easily.
+  \Babel{} provides support (total or partial) for about 200 languages,
+  either as a “classical” package option or as an |ini| file.
+  Furthermore, new languages can be created from scratch easily.
 
  \vspace{20cm}
 \end{minipage}
@@ -1187,6 +1185,51 @@ for auxiliary tasks).
 \endgroup
 \end{example}
 
+\begin{note}
+  The \texttt{ini} files just define and set some parameters, but the
+  corresponding behavior is not always implemented. Also, there are 
+  some limitations in the engines. A few remarks follows:
+\begin{description}
+\itemsep=-\parskip
+\item[Arabic] Monolingual documents mostly work in \luatex, but it must
+  be fine tuned, and a recent version of
+  \textsf{fontspec}/\textsf{loaotfload} is required. In \xetex{}
+  \babel{} resorts to the \textsf{bidi} package, which seems to work.
+\item[Hebrew] Niqqud marks seem to work in both engines, but
+  cantillation marks are misplaced (\xetex{} seems better, but still
+  problematic).
+\item[Devanagari] In \luatex{} many fonts work, but some others do
+  not, the main issue being the ‘ra’. It is advisable to set explicitly
+  the script to either |deva| or |dev2|, eg:
+\begin{verbatim}
+\newfontscript{Devanagari}{deva}
+\end{verbatim}  
+  Other Indic scripts are still under development in \luatex{}. On the
+  other hand, \xetex{} is better.
+\item[Southeast scripts] Thai works in both \luatex{} and \xetex{}, but
+  line breaking differs (rules can be modified in \luatex; they are
+  hardcoded in \xetex). Lao seems to work, too, but there are no
+  patterns for the latter in \luatex{}. Some quick patterns could help,
+  with something similar to:
+\begingroup
+\setmonofont[Script=Lao]{DejaVu Sans Mono}
+\begin{verbatim}
+\babelprovide[import,hyphenrules=+]{lao}
+\babelpatterns[lao]{1ດ 1ມ 1ແ 1ອ 1ງ 1ກ 1າ} % Random
+\end{verbatim}
+\endgroup
+  Khemer clusters are rendered wrongly.
+\item[East Asia scripts] Internal inconsistencies in script and
+  language names must be sorted out, so you may need to set them
+  explicitly in |\babelfont|, as well as |CJKShape|. \luatex{} does
+  basic line breaking, but currently \xetex{} does not (you may load
+  \textsf{zhspacing}). Anyway, CJK texts are are best set with a
+  dedicated framework (\textsf{CJK}, \textsf{luatexja}, \textsf{kotex},
+  \textsf{CTeX}...), although for a few words and shorts texts \babel{}
+  should be fine.
+\end{description}
+\end{note}
+
 Here is the list (u means Unicode captions, and l means LICR
 captions):
 
@@ -2098,16 +2141,19 @@ list is empty).
 \Describe{main}{} This valueless option makes the language the main
 one. Only in newly defined languages.
 
-\Describe{script=}{\meta{script-name}} \New{3.15} Sets the script name
-to be used by \textsf{fontspec} (eg, |Devanagari|). Overrides the
-value in the |ini| file. This value is particularly important because
-it sets the writing direction, so you must use it if for some reason 
-the default value is wrong.
+\Describe{script=}{\meta{script-name}}
+\New{3.15} Sets the script name to be used by \textsf{fontspec} (eg,
+|Devanagari|). Overrides the value in the |ini| file. If
+\textsf{fontspec} does not define it, then \babel{} sets its tag to
+that provided by the |ini| file. This value is particularly important
+because it sets the writing direction, so you must use it if for some
+reason the default value is wrong.
 
-\Describe{language=}{\meta{language-name}} \New{3.15} Sets the
-language name to be used by \textsf{fontspec} (eg, |Hindi|). Overrides
-the value in the |ini| file. Not so important, but sometimes still
-relevant.
+\Describe{language=}{\meta{language-name}} \New{3.15}
+Sets the language name to be used by \textsf{fontspec} (eg, |Hindi|).
+Overrides the value in the |ini| file. If \textsf{fontspec} does not
+define it, then \babel{} sets its tag to that provided by the |ini|
+file. Not so important, but sometimes still relevant.
 
 \bigskip
 
@@ -2212,7 +2258,7 @@ respectively.
   \textsf{iflang} instead of |\iflanguage| if possible.
 \end{warning}
 
-\subsection{Hyphenation tools}
+\subsection{Hyphenation and line breaking}
 
 \Describe{\babelhyphen}{%
   \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}\marg{type}}
@@ -2321,6 +2367,17 @@ encoding (not set in the preamble by default). Multiple
 Listed patterns are saved expanded and therefore it relies on the
 LICR. Of course, it also works without the LICR if the input and the
 font encodings are the same, like in Unicode based engines.
+
+\New{3.31} (Only \luatex.) With |\babelprovide| and |import|ed CJK
+languages, a simple generic line breaking algorithm (push-out-first) is
+applied, based on a selection of the Unicode rules.
+
+\New{3.27} Interword spacing for Thai, Lao and Khemer is activated
+automatically if a language with one of those scripts are loaded with
+|\babelprovide|. See the sample on the \babel{} repository. With both
+Unicode engines, spacing is based on the ``current'' em unit (the size
+of the previous char in \luatex, and the font size set by the last
+|\selectfont| in \xetex).
 
 \subsection{Selecting scripts}
 
@@ -2526,10 +2583,11 @@ _\babelprovide[import, main]{arabic}_
                    \texttt{extras}}
 
 \New{3.16} \textit{To be expanded}. Selects which layout elements are
-adapted in bidi documents, including some text elements. You may use
-several options with a dot-separated list (eg,
-|layout=counters.contents.sectioning|). This list will be expanded in
-future releases (tables, captions, etc.). Note not all options are
+adapted in bidi documents, including some text elements (except with
+options loading the |bidi| package, which provides its own mechanism to
+control these elements). You may use several options with a
+dot-separated list (eg, |layout=counters.contents.sectioning|). This
+list will be expanded in future releases. Note not all options are
 required by all engines.
 
 \begin{description}
@@ -2560,7 +2618,7 @@ required by all engines.
 
 \item[lists] required in \xetex{} and \pdftex{}, but only in
 bidirectional (with both R and L paragraphs) documents in \luatex{}.
-  
+
 \begin{warning}
   As of April 2019 there is a bug with |\parshape| in \luatex{} (a
   \TeX{} primitive) which makes lists to be horizontally misplaced if
@@ -2590,7 +2648,9 @@ bidirectional (with both R and L paragraphs) documents in \luatex{}.
 \item[tabular] required in \luatex{} for R |tabular| (it has been
   tested only with simple tables, so expect some readjustments in the
   future); ignored in \pdftex{} or \xetex{} (which will not support a
-  similar option in the short term) \New{3.18}.
+  similar option in the short term). It patches an internal command, so
+  it might be ignored by some packages and classes (or even raise an
+  error). \New{3.18}.
 
 \item[extras] is used for miscellaneous readjustments which do not fit into
   the previous groups. Currently redefines in \luatex{} |\underline| and
@@ -2961,18 +3021,13 @@ part of the style for Hebrew, but it is somewhat unsatisfactory and
 internally replaces some hardwired commands by other hardwired commands
 (generic changes would be much better).
 
-It is possible now to typeset Arabic or Hebrew with numbers and L text.
-Next on the roadmap are line breaking in Thai and the like. Also on the
-roadmap are better support for R layouts (lists, footnotes, tables,
-column order), page and section numbering, and maybe kashida
-justification.
-
 Useful additions would be, for example, time, currency, addresses and
 personal names.\footnote{See for example POSIX, ISO 14652 and the
 Unicode Common Locale Data Repository (CLDR). Those system, however,
 have limited application to \TeX\ because their aim is just to display
 information and not fine typesetting.}. But that is the easy
 part, because they don't require modifying the \LaTeX{} internals.
+Calendars (Arabic, Persian, Indic, etc.) are under study.
 
 Also interesting are differences in the sentence structure or related
 to it. For example, in Basque the number precedes the name (including
@@ -2982,44 +3037,18 @@ chapters), in Hungarian ``from (1)'' is ``(1)-b\H{o}l'', but ``from
 ``\'{\i}tem 3.$^{\textrm{\scriptsize o}}$'' or
 ``3.$^{\textrm{\scriptsize er}}$ \'{\i}tem'', and so on.
 
+An option to manage bidirectional document layout in \luatex{} (lists,
+footnotes, etc.) is almost finished, but \xetex{} required more work.
+Unfortunately, proper support for \xetex{} requires patching somehow
+lots of macros and packages (and some issues related to |\special|s
+remain, like color and hyperlinks), so \babel{} resorts to the
+\textsf{bidi} package (by Vafa Khalighi). See the \babel{} repository
+for a small example (|xe-bidi|).
+
 \subsection{Tentative and experimental code}
 
 See the code section for |\foreignlanguage*| (a new starred
 version of |\foreignlanguage|).
-
-\medskip
-\textbf{Southeast Asian interword spacing}
-
-There is some preliminary interword spacing for Thai, Lao and Khemer in
-\luatex{} (provided there are hyphenation patters) and \xetex. It is
-activated automatically if a language with one of those scripts are
-loaded with |\babelprovide|. See the sample on the \babel{} repository.
-With both engines, interword spacing is based on the ``current'' em
-unit (the size of the previous char in \luatex{} and the font size set
-by the last |\selectfont| in \xetex).
-
-\medskip
-\textbf{Bidi writing} in \luatex{} is still under development, but the
-basic implementation is finished. On the other hand, in \xetex{} it is
-taking its first steps. The latter engine poses quite different
-challenges. An option to manage document layout in \luatex{} (lists,
-footnotes, etc.) is almost finished, but \xetex{} required more work.
-
-Unfortunately, proper support for \xetex{} requires patching somehow
-lots of macros and packages (and some issues related to |\special|s
-remain, like color and hyperlinks). 
-
-\medskip
-\textbf{bidi=bidi}
-
-\New{3.27} This package option is a new experimental support for bidi
-writing with \xetex{} and the \textsf{bidi} package (by Vafa Khalighi).
-Currently, it just provides the basic direction switches with
-|\selectlanguage| and |\foreignlanguage|. Any help in making \babel{}
-and \textsf{bidi} collaborate will be welcome (although the underlying
-concepts in both packages seem very different).
-
-See the babel repository for a small example (|xe-bidi|).
 
 \medskip
 \textbf{Old stuff}
@@ -3318,18 +3347,16 @@ such as checking the category code of the @-sign, preventing
 the \file{.ldf} file from being processed twice, etc.
 
 \DescribeMacro{\ldf@quit}
-The macro |\ldf@quit| does work needed
-if a \file{.ldf} file was processed
-earlier. This includes resetting the category code
-of the @-sign, preparing the language to be activated at
-|\begin{document}| time, and ending the input stream.
+The macro |\ldf@quit| does work needed if a \file{.ldf} file was
+processed earlier. This includes resetting the category code of the
+@-sign, preparing the language to be activated at |\begin{document}|
+time, and ending the input stream.
 
 \DescribeMacro{\ldf@finish}
-The macro |\ldf@finish| does work needed
-at the end of each \file{.ldf} file. This
-includes resetting the category code of the @-sign,
-loading a local configuration file, and preparing the language
-to be activated at |\begin{document}| time.
+The macro |\ldf@finish| does work needed at the end of each \file{.ldf}
+file. This includes resetting the category code of the @-sign, loading
+a local configuration file, and preparing the language to be activated
+at |\begin{document}| time.
 
 \DescribeMacro{\loadlocalcfg}
 After processing a language definition file,
@@ -3840,17 +3867,22 @@ help from Bernd Raichle, for which I am grateful.
     1986.
  \bibitem{treebus} K.F. Treebus.
     \emph{Tekstwijzer, een gids voor het grafisch verwerken van
-    tekst.}
+    tekst},
     SDU Uitgeverij ('s-Gravenhage, 1988).
  \bibitem{HP} Hubert Partl,
-   \emph{German \TeX}, \emph{TUGboat} 9 (1988) \#1, p.~70--72.
+   \emph{German \TeX},
+   \emph{TUGboat} 9 (1988) \#1, p.~70--72.
   \bibitem{LLth} Leslie Lamport,
     in: \TeX hax Digest, Volume 89, \#13, 17 February 1989.
  \bibitem{BEP} Johannes Braams, Victor Eijkhout and Nico Poppelier,
    \emph{The development of national \LaTeX\ styles},
    \emph{TUGboat} 10 (1989) \#3, p.~401--406.
  \bibitem{FE} Yannis Haralambous,
-    \emph{Fonts \& Encodings}, O'Reilly, 2007.
+   \emph{Fonts \& Encodings}, O'Reilly, 2007.
+ \bibitem{UE} Jukka K. Korpela,
+   \textit{Unicode Explained}, O'Reilly, 2006.
+ \bibitem{CJKV} Ken Lunde,
+   \textit{CJKV Information Processing}, O'Reilly, 2nd ed., 2009.
  \bibitem{ilatex} Joachim Schrod,
    \emph{International \LaTeX\ is ready to use},
    \emph{TUGboat} 11 (1990) \#1, p.~87--90.
@@ -3965,8 +3997,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.30>>
-%<<date=2019/04/22>>
+%<<version=3.31>>
+%<<date=2019/05/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4485,7 +4517,7 @@ help from Bernd Raichle, for which I am grateful.
     \AtEndOfPackage{\EnableBabelHook{babel-bidi}}%
     \RequirePackage{luatexbase}%
     \directlua{
-      require('babel-bidi.lua')
+      require('babel-data-bidi.lua')
       require('babel-bidi-\bbl@tempa.lua')
     }
     \bbl@activate@preotf
@@ -5476,6 +5508,8 @@ help from Bernd Raichle, for which I am grateful.
 \def\main@language#1{%
   \def\bbl@main@language{#1}%
   \let\languagename\bbl@main@language
+  \bbl@id@assign
+  \chardef\localeid\@nameuse{bbl@id@@\languagename}%
   \bbl@patterns{\languagename}}
 %    \end{macrocode}
 %
@@ -7832,7 +7866,7 @@ help from Bernd Raichle, for which I am grateful.
   {\BabelPatchSection{caption}}{}
 %    \end{macrocode}
 %
-%    Now we load definition files for engines.
+% \subsection{Load engine specific macros}
 %
 %    \begin{macrocode}
 \bbl@trace{Input engine specific macros}
@@ -7935,7 +7969,6 @@ help from Bernd Raichle, for which I am grateful.
          \catcode`\[=12 \catcode`\]=12 \catcode`\==12 %
          \let\bbl@ini@captions@aux\@gobbletwo
          \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
-         \let\bbl@inikv@typography\bbl@iniskip
          \bbl@read@ini{##1}%
          \bbl@exportkey{chrng}{characters.ranges}{}%
          \bbl@exportkey{dgnat}{numbers.digits.native}{}%
@@ -7979,27 +8012,44 @@ help from Bernd Raichle, for which I am grateful.
   \ifcase\bbl@engine\or
     \bbl@ifunset{bbl@intsp@\languagename}{}%
       {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
-        \bbl@seaintraspace
-        \ifx\bbl@KVP@intraspace\@nil
-           \bbl@exp{%
-             \\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
-        \fi
-        \directlua{
-           Babel = Babel or {}
-           Babel.sea_ranges = Babel.sea_ranges or {}
-           Babel.set_chranges('\bbl@cs{sbcp@\languagename}', 
-                              '\bbl@cs{chrng@\languagename}')
-        }
-        \ifx\bbl@KVP@intrapenalty\@nil
-          \bbl@intrapenalty0\@@
-        \fi
-      \fi
-      \ifx\bbl@KVP@intraspace\@nil\else % We may override the ini
-        \expandafter\bbl@intraspace\bbl@KVP@intraspace\@@
-      \fi
-      \ifx\bbl@KVP@intrapenalty\@nil\else
-        \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
-      \fi}%
+         \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Hant,Hans,Jpan,Kore}%
+         \ifin@
+           \bbl@cjkintraspace
+           \directlua{
+               Babel = Babel or {}
+               Babel.locale_props = Babel.locale_props or {}
+               Babel.locale_props[\the\localeid].linebreak = 'c'
+           }%
+           \ifx\bbl@KVP@intraspace\@nil
+              \bbl@exp{%
+                \\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
+           \fi
+           \ifx\bbl@KVP@intrapenalty\@nil
+             \bbl@intrapenalty0\@@
+           \fi 
+         \else
+           \bbl@seaintraspace
+           \ifx\bbl@KVP@intraspace\@nil
+              \bbl@exp{%
+                \\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
+           \fi
+           \directlua{
+              Babel = Babel or {}
+              Babel.sea_ranges = Babel.sea_ranges or {}
+              Babel.set_chranges('\bbl@cs{sbcp@\languagename}', 
+                                 '\bbl@cs{chrng@\languagename}')
+           }%
+           \ifx\bbl@KVP@intrapenalty\@nil
+             \bbl@intrapenalty0\@@
+           \fi
+         \fi
+       \fi
+       \ifx\bbl@KVP@intraspace\@nil\else % We may override the ini
+         \expandafter\bbl@intraspace\bbl@KVP@intraspace\@@
+       \fi
+       \ifx\bbl@KVP@intrapenalty\@nil\else
+         \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
+       \fi}%
   \or 
     \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Thai,Laoo,Khmr}%
     \ifin@
@@ -9398,6 +9448,15 @@ help from Bernd Raichle, for which I am grateful.
     \fi
   \else
     \global\bbl@csarg\chardef{wdir@#1}\z@
+  \fi
+  \ifodd\bbl@engine
+    \bbl@csarg\ifcase{wdir@#1}%
+      \directlua{ Babel.locale_props[\the\localeid].textdir = 'l' }%
+    \or
+      \directlua{ Babel.locale_props[\the\localeid].textdir = 'r' }%
+    \or
+      \directlua{ Babel.locale_props[\the\localeid].textdir = 'al' }%
+    \fi
   \fi}
 \def\bbl@switchdir{%
   \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
@@ -9840,7 +9899,14 @@ help from Bernd Raichle, for which I am grateful.
     {\count@\bbl@id@last\relax
      \advance\count@\@ne
      \bbl@csarg\chardef{id@@\languagename}\count@
-     \edef\bbl@id@last{\the\count@}}%
+     \edef\bbl@id@last{\the\count@}%
+     \ifcase\bbl@engine\or
+       \directlua{
+         Babel = Babel or {}
+         Babel.locale_props = Babel.locale_props or {}
+         Babel.locale_props[\bbl@id@last] = {}
+        }%
+      \fi}%
     {}}
 %    \end{macrocode}
 %
@@ -10975,6 +11041,7 @@ help from Bernd Raichle, for which I am grateful.
     {\ExecuteOptions{bidi=basic}}
   \DeclareOption{bidi=basic}%
     {\let\bbl@beforeforeign\leavevmode
+     % TODO - to locale_props, not as separate attribute
      \newattribute\bbl@attr@dir
      % I don't like it, hackish:
      \frozen@everymath\expandafter{%
@@ -11938,12 +12005,15 @@ help from Bernd Raichle, for which I am grateful.
     Babel.intraspaces = Babel.intraspaces or {}
     Babel.intraspaces['\csname bbl@sbcp@\languagename\endcsname'] = %
        {b = #1, p = #2, m = #3}
+    Babel.locale_props[\the\localeid].intraspace = %
+       {b = #1, p = #2, m = #3}
   }}
 \def\bbl@intrapenalty#1\@@{%
   \directlua{
     Babel = Babel or {}
     Babel.intrapenalties = Babel.intrapenalties or {}
     Babel.intrapenalties['\csname bbl@sbcp@\languagename\endcsname'] = #1
+    Babel.locale_props[\the\localeid].intrapenalty = #1
   }}
 \begingroup
 \catcode`\%=12
@@ -11954,6 +12024,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@seaintraspace\relax
   \directlua{
     Babel = Babel or {}
+    Babel.sea_enabled = true
     Babel.sea_ranges = Babel.sea_ranges or {}
     function Babel.set_chranges (script, chrng) 
       local c = 0
@@ -11995,15 +12066,100 @@ help from Bernd Raichle, for which I am grateful.
         end
       end
     end
+  }^^
+  \bbl@luahyphenate}
+\catcode`\%=14
+\gdef\bbl@cjkintraspace{%
+  \let\bbl@cjkintraspace\relax
+  \directlua{
+    Babel = Babel or {}
+    require'babel-data-cjk.lua'
+    Babel.cjk_enabled = true
+    function Babel.cjk_linebreak(head)
+      local GLYPH = node.id'glyph'
+      local last_char = nil
+      local quad = 655360      % 10 pt = 655360 = 10 * 65536
+      local last_class = nil
+
+      for item in node.traverse(head) do
+        if item.id == GLYPH then
+
+          local LOCALE = node.get_attribute(item,
+                luatexbase.registernumber'bbl@attr@locale')
+
+          local props = Babel.locale_props[LOCALE]
+
+          class = Babel.cjk_class[item.char].c
+
+          if class == 'cp' then class = 'cl' end % )] as CL
+          if class == 'id' then class = 'I' end
+
+          if class and last_class and Babel.cjk_breaks[last_class][class] then 
+            br = Babel.cjk_breaks[last_class][class]
+          else
+            br = 0
+          end
+
+          if br == 1 and props.linebreak == 'c' then
+            local intrapenalty = props.intrapenalty
+            if intrapenalty ~= 0 then
+              local n = node.new(14, 0)     % penalty
+              n.penalty = intrapenalty
+              node.insert_before(head, item, n)
+            end    
+            local intraspace = props.intraspace
+            local n = node.new(12, 13)      % (glue, spaceskip)
+            node.setglue(n, intraspace.b * quad,
+                            intraspace.p * quad,
+                            intraspace.m * quad)
+            node.insert_before(head, item, n)
+          end
+
+          quad = font.getfont(item.font).size
+          last_class = class
+        else % if penalty, glue or anything else
+          last_class = nil
+        end
+      end
+      lang.hyphenate(head)
+    end
+  }%
+  \bbl@luahyphenate}
+\gdef\bbl@luahyphenate{%
+  \let\bbl@luahyphenate\relax
+  \directlua{
     luatexbase.add_to_callback('hyphenate',
-      function (head, tail)
-        lang.hyphenate(head)
+    function (head, tail)
+      if Babel.cjk_enabled then
+        Babel.cjk_linebreak(head)
+      end
+      lang.hyphenate(head)
+      if Babel.sea_enabled then
         Babel.sea_disc_to_space(head)
-      end,
-      'Babel.sea_disc_to_space')
-}}
+      end
+    end,
+    'Babel.hyphenate')
+  }
+}
 \endgroup
 %    \end{macrocode}
+%
+% \subsection{CJK line breaking}
+%
+% Minimal line breaking for CJK scripts, mainly intended by simple
+% documents and short texts as a secundary language. Only line
+% breaking, with a little stretching for justification, without any
+% attempt to adjust the spacing. It is based (but does not strictly
+% follows) on the Unicode algorithm.
+%
+% We first need a little table with the corresponding line breaking
+% properties. A few characters have an additional key for the width
+% (fullwidth \textit{vs.} halfwidth), not yet used. There is a separate
+% file, defined below.
+%
+% \changes{3.31}{2019/05/04}{Simple CJK line breaking}
+% 
+% \textit{Work in progress.} 
 %
 % Common stuff.
 %
@@ -12066,6 +12222,8 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{3.19}{2018/04/23}{Patch \cs{@eqnnum}, somewhat ad hoc. To be
 %   improved.}
 % \changes{3.21}{2018/05/09}{The ad hoc \cs{@eqnnum} was buggy. Fixed.}
+% \changes{3.31}{2019/05/04}{\cs{@tabular} and \cs{list} are patched,
+%   instead of redefined.}
 %
 %    \begin{macrocode}
 \bbl@trace{Redefinitions for bidi layout}
@@ -12078,22 +12236,24 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
 \ifx\bbl@beforeforeign\leavevmode % A poor test for bidi=
-  \def\bbl@nextfake#1{%  non-local changes - always inside a group!
+  \def\bbl@nextfake#1{%  non-local changes, use always inside a group!
     \bbl@exp{%
       \mathdir\the\bodydir  
       #1%              Once entered in math, set boxes to restore values
-      \everyvbox{%
-        \the\everyvbox
-        \bodydir\the\bodydir
-        \mathdir\the\mathdir
-        \everyhbox{\the\everyhbox}%
-        \everyvbox{\the\everyvbox}}%
-      \everyhbox{%
-        \the\everyhbox
-        \bodydir\the\bodydir
-        \mathdir\the\mathdir
-        \everyhbox{\the\everyhbox}%
-        \everyvbox{\the\everyvbox}}}}%
+      \<ifmmode>%
+        \everyvbox{%
+          \the\everyvbox
+          \bodydir\the\bodydir
+          \mathdir\the\mathdir
+          \everyhbox{\the\everyhbox}%
+          \everyvbox{\the\everyvbox}}%
+        \everyhbox{%
+          \the\everyhbox
+          \bodydir\the\bodydir
+          \mathdir\the\mathdir
+          \everyhbox{\the\everyhbox}%
+          \everyvbox{\the\everyvbox}}%
+      \<fi>}}%
   \def\@hangfrom#1{%
     \setbox\@tempboxa\hbox{{#1}}%
     \hangindent\wd\@tempboxa
@@ -12103,38 +12263,22 @@ help from Bernd Raichle, for which I am grateful.
     \noindent\box\@tempboxa}
 \fi
 \IfBabelLayout{tabular}
-  {\def\@tabular{%
-     \leavevmode\hbox\bgroup\bbl@nextfake$%   %$
-     \let\@acol\@tabacol       \let\@classz\@tabclassz
-     \let\@classiv\@tabclassiv \let\\\@tabularcr\@tabarray}}
+  {\bbl@replace\@tabular{$}{\bbl@nextfake$}%
+   \let\bbl@tabular\@tabular
+   \AtBeginDocument{%
+     \ifx\bbl@tabular\@tabular\else
+       \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+     \fi}}
   {}
 \IfBabelLayout{lists}
-  {\def\list#1#2{%
-     \ifnum \@listdepth >5\relax
-       \@toodeep
-     \else
-       \global\advance\@listdepth\@ne
-     \fi
-     \rightmargin\z@
-     \listparindent\z@
-     \itemindent\z@
-     \csname @list\romannumeral\the\@listdepth\endcsname
-     \def\@itemlabel{#1}%
-     \let\makelabel\@mklab
-     \@nmbrlistfalse
-     #2\relax
-     \@trivlist
-     \parskip\parsep
-     \parindent\listparindent
-     \advance\linewidth -\rightmargin
-     \advance\linewidth -\leftmargin
-     \advance\@totalleftmargin \leftmargin
-     \parshape \@ne
-     \@totalleftmargin \linewidth
+  {\expandafter\def\expandafter\bbl@toreplace\expandafter{\list{##1}{##2}}%
+   \bbl@replace\bbl@toreplace{\parshape}{\bbl@listparshape}%
+   \bbl@exp{\def\\\list##1##2{\the\toks@}}% \toks@ <- implicit result
+   \def\bbl@listparshape#1#2#3{%
+     \parshape #1 #2 #3 %
      \ifnum\bbl@getluadir{page}=\bbl@getluadir{par}\else
        \shapemode\tw@
-     \fi
-     \ignorespaces}}
+     \fi}}
   {}
 %    \end{macrocode}
 %
@@ -12190,12 +12334,12 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \changes{3.14}{2017/09/30}{LuaTeX - support for R/AL texts - basic-r}
 %
-% The file \textsf{babel-bidi.lua} currently only contains data. It is
+% The file \textsf{babel-data-bidi.lua} currently only contains data. It is
 % a large and boring file and it's not shown here. See the generated
 % file.
 %\iffalse
 %    \begin{macrocode}
-%<*bidi>
+%<*bididata>
 -- Data from Unicode and ConTeXt
 
 Babel = Babel or {}
@@ -18274,7 +18418,7 @@ Babel.characters={
  [0xE007E]={d='bn'},
  [0xE007F]={d='bn'}
 }
-%</bidi>
+%</bididata>
 %    \end{macrocode}
 %\fi
 %
@@ -18330,7 +18474,7 @@ Babel = Babel or {}
 
 Babel.bidi_enabled = true
 
-require('babel-bidi.lua')
+require('babel-data-bidi.lua')
 
 local characters = Babel.characters
 local ranges = Babel.ranges
@@ -18605,7 +18749,7 @@ Babel.fontmap[2] = {}      -- al/an
 
 Babel.bidi_enabled = true
 
-require('babel-bidi.lua')
+require('babel-data-bidi.lua')
 
 local characters = Babel.characters
 local ranges = Babel.ranges
@@ -18723,7 +18867,7 @@ function Babel.bidi(head, ispar, hdir)
         end
       end
       d = d or 'l'
-      
+
       -- A short 'pause' in bidi for mapfont
       d_font = d_font or d
       d_font = (d_font == 'l' and 0) or
@@ -18775,7 +18919,7 @@ function Babel.bidi(head, ispar, hdir)
       glue_d = d
       glue_i = item
       d = nil
-      
+
     elseif item.id == node.id'math' then
       inmath = (item.subtype == 0)
 
@@ -18968,6 +19112,270 @@ function Babel.bidi(head, ispar, hdir)
 end
 %</basic>
 %    \end{macrocode}
+%
+% \section{Data for CJK}
+%
+% It is a boring file and it's not shown here. See the generated file.
+%\iffalse
+%    \begin{macrocode}
+%<*cjkdata>
+Babel = Babel or {}
+
+Babel.cjk_characters = {
+  [0x0021]={c='ex'},
+  [0x0024]={c='pr'},
+  [0x0025]={c='po'},
+  [0x0028]={c='op'},
+  [0x0029]={c='cp'},
+  [0x002B]={c='pr'},
+  [0x002C]={c='is'},
+  [0x002D]={c='hy'},
+  [0x002E]={c='is'},
+  [0x002F]={c='sy'},
+  [0x003A]={c='is'},
+  [0x003B]={c='is'},
+  [0x003F]={c='ex'},
+  [0x005B]={c='op'},
+  [0x005C]={c='pr'},
+  [0x005D]={c='cp'},
+  [0x007B]={c='op'},
+  [0x007D]={c='cl'},
+  [0x00A1]={c='op'},
+  [0x00A2]={c='po'},
+  [0x00A3]={c='pr'},
+  [0x00A4]={c='pr'},
+  [0x00A5]={c='pr'},
+  [0x00B0]={c='po'},
+  [0x00B1]={c='pr'},
+  [0x201A]={c='op'},
+  [0x201E]={c='op'},
+  [0x2024]={c='in'},
+  [0x2025]={c='in'},
+  [0x2026]={c='in'},
+  [0x2030]={c='po'},
+  [0x2031]={c='po'},
+  [0x2032]={c='po'},
+  [0x2033]={c='po'},
+  [0x2034]={c='po'},
+  [0x2035]={c='po'},
+  [0x2036]={c='po'},
+  [0x2037]={c='po'},
+  [0x203C]={c='ns'},
+  [0x203D]={c='ns'},
+  [0x2044]={c='is'},
+  [0x2045]={c='op'},
+  [0x2046]={c='cl'},
+  [0x2047]={c='ns'},
+  [0x2048]={c='ns'},
+  [0x2049]={c='ns'},
+  [0x207D]={c='op'},
+  [0x207E]={c='cl'},
+  [0x208D]={c='op'},
+  [0x208E]={c='cl'},
+  [0x20A7]={c='po'},
+  [0x20B6]={c='po'},
+  [0x20BB]={c='po'},
+  [0x20BE]={c='po'},
+  [0x2103]={c='po'},
+  [0x2109]={c='po'},
+  [0x2116]={c='pr'},
+  [0x2212]={c='pr'},
+  [0x2213]={c='pr'},
+  [0x22EF]={c='in'},
+  [0x2308]={c='op'},
+  [0x2309]={c='cl'},
+  [0x230A]={c='op'},
+  [0x230B]={c='cl'},
+  [0x2329]={c='op'},
+  [0x232A]={c='cl'},
+  [0x2983]={c='op'},
+  [0x2984]={c='cl'},
+  [0x2985]={c='op'},
+  [0x2986]={c='cl'},
+  [0x2987]={c='op'},
+  [0x2988]={c='cl'},
+  [0x2989]={c='op'},
+  [0x298A]={c='cl'},
+  [0x298B]={c='op'},
+  [0x298C]={c='cl'},
+  [0x298D]={c='op'},
+  [0x298E]={c='cl'},
+  [0x298F]={c='op'},
+  [0x2990]={c='cl'},
+  [0x2991]={c='op'},
+  [0x2992]={c='cl'},
+  [0x2993]={c='op'},
+  [0x2994]={c='cl'},
+  [0x2995]={c='op'},
+  [0x2996]={c='cl'},
+  [0x2997]={c='op'},
+  [0x2998]={c='cl'},
+  [0x29D8]={c='op'},
+  [0x29D9]={c='cl'},
+  [0x29DA]={c='op'},
+  [0x29DB]={c='cl'},
+  [0x29FC]={c='op'},
+  [0x29FD]={c='cl'},
+  [0x2CF9]={c='ex'},
+  [0x2CFE]={c='ex'},
+  [0x2E18]={c='op'},
+  [0x2E22]={c='op'},
+  [0x2E23]={c='cl'},
+  [0x2E24]={c='op'},
+  [0x2E25]={c='cl'},
+  [0x2E26]={c='op'},
+  [0x2E27]={c='cl'},
+  [0x2E28]={c='op'},
+  [0x2E29]={c='cl'},
+  [0x2E2E]={c='ex'},
+  [0x2E42]={c='op'},
+  [0x3001]={c='cl'},
+  [0x3002]={c='cl'},
+  [0x3005]={c='ns'},
+  [0x3008]={c='op'},
+  [0x3009]={c='cl'},
+  [0x300A]={c='op'},
+  [0x300B]={c='cl'},
+  [0x300C]={c='op'},
+  [0x300D]={c='cl'},
+  [0x300E]={c='op'},
+  [0x300F]={c='cl'},
+  [0x3010]={c='op'},
+  [0x3011]={c='cl'},
+  [0x3014]={c='op'},
+  [0x3015]={c='cl'},
+  [0x3016]={c='op'},
+  [0x3017]={c='cl'},
+  [0x3018]={c='op'},
+  [0x3019]={c='cl'},
+  [0x301A]={c='op'},
+  [0x301B]={c='cl'},
+  [0x301C]={c='ns'},
+  [0x301D]={c='op'},
+  [0x301E]={c='cl'},
+  [0x301F]={c='cl'},
+  [0x303B]={c='ns'},
+  [0x303C]={c='ns'},
+  [0x309B]={c='ns'},
+  [0x309C]={c='ns'},
+  [0x309D]={c='ns'},
+  [0x309E]={c='ns'},
+  [0x30A0]={c='ns'},
+  [0x30FB]={c='ns'},
+  [0x30FD]={c='ns'},
+  [0x30FE]={c='ns'},
+  [0xA015]={c='ns'},
+  [0xA60E]={c='ex'},
+  [0xA838]={c='po'},
+  [0xFD3E]={c='cl'},
+  [0xFD3F]={c='op'},
+  [0xFDFC]={c='po'},
+  [0xFE10]={c='is'},
+  [0xFE11]={c='cl'},
+  [0xFE12]={c='cl'},
+  [0xFE13]={c='is'},
+  [0xFE14]={c='is'},
+  [0xFE15]={c='ex'},
+  [0xFE16]={c='ex'},
+  [0xFE17]={c='op'},
+  [0xFE18]={c='cl'},
+  [0xFE19]={c='in'},
+  [0xFE35]={c='op'},
+  [0xFE36]={c='cl'},
+  [0xFE37]={c='op'},
+  [0xFE38]={c='cl'},
+  [0xFE39]={c='op'},
+  [0xFE3A]={c='cl'},
+  [0xFE3B]={c='op'},
+  [0xFE3C]={c='cl'},
+  [0xFE3D]={c='op'},
+  [0xFE3E]={c='cl'},
+  [0xFE3F]={c='op'},
+  [0xFE40]={c='cl'},
+  [0xFE41]={c='op'},
+  [0xFE42]={c='cl'},
+  [0xFE43]={c='op'},
+  [0xFE44]={c='cl'},
+  [0xFE47]={c='op'},
+  [0xFE48]={c='cl'},
+  [0xFE50]={c='cl'},
+  [0xFE52]={c='cl'},
+  [0xFE54]={c='ns'},
+  [0xFE55]={c='ns'},
+  [0xFE56]={c='ex'},
+  [0xFE57]={c='ex'},
+  [0xFE59]={c='op'},
+  [0xFE5A]={c='cl'},
+  [0xFE5B]={c='op'},
+  [0xFE5C]={c='cl'},
+  [0xFE5D]={c='op'},
+  [0xFE5E]={c='cl'},
+  [0xFE69]={c='pr'},
+  [0xFE6A]={c='po'},
+  [0xFF01]={c='ex', w='f'},
+  [0xFF04]={c='pr', w='f'},
+  [0xFF05]={c='po', w='f'},
+  [0xFF08]={c='op', w='f'},
+  [0xFF09]={c='cl', w='f'},
+  [0xFF0C]={c='cl', w='f'},
+  [0xFF0E]={c='cl', w='f'},
+  [0xFF1A]={c='ns', w='f'},
+  [0xFF1B]={c='ns', w='f'},
+  [0xFF1F]={c='ex', w='f'},
+  [0xFF3B]={c='op', w='f'},
+  [0xFF3D]={c='cl', w='f'},
+  [0xFF5B]={c='op', w='f'},
+  [0xFF5D]={c='cl', w='f'},
+  [0xFF5F]={c='op', w='f'},
+  [0xFF60]={c='cl', w='f'},
+  [0xFF61]={c='cl', w='h'},
+  [0xFF62]={c='op', w='h'},
+  [0xFF63]={c='cl', w='h'},
+  [0xFF64]={c='cl', w='h'} 
+}
+
+Babel.cjk_class = setmetatable ( Babel.cjk_characters, {
+  __index = function(_, k)
+    if (k >= 0xAC00  and k <= 0xD7A3)      -- H2/H3
+        or (k >= 0x2E80  and k <= 0x9FFF)
+        or (k >= 0xF900  and k <= 0xFAFF)
+        or (k >= 0xFE10  and k <= 0xFE1F) 
+        or (k >= 0xFE30  and k <= 0xFE6F)
+        or (k >= 0xFF00  and k <= 0xFFEF)
+        or (k >= 0x1F000 and k <= 0x1FFFD)
+        or (k >= 0x20000 and k <= 0x2FFFD)
+        or (k >= 0x30000 and k <= 0x3FFFD) then
+      return {c='I'}
+    elseif (k >= 0x20A0  and k <= 0x20CF) then
+      return {c='pr'}
+    else
+      return {c='O'}
+    end
+  end })
+
+-- Note ns = ex = sy = is = po = hy. Here, 'I' and 'O' are
+-- pseudo-classes for ideographic-like (id, h2, h3), and 'other',
+-- respectively. Jamo is not considered yet, but very likely at least
+-- jl must be.
+
+Babel.cjk_breaks = {
+  ['op'] = { },
+  ['cl'] = { ['op']=1, ['pr']=1,           ['in']=1, ['I']=1 },
+  ['ns'] = { ['op']=1, ['pr']=1, ['po']=1, ['in']=1, ['I']=1 },
+  ['ex'] = { ['op']=1, ['pr']=1, ['po']=1, ['in']=1, ['I']=1 },
+  ['sy'] = { ['op']=1, ['pr']=1, ['po']=1, ['in']=1, ['I']=1 },
+  ['is'] = { ['op']=1, ['pr']=1, ['po']=1, ['in']=1, ['I']=1 },
+  ['pr'] = {           ['pr']=1, ['po']=1, ['in']=1 },
+  ['po'] = { ['op']=1, ['pr']=1, ['po']=1, ['in']=1, ['I']=1 },
+  ['in'] = { ['op']=1, ['pr']=1, ['po']=1,           ['I']=1 },
+  ['hy'] = { ['op']=1, ['pr']=1, ['po']=1, ['in']=1, ['I']=1 },
+  --
+  ['I']  = { ['op']=1, ['pr']=1, ['I']=1, ['O']=1 },
+  ['O']  = {                     ['I']=1 }
+}
+%</cjkdata>
+%    \end{macrocode}
+%\fi
 %
 % \section{The `nil' language}
 %
