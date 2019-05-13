@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/05/04 v3.31 The Babel package]
+\ProvidesFile{babel.dtx}[2019/05/13 v3.31.1640 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -91,7 +91,7 @@
 \def\verbatim{\begin{shaded*}\bblxv\vskip-\baselineskip\vskip2.5\parsep}
 \def\endverbatim{\bblexv\vskip-2\baselineskip\end{shaded*}}
 \catcode`\_=\active
-\def_{\bgroup\let_\egroup\color{thered}}
+\def_{\bgroup\let_\egroup\leavevmode\color{thered}}
 \def\MacroFont{\fontencoding \encodingdefault \fontfamily\ttdefault
   \fontseries\mddefault \fontshape\updefault \small \catcode`\_=\active}
 \definecolor{shadecolor}{rgb}{0.96,0.96,0.93}
@@ -1212,7 +1212,7 @@ for auxiliary tasks).
   patterns for the latter in \luatex{}. Some quick patterns could help,
   with something similar to:
 \begingroup
-\setmonofont[Script=Lao]{DejaVu Sans Mono}
+\setmonofont[Script=Lao,Scale=MatchLowercase]{DejaVu Sans Mono}
 \begin{verbatim}
 \babelprovide[import,hyphenrules=+]{lao}
 \babelpatterns[lao]{1ດ 1ມ 1ແ 1ອ 1ງ 1ກ 1າ} % Random
@@ -1223,10 +1223,16 @@ for auxiliary tasks).
   language names must be sorted out, so you may need to set them
   explicitly in |\babelfont|, as well as |CJKShape|. \luatex{} does
   basic line breaking, but currently \xetex{} does not (you may load
-  \textsf{zhspacing}). Anyway, CJK texts are are best set with a
+  \textsf{zhspacing}). Although for a few words and shorts texts the
+  |ini| files should be fine, CJK texts are are best set with a
   dedicated framework (\textsf{CJK}, \textsf{luatexja}, \textsf{kotex},
-  \textsf{CTeX}...), although for a few words and shorts texts \babel{}
-  should be fine.
+  \textsf{CTeX}...), . Actually, this is what the |ldf| does in
+  |japanese| with \luatex, because the following piece of code loads 
+  \textsf{luatexja}:
+\begin{verbatim}
+\documentclass{ltjbook}
+\usepackage[japanese]{babel}
+\end{verbatim}
 \end{description}
 \end{note}
 
@@ -2370,7 +2376,10 @@ font encodings are the same, like in Unicode based engines.
 
 \New{3.31} (Only \luatex.) With |\babelprovide| and |import|ed CJK
 languages, a simple generic line breaking algorithm (push-out-first) is
-applied, based on a selection of the Unicode rules.
+applied, based on a selection of the Unicode rules (\New{3.31} it is
+disabled in verbatim mode, or more precisely when the hyphenrules
+are set to |nohyphenation|). It can be activated alternatively by
+setting explicitly the |intraspace|.
 
 \New{3.27} Interword spacing for Thai, Lao and Khemer is activated
 automatically if a language with one of those scripts are loaded with
@@ -2440,11 +2449,11 @@ differ in the way `weak' numeric characters are ordered (eg, Arabic
   essentially stable, but, of course, it is not bug free and there
   could be improvements in the future, because setting bidi text has
   many subtleties (see for example <https://www.w3.org/TR/html-bidi/>).
-  A basic stable version for other engines must wait very likely until
-  (Northern) Winter. This applies to text, but \textbf{graphical}
-  elements, including the |picture| environment and PDF or PS based
-  graphics, are not yet correctly handled (far from trivial). Also,
-  indexes and the like are under study, as well as math.
+  A basic stable version for other engines must wait. This applies to
+  text, but \textbf{graphical} elements, including the |picture|
+  environment and PDF or PS based graphics, are not yet correctly
+  handled (far from trivial). Also, indexes and the like are under
+  study, as well as math (there are progresses in the latter).
 
   An effort is being made to avoid incompatibilities in the future
   (this one of the reason currently bidi must be explicitly requested
@@ -2482,11 +2491,7 @@ See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
   The following text comes from the Arabic Wikipedia (article about
   Arabia). Copy-pasting some text from the Wikipedia is a good way to
   test this feature. Remember |basic-r| is available in \luatex{}
-  only.\footnote{At the time of this writing some Arabic fonts are not
-  rendered correctly by the default \luatex{} font loader, with
-  misplaced kerns inside some words, so double check the resulting
-  text. Have a look at the workaround available on GitHub, under
-  \texttt{/required/babel/samples}}
+  only.
   \begingroup
 % If you are looking at the code to see how it has been written, you
 % will be disappointed :-). The following example is built ad hoc to
@@ -2531,25 +2536,25 @@ _\babelprovide[import, main]{arabic}_
   \setmonofont[Scale=.87,Script=Arabic]{DejaVu Sans Mono} \catcode`@=13
   \def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TRT \else
   \bgroup\textdir TLT \pardir TLT \fi}
-  \begin{verbatim}
-  \documentclass{book}
+\begin{verbatim}
+\documentclass{book}
 
-  \usepackage[english, _bidi=basic_]{babel}
+\usepackage[english, _bidi=basic_]{babel}
 
-  \babelprovide[_mapfont=direction_]{arabic}
+\babelprovide[_mapfont=direction_]{arabic}
 
-  \babelfont{rm}{Crimson}
-  \babelfont[*arabic]{rm}{FreeSerif}
+\babelfont{rm}{Crimson}
+\babelfont[*arabic]{rm}{FreeSerif}
 
-  \begin{document}
+\begin{document}
 
-  Most Arabic speakers consider the two varieties to be two registers
-  of one language, although the two registers can be referred to in
-  Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
-  @1فصحى التراث@0 \textit{fuṣḥā t-turāth} (CA).
+Most Arabic speakers consider the two varieties to be two registers
+of one language, although the two registers can be referred to in
+Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
+@1فصحى التراث@0 \textit{fuṣḥā t-turāth} (CA).
 
-  \end{document}
-  \end{verbatim}
+\end{document}
+\end{verbatim}
   \endgroup
   In this example, and thanks to |mapfont=direction|, any Arabic letter
   (because the language is |arabic|) changes its font to that set for
@@ -2565,9 +2570,9 @@ _\babelprovide[import, main]{arabic}_
   |\hbox|’es). If you need |\ref| ranges, the best option is to define
   a dedicated macro like this (to avoid explicit direction changes in the
   body; here |\texthe| must be defined to select the main language):
-  \begin{verbatim}
-  \newcommand\refrange[2]{\babelsublr{\texthe{\ref{#1}}-\texthe{\ref{#2}}}}
-  \end{verbatim}
+\begin{verbatim}
+\newcommand\refrange[2]{\babelsublr{\texthe{\ref{#1}}-\texthe{\ref{#2}}}}
+\end{verbatim}
 
   In a future a more complete method, reading recursively boxed text, may
   be added.
@@ -2768,7 +2773,7 @@ options are also used (eg, |\ProsodicMarksOn| in \textsf{latin}).
 events. Some hooks are predefined when \luatex{} and \xetex{} are
 used.
 
-\Describe\AddBabelHook{\marg{name}\marg{event}\marg{code}}
+\Describe{\AddBabelHook}{\marg{name}\marg{event}\marg{code}}
 
 The same name can be applied to several events.  Hooks may be enabled
 and disabled for all defined events with
@@ -2841,7 +2846,7 @@ ones, they only have a single hook and replace a default definition.
   file. Used by \file{luababel.def}.
 \end{description}
 
-\Describe\BabelContentsFiles{}
+\Describe{\BabelContentsFiles}{}
 \New{3.9a} This macro contains a list of ``toc'' types
 requiring a command to switch the language. Its default value is
 |toc,lof,lot|, but you may redefine it with |\renewcommand| (it's up
@@ -2910,8 +2915,9 @@ ibygreek, bgreek, serbianc, frenchle, ethiop} and \textsf{friulan}.
 
 Most of them work out of the box, but some may require extra fonts,
 encoding files, a preprocessor or even a complete framework (like
-CJK).  For example, if you have got the \textsf{velthuis/devnag} package,
-you can create a file with extension |.dn|:
+\textsf{CJK} or \textsf{luatexja}). For example, if you have got the
+\textsf{velthuis/devnag} package, you can create a file with extension
+|.dn|:
 \begin{verbatim}
 \documentclass{article}
 \usepackage[hindi]{babel}
@@ -2922,11 +2928,31 @@ you can create a file with extension |.dn|:
 Then you preprocess it with |devnag| \m{file}, which creates
 \m{file}|.tex|; you can then typeset the latter with \LaTeX.
 
-\begin{note}
-  Please, for info about the support in luatex for some complex scripts,
-  see the wiki, on \texttt{https://github.com/latex3/latex2e/wiki/%
-  Babel:-Remarks-on-the-luatex-support-for-some-scripts}.
-\end{note}
+\subsection{Unicode character properties in \luatex}
+
+Part of the \babel{} job is to apply Unicode rules to some
+script-specific features based on some properties. Currently, they are
+3, namely, direction (ie, bidi class), mirroring glyphs, and line
+breaking for CJK scripts. These properties are stored in \textsf{lua}
+tables, which you can modify with the following macro.
+
+\Describe{\babelcharproperty}{\marg{char-code}\oarg{to-char-code}%
+          \marg{propertry}\marg{value}}
+
+\New{3.32} Here, \marg{char-code} is a number (with \TeX{} syntax).
+With the optional argument, you can set a range of values. There are
+three properties (with a short name, taken from Unicode): |direction|
+(|bc|), |mirror| (|bmg|), |linebreak| (|lb|).
+          
+For example:
+\begin{verbatim}
+\babelcharproperty{`¿}{mirror}{`?}   
+\babelcharproperty{`-}{direction}{l}  % or al, r, en, an, on, et, cs
+\babelcharproperty{`)}{linebreak}{cl} % or id, op, cl, ns, ex, in, hy
+\end{verbatim}
+
+This command is allowed only in vertical mode (the preamble or between
+paragraphs).
 
 \subsection{Tips, workarounds, know issues and notes}
 
@@ -3997,8 +4023,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.31>>
-%<<date=2019/05/04>>
+%<<version=3.31.1640>>
+%<<date=2019/05/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5332,6 +5358,10 @@ help from Bernd Raichle, for which I am grateful.
   \def\<bbl@e@#2>{\the\toks@{\bbl@ens@fontenc}}}}
 \def\bbl@ensure#1#2#3{% 1: include 2: exclude 3: fontenc
   \def\bbl@tempb##1{% elt for (excluding) \bbl@captionslist list
+    \ifx##1\@undefined
+      \edef##1{\noexpand\bbl@nocaption
+        {\bbl@stripslash##1}{\languagename\bbl@stripslash##1}}%
+    \fi
     \ifx##1\@empty\else
       \in@{##1}{#2}%
       \ifin@\else
@@ -8008,11 +8038,14 @@ help from Bernd Raichle, for which I am grateful.
     \fi
     \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
   \fi
-  % For Southeast Asian, if interspace in ini -- TODO: as hook
+  % For East Asian, Southeast Asian, if interspace in ini - TODO: as hook?
+  \ifx\bbl@KVP@intraspace\@nil\else % We may override the ini
+    \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
+  \fi
   \ifcase\bbl@engine\or
     \bbl@ifunset{bbl@intsp@\languagename}{}%
       {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
-         \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Hant,Hans,Jpan,Kore}%
+         \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Hant,Hans,Jpan,Kore,Kana}%
          \ifin@
            \bbl@cjkintraspace
            \directlua{
@@ -8020,19 +8053,13 @@ help from Bernd Raichle, for which I am grateful.
                Babel.locale_props = Babel.locale_props or {}
                Babel.locale_props[\the\localeid].linebreak = 'c'
            }%
-           \ifx\bbl@KVP@intraspace\@nil
-              \bbl@exp{%
-                \\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
-           \fi
+           \bbl@exp{\\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
            \ifx\bbl@KVP@intrapenalty\@nil
              \bbl@intrapenalty0\@@
            \fi 
          \else
            \bbl@seaintraspace
-           \ifx\bbl@KVP@intraspace\@nil
-              \bbl@exp{%
-                \\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
-           \fi
+           \bbl@exp{\\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
            \directlua{
               Babel = Babel or {}
               Babel.sea_ranges = Babel.sea_ranges or {}
@@ -8043,9 +8070,6 @@ help from Bernd Raichle, for which I am grateful.
              \bbl@intrapenalty0\@@
            \fi
          \fi
-       \fi
-       \ifx\bbl@KVP@intraspace\@nil\else % We may override the ini
-         \expandafter\bbl@intraspace\bbl@KVP@intraspace\@@
        \fi
        \ifx\bbl@KVP@intrapenalty\@nil\else
          \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
@@ -12080,13 +12104,15 @@ help from Bernd Raichle, for which I am grateful.
       local last_char = nil
       local quad = 655360      % 10 pt = 655360 = 10 * 65536
       local last_class = nil
+      local last_lang = nil
 
       for item in node.traverse(head) do
         if item.id == GLYPH then
+        
+          local lang = item.lang
 
           local LOCALE = node.get_attribute(item,
                 luatexbase.registernumber'bbl@attr@locale')
-
           local props = Babel.locale_props[LOCALE]
 
           class = Babel.cjk_class[item.char].c
@@ -12100,7 +12126,9 @@ help from Bernd Raichle, for which I am grateful.
             br = 0
           end
 
-          if br == 1 and props.linebreak == 'c' then
+          if br == 1 and props.linebreak == 'c' and
+              lang ~= \the\l@nohyphenation\space and
+              last_lang ~= \the\l@nohyphenation then
             local intrapenalty = props.intrapenalty
             if intrapenalty ~= 0 then
               local n = node.new(14, 0)     % penalty
@@ -12117,6 +12145,7 @@ help from Bernd Raichle, for which I am grateful.
 
           quad = font.getfont(item.font).size
           last_class = class
+          last_lang = lang
         else % if penalty, glue or anything else
           last_class = nil
         end
@@ -12197,6 +12226,51 @@ help from Bernd Raichle, for which I am grateful.
     end
   }}
 \AtBeginDocument{\bbl@luafixboxdir}
+%    \end{macrocode}
+%
+% The code for |\babelcharproperty| is straightforward. Just note the
+% modified lua table can be different.
+%
+%    \begin{macrocode}
+\newcommand\babelcharproperty[1]{%
+  \count@=#1\relax
+  \ifvmode
+    \expandafter\bbl@chprop
+  \else
+    \bbl@error{\string\babelcharproperty\space can be used only in\\%
+               vertical mode (preamble or between paragraphs)}%
+              {See the manual for futher info}%
+  \fi}
+\newcommand\bbl@chprop[3][\the\count@]{%
+  \@tempcnta=#1\relax
+  \bbl@ifunset{bbl@chprop@#2}%
+    {\bbl@error{No property named '#2'. Allowed values are\\%
+                direction (bc), mirror (bmg), and linebreak (lb)}%
+               {See the manual for futher info}}%
+    {}%
+  \loop
+    \@nameuse{bbl@chprop@#2}{#3}%
+  \ifnum\count@<\@tempcnta
+    \advance\count@\@ne
+  \repeat}
+\def\bbl@chprop@direction#1{%
+  \directlua{
+    Babel.characters[\the\count@] =  Babel.characters[\the\count@] or {}
+    Babel.characters[\the\count@]['d'] = '#1'
+  }}
+\let\bbl@chprop@bc\bbl@chprop@direction
+\def\bbl@chprop@mirror#1{%
+  \directlua{
+    Babel.characters[\the\count@] =  Babel.characters[\the\count@] or {}
+    Babel.characters[\the\count@]['m'] = '\number#1' 
+  }}
+\let\bbl@chprop@bmg\bbl@chprop@mirror
+\def\bbl@chprop@linebreak#1{%
+  \directlua{
+    Babel.Babel.cjk_characters[\the\count@] = Babel.Babel.cjk_characters[\the\count@] or {}
+    Babel.Babel.cjk_characters[\the\count@]['c'] = '#1'
+  }}
+\let\bbl@chprop@lb\bbl@chprop@linebreak
 %    \end{macrocode}
 %
 % \subsection{Layout}
@@ -19399,12 +19473,13 @@ Babel.cjk_breaks = {
 %    command, \texttt{nil} could be an `unknown' language in which
 %    case we have to make it known.
 %
+% \changes{babel-3.32}{2012/12/21}{Don't set it to
+%   \cs{l@nohyphenation}, best reserved fo special uses.}
+%
 %    \begin{macrocode}
-\ifx\l@nohyphenation\@undefined
-   \@nopatterns{nil}
-   \adddialect\l@nil0
-\else
-   \let\l@nil\l@nohyphenation
+\ifx\l@nil\@undefined
+  \newlanguage\l@nil
+  \@namedef{bbl@hyphendata@\the\l@nil}{{}{}}% Remove warning
 \fi
 %    \end{macrocode}
 %

@@ -1,4 +1,4 @@
-## Babel 3.31
+## Babel 3.31.1640
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,20 +51,24 @@ respective authors.
 ### Latest changes
 
 ```
+3.32   0000-00-00
+       - CJK line breaking is now disabled in verbatim (lua).
+       - New - \babelcharproperty, to change the direction, mirroring
+         glyph and line break properties (lua).
 3.31   2019-05-04
-       - Basic support for line breaking with CJK scripts.
+       - Basic support for line breaking with CJK scripts (lua)
        - layout=tabular now works with the 'array' package (and some
-         others).
+         others; lua).
 
 3.30   2019-04-22
-       - Fix - dir in boxes inside math (hopefully now it works).
-       - Option mapdigits for \babelprovide (only luatex), which
-         converts European digits to local ones.
+       - Fix - dir in boxes inside math (hopefully now it works; lua).
+       - Option mapdigits for \babelprovide, which converts European
+         digits to local ones (lua).
 
 3.29    2019-04-03
        - The fix for boxes inside math is incompatible with ams.
          Removed (a better fix is under study).
-       - Options bidi-l and bidi-r (for the bidi package).
+       - Options bidi-l and bidi-r (for the bidi package; xe).
 
 3.28    2019-04-01
        - Fixes - wrong dir after math, in math inside tabular, in weak L
@@ -85,7 +89,7 @@ respective authors.
 
 3.25   2018-10-03
        - Fixes for 3.23 - mapfont=direction could raise an error.
-         Language and Script were not always defined correctly.
+       - Language and Script were not always defined correctly.
        - Improved tentative support for Thai, Lao and Khmer in both 
          luatex and xetex.
 
@@ -143,4 +147,4 @@ respective authors.
 ```
 
 Javier Bezos
-2019/05/04
+2019/05/13
