@@ -1,4 +1,4 @@
-## Babel 3.31.1640
+## Babel 3.31.1649
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -55,6 +55,9 @@ respective authors.
        - CJK line breaking is now disabled in verbatim (lua).
        - New - \babelcharproperty, to change the direction, mirroring
          glyph and line break properties (lua).
+       - Support for the picture environment (with pict2e) and pgf (lua,
+         somewhat experimental).
+
 3.31   2019-05-04
        - Basic support for line breaking with CJK scripts (lua)
        - layout=tabular now works with the 'array' package (and some
@@ -147,4 +150,4 @@ respective authors.
 ```
 
 Javier Bezos
-2019/05/13
+2019/05/22
