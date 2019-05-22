@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/05/13 v3.31.1640 The Babel package]
+\ProvidesFile{babel.dtx}[2019/05/22 v3.31.1649 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2465,19 +2465,19 @@ There are some package options controlling bidi writing.
 
 \Describe{bidi=}{\texttt{default} $\string|$ \texttt{basic}
   $\string|$ \texttt{basic-r} $\string|$ \texttt{bidi-l} $\string|$
-  \texttt{bidi-l}}
+  \texttt{bidi-r}}
 
 \New{3.14} Selects the bidi algorithm to be used. With |default| the
 bidi mechanism is just activated (by default it is not), but every
 change must by marked up. In \xetex{} and \pdftex{} this is the only
 option.
 
-In \luatex, |basic-r| provides a simple and fast method for R
-text, which handles numbers and unmarked L text within an R context in
-typical cases. \New{3.19} Finally, |basic| supports both L and R text
-and it is the preferred method (support for |basic-r| is now limited).
-(They are named \texttt{basic} mainly because they only consider the
-intrinsic direction of scripts and weak directionality.)
+In \luatex, |basic-r| provides a simple and fast method for R text,
+which handles numbers and unmarked L text within an R context many in
+typical cases. \New{3.19} Finally, |basic| supports both L and R text,
+and it is the preferred method (support for |basic-r| is currently
+limited). (They are named \texttt{basic} mainly because they only
+consider the intrinsic direction of scripts and weak directionality.)
 
 \New{3.29} In \xetex, |bidi-r| and |bidi-l| resort to the package
 \textsf{bidi} (by Vafa Khalighi). Integration is still somewhat
@@ -2942,7 +2942,7 @@ tables, which you can modify with the following macro.
 \New{3.32} Here, \marg{char-code} is a number (with \TeX{} syntax).
 With the optional argument, you can set a range of values. There are
 three properties (with a short name, taken from Unicode): |direction|
-(|bc|), |mirror| (|bmg|), |linebreak| (|lb|).
+(|bc|), |mirror| (|bmg|), |linebreak| (|lb|). The settings are global.
           
 For example:
 \begin{verbatim}
@@ -3922,8 +3922,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \fi
 %
-% \changes{babel~3.8e}{2005/03/24}{Many enhancements to the text by
-%    Andrew Young}
 % \changes{babel~3.9c}{2013/04/04}{Added the ``modifiers'' mechanism}
 % \changes{babel~3.9g}{2013/06/01}{bbplain merged}
 % \changes{babel~3.9k}{2014/03/23}{Code and doc reorganized, and some
@@ -4023,8 +4021,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.31.1640>>
-%<<date=2019/05/13>>
+%<<version=3.31.1649>>
+%<<date=2019/05/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4137,7 +4135,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\bbl@ifunset}
 %   To check if a macro is defined, we create a new macro, which does
 %   the same as |\@ifundefined|. However, in an $\epsilon$-tex engine,
@@ -4228,6 +4225,30 @@ help from Bernd Raichle, for which I am grateful.
     \fi}%
   \expandafter\bbl@replace@aux#1#2\bbl@nil#2%
   \edef#1{\the\toks@}}
+%    \end{macrocode}
+%
+% An extensison to the previous macro. It takes into account the
+% parameters, and it is string based (ie, if you replace |elax| by
+% |ho|, then |\relax| becomes |\rho|). No checking is done at all,
+% because it is not a general purpose macro, and it is used by \babel{}
+% only when it works (an example where it does \textit{not} work is in
+% |\bbl@TG@@date|). It may change! (to add new features).
+%
+%    \begin{macrocode}
+\expandafter\def\expandafter\bbl@parsedef\detokenize{macro:}#1->#2\relax{%
+  \def\bbl@tempa{#1}%
+  \def\bbl@tempb{#2}}
+\def\bbl@sreplace#1#2#3{%
+  \begingroup
+    \expandafter\bbl@parsedef\meaning#1\relax
+    \def\bbl@tempc{#2}%
+    \edef\bbl@tempc{\expandafter\strip@prefix\meaning\bbl@tempc}%
+    \def\bbl@tempd{#3}%
+    \edef\bbl@tempd{\expandafter\strip@prefix\meaning\bbl@tempd}%
+    \bbl@exp{\\\bbl@replace\\\bbl@tempb{\bbl@tempc}{\bbl@tempd}}%
+    \bbl@exp{%
+  \endgroup
+  \\\scantokens{\def\\#1\bbl@tempa{\bbl@tempb}}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -4416,7 +4437,6 @@ help from Bernd Raichle, for which I am grateful.
 %    (like variant spellings). It also takes care of a number of
 %    compatibility issues with other packages an defines a few
 %    aditional package options.
-%
 %
 %    Apart from all the language options below we also have a few options
 %    that influence the behavior of language definition files.
@@ -5188,7 +5208,6 @@ help from Bernd Raichle, for which I am grateful.
     \lowercase{\endgroup#1~}}
 %    \end{macrocode}
 %
-%
 %  \begin{macro}{\bbl@redefine}
 %    To redefine a command, we save the old meaning of the macro.
 %    Then we redefine it to call the original macro with the
@@ -5532,8 +5551,6 @@ help from Bernd Raichle, for which I am grateful.
 %    to switch to the correct language at the beginning of the
 %    document.
 %
-% \changes{babel~3.8l}{2008/07/06}{Use \cs{bbl@patterns}}
-%
 %    \begin{macrocode}
 \def\main@language#1{%
   \def\bbl@main@language{#1}%
@@ -5835,7 +5852,6 @@ help from Bernd Raichle, for which I am grateful.
 %    single character shorthand. If that doesn't exist we check for a
 %    shorthand with an argument.
 %
-% \changes{babel~3.8b}{2004/04/19}{Now use \cs{bbl@sh@select}}
 % \changes{babel~3.9a}{2012/08/18}{Instead of the ``copy-paste pattern''
 % a new macro is used}
 %
@@ -5940,7 +5956,6 @@ help from Bernd Raichle, for which I am grateful.
 %    will expand to either |\bbl@firstcs| or |\bbl@scndcs|. Hence two
 %    more arguments need to follow it.
 %
-% \changes{babel~3.8b}{2004/04/19}{Added command}
 % \changes{babel~3.9a}{2012/08/18}{Removed \cs{string}s, because the
 %   char are already string'ed}
 %
@@ -6059,9 +6074,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \item the code to be executed when the shorthand is encountered.
 %    \end{enumerate}
 %
-% \changes{babel~3.8b}{2004/04/19}{We need to support shorthands with
-%    and without argument in different groups; added the name of the
-%    group to the storage macro}
 % \changes{babel~3.9a}{2012/07/03}{Check if shorthands are redefined}
 %
 %    \begin{macrocode}
@@ -6262,8 +6274,6 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\@notshorthand}
-%
-% \changes{v3.8d}{2004/11/20}{Error message added}
 %
 %    \begin{macrocode}
 \def\@notshorthand#1{%
@@ -7635,9 +7645,6 @@ help from Bernd Raichle, for which I am grateful.
 %  \begin{macro}{\glq}
 %  \begin{macro}{\grq}
 %
-% \changes{babel~3.8b}{2004/05/02}{Made \cs{glq} fontencoding
-%    dependent as well}
-%
 %    The `german' single quotes.
 %
 %    \begin{macrocode}
@@ -7665,9 +7672,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\glqq}
 %  \begin{macro}{\grqq}
-%
-% \changes{babel~3.8b}{2004/05/02}{Made \cs{grqq} fontencoding
-%    dependent as well}
 %
 %    The `german' double quotes.
 %
@@ -7697,9 +7701,6 @@ help from Bernd Raichle, for which I am grateful.
 %  \begin{macro}{\flq}
 %  \begin{macro}{\frq}
 %
-% \changes{babel~3.8b}{2004/05/02}{Made \cs{flq} and \cs{frq}
-%    fontencoding dependent}
-%
 %    The `french' single guillemets.
 %
 %    \begin{macrocode}
@@ -7714,9 +7715,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\flqq}
 %  \begin{macro}{\frqq}
-%
-% \changes{babel~3.8b}{2004/05/02}{Made \cs{flqq} and \cs{frqq}
-%    fontencoding dependent}
 %
 %    The `french' double guillemets.
 %
@@ -7740,9 +7738,6 @@ help from Bernd Raichle, for which I am grateful.
 %    always placed in the lower position.
 %
 %  \begin{macro}{\umlauthigh}
-%
-% \changes{v3.8a}{2004/02/19}{Use \cs{leavevmode}\cs{bgroup} to
-%    prevent problems when this command occurs in vertical mode.}
 %
 %  \begin{macro}{\umlautlow}
 %    To be able to provide both positions of |\"| we provide two
@@ -7784,9 +7779,6 @@ help from Bernd Raichle, for which I am grateful.
 %    First we have to save the current x-height of the font, because
 %    we'll change this font dimension and this is always done
 %    globally.
-%
-% \changes{v3.8a}{2004/02/19}{Use \cs{leavevmode}\cs{bgroup} to
-%    prevent problems when this command occurs in vertical mode.}
 %
 %    Then we compute the new x-height in such a way that the umlaut
 %    character is lowered to the base character.  The value of
@@ -8929,17 +8921,10 @@ help from Bernd Raichle, for which I am grateful.
 %    with the text that is put into them. To achieve this we need to
 %    adapt the definition of |\markright| and |\markboth| somewhat.
 %
-% \changes{babel~3.8c}{2004/05/26}{No need to add \emph{anything} to
-%    an empty mark; prevented this by checking the contents of the
-%    argument}
-% \changes{babel~3.8f}{2005/05/15}{Make the definition independent of
-%    the original definition; expand \cs{languagename} before passing
-%    it into the token registers}
 % \changes{babel~3.9t}{2017/04/23}{Refactored \cs{markright} and
 %    \cs{markboth}}
 % \changes{babel~3.23}{2018/09/01}{Trick to isolate the bidi in page 
 %    numbers}
-%
 %
 %    We check whether the argument is empty; if it is, we just make
 %    sure the scratch token register is empty.  Next, we store the
@@ -8981,15 +8966,6 @@ help from Bernd Raichle, for which I am grateful.
 %    |\markboth| in |\@mkboth|. Therefore we need to check whether
 %    |\@mkboth| has already been set. If so we neeed to do that again
 %    with the new definition of |\markboth|.
-%
-% \changes{babel~3.8c}{2004/05/26}{No need to add \emph{anything} to
-%    an empty mark, prevented this by checking the contents of the
-%    arguments}
-% \changes{babel~3.8f}{2005/05/15}{Make the definition independent of
-%    the original definition; expand \cs{languagename} before passing
-%    it into the token registers}
-% \changes{babel~3.8j}{2008/03/21}{Added setting of \cs{@mkboth} (PR
-%    3826)}
 %
 %    \begin{macrocode}
    \ifx\@mkboth\markboth
@@ -9109,10 +9085,6 @@ help from Bernd Raichle, for which I am grateful.
 %  \begin{macro}{\vrefpagenum}
 %  \begin{macro}{\Ref}
 %
-% \changes{babel~3.8g}{2005/05/21}{We also need to adapt \cs{Ref}
-%    which needs to be able to uppercase the first letter of the
-%    expansion of \cs{ref}}
-%
 %    When the package varioref is in use we need to modify its
 %    internal command |\@@vpageref| in order to prevent problems when
 %    an active character ends up in the argument of |\vref|.
@@ -9176,9 +9148,6 @@ help from Bernd Raichle, for which I am grateful.
 %    Then we check whether the expansion of |\normal@char:| is not
 %    equal to |\relax|.
 %
-% \changes{babel~3.8b}{2004/04/19}{added \cs{string} to prevent
-%    unwanted expansion of the colon}
-%
 %    \begin{macrocode}
       {\expandafter\ifx\csname normal@char\string:\endcsname\relax
        \else
@@ -9200,9 +9169,6 @@ help from Bernd Raichle, for which I am grateful.
 % \subsubsection{\pkg{hyperref}}
 %
 %  \begin{macro}{\pdfstringdefDisableCommands}
-%
-% \changes{babel~3.8j}{2008/03/16}{Inform \pkg{hyperref} to use
-%    shorthands at system level (PR4006)}
 %
 %    A number of interworking problems between \pkg{babel} and
 %    \pkg{hyperref} are tackled by \pkg{hyperref} itself. The
@@ -10040,7 +10006,6 @@ help from Bernd Raichle, for which I am grateful.
 %    update the value of |\language| and call |\originalTeX|
 %    to bring \TeX\ in a certain pre-defined state.
 %
-% \changes{babel~3.8l}{2008/07/06}{Use \cs{bbl@patterns}}
 % \changes{babel~3.9a}{2012/07/27}{Moved \cs{bbl@patterns} to the
 %    correct place, after setting the extras for the current
 %    language}
@@ -10317,7 +10282,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\bbl@patterns}
 %
-% \changes{babel~3.8l}{2008/07/06}{Macro added}
 % \changes{babel~3.9a}{2012/08/28}{Extended to set hyphenation
 %    exceptions as defined with \cs{babelhyphenation}}
 % \changes{babel~3.9m}{2015/07/25}{Preset \cs{bbl@pttnlist} and
@@ -10378,9 +10342,6 @@ help from Bernd Raichle, for which I am grateful.
 %    |\lccode|'s and font encodings are not set at all, so in most
 %    cases you should use |otherlanguage*|.
 %
-% \changes{babel~3.8j}{2008/03/16}{Also set the hyphenmin parameters to
-%    the correct value (PR3997)}
-% \changes{babel~3.8l}{2008/07/06}{Use \cs{bbl@patterns}}
 % \changes{3.15}{2017/10/30}{Don't set language name. Use temp macro.}
 % \changes{3.15}{2018/02/14}{Fix - didn't work with polyglossia}
 %
@@ -10699,7 +10660,6 @@ help from Bernd Raichle, for which I am grateful.
 <@Define core switching macros@>
 %    \end{macrocode}
 %
-%
 %  \begin{macro}{\process@line}
 %    Each line in the file \file{language.dat} is processed by
 %    |\process@line| after it is read. The first thing this macro does
@@ -10980,9 +10940,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    Check for the end of the file. We must reverse the test for
 %    |\ifeof| without |\else|. Then reactivate the default patterns.
-%
-% \changes{babel~3.8m}{2008/07/08}{Also restore the name of the
-%    language in \cs{languagename} (PR 4039)}
 %
 %    \begin{macrocode}
   \begingroup
@@ -11314,7 +11271,6 @@ help from Bernd Raichle, for which I am grateful.
 %<</Font selection>>
 %    \end{macrocode}
 %
-%
 % \section{Hooks for XeTeX and LuaTeX}
 %
 % \subsection{XeTeX}
@@ -11474,6 +11430,9 @@ help from Bernd Raichle, for which I am grateful.
 % Consider |txtbabel| as a shorthand for \textit{tex--xet babel},
 % which is the bidi model in both \pdftex{} and \xetex{}.
 %
+% \changes{3.33}{2019/05/04}{\cs{@tabular}, \cs{list}, etc., are
+%   patched, instead of redefined.}
+%
 %    \begin{macrocode}
 %<*texxet>
 \bbl@trace{Redefinitions for bidi layout}
@@ -11502,122 +11461,39 @@ help from Bernd Raichle, for which I am grateful.
     \parfillskip\bbl@endskip}
 \fi
 \IfBabelLayout{lists}
-  {\def\list#1#2{%
-    \ifnum \@listdepth >5\relax
-      \@toodeep
-    \else
-      \global\advance\@listdepth\@ne
-    \fi
-    \rightmargin\z@
-    \listparindent\z@
-    \itemindent\z@
-    \csname @list\romannumeral\the\@listdepth\endcsname
-    \def\@itemlabel{#1}%
-    \let\makelabel\@mklab
-    \@nmbrlistfalse
-    #2\relax
-    \@trivlist
-    \parskip\parsep
-    \parindent\listparindent
-    \advance\linewidth-\rightmargin
-    \advance\linewidth-\leftmargin
-    \advance\@totalleftmargin
-      \ifcase\bbl@thepardir\leftmargin\else\rightmargin\fi
-    \parshape\@ne\@totalleftmargin\linewidth
-    \ignorespaces}%
-  \ifcase\bbl@engine
-    \def\labelenumii{)\theenumii(}%
-    \def\p@enumiii{\p@enumii)\theenumii(}%
-  \fi
-  \def\@verbatim{%
-    \trivlist \item\relax
-    \if@minipage\else\vskip\parskip\fi
-    \bbl@startskip\textwidth
-    \advance\bbl@startskip-\linewidth
-    \bbl@endskip\z@skip
-    \parindent\z@
-    \parfillskip\@flushglue
-    \parskip\z@skip
-    \@@par
-    \language\l@nohyphenation
-    \@tempswafalse
-    \def\par{%
-      \if@tempswa
-        \leavevmode\null
-        \@@par\penalty\interlinepenalty
-      \else
-        \@tempswatrue
-        \ifhmode\@@par\penalty\interlinepenalty\fi
-      \fi}%
-    \let\do\@makeother \dospecials
-    \obeylines \verbatim@font \@noligs
-    \everypar\expandafter{\the\everypar\unpenalty}}}
+  {\bbl@sreplace\list
+    {\@totalleftmargin\leftmargin}{\@totalleftmargin\bbl@listleftmargin}%
+   \def\bbl@listleftmargin{%
+     \ifcase\bbl@thepardir\leftmargin\else\rightmargin\fi}%
+   \ifcase\bbl@engine
+     \def\labelenumii{)\theenumii(}% pdftex doesn't reverse ()
+     \def\p@enumiii{\p@enumii)\theenumii(}%
+   \fi
+   \bbl@sreplace\@verbatim
+     {\leftskip\@totalleftmargin}%
+     {\bbl@startskip\textwidth
+      \advance\bbl@startskip-\linewidth}%
+   \bbl@sreplace\@verbatim 
+     {\rightskip\z@skip}%
+     {\bbl@endskip\z@skip}}%
   {}
 \IfBabelLayout{contents}
-  {\def\@dottedtocline#1#2#3#4#5{%
-     \ifnum#1>\c@tocdepth\else
-       \vskip \z@ \@plus.2\p@
-       {\bbl@startskip#2\relax
-        \bbl@endskip\@tocrmarg
-        \parfillskip-\bbl@endskip
-        \parindent#2\relax
-        \@afterindenttrue
-        \interlinepenalty\@M
-        \leavevmode
-        \@tempdima#3\relax
-        \advance\bbl@startskip\@tempdima
-        \null\nobreak\hskip-\bbl@startskip
-        {#4}\nobreak
-        \leaders\hbox{%
-          $\m@th\mkern\@dotsep mu\hbox{.}\mkern\@dotsep mu$}%
-          \hfill\nobreak
-          \hb@xt@\@pnumwidth{\hfil\normalfont\normalcolor#5}%
-          \par}%
-     \fi}}
+  {\bbl@sreplace\@dottedtocline{\leftskip}{\bbl@startskip}%
+   \bbl@sreplace\@dottedtocline{\rightskip}{\bbl@endskip}}
   {}
 \IfBabelLayout{columns}
-  {\def\@outputdblcol{%
-     \if@firstcolumn
-       \global\@firstcolumnfalse
-       \global\setbox\@leftcolumn\copy\@outputbox
-       \splitmaxdepth\maxdimen
-       \vbadness\maxdimen
-       \setbox\@outputbox\vbox{\unvbox\@outputbox\unskip}%
-       \setbox\@outputbox\vsplit\@outputbox to\maxdimen
-       \toks@\expandafter{\topmark}%
-       \xdef\@firstcoltopmark{\the\toks@}%
-       \toks@\expandafter{\splitfirstmark}%
-       \xdef\@firstcolfirstmark{\the\toks@}%
-       \ifx\@firstcolfirstmark\@empty
-         \global\let\@setmarks\relax
-       \else
-         \gdef\@setmarks{%
-           \let\firstmark\@firstcolfirstmark
-           \let\topmark\@firstcoltopmark}%
-       \fi
-     \else
-       \global\@firstcolumntrue
-       \setbox\@outputbox\vbox{%
-         \hb@xt@\textwidth{%
-           \hskip\columnwidth
-           \hfil
-           {\normalcolor\vrule \@width\columnseprule}%
-           \hfil
-           \hb@xt@\columnwidth{\box\@leftcolumn \hss}%
-           \hskip-\textwidth
-           \hb@xt@\columnwidth{\box\@outputbox \hss}%
-           \hskip\columnsep
-           \hskip\columnwidth}}%
-       \@combinedblfloats
-       \@setmarks
-       \@outputpage
-       \begingroup
-         \@dblfloatplacement
-         \@startdblcolumn
-         \@whilesw\if@fcolmade \fi{\@outputpage
-         \@startdblcolumn}%
-       \endgroup
-     \fi}}%
+  {\bbl@sreplace\@outputdblcol{\hb@xt@\textwidth}{\bbl@outputhbox}%
+   \def\bbl@outputhbox#1{%
+     \hb@xt@\textwidth{%
+       \hskip\columnwidth
+       \hfil
+       {\normalcolor\vrule \@width\columnseprule}%
+       \hfil
+       \hb@xt@\columnwidth{\box\@leftcolumn \hss}%
+       \hskip-\textwidth
+       \hb@xt@\columnwidth{\box\@outputbox \hss}%
+       \hskip\columnsep
+       \hskip\columnwidth}}}%
   {}
 <@Footnote changes@>
 \IfBabelLayout{footnotes}%
@@ -11627,7 +11503,7 @@ help from Bernd Raichle, for which I am grateful.
   {}
 %    \end{macrocode}
 %
-%      Implicitly reverses sectioning labels in |bidi=basic-r|, because
+%      Implicitly reverses sectioning labels in |bidi=basic|, because
 %      the full stop is not in contact with L numbers any more. I
 %      think there must be a better way.
 %
@@ -12175,18 +12051,18 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{CJK line breaking}
 %
-% Minimal line breaking for CJK scripts, mainly intended by simple
+% Minimal line breaking for CJK scripts, mainly intended for simple
 % documents and short texts as a secundary language. Only line
 % breaking, with a little stretching for justification, without any
-% attempt to adjust the spacing. It is based (but does not strictly
-% follows) on the Unicode algorithm.
+% attempt to adjust the spacing. It is based on (but does not strictly
+% follow) the Unicode algorithm.
 %
 % We first need a little table with the corresponding line breaking
 % properties. A few characters have an additional key for the width
 % (fullwidth \textit{vs.} halfwidth), not yet used. There is a separate
 % file, defined below.
 %
-% \changes{3.31}{2019/05/04}{Simple CJK line breaking}
+% \changes{3.31}{2019/05/04}{Simple CJK line breaking.}
 % 
 % \textit{Work in progress.} 
 %
@@ -12280,16 +12156,23 @@ help from Bernd Raichle, for which I am grateful.
 % Unlike \xetex{}, \luatex{} requires only minimal changes for
 % right-to-left layouts, particularly in monolingual documents (the
 % engine itself reverses boxes -- including column order or headings
-% --, margins, etc.) and with |bidi=basic-r|, without having to patch
+% --, margins, etc.) with |bidi=basic|, without having to patch
 % almost any macro where text direction is relevant.
 %
 % |\@hangfrom| is useful in many contexts and it is redefined always
 % with the |layout| option.
 %
-% There are, however, a number of issues when the text direction is
-% not the same as the box direction (as set by |\bodydir|), and when
+% There are, however, a number of issues when the text direction is not
+% the same as the box direction (as set by |\bodydir|), and when
 % |\parbox| and |\hangindent| are involved. Fortunately, latest
 % releases of \luatex{} simplify a lot the solution with |\shapemode|.
+%
+% With the issue \#15 I realized commands are best patched, instead of
+% redefined. With a few lines, a modification could be applied to
+% several classes and packages. Now, |tabular| seems to work (at least
+% in simple cases) with \textsf{array}, \textsf{tabularx},
+% \textsf{hhline}, \textsf{colortbl}, \textsf{longtable},
+% \textsf{booktabs}, etc. However, \textsf{dcolumn} still fails.
 %
 % \changes{3.18}{2018/02/14}{\cs{bbl@nextfake}, similar to the old
 %   \cs{nextfakemath} in Omega}
@@ -12343,30 +12226,44 @@ help from Bernd Raichle, for which I am grateful.
      \ifx\bbl@tabular\@tabular\else
        \bbl@replace\@tabular{$}{\bbl@nextfake$}%
      \fi}}
-  {}
+   {}
 \IfBabelLayout{lists}
-  {\expandafter\def\expandafter\bbl@toreplace\expandafter{\list{##1}{##2}}%
-   \bbl@replace\bbl@toreplace{\parshape}{\bbl@listparshape}%
-   \bbl@exp{\def\\\list##1##2{\the\toks@}}% \toks@ <- implicit result
+  {\bbl@sreplace\list{\parshape}{\bbl@listparshape}%
    \def\bbl@listparshape#1#2#3{%
      \parshape #1 #2 #3 %
      \ifnum\bbl@getluadir{page}=\bbl@getluadir{par}\else
        \shapemode\tw@
      \fi}}
   {}
+\IfBabelLayout{graphics}
+  {\def\bbl@pictsetdir{%
+     \ifcase\bbl@thetextdir
+       \let\bbl@pictresetdir\relax
+     \else
+       \textdir TLT\relax
+       \def\bbl@pictresetdir{\textdir TRT\relax}%
+     \fi}%
+   \bbl@sreplace\@picture{\hskip-}{\bbl@pictsetdir\hskip-}%
+   \def\put(#1,#2)#3{%  Not easy to patch. Better redefine.
+     \@killglue
+     \raise#2\unitlength
+     \hb@xt@\z@{\kern#1\unitlength{\bbl@pictresetdir#3}\hss}}%
+   \AtBeginDocument
+     {\ifx\tikz@atbegin@node\@undefined\else
+        \bbl@sreplace\pgfpicture{\pgfpicturetrue}{\bbl@pictsetdir\pgfpicturetrue}%
+        \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
+      \fi}}
+  {}
 %    \end{macrocode}
 %
 %      Implicitly reverses sectioning labels in bidi=basic-r, because
 %      the full stop is not in contact with L numbers any more. I
-%      think there must be a better way. Assumes |bidi=basic-r|, but
+%      think there must be a better way. Assumes |bidi=basic|, but
 %      there are some additional readjustments for |bidi=default|.
 %
 %    \begin{macrocode}
 \IfBabelLayout{counters}%
-  {\def\@textsuperscript#1{{% lua has separate settings for math
-     \m@th
-     \mathdir\pagedir % required with basic-r; ok with default, too
-     \ensuremath{^{\mbox {\fontsize \sf@size \z@ #1}}}}}%
+  {\bbl@sreplace\@textsuperscript{\m@th}{\m@th\mathdir\pagedir}%
    \let\bbl@latinarabic=\@arabic
    \def\@arabic#1{\babelsublr{\bbl@latinarabic#1}}%
    \@ifpackagewith{babel}{bidi=default}%
@@ -12392,10 +12289,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \IfBabelLayout{extras}%
-  {\def\underline#1{%
-     \relax
-     \ifmmode\@@underline{#1}%
-     \else\bbl@nextfake$\@@underline{\hbox{#1}}\m@th$\relax\fi}%
+  {\bbl@sreplace\underline{$\@@underline}{\bbl@nextfake$\@@underline}%
    \DeclareRobustCommand{\LaTeXe}{\mbox{\m@th
      \if b\expandafter\@car\f@series\@nil\boldmath\fi
      \babelsublr{%
