@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/05/22 v3.31.1649 The Babel package]
+\ProvidesFile{babel.dtx}[2019/06/03 v3.32 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -233,14 +233,14 @@ Javier Bezos
 
 \item  Changes and new features with relation to version 3.8 are
   highlighted with \New{X.XX}\hspace{-.5em}. The most recent features
-  could be still unstable. Please, report any issues you find on      
+  could be still unstable. Please, report any issues you find in      
   \texttt{https://github.com/latex3/babel/issues}, which is better 
   than just complaining on an e-mail list or a web forum.
 
 \item If you are interested in the \TeX{} multilingual support, please
   join the \textsf{kadingira} list on
   \texttt{http://tug.org/mailman/listinfo/kadingira}. You can follow
-  the development of \babel{} on
+  the development of \babel{} in
   \texttt{https://github.com/latex3/babel} (which provides some sample
   files, too).
 
@@ -2376,7 +2376,7 @@ font encodings are the same, like in Unicode based engines.
 
 \New{3.31} (Only \luatex.) With |\babelprovide| and |import|ed CJK
 languages, a simple generic line breaking algorithm (push-out-first) is
-applied, based on a selection of the Unicode rules (\New{3.31} it is
+applied, based on a selection of the Unicode rules (\New{3.32} it is
 disabled in verbatim mode, or more precisely when the hyphenrules
 are set to |nohyphenation|). It can be activated alternatively by
 setting explicitly the |intraspace|.
@@ -2450,10 +2450,11 @@ differ in the way `weak' numeric characters are ordered (eg, Arabic
   could be improvements in the future, because setting bidi text has
   many subtleties (see for example <https://www.w3.org/TR/html-bidi/>).
   A basic stable version for other engines must wait. This applies to
-  text, but \textbf{graphical} elements, including the |picture|
-  environment and PDF or PS based graphics, are not yet correctly
-  handled (far from trivial). Also, indexes and the like are under
-  study, as well as math (there are progresses in the latter).
+  text; there is a basic support for \textbf{graphical} elements,
+  including the |picture| environment (with \textsf{pict2e}) and
+  \textsf{pfg/tikz}. Also, indexes and the like are under study, as
+  well as math (there are progresses in the latter, too, but for
+  example |cases| may fail).
 
   An effort is being made to avoid incompatibilities in the future
   (this one of the reason currently bidi must be explicitly requested
@@ -2483,6 +2484,12 @@ consider the intrinsic direction of scripts and weak directionality.)
 \textsf{bidi} (by Vafa Khalighi). Integration is still somewhat
 tentative, but it mostly works. For RL documents use the former, and
 for LR ones use the latter.
+
+\New{3.32} There is some experimental support for \textsf{harftex}.
+Since it is based on \luatex, the option |basic| mostly works. You may
+need to deactivate the |rtlm| or the |rtla| font features (besides
+loading \textsf{harfload} before \babel and activating |mode=harf|;
+there is a sample in the GitHub repository).
 
 There are samples on GitHub, under \texttt{/required/babel/samples}.
 See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
@@ -2584,7 +2591,8 @@ Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
                    \texttt{contents}  $\string|$
                    \texttt{footnotes}  $\string|$
                    \texttt{captions}  $\string|$
-                   \texttt{columns} $\string|$
+                   \texttt{columns} $\string|$                
+                   \texttt{graphics} $\string|$
                    \texttt{extras}}
 
 \New{3.16} \textit{To be expanded}. Selects which layout elements are
@@ -2656,6 +2664,12 @@ bidirectional (with both R and L paragraphs) documents in \luatex{}.
   similar option in the short term). It patches an internal command, so
   it might be ignored by some packages and classes (or even raise an
   error). \New{3.18}.
+
+\item[graphics] modifies the |picture| environment so that the whole
+  figure is L but the text is R. It \textit{does not} work with the
+  standard |picture|, and \textit{pict2e} is required if you want
+  sloped lines. It attempts to do the same for \textsf{pgf/tikz}.
+  Somewhat experimental. \New{3.32}.
 
 \item[extras] is used for miscellaneous readjustments which do not fit into
   the previous groups. Currently redefines in \luatex{} |\underline| and
@@ -2930,7 +2944,7 @@ Then you preprocess it with |devnag| \m{file}, which creates
 
 \subsection{Unicode character properties in \luatex}
 
-Part of the \babel{} job is to apply Unicode rules to some
+\New{3.32} Part of the \babel{} job is to apply Unicode rules to some
 script-specific features based on some properties. Currently, they are
 3, namely, direction (ie, bidi class), mirroring glyphs, and line
 breaking for CJK scripts. These properties are stored in \textsf{lua}
@@ -4021,8 +4035,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.31.1649>>
-%<<date=2019/05/22>>
+%<<version=3.32>>
+%<<date=2019/06/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4248,7 +4262,9 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@exp{\\\bbl@replace\\\bbl@tempb{\bbl@tempc}{\bbl@tempd}}%
     \bbl@exp{%
   \endgroup
-  \\\scantokens{\def\\#1\bbl@tempa{\bbl@tempb}}}}
+  \\\makeatletter % "internal" macros with @ are assumed
+  \\\scantokens{\def\\#1\bbl@tempa{\bbl@tempb}}%
+  \catcode64=\the\catcode64\relax}} % Restore @
 %    \end{macrocode}
 % \end{macro}
 %
@@ -4491,6 +4507,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \changes{babel~3.30}{2019/04/22}{Callbacks aren't specific to
 %   bidi any more, so they are moved.}
+% \changes{babel~3.32}{2019/05/30}{Consider Harf.}
 %
 %    \begin{macrocode}
 \ifx\bbl@languages\@undefined\else
@@ -4512,6 +4529,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@languages
 \fi
 \ifodd\bbl@engine
+  % Harftex is evolving, so the callback is not harcoded, just in case
+  \def\bbl@harfpreline{Harf pre_linebreak_filter callback}%
   \def\bbl@activate@preotf{%
     \let\bbl@activate@preotf\relax  % only once
     \directlua{
@@ -4544,13 +4563,19 @@ help from Bernd Raichle, for which I am grateful.
         Babel.pre_otfload_v,
         'Babel.pre_otfload_v',
         luatexbase.priority_in_callback('pre_linebreak_filter',
-          'luaotfload.node_processor') or nil)
+           '\bbl@harfpreline') 
+        or luatexbase.priority_in_callback('pre_linebreak_filter',
+           'luaotfload.node_processor')
+        or nil)
       %
       luatexbase.add_to_callback('hpack_filter',
         Babel.pre_otfload_h,
         'Babel.pre_otfload_h',
         luatexbase.priority_in_callback('hpack_filter',
-          'luaotfload.node_processor') or nil)
+           '\bbl@harfpreline') 
+        or luatexbase.priority_in_callback('hpack_filter',
+           'luaotfload.node_processor')
+        or nil)
     }}
   \let\bbl@tempa\relax
   \@ifpackagewith{babel}{bidi=basic}%
@@ -5377,7 +5402,7 @@ help from Bernd Raichle, for which I am grateful.
   \def\<bbl@e@#2>{\the\toks@{\bbl@ens@fontenc}}}}
 \def\bbl@ensure#1#2#3{% 1: include 2: exclude 3: fontenc
   \def\bbl@tempb##1{% elt for (excluding) \bbl@captionslist list
-    \ifx##1\@undefined
+    \ifx##1\@undefined % 3.32 - Don't assume the macros exists
       \edef##1{\noexpand\bbl@nocaption
         {\bbl@stripslash##1}{\languagename\bbl@stripslash##1}}%
     \fi
@@ -7929,6 +7954,8 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{3.30}{2019/04/22}{Native digits (lua level).}
 % \changes{3.30}{2019/04/22}{New attribute in luatex for `locale'. Also
 %   \cs{localeid}}
+% \changes{3.32}{2019/05/30}{Activate CJK line breaking  with an explicit
+%   intraspace.}
 %
 %    \begin{macrocode}
 \bbl@trace{Creating languages and reading ini files}
@@ -11889,6 +11916,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \changes{babel~3.24}{2018/09/24}{Lua code for interword spacing
 %   in Southeast Asian scripts.}
+% \changes{babel~3.32}{2019/05/25}{Don't break with CJK if nohyphenation.}
 %
 % \textit{In progress.} Replace regular (ie, implicit) discretionaries
 % by spaceskips, based on the previous glyph (which I think makes
@@ -12104,6 +12132,8 @@ help from Bernd Raichle, for which I am grateful.
 \AtBeginDocument{\bbl@luafixboxdir}
 %    \end{macrocode}
 %
+% \changes{3.32}{2019/05/23}{New - \cs{babelcharproperty}.}
+%
 % The code for |\babelcharproperty| is straightforward. Just note the
 % modified lua table can be different.
 %
@@ -12236,7 +12266,8 @@ help from Bernd Raichle, for which I am grateful.
      \fi}}
   {}
 \IfBabelLayout{graphics}
-  {\def\bbl@pictsetdir{%
+  {\let\bbl@pictresetdir\relax
+   \def\bbl@pictsetdir{%
      \ifcase\bbl@thetextdir
        \let\bbl@pictresetdir\relax
      \else
@@ -12251,6 +12282,7 @@ help from Bernd Raichle, for which I am grateful.
    \AtBeginDocument
      {\ifx\tikz@atbegin@node\@undefined\else
         \bbl@sreplace\pgfpicture{\pgfpicturetrue}{\bbl@pictsetdir\pgfpicturetrue}%
+        \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
       \fi}}
   {}
@@ -19367,7 +19399,7 @@ Babel.cjk_breaks = {
 %    command, \texttt{nil} could be an `unknown' language in which
 %    case we have to make it known.
 %
-% \changes{babel-3.32}{2012/12/21}{Don't set it to
+% \changes{babel-3.32}{2019/05/21}{Don't set it to
 %   \cs{l@nohyphenation}, best reserved fo special uses.}
 %
 %    \begin{macrocode}

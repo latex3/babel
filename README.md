@@ -1,4 +1,4 @@
-## Babel 3.31.1649
+## Babel 3.32
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -41,7 +41,7 @@ for further details, or if you need to obtain the `latexbug` package.
 If the bug turns out to be with third-party software then please
 contact the developer, and not us!
 
-You may also report them to the author more informally on:
+You may also report them to the current maintainer more informally on:
 
    http://www.texnia.com/contact.html
 
@@ -51,12 +51,13 @@ respective authors.
 ### Latest changes
 
 ```
-3.32   0000-00-00
+3.32   2019-06-03
        - CJK line breaking is now disabled in verbatim (lua).
        - New - \babelcharproperty, to change the direction, mirroring
          glyph and line break properties (lua).
-       - Support for the picture environment (with pict2e) and pgf (lua,
-         somewhat experimental).
+       - Basic support for the picture environment (with pict2e) and pgf
+         (lua, somewhat experimental).
+       - Start support for harftex (just try - it may work).
 
 3.31   2019-05-04
        - Basic support for line breaking with CJK scripts (lua)
@@ -150,4 +151,4 @@ respective authors.
 ```
 
 Javier Bezos
-2019/05/22
+2019/06/03
