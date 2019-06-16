@@ -1,4 +1,8 @@
-## Babel 3.32
+## Babel 3.32.1674
+
+**NOTE.** Release 3.32.1674 disables mirroring with bidi=basic with
+Harftex. Also, \prehyphenchar is set to 0 in most SE Asian scripts.
+
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -151,4 +155,4 @@ respective authors.
 ```
 
 Javier Bezos
-2019/06/03
+2019/06/16
