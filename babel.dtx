@@ -31,13 +31,23 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/06/16 v3.32.1674 The Babel package]
+\ProvidesFile{babel.dtx}[2019/07/19 v3.33 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
-\setmainfont[Scale=.88]{Noto Serif}
-\setsansfont[Scale=.88]{Noto Sans}
-\setmonofont[Scale=.88,FakeStretch=.95]{Noto Mono}
+\setmainfont[
+     Scale=.88,
+     BoldFont = NotoSerif-Bold.ttf,
+     ItalicFont = NotoSerif-Italic.ttf,
+     BoldItalicFont = NotoSerif-BoldItalic.ttf]
+  {NotoSerif-Regular.ttf}
+\setsansfont[
+     Scale=.88,
+     BoldFont = NotoSans-Bold.ttf,
+     ItalicFont = NotoSans-Italic.ttf,
+     BoldItalicFont = NotoSans-BoldItalic.ttf]
+  {NotoSans-Regular.ttf}
+\setmonofont[Scale=.88,FakeStretch=.95]{NotoMono-Regular.ttf}
 \raggedright
 \addtolength{\textwidth}{25pt}
 \addtolength{\textheight}{3.5cm}
@@ -910,8 +920,8 @@ in \textsf{english} the shorthands defined by \textsf{ngerman} with
 \begin{verbatim}
 \addto\extrasenglish{\languageshorthands{ngerman}}
 \end{verbatim}
-(You may also need to activate them with, for example,
-|\useshorthands|.)
+(You may also need to activate them as user shorthands in the preamble
+with, for example, |\useshorthands| or |\useshorthands*|.)
 
 Very often, this is a more convenient way to deactivate shorthands
 than |\shorthandoff|, as for example if you want to define a macro
@@ -2787,14 +2797,15 @@ options are also used (eg, |\ProsodicMarksOn| in \textsf{latin}).
 events. Some hooks are predefined when \luatex{} and \xetex{} are
 used.
 
-\Describe{\AddBabelHook}{\marg{name}\marg{event}\marg{code}}
+\Describe{\AddBabelHook}{\oarg{lang}\marg{name}\marg{event}\marg{code}}
 
-The same name can be applied to several events.  Hooks may be enabled
-and disabled for all defined events with
-|\EnableBabelHook|\marg{name}, |\DisableBabelHook|\marg{name}. Names
-containing the string |babel| are reserved (they are used, for
-example, by |\useshortands*| to add a hook for the event
-|afterextras|).
+The same name can be applied to several events. Hooks may be enabled
+and disabled for all defined events with |\EnableBabelHook|\marg{name},
+|\DisableBabelHook|\marg{name}. Names containing the string |babel| are
+reserved (they are used, for example, by |\useshortands*| to add a hook
+for the event |afterextras|). \New{3.33} They may be also applied to an
+specific language with the optional argument; language specific
+settings are executed after global ones.
 
 Current events are the following; in some of them you can use one to
 three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
@@ -4035,8 +4046,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.32.1674>>
-%<<date=2019/06/16>>
+%<<version=3.33>>
+%<<date=2019/07/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5311,27 +5322,29 @@ help from Bernd Raichle, for which I am grateful.
 %  for developpers, after all. |\bbl@usehooks| is the commands used by
 %  babel to execute hooks defined for an event.
 %
-% \changes{babel~3.9k}{2014/03/23}{Removed a \cs{newcommand},
-%    undefined in Plain}
+% \changes{babel~3.33}{2019/07/16}{Optional argument for languages.}
 %
 %    \begin{macrocode}
 \bbl@trace{Hooks}
-\def\AddBabelHook#1#2{%
-  \bbl@ifunset{bbl@hk@#1}{\EnableBabelHook{#1}}{}%
-  \def\bbl@tempa##1,#2=##2,##3\@empty{\def\bbl@tempb{##2}}%
-  \expandafter\bbl@tempa\bbl@evargs,#2=,\@empty
-  \bbl@ifunset{bbl@ev@#1@#2}%
-    {\bbl@csarg\bbl@add{ev@#2}{\bbl@elt{#1}}%
-     \bbl@csarg\newcommand}%
-    {\bbl@csarg\let{ev@#1@#2}\relax
-     \bbl@csarg\newcommand}%
-  {ev@#1@#2}[\bbl@tempb]}
-\def\EnableBabelHook#1{\bbl@csarg\let{hk@#1}\@firstofone}
-\def\DisableBabelHook#1{\bbl@csarg\let{hk@#1}\@gobble}
+\newcommand\AddBabelHook[3][]{%
+  \bbl@ifunset{bbl@hk@#2}{\EnableBabelHook{#2}}{}%
+  \def\bbl@tempa##1,#3=##2,##3\@empty{\def\bbl@tempb{##2}}%
+  \expandafter\bbl@tempa\bbl@evargs,#3=,\@empty
+  \bbl@ifunset{bbl@ev@#2@#3@#1}%
+    {\bbl@csarg\bbl@add{ev@#3@#1}{\bbl@elt{#2}}}%
+    {\bbl@csarg\let{ev@#2@#3@#1}\relax}%
+  \bbl@csarg\newcommand{ev@#2@#3@#1}[\bbl@tempb]}
+\newcommand\EnableBabelHook[1]{\bbl@csarg\let{hk@#1}\@firstofone}
+\newcommand\DisableBabelHook[1]{\bbl@csarg\let{hk@#1}\@gobble}
 \def\bbl@usehooks#1#2{%
   \def\bbl@elt##1{%
-    \@nameuse{bbl@hk@##1}{\@nameuse{bbl@ev@##1@#1}#2}}%
-  \@nameuse{bbl@ev@#1}}
+    \@nameuse{bbl@hk@##1}{\@nameuse{bbl@ev@##1@#1@}#2}}%
+  \@nameuse{bbl@ev@#1@}%
+  \ifx\languagename\@undefined\else % Test required for Plain (?)
+    \def\bbl@elt##1{%
+      \@nameuse{bbl@hk@##1}{\@nameuse{bbl@ev@##1@#1@\languagename}#2}}%
+    \@nameuse{bbl@ev@#1@\languagename}%
+  \fi}
 %    \end{macrocode}
 %
 %    To ensure forward compatibility, arguments in hooks are set
@@ -7685,7 +7698,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \ProvideTextCommand{\grq}{T1}{%
-  \textormath{\textquoteleft}{\mbox{\textquoteleft}}}
+  \textormath{\kern\z@\textquoteleft}{\mbox{\textquoteleft}}}
 \ProvideTextCommand{\grq}{TU}{%
   \textormath{\textquoteleft}{\mbox{\textquoteleft}}}
 \ProvideTextCommand{\grq}{OT1}{%
@@ -8318,15 +8331,14 @@ help from Bernd Raichle, for which I am grateful.
        {\bbl@exp{\\\adddialect\<l@#1>\language}}%
        {}}%                      so, l@<lang> is ok - nothing to do
     {\bbl@exp{\\\adddialect\<l@#1>\bbl@tempa}}% found in opt list or ini
-  \ifodd\bbl@engine
-    \bbl@ifunset{bbl@prehc@\languagename}%
-      {}%
-      {\bbl@exp{%
-         \\\bbl@ifblank{\@nameuse{bbl@prehc@#1}}%
-           {}%
-           {{\language\<l@\languagename>%
-             \prehyphenchar=\@nameuse{bbl@prehc@\languagename}\relax}}}}%
-  \fi}
+  \bbl@ifunset{bbl@prehc@\languagename}%
+    {}%  TODO - XeTeX, based on \babelfont and HyphenChar?
+    {\ifodd\bbl@engine\bbl@exp{%
+       \\\bbl@ifblank{\@nameuse{bbl@prehc@#1}}%
+         {}%
+         {\\\AddBabelHook[\languagename]{babel-prehc-\languagename}{patterns}%
+           {\prehyphenchar=\@nameuse{bbl@prehc@\languagename}\relax}}}%
+     \fi}}
 %    \end{macrocode}
 %
 % The reader of |ini| files. There are 3 possible cases: a section name
@@ -8836,7 +8848,7 @@ help from Bernd Raichle, for which I am grateful.
 %    because of a circular definition).
 %
 %   (Recent versions of natbib change dynamically |\@citex|, so PR4087
-%     doesn't seem fixable in a simple way. Just load natbib before.)
+%    doesn't seem fixable in a simple way. Just load natbib before.)
 %
 %    \begin{macrocode}
     \def\@citex[#1][#2]#3{%
@@ -9127,7 +9139,8 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    When the package varioref is in use we need to modify its
 %    internal command |\@@vpageref| in order to prevent problems when
-%    an active character ends up in the argument of |\vref|.
+%    an active character ends up in the argument of |\vref|. The same
+%    needs to happen for |\vrefpagenum|.
 %
 %    \begin{macrocode}
   \AtBeginDocument{%
@@ -9136,11 +9149,6 @@ help from Bernd Raichle, for which I am grateful.
         \@safe@activestrue
         \org@@@vpageref{#1}[#2]{#3}%
         \@safe@activesfalse}%
-%    \end{macrocode}
-%
-%    The same needs to happen for |\vrefpagenum|.
-%
-%    \begin{macrocode}
       \bbl@redefine\vrefpagenum#1#2{%
         \@safe@activestrue
         \org@vrefpagenum{#1}{#2}%

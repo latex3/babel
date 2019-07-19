@@ -1,8 +1,4 @@
-## Babel 3.32.1674
-
-**NOTE.** Release 3.32.1674 disables mirroring with bidi=basic with
-Harftex. Also, \prehyphenchar is set to 0 in most SE Asian scripts.
-
+## Babel 3.33
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -55,6 +51,12 @@ respective authors.
 ### Latest changes
 
 ```
+3.33   2019-07-19
+       - \prehyphenchar set to 0 in languages requiring it: kannada,
+         marathi, tamil, etc. (lua).
+       - \AddBabelHook can be set for specific languages.
+       - Fix - !\grq in T1 behaved like the ligature !`.
+       - Minimal preliminary support for the experimental harftex.
 3.32   2019-06-03
        - CJK line breaking is now disabled in verbatim (lua).
        - New - \babelcharproperty, to change the direction, mirroring
@@ -141,18 +143,6 @@ respective authors.
          bidi at 'automatic' hyphens.
        - Fix for latest latex - babel.ins raised an error.
 
-3.19    2018-04-25
-       - Most changes are for luatex:
-         . The main new feature is a bidi method for both implicit L in
-           R text, and implicit R in L text, with the possibility of
-           switching the font automatically. Still somewhat
-           experimental, but it should work in most cases.
-         . layout=extras for a couple of miscellaneous readjustments.
-         . bidi equation numbers.
-       - Also, for all engines, new field in some ini files:
-         digits.native (to be used in future releases).  
-
 ```
 
 Javier Bezos
-2019/06/16
