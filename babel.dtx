@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/07/19 v3.33 The Babel package]
+\ProvidesFile{babel.dtx}[2019/07/28 v3.33.1716 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -349,9 +349,10 @@ Package babel Warning: No hyphenation patterns were preloaded for
 
 \subsection{Multilingual documents}
 
-In multilingual documents, just use several options. The last one is
-considered the main language, activated by default. Sometimes, the
-main language changes the document layout (eg, |spanish| and |french|).
+In multilingual documents, just use list the required languages as
+package options. The last one is considered the main language,
+activated by default. Sometimes, the main language changes the document
+layout (eg, |spanish| and |french|).
 
 \begin{example}
   In \LaTeX, the preamble of the document:
@@ -364,11 +365,14 @@ main language changes the document layout (eg, |spanish| and |french|).
   language in use, and the main one.
 \end{example}
 
-You can also set the main language explicitly:
+You can also set the main language explicitly, but it is discouraged
+except if there a real reason to do so:
 \begin{verbatim}
 \documentclass{article}
 \usepackage[_main=english_,dutch]{babel}
 \end{verbatim}
+
+Examples of cases where |main| is useful are the following.
 
 \begin{note}
 Some classes load \babel{} with a hardcoded language option. Sometimes,
@@ -1993,7 +1997,8 @@ to select fonts in addition to the three basic families.
   no-op). Of course, both methods are incompatible, and if you use
   |\set|\textit{xxxx}|font|, font switching with |\babelfont| just
   does \textit{not} work (nor the standard |\|\textit{xx}|default|,
-  for that matter).
+  for that matter). As of \New{3.34} there is an attempt to make them
+  compatible, but the language system will not be set by \babel.
 \end{warning}
 
 \begin{troubleshooting}
@@ -4046,8 +4051,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.33>>
-%<<date=2019/07/19>>
+%<<version=3.33.1716>>
+%<<date=2019/07/28>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4133,6 +4138,25 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %  \end{macro}
+%
+% \begin{macro}{\bbl@exp}
+%
+%   Now, just syntactical sugar, but it makes partial expansion of
+%   some code a lot more simple and readable. Here |\\| stands for
+%   |\noexpand| and |\<..>| for |\noexpand| applied to a built macro
+%   name (the latter does not define the macro if undefined to
+%   |\relax|, because it is created locally). The result may be
+%   followed by extra arguments, if necessary.
+%
+%    \begin{macrocode}
+\def\bbl@exp#1{%
+  \begingroup
+    \let\\\noexpand
+    \def\<##1>{\expandafter\noexpand\csname##1\endcsname}%
+    \edef\bbl@exp@aux{\endgroup#1}%
+  \bbl@exp@aux}
+%    \end{macrocode}
+% \end{macro}
 %
 % \begin{macro}{\bbl@trim}
 %   The following piece of code is stolen (with some changes) from
@@ -4257,12 +4281,18 @@ help from Bernd Raichle, for which I am grateful.
 % |ho|, then |\relax| becomes |\rho|). No checking is done at all,
 % because it is not a general purpose macro, and it is used by \babel{}
 % only when it works (an example where it does \textit{not} work is in
-% |\bbl@TG@@date|). It may change! (to add new features).
-%
+% |\bbl@TG@@date|). It may change! (I'm not sure ckecking the
+% replacement is really necessary or just paranoia).
+% 
+% \changes{babel~3.34}{2019/07/23}{Take into account prefixes like
+%   \cs{long} and macros with trailing spaces. Don't touch original if
+%   not necessary.}
+% 
 %    \begin{macrocode}
-\expandafter\def\expandafter\bbl@parsedef\detokenize{macro:}#1->#2\relax{%
+\bbl@exp{\def\\\bbl@parsedef##1\detokenize{macro:}}#2->#3\relax{%
   \def\bbl@tempa{#1}%
-  \def\bbl@tempb{#2}}
+  \def\bbl@tempb{#2}%
+  \def\bbl@tempe{#3}}
 \def\bbl@sreplace#1#2#3{%
   \begingroup
     \expandafter\bbl@parsedef\meaning#1\relax
@@ -4270,31 +4300,20 @@ help from Bernd Raichle, for which I am grateful.
     \edef\bbl@tempc{\expandafter\strip@prefix\meaning\bbl@tempc}%
     \def\bbl@tempd{#3}%
     \edef\bbl@tempd{\expandafter\strip@prefix\meaning\bbl@tempd}%
-    \bbl@exp{\\\bbl@replace\\\bbl@tempb{\bbl@tempc}{\bbl@tempd}}%
-    \bbl@exp{%
+    \bbl@xin@{\bbl@tempc}{\bbl@tempe}% If not in macro, do nothing
+    \ifin@
+      \bbl@exp{\\\bbl@replace\\\bbl@tempe{\bbl@tempc}{\bbl@tempd}}%
+      \def\bbl@tempc{%     Expanded an executed below as 'uplevel'
+         \\\makeatletter % "internal" macros with @ are assumed
+         \\\scantokens{%
+           \bbl@tempa\\\@namedef{\bbl@stripslash#1}\bbl@tempb{\bbl@tempe}}%
+         \catcode64=\the\catcode64\relax}%  Restore @
+    \else
+      \let\bbl@tempc\@empty  % Not \relax
+    \fi
+    \bbl@exp{%      For the 'uplevel' assignments
   \endgroup
-  \\\makeatletter % "internal" macros with @ are assumed
-  \\\scantokens{\def\\#1\bbl@tempa{\bbl@tempb}}%
-  \catcode64=\the\catcode64\relax}} % Restore @
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\bbl@exp}
-%
-%   Now, just syntactical sugar, but it makes partial expansion of
-%   some code a lot more simple and readable. Here |\\| stands for
-%   |\noexpand| and |\<..>| for |\noexpand| applied to a built macro
-%   name (the latter does not define the macro if undefined to
-%   |\relax|, because it is created locally). The result may be
-%   followed by extra arguments, if necessary.
-%
-%    \begin{macrocode}
-\def\bbl@exp#1{%
-  \begingroup
-    \let\\\noexpand
-    \def\<##1>{\expandafter\noexpand\csname##1\endcsname}%
-    \edef\bbl@exp@aux{\endgroup#1}%
-  \bbl@exp@aux}
+    \bbl@tempc}}  % empty or expand to set #1 with changes 
 %    \end{macrocode}
 % \end{macro}
 %
@@ -8359,6 +8378,15 @@ help from Bernd Raichle, for which I am grateful.
     \let\bbl@savestrings\@empty
     \let\bbl@savetoday\@empty
     \let\bbl@savedate\@empty
+    \def\bbl@inipreread##1=##2\@@{%
+      \bbl@trim@def\bbl@tempa{##1}% Redundant below !!
+      % Move trims here ??
+      \bbl@ifunset{bbl@KVP@\bbl@section.\bbl@tempa}%
+        {\expandafter\bbl@inireader\bbl@tempa=##2\@@}%
+        {\def\bbl@tempc{\expandafter\bbl@inireader\bbl@tempa=}%
+         \expandafter\expandafter\expandafter
+         \bbl@tempc\csname bbl@KVP@\bbl@section.\bbl@tempa\endcsname\@@}%
+         \global\bbl@csarg\let{KVP@\bbl@section.\bbl@tempa}\relax}%
     \let\bbl@inireader\bbl@iniskip
     \bbl@info{Importing data from babel-#1.ini for \languagename}%
     \loop
@@ -8372,7 +8400,7 @@ help from Bernd Raichle, for which I am grateful.
     \repeat
   \fi}
 \def\bbl@iniline#1\bbl@iniline{%
-  \@ifnextchar[\bbl@inisec{\@ifnextchar;\bbl@iniskip\bbl@inireader}#1\@@}% ]
+  \@ifnextchar[\bbl@inisec{\@ifnextchar;\bbl@iniskip\bbl@inipreread}#1\@@}% ]
 %    \end{macrocode}
 %
 % The special cases for comment lines and sections are handled by the
@@ -11141,7 +11169,11 @@ help from Bernd Raichle, for which I am grateful.
   \EnableBabelHook{babel-fontspec}% Just calls \bbl@switchfont
   \bbl@bblfont}
 \newcommand\bbl@bblfont[2][]{% 1=features 2=fontname
-  \bbl@ifunset{\bbl@tempb family}{\bbl@providefam{\bbl@tempb}}{}%
+  \bbl@ifunset{\bbl@tempb family}%
+    {\bbl@providefam{\bbl@tempb}}%
+    {\bbl@exp{%
+      \\\bbl@sreplace\<\bbl@tempb family >%
+        {\@nameuse{\bbl@tempb default}}{\<\bbl@tempb default>}}}%
   % For the default font, just in case:
   \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
   \expandafter\bbl@ifblank\expandafter{\bbl@tempa}%
@@ -11189,9 +11221,10 @@ help from Bernd Raichle, for which I am grateful.
                        \<bbl@##1dflt@*\bbl@tempa>}}}%
       {}}%                               1=T - language, already defined
   \def\bbl@tempa{%
-    \bbl@warning{The current font is not a standard family:\\%
+    \bbl@warning{The current font is not a babel standard family:\\%
       \fontname\font\\%
-      Script and Language are not applied. Consider\\%
+      There is nothing intrinsically wrong with it, but\\%
+      script and Language will not be applied. Consider\\%
       defining a new family with \string\babelfont.\\%
       Reported}}%
   \bbl@foreach\bbl@font@fams{%     don't gather with prev for
@@ -11478,7 +11511,7 @@ help from Bernd Raichle, for which I am grateful.
 % Consider |txtbabel| as a shorthand for \textit{tex--xet babel},
 % which is the bidi model in both \pdftex{} and \xetex{}.
 %
-% \changes{3.33}{2019/05/04}{\cs{@tabular}, \cs{list}, etc., are
+% \changes{3.32}{2019/05/04}{\cs{@tabular}, \cs{list}, etc., are
 %   patched, instead of redefined.}
 %
 %    \begin{macrocode}

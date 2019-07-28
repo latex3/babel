@@ -1,4 +1,4 @@
-## Babel 3.33
+## Babel 3.33.1716
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,6 +51,8 @@ respective authors.
 ### Latest changes
 
 ```
+3.34   ---
+       - Improved compatibility for \babelfont vs \setmainfont
 3.33   2019-07-19
        - \prehyphenchar set to 0 in languages requiring it: kannada,
          marathi, tamil, etc. (lua).
