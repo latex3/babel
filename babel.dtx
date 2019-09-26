@@ -267,7 +267,7 @@ Javier Bezos
 \subsection{Monolingual documents}
 
 In most cases, a single language is required, and then all you need in
-\LaTeX{} is to load the package using its standand mechanism for this
+\LaTeX{} is to load the package using its standard mechanism for this
 purpose, namely, passing that language as an optional argument. In
 addition, you may want to set the font and input encodings.
 
@@ -436,7 +436,7 @@ _\foreignlanguage{french}{français}_.
 loading \babel{} by means of \textit{modifiers}. They are set after
 the language name, and are prefixed with a dot (only when the language
 is set as package option -- neither global options nor the |main| key
-accept them). An example is (spaces are not significant and they can
+accepts them). An example is (spaces are not significant and they can
 be added or removed):\footnote{No predefined ``axis'' for modifiers
 are provided because languages and their scripts have quite different
 needs.}
@@ -446,7 +446,7 @@ needs.}
 
 Attributes (described below) are considered modifiers, ie, you can
 set an attribute by including it in the list of modifiers. However,
-modifiers is a more general mechanism.
+modifiers are a more general mechanism.
 
 \subsection{\textsf{xelatex} and \textsf{lualatex}}
 
@@ -611,7 +611,7 @@ compatibility).
 \Describe{\begin\menv{otherlanguage}}{\marg{language}\Eenv{otherlanguage}}
 
 The environment \Lenv{otherlanguage} does basically the same as
-|\selectlanguage|, except the language change is (mostly) local to
+|\selectlanguage|, except that language change is (mostly) local to
 the environment.
 
 Actually, there might be some non-local changes, as this environment
@@ -663,7 +663,7 @@ say, |'| done by some languages (eg, \textsf{italian}, \textsf{french},
 \Describe{\babeltags}{\char`\{\m{tag1} \texttt{=} \m{language1}, \m{tag2}
 \texttt{=} \m{language2}, \dots\char`\}}
 
-\New{3.9i} In multilingual documents with many language switches the
+\New{3.9i} In multilingual documents with many language-switches the
 commands above can be cumbersome. With this tool shorter names can be
 defined. It adds nothing really new -- it is just syntactical sugar.
 
@@ -744,14 +744,14 @@ With |ini| files (see below), captions are ensured by default.
 A \textit{shorthand} is a sequence of one or two characters that
 expands to arbitrary \TeX{} code.
 
-Shorthands can be used for different kinds of things, as for example:
+Shorthands can be used for different kinds of things, for example:
 (1) in some languages shorthands such as |"a| are defined to be able
 to hyphenate the word if the encoding is |OT1|; (2) in some languages
 shorthands such as |!| are used to insert the right amount of white
 space; (3) several kinds of discretionaries and breaks can be inserted
 easily with |"-|, |"=|, etc.
 
-The package \textsf{inputenc} as well as \xetex{} an \luatex{} have
+The package \textsf{inputenc} as well as \xetex{} and \luatex{} have
 alleviated entering non-ASCII characters, but minority languages and
 some kinds of text can still require characters not directly available
 on the keyboards (and sometimes not even as separated or precomposed
@@ -864,17 +864,17 @@ system shorthands. Language-dependent user shorthands (new in
 \defineshorthand{"*}{\babelhyphen{soft}}
 \defineshorthand{"-}{\babelhyphen{hard}}
 \end{verbatim}
-  However, behavior of hyphens is language dependent. For example, in
+  However, the behavior of hyphens is language-dependent. For example, in
   languages like Polish and Portuguese, a hard hyphen inside compound
   words are repeated at the beginning of the next line. You could then
   set:
 \begin{verbatim}
-\defineshorthand[*polish,*portugese]{"-}{\babelhyphen{repeat}}
+\defineshorthand[*polish,*portuguese]{"-}{\babelhyphen{repeat}}
 \end{verbatim}
   Here, options with |*| set a language-dependent user shorthand,
   which means the generic one above only applies for the rest of
   languages; without |*| they would (re)define the language shorthands
-  instead, which are overriden by user ones.
+  instead, which are overridden by user ones.
 
   Now, you have a single unified shorthand (|"-|), with a
   content-based meaning (`compound word hyphen') whose visual behavior
@@ -928,7 +928,7 @@ in \textsf{english} the shorthands defined by \textsf{ngerman} with
 with, for example, |\useshorthands| or |\useshorthands*|.)
 
 Very often, this is a more convenient way to deactivate shorthands
-than |\shorthandoff|, as for example if you want to define a macro
+than |\shorthandoff|, for example if you want to define a macro
 to easy typing phonetic characters with \textsf{tipa}:
 \begin{verbatim}
 \newcommand{\myipa}[1]{{\languageshorthands{none}\tipaencoding#1}}
@@ -941,7 +941,7 @@ language are taken into account, ie, not user shorthands), (2) turned
 off with |\shorthandoff| or (3) deactivated with the internal
 |\bbl@deactivate|; for example, \verb|\babelshorthand{"u}| or
 \verb|\babelshorthand{:}|.  (You can conveniently define your own
-macros, or even you own user shorthands provided they do not ovelap.)
+macros, or even your own user shorthands provided they do not overlap.)
 
 For your records, here is a list of shorthands, but you must double
 check them, as they may change:\footnote{Thanks to Enrico Gregorio}
@@ -1033,7 +1033,7 @@ this is not a real problem (just use ``allowed'' characters).
 Shorthands are mainly intended for text, not for math. By setting this
 option with the value |normal| they are deactivated in math mode
 (default is |active|) and things like |${a'}$| (a closing brace after
-a shorthand) are not a source of trouble any more.
+a shorthand) are not a source of trouble anymore.
 
 \Describe{config=}{\meta{file}} Load \meta{file}\texttt{.cfg} instead
 of the default config file |bblopts.cfg| (the file is loaded even
@@ -1045,8 +1045,8 @@ package or global option, it is added to the list of requested
 languages.
 
 \Describe{headfoot=}{\meta{language}} By default, headlines and
-footlines are not touched (only marks), and if they contain language
-dependent macros (which is not usual) there may be unexpected
+footlines are not touched (only marks), and if they contain
+language-dependent macros (which is not usual) there may be unexpected
 results. With this option you may set the language in heads and foots.
 
 \Describe{noconfigs}{} Global and language default config files are
@@ -1104,7 +1104,7 @@ can take the following values:
   options have been stated. The option |first| can be regarded as an
   optimized version of \texttt{other*} for monolingual
   documents.\footnote{Providing |foreign| is pointless, because the
-  case mapping applied is that at the end of paragraph, but if either
+  case mapping applied is that at the end of the paragraph, but if either
   \xetex{} or \luatex{} change this behavior it might be added. On
   the other hand, |other| is provided even if I [JBL] think it isn't
   really useful, but who knows.}
@@ -1126,11 +1126,11 @@ documents. See sec.~\ref{bidi}.
 
 With this package option \babel{} just loads some basic macros (those
 in |switch.def|), defines |\AfterBabelLanguage| and exits. It also
-selects the hyphenations patterns for the last language passed as
+selects the hyphenation patterns for the last language passed as
 option (by its name in |language.dat|). There are two main uses:
 classes and packages, and as a last resort in case there are, for some
 reason, incompatible languages. It can be used if you just want to
-select the hyphenations patterns of a single language, too.
+select the hyphenation patterns of a single language, too.
 % TODO: example
 
 \Describe\AfterBabelLanguage{\marg{option-name}\marg{code}}
@@ -1949,8 +1949,8 @@ to select fonts in addition to the three basic families.
   This makes sure the OpenType script for Devanagari is |deva| and not
   |dev2| (\luatex{} does not detect automatically the correct 
   script\footnote{And even with the correct code some fonts could be 
-  rendered incorrectly by \textsf{fontspec}, so double check the 
-  results. \xetex{} fares better, but some font are still
+  rendered incorrectly by \textsf{fontspec}, so double-check the 
+  results. \xetex{} fares better, but some fonts are still
   problematic.}). You may also pass some options to \textsf{fontspec}:
   with |silent|, the warnings about unavailable scripts or languages
   are not shown (they are only really useful when the document format
@@ -1970,10 +1970,10 @@ to select fonts in addition to the three basic families.
   |\fontspec| is not touched at all, only the preset font families
   (|rm|, |sf|, |tt|, and the like). If a language is switched when an
   \textit{ad hoc} font is active, or you select the font with this
-  command, neither the script nor the language are passed. You must
+  command, neither the script nor the language is passed. You must
   add them by hand. This is by design, for several reasons (for
   example, each font has its own set of features and a generic setting
-  for several of them could be problematic, and also a “lower level”
+  for several of them could be problematic, and also a “lower-level”
   font selection is useful).
 \end{note}
 
@@ -2192,7 +2192,7 @@ is, ‘when a character has the same direction as the script for the
 “provided” language, then change its font to that set for this
 language’. There are 3 directions, following the bidi Unicode
 algorithm, namely, Arabic-like, Hebrew-like and left to
-right.\footnote{In future releases an new value (\texttt{script}) will
+right.\footnote{In future releases a new value (\texttt{script}) will
 be added.} So, there should be at most 3 directives of this kind.
 
 \Describe{intraspace=}{\meta{base} \meta{shrink} \meta{stretch}}
@@ -2300,13 +2300,13 @@ In \TeX, \verb|-| and \verb|\-| forbid further breaking opportunities
 in the word. This is the desired behavior very often, but not always,
 and therefore many languages provide shorthands for these
 cases. Unfortunately, this has not been done consistently: for
-example, \verb|"-| in Dutch, Portugese, Catalan or Danish is a hard
+example, \verb|"-| in Dutch, Portuguese, Catalan or Danish is a hard
 hyphen, while in German, Spanish, Norwegian, Slovak or Russian is a
 soft hyphen. Furthermore, some of them even redefine |\-|, so that you
 cannot insert a soft hyphen without breaking opportunities in the rest
 of the word.
 
-Therefore, some macros are provide with a set of basic ``hyphens''
+Therefore, some macros are provided with a set of basic ``hyphens''
 which can be used by themselves, to define a user shorthand, or even
 in language files.
 \begin{itemize}
@@ -2314,16 +2314,16 @@ in language files.
   explanatory.
 \item |\babelhyphen{repeat}| inserts a hard hyphen which is repeated
   at the beginning of the next line, as done in languages like
-  Polish, Portugese and Spanish.
+  Polish, Portuguese and Spanish.
 \item |\babelhyphen{nobreak}| inserts a hard hyphen without a break
   after it (even if a space follows).
-\item |\babelhyphen{empty}| inserts a break oportunity without
+\item |\babelhyphen{empty}| inserts a break opportunity without
   a hyphen at all.
 \item |\babelhyphen|\marg{text} is a hard ``hyphen'' using \m{text}
   instead. A typical case is |\babelhyphen{/}|.
 \end{itemize}
-With all of them hyphenation in the rest of the word is enabled. If
-you don't want enabling it, there is a starred counterpart:
+With all of them, hyphenation in the rest of the word is enabled. If
+you don't want to enable it, there is a starred counterpart:
 |\babelhyphen*{soft}| (which in most cases is equivalent to the
 original |\-|), |\babelhyphen*{hard}|, etc.
 
@@ -2350,7 +2350,7 @@ documents). Language exceptions take precedence over global ones.
 
 It can be used only in the preamble, and exceptions are set when the
 language is first selected, thus taking into account changes of
-|\lccodes|'s done in |\extras|\m{lang} as well as the language specific
+|\lccodes|'s done in |\extras|\m{lang} as well as the language-specific
 encoding (not set in the preamble by default). Multiple
 |\babelhyphenation|'s are allowed. For example:
 \begin{verbatim}
@@ -2364,7 +2364,7 @@ font encodings are the same, like in Unicode based engines.
 \begin{note}
   Using |\babelhyphenation| with Southeast Asian scripts is mostly
   pointless. But with |\babelpatterns| (below) you may fine-tune line
-  breaking (only \luatex). Even if there are no pattern for the
+  breaking (only \luatex). Even if there are no patterns for the
   language, you can add at least some typical cases.
 \end{note}
 
@@ -2381,7 +2381,7 @@ combination already exists, it gets replaced by the new one.
 
 It can be used only in the preamble, and patterns are added when the
 language is first selected, thus taking into account changes of
-|\lccodes|'s done in |\extras|\m{lang} as well as the language specific
+|\lccodes|'s done in |\extras|\m{lang} as well as the language-specific
 encoding (not set in the preamble by default). Multiple
 |\babelpatterns|'s are allowed.
 
@@ -2407,7 +2407,7 @@ of the previous char in \luatex, and the font size set by the last
 
 Currently \babel{} provides no standard interface to select
 scripts, because they are best selected with either |\fontencoding|
-(low level) or a language name (high level). Even the Latin script may
+(low-level) or a language name (high-level). Even the Latin script may
 require different encodings (ie, sets of glyphs) depending on the
 language, and therefore such a switch would be in a sense
 incomplete.\footnote{The so-called Unicode fonts do not improve the
@@ -2445,7 +2445,7 @@ used for ``ordinary'' text (they are stored in |\BabelNonText|, used
 in some special cases when no Latin encoding is explicitly set).
 
 The foregoing rules (which are applied ``at begin document'') cover
-most of cases. No assumption is made on characters above
+most of the cases. No assumption is made on characters above
 127, which may not follow the LICR conventions -- the goal is just
 to ensure most of the ASCII letters and symbols are the right ones.
 
@@ -2461,14 +2461,14 @@ differ in the way `weak' numeric characters are ordered (eg, Arabic
 
 \begin{warning}
   The current code for \textbf{text} in \luatex{} should be considered
-  essentially stable, but, of course, it is not bug free and there
+  essentially stable, but, of course, it is not bug-free and there
   could be improvements in the future, because setting bidi text has
   many subtleties (see for example <https://www.w3.org/TR/html-bidi/>).
   A basic stable version for other engines must wait. This applies to
   text; there is a basic support for \textbf{graphical} elements,
   including the |picture| environment (with \textsf{pict2e}) and
   \textsf{pfg/tikz}. Also, indexes and the like are under study, as
-  well as math (there are progresses in the latter, too, but for
+  well as math (there is progress in the latter, too, but for
   example |cases| may fail).
 
   An effort is being made to avoid incompatibilities in the future
@@ -2485,7 +2485,7 @@ There are some package options controlling bidi writing.
 
 \New{3.14} Selects the bidi algorithm to be used. With |default| the
 bidi mechanism is just activated (by default it is not), but every
-change must by marked up. In \xetex{} and \pdftex{} this is the only
+change must be marked up. In \xetex{} and \pdftex{} this is the only
 option.
 
 In \luatex, |basic-r| provides a simple and fast method for R text,
@@ -2585,7 +2585,7 @@ Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
 \end{example}
 
 \begin{note}
-  Boxes are “black boxes”. Numbers inside an |\hbox| (as for example
+  Boxes are “black boxes”. Numbers inside an |\hbox| (for example
   in a |\ref|) do not know anything about the surrounding chars. So,
   |\ref{A}-\ref{B}| are not rendered in the visual order A-B, but in the
   wrong one B-A (because the hyphen does not “see” the digits inside the
@@ -2596,7 +2596,7 @@ Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
 \newcommand\refrange[2]{\babelsublr{\texthe{\ref{#1}}-\texthe{\ref{#2}}}}
 \end{verbatim}
 
-  In a future a more complete method, reading recursively boxed text, may
+  In the future a more complete method, reading recursively boxed text, may
   be added.
 \end{note}
 
@@ -2659,14 +2659,14 @@ bidirectional (with both R and L paragraphs) documents in \luatex{}.
   toc entries are R by default if the main language is R.
 
 \item[columns] required in \xetex{} and \pdftex{} to reverse the
-  column order (currently only the standard two column mode); in
+  column order (currently only the standard two-column mode); in
   \luatex{} they are R by default if the main language is R (including
   \textsf{multicol}).
 
 \item[footnotes] not required in monolingual documents, but it may be
   useful in bidirectional documents (with both R and L paragraphs) in all
   engines; you may use alternatively |\BabelFootnote| described below
-  (what this options does exactly is also explained there).
+  (what this option does exactly is also explained there).
 
 \item[captions] is similar to |sectioning|, but for |\caption|; not
   required in monolingual documents with \luatex{}, but may be
@@ -2808,8 +2808,8 @@ The same name can be applied to several events. Hooks may be enabled
 and disabled for all defined events with |\EnableBabelHook|\marg{name},
 |\DisableBabelHook|\marg{name}. Names containing the string |babel| are
 reserved (they are used, for example, by |\useshortands*| to add a hook
-for the event |afterextras|). \New{3.33} They may be also applied to an
-specific language with the optional argument; language specific
+for the event |afterextras|). \New{3.33} They may be also applied to a
+specific language with the optional argument; language-specific
 settings are executed after global ones.
 
 Current events are the following; in some of them you can use one to
@@ -2831,7 +2831,7 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
 \item[encodedcommands] (input, font encodings) Used (locally) in
   |\StartBabelCommands|. Both \xetex{} and \luatex{} make sure the
   encoded text is read correctly.
-\item[stopcommands] Used to reset the the above, if necessary.
+\item[stopcommands] Used to reset the above, if necessary.
 \item[write] This event comes just after the switching commands are
   written to the |aux| file.
 \item[beforeextras] Just before executing |\extras|\m{language}. This
@@ -2869,7 +2869,7 @@ ones, they only have a single hook and replace a default definition.
 \item[everylanguage] (language) Executed before every language patterns
   are loaded.
 \item[loadkernel] (file) By default loads |switch.def|. It can be used
-  to load a different version of this files or to load nothing.
+  to load a different version of this file or to load nothing.
 \item[loadpatterns] (patterns file) Loads the patterns file. Used by
   \file{luababel.def}.
 \item[loadexceptions] (exceptions file) Loads the exceptions
@@ -2984,7 +2984,7 @@ For example:
 This command is allowed only in vertical mode (the preamble or between
 paragraphs).
 
-\subsection{Tips, workarounds, know issues and notes}
+\subsection{Tips, workarounds, known issues and notes}
 
 \begin{itemize}
 \item If you use the document class \cls{book} \emph{and} you use
@@ -3071,7 +3071,7 @@ some languages (kerning and spacing). Ligatures can be disabled.
 
 \subsection{Current and future work}
 
-Current work is focused on the so-called complex scripts in \luatex{}.
+The current work is focused on the so-called complex scripts in \luatex{}.
 In 8-bit engines, \babel{} provided a basic support for bidi text as
 part of the style for Hebrew, but it is somewhat unsatisfactory and
 internally replaces some hardwired commands by other hardwired commands
@@ -3079,7 +3079,7 @@ internally replaces some hardwired commands by other hardwired commands
 
 Useful additions would be, for example, time, currency, addresses and
 personal names.\footnote{See for example POSIX, ISO 14652 and the
-Unicode Common Locale Data Repository (CLDR). Those system, however,
+Unicode Common Locale Data Repository (CLDR). Those systems, however,
 have limited application to \TeX\ because their aim is just to display
 information and not fine typesetting.}. But that is the easy
 part, because they don't require modifying the \LaTeX{} internals.
@@ -3182,7 +3182,7 @@ german hyphen.ger
 
 You may also set the font encoding the patterns are intended for by
 following the language name by a colon and the encoding
-code.\footnote{This in not a new feature, but in former versions it
+code.\footnote{This is not a new feature, but in former versions it
 didn't work correctly.} For example:
 \begin{verbatim}
 german:T1 hyphenT1.ger
@@ -3256,19 +3256,19 @@ Some recommendations:
   ancient language). Note however |=|, |<|, |>|, |:| and the like
   can be dangerous, because they may be used as part of the syntax
   of some elements (numeric expressions, key/value pairs, etc.).
-\item Captions should not contain shorthands or encoding dependent
+\item Captions should not contain shorthands or encoding-dependent
   commands (the latter is not always possible, but should be clearly
   documented). They should be defined using the LICR. You may
   also use the new tools for encoded strings, described below.
 \item Avoid adding things to |\noextras|\m{lang} except for umlauthigh
   and friends, |\bbl@deactivate|, |\bbl@(non)frenchspacing|, and
-  language specific macros. Use always, if possible, |\bbl@save| and
+  language-specific macros. Use always, if possible, |\bbl@save| and
   |\bbl@savevariable| (except if you still want to have access to the
   previous value). Do not reset a macro or a setting to a hardcoded
   value. Never. Instead save its value in |\extras|\m{lang}.
 \item Do not switch scripts. If you want to make sure a set of glyphs
-  is used, switch either the font encoding (low level) or the language
-  (high level, which in turn may switch the font encoding). Usage of things
+  is used, switch either the font encoding (low-level) or the language
+  (high-level, which in turn may switch the font encoding). Usage of things
   like |\latintext| is deprecated.\footnote{But not removed, for backward
   compatibility.}
 \item Please, for ``private'' internal macros do not use the |\bbl@|
@@ -3312,7 +3312,7 @@ but if you want to do it, here are a few guidelines.
 The following page provides a starting point:
 \texttt{http://www.texnia.com/incubator.html}.
 
-If your need further assistance and technical advice in the
+If you need further assistance and technical advice in the
 development of language styles, I am willing to help you.  And of
 course, you can make any suggestion you like.
 
@@ -3434,7 +3434,7 @@ first family in the given encoding seems to be needed.
 
 Here is the basic structure of an |ldf| file, with a language, a
 dialect and an attribute. Strings are best defined using the method
-explained in in sec. \ref{s:strings} (\babel{} 3.9 and later).
+explained in sec. \ref{s:strings} (\babel{} 3.9 and later).
 
 \begin{verbatim}
 \ProvidesLanguage{<language>}
@@ -3634,7 +3634,7 @@ declarations apply until the next |\StartBabelCommands| or
 kind.
 
 Thanks to this new feature, string values and string language
-switching are not mixed any more. No need of |\addto|. If the language
+switching are not mixed anymore. No need of |\addto|. If the language
 is |french|, just redefine |\frenchchaptername|.
 
 \Describe\StartBabelCommands
@@ -3656,7 +3656,7 @@ key |strings| has also other two special values: |generic| and
 |encoded|).
 
 If a string is set several times (because several blocks are read),
-the first one take precedence (ie, it works much like
+the first one takes precedence (ie, it works much like
 |\providecommand|).
 
 Encoding info is |charset=| followed by a charset, which if given sets
@@ -3789,7 +3789,7 @@ to define |\abmoniname|, |\abmoniiname|, etc. (and similarly with
 
 \Describe\SetCase{\oarg{map-list}\marg{toupper-code}\marg{tolower-code}}
 Sets globally code to be executed at |\MakeUppercase| and
-|\MakeLowercase|. The code would be typically things like |\let\BB\bb|
+|\MakeLowercase|. The code would typically be things like |\let\BB\bb|
 and |\uccode| or |\lccode| (although for the reasons explained above,
 changes in lc/uc codes may not work). A \meta{map-list} is a series of
 macros using the internal format of |\@uclclist| (eg,
@@ -3861,7 +3861,7 @@ assignment is wrong, fix it directly.
 
 \subsection{Changes in \babel\ version 3.9}
 
-Most of changes in version 3.9 were related to bugs, either to fix them
+Most of the changes in version 3.9 were related to bugs, either to fix them
 (there were lots), or to provide some alternatives. Even new features
 like |\babelhyphen| are intended to solve a certain problem (in this
 case, the lacking of a uniform syntax and behavior for shorthands
@@ -4536,7 +4536,7 @@ help from Bernd Raichle, for which I am grateful.
 % language used.
 %
 % \changes{babel~3.30}{2019/04/22}{Callbacks aren't specific to
-%   bidi any more, so they are moved.}
+%   bidi anymore, so they are moved.}
 % \changes{babel~3.32}{2019/05/30}{Consider Harf.}
 %
 %    \begin{macrocode}
@@ -4983,7 +4983,7 @@ help from Bernd Raichle, for which I am grateful.
 %    defined explicitly. So, package options not yet taken into
 %    account and stored in |bbl@language@opts| are assumed to be
 %    languages (note this list also contains the language given with
-%    |main|). If not declared above, the name of the option and the
+%    |main|). If not declared above, the names of the option and the
 %    file are the same.
 %
 %    \begin{macrocode}
@@ -5084,7 +5084,7 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.9a}{2012/06/24}{Now babel is not loaded to prevent
 %    the document from raising errors after fixing it}
 % \changes{babel~3.21}{2018/05/09}{Requesting a language is no required
-%    any more, in case you only need \cs{babelprovide}.}
+%    anymore, in case you only need \cs{babelprovide}.}
 %
 %    \begin{macrocode}
 \ifx\bbl@main@language\@undefined
@@ -5102,7 +5102,7 @@ help from Bernd Raichle, for which I am grateful.
 % The kernel of the \babel\ system is stored in either
 % \file{hyphen.cfg} or \file{switch.def} and \file{babel.def}.  The
 % file \file{babel.def} contains most of the code, while
-% \file{switch.def} defines the language switching commands; both can
+% \file{switch.def} defines the language-switching commands; both can
 % be read at run time. The file \file{hyphen.cfg} is a file that can
 % be loaded into the format, which is necessary when you want to be
 % able to switch hyphenation patterns (by default, it also inputs
@@ -5390,7 +5390,7 @@ help from Bernd Raichle, for which I am grateful.
 % sure things are expanded the correct number of times.
 %
 % The macro |\bbl@e@|\m{language} contains
-% |\bbl@ensure|\marg{include}\marg{exclude}\marg{fontenc}, which in in
+% |\bbl@ensure|\marg{include}\marg{exclude}\marg{fontenc}, which in
 % turn loops over the macros names in |\bbl@captionslist|, excluding
 % (with the help of |\in@|) those in the |exclude| list. If the
 % |fontenc| is given (and not |\relax|), the |\fontencoding| is also
@@ -6753,7 +6753,7 @@ help from Bernd Raichle, for which I am grateful.
 %  we begin to save new values.  This works well because we release
 %  the saved meanings before we begin to save a new set of control
 %  sequence meanings (see |\selectlanguage| and |\originalTeX|). Note
-%  undefined macros are not undefined any more when saved -- they are
+%  undefined macros are not undefined anymore when saved -- they are
 %  |\relax|'ed.
 %
 %  \begin{macro}{\babel@savecnt}
@@ -6950,11 +6950,11 @@ help from Bernd Raichle, for which I am grateful.
 %    The following two commands are used to wrap the ``hyphen'' and
 %    set the behavior of the rest of the word -- the version with a
 %    single |@| is used when further hyphenation is allowed, while
-%    that with |@@| if no more hyphen are allowed. In both cases, if
+%    that with |@@| if no more hyphens are allowed. In both cases, if
 %    the hyphen is preceded by a positive space, breaking after the
 %    hyphen is disallowed.
 %
-%    There should not be a discretionaty after a hyphen at the
+%    There should not be a discretionary after a hyphen at the
 %    beginning of a word, so it is prevented if preceded by a
 %    skip. Unfortunately, this does handle cases like ``(-suffix)''.
 %    |\nobreak| is always preceded by |\leavevmode|, in case the
@@ -7047,7 +7047,7 @@ help from Bernd Raichle, for which I am grateful.
 % The second one. We need to patch |\@uclclist|, but it is done once
 % and only if |\SetCase| is used or if strings are encoded.  The code
 % is far from satisfactory for several reasons, including the fact
-% |\@uclclist| is not a list any more. Therefore a package option is
+% |\@uclclist| is not a list anymore. Therefore a package option is
 % added to ignore it. Instead of gobbling the macro
 % getting the next two elements (usually |\reserved@a|), we pass it as
 % argument to |\bbl@uclc|. The parser is restarted inside
@@ -7697,7 +7697,7 @@ help from Bernd Raichle, for which I am grateful.
 %    marks, which make them usable both outside and inside mathmode.
 %    They are defined with |\ProvideTextCommandDefault|, but this is
 %    very likely not required because their definitions are based on
-%    encoding dependent macros.
+%    encoding-dependent macros.
 %
 % \changes{babel~3.16}{2018/01/02}{Adapted to TU and refactored -
 %  redundant code.}
@@ -8875,8 +8875,8 @@ help from Bernd Raichle, for which I am grateful.
 %    that definition (it would result in parameter stack overflow
 %    because of a circular definition).
 %
-%   (Recent versions of natbib change dynamically |\@citex|, so PR4087
-%    doesn't seem fixable in a simple way. Just load natbib before.)
+%   (Recent versions of \pkg{natbib} change dynamically |\@citex|, so PR4087
+%    doesn't seem fixable in a simple way. Just load \pkg{natbib} before.)
 %
 %    \begin{macrocode}
     \def\@citex[#1][#2]#3{%
@@ -9185,11 +9185,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    The package \pkg{varioref} defines |\Ref| to be a robust command
 %    wich uppercases the first character of the reference text. In
-%    order to be able to do that it needs to access the exandable form
+%    order to be able to do that it needs to access the expandable form
 %    of |\ref|. So we employ a little trick here. We redefine the
 %    (internal) command \verb*|\Ref | to call |\org@ref| instead of
-%    |\ref|. The disadvantgage of this solution is that whenever the
-%    derfinition of |\Ref| changes, this definition needs to be updated
+%    |\ref|. The disadvantage of this solution is that whenever the
+%    definition of |\Ref| changes, this definition needs to be updated
 %    as well.
 %
 %    \begin{macrocode}
@@ -9464,7 +9464,7 @@ help from Bernd Raichle, for which I am grateful.
 % Youssef Jabri), which is compatible with \babel{}.
 %
 % There are two ways of modifying macros to make them “bidi”, namely,
-% by patching the internal low level macros (which is what I have done
+% by patching the internal low-level macros (which is what I have done
 % with lists, columns, counters, tocs, much like |rlbabel| did), and
 % by introducing a “middle layer” just below the user interface
 % (sectioning, footnotes).
@@ -9481,7 +9481,7 @@ help from Bernd Raichle, for which I am grateful.
 %      and so on, but bidi text does not work out of the box and some
 %      development is necessary. It also provides tools to properly
 %      set left-to-right and right-to-left page layouts. As Lua\TeX-ja
-%      shows, vertical typesetting is posible, too. Its main drawback
+%      shows, vertical typesetting is possible, too. Its main drawback
 %      is font handling is often considered to be less mature than
 %      \xetex{}, mainly in Indic scripts (but there are steps to make
 %      HarfBuzz, the \xetex{} font engine, available in \luatex{}; see
@@ -10014,7 +10014,7 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.16}{2018/01/02}{New mechanism to pass the language
 % to aux, toc, etc.}
 % \changes{babel~3.22}{2018/06/05}{Unknown languages in aux files do
-%   not raise an error any more (only a warning).}
+%   not raise an error anymore (only a warning).}
 %
 %    \begin{macrocode}
 \def\BabelContentsFiles{toc,lof,lot}
@@ -10847,7 +10847,7 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.9f}{2013/05/16}{Restored code to set default
 %    hyphenmins, which was deleted mistakenly}
 %
-%    \cs{bbl@languages} saves a snapshot of the loaded languagues in the
+%    \cs{bbl@languages} saves a snapshot of the loaded languages in the
 %    form  \cs{bbl@elt}\marg{language-name}\marg{number}%
 %    \marg{patterns-file}\marg{exceptions-file}. Note the last 2
 %    arguments are empty in `dialects' defined in |language.dat| with
@@ -10912,7 +10912,7 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %    Now, hooks are defined. For efficiency reasons, they are dealt
-%    here in a special way. Besides \luatex, format specific
+%    here in a special way. Besides \luatex, format-specific
 %    configuration files are taken into account.
 %
 % \changes{babel~3.9b}{2013/03/25}{Fixed an idiot slip: \cs{def}
@@ -11039,13 +11039,13 @@ help from Bernd Raichle, for which I am grateful.
 %    register.
 %
 % \changes{babel~3.9a}{2012/09/25}{The list of languages is not
-%    printed every job any more (it is saved in \cs{bbl@languages}).}
+%    printed every job anymore (it is saved in \cs{bbl@languages}).}
 % \changes{babel~3.9g}{2013/07/28}{In non-LaTeX formats the number of
 %    languages were not printed. Moved from \cs{dump} and cleaned up:
 %    now \cs{toks}8 is expanded here.}
 % \changes{babel~3.9o}{2016/01/25}{The number of languages loaded was
 %    off by 1.}
-% \changes{babel~3.21}{2018/05/09}{The message is not printed any more.}
+% \changes{babel~3.21}{2018/05/09}{The message is not printed anymore.}
 %
 %    \begin{macrocode}
 \if/\the\toks@/\else
@@ -11585,7 +11585,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %      Implicitly reverses sectioning labels in |bidi=basic|, because
-%      the full stop is not in contact with L numbers any more. I
+%      the full stop is not in contact with L numbers anymore. I
 %      think there must be a better way.
 %
 %    \begin{macrocode}
@@ -11623,7 +11623,7 @@ help from Bernd Raichle, for which I am grateful.
 % latter. If there are new synonymous, the are added, but note if the
 % language patterns have not been preloaded they won't at run time.
 %
-% Other preloaded languages could be read twice, if they has been
+% Other preloaded languages could be read twice, if they have been
 % preloaded into the format. This is not optimal, but it shouldn't
 % happen very often -- with \luatex{} patterns are best loaded when
 % the document is typeset, and the ``0th'' language is preloaded just
@@ -12343,7 +12343,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %      Implicitly reverses sectioning labels in bidi=basic-r, because
-%      the full stop is not in contact with L numbers any more. I
+%      the full stop is not in contact with L numbers anymore. I
 %      think there must be a better way. Assumes |bidi=basic|, but
 %      there are some additional readjustments for |bidi=default|.
 %
