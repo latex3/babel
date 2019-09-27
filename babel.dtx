@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/07/28 v3.33.1716 The Babel package]
+\ProvidesFile{babel.dtx}[2019/09/27 v3.34 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -282,7 +282,7 @@ addition, you may want to set the font and input encodings.
 \documentclass{article}
 
 \usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+% \usepackage[utf8]{inputenc} % Uncomment if LaTeX < 2018-04-01
 
 _\usepackage[french]{babel}_
 
@@ -349,8 +349,8 @@ Package babel Warning: No hyphenation patterns were preloaded for
 
 \subsection{Multilingual documents}
 
-In multilingual documents, just use list the required languages as
-package options. The last one is considered the main language,
+In multilingual documents, just use a list of the required languages as
+package or class options. The last language is considered the main one,
 activated by default. Sometimes, the main language changes the document
 layout (eg, |spanish| and |french|).
 
@@ -869,7 +869,7 @@ system shorthands. Language-dependent user shorthands (new in
   words are repeated at the beginning of the next line. You could then
   set:
 \begin{verbatim}
-\defineshorthand[*polish,*portuguese]{"-}{\babelhyphen{repeat}}
+\defineshorthand[*polish,*portugese]{"-}{\babelhyphen{repeat}}
 \end{verbatim}
   Here, options with |*| set a language-dependent user shorthand,
   which means the generic one above only applies for the rest of
@@ -1998,7 +1998,8 @@ to select fonts in addition to the three basic families.
   |\set|\textit{xxxx}|font|, font switching with |\babelfont| just
   does \textit{not} work (nor the standard |\|\textit{xx}|default|,
   for that matter). As of \New{3.34} there is an attempt to make them
-  compatible, but the language system will not be set by \babel.
+  compatible, but the language system will not be set by \babel and
+  should be set with |fontspec| if necessary.
 \end{warning}
 
 \begin{troubleshooting}
@@ -2043,6 +2044,14 @@ There is a counterpart for code to be run when a language is
 unselected: |\noextras|\m{lang}.
 \end{itemize}
 
+\begin{note} Do \textit{not} redefine a caption in the following way:
+\begin{verbatim}
+\AtBeginDocument{\renewcommand\contentsname{Foo}}
+\end{verbatim}
+The changes may be discarded with a language selector, and the original
+value restored.
+\end{note}
+
 \begin{note}
   These macros (|\captions|\m{lang}, |\extras|\m{lang}) may be
   redefined, but \textit{must not} be used as such -- they just pass
@@ -2069,11 +2078,14 @@ existing language, too, as explained in the previous subsection).
 
 \Describe{\babelprovide}{\oarg{options}\marg{language-name}}
 
-Defines the internal structure of the language with some defaults: the
-hyphen rules, if not available, are set to the current ones, left and
-right hyphen mins are set to 2 and 3, but captions and date are not
-defined. Conveniently, \babel{} warns you about what to do. Very
-likely you will find alerts like that in the |log| file:
+If the language |\marg{language-name}| has not been defined and there
+are no options, it creates an “empty” one in the following way: defines
+the internal structure of the language with some defaults: the hyphen
+rules, if not available, are set to the current ones, left and right
+hyphen mins are set to 2 and 3, but captions and date are not defined.
+Conveniently, some options allow to fill the language, and \babel{}
+warns you about what to do if there is a missing string. Very likely
+you will find alerts like that in the |log| file:
 \begin{verbatim}
 Package babel Warning: \mylangchaptername not set. Please, define
 (babel)                it in the preamble with something like:
@@ -2857,6 +2869,13 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
 \item[afterreset] \New{3.9i} Executed when selecting a language just after
   |\originalTeX| is run and reset to its base value, before executing
   |\captions|\m{language} and |\date|\m{language}.
+% STILL UNDER STUDY:
+% \item[beforestart] \New{3.34} Executed either at the beginning of the
+%   |aux| file (when read at the start of the document), or else at begin
+%   document. In other words, it makes sure the code is executed always
+%   and executed once. But be aware it is a somewhat dangerous, because
+%   the scope in the first case is local, while in the second case is
+%   global, so be careful with assignments.
 \end{description}
 
 Four events are used in \file{hyphen.cfg}, which are handled in a
@@ -2964,7 +2983,8 @@ Then you preprocess it with |devnag| \m{file}, which creates
 script-specific features based on some properties. Currently, they are
 3, namely, direction (ie, bidi class), mirroring glyphs, and line
 breaking for CJK scripts. These properties are stored in \textsf{lua}
-tables, which you can modify with the following macro.
+tables, which you can modify with the following macro (for example,
+to set them for glyphs in the PUA).
 
 \Describe{\babelcharproperty}{\marg{char-code}\oarg{to-char-code}%
           \marg{propertry}\marg{value}}
@@ -3634,7 +3654,7 @@ declarations apply until the next |\StartBabelCommands| or
 kind.
 
 Thanks to this new feature, string values and string language
-switching are not mixed anymore. No need of |\addto|. If the language
+switching are not mixed any more. No need of |\addto|. If the language
 is |french|, just redefine |\frenchchaptername|.
 
 \Describe\StartBabelCommands
@@ -4051,8 +4071,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.33.1716>>
-%<<date=2019/07/28>>
+%<<version=3.34>>
+%<<date=2019/09/27>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4281,8 +4301,10 @@ help from Bernd Raichle, for which I am grateful.
 % |ho|, then |\relax| becomes |\rho|). No checking is done at all,
 % because it is not a general purpose macro, and it is used by \babel{}
 % only when it works (an example where it does \textit{not} work is in
-% |\bbl@TG@@date|). It may change! (I'm not sure ckecking the
-% replacement is really necessary or just paranoia).
+% |\bbl@TG@@date|, and also fails if there are macros with spaces,
+% because they retokenized). It may change! (or even merged with
+% |\bbl@replace|; I'm not sure ckecking the replacement is really
+% necessary or just paranoia).
 % 
 % \changes{babel~3.34}{2019/07/23}{Take into account prefixes like
 %   \cs{long} and macros with trailing spaces. Don't touch original if
@@ -4536,7 +4558,7 @@ help from Bernd Raichle, for which I am grateful.
 % language used.
 %
 % \changes{babel~3.30}{2019/04/22}{Callbacks aren't specific to
-%   bidi anymore, so they are moved.}
+%   bidi any more, so they are moved.}
 % \changes{babel~3.32}{2019/05/30}{Consider Harf.}
 %
 %    \begin{macrocode}
@@ -4707,6 +4729,9 @@ help from Bernd Raichle, for which I am grateful.
 \DeclareOption{silent}{}
 \DeclareOption{mono}{}
 \DeclareOption{shorthands=off}{\bbl@tempa shorthands=\bbl@tempa}
+% Don't use. Experimental:
+\newif\ifbbl@single
+\DeclareOption{selectors=off}{\bbl@singletrue}
 <@More package options@>
 %    \end{macrocode}
 %
@@ -5075,7 +5100,7 @@ help from Bernd Raichle, for which I am grateful.
     {Too late for \string\AfterBabelLanguage}%
     {Languages have been loaded, so I can do nothing}}
 %    \end{macrocode}
-%
+%      
 %    In order to catch the case where the user forgot to specify a
 %    language we check whether |\bbl@main@language|, has become
 %    defined. If not, no language has been loaded and an error
@@ -5084,7 +5109,7 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.9a}{2012/06/24}{Now babel is not loaded to prevent
 %    the document from raising errors after fixing it}
 % \changes{babel~3.21}{2018/05/09}{Requesting a language is no required
-%    anymore, in case you only need \cs{babelprovide}.}
+%    any more, in case you only need \cs{babelprovide}.}
 %
 %    \begin{macrocode}
 \ifx\bbl@main@language\@undefined
@@ -5181,6 +5206,7 @@ help from Bernd Raichle, for which I am grateful.
   \def\bbl@opt@safe{BR}
   \ifx\@uclclist\@undefined\let\@uclclist\@empty\fi
   \ifx\bbl@trace\@undefined\def\bbl@trace#1{}\fi
+  \expandafter\newif\csname ifbbl@single\endcsname
 \fi
 %    \end{macrocode}
 %
@@ -5377,7 +5403,8 @@ help from Bernd Raichle, for which I am grateful.
   everylanguage=1,loadkernel=1,loadpatterns=1,loadexceptions=1,%
   adddialect=2,patterns=2,defaultcommands=0,encodedcommands=2,write=0,%
   beforeextras=0,afterextras=0,stopcommands=0,stringprocess=0,%
-  hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0}
+  hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0,%
+  beforestart=0}
 %    \end{macrocode}
 %
 % \begin{macro}{\babelensure}
@@ -5390,7 +5417,7 @@ help from Bernd Raichle, for which I am grateful.
 % sure things are expanded the correct number of times.
 %
 % The macro |\bbl@e@|\m{language} contains
-% |\bbl@ensure|\marg{include}\marg{exclude}\marg{fontenc}, which in
+% |\bbl@ensure|\marg{include}\marg{exclude}\marg{fontenc}, which in in
 % turn loops over the macros names in |\bbl@captionslist|, excluding
 % (with the help of |\in@|) those in the |exclude| list. If the
 % |fontenc| is given (and not |\relax|), the |\fontencoding| is also
@@ -5621,12 +5648,28 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %    We also have to make sure that some code gets executed at the
-%    beginning of the document. Languages does not set |\pagedir|, so
+%    beginning of the document. Languages do not set |\pagedir|, so
 %    we set here for the whole document to the main |\bodydir|.
 %
+% \changes{babel~3.34}{2019/09/20}{New hook beforestart.}
+%
 %    \begin{macrocode}
+\def\bbl@beforestart{%
+  \bbl@usehooks{beforestart}{}%
+  \global\let\bbl@beforestart\relax}
 \AtBeginDocument{%
+  \bbl@beforestart
+  \if@filesw
+    \immediate\write\@mainaux{%
+    %  \let\string\bbl@nostdfont\string\@gobble 
+      \string\bbl@beforestart}%
+  \fi
   \expandafter\selectlanguage\expandafter{\bbl@main@language}%
+  \ifbbl@single  % must go after the line above
+    \renewcommand\selectlanguage[1]{}%
+    \renewcommand\foreignlanguage[2]{#2}%
+    \global\let\babel@aux\@gobbletwo  % Also as flag
+  \fi
   \ifcase\bbl@engine\or\pagedir\bodydir\fi}  % TODO - a better place
 %    \end{macrocode}
 %
@@ -5660,7 +5703,7 @@ help from Bernd Raichle, for which I am grateful.
 %    the original catcode. It does not hurt, but should be fixed. It's
 %    already done with |\nfss@catcodes|, added in 3.10.
 %
-% \changes{3.10}{2017/05/14}{Refactored. Add to \cs{nfss@catcodes} too.}
+% \changes{babel~3.10}{2017/05/14}{Refactored. Add to \cs{nfss@catcodes} too.}
 %
 %    \begin{macrocode}
 \bbl@trace{Shorhands}
@@ -5786,6 +5829,8 @@ help from Bernd Raichle, for which I am grateful.
 % too}
 % \changes{babel~3.9a}{2012/12/27}{Take into account mathematically
 %   active chars, to avoid infinite loops}
+% \changes{babel~3.34}{2019/09/23}{Math active in lua has a different
+%   value}
 %
 %   The very first thing to do is saving the original catcode and the
 %   original definition, even if not active, which is possible
@@ -5819,7 +5864,7 @@ help from Bernd Raichle, for which I am grateful.
     \expandafter\let\csname normal@char#2\endcsname#3%
   \else
     \bbl@info{Making #2 an active character}%
-    \ifnum\mathcode`#2="8000
+    \ifnum\mathcode`#2=\ifodd\bbl@engine"1000000 \else"8000 \fi
       \@namedef{normal@char#2}{%
         \textormath{#3}{\csname bbl@oridef@@#2\endcsname}}%
     \else
@@ -6753,7 +6798,7 @@ help from Bernd Raichle, for which I am grateful.
 %  we begin to save new values.  This works well because we release
 %  the saved meanings before we begin to save a new set of control
 %  sequence meanings (see |\selectlanguage| and |\originalTeX|). Note
-%  undefined macros are not undefined anymore when saved -- they are
+%  undefined macros are not undefined any more when saved -- they are
 %  |\relax|'ed.
 %
 %  \begin{macro}{\babel@savecnt}
@@ -7047,7 +7092,7 @@ help from Bernd Raichle, for which I am grateful.
 % The second one. We need to patch |\@uclclist|, but it is done once
 % and only if |\SetCase| is used or if strings are encoded.  The code
 % is far from satisfactory for several reasons, including the fact
-% |\@uclclist| is not a list anymore. Therefore a package option is
+% |\@uclclist| is not a list any more. Therefore a package option is
 % added to ignore it. Instead of gobbling the macro
 % getting the next two elements (usually |\reserved@a|), we pass it as
 % argument to |\bbl@uclc|. The parser is restarted inside
@@ -7971,11 +8016,11 @@ help from Bernd Raichle, for which I am grateful.
 % requested, an |ini| file. It may be used in conjunction to previouly
 % loaded |ldf| files.
 %
-% \changes{3.10}{2017/05/19}{Added \cs{babelprovide}}
-% \changes{3.13}{2017/08/30}{Added \cs{import}, which also reads
+% \changes{babel~3.10}{2017/05/19}{Added \cs{babelprovide}}
+% \changes{babel~3.13}{2017/08/30}{Added \cs{import}, which also reads
 % dates. Some refactoring in the ini reader.}
-% \changes{3.15}{2017/10/30}{New keys script, language}
-% \changes{3.16}{2018/01/02}{Make sure ensuring works even before
+% \changes{babel~3.15}{2017/10/30}{New keys script, language}
+% \changes{babel~3.16}{2018/01/02}{Make sure ensuring works even before
 %   the language is selected}
 % \changes{babel~3.19}{2018/04/23}{New option - mapfont. Currently
 %   only with direction}
@@ -7984,13 +8029,15 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.23}{2018/09/01}{Valueless import}
 % \changes{babel~3.26}{2018/10/16}{Quick fix for xetex - test the 
 %   script for intraspace}
-% \changes{3.30}{2019/04/22}{Read some basic parameters from ini
+% \changes{babel~3.30}{2019/04/22}{Read some basic parameters from ini
 %   even without import.}
-% \changes{3.30}{2019/04/22}{Native digits (lua level).}
-% \changes{3.30}{2019/04/22}{New attribute in luatex for `locale'. Also
+% \changes{babel~3.30}{2019/04/22}{Native digits (lua level).}
+% \changes{babel~3.30}{2019/04/22}{New attribute in luatex for `locale'. Also
 %   \cs{localeid}}
-% \changes{3.32}{2019/05/30}{Activate CJK line breaking  with an explicit
+% \changes{babel~3.32}{2019/05/30}{Activate CJK line breaking  with an explicit
 %   intraspace.}
+% \changes{babel~3.34}{2019/09/20}{Fix - with main the language must not
+%   be restored.}
 %
 %    \begin{macrocode}
 \bbl@trace{Creating languages and reading ini files}
@@ -8218,8 +8265,10 @@ help from Bernd Raichle, for which I am grateful.
        \catcode`\@=\atcatcode
        \let\atcatcode\relax
      \fi}%
-  \let\languagename\bbl@savelangname
-  \chardef\localeid\bbl@savelocaleid\relax}
+  \ifx\bbl@KVP@main\@nil  % Restore only if not 'main'
+    \let\languagename\bbl@savelangname
+    \chardef\localeid\bbl@savelocaleid\relax
+  \fi}
 %    \end{macrocode}
 %
 % A tool to define the macros for native digits from the list provided 
@@ -8261,7 +8310,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % Depending on whether or not the language exists, we define two macros.
 %
-% \changes{3.22}{2018/06/05}{Fix - Error with \cs{chapter} if empty in ini.}-
+% \changes{babel~3.22}{2018/06/05}{Fix - Error with \cs{chapter} if empty in ini.}-
 %
 %    \begin{macrocode}
 \def\bbl@provide@new#1{%
@@ -8319,7 +8368,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % The |hyphenrules| option is handled with an auxiliary macro.
 %
-% \changes{3.14}{2017/10/03}{Take into account ini settings for
+% \changes{babel~3.14}{2017/10/03}{Take into account ini settings for
 % hyphenrules if `import'.}
 %
 %    \begin{macrocode}
@@ -8381,12 +8430,12 @@ help from Bernd Raichle, for which I am grateful.
     \def\bbl@inipreread##1=##2\@@{%
       \bbl@trim@def\bbl@tempa{##1}% Redundant below !!
       % Move trims here ??
-      \bbl@ifunset{bbl@KVP@\bbl@section.\bbl@tempa}%
+      \bbl@ifunset{bbl@KVP@\bbl@section/\bbl@tempa}%
         {\expandafter\bbl@inireader\bbl@tempa=##2\@@}%
         {\def\bbl@tempc{\expandafter\bbl@inireader\bbl@tempa=}%
          \expandafter\expandafter\expandafter
-         \bbl@tempc\csname bbl@KVP@\bbl@section.\bbl@tempa\endcsname\@@}%
-         \global\bbl@csarg\let{KVP@\bbl@section.\bbl@tempa}\relax}%
+         \bbl@tempc\csname bbl@KVP@\bbl@section/\bbl@tempa\endcsname\@@}%
+         \global\bbl@csarg\let{KVP@\bbl@section/\bbl@tempa}\relax}%
     \let\bbl@inireader\bbl@iniskip
     \bbl@info{Importing data from babel-#1.ini for \languagename}%
     \loop
@@ -8522,8 +8571,8 @@ help from Bernd Raichle, for which I am grateful.
 %
 % TODO. Remove copypaste pattern.
 %
-% \changes{3.16}{2018/01/02}{Fix - dates were severely broken.}
-% \changes{3.28}{2019/04/01}{Start work on calendars.}
+% \changes{babel~3.16}{2018/01/02}{Fix - dates were severely broken.}
+% \changes{babel~3.28}{2019/04/01}{Start work on calendars.}
 %
 %    \begin{macrocode}
 \bbl@csarg\def{inikv@date.gregorian}#1=#2\@@{%       for defaults
@@ -8635,10 +8684,12 @@ help from Bernd Raichle, for which I am grateful.
 % when the language is first selected) to know which script/language
 % must be enabled. This means we must make sure a few characters are
 % not active. The |ini| is not read directly, but with a proxy |tex|
-% file named as the language.
+% file named as the language (which means any code in it must be
+% skipped, too.
 %
-% \changes{3.16}{2018/01/02}{Load ids inside a box, to prevent extra
+% \changes{babel~3.16}{2018/01/02}{Load ids inside a box, to prevent extra
 % spaces.}
+% \changes{babel~3.34}{2019/08/05}{Added \cs{endinput}.}
 %
 %    \begin{macrocode}
 \def\bbl@ini@ids#1{%
@@ -8646,7 +8697,8 @@ help from Bernd Raichle, for which I am grateful.
     \begingroup
       \bbl@add\bbl@secpost@identification{\closein1 }%
       \catcode`\[=12 \catcode`\]=12 \catcode`\==12 %
-      \bbl@read@ini{##1}%
+      \bbl@read@ini{##1}%   
+      \endinput
     \endgroup}%           boxed, to avoid extra spaces:
   {\setbox\z@\hbox{\InputIfFileExists{babel-#1.tex}{}{}}}}
 %    \end{macrocode}
@@ -9026,13 +9078,14 @@ help from Bernd Raichle, for which I am grateful.
        \edef\thepage{%
          \noexpand\babelsublr{\unexpanded\expandafter{\thepage}}}}%
    \fi}
-  {\bbl@redefine\markright#1{%
-     \bbl@ifblank{#1}%
-       {\org@markright{}}%
-       {\toks@{#1}%
-        \bbl@exp{%
-          \\\org@markright{\\\protect\\\foreignlanguage{\languagename}%
-            {\\\protect\\\bbl@restore@actives\the\toks@}}}}}%
+  {\ifbbl@single\else
+     \bbl@redefine\markright#1{%
+       \bbl@ifblank{#1}%
+         {\org@markright{}}%
+         {\toks@{#1}%
+          \bbl@exp{%
+            \\\org@markright{\\\protect\\\foreignlanguage{\languagename}%
+              {\\\protect\\\bbl@restore@actives\the\toks@}}}}}%
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -9048,33 +9101,34 @@ help from Bernd Raichle, for which I am grateful.
 %    with the new definition of |\markboth|.
 %
 %    \begin{macrocode}
-   \ifx\@mkboth\markboth
-     \def\bbl@tempc{\let\@mkboth\markboth}
-   \else
-     \def\bbl@tempc{}
-   \fi
+     \ifx\@mkboth\markboth
+       \def\bbl@tempc{\let\@mkboth\markboth}
+     \else
+       \def\bbl@tempc{}
+     \fi
 %    \end{macrocode}
 %
 %    Now we can start the new definition of |\markboth|
 %
 %    \begin{macrocode}
-   \bbl@redefine\markboth#1#2{%
-     \protected@edef\bbl@tempb##1{%
-       \protect\foreignlanguage
-       {\languagename}{\protect\bbl@restore@actives##1}}%
-     \bbl@ifblank{#1}%
-       {\toks@{}}%
-       {\toks@\expandafter{\bbl@tempb{#1}}}%
-     \bbl@ifblank{#2}%
-       {\@temptokena{}}%
-       {\@temptokena\expandafter{\bbl@tempb{#2}}}%
-     \bbl@exp{\\\org@markboth{\the\toks@}{\the\@temptokena}}}
+     \bbl@redefine\markboth#1#2{%
+       \protected@edef\bbl@tempb##1{%
+         \protect\foreignlanguage
+         {\languagename}{\protect\bbl@restore@actives##1}}%
+       \bbl@ifblank{#1}%
+         {\toks@{}}%
+         {\toks@\expandafter{\bbl@tempb{#1}}}%
+       \bbl@ifblank{#2}%
+         {\@temptokena{}}%
+         {\@temptokena\expandafter{\bbl@tempb{#2}}}%
+       \bbl@exp{\\\org@markboth{\the\toks@}{\the\@temptokena}}}
 %    \end{macrocode}
 %
 %    and copy it to |\@mkboth| if necessary.
 %
 %    \begin{macrocode}
-   \bbl@tempc}  % end \IfBabelLayout
+       \bbl@tempc
+     \fi}  % end ifbbl@single, end \IfBabelLayout
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -9488,10 +9542,10 @@ help from Bernd Raichle, for which I am grateful.
 %      <https://github.com/tatzetwerk/luatex-harfbuzz>).
 %    \end{itemize}
 %
-% \changes{3.15}{2017/10/30}{Use an attribute instead of tex language
+% \changes{babel~3.15}{2017/10/30}{Use an attribute instead of tex language
 %    (reserved for hyphenation).}
-% \changes{3.15}{2017/10/30}{Store direction in @wdir@<lang>.}
-% \changes{3.28}{2019/04/01}{Dir in boxes within math and other
+% \changes{babel~3.15}{2017/10/30}{Store direction in @wdir@<lang>.}
+% \changes{babel~3.28}{2019/04/01}{Dir in boxes within math and other
 %    contexts (passim).}
 %
 %    \begin{macrocode}
@@ -9627,7 +9681,7 @@ help from Bernd Raichle, for which I am grateful.
 % properly handle the par direction. Note text and par dirs are
 % decoupled to some extent (although not completely).
 %
-% \changes{3.16}{2018/01/02}{Fix - the direction prevented the removal
+% \changes{babel~3.16}{2018/01/02}{Fix - the direction prevented the removal
 %   of the indent to be re-placed}
 %
 %    \begin{macrocode}
@@ -9662,7 +9716,7 @@ help from Bernd Raichle, for which I am grateful.
 % A tool for weak L (mainly digits). We also disable warnings with
 % \textsf{hyperref}.
 %
-% \changes{3.16}{2018/01/02}{New macro \cs{babelsublr}}
+% \changes{babel~3.16}{2018/01/02}{New macro \cs{babelsublr}}
 %
 %    \begin{macrocode}
 \DeclareRobustCommand\babelsublr[1]{\leavevmode{\bbl@textdir\z@#1}}
@@ -10014,7 +10068,7 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.16}{2018/01/02}{New mechanism to pass the language
 % to aux, toc, etc.}
 % \changes{babel~3.22}{2018/06/05}{Unknown languages in aux files do
-%   not raise an error anymore (only a warning).}
+%   not raise an error any more (only a warning).}
 %
 %    \begin{macrocode}
 \def\BabelContentsFiles{toc,lof,lot}
@@ -10026,7 +10080,9 @@ help from Bernd Raichle, for which I am grateful.
   % write to auxs
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
     \if@filesw
-      \protected@write\@auxout{}{\string\babel@aux{\languagename}{}}%
+      \ifx\babel@aux\@gobbletwo\else % Set if single in the first, redundant
+        \protected@write\@auxout{}{\string\babel@aux{\languagename}{}}%
+      \fi
       \bbl@usehooks{write}{}%
     \fi
   \fi}
@@ -10121,7 +10177,7 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.9h}{2013/11/29}{Use \cs{def} instead of
 %    \cs{renewcommand} for \cs{BabelLower}}
 % \changes{babel~3.9i}{2014/03/04}{Added `afterreset' hook}
-% \changes{3.15}{2017/10/30}{Remove spaces inside captions and date.}
+% \changes{babel~3.15}{2017/10/30}{Remove spaces inside captions and date.}
 %
 %    \begin{macrocode}
 \newif\ifbbl@usedategroup
@@ -10418,8 +10474,8 @@ help from Bernd Raichle, for which I am grateful.
 %    |\lccode|'s and font encodings are not set at all, so in most
 %    cases you should use |otherlanguage*|.
 %
-% \changes{3.15}{2017/10/30}{Don't set language name. Use temp macro.}
-% \changes{3.15}{2018/02/14}{Fix - didn't work with polyglossia}
+% \changes{babel~3.15}{2017/10/30}{Don't set language name. Use temp macro.}
+% \changes{babel~3.15}{2018/02/14}{Fix - didn't work with polyglossia}
 %
 %    \begin{macrocode}
 \def\hyphenrules#1{%
@@ -11039,13 +11095,13 @@ help from Bernd Raichle, for which I am grateful.
 %    register.
 %
 % \changes{babel~3.9a}{2012/09/25}{The list of languages is not
-%    printed every job anymore (it is saved in \cs{bbl@languages}).}
+%    printed every job any more (it is saved in \cs{bbl@languages}).}
 % \changes{babel~3.9g}{2013/07/28}{In non-LaTeX formats the number of
 %    languages were not printed. Moved from \cs{dump} and cleaned up:
 %    now \cs{toks}8 is expanded here.}
 % \changes{babel~3.9o}{2016/01/25}{The number of languages loaded was
 %    off by 1.}
-% \changes{babel~3.21}{2018/05/09}{The message is not printed anymore.}
+% \changes{babel~3.21}{2018/05/09}{The message is not printed any more.}
 %
 %    \begin{macrocode}
 \if/\the\toks@/\else
@@ -11082,7 +11138,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \section{Font handling with fontspec}
 %
-% \changes{3.15}{2017/10/30}{New way to select fonts, with \cs{babelfont}}
+% \changes{babel~3.15}{2017/10/30}{New way to select fonts, with \cs{babelfont}}
 %
 % Add the bidi handler just before luaoftload, which is loaded by default
 % by LaTeX. Just in case, consider the possibility it has not been
@@ -11155,6 +11211,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 % With explicit languages, we could define the font at once, but we
 % don't. Just wait and see if the language is actually activated.
+% |bbl@font| replaces hardcoded font names inside |\..family| by the
+% corresponding macro |\..default|.
+%
+% \changes{babel~3.34}{2019/08/29}{Better checks for fonts, and improved
+%   compatibility with fontspec.}
 %
 %    \begin{macrocode}
 %<<*Font selection>>
@@ -11162,13 +11223,13 @@ help from Bernd Raichle, for which I am grateful.
 \@onlypreamble\babelfont
 \newcommand\babelfont[2][]{%  1=langs/scripts 2=fam
   \edef\bbl@tempa{#1}%
-  \def\bbl@tempb{#2}%
+  \def\bbl@tempb{#2}%  Used by \bbl@bblfont
   \ifx\fontspec\@undefined
     \usepackage{fontspec}%
   \fi
   \EnableBabelHook{babel-fontspec}% Just calls \bbl@switchfont
   \bbl@bblfont}
-\newcommand\bbl@bblfont[2][]{% 1=features 2=fontname
+\newcommand\bbl@bblfont[2][]{% 1=features 2=fontname, @font=rm|sf|tt
   \bbl@ifunset{\bbl@tempb family}%
     {\bbl@providefam{\bbl@tempb}}%
     {\bbl@exp{%
@@ -11201,10 +11262,22 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % The following macro is activated when the hook |babel-fontspec| is
-% enabled.
+% enabled. But before we define a macro for a warning, which sets a
+% flag to avoid duplicate them.
 %
 %    \begin{macrocode}
-\def\bbl@switchfont{%
+\def\bbl@nostdfont#1{%
+  \bbl@ifunset{bbl@WFF@\f@family}%
+    {\bbl@csarg\gdef{WFF@\f@family}{}%  Flag, to avoid dupl warns
+     \bbl@warning{The current font is not a babel standard family:\\%
+       #1%
+       \fontname\font\\%
+       There is nothing intrinsically wrong with it, but\\%
+       'babel' will no set Script and Language. Consider\\%
+       defining a new family with \string\babelfont.\\%
+       Reported}}
+   {}}%
+\gdef\bbl@switchfont{%
   \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
   \bbl@exp{%  eg Arabic -> arabic
     \lowercase{\edef\\\bbl@tempa{\bbl@cs{sname@\languagename}}}}%
@@ -11220,13 +11293,7 @@ help from Bernd Raichle, for which I am grateful.
             \global\let\<bbl@##1dflt@\languagename>%
                        \<bbl@##1dflt@*\bbl@tempa>}}}%
       {}}%                               1=T - language, already defined
-  \def\bbl@tempa{%
-    \bbl@warning{The current font is not a babel standard family:\\%
-      \fontname\font\\%
-      There is nothing intrinsically wrong with it, but\\%
-      script and Language will not be applied. Consider\\%
-      defining a new family with \string\babelfont.\\%
-      Reported}}%
+  \def\bbl@tempa{\bbl@nostdfont{}}%
   \bbl@foreach\bbl@font@fams{%     don't gather with prev for
     \bbl@ifunset{bbl@##1dflt@\languagename}%
       {\bbl@cs{famrst@##1}%
@@ -11240,6 +11307,40 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@ifrestoring{}{\bbl@tempa}}%
 %    \end{macrocode}
 %
+% The following is executed at the beginning of the aux file or the
+% document to warn about fonts not defined with |\babelfont|.
+%
+%    \begin{macrocode}
+\ifx\f@family\@undefined\else   % if latex
+  \ifcase\bbl@engine            % if pdftex
+    \let\bbl@ckeckstdfonts\relax
+  \else
+    \def\bbl@ckeckstdfonts{%
+      \begingroup
+        \global\let\bbl@ckeckstdfonts\relax
+        \let\bbl@tempa\@empty
+        \bbl@foreach\bbl@font@fams{%
+          \bbl@ifunset{bbl@##1dflt@}%
+            {\@nameuse{##1family}%
+             \bbl@csarg\gdef{WFF@\f@family}{}% Flag
+             \bbl@exp{\\\bbl@add\\\bbl@tempa{* \<##1family> / \f@family\\\\%
+                \space\space\fontname\font\\\\}}%
+             \bbl@csarg\xdef{##1dflt@}{\f@family}%
+             \expandafter\xdef\csname ##1default\endcsname{\f@family}}%
+            {}}%
+        \ifx\bbl@tempa\@empty\else
+          \bbl@warning{The following fonts are not babel standard families:\\%
+            \bbl@tempa
+            There is nothing intrinsically wrong with it, but\\%
+            'babel' will no set Script and Language. Consider\\%
+            defining a new family with \string\babelfont.\\%
+            Reported}%
+        \fi
+      \endgroup}
+  \fi
+\fi
+%    \end{macrocode}
+%
 % Now the macros defining the font with \textsf{fontspec}.
 %
 % When there are repeated keys in \textsf{fontspec}, the last value
@@ -11248,7 +11349,7 @@ help from Bernd Raichle, for which I am grateful.
 % |\bbl@mapselect| because |\selectfont| is called internally when a
 % font is defined.
 %
-% \changes{3.28}{2019/04/01}{\cs{babelfont} now based on
+% \changes{babel~3.28}{2019/04/01}{\cs{babelfont} now based on
 %   \cs{newfontfamily}.}
 %
 %    \begin{macrocode}
@@ -11486,6 +11587,7 @@ help from Bernd Raichle, for which I am grateful.
 <@Restore Unicode catcodes before loading patterns@>}
 \ifx\DisableBabelHook\@undefined\endinput\fi
 \AddBabelHook{babel-fontspec}{afterextras}{\bbl@switchfont}
+\AddBabelHook{babel-fontspec}{beforestart}{\bbl@ckeckstdfonts}
 \DisableBabelHook{babel-fontspec}
 <@Font selection@>
 \input txtbabel.def
@@ -11511,7 +11613,7 @@ help from Bernd Raichle, for which I am grateful.
 % Consider |txtbabel| as a shorthand for \textit{tex--xet babel},
 % which is the bidi model in both \pdftex{} and \xetex{}.
 %
-% \changes{3.32}{2019/05/04}{\cs{@tabular}, \cs{list}, etc., are
+% \changes{babel~3.32}{2019/05/04}{\cs{@tabular}, \cs{list}, etc., are
 %   patched, instead of redefined.}
 %
 %    \begin{macrocode}
@@ -11585,7 +11687,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %      Implicitly reverses sectioning labels in |bidi=basic|, because
-%      the full stop is not in contact with L numbers anymore. I
+%      the full stop is not in contact with L numbers any more. I
 %      think there must be a better way.
 %
 %    \begin{macrocode}
@@ -12144,7 +12246,7 @@ help from Bernd Raichle, for which I am grateful.
 % (fullwidth \textit{vs.} halfwidth), not yet used. There is a separate
 % file, defined below.
 %
-% \changes{3.31}{2019/05/04}{Simple CJK line breaking.}
+% \changes{babel~3.31}{2019/05/04}{Simple CJK line breaking.}
 % 
 % \textit{Work in progress.} 
 %
@@ -12155,6 +12257,7 @@ help from Bernd Raichle, for which I am grateful.
 <@Restore Unicode catcodes before loading patterns@>}
 \ifx\DisableBabelHook\@undefined\endinput\fi
 \AddBabelHook{babel-fontspec}{afterextras}{\bbl@switchfont}
+\AddBabelHook{babel-fontspec}{beforestart}{\bbl@ckeckstdfonts}
 \DisableBabelHook{babel-fontspec}
 <@Font selection@>
 %    \end{macrocode}
@@ -12186,7 +12289,7 @@ help from Bernd Raichle, for which I am grateful.
 \AtBeginDocument{\bbl@luafixboxdir}
 %    \end{macrocode}
 %
-% \changes{3.32}{2019/05/23}{New - \cs{babelcharproperty}.}
+% \changes{babel~3.32}{2019/05/23}{New - \cs{babelcharproperty}.}
 %
 % The code for |\babelcharproperty| is straightforward. Just note the
 % modified lua table can be different.
@@ -12258,12 +12361,12 @@ help from Bernd Raichle, for which I am grateful.
 % \textsf{hhline}, \textsf{colortbl}, \textsf{longtable},
 % \textsf{booktabs}, etc. However, \textsf{dcolumn} still fails.
 %
-% \changes{3.18}{2018/02/14}{\cs{bbl@nextfake}, similar to the old
+% \changes{babel~3.18}{2018/02/14}{\cs{bbl@nextfake}, similar to the old
 %   \cs{nextfakemath} in Omega}
-% \changes{3.19}{2018/04/23}{Patch \cs{@eqnnum}, somewhat ad hoc. To be
+% \changes{babel~3.19}{2018/04/23}{Patch \cs{@eqnnum}, somewhat ad hoc. To be
 %   improved.}
-% \changes{3.21}{2018/05/09}{The ad hoc \cs{@eqnnum} was buggy. Fixed.}
-% \changes{3.31}{2019/05/04}{\cs{@tabular} and \cs{list} are patched,
+% \changes{babel~3.21}{2018/05/09}{The ad hoc \cs{@eqnnum} was buggy. Fixed.}
+% \changes{babel~3.31}{2019/05/04}{\cs{@tabular} and \cs{list} are patched,
 %   instead of redefined.}
 %
 %    \begin{macrocode}
@@ -12304,7 +12407,8 @@ help from Bernd Raichle, for which I am grateful.
     \noindent\box\@tempboxa}
 \fi
 \IfBabelLayout{tabular}
-  {\bbl@replace\@tabular{$}{\bbl@nextfake$}%
+  {\let\bbl@OL@@tabular\@tabular
+   \bbl@replace\@tabular{$}{\bbl@nextfake$}%
    \let\bbl@tabular\@tabular
    \AtBeginDocument{%
      \ifx\bbl@tabular\@tabular\else
@@ -12312,7 +12416,8 @@ help from Bernd Raichle, for which I am grateful.
      \fi}}
    {}
 \IfBabelLayout{lists}
-  {\bbl@sreplace\list{\parshape}{\bbl@listparshape}%
+  {\let\bbl@OL@list\list
+   \bbl@sreplace\list{\parshape}{\bbl@listparshape}%
    \def\bbl@listparshape#1#2#3{%
      \parshape #1 #2 #3 %
      \ifnum\bbl@getluadir{page}=\bbl@getluadir{par}\else
@@ -12328,6 +12433,8 @@ help from Bernd Raichle, for which I am grateful.
        \textdir TLT\relax
        \def\bbl@pictresetdir{\textdir TRT\relax}%
      \fi}%
+   \let\bbl@OL@@picture\@picture
+   \let\bbl@OL@put\put
    \bbl@sreplace\@picture{\hskip-}{\bbl@pictsetdir\hskip-}%
    \def\put(#1,#2)#3{%  Not easy to patch. Better redefine.
      \@killglue
@@ -12335,6 +12442,7 @@ help from Bernd Raichle, for which I am grateful.
      \hb@xt@\z@{\kern#1\unitlength{\bbl@pictresetdir#3}\hss}}%
    \AtBeginDocument
      {\ifx\tikz@atbegin@node\@undefined\else
+        \let\bbl@OL@pgfpicture\pgfpicture
         \bbl@sreplace\pgfpicture{\pgfpicturetrue}{\bbl@pictsetdir\pgfpicturetrue}%
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
@@ -12343,25 +12451,32 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %      Implicitly reverses sectioning labels in bidi=basic-r, because
-%      the full stop is not in contact with L numbers anymore. I
+%      the full stop is not in contact with L numbers any more. I
 %      think there must be a better way. Assumes |bidi=basic|, but
 %      there are some additional readjustments for |bidi=default|.
 %
 %    \begin{macrocode}
 \IfBabelLayout{counters}%
-  {\bbl@sreplace\@textsuperscript{\m@th}{\m@th\mathdir\pagedir}%
+  {\let\bbl@OL@@textsuperscript\@textsuperscript
+   \bbl@sreplace\@textsuperscript{\m@th}{\m@th\mathdir\pagedir}%
    \let\bbl@latinarabic=\@arabic
+   \let\bbl@OL@@arabic\@arabic
    \def\@arabic#1{\babelsublr{\bbl@latinarabic#1}}%
    \@ifpackagewith{babel}{bidi=default}%
      {\let\bbl@asciiroman=\@roman
+      \let\bbl@OL@@roman\@roman
       \def\@roman#1{\babelsublr{\ensureascii{\bbl@asciiroman#1}}}%
       \let\bbl@asciiRoman=\@Roman
+      \let\bbl@OL@@roman\@Roman
       \def\@Roman#1{\babelsublr{\ensureascii{\bbl@asciiRoman#1}}}%
+      \let\bbl@OL@labelenumii\labelenumii
       \def\labelenumii{)\theenumii(}%
+      \let\bbl@OL@p@enumiii\p@enumiii
       \def\p@enumiii{\p@enumii)\theenumii(}}{}}{}
 <@Footnote changes@>
 \IfBabelLayout{footnotes}%
-  {\BabelFootnote\footnote\languagename{}{}%
+  {\let\bbl@OL@footnote\footnote
+   \BabelFootnote\footnote\languagename{}{}%
    \BabelFootnote\localfootnote\languagename{}{}%
    \BabelFootnote\mainfootnote{}{}{}}
   {}
@@ -12371,11 +12486,13 @@ help from Bernd Raichle, for which I am grateful.
 % formatting. They have very little in common and are grouped here, as
 % a single option.
 %
-% \changes{3.19}{2018/04/23}{New option extras for layout}
+% \changes{babel~3.19}{2018/04/23}{New option extras for layout}
 %
 %    \begin{macrocode}
 \IfBabelLayout{extras}%
-  {\bbl@sreplace\underline{$\@@underline}{\bbl@nextfake$\@@underline}%
+  {\let\bbl@OL@underline\underline
+   \bbl@sreplace\underline{$\@@underline}{\bbl@nextfake$\@@underline}%
+   \let\bbl@OL@LaTeX2e\LaTeX2e
    \DeclareRobustCommand{\LaTeXe}{\mbox{\m@th
      \if b\expandafter\@car\f@series\@nil\boldmath\fi
      \babelsublr{%
@@ -12386,7 +12503,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Auto bidi with \texttt{basic} and \texttt{basic-r}}
 %
-% \changes{3.14}{2017/09/30}{LuaTeX - support for R/AL texts - basic-r}
+% \changes{babel~3.14}{2017/09/30}{LuaTeX - support for R/AL texts - basic-r}
 %
 % The file \textsf{babel-data-bidi.lua} currently only contains data. It is
 % a large and boring file and it's not shown here. See the generated

@@ -1,4 +1,4 @@
-## Babel 3.33.1716
+## Babel 3.34
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,14 +51,18 @@ respective authors.
 ### Latest changes
 
 ```
-3.34   ---
-       - Improved compatibility for \babelfont vs \setmainfont
+3.34   2019-09-27
+       - Improved compatibility for \babelfont vs \setmainfont.
+       - Fix - active ' entered in an infinite loop with lua.
+       - Fix - main in \babelprovide was not set until begin document.
+       
 3.33   2019-07-19
        - \prehyphenchar set to 0 in languages requiring it: kannada,
          marathi, tamil, etc. (lua).
        - \AddBabelHook can be set for specific languages.
        - Fix - !\grq in T1 behaved like the ligature !`.
        - Minimal preliminary support for the experimental harftex.
+       
 3.32   2019-06-03
        - CJK line breaking is now disabled in verbatim (lua).
        - New - \babelcharproperty, to change the direction, mirroring
@@ -120,30 +124,6 @@ respective authors.
          the Japanese script).
        - Set the \thepage bidi bahavior in foots/heads.
        - Fix - Undefined \bbl@stripslash in Plain.
-
-3.22   2018-06-05
-       - Fix - Error with \chapter if empty in ini
-       - Prelimimary support for Sanskrit
-       - Unknown languages in aux files do not raise an error
-         any more (only show a warning).
-
-3.21   2018-05-10
-       - Fix - equation numbers raised an error.
-       - Two minor changes: if no language is requested load nil 
-         instead of raising an error, and the message 'babel <x.x>...'
-         is not printed to the log any more.
-
-3.20   2018-05-02
-       - ini files with the field digits.native define
-         \<language>digits and \<language>counters. \arabic can be
-         redefined to use native digits.
-       - Fix - mapfont in bidi=basic didn't take into account combining
-         marks (eg, Arabic vowels).
-       - Fix - A bug introduced in 3.19, which sometimes reversed text 
-         in \hbox'es.
-       - Fix for luatex 1.07 - An internal change in luatex broke
-         bidi at 'automatic' hyphens.
-       - Fix for latest latex - babel.ins raised an error.
 
 ```
 
