@@ -1,4 +1,4 @@
-## Babel 3.34
+## Babel 3.34.1782
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,18 +51,22 @@ respective authors.
 ### Latest changes
 
 ```
+3.35   2019-10-??
+       - Shorthands work in bibs and refs even with safe=none.
+       - Fix - Another issue related to \ensureascii and LGR (#30)
+
 3.34   2019-09-27
        - Improved compatibility for \babelfont vs \setmainfont.
-       - Fix - active ' entered in an infinite loop with lua.
+       - Fix - active ' entered in an infinite loop with lua (#27).
        - Fix - main in \babelprovide was not set until begin document.
-       
+
 3.33   2019-07-19
        - \prehyphenchar set to 0 in languages requiring it: kannada,
          marathi, tamil, etc. (lua).
        - \AddBabelHook can be set for specific languages.
-       - Fix - !\grq in T1 behaved like the ligature !`.
+       - Fix - !\grq in T1 behaved like the ligature !` (#19).
        - Minimal preliminary support for the experimental harftex.
-       
+
 3.32   2019-06-03
        - CJK line breaking is now disabled in verbatim (lua).
        - New - \babelcharproperty, to change the direction, mirroring

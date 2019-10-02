@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/09/27 v3.34 The Babel package]
+\ProvidesFile{babel.dtx}[2019/10/02 v3.34.1782 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1023,11 +1023,13 @@ using them; see above.
 shorthands is safe. With \texttt{safe=bib} only |\nocite|, |\bibcite|
 and |\bibitem| are redefined. With |safe=ref| only |\newlabel|, |\ref|
 and |\pageref| are redefined (as well as a few macros from
-\textsf{varioref} and \textsf{ifthen}). With |safe=none| no macro is
-redefined. This option is strongly recommended, because a good deal of
-incompatibilities and errors are related to these redefinitions -- of
-course, in such a case you cannot use shorthands in these macros, but
-this is not a real problem (just use ``allowed'' characters).
+\textsf{varioref} and \textsf{ifthen}).
+
+With |safe=none| no macro is redefined. This option is strongly
+recommended, because a good deal of incompatibilities and errors are
+related to these redefinitions. As of \New{3.34}, in $\epsilon$\TeX{}
+based engines (ie, almost every engine except the oldest ones)
+shorthands can be used in these macros (formerly you could not).
 
 \Describe{math=}{\texttt{active} $\string|$ \texttt{normal}}
 Shorthands are mainly intended for text, not for math. By setting this
@@ -4071,8 +4073,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.34>>
-%<<date=2019/09/27>>
+%<<version=3.34.1782>>
+%<<date=2019/10/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4211,24 +4213,26 @@ help from Bernd Raichle, for which I am grateful.
 %   waste memory.
 %
 %    \begin{macrocode}
-\def\bbl@ifunset#1{%
-  \expandafter\ifx\csname#1\endcsname\relax
-    \expandafter\@firstoftwo
-  \else
-    \expandafter\@secondoftwo
-  \fi}
-\bbl@ifunset{ifcsname}%
-  {}%
-  {\def\bbl@ifunset#1{%
-     \ifcsname#1\endcsname
-       \expandafter\ifx\csname#1\endcsname\relax
-         \bbl@afterelse\expandafter\@firstoftwo
+\begingroup
+  \gdef\bbl@ifunset#1{%
+    \expandafter\ifx\csname#1\endcsname\relax
+      \expandafter\@firstoftwo
+    \else
+      \expandafter\@secondoftwo
+    \fi}
+  \bbl@ifunset{ifcsname}%
+    {}%
+    {\gdef\bbl@ifunset#1{%
+       \ifcsname#1\endcsname
+         \expandafter\ifx\csname#1\endcsname\relax
+           \bbl@afterelse\expandafter\@firstoftwo
+         \else
+           \bbl@afterfi\expandafter\@secondoftwo
+         \fi
        \else
-         \bbl@afterfi\expandafter\@secondoftwo
-       \fi
-     \else
-       \expandafter\@firstoftwo
-     \fi}}
+         \expandafter\@firstoftwo
+       \fi}}
+\endgroup
 %    \end{macrocode}
 % \end{macro}
 %
@@ -6079,28 +6083,41 @@ help from Bernd Raichle, for which I am grateful.
 %    The command |\active@prefix| which is used in the expansion of
 %    active characters has a function similar to |\OT1-cmd| in that it
 %    |\protect|s the active character whenever |\protect| is
-%    \emph{not} |\@typeset@protect|.
-%
-%    \begin{macrocode}
-\def\active@prefix#1{%
-  \ifx\protect\@typeset@protect
-  \else
-%    \end{macrocode}
-%
-%    When |\protect| is set to |\@unexpandable@protect| we make sure
-%    that the active character is als \emph{not} expanded by inserting
-%    |\noexpand| in front of it. The |\@gobble| is needed to remove
+%    \emph{not} |\@typeset@protect|. The |\@gobble| is needed to remove
 %    a token such as |\activechar:| (when the double colon was the
-%    active character to be dealt with).
+%    active character to be dealt with). There are two definitions,
+%    depending of |\ifincsname| is available. If there is, the
+%    expansion will be more robust.
 %
 %    \begin{macrocode}
-    \ifx\protect\@unexpandable@protect
-      \noexpand#1%
-    \else
-      \protect#1%
-    \fi
-    \expandafter\@gobble
-  \fi}
+\begingroup
+\bbl@ifunset{ifincsname}%
+  {\gdef\active@prefix#1{%
+     \ifx\protect\@typeset@protect
+     \else
+       \ifx\protect\@unexpandable@protect
+         \noexpand#1%
+       \else
+         \protect#1%
+       \fi
+       \expandafter\@gobble
+     \fi}}
+  {\gdef\active@prefix#1{%
+     \ifincsname
+       \string#1%
+       \expandafter\@gobble
+     \else
+       \ifx\protect\@typeset@protect
+       \else
+         \ifx\protect\@unexpandable@protect
+           \noexpand#1%
+         \else
+           \protect#1%
+         \fi
+         \expandafter\expandafter\expandafter\@gobble
+       \fi
+     \fi}}
+\endgroup
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -9386,10 +9403,11 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.9j}{2014/03/17}{Moved misplaced code - it should be
 %    executed only with LaTeX}
 % \changes{babel~3.23}{2018/08/28}{Added TS1, T3, TS3}
+% \changes{babel~3.35}{2019/10/01}{Added PU, PD1}
 %
 %    \begin{macrocode}
 \bbl@trace{Encoding and fonts}
-\newcommand\BabelNonASCII{LGR,X2,OT2,OT3,OT6,LHE,LWN,LMA,LMC,LMS,LMU}
+\newcommand\BabelNonASCII{LGR,X2,OT2,OT3,OT6,LHE,LWN,LMA,LMC,LMS,LMU,PU,PD1}
 \newcommand\BabelNonText{TS1,T3,TS3}
 \let\org@TeX\TeX
 \let\org@LaTeX\LaTeX
