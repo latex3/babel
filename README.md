@@ -1,4 +1,4 @@
-## Babel 3.34.1785
+## Babel 3.34.1786
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -55,6 +55,7 @@ respective authors.
        - Shorthands work in bibs and refs even with safe=none.
        - Fix - Another issue related to \ensureascii and LGR (#30)
        - (Testing) a way to re(set) values in ini files.
+       - (Temporary) hack for issue #25.
 
 3.34   2019-09-27
        - Improved compatibility for \babelfont vs \setmainfont.

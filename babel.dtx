@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/10/05 v3.34.1785 The Babel package]
+\ProvidesFile{babel.dtx}[2019/10/06 v3.34.1786 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4073,8 +4073,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.34.1785>>
-%<<date=2019/10/05>>
+%<<version=3.34.1786>>
+%<<date=2019/10/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12543,19 +12543,24 @@ help from Bernd Raichle, for which I am grateful.
 
 Babel = Babel or {}
 
+-- TODO: merge ranges into characters, as meta index
+
 Babel.ranges={
  {0x0590, 0x05FF, 'r'},
  {0x0600, 0x07BF, 'al'},
  {0x07C0, 0x085F, 'r'},
  {0x0860, 0x086F, 'al'},
  {0x08A0, 0x08FF, 'al'},
+ {0xE000, 0xF8FF, 'on'}, -- PUA
  {0xFB1D, 0xFB4F, 'r'},
  {0xFB50, 0xFDFF, 'al'},
  {0xFE70, 0xFEFF, 'al'},
  {0x10800, 0x10C4F, 'r'},
  {0x1E800, 0x1E8DF, 'r'},
  {0x1E900, 0x1E95F, 'r'},
- {0x1F300, 0x1F9FF, 'on'}
+ {0x1F300, 0x1F9FF, 'on'},
+ {0xF0000, 0xFFFFD, 'on'}, -- PUA
+ {0x100000, 0x10FFFD, 'on'} -- PUA
 }
 
 Babel.characters={
@@ -18882,7 +18887,7 @@ function Babel.bidi(head, ispar)
       if mir == 'rrr' or mir == 'lrr' or mir == 'rrl' or mir == 'rlr' then
         for ch in node.traverse(node.next(last_lr)) do
           if ch == item then break end
-          if ch.id == node.id'glyph' then
+          if ch.id == node.id'glyph' and characters[ch.char] then
             ch.char = characters[ch.char].m or ch.char
           end
         end
@@ -18911,7 +18916,9 @@ function Babel.bidi(head, ispar)
 %    \begin{macrocode}
   if last_lr and outer == 'r' then
     for ch in node.traverse_id(node.id'glyph', node.next(last_lr)) do
-      ch.char = characters[ch.char].m or ch.char
+      if characters[ch.char] then
+        ch.char = characters[ch.char].m or ch.char
+      end
     end
   end
   if first_n then
@@ -19243,7 +19250,8 @@ function Babel.bidi(head, ispar, hdir)
       for r = first_on, q - 1 do
         nodes[r][2] = temp
         item = nodes[r][1]    -- MIRRORING
-        if Babel.mirroring_enabled and item.id == GLYPH and temp == 'r' then
+        if Babel.mirroring_enabled and item.id == GLYPH
+             and temp == 'r' and characters[item.char] then
           item.char = characters[item.char].m or item.char
         end
       end
