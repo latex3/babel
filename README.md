@@ -1,4 +1,4 @@
-## Babel 3.34.1786
+## Babel 3.34.1791
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -52,6 +52,7 @@ respective authors.
 
 ```
 3.35   2019-10-??
+       - \markboth and \markright made robust with a recent LaTeX.
        - Shorthands work in bibs and refs even with safe=none.
        - Fix - Another issue related to \ensureascii and LGR (#30)
        - (Testing) a way to re(set) values in ini files.

@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/10/06 v3.34.1786 The Babel package]
+\ProvidesFile{babel.dtx}[2019/10/11 v3.34.1791 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4073,8 +4073,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.34.1786>>
-%<<date=2019/10/06>>
+%<<version=3.34.1791>>
+%<<date=2019/10/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9106,7 +9106,8 @@ help from Bernd Raichle, for which I am grateful.
          \noexpand\babelsublr{\unexpanded\expandafter{\thepage}}}}%
    \fi}
   {\ifbbl@single\else
-     \bbl@redefine\markright#1{%
+     \bbl@ifunset{markright }\bbl@redefine\bbl@redefinerobust
+     \markright#1{%
        \bbl@ifblank{#1}%
          {\org@markright{}}%
          {\toks@{#1}%
@@ -9138,7 +9139,8 @@ help from Bernd Raichle, for which I am grateful.
 %    Now we can start the new definition of |\markboth|
 %
 %    \begin{macrocode}
-     \bbl@redefine\markboth#1#2{%
+     \bbl@ifunset{markboth }\bbl@redefine\bbl@redefinerobust
+     \markboth#1#2{%
        \protected@edef\bbl@tempb##1{%
          \protect\foreignlanguage
          {\languagename}{\protect\bbl@restore@actives##1}}%
@@ -11300,9 +11302,12 @@ help from Bernd Raichle, for which I am grateful.
      \bbl@warning{The current font is not a babel standard family:\\%
        #1%
        \fontname\font\\%
-       There is nothing intrinsically wrong with it, but\\%
-       'babel' will no set Script and Language. Consider\\%
-       defining a new family with \string\babelfont.\\%
+       There is nothing intrinsically wrong with this warning, and\\%
+       you can ignore it altogether if you do not need these\\%
+       families. But if they are used in the document, you should be\\%
+       aware 'babel' will no set Script and Language for them, so\\%
+       you may consider defining a new family with \string\babelfont.\\%
+       See the manual for further details about \string\babelfont.\\%
        Reported}}
    {}}%
 \gdef\bbl@switchfont{%
