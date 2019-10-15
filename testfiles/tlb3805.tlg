@@ -52,9 +52,7 @@ Package: hyperref
 ! OK.
 l. ......} shows this working (\pageref{sec:foo}).}
 > \box...=
-\hbox(7.5+2.5)x275.80602
-.\penalty 10000
-.\glue 3.33333 plus 1.66666 minus 1.11111
+\hbox(7.5+2.5)x272.47269
 .\pdfstartlink(*+*)x* attr{/Border[0 0 1]/H/I/C[1 0 0]} action goto name{section.1}
 .\OT1/cmr/m/n/10 S
 .\OT1/cmr/m/n/10 e
@@ -67,9 +65,7 @@ l. ......} shows this working (\pageref{sec:foo}).}
 .\glue 3.33333 plus 1.66666 minus 1.11111
 .\OT1/cmr/m/n/10 1
 .\hbox(0.0+0.0)x0.0
-.\write1{\newlabel{1@xvr}{{}{\thepage }{Foo}{section.1}{}}}
-.\penalty 10000
-.\penalty 10000
+.\write1{\newlabel{1@xvr}{{}{\thepage }}}
 .\glue 3.33333 plus 1.66666 minus 1.11111
 .\OT1/cmr/m/n/10 o
 .\OT1/cmr/m/n/10 n
@@ -80,10 +76,9 @@ l. ......} shows this working (\pageref{sec:foo}).}
 .\OT1/cmr/m/n/10 e
 .\penalty 10000
 .\glue 3.33333 plus 1.66666 minus 1.11111
-.\pdfstartlink(*+*)x* attr{/Border[0 0 1]/H/I/C[1 0 0]} action goto name{section.1}
 .\OT1/cmr/m/n/10 1
-.\pdfendlink
-.\write1{\newlabel{1@vr}{{}{\thepage }{Foo}{section.1}{}}}
+.\hbox(0.0+0.0)x0.0
+.\write1{\newlabel{1@vr}{{}{\thepage }}}
 .\pdfendlink
 .\glue 3.33333 plus 1.66666 minus 1.11111
 .\OT1/cmr/m/n/10 s
@@ -103,6 +98,11 @@ l. ......} shows this working (\pageref{sec:foo}).}
 .\OT1/cmr/m/n/10 e
 .\OT1/cmr/m/n/10 a
 .\OT1/cmr/m/n/10 k
+.\OT1/cmr/m/n/10 i
+.\OT1/cmr/m/n/10 n
+.\OT1/cmr/m/n/10 g
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmr/m/n/10 (
 .etc.
 ! OK.
 l. ......o} shows this breaking (\vref*{sec:foo}).}
@@ -116,7 +116,7 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line ....
   test2e.tex
  article.cls    ....-..-.. v... Standard LaTeX document class
   size10.clo    ....-..-.. v... Standard LaTeX file (size option)
-   babel.sty    ....-..-.. 3.29.1617 The Babel package
+   babel.sty    ....-..-.. 3.35 The Babel package
 american.ldf    ....-..-.. v... English support from the babel system
  nameref.sty    ....-..-.. v... Cross-referencing by name of section
 refcount.sty    ....-..-.. v... Data extraction from label references (HO)

@@ -11,13 +11,13 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line ....
 > \box...=
-\hbox(32.29997+27.29997)x80.9445
-.\hbox(32.29997+27.29997)x77.61118
+\hbox(32.29997+27.29997)x80.94456
+.\hbox(32.29997+27.29997)x77.61124
 ..\mathon
-..\vbox(32.29997+27.29997)x77.61118
-...\hbox(2.79999+0.0)x77.61118
+..\vbox(32.29997+27.29997)x77.61124
+...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x21.22223, glue set 19.22223fil
+....\hbox(2.79999+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -52,7 +52,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -90,7 +90,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ......\rule(0.4+0.0)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x17.2778, glue set 17.2778fil
+....\hbox(2.79999+0.0)x17.27782, glue set 17.27782fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -109,7 +109,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -145,9 +145,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(8.39996+3.60004)x77.61118
+...\hbox(8.39996+3.60004)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x21.22223, glue set 1.11111fil
+....\hbox(8.39996+3.60004)x21.22224, glue set 1.11111fil
 .....\rule(8.39996+3.60004)x0.0
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -158,13 +158,15 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 a
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557
+....\hbox(8.39996+3.60004)x19.55559
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 b
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -176,9 +178,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x17.2778, glue set 0.41669fil
+....\hbox(8.39996+3.60004)x17.27782, glue set 0.41669fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 c
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -186,9 +189,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557
+....\hbox(8.39996+3.60004)x19.55559
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 d
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -201,9 +205,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(2.79999+0.0)x77.61118
+...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x21.22223, glue set 19.22223fil
+....\hbox(2.79999+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -232,7 +236,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -261,13 +265,13 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x17.2778, glue set 17.2778fil
+....\hbox(2.79999+0.0)x17.27782, glue set 17.27782fil
 .....\glue 0.0 plus 1.0fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\glue 0.0 plus 1.0fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -278,9 +282,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(8.39996+3.60004)x77.61118
+...\hbox(8.39996+3.60004)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x21.22223, glue set 1.11111fil
+....\hbox(8.39996+3.60004)x21.22224, glue set 1.11111fil
 .....\rule(8.39996+3.60004)x0.0
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -291,13 +295,15 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 1
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 0.27779fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 0.27779fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 2
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -309,9 +315,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x17.2778, glue set 0.1389fil
+....\hbox(8.39996+3.60004)x17.27782, glue set 0.1389fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 3
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -319,9 +326,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 0.27779fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 0.27779fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 4
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -334,9 +342,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(2.79999+0.0)x77.61118
+...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x21.22223, glue set 19.22223fil
+....\hbox(2.79999+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -365,7 +373,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -394,13 +402,13 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x17.2778, glue set 17.2778fil
+....\hbox(2.79999+0.0)x17.27782, glue set 17.27782fil
 .....\glue 0.0 plus 1.0fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -430,9 +438,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(8.39996+3.60004)x77.61118
+...\hbox(8.39996+3.60004)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x21.22223, glue set 2.22223fil
+....\hbox(8.39996+3.60004)x21.22224, glue set 2.22223fil
 .....\rule(8.39996+3.60004)x0.0
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -443,13 +451,15 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 i
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 1.25fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 1.25fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 j
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -461,9 +471,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x17.2778
+....\hbox(8.39996+3.60004)x17.27782
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 k
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -471,9 +482,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 1.3889fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 1.3889fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 l
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -486,9 +498,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(0.4+0.0)x77.61118
+...\hbox(0.4+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(0.4+0.0)x21.22223, glue set 19.22223fil
+....\hbox(0.4+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -499,7 +511,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\leaders 0.0 plus 1.0fil
 ......\rule(0.4+0.0)x*
 ....\glue(\tabskip) 0.0
-....\hbox(0.4+0.0)x19.55557, glue set 17.55557fil
+....\hbox(0.4+0.0)x19.55559, glue set 17.55559fil
 .....\leaders 0.0 plus 1.0fil
 ......\rule(0.4+0.0)x*
 .....\glue -0.2
@@ -510,11 +522,11 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(0.4+0.0)x17.2778, glue set 17.2778fil
+....\hbox(0.4+0.0)x17.27782, glue set 17.27782fil
 .....\leaders 0.0 plus 1.0fil
 ......\rule(0.4+0.0)x*
 ....\glue(\tabskip) 0.0
-....\hbox(0.4+0.0)x19.55557, glue set 17.55557fil
+....\hbox(0.4+0.0)x19.55559, glue set 17.55559fil
 .....\leaders 0.0 plus 1.0fil
 ......\rule(0.4+0.0)x*
 .....\glue -0.2
@@ -526,9 +538,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(8.39996+3.60004)x77.61118
+...\hbox(8.39996+3.60004)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x21.22223
+....\hbox(8.39996+3.60004)x21.22224
 .....\rule(8.39996+3.60004)x0.0
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -539,13 +551,15 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 w
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 0.13889fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 0.13889fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 x
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -557,9 +571,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x17.2778
+....\hbox(8.39996+3.60004)x17.27782
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 y
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -567,9 +582,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 0.55557fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 0.55557fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 z
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -582,9 +598,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(2.79999+0.0)x77.61118
+...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x21.22223, glue set 19.22223fil
+....\hbox(2.79999+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -619,7 +635,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -657,7 +673,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ......\rule(0.4+0.0)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x17.2778, glue set 17.2778fil
+....\hbox(2.79999+0.0)x17.27782, glue set 17.27782fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -676,7 +692,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -716,13 +732,13 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ! OK.
 l. ...\showbox0
 > \box...=
-\hbox(32.29997+27.29997)x80.9445
-.\hbox(32.29997+27.29997)x77.61118
+\hbox(32.29997+27.29997)x80.94456
+.\hbox(32.29997+27.29997)x77.61124
 ..\mathon
-..\vbox(32.29997+27.29997)x77.61118
-...\hbox(2.79999+0.0)x77.61118
+..\vbox(32.29997+27.29997)x77.61124
+...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x21.22223, glue set 19.22223fil
+....\hbox(2.79999+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -757,7 +773,7 @@ l. ...\showbox0
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -795,7 +811,7 @@ l. ...\showbox0
 ......\rule(0.4+0.0)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x17.2778, glue set 17.2778fil
+....\hbox(2.79999+0.0)x17.27782, glue set 17.27782fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -814,7 +830,7 @@ l. ...\showbox0
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -850,9 +866,9 @@ l. ...\showbox0
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(8.39996+3.60004)x77.61118
+...\hbox(8.39996+3.60004)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x21.22223, glue set 1.11111fil
+....\hbox(8.39996+3.60004)x21.22224, glue set 1.11111fil
 .....\rule(8.39996+3.60004)x0.0
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -863,13 +879,15 @@ l. ...\showbox0
 .....\glue -0.2
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 a
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557
+....\hbox(8.39996+3.60004)x19.55559
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 b
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -881,9 +899,10 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x17.2778, glue set 0.41669fil
+....\hbox(8.39996+3.60004)x17.27782, glue set 0.41669fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 c
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -891,9 +910,10 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557
+....\hbox(8.39996+3.60004)x19.55559
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 d
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -906,9 +926,9 @@ l. ...\showbox0
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(2.79999+0.0)x77.61118
+...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x21.22223, glue set 19.22223fil
+....\hbox(2.79999+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -937,7 +957,7 @@ l. ...\showbox0
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -966,13 +986,13 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x17.2778, glue set 17.2778fil
+....\hbox(2.79999+0.0)x17.27782, glue set 17.27782fil
 .....\glue 0.0 plus 1.0fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\glue 0.0 plus 1.0fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -983,9 +1003,9 @@ l. ...\showbox0
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(8.39996+3.60004)x77.61118
+...\hbox(8.39996+3.60004)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x21.22223, glue set 1.11111fil
+....\hbox(8.39996+3.60004)x21.22224, glue set 1.11111fil
 .....\rule(8.39996+3.60004)x0.0
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -996,13 +1016,15 @@ l. ...\showbox0
 .....\glue -0.2
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 1
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 0.27779fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 0.27779fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 2
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -1014,9 +1036,10 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x17.2778, glue set 0.1389fil
+....\hbox(8.39996+3.60004)x17.27782, glue set 0.1389fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 3
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -1024,9 +1047,10 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 0.27779fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 0.27779fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 4
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -1039,9 +1063,9 @@ l. ...\showbox0
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(2.79999+0.0)x77.61118
+...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x21.22223, glue set 19.22223fil
+....\hbox(2.79999+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -1070,7 +1094,7 @@ l. ...\showbox0
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -1099,13 +1123,13 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x17.2778, glue set 17.2778fil
+....\hbox(2.79999+0.0)x17.27782, glue set 17.27782fil
 .....\glue 0.0 plus 1.0fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -1135,9 +1159,9 @@ l. ...\showbox0
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(8.39996+3.60004)x77.61118
+...\hbox(8.39996+3.60004)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x21.22223, glue set 2.22223fil
+....\hbox(8.39996+3.60004)x21.22224, glue set 2.22223fil
 .....\rule(8.39996+3.60004)x0.0
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -1148,13 +1172,15 @@ l. ...\showbox0
 .....\glue -0.2
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 i
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 1.25fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 1.25fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 j
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -1166,9 +1192,10 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x17.2778
+....\hbox(8.39996+3.60004)x17.27782
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 k
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -1176,9 +1203,10 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 1.3889fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 1.3889fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 l
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -1191,9 +1219,9 @@ l. ...\showbox0
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(0.4+0.0)x77.61118
+...\hbox(0.4+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(0.4+0.0)x21.22223, glue set 19.22223fil
+....\hbox(0.4+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -1204,7 +1232,7 @@ l. ...\showbox0
 .....\leaders 0.0 plus 1.0fil
 ......\rule(0.4+0.0)x*
 ....\glue(\tabskip) 0.0
-....\hbox(0.4+0.0)x19.55557, glue set 17.55557fil
+....\hbox(0.4+0.0)x19.55559, glue set 17.55559fil
 .....\leaders 0.0 plus 1.0fil
 ......\rule(0.4+0.0)x*
 .....\glue -0.2
@@ -1215,11 +1243,11 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(0.4+0.0)x17.2778, glue set 17.2778fil
+....\hbox(0.4+0.0)x17.27782, glue set 17.27782fil
 .....\leaders 0.0 plus 1.0fil
 ......\rule(0.4+0.0)x*
 ....\glue(\tabskip) 0.0
-....\hbox(0.4+0.0)x19.55557, glue set 17.55557fil
+....\hbox(0.4+0.0)x19.55559, glue set 17.55559fil
 .....\leaders 0.0 plus 1.0fil
 ......\rule(0.4+0.0)x*
 .....\glue -0.2
@@ -1231,9 +1259,9 @@ l. ...\showbox0
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(8.39996+3.60004)x77.61118
+...\hbox(8.39996+3.60004)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x21.22223
+....\hbox(8.39996+3.60004)x21.22224
 .....\rule(8.39996+3.60004)x0.0
 .....\glue -0.2
 .....\rule(*+*)x0.4
@@ -1244,13 +1272,15 @@ l. ...\showbox0
 .....\glue -0.2
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 w
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 0.13889fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 0.13889fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 x
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -1262,9 +1292,10 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x17.2778
+....\hbox(8.39996+3.60004)x17.27782
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 y
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -1272,9 +1303,10 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(8.39996+3.60004)x19.55557, glue set 0.55557fil
+....\hbox(8.39996+3.60004)x19.55559, glue set 0.55557fil
 .....\glue 6.0
 .....\glue 0.0 plus 1.0fil
+.....\glue 0.00002
 .....\OT1/cmr/m/n/10 z
 .....\glue 0.0 plus 1.0fil
 .....\glue 6.0
@@ -1287,9 +1319,9 @@ l. ...\showbox0
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
 ...\glue(\lineskip) 0.0
-...\hbox(2.79999+0.0)x77.61118
+...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x21.22223, glue set 19.22223fil
+....\hbox(2.79999+0.0)x21.22224, glue set 19.22224fil
 .....\glue -0.2
 .....\rule(*+*)x0.4
 .....\glue -0.2
@@ -1324,7 +1356,7 @@ l. ...\showbox0
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -1362,7 +1394,7 @@ l. ...\showbox0
 ......\rule(0.4+0.0)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x17.2778, glue set 17.2778fil
+....\hbox(2.79999+0.0)x17.27782, glue set 17.27782fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0
@@ -1381,7 +1413,7 @@ l. ...\showbox0
 .......\glue 2.0
 .......\rule(0.4+0.0)x2.0
 ....\glue(\tabskip) 0.0
-....\hbox(2.79999+0.0)x19.55557, glue set 17.55557fil
+....\hbox(2.79999+0.0)x19.55559, glue set 17.55559fil
 .....\hbox(2.79999+0.0)x0.0, glue set - 2.0fil
 ......\vbox(2.79999+0.0)x2.0
 .......\rule(0.4+0.0)x2.0

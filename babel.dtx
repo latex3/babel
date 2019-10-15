@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/10/11 v3.34.1791 The Babel package]
+\ProvidesFile{babel.dtx}[2019/10/15 v3.35 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4073,8 +4073,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.34.1791>>
-%<<date=2019/10/11>>
+%<<version=3.35>>
+%<<date=2019/10/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4211,6 +4211,9 @@ help from Bernd Raichle, for which I am grateful.
 %   the same as |\@ifundefined|. However, in an $\epsilon$-tex engine,
 %   it is based on |\ifcsname|, which is more efficient, and do not
 %   waste memory.
+%
+% \changes{babel~3.35}{2019/09/22}{Inside a group, so that \cs{ifcsname}
+%   is still undefined.}
 %
 %    \begin{macrocode}
 \begingroup
@@ -6088,6 +6091,8 @@ help from Bernd Raichle, for which I am grateful.
 %    active character to be dealt with). There are two definitions,
 %    depending of |\ifincsname| is available. If there is, the
 %    expansion will be more robust.
+%
+% \changes{babel 3.35}{2019/09/18}{Added \cs{ifincsname} test.}
 %
 %    \begin{macrocode}
 \begingroup
@@ -8482,7 +8487,6 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@inisec[#1]#2\@@{%    if starts with opening bracket
   \def\bbl@elt##1##2{\bbl@inireader##1=##2\@@}%
   \@nameuse{bbl@renew@\bbl@section}%
-  % \bbl@csarg\show{renew@\bbl@section}%
   \global\bbl@csarg\let{renew@\bbl@section}\relax
   \@nameuse{bbl@secpost@\bbl@section}%  ends previous section
   \def\bbl@section{#1}%
@@ -9094,6 +9098,9 @@ help from Bernd Raichle, for which I am grateful.
 %    the mark are not disabled by the output routine kicking in while
 %    \cs{@safe@activestrue} is in effect.
 %
+% \changes{babel~3.35}{2019/10/11}{Now \cs{markboth} is protected.
+%    Consider this case.}
+%
 %    \begin{macrocode}
 \bbl@trace{Marks}
 \IfBabelLayout{sectioning}
@@ -9126,7 +9133,9 @@ help from Bernd Raichle, for which I am grateful.
 %    headings for the page. While doing so they also store a copy of
 %    |\markboth| in |\@mkboth|. Therefore we need to check whether
 %    |\@mkboth| has already been set. If so we neeed to do that again
-%    with the new definition of |\markboth|.
+%    with the new definition of |\markboth|. (As of Oct 2019, \LaTeX{}
+%    stores the definition in an intermediate macros, so it's not
+%    necessary anymore, but it's preserved for older versions.)
 %
 %    \begin{macrocode}
      \ifx\@mkboth\markboth
@@ -9134,11 +9143,6 @@ help from Bernd Raichle, for which I am grateful.
      \else
        \def\bbl@tempc{}
      \fi
-%    \end{macrocode}
-%
-%    Now we can start the new definition of |\markboth|
-%
-%    \begin{macrocode}
      \bbl@ifunset{markboth }\bbl@redefine\bbl@redefinerobust
      \markboth#1#2{%
        \protected@edef\bbl@tempb##1{%
@@ -9151,11 +9155,6 @@ help from Bernd Raichle, for which I am grateful.
          {\@temptokena{}}%
          {\@temptokena\expandafter{\bbl@tempb{#2}}}%
        \bbl@exp{\\\org@markboth{\the\toks@}{\the\@temptokena}}}
-%    \end{macrocode}
-%
-%    and copy it to |\@mkboth| if necessary.
-%
-%    \begin{macrocode}
        \bbl@tempc
      \fi}  % end ifbbl@single, end \IfBabelLayout
 %    \end{macrocode}
@@ -12537,6 +12536,8 @@ help from Bernd Raichle, for which I am grateful.
 % \subsection{Auto bidi with \texttt{basic} and \texttt{basic-r}}
 %
 % \changes{babel~3.14}{2017/09/30}{LuaTeX - support for R/AL texts - basic-r}
+% \changes{babel~3.35}{2019/10/11}{Hack for unboxed boxes - The PUAs
+%   are `on'.}
 %
 % The file \textsf{babel-data-bidi.lua} currently only contains data. It is
 % a large and boring file and it's not shown here. See the generated

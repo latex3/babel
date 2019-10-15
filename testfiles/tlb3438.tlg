@@ -8,7 +8,8 @@ Package: babel
 Package babel Warning: Unknown language `FRENCH'. Either you have
 (babel)                misspelled its name, it has not been installed,
 (babel)                or you requested it in a previous run. Fix its name,
-(babel)                install it or just rerun the file, respectively.
+(babel)                install it or just rerun the file, respectively. In
+(babel)                some cases, you may need to remove the aux file.
 (babel)                I'll proceed, but expect wrong results.
 (babel)                Reported on input line ....
 > \box...=
