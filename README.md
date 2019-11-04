@@ -1,4 +1,4 @@
-## Babel 3.35
+## Babel 3.35.1815
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,6 +51,15 @@ respective authors.
 ### Latest changes
 
 ```
+3.36   2019-??-??
+       - New \babeladjust, with options: bidi.text, bidi.mirroring,
+         bidi.mapdigits, layout.tabular, layout.lists, linebreak.sea,
+         linebreak.cjk. There are still
+         some limitations.
+       - New ini for Ancient Greek, thanks to Claudio Beccari.
+       - Fix - Language and script set for Chinese Tradicional and
+         Chinese Simplified.
+       
 3.35   2019-10-15
        - \markboth and \markright made robust with a recent LaTeX.
        - Shorthands work in bibs and refs even with safe=none.

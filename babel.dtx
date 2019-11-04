@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/10/15 v3.35 The Babel package]
+\ProvidesFile{babel.dtx}[2019/11/04 v3.35.1815 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1235,16 +1235,14 @@ for auxiliary tasks).
 \end{verbatim}
 \endgroup
   Khemer clusters are rendered wrongly.
-\item[East Asia scripts] Internal inconsistencies in script and
-  language names must be sorted out, so you may need to set them
-  explicitly in |\babelfont|, as well as |CJKShape|. \luatex{} does
-  basic line breaking, but currently \xetex{} does not (you may load
-  \textsf{zhspacing}). Although for a few words and shorts texts the
-  |ini| files should be fine, CJK texts are are best set with a
-  dedicated framework (\textsf{CJK}, \textsf{luatexja}, \textsf{kotex},
-  \textsf{CTeX}...), . Actually, this is what the |ldf| does in
-  |japanese| with \luatex, because the following piece of code loads 
-  \textsf{luatexja}:
+\item[East Asia scripts] Settings for either Simplified of Tradicional
+should work out of the box. \luatex{} does basic line breaking, but
+currently \xetex{} does not (you may load \textsf{zhspacing}). Although
+for a few words and shorts texts the |ini| files should be fine, CJK
+texts are best set with a dedicated framework (\textsf{CJK},
+\textsf{luatexja}, \textsf{kotex}, \textsf{CTeX}, etc.). Actually, this
+is what the |ldf| does in |japanese| with \luatex, because the
+following piece of code loads \textsf{luatexja}:
 \begin{verbatim}
 \documentclass{ltjbook}
 \usepackage[japanese]{babel}
@@ -2081,10 +2079,13 @@ existing language, too, as explained in the previous subsection).
 \Describe{\babelprovide}{\oarg{options}\marg{language-name}}
 
 If the language |\marg{language-name}| has not been defined and there
-are no options, it creates an “empty” one in the following way: defines
-the internal structure of the language with some defaults: the hyphen
-rules, if not available, are set to the current ones, left and right
-hyphen mins are set to 2 and 3, but captions and date are not defined.
+are no options, it creates lan “empty” one in the following way: define
+the internal structure of the language with some defaults: if there is
+an |ini| file, read some basic parameters (language, script,
+hyphenrules...), which you can modify; if not, the hyphen rules, if not
+available, are set to the current ones, left and right hyphen mins are
+set to 2 and 3. In either case, captions and date are not defined.
+
 Conveniently, some options allow to fill the language, and \babel{}
 warns you about what to do if there is a missing string. Very likely
 you will find alerts like that in the |log| file:
@@ -3005,6 +3006,20 @@ For example:
 
 This command is allowed only in vertical mode (the preamble or between
 paragraphs).
+
+\subsection{Tweaking some features}
+
+\Describe{\babeladjust}{\marg{key-value-list}}
+
+\New{3.36} Sometimes you might need to disable some \textsc{babel}
+features. Currently this macro understands the following keys (and only
+for \textsf{luatex}), with values |on| or |off|: |bidi.text|,
+|bidi.mirroring|, |bidi.mapdigits|, |layout.lists|, |layout.tabular|,
+|linebreak.sea|, |linebreak.cjk|. For example, you can set
+|\babeladjust{bidi.text=off}| if you are using an alternative algorithm
+or with large sections not requiring it. Use with care, because these
+options do not deactive other related options (like paragraph direction
+with |bidi.text|).
 
 \subsection{Tips, workarounds, known issues and notes}
 
@@ -4073,8 +4088,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.35>>
-%<<date=2019/10/15>>
+%<<version=3.35.1815>>
+%<<date=2019/11/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8121,19 +8136,20 @@ help from Bernd Raichle, for which I am grateful.
   % At this point all parameters are defined if 'import'. Now we
   % execute some code depending on them. But what about if nothing was
   % imported? We just load the very basic parameters: ids and a few
-  % more.
-  \bbl@ifunset{bbl@lname@#2}%
-    {\def\BabelBeforeIni##1##2{%
-       \begingroup
-         \catcode`\[=12 \catcode`\]=12 \catcode`\==12 %
-         \let\bbl@ini@captions@aux\@gobbletwo
-         \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
-         \bbl@read@ini{##1}%
-         \bbl@exportkey{chrng}{characters.ranges}{}%
-         \bbl@exportkey{dgnat}{numbers.digits.native}{}%
-       \endgroup}%           boxed, to avoid extra spaces:
-     {\setbox\z@\hbox{\InputIfFileExists{babel-#2.tex}{}{}}}}%
-    {}%
+  % more. 
+  % THIS ADDITION IN 3.30 IS WRONG!!
+%   \bbl@ifunset{bbl@lname@#2}%
+%     {\def\BabelBeforeIni##1##2{%
+%        \begingroup
+%          \catcode`\[=12 \catcode`\]=12 \catcode`\==12 %
+%          \let\bbl@ini@captions@aux\@gobbletwo
+%          \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
+%          \bbl@read@ini{##1}%
+%          \bbl@exportkey{chrng}{characters.ranges}{}%
+%          \bbl@exportkey{dgnat}{numbers.digits.native}{}%
+%        \endgroup}%           boxed, to avoid extra spaces:
+%      {\setbox\z@\hbox{\InputIfFileExists{babel-#2.tex}{}{}}}}%
+%     {}%
   % -
   % Override script and language names with script= and language=
   \ifx\bbl@KVP@script\@nil\else
@@ -8530,10 +8546,14 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \let\bbl@inikv@identification\bbl@inikv
 \def\bbl@secpost@identification{%
-  \bbl@exportkey{lname}{identification.name.english}{}%
+  \bbl@ifunset{bbl@@kv@identification.name.opentype}%
+    {\bbl@exportkey{lname}{identification.name.english}{}}%
+    {\bbl@exportkey{lname}{identification.name.opentype}{}}%
   \bbl@exportkey{lbcp}{identification.tag.bcp47}{}%
   \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
-  \bbl@exportkey{sname}{identification.script.name}{}%
+  \bbl@ifunset{bbl@@kv@identification.script.name.opentype}%
+    {\bbl@exportkey{sname}{identification.script.name}{}}%
+    {\bbl@exportkey{sname}{identification.script.name.opentype}{}}%
   \bbl@exportkey{sbcp}{identification.script.tag.bcp47}{}%
   \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}}
 \let\bbl@inikv@typography\bbl@inikv
@@ -8734,7 +8754,68 @@ help from Bernd Raichle, for which I am grateful.
   {\setbox\z@\hbox{\InputIfFileExists{babel-#1.tex}{}{}}}}
 %    \end{macrocode}
 %
-% \section{The kernel of Babel (\texttt{babel.def}, only \LaTeX)}
+% \section{Adjusting the Babel bahavior}
+%
+% A generic high level inteface is provided to adjust some global
+% and general settings.
+%
+%    \begin{macrocode}
+\newcommand\babeladjust[1]{%  TODO. Error handling.
+  \bbl@forkv{#1}{\@nameuse{bbl@ADJ@##1@##2}}}
+%
+\def\bbl@adjust@lua#1#2{%
+  \ifvmode
+    \ifnum\currentgrouplevel=\z@
+      \directlua{ Babel.#2 }%
+      \expandafter\expandafter\expandafter\@gobble
+    \fi
+  \fi      
+  {\bbl@error   % The error is gobbled if everything went ok.
+     {Currently, #1 related features can be adjusted only\\%
+      in the main vertical list.}%
+     {Maybe things change in the future, but this is what it is.}}}
+\@namedef{bbl@ADJ@bidi.mirroring@on}{%
+  \bbl@adjust@lua{bidi}{mirroring_enabled=true}}
+\@namedef{bbl@ADJ@bidi.mirroring@off}{%
+  \bbl@adjust@lua{bidi}{mirroring_enabled=false}}
+\@namedef{bbl@ADJ@bidi.text@on}{%
+  \bbl@adjust@lua{bidi}{bidi_enabled=true}}
+\@namedef{bbl@ADJ@bidi.text@off}{%
+  \bbl@adjust@lua{bidi}{bidi_enabled=false}}
+\@namedef{bbl@ADJ@bidi.mapdigits@on}{%
+  \bbl@adjust@lua{bidi}{digits_mapped=true}}
+\@namedef{bbl@ADJ@bidi.mapdigits@off}{%
+  \bbl@adjust@lua{bidi}{digits_mapped=false}}
+%
+\@namedef{bbl@ADJ@linebreak.sea@on}{%
+  \bbl@adjust@lua{linebreak}{sea_enabled=true}}
+\@namedef{bbl@ADJ@linebreak.sea@off}{%
+  \bbl@adjust@lua{linebreak}{sea_enabled=false}}
+\@namedef{bbl@ADJ@linebreak.cjk@on}{%
+  \bbl@adjust@lua{linebreak}{cjk_enabled=true}}
+\@namedef{bbl@ADJ@linebreak.cjk@off}{%
+  \bbl@adjust@lua{linebreak}{cjk_enabled=false}}
+%
+\def\bbl@adjust@layout#1{%
+  \ifvmode
+    #1%
+    \expandafter\@gobble
+  \fi
+  {\bbl@error   % The error is gobbled if everything went ok.
+     {Currently, layout related features can be adjusted only\\%
+      in vertical mode.}%
+     {Maybe things change in the future, but this is what it is.}}}
+\@namedef{bbl@ADJ@layout.tabular@on}{%
+  \bbl@adjust@layout{\let\@tabular\bbl@NL@@tabular}}
+\@namedef{bbl@ADJ@layout.tabular@off}{%
+  \bbl@adjust@layout{\let\@tabular\bbl@OL@@tabular}}
+\@namedef{bbl@ADJ@layout.lists@on}{%
+  \bbl@adjust@layout{\let\list\bbl@NL@list}}
+\@namedef{bbl@ADJ@layout.lists@on}{%
+  \bbl@adjust@layout{\let\list\bbl@OL@list}}
+%    \end{macrocode}
+%
+% \section{The kernel of Babel (\texttt{babel.def} for \LaTeX only)}
 %
 % \subsection{The redefinition of the style commands}
 %
@@ -11677,7 +11758,7 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 \IfBabelLayout{lists}
   {\bbl@sreplace\list
-    {\@totalleftmargin\leftmargin}{\@totalleftmargin\bbl@listleftmargin}%
+     {\@totalleftmargin\leftmargin}{\@totalleftmargin\bbl@listleftmargin}%
    \def\bbl@listleftmargin{%
      \ifcase\bbl@thepardir\leftmargin\else\rightmargin\fi}%
    \ifcase\bbl@engine
@@ -12441,15 +12522,17 @@ help from Bernd Raichle, for which I am grateful.
 \IfBabelLayout{tabular}
   {\let\bbl@OL@@tabular\@tabular
    \bbl@replace\@tabular{$}{\bbl@nextfake$}%
-   \let\bbl@tabular\@tabular
+   \let\bbl@NL@@tabular\@tabular
    \AtBeginDocument{%
-     \ifx\bbl@tabular\@tabular\else
+     \ifx\bbl@NL@@tabular\@tabular\else
        \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+       \let\bbl@NL@@tabular\@tabular
      \fi}}
    {}
 \IfBabelLayout{lists}
   {\let\bbl@OL@list\list
    \bbl@sreplace\list{\parshape}{\bbl@listparshape}%
+   \let\bbl@NL@list\list
    \def\bbl@listparshape#1#2#3{%
      \parshape #1 #2 #3 %
      \ifnum\bbl@getluadir{page}=\bbl@getluadir{par}\else
@@ -12540,16 +12623,26 @@ help from Bernd Raichle, for which I am grateful.
 %   are `on'.}
 %
 % The file \textsf{babel-data-bidi.lua} currently only contains data. It is
-% a large and boring file and it's not shown here. See the generated
-% file.
+% a large and boring file and it's not shown here (see the generated file),
+% but here is a sample:
+%\begin{verbatim}
+% [0x25]={d='et'},
+% [0x26]={d='on'},
+% [0x27]={d='on'},
+% [0x28]={d='on', m=0x29},
+% [0x29]={d='on', m=0x28},
+% [0x2A]={d='on'},
+% [0x2B]={d='es'},
+% [0x2C]={d='cs'},
+%\end{verbatim}
+% For the meaning of these codes, see the Unicode standard.
+%
 %\iffalse
 %    \begin{macrocode}
 %<*bididata>
 -- Data from Unicode and ConTeXt
 
 Babel = Babel or {}
-
--- TODO: merge ranges into characters, as meta index
 
 Babel.ranges={
  {0x0590, 0x05FF, 'r'},
@@ -12569,7 +12662,7 @@ Babel.ranges={
  {0x100000, 0x10FFFD, 'on'} -- PUA
 }
 
-Babel.characters={
+Babel.bidi_props={
  [0x0]={d='bn'},
  [0x1]={d='bn'},
  [0x2]={d='bn'},
@@ -18628,6 +18721,26 @@ Babel.characters={
  [0xE007E]={d='bn'},
  [0xE007F]={d='bn'}
 }
+
+Babel.characters = setmetatable ( Babel.bidi_props, {
+  __index = function(_, k)
+    if (k >= 0x0590   and k <= 0x05FF)   then return {d='r'}  end
+    if (k >= 0x0600   and k <= 0x07BF)   then return {d='al'} end
+    if (k >= 0x07C0   and k <= 0x085F)   then return {d='r'}  end
+    if (k >= 0x0860   and k <= 0x086F)   then return {d='al'} end
+    if (k >= 0x08A0   and k <= 0x08FF)   then return {d='al'} end
+    if (k >= 0xE000   and k <= 0xF8FF)   then return {d='on'} end -- PUA
+    if (k >= 0xFB1D   and k <= 0xFB4F)   then return {d='r'}  end
+    if (k >= 0xFB50   and k <= 0xFDFF)   then return {d='al'} end
+    if (k >= 0xFE70   and k <= 0xFEFF)   then return {d='al'} end
+    if (k >= 0x10800  and k <= 0x10C4F)  then return {d='r'}  end
+    if (k >= 0x1E800  and k <= 0x1E8DF)  then return {d='r'}  end
+    if (k >= 0x1E900  and k <= 0x1E95F)  then return {d='r'}  end
+    if (k >= 0x1F300  and k <= 0x1F9FF)  then return {d='on'} end
+    if (k >= 0xF0000  and k <= 0xFFFFD)  then return {d='on'} end -- PUA
+    if (k >= 0x100000 and k <= 0x10FFFD) then return {d='on'} end -- PUA
+  end })
+  
 %</bididata>
 %    \end{macrocode}
 %\fi
@@ -18650,7 +18763,7 @@ Babel.characters={
 % \end{quote}
 %
 % Well, it took me some time to guess what the batch rules in UAX\#9
-% actually mean (in other word, \textit{what} they do and\textit{why},
+% actually mean (in other word, \textit{what} they do and \textit{why},
 % and not only \textit{how}), but I think (or I hope) I've managed to
 % understand them.
 %
@@ -19335,7 +19448,18 @@ end
 %
 % \section{Data for CJK}
 %
-% It is a boring file and it's not shown here. See the generated file.
+% It is a boring file and it's not shown here (see the generated file),
+% but here is a sample:
+%\begin{verbatim}
+% [0x0021]={c='ex'},
+% [0x0024]={c='pr'},
+% [0x0025]={c='po'},
+% [0x0028]={c='op'},
+% [0x0029]={c='cp'},
+% [0x002B]={c='pr'},
+%\end{verbatim}
+% For the meaning of these codes, see the Unicode standard.
+%
 %\iffalse
 %    \begin{macrocode}
 %<*cjkdata>
