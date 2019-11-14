@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/11/04 v3.35.1815 The Babel package]
+\ProvidesFile{babel.dtx}[2019/11/14 v3.36 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2078,13 +2078,17 @@ existing language, too, as explained in the previous subsection).
 
 \Describe{\babelprovide}{\oarg{options}\marg{language-name}}
 
-If the language |\marg{language-name}| has not been defined and there
-are no options, it creates lan “empty” one in the following way: define
-the internal structure of the language with some defaults: if there is
-an |ini| file, read some basic parameters (language, script,
-hyphenrules...), which you can modify; if not, the hyphen rules, if not
+If the language \m{language-name} has not been loaded as class or
+package option and there are no \m{options}, it creates an “empty” one
+with some defaults in its internal structure: the hyphen rules, if not
 available, are set to the current ones, left and right hyphen mins are
-set to 2 and 3. In either case, captions and date are not defined.
+set to 2 and 3. In either case, caption, date and language system are
+not defined.
+
+If no |ini| file is imported with |import|, \m{language-name} is
+relevant because in such a case the hyphenation rules are based on it
+as provided in the |ini| file corresponding to that name; the same
+applies to OpenType language and script.
 
 Conveniently, some options allow to fill the language, and \babel{}
 warns you about what to do if there is a missing string. Very likely
@@ -2214,8 +2218,8 @@ be added.} So, there should be at most 3 directives of this kind.
 Sets the interword space for the writing system of the language, in em
 units (so, |0 .1 0| is |0em plus .1em|). Like |\spaceskip|, the em unit
 applied is that of the current text (more precisely, the previous 
-glyph). Currently used only in Southeast Asian scrips, like Thai.
-Requires |import|.
+glyph). Currently used only in Southeast Asian scrips, like Thai, and
+CJK. Requires |import|.
 
 \Describe{intrapenalty=}{\meta{penalty}}
 Sets the interword penalty for the writing system of this language.
@@ -2996,7 +3000,7 @@ to set them for glyphs in the PUA).
 With the optional argument, you can set a range of values. There are
 three properties (with a short name, taken from Unicode): |direction|
 (|bc|), |mirror| (|bmg|), |linebreak| (|lb|). The settings are global.
-          
+
 For example:
 \begin{verbatim}
 \babelcharproperty{`¿}{mirror}{`?}   
@@ -3011,15 +3015,16 @@ paragraphs).
 
 \Describe{\babeladjust}{\marg{key-value-list}}
 
-\New{3.36} Sometimes you might need to disable some \textsc{babel}
-features. Currently this macro understands the following keys (and only
-for \textsf{luatex}), with values |on| or |off|: |bidi.text|,
+\New{3.36} Sometimes you might need to disable some \babel{} features.
+Currently this macro understands the following keys (and only for
+\textsf{luatex}), with values |on| or |off|: |bidi.text|,
 |bidi.mirroring|, |bidi.mapdigits|, |layout.lists|, |layout.tabular|,
 |linebreak.sea|, |linebreak.cjk|. For example, you can set
 |\babeladjust{bidi.text=off}| if you are using an alternative algorithm
-or with large sections not requiring it. Use with care, because these
-options do not deactive other related options (like paragraph direction
-with |bidi.text|).
+or with large sections not requiring it. With \textsf{luahbtex} you may
+need |bidi.mirroring=off|. Use with care, because these options do not
+deactivate other related options (like paragraph direction with
+|bidi.text|).
 
 \subsection{Tips, workarounds, known issues and notes}
 
@@ -3165,6 +3170,16 @@ So, for example:
 \setmainfont{Minion Pro}
 \babelFSfeatures{turkish}{Language=Turkish}
 \end{verbatim}
+
+\medskip
+\textbf{Modifying values of |ini| files}
+
+\New{3.36} There is a way to modify the values of |ini| files when they
+get loaded with |\babelprovide|. To set, say, |digits.native| in the
+|numbers| section, use something like
+|numbers..digits.native=abcdefghij| (note the double dot between the
+section and the key name). The syntax may change, and currently it only
+redefines existing keys.
 
 \section{Loading languages with \file{language.dat}}
 
@@ -4088,8 +4103,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.35.1815>>
-%<<date=2019/11/04>>
+%<<version=3.36>>
+%<<date=2019/11/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5680,11 +5695,9 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@usehooks{beforestart}{}%
   \global\let\bbl@beforestart\relax}
 \AtBeginDocument{%
-  \bbl@beforestart
+  \@nameuse{bbl@beforestart}%
   \if@filesw
-    \immediate\write\@mainaux{%
-    %  \let\string\bbl@nostdfont\string\@gobble 
-      \string\bbl@beforestart}%
+    \immediate\write\@mainaux{\string\@nameuse{bbl@beforestart}}%
   \fi
   \expandafter\selectlanguage\expandafter{\bbl@main@language}%
   \ifbbl@single  % must go after the line above
@@ -8090,20 +8103,20 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@main\@nil
   \let\bbl@KVP@script\@nil
   \let\bbl@KVP@language\@nil
-  \let\bbl@KVP@dir\@nil
-  \let\bbl@KVP@hyphenrules\@nil
+  \let\bbl@KVP@hyphenrules\@nil  % only for provide@new
   \let\bbl@KVP@mapfont\@nil
   \let\bbl@KVP@maparabic\@nil
   \let\bbl@KVP@mapdigits\@nil
   \let\bbl@KVP@intraspace\@nil
   \let\bbl@KVP@intrapenalty\@nil
   \bbl@forkv{#1}{%  TODO - error handling
-    \in@{/}{##1}%
+    \in@{..}{##1}%
     \ifin@
       \bbl@renewinikey##1\@@{##2}%
     \else
       \bbl@csarg\def{KVP@##1}{##2}%
     \fi}%
+  % == import, captions ==
   \ifx\bbl@KVP@import\@nil\else
     \bbl@exp{\\\bbl@ifblank{\bbl@KVP@import}}%
       {\begingroup
@@ -8137,28 +8150,31 @@ help from Bernd Raichle, for which I am grateful.
   % execute some code depending on them. But what about if nothing was
   % imported? We just load the very basic parameters: ids and a few
   % more. 
-  % THIS ADDITION IN 3.30 IS WRONG!!
-%   \bbl@ifunset{bbl@lname@#2}%
-%     {\def\BabelBeforeIni##1##2{%
-%        \begingroup
-%          \catcode`\[=12 \catcode`\]=12 \catcode`\==12 %
-%          \let\bbl@ini@captions@aux\@gobbletwo
-%          \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
-%          \bbl@read@ini{##1}%
-%          \bbl@exportkey{chrng}{characters.ranges}{}%
-%          \bbl@exportkey{dgnat}{numbers.digits.native}{}%
-%        \endgroup}%           boxed, to avoid extra spaces:
-%      {\setbox\z@\hbox{\InputIfFileExists{babel-#2.tex}{}{}}}}%
-%     {}%
+  \bbl@ifunset{bbl@lname@#2}%
+    {\def\BabelBeforeIni##1##2{%
+       \begingroup
+         \catcode`\[=12 \catcode`\]=12 \catcode`\==12 %
+         \let\bbl@ini@captions@aux\@gobbletwo
+         \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
+         \bbl@read@ini{##1}{basic data}%
+         \bbl@exportkey{chrng}{characters.ranges}{}%
+         \bbl@exportkey{dgnat}{numbers.digits.native}{}%
+         % \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
+         % \bbl@exportkey{intsp}{typography.intraspace}{}%
+       \endgroup}%           boxed, to avoid extra spaces:
+     {\setbox\z@\hbox{\InputIfFileExists{babel-#2.tex}{}{}}}}%
+    {}%
   % -
-  % Override script and language names with script= and language=
+  % == script, language ==
+  % Override the values from ini or defines them
   \ifx\bbl@KVP@script\@nil\else
     \bbl@csarg\edef{sname@#2}{\bbl@KVP@script}%
   \fi
   \ifx\bbl@KVP@language\@nil\else
     \bbl@csarg\edef{lname@#2}{\bbl@KVP@language}%
   \fi
-  % For bidi texts, to switch the language based on direction
+  % == mapfont ==
+  % For bidi texts, to switch the font based on direction
   \ifx\bbl@KVP@mapfont\@nil\else
     \bbl@ifsamestring{\bbl@KVP@mapfont}{direction}{}%
       {\bbl@error{Option `\bbl@KVP@mapfont' unknown for\\%
@@ -8183,15 +8199,16 @@ help from Bernd Raichle, for which I am grateful.
     \fi
     \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
   \fi
-  % For East Asian, Southeast Asian, if interspace in ini - TODO: as hook?
-  \ifx\bbl@KVP@intraspace\@nil\else % We may override the ini
+  % == intraspace, intrapenalty ==
+  % For CJK, East Asian, Southeast Asian, if interspace in ini
+  \ifx\bbl@KVP@intraspace\@nil\else % We can override the ini or set
     \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
   \fi
-  \ifcase\bbl@engine\or
+  \ifcase\bbl@engine\or   % lua
     \bbl@ifunset{bbl@intsp@\languagename}{}%
       {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
          \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Hant,Hans,Jpan,Kore,Kana}%
-         \ifin@
+         \ifin@           % cjk
            \bbl@cjkintraspace
            \directlua{
                Babel = Babel or {}
@@ -8202,7 +8219,7 @@ help from Bernd Raichle, for which I am grateful.
            \ifx\bbl@KVP@intrapenalty\@nil
              \bbl@intrapenalty0\@@
            \fi 
-         \else
+         \else            % sea
            \bbl@seaintraspace
            \bbl@exp{\\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
            \directlua{
@@ -8219,9 +8236,9 @@ help from Bernd Raichle, for which I am grateful.
        \ifx\bbl@KVP@intrapenalty\@nil\else
          \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
        \fi}%
-  \or 
+  \or                     % xe
     \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Thai,Laoo,Khmr}%
-    \ifin@
+    \ifin@                % sea (currently ckj not handled)
       \bbl@ifunset{bbl@intsp@\languagename}{}%
         {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
           \ifx\bbl@KVP@intraspace\@nil
@@ -8246,6 +8263,7 @@ help from Bernd Raichle, for which I am grateful.
         \fi}%
     \fi
   \fi
+  % == maparabic ==
   % Native digits, if provided in ini (TeX level, xe and lua)
   \ifcase\bbl@engine\else
     \bbl@ifunset{bbl@dgnat@\languagename}{}%
@@ -8263,6 +8281,7 @@ help from Bernd Raichle, for which I am grateful.
         \fi
       \fi}%
   \fi
+  % == mapdigits ==
   % Native digits (lua level).
   \ifodd\bbl@engine
     \ifx\bbl@KVP@mapdigits\@nil\else
@@ -8299,6 +8318,7 @@ help from Bernd Raichle, for which I am grateful.
         }}
     \fi
   \fi
+  % == require.babel in ini ==
   % To load or reaload the babel-*.tex, if require.babel in ini
   \bbl@ifunset{bbl@rqtex@\languagename}{}%
     {\expandafter\ifx\csname bbl@rqtex@\languagename\endcsname\@empty\else
@@ -8309,6 +8329,7 @@ help from Bernd Raichle, for which I am grateful.
        \catcode`\@=\atcatcode
        \let\atcatcode\relax
      \fi}%
+  % == main ==
   \ifx\bbl@KVP@main\@nil  % Restore only if not 'main'
     \let\languagename\bbl@savelangname
     \chardef\localeid\bbl@savelocaleid\relax
@@ -8372,7 +8393,7 @@ help from Bernd Raichle, for which I am grateful.
         \fi}%
       \expandafter\bbl@tempb\bbl@captionslist\@empty
     \else
-      \bbl@read@ini{\bbl@KVP@captions}%  Here all letters cat = 11
+      \bbl@read@ini{\bbl@KVP@captions}{data}%  Here all letters cat = 11
       \bbl@after@ini
       \bbl@savestrings
     \fi
@@ -8396,7 +8417,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@provide@renew#1{%
   \ifx\bbl@KVP@captions\@nil\else
     \StartBabelCommands*{#1}{captions}%
-      \bbl@read@ini{\bbl@KVP@captions}%   Here all letters cat = 11
+      \bbl@read@ini{\bbl@KVP@captions}{data}%   Here all letters cat = 11
       \bbl@after@ini
       \bbl@savestrings
     \EndBabelCommands
@@ -8407,6 +8428,7 @@ help from Bernd Raichle, for which I am grateful.
      \bbl@savedate
    \EndBabelCommands
   \fi
+  % == hyphenrules ==
   \bbl@provide@hyphens{#1}}
 %    \end{macrocode}
 %
@@ -8458,7 +8480,7 @@ help from Bernd Raichle, for which I am grateful.
 % key/value pair. \textit{TODO - Work in progress.}
 %
 %    \begin{macrocode}
-\def\bbl@read@ini#1{%
+\def\bbl@read@ini#1#2{%
   \openin1=babel-#1.ini        % FIXME - number must not be hardcoded
   \ifeof1
     \bbl@error
@@ -8474,11 +8496,12 @@ help from Bernd Raichle, for which I am grateful.
     \def\bbl@inipreread##1=##2\@@{%
       \bbl@trim@def\bbl@tempa{##1}% Redundant below !!
       % Move trims here ??
-      \bbl@ifunset{bbl@KVP@\bbl@section/\bbl@tempa}%
+      \bbl@ifunset{bbl@KVP@\bbl@section..\bbl@tempa}%
         {\expandafter\bbl@inireader\bbl@tempa=##2\@@}%
         {}}%
     \let\bbl@inireader\bbl@iniskip
-    \bbl@info{Importing data from babel-#1.ini for \languagename}%
+    \bbl@info{Importing #2 for \languagename\\%
+             from babel-#1.ini. Reported}%
     \loop
     \if T\ifeof1F\fi T\relax % Trick, because inside \loop
       \endlinechar\m@ne
@@ -8507,12 +8530,14 @@ help from Bernd Raichle, for which I am grateful.
   \@nameuse{bbl@secpost@\bbl@section}%  ends previous section
   \def\bbl@section{#1}%
   \def\bbl@elt##1##2{%
-    \@namedef{bbl@KVP@#1/##1}{}}%
+    \@namedef{bbl@KVP@#1..##1}{}}%
   \@nameuse{bbl@renew@#1}%
   \@nameuse{bbl@secpre@#1}%   starts current section
   \bbl@ifunset{bbl@inikv@#1}%
     {\let\bbl@inireader\bbl@iniskip}%
     {\bbl@exp{\let\\\bbl@inireader\<bbl@inikv@#1>}}}
+\def\bbl@renewinikey#1..#2\@@#3{%
+  \bbl@csarg\bbl@add{renew@#1}{\bbl@elt{#2}{#3}}}
 %    \end{macrocode}
 %
 % Reads a key=val line and stores the trimmed val in
@@ -8542,6 +8567,9 @@ help from Bernd Raichle, for which I am grateful.
 % Key-value pairs are treated differently depending on the section in
 % the |ini| file.  The following macros are the readers for
 % |identification| and |typography|.
+%
+% \changes{babel~3.36}{2019/10/30}{New fields for CJK, because OpenType
+%  and the CLDR follow different models.}
 %
 %    \begin{macrocode}
 \let\bbl@inikv@identification\bbl@inikv
@@ -8719,7 +8747,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \def\bbl@provide@lsys#1{%
   \bbl@ifunset{bbl@lname@#1}%
-    {\bbl@ini@ids{#1}}%
+    {\bbl@ini@basic{#1}}%
     {}%
   \bbl@csarg\let{lsys@#1}\@empty
   \bbl@ifunset{bbl@sname@#1}{\bbl@csarg\gdef{sname@#1}{Default}}{}%
@@ -8743,18 +8771,18 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.34}{2019/08/05}{Added \cs{endinput}.}
 %
 %    \begin{macrocode}
-\def\bbl@ini@ids#1{%
+\def\bbl@ini@basic#1{%
   \def\BabelBeforeIni##1##2{%
     \begingroup
       \bbl@add\bbl@secpost@identification{\closein1 }%
       \catcode`\[=12 \catcode`\]=12 \catcode`\==12 %
-      \bbl@read@ini{##1}%   
-      \endinput
-    \endgroup}%           boxed, to avoid extra spaces:
+      \bbl@read@ini{##1}{font and identification data}%   
+      \endinput          % babel- .tex may contain onlypreamble's
+    \endgroup}%            boxed, to avoid extra spaces:
   {\setbox\z@\hbox{\InputIfFileExists{babel-#1.tex}{}{}}}}
-%    \end{macrocode}
-%
 % \section{Adjusting the Babel bahavior}
+%
+% \changes{babel~3.36}{2019/10/30}{New macro \cs{babeladjust}}
 %
 % A generic high level inteface is provided to adjust some global
 % and general settings.
@@ -9905,13 +9933,25 @@ help from Bernd Raichle, for which I am grateful.
 %    or variant language, for which an already defined hyphenation
 %    table can be used.
 %
+% \changes{babel~3.36}{2019/11/07}{Improved message, now showing the
+%   language name}
+%
 %    \begin{macrocode}
 \def\bbl@version{<@version@>}
 \def\bbl@date{<@date@>}
 \def\adddialect#1#2{%
   \global\chardef#1#2\relax
   \bbl@usehooks{adddialect}{{#1}{#2}}%
-  \wlog{\string#1 = a dialect from \string\language#2}}
+  \begingroup
+    \count@#1\relax
+    \def\bbl@elt##1##2##3##4{%
+      \ifnum\count@=##2\relax
+        \bbl@info{\string#1 = using hyphenrules for ##1\\%
+                  (\string\language\the\count@)}%
+        \def\bbl@elt####1####2####3####4{}%
+      \fi}%
+    \bbl@languages
+  \endgroup}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -11436,7 +11476,7 @@ help from Bernd Raichle, for which I am grateful.
           \bbl@ifunset{bbl@##1dflt@}%
             {\@nameuse{##1family}%
              \bbl@csarg\gdef{WFF@\f@family}{}% Flag
-             \bbl@exp{\\\bbl@add\\\bbl@tempa{* \<##1family> / \f@family\\\\%
+             \bbl@exp{\\\bbl@add\\\bbl@tempa{* \<##1family>= \f@family\\\\%
                 \space\space\fontname\font\\\\}}%
              \bbl@csarg\xdef{##1dflt@}{\f@family}%
              \expandafter\xdef\csname ##1default\endcsname{\f@family}}%
@@ -12281,7 +12321,7 @@ help from Bernd Raichle, for which I am grateful.
 
       for item in node.traverse(head) do
         if item.id == GLYPH then
-        
+
           local lang = item.lang
 
           local LOCALE = node.get_attribute(item,
@@ -12623,7 +12663,7 @@ help from Bernd Raichle, for which I am grateful.
 %   are `on'.}
 %
 % The file \textsf{babel-data-bidi.lua} currently only contains data. It is
-% a large and boring file and it's not shown here (see the generated file),
+% a large and boring file and it is not shown here (see the generated file),
 % but here is a sample:
 %\begin{verbatim}
 % [0x25]={d='et'},
@@ -12662,7 +12702,7 @@ Babel.ranges={
  {0x100000, 0x10FFFD, 'on'} -- PUA
 }
 
-Babel.bidi_props={
+Babel.characters={
  [0x0]={d='bn'},
  [0x1]={d='bn'},
  [0x2]={d='bn'},
@@ -18721,26 +18761,6 @@ Babel.bidi_props={
  [0xE007E]={d='bn'},
  [0xE007F]={d='bn'}
 }
-
-Babel.characters = setmetatable ( Babel.bidi_props, {
-  __index = function(_, k)
-    if (k >= 0x0590   and k <= 0x05FF)   then return {d='r'}  end
-    if (k >= 0x0600   and k <= 0x07BF)   then return {d='al'} end
-    if (k >= 0x07C0   and k <= 0x085F)   then return {d='r'}  end
-    if (k >= 0x0860   and k <= 0x086F)   then return {d='al'} end
-    if (k >= 0x08A0   and k <= 0x08FF)   then return {d='al'} end
-    if (k >= 0xE000   and k <= 0xF8FF)   then return {d='on'} end -- PUA
-    if (k >= 0xFB1D   and k <= 0xFB4F)   then return {d='r'}  end
-    if (k >= 0xFB50   and k <= 0xFDFF)   then return {d='al'} end
-    if (k >= 0xFE70   and k <= 0xFEFF)   then return {d='al'} end
-    if (k >= 0x10800  and k <= 0x10C4F)  then return {d='r'}  end
-    if (k >= 0x1E800  and k <= 0x1E8DF)  then return {d='r'}  end
-    if (k >= 0x1E900  and k <= 0x1E95F)  then return {d='r'}  end
-    if (k >= 0x1F300  and k <= 0x1F9FF)  then return {d='on'} end
-    if (k >= 0xF0000  and k <= 0xFFFFD)  then return {d='on'} end -- PUA
-    if (k >= 0x100000 and k <= 0x10FFFD) then return {d='on'} end -- PUA
-  end })
-  
 %</bididata>
 %    \end{macrocode}
 %\fi
@@ -19448,7 +19468,7 @@ end
 %
 % \section{Data for CJK}
 %
-% It is a boring file and it's not shown here (see the generated file),
+% It is a boring file and it is not shown here (see the generated file),
 % but here is a sample:
 %\begin{verbatim}
 % [0x0021]={c='ex'},
@@ -19745,11 +19765,15 @@ Babel.cjk_breaks = {
 %
 % \changes{babel-3.32}{2019/05/21}{Don't set it to
 %   \cs{l@nohyphenation}, best reserved fo special uses.}
+% \changes{babel~3.36}{2019/10/30}{Add nil to the language list.}
 %
 %    \begin{macrocode}
 \ifx\l@nil\@undefined
   \newlanguage\l@nil
   \@namedef{bbl@hyphendata@\the\l@nil}{{}{}}% Remove warning
+  \let\bbl@elt\relax
+  \edef\bbl@languages{%  Add it to the list of languages
+    \bbl@languages\bbl@elt{nil}{\the\l@nil}{}{}}
 \fi
 %    \end{macrocode}
 %

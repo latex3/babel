@@ -1,14 +1,14 @@
 \documentclass{article}
 
-\usepackage{harfload}
-
 \usepackage[bidi=basic]{babel}
 
 \babelprovide[main, import]{persian}
 \babelprovide[import]{malayalam}
 
-\babelfont{rm}[RawFeature={mode=harf}]{Amiri}
-\babelfont[malayalam]{rm}[RawFeature={mode=harf}]{FreeSerif} %{Kartika}
+\babelfont{rm}[Renderer=Harfbuzz]{Amiri}
+\babelfont[malayalam]{rm}[Renderer=Harfbuzz]{FreeSerif}
+
+\babeladjust{ bidi.mirroring = off } % Harf does mirroring
 
 \begin{document}
 
@@ -34,5 +34,9 @@
 സാങ്കേതിവിദ്യയിലുള്ള ഫോണ്ടുകൾ പ്രദർശിപ്പിക്കാൻ പുതിയ ഹാർഫ്ബസ്
 ഉപയോഗിക്കുന്നു എന്നാൽ പഴയ് ഹാർഫ്ബസ് ഓപ്പൺടൈപ്പ് ഫോണ്ടുകൾ മാത്രമേ
 പിൻതുണക്കുകയുള്ളൂ.
+
+\medskip
+
+Typeset with luahblatex. Requires luaotfload 3.11.
 
 \end{document}
