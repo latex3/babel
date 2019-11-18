@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/11/14 v3.36 The Babel package]
+\ProvidesFile{babel.dtx}[2019/11/18 v3.36.1829 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1235,14 +1235,15 @@ for auxiliary tasks).
 \end{verbatim}
 \endgroup
   Khemer clusters are rendered wrongly.
-\item[East Asia scripts] Settings for either Simplified of Tradicional
+\item[East Asia scripts] Settings for either Simplified of Traditional
 should work out of the box. \luatex{} does basic line breaking, but
 currently \xetex{} does not (you may load \textsf{zhspacing}). Although
 for a few words and shorts texts the |ini| files should be fine, CJK
 texts are best set with a dedicated framework (\textsf{CJK},
-\textsf{luatexja}, \textsf{kotex}, \textsf{CTeX}, etc.). Actually, this
-is what the |ldf| does in |japanese| with \luatex, because the
-following piece of code loads \textsf{luatexja}:
+\textsf{luatexja}, \textsf{kotex}, \textsf{CTeX}, etc.). This is what
+the class |ltjbook| does with \luatex, which can be used in conjuntion
+with the |ldf| for |japanese|, because the following piece of code
+loads \textsf{luatexja}:
 \begin{verbatim}
 \documentclass{ltjbook}
 \usepackage[japanese]{babel}
@@ -2086,9 +2087,10 @@ set to 2 and 3. In either case, caption, date and language system are
 not defined.
 
 If no |ini| file is imported with |import|, \m{language-name} is
-relevant because in such a case the hyphenation rules are based on it
-as provided in the |ini| file corresponding to that name; the same
-applies to OpenType language and script.
+relevant because in such a case the hyphenation rules (including those
+for South East Asian and CJK) are based on it as provided in the |ini|
+file corresponding to that name; the same applies to OpenType language
+and script.
 
 Conveniently, some options allow to fill the language, and \babel{}
 warns you about what to do if there is a missing string. Very likely
@@ -2219,12 +2221,12 @@ Sets the interword space for the writing system of the language, in em
 units (so, |0 .1 0| is |0em plus .1em|). Like |\spaceskip|, the em unit
 applied is that of the current text (more precisely, the previous 
 glyph). Currently used only in Southeast Asian scrips, like Thai, and
-CJK. Requires |import|.
+CJK.
 
 \Describe{intrapenalty=}{\meta{penalty}}
 Sets the interword penalty for the writing system of this language.
 Currently used only in Southeast Asian scrips, like Thai. Ignored if 0
-(which is the default value). Requires |import|.
+(which is the default value). 
 
 \begin{note}
   (1) If you need shorthands, you can define them with |\useshorthands|
@@ -4103,8 +4105,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.36>>
-%<<date=2019/11/14>>
+%<<version=3.36.1829>>
+%<<date=2019/11/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8159,8 +8161,8 @@ help from Bernd Raichle, for which I am grateful.
          \bbl@read@ini{##1}{basic data}%
          \bbl@exportkey{chrng}{characters.ranges}{}%
          \bbl@exportkey{dgnat}{numbers.digits.native}{}%
-         % \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
-         % \bbl@exportkey{intsp}{typography.intraspace}{}%
+         \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
+         \bbl@exportkey{intsp}{typography.intraspace}{}%
        \endgroup}%           boxed, to avoid extra spaces:
      {\setbox\z@\hbox{\InputIfFileExists{babel-#2.tex}{}{}}}}%
     {}%
@@ -8204,65 +8206,7 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\bbl@KVP@intraspace\@nil\else % We can override the ini or set
     \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
   \fi
-  \ifcase\bbl@engine\or   % lua
-    \bbl@ifunset{bbl@intsp@\languagename}{}%
-      {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
-         \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Hant,Hans,Jpan,Kore,Kana}%
-         \ifin@           % cjk
-           \bbl@cjkintraspace
-           \directlua{
-               Babel = Babel or {}
-               Babel.locale_props = Babel.locale_props or {}
-               Babel.locale_props[\the\localeid].linebreak = 'c'
-           }%
-           \bbl@exp{\\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
-           \ifx\bbl@KVP@intrapenalty\@nil
-             \bbl@intrapenalty0\@@
-           \fi 
-         \else            % sea
-           \bbl@seaintraspace
-           \bbl@exp{\\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
-           \directlua{
-              Babel = Babel or {}
-              Babel.sea_ranges = Babel.sea_ranges or {}
-              Babel.set_chranges('\bbl@cs{sbcp@\languagename}', 
-                                 '\bbl@cs{chrng@\languagename}')
-           }%
-           \ifx\bbl@KVP@intrapenalty\@nil
-             \bbl@intrapenalty0\@@
-           \fi
-         \fi
-       \fi
-       \ifx\bbl@KVP@intrapenalty\@nil\else
-         \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
-       \fi}%
-  \or                     % xe
-    \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Thai,Laoo,Khmr}%
-    \ifin@                % sea (currently ckj not handled)
-      \bbl@ifunset{bbl@intsp@\languagename}{}%
-        {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
-          \ifx\bbl@KVP@intraspace\@nil
-             \bbl@exp{%
-               \\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
-          \fi
-          \ifx\bbl@KVP@intrapenalty\@nil
-            \bbl@intrapenalty0\@@
-          \fi
-        \fi
-        \ifx\bbl@KVP@intraspace\@nil\else % We may override the ini
-          \expandafter\bbl@intraspace\bbl@KVP@intraspace\@@
-        \fi
-        \ifx\bbl@KVP@intrapenalty\@nil\else
-          \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
-        \fi
-        \ifx\bbl@ispacesize\@undefined
-          \AtBeginDocument{%
-            \expandafter\bbl@add
-            \csname selectfont \endcsname{\bbl@ispacesize}}%
-          \def\bbl@ispacesize{\bbl@cs{xeisp@\bbl@cs{sbcp@\languagename}}}%
-        \fi}%
-    \fi
-  \fi
+  \bbl@provide@intraspace
   % == maparabic ==
   % Native digits, if provided in ini (TeX level, xe and lua)
   \ifcase\bbl@engine\else
@@ -8511,6 +8455,14 @@ help from Bernd Raichle, for which I am grateful.
         \expandafter\bbl@iniline\bbl@line\bbl@iniline
       \fi
     \repeat
+    \bbl@foreach\bbl@renewlist{%
+      \bbl@ifunset{bbl@renew@##1}{}{\bbl@inisec[##1]\@@}}%
+    \global\let\bbl@renewlist\@empty
+    % Ends last section. See \bbl@inisec
+    \def\bbl@elt##1##2{\bbl@inireader##1=##2\@@}%
+    \@nameuse{bbl@renew@\bbl@section}%
+    \global\bbl@csarg\let{renew@\bbl@section}\relax
+    \@nameuse{bbl@secpost@\bbl@section}%  
   \fi}
 \def\bbl@iniline#1\bbl@iniline{%
   \@ifnextchar[\bbl@inisec{\@ifnextchar;\bbl@iniskip\bbl@inipreread}#1\@@}% ]
@@ -8519,7 +8471,10 @@ help from Bernd Raichle, for which I am grateful.
 % The special cases for comment lines and sections are handled by the
 % two following commands. In sections, we provide the posibility to
 % take extra actions at the end or at the start (TODO - but note the last
-% section is not ended). By default, key=val pairs are ignored.
+% section is not ended). By default, key=val pairs are ignored. The
+% |secpost| ``hook'' is used only by `identification', while |secpre|
+% only by |date.gregorian.licr|.
+% 
 %
 %    \begin{macrocode}
 \def\bbl@iniskip#1\@@{}%      if starts with ;
@@ -8528,15 +8483,19 @@ help from Bernd Raichle, for which I am grateful.
   \@nameuse{bbl@renew@\bbl@section}%
   \global\bbl@csarg\let{renew@\bbl@section}\relax
   \@nameuse{bbl@secpost@\bbl@section}%  ends previous section
-  \def\bbl@section{#1}%
+  \def\bbl@section{#1}%                 starts current section
   \def\bbl@elt##1##2{%
     \@namedef{bbl@KVP@#1..##1}{}}%
   \@nameuse{bbl@renew@#1}%
-  \@nameuse{bbl@secpre@#1}%   starts current section
+  \@nameuse{bbl@secpre@#1}%  pre-section `hook'
   \bbl@ifunset{bbl@inikv@#1}%
     {\let\bbl@inireader\bbl@iniskip}%
     {\bbl@exp{\let\\\bbl@inireader\<bbl@inikv@#1>}}}
+\let\bbl@renewlist\@empty
 \def\bbl@renewinikey#1..#2\@@#3{%
+  \bbl@ifunset{bbl@renew@#1}%
+    {\bbl@add@list\bbl@renewlist{#1}}%
+    {}%
   \bbl@csarg\bbl@add{renew@#1}{\bbl@elt{#2}{#3}}}
 %    \end{macrocode}
 %
@@ -8565,8 +8524,10 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % Key-value pairs are treated differently depending on the section in
-% the |ini| file.  The following macros are the readers for
-% |identification| and |typography|.
+% the |ini| file. The following macros are the readers for
+% |identification| and |typography|. Note |\bbl@secpost@identification|
+% is called always (via |\bbl@inisec|), while |\bbl@after@ini| must be
+% called explicitly after |\bbl@read@ini| if necessary.
 %
 % \changes{babel~3.36}{2019/10/30}{New fields for CJK, because OpenType
 %  and the CLDR follow different models.}
@@ -11736,6 +11697,33 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@intrapenalty#1\@@{%
   \bbl@csarg\gdef{xeipn@\bbl@cs{sbcp@\languagename}}%
     {\XeTeXlinebreakpenalty #1\relax}}
+        \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Thai,Laoo,Khmr}%
+\def\bbl@provide@intraspace{%
+   \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Thai,Laoo,Khmr}%
+   \ifin@                % sea (currently ckj not handled)
+     \bbl@ifunset{bbl@intsp@\languagename}{}%
+       {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
+         \ifx\bbl@KVP@intraspace\@nil
+            \bbl@exp{%
+              \\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
+         \fi
+         \ifx\bbl@KVP@intrapenalty\@nil
+           \bbl@intrapenalty0\@@
+         \fi
+       \fi
+       \ifx\bbl@KVP@intraspace\@nil\else % We may override the ini
+         \expandafter\bbl@intraspace\bbl@KVP@intraspace\@@
+       \fi
+       \ifx\bbl@KVP@intrapenalty\@nil\else
+         \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
+       \fi
+       \ifx\bbl@ispacesize\@undefined
+         \AtBeginDocument{%
+           \expandafter\bbl@add
+           \csname selectfont \endcsname{\bbl@ispacesize}}%
+         \def\bbl@ispacesize{\bbl@cs{xeisp@\bbl@cs{sbcp@\languagename}}}%
+       \fi}%
+   \fi}
 \AddBabelHook{xetex}{loadkernel}{%
 <@Restore Unicode catcodes before loading patterns@>}
 \ifx\DisableBabelHook\@undefined\endinput\fi
@@ -11771,6 +11759,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 %<*texxet>
+\providecommand\bbl@provide@intraspace{}
 \bbl@trace{Redefinitions for bidi layout}
 \def\bbl@sspre@caption{%
   \bbl@exp{\everyhbox{\\\bbl@textdir\bbl@cs{wdir@\bbl@main@language}}}}
@@ -12384,6 +12373,38 @@ help from Bernd Raichle, for which I am grateful.
   }
 }
 \endgroup
+\def\bbl@provide@intraspace{%
+  \bbl@ifunset{bbl@intsp@\languagename}{}%
+    {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
+       \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Hant,Hans,Jpan,Kore,Kana}%
+       \ifin@           % cjk
+         \bbl@cjkintraspace
+         \directlua{
+             Babel = Babel or {}
+             Babel.locale_props = Babel.locale_props or {}
+             Babel.locale_props[\the\localeid].linebreak = 'c'
+         }%
+         \bbl@exp{\\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
+         \ifx\bbl@KVP@intrapenalty\@nil
+           \bbl@intrapenalty0\@@
+         \fi 
+       \else            % sea
+         \bbl@seaintraspace
+         \bbl@exp{\\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
+         \directlua{
+            Babel = Babel or {}
+            Babel.sea_ranges = Babel.sea_ranges or {}
+            Babel.set_chranges('\bbl@cs{sbcp@\languagename}', 
+                               '\bbl@cs{chrng@\languagename}')
+         }%
+         \ifx\bbl@KVP@intrapenalty\@nil
+           \bbl@intrapenalty0\@@
+         \fi
+       \fi
+     \fi
+     \ifx\bbl@KVP@intrapenalty\@nil\else
+       \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
+     \fi}}
 %    \end{macrocode}
 %
 % \subsection{CJK line breaking}

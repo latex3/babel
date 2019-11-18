@@ -1,4 +1,4 @@
-## Babel 3.36
+## Babel 3.36.1829
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,14 +51,20 @@ respective authors.
 ### Latest changes
 
 ```
+3.37   Development - 2019-??-??
+       - \babelprovide now can be used to add or modify values for the
+         keys in ini files.
+       - Line break in South East Asian and CKJ are assimilated to
+         hyphenation, and it is activated even without 'import' (lua).
+
 3.36   2019-11-14
        - New - \babeladjust, with options: bidi.text, bidi.mirroring,
          bidi.mapdigits, layout.tabular, layout.lists, linebreak.sea,
-         linebreak.cjk. There are still some limitations.
+         linebreak.cjk. There are still some limitations (lua).
        - New - ini for Polytonic Greek, thanks to Claudio Beccari.
        - Fix - Language and script set for Chinese Tradicional and
          Chinese Simplified.
-       
+
 3.35   2019-10-15
        - \markboth and \markright made robust with a recent LaTeX.
        - Shorthands work in bibs and refs even with safe=none.
@@ -113,31 +119,6 @@ respective authors.
        - Fix for 3.23 - \ensureascii was redefined even when not 
          necessary.
        - Minor improvements in babel-vi.ini.
-
-3.26   2018-10-16
-       - Fix for 3.25 - \babelprovide raised an error with xetex. 
-
-3.25   2018-10-03
-       - Fixes for 3.23 - mapfont=direction could raise an error.
-       - Language and Script were not always defined correctly.
-       - Improved tentative support for Thai, Lao and Khmer in both 
-         luatex and xetex.
-
-3.24   2018-09-26
-       - Prelimimary support for Thai interword spacing with luatex.
-
-3.23   2018-09-02
-       - After extensive tests and fixing some issues, bidi=basic is 
-         not experimental any longer.
-       - import in \babelprovide does not require a language code if
-         the language name is a recognized one.
-       - New macro: \ifbabelshorthand.
-       - TS1, T3 and TS3 have been added to the non-ascii list, to 
-         avoid problems in case no ASCII-savvy encoding is requested.
-       - Define Language and Script if fontspec does not known them (eg, 
-         the Japanese script).
-       - Set the \thepage bidi bahavior in foots/heads.
-       - Fix - Undefined \bbl@stripslash in Plain.
 
 ```
 
