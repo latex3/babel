@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/11/18 v3.36.1829 The Babel package]
+\ProvidesFile{babel.dtx}[2019/11/26 v3.36.1837 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2008,11 +2008,41 @@ to select fonts in addition to the three basic families.
 font 'FONT' with script 'SCRIPT' 'Default' language used instead'}
 \textit{Package fontspec Warning: 'Language 'LANG' not available for
 font 'FONT' with script 'SCRIPT' 'Default' language used instead'}.
+\textbf{This is \textit{not} and error.}
 This warning is shown by \textsf{fontspec}, not by \babel. It could be
 irrelevant for English, but not for many other languages, including
 Urdu and Turkish. This is a useful and harmless warning, and if
 everything is fine with your document the best thing you can do is just
 to ignore it altogether.
+\end{troubleshooting}
+
+\begin{troubleshooting}
+\trouble{Package babel Warning: The following fonts are not babel standard families}
+\textit{Package babel Warning: The following fonts are not babel
+standard families}.
+\textbf{This is \textit{not} and error.}
+The main purpose of |\babelfont| is to define at once in a multilingual
+document the fonts required by the different languages, with their
+corresponding language systems (script and language). So, if you load,
+say, 4 languages, |\babelfont{rm}{FreeSerif}| defines 4 fonts (with their
+variants, of course), which are switched with the language by \babel.
+It's just a tool to make things easier and transparent to the user.
+
+There is no real need to use |\babelfont| in a monolingual document, if
+you set the language system in |\setmainfont| (or not, depending on what
+you want).
+
+\babel assumes that if you are using |\babelfont| for a family, very
+likely you want to define the rest of them. If you don't, you can find
+some inconsistencies between families. This checking is done at the
+beginning of the document, at a point where we cannot know which
+families will be used.
+
+As the message explains, \textit{there is nothing intrinsically wrong}
+with not defining all the families. In fact, there is nothing
+intrinsically wrong with not using |\babelfont| at all. But you must be
+aware that this may lead to some problems. And this is the very reason
+of the warning.
 \end{troubleshooting}
 
 \subsection{Modifying a language}
@@ -4105,8 +4135,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.36.1829>>
-%<<date=2019/11/18>>
+%<<version=3.36.1837>>
+%<<date=2019/11/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4640,9 +4670,6 @@ help from Bernd Raichle, for which I am grateful.
       function Babel.pre_otfload_h(head, gc, sz, pt, dir)
         if Babel.numbers and Babel.digits_mapped then
           head = Babel.numbers(head)
-        end
-        if Babel.fixboxdirs then          % Temporary!
-          head = Babel.fixboxdirs(head)
         end
         if Babel.bidi_enabled then
           head = Babel.bidi(head, false, dir)
@@ -5682,7 +5709,6 @@ help from Bernd Raichle, for which I am grateful.
   \def\bbl@main@language{#1}%
   \let\languagename\bbl@main@language
   \bbl@id@assign
-  \chardef\localeid\@nameuse{bbl@id@@\languagename}%
   \bbl@patterns{\languagename}}
 %    \end{macrocode}
 %
@@ -8099,7 +8125,6 @@ help from Bernd Raichle, for which I am grateful.
   % Set name and locale id
   \def\languagename{#2}%
   \bbl@id@assign
-  \chardef\localeid\@nameuse{bbl@id@@\languagename}%
   \let\bbl@KVP@captions\@nil
   \let\bbl@KVP@import\@nil
   \let\bbl@KVP@main\@nil
@@ -10136,9 +10161,12 @@ help from Bernd Raichle, for which I am grateful.
          Babel = Babel or {}
          Babel.locale_props = Babel.locale_props or {}
          Babel.locale_props[\bbl@id@last] = {}
+         Babel.locale_ids = Babel.locale_ids or {}
+         Babel.locale_ids['\languagename'] = \bbl@id@last
         }%
       \fi}%
-    {}}
+    {}%
+    \chardef\localeid\@nameuse{bbl@id@@\languagename}}
 %    \end{macrocode}
 %
 % The unprotected part of |\selectlanguage|.
@@ -10303,7 +10331,6 @@ help from Bernd Raichle, for which I am grateful.
   \languageshorthands{none}%
   % set the locale id
   \bbl@id@assign
-  \chardef\localeid\@nameuse{bbl@id@@\languagename}%
   % switch captions, date
   \ifcase\bbl@select@type
     \ifhmode
@@ -10767,6 +10794,7 @@ help from Bernd Raichle, for which I am grateful.
       \def\\{^^J(babel) }%
       \message{\\#1}%
     \endgroup}
+  \let\bbl@infowarn\bbl@warning
   \def\bbl@info#1{%
     \begingroup
       \newlinechar=`\^^J
@@ -10784,6 +10812,13 @@ help from Bernd Raichle, for which I am grateful.
       \def\\{\MessageBreak}%
       \PackageWarning{babel}{#1}%
     \endgroup}
+  \def\bbl@infowarn#1{%
+    \begingroup
+      \def\\{\MessageBreak}%
+      \GenericWarning
+        {(babel) \@spaces\@spaces\@spaces}%
+        {Package babel Info: #1}%
+    \endgroup}
   \def\bbl@info#1{%
     \begingroup
       \def\\{\MessageBreak}%
@@ -10792,6 +10827,7 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 \@ifpackagewith{babel}{silent}
   {\let\bbl@info\@gobble
+   \let\bbl@infowarn\@gobble
    \let\bbl@warning\@gobble}
   {}
 \def\bbl@nocaption{\protect\bbl@nocaption@i}
@@ -11380,7 +11416,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@nostdfont#1{%
   \bbl@ifunset{bbl@WFF@\f@family}%
     {\bbl@csarg\gdef{WFF@\f@family}{}%  Flag, to avoid dupl warns
-     \bbl@warning{The current font is not a babel standard family:\\%
+     \bbl@infowarn{The current font is not a babel standard family:\\%
        #1%
        \fontname\font\\%
        There is nothing intrinsically wrong with this warning, and\\%
@@ -11443,7 +11479,7 @@ help from Bernd Raichle, for which I am grateful.
              \expandafter\xdef\csname ##1default\endcsname{\f@family}}%
             {}}%
         \ifx\bbl@tempa\@empty\else
-          \bbl@warning{The following fonts are not babel standard families:\\%
+          \bbl@infowarn{The following fonts are not babel standard families:\\%
             \bbl@tempa
             There is nothing intrinsically wrong with it, but\\%
             'babel' will no set Script and Language. Consider\\%
@@ -11697,7 +11733,6 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@intrapenalty#1\@@{%
   \bbl@csarg\gdef{xeipn@\bbl@cs{sbcp@\languagename}}%
     {\XeTeXlinebreakpenalty #1\relax}}
-        \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Thai,Laoo,Khmr}%
 \def\bbl@provide@intraspace{%
    \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Thai,Laoo,Khmr}%
    \ifin@                % sea (currently ckj not handled)
@@ -12225,6 +12260,21 @@ help from Bernd Raichle, for which I am grateful.
 % Unicode UAX 14).
 %
 %    \begin{macrocode}
+\directlua{
+  Babel = Babel or {}
+  Babel.linebreaking = Babel.linebreaking or {}
+  Babel.linebreaking.before = {}
+  Babel.linebreaking.after = {}
+  Babel.locale = {} % Free to use, indexed with \localeid
+  function Babel.linebreaking.add_before(func)
+    tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
+    table.insert(Babel.linebreaking.before , func)
+  end
+  function Babel.linebreaking.add_after(func)
+    tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
+    table.insert(Babel.linebreaking.after, func)
+  end
+}
 \def\bbl@intraspace#1 #2 #3\@@{%
   \directlua{
     Babel = Babel or {}
@@ -12364,7 +12414,13 @@ help from Bernd Raichle, for which I am grateful.
       if Babel.cjk_enabled then
         Babel.cjk_linebreak(head)
       end
+      for k, func in ipairs(Babel.linebreaking.before)  do
+        func(head)
+      end
       lang.hyphenate(head)
+      for k, func in ipairs(Babel.linebreaking.after)  do
+        func(head)
+      end
       if Babel.sea_enabled then
         Babel.sea_disc_to_space(head)
       end
@@ -12436,33 +12492,6 @@ help from Bernd Raichle, for which I am grateful.
 <@Font selection@>
 %    \end{macrocode}
 %
-% \textbf{Temporary} fix for luatex $<$1.10, which sometimes inserted a
-% spurious closing dir node with a |\textdir| within |\hbox|es. This
-% will be eventually removed.
-%
-%    \begin{macrocode}
-\def\bbl@luafixboxdir{%
-  \setbox\z@\hbox{\textdir TLT}%
-  \directlua{
-    function Babel.first_dir(head)
-      for item in node.traverse_id(node.id'dir', head) do
-        return item
-      end
-      return nil
-    end
-    if Babel.first_dir(tex.box[0].head) then
-      function Babel.fixboxdirs(head)
-        local fd = Babel.first_dir(head)
-        if fd and fd.dir:sub(1,1) == '-' then
-          head = node.remove(head, fd)
-        end
-        return head
-      end
-    end
-  }}
-\AtBeginDocument{\bbl@luafixboxdir}
-%    \end{macrocode}
-%
 % \changes{babel~3.32}{2019/05/23}{New - \cs{babelcharproperty}.}
 %
 % The code for |\babelcharproperty| is straightforward. Just note the
@@ -12509,6 +12538,207 @@ help from Bernd Raichle, for which I am grateful.
   }}
 \let\bbl@chprop@lb\bbl@chprop@linebreak
 %    \end{macrocode}
+%
+%  Post-handling hyphenation patterns for non-standard rules, like |ff|
+%  to |ff-f|.
+%  
+%    \begin{macrocode}
+\begingroup
+\catcode`#=11
+\directlua{
+  function Babel.get_locale(n)
+    return node.get_attribute(n, luatexbase.registernumber'bbl@attr@locale')
+  end
+  
+  function Babel.str_to_nodes(text, base)
+    local n, head, last    
+    for s in string.utfvalues(text) do
+      if base.id == 7 then 
+        base = base.replace
+      end
+      n = node.copy(base)
+      n.char    = s
+      if not head then
+        head = n
+      else
+        last.next = n
+      end
+      last = n
+    end 
+    return head
+  end
+
+  function Babel.fetch_word(head, funct)
+    local word_string = ''
+    local word_nodes = {}
+    local locale, last_locale
+
+    for item in node.traverse(head) do
+      locale = Babel.get_locale(item)
+      last_locale = last_locale or locale
+
+      if item.id == 29 and not(item.char == 124) % ie, not |
+          and locale == last_locale
+          and not (item.lang == \the\l@nohyphenation) then
+        word_string = word_string .. unicode.utf8.char(item.char)
+        table.insert(word_nodes, item)
+        last_locale = locale
+
+      elseif item.id == 7 and item.subtype == 2
+           and locale == last_locale
+           and not (item.lang == \the\l@nohyphenation) then
+         word_string = word_string .. '-'
+         table.insert(word_nodes, item)
+         last_locale = locale
+
+      elseif item.id == 7 and item.subtype == 3
+           and locale == last_locale
+           and not (item.lang == \the\l@nohyphenation) then
+         word_string = word_string .. '|'       
+         table.insert(word_nodes, item)
+         last_locale = locale
+
+      elseif word_string == '' then
+        % pass
+
+      else
+        return word_string, word_nodes, item
+      end
+    end
+  end
+  
+  Babel.linebreaking.replacements = {}
+  
+  function Babel.post_hyphenate_replace(head)
+  local u = unicode.utf8
+  local word_head = head
+
+  while true do
+    local w, wn, nw = Babel.fetch_word(word_head)
+    if not nw then return head end
+
+    if not Babel.linebreaking.replacements[Babel.get_locale(wn[1])] then
+      break
+    end
+
+    for _, reps in ipairs(Babel.linebreaking.replacements[Babel.get_locale(wn[1])]) do
+      local r = reps.replace
+      local p = reps.pattern 
+
+      % This should be done when set:
+      if not u.find(p, '()', nil, true) then
+        p = '()' .. p .. '()'
+      end
+      p = u.gsub(p, '{(.)}',  % This should be done when set, too
+                 function (n)
+                    return '\@percentchar'
+                            .. (tonumber(n) and (tonumber(n)+1) or n)
+                 end)
+
+      while true do
+        first, A, B, C, E, F, G = u.match(w, p) 
+        if not A then break end
+
+        local last = {A, B, C, E, F, G} % Ugly. Must be a better way
+        last = last[#last]
+
+        % Fix offsets, from bytes to unicode
+        first = u.len(w:sub(1, first-1)) + 1
+        last  = u.len(w:sub(1, last-1))
+
+        % This EXpands {n} in replacement fields pre, post, no
+        local x = function (s)
+          if s == nil then return '' end
+          return u.gsub(s, '{([0-9])}',
+            function (n)
+              return u.sub(w, n+first-1, n+first-1)
+            end)
+        end
+
+        local new  % used when inserting and removing nodes
+        local changed = 0
+
+        for q = first, last do   
+          local rep_i = r[q-first+1]
+          local char_node = wn[q]
+          local char_base = char_node
+
+          if rep_i and rep_i.data then
+            char_base = wn[rep_i.data]
+          end
+          if rep_i == nil then
+            rep_i = { string='' }
+          end
+
+          if rep_i and (rep_i.pre or rep_i.no or rep_i.post) then
+            changed = changed + 1
+            d = node.new(7, 0)   % (disc, discretionary)
+            d.pre     = Babel.str_to_nodes(x(rep_i.pre), char_base)
+            d.post    = Babel.str_to_nodes(x(rep_i.post), char_base)
+            d.replace = Babel.str_to_nodes(x(rep_i.no), char_base)
+            d.attr    = char_base.attr
+            if rep_i.pre and not(rep_i.pre == '') then  % TeXbook p96
+              d.penalty  = rep_i.penalty or tex.hyphenpenalty
+            else
+              d.penalty  = rep_i.penalty or tex.exhyphenpenalty
+            end
+            head, new = node.insert_before(head, char_node, d)
+            node.remove(head, char_node)
+            if q == 1 then
+              word_head = new
+            end
+          elseif rep_i and rep_i.string then
+            changed = changed + 1
+            rep_i.string = x(rep_i.string, char_base) 
+            if rep_i.string == '' then 
+              if q == 1 then
+                word_head = char_node.next
+              end
+              head, new = node.remove(head, char_node)
+            else
+              local n
+              for s in string.utfvalues(rep_i.string) do
+                if char_node.id == 7 then
+                  texio.write_nl('Automatic hyphens cannot be replaced, just removed.')
+                else
+                  n = node.copy(char_base)
+                end              
+                n.char = s
+                if q == 1 then
+                  head, new = node.insert_before(head, char_node, n)   
+                  word_head = new
+                else 
+                  node.insert_before(head, char_node, n)   
+                end                  
+              end
+
+              node.remove(head, char_node)
+            end
+          end  % if char and char.string
+        end  % for char in match
+        if changed > 20 then
+          texio.write('Too many changes. Ignoring the rest.')
+        elseif changed > 0 then
+          w, wn, nw = Babel.fetch_word(word_head)   
+        end
+
+      end  % for match
+    end  % for patterns
+  word_head = nw
+  end  % for words
+  return head
+end
+
+function Babel.linebreaking.add_replacement(lang, patt, repl)
+  local lbk = Babel.linebreaking
+  lbk.replacements[Babel.locale_ids[lang]] =
+      lbk.replacements[Babel.locale_ids[lang]] or {}
+  table.insert(lbk.replacements[Babel.locale_ids[lang]],
+               { pattern = patt, replace = repl })
+end
+
+}
+\endgroup
 %
 % \subsection{Layout}
 %
