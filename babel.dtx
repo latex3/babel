@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/11/30 v3.36.1841 The Babel package]
+\ProvidesFile{babel.dtx}[2019/12/03 v3.36.1844 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3181,6 +3181,36 @@ See the code section for |\foreignlanguage*| (a new starred
 version of |\foreignlanguage|).
 
 \medskip
+\textbf{Modifying, and adding, values of |ini| files}
+
+\New{3.37} There is a way to modify the values of |ini| files when they
+get loaded with |\babelprovide|. To set, say, |digits.native| in the
+|numbers| section, use something like
+|numbers..digits.native=abcdefghij| (note the double dot between the
+section and the key name). New keys may be added, too.
+
+\medskip
+\textbf{Non-standard hyphenation}
+
+\New{3.37} With \luatex{} it is now possible to define non-standard
+hyohenation rules, like |f-f| $\to$ |ff-f|. No rules are currently
+provided by defualt, but they can be defined as shown in the following
+example:
+\begin{verbatim}
+\babelposthyphenation{ngerman}{([fmtrp]) | {1}}
+{
+  { no = {1}, pre = {1}{1}-},
+  remove,
+  {}
+}
+\end{verbatim}
+
+See the \babel{} wiki for a description and some examples:
+\begin{verbatim}
+https://github.com/latex3/babel/wiki
+\end{verbatim}
+
+\medskip
 \textbf{Old stuff}
 
 A couple of tentative macros were provided by \babel{} ($\ge$3.9g) with
@@ -3202,16 +3232,6 @@ So, for example:
 \setmainfont{Minion Pro}
 \babelFSfeatures{turkish}{Language=Turkish}
 \end{verbatim}
-
-\medskip
-\textbf{Modifying values of |ini| files}
-
-\New{3.36} There is a way to modify the values of |ini| files when they
-get loaded with |\babelprovide|. To set, say, |digits.native| in the
-|numbers| section, use something like
-|numbers..digits.native=abcdefghij| (note the double dot between the
-section and the key name). The syntax may change, and currently it only
-redefines existing keys.
 
 \section{Loading languages with \file{language.dat}}
 
@@ -4135,8 +4155,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.36.1841>>
-%<<date=2019/11/30>>
+%<<version=3.36.1844>>
+%<<date=2019/12/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8828,16 +8848,9 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@ADJ@layout.lists@on}{%
   \bbl@adjust@layout{\let\list\bbl@OL@list}}
 \@namedef{bbl@ADJ@hyphenation.extra@on}{%
-  \begingroup
-    \directlua{
-      Babel.linebreaking.add_after(Babel.post_hyphenate_replace)
-      Babel.hyphenate_ids = {}
-    }%  
-    \def\bbl@elt##1##2##3##4{%
-      \count@=##2\relax
-      \directlua{ Babel.hyphenate_ids['##1'] = \the\count@ }}%  
-    \bbl@languages
-  \endgroup}
+  \directlua{
+    Babel.linebreaking.add_after(Babel.post_hyphenate_replace)
+  }}
 %    \end{macrocode}
 %
 % \section{The kernel of Babel (\texttt{babel.def} for \LaTeX only)}
@@ -12559,12 +12572,10 @@ help from Bernd Raichle, for which I am grateful.
 %  
 %    \begin{macrocode}
 \begingroup
-\catcode`#=11
+\catcode`\#=12
+\catcode`\%=12
+\catcode`\&=14
 \directlua{
-  function Babel.get_locale(n)
-    return node.get_attribute(n, luatexbase.registernumber'bbl@attr@locale')
-  end
-
   function Babel.str_to_nodes(text, base)
     local n, head, last    
     for s in string.utfvalues(text) do
@@ -12591,8 +12602,8 @@ help from Bernd Raichle, for which I am grateful.
     for item in node.traverse(head) do
 
       if item.id == 29
-          and not(item.char == 124) % ie, not |
-          and not(item.char == 61)  % ie, not =
+          and not(item.char == 124) &% ie, not |
+          and not(item.char == 61)  &% ie, not =
           and (item.lang == lang or lang == nil) then
         lang = lang or item.lang
         word_string = word_string .. unicode.utf8.char(item.char)
@@ -12607,7 +12618,7 @@ help from Bernd Raichle, for which I am grateful.
          word_nodes[#word_nodes+1] = item
 
       elseif word_string == '' then
-        % pass
+        &% pass
 
       else
         return word_string, word_nodes, item, lang
@@ -12615,23 +12626,20 @@ help from Bernd Raichle, for which I am grateful.
     end
   end
 
-  function Babel.replace_capture (s, m)
-  if s == nil then return '' end
-  return unicode.utf8.gsub(s, '{([0-9])}',
-            function (d)
-              return m[tonumber(d)]
-            end)
+  function Babel.capture_func(key, cap)
+    local ret = "[[" .. cap:gsub('{([0-9])}', "]]..m[%1]..[[") .. "]]"
+    ret = ret:gsub("%[%[%]%]%.%.", '')
+    ret = ret:gsub("%.%.%[%[%]%]", '')
+    return key .. [[=function(m) return ]] .. ret .. [[ end]]
   end
 
   Babel.linebreaking.replacements = {}
-  Babel.hyphenate_ids = {}
 
- function Babel.post_hyphenate_replace(head)
+  function Babel.post_hyphenate_replace(head)
     local u = unicode.utf8
     local lbk = Babel.linebreaking
-    local x = Babel.replace_capture
     local word_head = head
-    
+
     while true do
       local w, wn, nw, lang = Babel.fetch_word(word_head)
       if not lang then return head end
@@ -12651,13 +12659,14 @@ help from Bernd Raichle, for which I am grateful.
           local first = table.remove(matches, 1)
           local last =  table.remove(matches, #matches)
 
-          % Fix offsets, from bytes to unicode
+          &% Fix offsets, from bytes to unicode
           first = u.len(w:sub(1, first-1)) + 1
           last  = u.len(w:sub(1, last-1))
 
-          local new  % used when inserting and removing nodes
+          local new  &% used when inserting and removing nodes
           local changed = 0
 
+          &% This loop is somewhat dirty. To refactor. 
           for q = first, last do   
             local rep_i = r[q-first+1]
             local char_node = wn[q]
@@ -12666,18 +12675,22 @@ help from Bernd Raichle, for which I am grateful.
             if rep_i and rep_i.data then
               char_base = wn[rep_i.data+first-1]
             end
+
             if rep_i == nil then
-              rep_i = { string='' }
+              rep_i = { string = function(m) return '' end }
             end
 
             if rep_i and (rep_i.pre or rep_i.no or rep_i.post) then
               changed = changed + 1
-              d = node.new(7, 0)   % (disc, discretionary)
-              d.pre     = Babel.str_to_nodes(x(rep_i.pre, matches), char_base)
-              d.post    = Babel.str_to_nodes(x(rep_i.post, matches), char_base)
-              d.replace = Babel.str_to_nodes(x(rep_i.no, matches), char_base)
-              d.attr    = char_base.attr
-              if rep_i.pre and not(rep_i.pre == '') then  % TeXbook p96
+              d = node.new(7, 0)   &% (disc, discretionary)
+              local prepre = rep_i.pre and rep_i.pre(matches) or ''
+              d.pre = Babel.str_to_nodes(prepre, char_base)
+              d.post = Babel.str_to_nodes(
+                  rep_i.post and rep_i.post(matches) or '', char_base)
+              d.replace = Babel.str_to_nodes(
+                  rep_i.no and rep_i.no(matches) or '', char_base)
+              d.attr = char_base.attr
+              if prepre == '' then  &% TeXbook p96
                 d.penalty  = rep_i.penalty or tex.hyphenpenalty
               else
                 d.penalty  = rep_i.penalty or tex.exhyphenpenalty
@@ -12689,17 +12702,17 @@ help from Bernd Raichle, for which I am grateful.
               end
             elseif rep_i and rep_i.string then
               changed = changed + 1
-              rep_i.string = x(rep_i.string, matches)
-              if rep_i.string == '' then 
+              local str = rep_i.string(matches)
+              if str == '' then 
                 if q == 1 then
                   word_head = char_node.next
                 end
                 head, new = node.remove(head, char_node)
-              elseif char_node.id == 29 and u.len(rep_i.string) == 1 then
-                char_node.char = string.utfvalue(rep_i.string)
+              elseif char_node.id == 29 and u.len(str) == 1 then
+                char_node.char = string.utfvalue(str)
               else
                 local n
-                for s in string.utfvalues(rep_i.string) do
+                for s in string.utfvalues(str) do
                   if char_node.id == 7 then
                     log('Automatic hyphens cannot be replaced, just removed.')
                   else
@@ -12715,41 +12728,55 @@ help from Bernd Raichle, for which I am grateful.
                 end
 
                 node.remove(head, char_node)
-              end  % string length
-            end  % if char and char.string
-          end  % for char in match
+              end  &% string length
+            end  &% if char and char.string
+          end  &% for char in match
           if changed > 20 then
             texio.write('Too many changes. Ignoring the rest.')
           elseif changed > 0 then
             w, wn, nw = Babel.fetch_word(word_head)   
           end
 
-        end  % for match
-      end  % for patterns
+        end  &% for match
+      end  &% for patterns
       word_head = nw
-    end  % for words
+    end  &% for words
     return head
   end
-
-  function Babel.linebreaking.add_replacement(lang, patt, repl)
-    local lbk = Babel.linebreaking
-    if not Babel.hyphenate_ids[lang] then return end
-    local u = unicode.utf8
-    if not u.find(patt, '()', nil, true) then
-      patt = '()' .. patt .. '()'
-    end
-    patt = u.gsub(patt, '{(.)}', 
-               function (n)
-                  return '\@percentchar'
-                          .. (tonumber(n) and (tonumber(n)+1) or n)
-               end)
-    lbk.replacements[Babel.hyphenate_ids[lang]] =
-        lbk.replacements[Babel.hyphenate_ids[lang]] or {}
-    table.insert(lbk.replacements[Babel.hyphenate_ids[lang]],
-                 { pattern = patt, replace = repl })
-  end
-
 }
+\catcode`\#=6
+\gdef\babelposthyphenation#1#2#3{&%
+  \begingroup
+    \def\babeltempa{\bbl@add@list\babeltempb}&%
+    \let\babeltempb\@empty
+    \bbl@foreach{#3}{&%
+      \bbl@ifsamestring{##1}{remove}&%
+        {\bbl@add@list\babeltempb{nil}}&%
+        {\directlua{
+           local rep = [[##1]]
+           rep = rep:gsub(    '(no)%s*=%s*([^%s,]*)', Babel.capture_func)
+           rep = rep:gsub(   '(pre)%s*=%s*([^%s,]*)', Babel.capture_func)
+           rep = rep:gsub(  '(post)%s*=%s*([^%s,]*)', Babel.capture_func)
+           rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
+           tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
+         }}}&%
+    \directlua{
+      local lbk = Babel.linebreaking
+      local u = unicode.utf8
+      local patt = string.gsub([[#2]], '%s', '')
+      if not u.find(patt, '()', nil, true) then
+        patt = '()' .. patt .. '()'
+      end
+      patt = u.gsub(patt, '{(.)}', 
+                function (n)
+                  return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
+                end)
+      lbk.replacements[\the\csname l@#1\endcsname] =
+          lbk.replacements[\the\csname l@#1\endcsname] or {}
+      table.insert(lbk.replacements[\the\csname l@#1\endcsname],
+                   { pattern = patt, replace = { \babeltempb } })
+    }&%
+  \endgroup}
 \endgroup
 %
 % \subsection{Layout}
