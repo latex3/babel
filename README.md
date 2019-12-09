@@ -1,4 +1,4 @@
-## Babel 3.36.1844
+## Babel 3.37
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,12 +51,13 @@ respective authors.
 ### Latest changes
 
 ```
-3.37   Development - 2019-??-??
+3.37   2019-12-08
+       - Preliminary code for non-standard hyphenation, like ff ->
+         ff-f (lua).
        - \babelprovide now can be used to add or modify values for the
          keys in ini files.
-       - Line break in South East Asian and CKJ are assimilated to
+       - Line breaking in South East Asian and CKJ are assimilated to
          hyphenation, and it is activated even without 'import' (lua).
-       - Preliminary code for non-standard hyphenarion (lua).
 
 3.36   2019-11-14
        - New - \babeladjust, with options: bidi.text, bidi.mirroring,

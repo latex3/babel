@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/12/03 v3.36.1844 The Babel package]
+\ProvidesFile{babel.dtx}[2019/12/08 v3.37 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -202,29 +202,14 @@ Javier Bezos
 \vspace{2cm}
 \leftskip5mm
 \begin{minipage}{10cm}
-\large\setlength\parskip{3mm}\raggedright
-  The standard distribution of \LaTeX\ contains a number of document
-  classes that are meant to be used, but also serve as examples for
-  other users to create their own document classes.  These document
-  classes have become very popular among \LaTeX\ users. But it should
-  be kept in mind that they were designed for American tastes and
-  typography. At one time they even contained a number of hard-wired
-  texts.
-
-  This manual describes \babel{}, a package that makes use of the
-  capabilities of \TeX, \xetex{} and \luatex{} to provide an
-  environment in which documents can be typeset in a language other
-  than US English, or in more than one language or script.
-
-  Current development is focused on Unicode engines (Xe\TeX{} and
-  Lua\TeX) and the so-called \textit{complex scripts}. New features
-  related to font selection, bidi writing, line breaking and so on are
-  being added incrementally.
-
-  \Babel{} provides support (total or partial) for about 200 languages,
-  either as a “classical” package option or as an |ini| file.
-  Furthermore, new languages can be created from scratch easily.
-
+\fontsize{35}{45}\selectfont
+\setlength\parskip{3mm}\raggedright
+Localization and internationalization\\[1cm]
+\TeX\\
+pdf\TeX\\
+Lua\TeX\\
+LuaHB\TeX\\
+Xe\TeX
  \vspace{20cm}
 \end{minipage}
 \end{tabular}
@@ -258,7 +243,7 @@ Javier Bezos
 
 \item The first sections describe the traditional way of loading a
   language (with |ldf| files). The alternative way based on |ini|
-  files, which complements the previous one (it will \textit{not}
+  files, which complements the previous one (it does \textit{not}
   replace it), is described below.
 \end{itemize}
 
@@ -270,6 +255,14 @@ In most cases, a single language is required, and then all you need in
 \LaTeX{} is to load the package using its standard mechanism for this
 purpose, namely, passing that language as an optional argument. In
 addition, you may want to set the font and input encodings.
+
+Many languages are compatible with \textsf{xetex} and \textsf{luatex}.
+With them you can use \babel{} to localize the documents. When these
+engines are used, the Latin script is covered by default in current
+\LaTeX{} (provided the document encoding is UTF-8), because the font
+loader is preloaded and the font is switched to |lmroman|. Other
+scripts require loading \textsf{fontspec}. You may want to set the font
+attributes with \textsf{fontspec}, too.
 
 \begin{example}
   Here is a simple full example for “traditional” \TeX{} engines
@@ -293,13 +286,44 @@ Plus ça change, plus c'est la même chose!
 \end{document}
 \end{verbatim}
 \end{example}
+
+\begin{example}
+And now a simple monolingual document in Russian (text from the
+Wikipedia) with \xetex{} or \luatex{}. Note neither \textsf{fontenc}
+nor \textsf{inputenc} are necessary, but the document should be encoded
+in UTF-8 and a so-called Unicode font must be loaded (in this example
+|\babelfont| is used, described below).
+
+\begin{verbatim}
+\documentclass{article}
+
+_\usepackage[russian]{babel}_
+
+\babelfont{rm}{DejaVu Serif}
+
+\begin{document}
+
+Россия, находящаяся на пересечении множества культур, а также
+с учётом многонационального характера её населения, — отличается
+высокой степенью этнокультурного многообразия и способностью к
+межкультурному диалогу.
+
+\end{document}
+\end{verbatim}
+\end{example}
+
 \begin{troubleshooting}
 \trouble{Paragraph ended before \textbackslash UTFviii@three@octets
 was complete}
 A common source of trouble is a wrong setting of the input encoding.
-Very often you will get the following somewhat cryptic error:
+Depending on the \LaTeX{} version you could get the following somewhat
+cryptic error:
 \begin{verbatim}
 ! Paragraph ended before \UTFviii@three@octets was complete.
+\end{verbatim}
+Or the more explanatory:
+\begin{verbatim}
+! Package inputenc Error: Invalid UTF-8 byte ...
 \end{verbatim}
 Make sure you set the encoding actually used by your editor.
 \end{troubleshooting}
@@ -430,39 +454,11 @@ _\foreignlanguage{french}{français}_.
 \end{verbatim}
 \end{example}
 
-\subsection{Modifiers}
-
-\New{3.9c} The basic behavior of some languages can be modified when
-loading \babel{} by means of \textit{modifiers}. They are set after
-the language name, and are prefixed with a dot (only when the language
-is set as package option -- neither global options nor the |main| key
-accepts them). An example is (spaces are not significant and they can
-be added or removed):\footnote{No predefined ``axis'' for modifiers
-are provided because languages and their scripts have quite different
-needs.}
-\begin{verbatim}
-\usepackage[latin_.medieval_, spanish_.notilde.lcroman_, danish]{babel}
-\end{verbatim}
-
-Attributes (described below) are considered modifiers, ie, you can
-set an attribute by including it in the list of modifiers. However,
-modifiers are a more general mechanism.
-
-\subsection{\textsf{xelatex} and \textsf{lualatex}}
-
-Many languages are compatible with \textsf{xetex} and \textsf{luatex}.
-With them you can use \babel{} to localize the documents.
-
-The Latin script is covered by default in current \LaTeX{} (provided
-the document encoding is UTF-8), because the font loader is preloaded
-and the font is switched to |lmroman|. Other scripts require loading
-\textsf{fontspec}. You may want to set the font attributes with
-\textsf{fontspec}, too.
-
 \begin{example}
-  The following bilingual, single script document in UTF-8 encoding
-  just prints a couple of ‘captions’ and |\today| in Danish and
-  Vietnamese. No additional packages are required.
+  With \xetex{} and \luatex, the following bilingual, single script
+  document in UTF-8 encoding just prints a couple of ‘captions’ and
+  |\today| in Danish and Vietnamese. No additional packages are
+  required.
 \begin{verbatim}
 \documentclass{article}
 
@@ -480,30 +476,23 @@ _\usepackage[vietnamese,danish]{babel}_
 \end{verbatim}
 \end{example}
 
-\begin{example}
-Here is a simple monolingual document in Russian (text from the
-Wikipedia). Note neither \textsf{fontenc} nor \textsf{inputenc} are
-necessary, but the document should be encoded in UTF-8 and a
-so-called Unicode font must be loaded (in this example |\babelfont| is
-used, described below).
+\subsection{Modifiers}
 
+\New{3.9c} The basic behavior of some languages can be modified when
+loading \babel{} by means of \textit{modifiers}. They are set after
+the language name, and are prefixed with a dot (only when the language
+is set as package option -- neither global options nor the |main| key
+accepts them). An example is (spaces are not significant and they can
+be added or removed):\footnote{No predefined ``axis'' for modifiers
+are provided because languages and their scripts have quite different
+needs.}
 \begin{verbatim}
-\documentclass{article}
-
-_\usepackage[russian]{babel}_
-
-\babelfont{rm}{DejaVu Serif}
-
-\begin{document}
-
-Россия, находящаяся на пересечении множества культур, а также
-с учётом многонационального характера её населения, — отличается
-высокой степенью этнокультурного многообразия и способностью к
-межкультурному диалогу.
-
-\end{document}
+\usepackage[latin_.medieval_, spanish_.notilde.lcroman_, danish]{babel}
 \end{verbatim}
-\end{example}
+
+Attributes (described below) are considered modifiers, ie, you can
+set an attribute by including it in the list of modifiers. However,
+modifiers are a more general mechanism.
 
 \subsection{Troubleshooting}
 
@@ -725,7 +714,7 @@ By default only the basic captions and |\today| are redefined, but you
 can add further macros with the key |include| in the optional argument
 (without commas). Macros not to be modified are listed in
 |exclude|. You can also enforce a font encoding with
-|fontenc|.\footnote{With it encoded string may not work as expected.}
+|fontenc|.\footnote{With it, encoded strings may not work as expected.}
 A couple of examples:
 \begin{verbatim}
 \babelensure[include=\Today]{spanish}
@@ -775,18 +764,20 @@ use only shorthands provided by languages.
   char and on the same level are ignored.
 \item Since they are active, a shorthand cannot contain the same
   character in its definition (except if it is deactivated with, eg,
-  |string|).
+  |\string|).
 \end{enumerate}
 \end{note}
 
-A typical error when using shorthands is the following:
+\begin{troubleshooting}
 \trouble{Argument of \textbackslash language@active@arg"
 has an extra \textbraceright}
+A typical error when using shorthands is the following:
 \begin{verbatim}
 ! Argument of \language@active@arg" has an extra }.
 \end{verbatim}
 It means there is a closing brace just after a shorthand, which is not
 allowed (eg,~|"}|). Just add |{}| after (eg,~|"{}}|).
+\end{troubleshooting}
 
 \Describe{\shorthandon}{\marg{shorthands-list}}
 \DescribeOther{\shorthandoff}{%
@@ -818,6 +809,10 @@ so that with
 space, and |^| is the superscript character. The catcodes used are
 those when the shorthands are defined, usually when language files are
 loaded.
+
+If you do not need shorthands, or prefer an alternative approach of
+your own, you may want to switch them off with the package option
+|shorthands=off|, as described below.
 
 \Describe{\useshorthands}{%
 \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
@@ -881,36 +876,6 @@ system shorthands. Language-dependent user shorthands (new in
   is that expected in each context.
 \end{example}
 
-\Describe{\aliasshorthand}{\marg{original}\marg{alias}}
-
-The command |\aliasshorthand| can be used to let another
-character perform the same functions as the default shorthand
-character. If one prefers for example to use the character |/|
-over |"| in typing Polish texts, this can be achieved by entering
-|\aliasshorthand{"}{/}|.
-
-\begin{note}
-  The substitute character must \textit{not} have been declared before
-  as shorthand (in such a case, |\aliashorthands| is ignored).
-\end{note}
-
-\begin{example}
-  The following example shows how to replace a shorthand by another
-\begin{verbatim}
-\aliasshorthand{~}{^}
-\AtBeginDocument{\shorthandoff*{~}}
-\end{verbatim}
-\end{example}
-
-\begin{warning}
-  Shorthands remember somehow the original character, and the fallback
-  value is that of the latter. So, in this example, if no shorthand if
-  found, |^| expands to a non-breaking space, because this is the
-  value of |~| (internally, |^| still calls |\active@char~| or
-  |\normal@char~|). Furthermore, if you change the |system| value of
-  |^| with |\defineshorthand| nothing happens.
-\end{warning}
-
 \Describe{\languageshorthands}{\marg{language}} The command
 |\languageshorthands| can be used to switch the shorthands on the
 language level. It takes one argument, the name of a language or
@@ -943,6 +908,8 @@ off with |\shorthandoff| or (3) deactivated with the internal
 \verb|\babelshorthand{:}|.  (You can conveniently define your own
 macros, or even your own user shorthands provided they do not overlap.)
 
+\bigskip
+
 For your records, here is a list of shorthands, but you must double
 check them, as they may change:\footnote{Thanks to Enrico Gregorio}
 
@@ -969,7 +936,7 @@ check them, as they may change:\footnote{Thanks to Enrico Gregorio}
 \item[Kurmanji] |^|
 \item[Latin] |" ^ =|
 \item[Slovak] |" ^ ' -|
-\item[Spanish] |" . < > '|
+\item[Spanish] |" . < > ' ~|
 \item[Turkish] |: ! =|
 \end{description}
 In addition, the \babel{} core declares |~| as a one-char shorthand
@@ -980,6 +947,37 @@ preserved for backward compatibility.}
 \Describe\ifbabelshorthand{\marg{character}\marg{true}\marg{false}}
 
 \New{3.23} Tests if a character has been made a shorthand.
+
+\Describe{\aliasshorthand}{\marg{original}\marg{alias}}
+
+The command |\aliasshorthand| can be used to let another character
+perform the same functions as the default shorthand character. If one
+prefers for example to use the character |/| over |"| in typing Polish
+texts, this can be achieved by entering |\aliasshorthand{"}{/}|. For
+the reasons in the warning below, usage of this macro is not
+recommended.
+
+\begin{note}
+  The substitute character must \textit{not} have been declared before
+  as shorthand (in such a case, |\aliashorthands| is ignored).
+\end{note}
+
+\begin{example}
+  The following example shows how to replace a shorthand by another
+\begin{verbatim}
+\aliasshorthand{~}{^}
+\AtBeginDocument{\shorthandoff*{~}}
+\end{verbatim}
+\end{example}
+
+\begin{warning}
+  Shorthands remember somehow the original character, and the fallback
+  value is that of the latter. So, in this example, if no shorthand if
+  found, |^| expands to a non-breaking space, because this is the
+  value of |~| (internally, |^| still calls |\active@char~| or
+  |\normal@char~|). Furthermore, if you change the |system| value of
+  |^| with |\defineshorthand| nothing happens.
+\end{warning}
 
 \subsection{Package options}
 
@@ -1172,8 +1170,8 @@ LICR). They will be evolving with the time to add more features
 (something to keep in mind if backward compatibility is important). The
 following section shows how to make use of them currently (by means of
 |\babelprovide|), but a higher interface, based on package options, in
-under development (in other words, |\babelprovide| is mainly intended
-for auxiliary tasks).
+under study. In other words, |\babelprovide| is mainly meant
+for auxiliary tasks.
 
 \begin{example}
   Although Georgian has its own \texttt{ldf} file, here is how to
@@ -1221,27 +1219,30 @@ for auxiliary tasks).
 \newfontscript{Devanagari}{deva}
 \end{verbatim}  
   Other Indic scripts are still under development in \luatex{}. On the
-  other hand, \xetex{} is better.
+  other hand, \xetex{} is better. The upcoming \textsf{lualatex} will
+  be based on \textsf{luahbtex}, so Indic scripts will be rendered
+  correctly with the option |Renderer=Harfbuzz| in \textsc{fontspec}.
 \item[Southeast scripts] Thai works in both \luatex{} and \xetex{}, but
   line breaking differs (rules can be modified in \luatex; they are
-  hardcoded in \xetex). Lao seems to work, too, but there are no
-  patterns for the latter in \luatex{}. Some quick patterns could help,
-  with something similar to:
+  hard-coded in \xetex). Lao seems to work, too, but there are no
+  patterns for the latter in \luatex{}. Khemer clusters are rendered
+  wrongly. The comment about Indic scripts and \textsf{lualatex} also
+  applies here. Some quick patterns could help, with something similar
+  to:
 \begingroup
 \setmonofont[Script=Lao,Scale=MatchLowercase]{DejaVu Sans Mono}
 \begin{verbatim}
 \babelprovide[import,hyphenrules=+]{lao}
-\babelpatterns[lao]{1ດ 1ມ 1ແ 1ອ 1ງ 1ກ 1າ} % Random
+\babelpatterns[lao]{1ດ 1ມ 1ອ 1ງ 1ກ 1າ} % Random
 \end{verbatim}
 \endgroup
-  Khemer clusters are rendered wrongly.
 \item[East Asia scripts] Settings for either Simplified of Traditional
 should work out of the box. \luatex{} does basic line breaking, but
 currently \xetex{} does not (you may load \textsf{zhspacing}). Although
 for a few words and shorts texts the |ini| files should be fine, CJK
 texts are best set with a dedicated framework (\textsf{CJK},
 \textsf{luatexja}, \textsf{kotex}, \textsf{CTeX}, etc.). This is what
-the class |ltjbook| does with \luatex, which can be used in conjuntion
+the class |ltjbook| does with \luatex, which can be used in conjunction
 with the |ldf| for |japanese|, because the following piece of code
 loads \textsf{luatexja}:
 \begin{verbatim}
@@ -1872,6 +1873,13 @@ also the package \textsf{combofont} for a complementary approach.}
 \Describe\babelfont{\oarg{language-list}\marg{font-family}%
   \oarg{font-options}\marg{font-name}}
 
+The main purpose of |\babelfont| is to define at once in a multilingual
+document the fonts required by the different languages, with their
+corresponding language systems (script and language). So, if you load,
+say, 4 languages, |\babelfont{rm}{FreeSerif}| defines 4 fonts (with their
+variants, of course), which are switched with the language by \babel.
+It is a tool to make things easier and transparent to the user.
+
 Here \textit{font-family} is |rm|, |sf| or |tt| (or newly defined
 ones, as explained below), and \textit{font-name} is the same as in
 \textsf{fontspec} and the like.
@@ -2017,32 +2025,24 @@ to ignore it altogether.
 \end{troubleshooting}
 
 \begin{troubleshooting}
-\trouble{Package babel Warning: The following fonts are not babel standard families}
-\textit{Package babel Warning: The following fonts are not babel
+\trouble{Package babel Info: The following fonts are not babel standard families}
+\textit{Package babel Info: The following fonts are not babel
 standard families}.
-\textbf{This is \textit{not} and error.}
-The main purpose of |\babelfont| is to define at once in a multilingual
-document the fonts required by the different languages, with their
-corresponding language systems (script and language). So, if you load,
-say, 4 languages, |\babelfont{rm}{FreeSerif}| defines 4 fonts (with their
-variants, of course), which are switched with the language by \babel.
-It's just a tool to make things easier and transparent to the user.
 
-There is no real need to use |\babelfont| in a monolingual document, if
-you set the language system in |\setmainfont| (or not, depending on what
-you want).
+\textbf{This is \textit{not} and error.} \babel{} assumes that if you
+are using |\babelfont| for a family, very likely you want to define the
+rest of them. If you don't, you can find some inconsistencies between
+families. This checking is done at the beginning of the document, at a
+point where we cannot know which families will be used.
 
-\babel assumes that if you are using |\babelfont| for a family, very
-likely you want to define the rest of them. If you don't, you can find
-some inconsistencies between families. This checking is done at the
-beginning of the document, at a point where we cannot know which
-families will be used.
+Actually, there is no real need to use |\babelfont| in a monolingual
+document, if you set the language system in |\setmainfont| (or not,
+depending on what you want).
 
 As the message explains, \textit{there is nothing intrinsically wrong}
 with not defining all the families. In fact, there is nothing
 intrinsically wrong with not using |\babelfont| at all. But you must be
-aware that this may lead to some problems. And this is the very reason
-of the warning.
+aware that this may lead to some problems.
 \end{troubleshooting}
 
 \subsection{Modifying a language}
@@ -2116,11 +2116,11 @@ available, are set to the current ones, left and right hyphen mins are
 set to 2 and 3. In either case, caption, date and language system are
 not defined.
 
-If no |ini| file is imported with |import|, \m{language-name} is
-relevant because in such a case the hyphenation rules (including those
-for South East Asian and CJK) are based on it as provided in the |ini|
-file corresponding to that name; the same applies to OpenType language
-and script.
+If no |ini| file is imported with |import|, \m{language-name} is still
+relevant because in such a case the hyphenation and like breaking rules
+(including those for South East Asian and CJK) are based on it as
+provided in the |ini| file corresponding to that name; the same applies
+to OpenType language and script.
 
 Conveniently, some options allow to fill the language, and \babel{}
 warns you about what to do if there is a missing string. Very likely
@@ -2156,7 +2156,7 @@ If the language has been loaded as an argument in |\documentclass| or
 \New{3.13} Imports data from an |ini| file, including captions, date,
 and hyphenmins. For example:
 \begin{verbatim}
-\babelprovide[import=hu]{hungarian}
+\babelprovide[_import=hu_]{hungarian}
 \end{verbatim}
 Unicode engines load the UTF-8 variants, while 8-bit engines load the
 LICR (ie, with macros like |\'| or |\ss|) ones.
@@ -2167,7 +2167,7 @@ file set in the corresponding |babel-<language>.tex| (where
 the list of recognized languages above. So, the previous example could 
 be written:
 \begin{verbatim}
-\babelprovide[import]{hungarian}
+\babelprovide[_import_]{hungarian}
 \end{verbatim}
 
 There are about 200 |ini| files, with data taken from the |ldf| files
@@ -2185,14 +2185,14 @@ calls |\<language>date{\the\year}{\the\month}{\the\day}|.
 \Describe{captions=}{\meta{language-tag}}
 Loads only the strings. For example:
 \begin{verbatim}
-\babelprovide[captions=hu]{hungarian}
+\babelprovide[_captions=hu_]{hungarian}
 \end{verbatim}
 
 \Describe{hyphenrules=}{\meta{language-list}} With this option, with a
 space-separated list of hyphenation rules, \babel{} assigns to the
 language the first valid hyphenation rules in the list. For example:
 \begin{verbatim}
-\babelprovide[hyphenrules=chavacano spanish italian]{chavacano}
+\babelprovide[_hyphenrules=chavacano spanish italian_]{chavacano}
 \end{verbatim}
 If none of the listed hyphenrules exist, the default behavior
 applies. Note in this example we set |chavacano| as first option --
@@ -2237,14 +2237,13 @@ cases.
 
 \Describe{mapfont=}{\texttt{direction}}
 Assigns the font for the writing direction of this language (only with
-|bidi=basic|).\footnote{There will be another value, \texttt{language},
-not yet implemented.} More precisely, what |mapfont=direction| means
-is, ‘when a character has the same direction as the script for the
-“provided” language, then change its font to that set for this
-language’. There are 3 directions, following the bidi Unicode
-algorithm, namely, Arabic-like, Hebrew-like and left to
-right.\footnote{In future releases a new value (\texttt{script}) will
-be added.} So, there should be at most 3 directives of this kind.
+|bidi=basic|). More precisely, what |mapfont=direction| means is, ‘when
+a character has the same direction as the script for the “provided”
+language, then change its font to that set for this language’. There
+are 3 directions, following the bidi Unicode algorithm, namely,
+Arabic-like, Hebrew-like and left to right.\footnote{In future releases
+a couple of values (\texttt{language} and \texttt{script}) will be
+added.} So, there should be at most 3 directives of this kind.
 
 \Describe{intraspace=}{\meta{base} \meta{shrink} \meta{stretch}}
 Sets the interword space for the writing system of the language, in em
@@ -2284,8 +2283,8 @@ For example:
   % \babelprovide[import, maparabic]{telugu}
 \babelfont{rm}{Gautami}
 \begin{document}
-\telugudigits{1234}
-\telugucounter{section}
+_\telugudigits{1234}_
+_\telugucounter{section}_
 \end{document}
 \end{verbatim}
 
@@ -2551,11 +2550,12 @@ consider the intrinsic direction of scripts and weak directionality.)
 tentative, but it mostly works. For RL documents use the former, and
 for LR ones use the latter.
 
-\New{3.32} There is some experimental support for \textsf{harftex}.
-Since it is based on \luatex, the option |basic| mostly works. You may
-need to deactivate the |rtlm| or the |rtla| font features (besides
-loading \textsf{harfload} before \babel and activating |mode=harf|;
-there is a sample in the GitHub repository).
+\New{3.37} There is some experimental support for \textsf{luahbtex}
+(with |lualatex-dev|) and the latest releases of \textsf{luaotfload}
+(3.11), with |Renderer = Harfbuzz| in \textsf{fontspec}. Since it is
+based on \luatex, the option |basic| mostly works (You may need
+deactivate the |rtlm| or the |rtla| font features, or alternatively
+deactive mirroring in \babel{} with |\babeladjust|.)
 
 There are samples on GitHub, under \texttt{/required/babel/samples}.
 See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
@@ -3194,24 +3194,29 @@ section and the key name). New keys may be added, too.
 
 \New{3.37} With \luatex{} it is now possible to define non-standard
 hyohenation rules, like |f-f| $\to$ |ff-f|. No rules are currently
-provided by defualt, but they can be defined as shown in the following
+provided by default, but they can be defined as shown in the following
 example:
 \begin{verbatim}
 \babelposthyphenation{ngerman}{([fmtrp]) | {1}}
 {
-  { no = {1}, pre = {1}{1}-},
-  remove,
-  {}
+  { no = {1}, pre = {1}{1}-}, % Replace first char with disc
+  remove,                     % Remove automatic disc
+  {}                          % Keep last char, untouched
 }
 \end{verbatim}
 
-See the \babel{} wiki for a description and some examples:
+This feature must be explicitly activated with:
+\begin{verbatim}
+\babeladjust{ hyphenation.extra = on }
+\end{verbatim}
+
+See the \babel{} wiki for a more detailed description and some examples:
 \begin{verbatim}
 https://github.com/latex3/babel/wiki
 \end{verbatim}
 
 \medskip
-\textbf{Old stuff}
+\textbf{Old and deprecated stuff}
 
 A couple of tentative macros were provided by \babel{} ($\ge$3.9g) with
 a partial solution for ``Unicode'' fonts. These macros are now
@@ -4020,29 +4025,25 @@ help from Bernd Raichle, for which I am grateful.
 \begin{thebibliography}{9}
  \bibitem{AT} Huda Smitshuijzen Abifares, \textit{Arabic Typography},
    Saqi, 2001.
- \bibitem{DEK} Donald E. Knuth,
-   \emph{The \TeX book}, Addison-Wesley, 1986.
- \bibitem{LLbook} Leslie Lamport,
-    \emph{\LaTeX, A document preparation System}, Addison-Wesley,
-    1986.
- \bibitem{treebus} K.F. Treebus.
-    \emph{Tekstwijzer, een gids voor het grafisch verwerken van
-    tekst},
-    SDU Uitgeverij ('s-Gravenhage, 1988).
- \bibitem{HP} Hubert Partl,
-   \emph{German \TeX},
-   \emph{TUGboat} 9 (1988) \#1, p.~70--72.
-  \bibitem{LLth} Leslie Lamport,
-    in: \TeX hax Digest, Volume 89, \#13, 17 February 1989.
  \bibitem{BEP} Johannes Braams, Victor Eijkhout and Nico Poppelier,
    \emph{The development of national \LaTeX\ styles},
    \emph{TUGboat} 10 (1989) \#3, p.~401--406.
  \bibitem{FE} Yannis Haralambous,
    \emph{Fonts \& Encodings}, O'Reilly, 2007.
+ \bibitem{DEK} Donald E. Knuth,
+   \emph{The \TeX book}, Addison-Wesley, 1986.
  \bibitem{UE} Jukka K. Korpela,
    \textit{Unicode Explained}, O'Reilly, 2006.
+ \bibitem{LLbook} Leslie Lamport,
+    \emph{\LaTeX, A document preparation System}, Addison-Wesley,
+    1986.
+ \bibitem{LLth} Leslie Lamport,
+    in: \TeX hax Digest, Volume 89, \#13, 17 February 1989.
  \bibitem{CJKV} Ken Lunde,
    \textit{CJKV Information Processing}, O'Reilly, 2nd ed., 2009.
+ \bibitem{HP} Hubert Partl,
+   \emph{German \TeX},
+   \emph{TUGboat} 9 (1988) \#1, p.~70--72.
  \bibitem{ilatex} Joachim Schrod,
    \emph{International \LaTeX\ is ready to use},
    \emph{TUGboat} 11 (1990) \#1, p.~87--90.
@@ -4050,6 +4051,10 @@ help from Bernd Raichle, for which I am grateful.
    Sofroniu,
    \emph{Digital typography using \LaTeX},
    Springer, 2002, p.~301--373.
+ \bibitem{treebus} K.F. Treebus.
+    \emph{Tekstwijzer, een gids voor het grafisch verwerken van
+    tekst},
+    SDU Uitgeverij ('s-Gravenhage, 1988).
 \end{thebibliography}
 \end{document}
 %</filedriver>
@@ -4155,8 +4160,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.36.1844>>
-%<<date=2019/12/03>>
+%<<version=3.37>>
+%<<date=2019/12/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8136,6 +8141,8 @@ help from Bernd Raichle, for which I am grateful.
 %   intraspace.}
 % \changes{babel~3.34}{2019/09/20}{Fix - with main the language must not
 %   be restored.}
+% \changes{babel~3.37}{2019/12/07}{SEA and CJK linebreaking activated
+%   by default.}
 %
 %    \begin{macrocode}
 \bbl@trace{Creating languages and reading ini files}
@@ -8466,7 +8473,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 % The reader of |ini| files. There are 3 possible cases: a section name
 % (in the form |[...]|), a comment (starting with |;|) and a
-% key/value pair. \textit{TODO - Work in progress.}
+% key/value pair.
+%
+% \changes{babel~3.37}{2019/12/07}{Allow to define key/values
+%   (added \cs{bbl@renewlist}).}
 %
 %    \begin{macrocode}
 \def\bbl@read@ini#1#2{%
@@ -10185,8 +10195,6 @@ help from Bernd Raichle, for which I am grateful.
          Babel = Babel or {}
          Babel.locale_props = Babel.locale_props or {}
          Babel.locale_props[\bbl@id@last] = {}
-         Babel.locale_ids = Babel.locale_ids or {}
-         Babel.locale_ids['\languagename'] = \bbl@id@last
         }%
       \fi}%
     {}%
@@ -10798,10 +10806,16 @@ help from Bernd Raichle, for which I am grateful.
 %    so we can safely use its error handling interface. Otherwise
 %    we'll have to `keep it simple'.
 %
+%    Infos are not written to the console, but on the other hand many
+%    people think warnings are errors, so a further message type is
+%    defined: an important info which is sent to the console.
+%
 % \changes{babel~3.9a}{2012/07/30}{\cs{newcommand}s replaced by
 %    \cs{def}'s, so that the file can be loaded twice}
 % \changes{babel~3.9a}{2013/01/26}{Define generic variants instead of
 %    duplicating each predefined message}
+% \changes{babel~3.37}{2019/12/07}{New message type: an into written to
+%    the console.}
 %
 %    \begin{macrocode}
 \edef\bbl@nulllanguage{\string\language=0}
@@ -12274,6 +12288,8 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.24}{2018/09/24}{Lua code for interword spacing
 %   in Southeast Asian scripts.}
 % \changes{babel~3.32}{2019/05/25}{Don't break with CJK if nohyphenation.}
+% \changes{babel~3.37}{2019/12/07}{Added code for non-standard
+%   hyphenation.}
 %
 % \textit{In progress.} Replace regular (ie, implicit) discretionaries
 % by spaceskips, based on the previous glyph (which I think makes
@@ -12567,8 +12583,27 @@ help from Bernd Raichle, for which I am grateful.
 \let\bbl@chprop@lb\bbl@chprop@linebreak
 %    \end{macrocode}
 %
-%  Post-handling hyphenation patterns for non-standard rules, like |ff|
-%  to |ff-f|.
+% Post-handling hyphenation patterns for non-standard rules, like |ff|
+% to |ff-f|. There are still some issues with speed (not very slow, but
+% still slow).
+%
+% After declaring the table containing the patterns with their
+% replacements, we define some auxiliary functions: |str_to_nodes|
+% converts the string returned by a function to a node list, taking the
+% node at |base| as a model (font, language, etc.); |fetch_word|
+% fetches a series of glyphs and discretionaries, which |pattern| is
+% matched against (if there is a match, it is called again before
+% trying other patterns, and this is very likely the main bottleneck).
+%
+% |post_hyphenate_replace| is the callback applied after
+% |tex.hyphenate|. This means the automatic hyphenation points are
+% known. As empty captures return a byte position (as explained in the
+% \luatex{} manual), we must convert it to a utf8 position. With
+% |first|, the last byte can be the leading byte in a utf8 sequence,
+% so we just remove it and add 1 to the resulting length. With |last|
+% we must take into account the capture position points to the next
+% character. Here |word_head| points to the starting node of the text to
+% be matched.
 %  
 %    \begin{macrocode}
 \begingroup
@@ -12576,9 +12611,12 @@ help from Bernd Raichle, for which I am grateful.
 \catcode`\%=12
 \catcode`\&=14
 \directlua{
-  function Babel.str_to_nodes(text, base)
+  Babel.linebreaking.replacements = {}
+
+  function Babel.str_to_nodes(fn, matches, base)
     local n, head, last    
-    for s in string.utfvalues(text) do
+    if fn == nil then return nil end
+    for s in string.utfvalues(fn(matches)) do
       if base.id == 7 then 
         base = base.replace
       end
@@ -12598,8 +12636,9 @@ help from Bernd Raichle, for which I am grateful.
     local word_string = ''
     local word_nodes = {}
     local lang
+    local item = head
 
-    for item in node.traverse(head) do
+    while item do
 
       if item.id == 29
           and not(item.char == 124) &% ie, not |
@@ -12610,12 +12649,12 @@ help from Bernd Raichle, for which I am grateful.
         word_nodes[#word_nodes+1] = item
 
       elseif item.id == 7 and item.subtype == 2 then
-         word_string = word_string .. '='
-         word_nodes[#word_nodes+1] = item
+        word_string = word_string .. '='
+        word_nodes[#word_nodes+1] = item
 
       elseif item.id == 7 and item.subtype == 3 then
-         word_string = word_string .. '|'       
-         word_nodes[#word_nodes+1] = item
+        word_string = word_string .. '|'       
+        word_nodes[#word_nodes+1] = item
 
       elseif word_string == '' then
         &% pass
@@ -12623,34 +12662,27 @@ help from Bernd Raichle, for which I am grateful.
       else
         return word_string, word_nodes, item, lang
       end
+
+      item = item.next
     end
   end
 
-  function Babel.capture_func(key, cap)
-    local ret = "[[" .. cap:gsub('{([0-9])}', "]]..m[%1]..[[") .. "]]"
-    ret = ret:gsub("%[%[%]%]%.%.", '')
-    ret = ret:gsub("%.%.%[%[%]%]", '')
-    return key .. [[=function(m) return ]] .. ret .. [[ end]]
-  end
-
-  Babel.linebreaking.replacements = {}
-
   function Babel.post_hyphenate_replace(head)
     local u = unicode.utf8
-    local lbk = Babel.linebreaking
+    local lbkr = Babel.linebreaking.replacements
     local word_head = head
 
     while true do
       local w, wn, nw, lang = Babel.fetch_word(word_head)
       if not lang then return head end
 
-      if not lbk.replacements[lang] then
+      if not lbkr[lang] then
         break
       end
 
-      for k=1, #lbk.replacements[lang] do
-        local r = lbk.replacements[lang][k].replace
-        local p = lbk.replacements[lang][k].pattern 
+      for k=1, #lbkr[lang] do
+        local p = lbkr[lang][k].pattern 
+        local r = lbkr[lang][k].replace
 
         while true do
           local matches = { u.match(w, p) }
@@ -12659,50 +12691,49 @@ help from Bernd Raichle, for which I am grateful.
           local first = table.remove(matches, 1)
           local last =  table.remove(matches, #matches)
 
-          &% Fix offsets, from bytes to unicode
+          &% Fix offsets, from bytes to unicode.
           first = u.len(w:sub(1, first-1)) + 1
           last  = u.len(w:sub(1, last-1))
 
           local new  &% used when inserting and removing nodes
           local changed = 0
 
-          &% This loop is somewhat dirty. To refactor. 
+          &% This loop traverses the replace list and takes the
+          &% corresponding actions
           for q = first, last do   
-            local rep_i = r[q-first+1]
+            local crep = r[q-first+1]
             local char_node = wn[q]
             local char_base = char_node
 
-            if rep_i and rep_i.data then
-              char_base = wn[rep_i.data+first-1]
+            if crep and crep.data then
+              char_base = wn[crep.data+first-1]
             end
 
-            if rep_i == nil then
-              rep_i = { string = function(m) return '' end }
-            end
-
-            if rep_i and (rep_i.pre or rep_i.no or rep_i.post) then
+            if crep == {} then
+              break
+            elseif crep == nil then
+              changed = changed + 1
+              node.remove(head, char_node)
+            elseif crep and (crep.pre or crep.no or crep.post) then
               changed = changed + 1
               d = node.new(7, 0)   &% (disc, discretionary)
-              local prepre = rep_i.pre and rep_i.pre(matches) or ''
-              d.pre = Babel.str_to_nodes(prepre, char_base)
-              d.post = Babel.str_to_nodes(
-                  rep_i.post and rep_i.post(matches) or '', char_base)
-              d.replace = Babel.str_to_nodes(
-                  rep_i.no and rep_i.no(matches) or '', char_base)
+              d.pre = Babel.str_to_nodes(crep.pre, matches, char_base)
+              d.post = Babel.str_to_nodes(crep.post, matches, char_base)
+              d.replace = Babel.str_to_nodes(crep.no, matches, char_base)
               d.attr = char_base.attr
-              if prepre == '' then  &% TeXbook p96
-                d.penalty  = rep_i.penalty or tex.hyphenpenalty
+              if crep.pre == nil then  &% TeXbook p96
+                d.penalty  = crep.penalty or tex.hyphenpenalty
               else
-                d.penalty  = rep_i.penalty or tex.exhyphenpenalty
+                d.penalty  = crep.penalty or tex.exhyphenpenalty
               end
               head, new = node.insert_before(head, char_node, d)
               node.remove(head, char_node)
               if q == 1 then
                 word_head = new
               end
-            elseif rep_i and rep_i.string then
+            elseif crep and crep.string then
               changed = changed + 1
-              local str = rep_i.string(matches)
+              local str = crep.string(matches)
               if str == '' then 
                 if q == 1 then
                   word_head = char_node.next
@@ -12743,7 +12774,28 @@ help from Bernd Raichle, for which I am grateful.
     end  &% for words
     return head
   end
+
+  function Babel.capture_func(key, cap)
+    local ret = "[[" .. cap:gsub('{([0-9])}', "]]..m[%1]..[[") .. "]]"
+    ret = ret:gsub("%[%[%]%]%.%.", '')
+    ret = ret:gsub("%.%.%[%[%]%]", '')
+    return key .. [[=function(m) return ]] .. ret .. [[ end]]
+  end
 }
+%    \end{macrocode}
+%
+% Now the \TeX{} high level interface, which requires the function
+% defined above for converting strings to functions returning a string.
+% These functions handle the |{|\textit{n}|}| syntax. For example,
+% |pre={1}{1}-| becomes |function(m) return m[1]..m[1]..'-' end|, where
+% |m| are the matches returned after applying the pattern. The way it
+% is done is somewhat tricky, but the effect in not dissimilar to lua
+% |load| – save the code as string in a TeX macro, and expand this
+% macro at the appropriate place. As |\directlua| does not take into
+% account the current catcode of |@|, we just avoid this character in
+% macro names (which explains the internal group, too).
+% 
+%    \begin{macrocode}
 \catcode`\#=6
 \gdef\babelposthyphenation#1#2#3{&%
   \begingroup
@@ -12761,8 +12813,9 @@ help from Bernd Raichle, for which I am grateful.
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
     \directlua{
-      local lbk = Babel.linebreaking
+      local lbkr = Babel.linebreaking.replacements
       local u = unicode.utf8
+      &% Convert pattern:
       local patt = string.gsub([[#2]], '%s', '')
       if not u.find(patt, '()', nil, true) then
         patt = '()' .. patt .. '()'
@@ -12771,13 +12824,13 @@ help from Bernd Raichle, for which I am grateful.
                 function (n)
                   return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
                 end)
-      lbk.replacements[\the\csname l@#1\endcsname] =
-          lbk.replacements[\the\csname l@#1\endcsname] or {}
-      table.insert(lbk.replacements[\the\csname l@#1\endcsname],
+      lbkr[\the\csname l@#1\endcsname] = lbkr[\the\csname l@#1\endcsname] or {}
+      table.insert(lbkr[\the\csname l@#1\endcsname],
                    { pattern = patt, replace = { \babeltempb } })
     }&%
   \endgroup}
 \endgroup
+%    \end{macrocode}
 %
 % \subsection{Layout}
 %
