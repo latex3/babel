@@ -1,4 +1,4 @@
-## Babel 3.37
+## Babel 3.38
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,13 +51,22 @@ respective authors.
 ### Latest changes
 
 ```
+3.38   2020-01-15
+       - Automatic switching of ids (\language and \localeid), and fonts
+         based on script blocks (lua).s
+       - New macro - \localeinfo, to access the basic data in the ini
+         file loaded by languages.
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.38
+       
+       
 3.37   2019-12-08
        - Preliminary code for non-standard hyphenation, like ff ->
          ff-f (lua).
        - \babelprovide now can be used to add or modify values for the
          keys in ini files.
-       - Line breaking in South East Asian and CKJ are assimilated to
-         hyphenation, and it is activated even without 'import' (lua).
+       - Line breaking in South East Asian and CKJ is assimilated to
+         hyphenation, and it is activated even without 'import' (lua).      
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.37
 
 3.36   2019-11-14
        - New - \babeladjust, with options: bidi.text, bidi.mirroring,
@@ -65,7 +74,8 @@ respective authors.
          linebreak.cjk. There are still some limitations (lua).
        - New - ini for Polytonic Greek, thanks to Claudio Beccari.
        - Fix - Language and script set for Chinese Tradicional and
-         Chinese Simplified.
+         Chinese Simplified.        
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.36
 
 3.35   2019-10-15
        - \markboth and \markright made robust with a recent LaTeX.
@@ -115,12 +125,6 @@ respective authors.
          is a potential source of backwards incompatibilities, but
          very likely the risks are very low, and it is, I think, the
          expected behavior.
-
-3.27   2018-11-13
-       - Preliminary support for bidi (by Vafa Khalighi) with xetex.
-       - Fix for 3.23 - \ensureascii was redefined even when not 
-         necessary.
-       - Minor improvements in babel-vi.ini.
 
 ```
 

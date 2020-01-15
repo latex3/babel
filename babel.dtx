@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2019/12/08 v3.37 The Babel package]
+\ProvidesFile{babel.dtx}[2020/01/15 v3.38 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -59,6 +59,7 @@
 \newcommand*\xetex{\textsf{xetex}}
 \newcommand*\pdftex{\textsf{pdftex}}
 \newcommand*\luatex{\textsf{luatex}}
+\newcommand\largetex{T\kern -.1517em\lower .45ex\hbox {E}\kern -.09emX}
 \newcommand*\nb[1]{}
 \newcommand*\m[1]{\mbox{$\langle$\normalfont\itshape#1\/$\rangle$}}
 \newcommand*\langlist{%
@@ -98,7 +99,18 @@
 \newtheorem{troubleshooting}{Troubleshooting}
 \let\bblxv\verbatim
 \let\bblexv\endverbatim
-\def\verbatim{\begin{shaded*}\bblxv\vskip-\baselineskip\vskip2.5\parsep}
+\newcommand\setengine{\def\engine}
+\let\engine\relax
+\def\verbatim{%
+  \begin{shaded*}%
+    \ifx\engine\relax\else
+      \vskip-1.08\baselineskip
+      \leavevmode\llap{\fbox{\footnotesize\textsc{\engine}}\hskip2.8em}%
+      \vskip-1.5\baselineskip
+      \vskip0pt
+      \global\let\engine\relax
+    \fi
+    \bblxv\vskip-\baselineskip\vskip2.5\parsep}
 \def\endverbatim{\bblexv\vskip-2\baselineskip\end{shaded*}}
 \catcode`\_=\active
 \def_{\bgroup\let_\egroup\leavevmode\color{thered}}
@@ -205,11 +217,11 @@ Javier Bezos
 \fontsize{35}{45}\selectfont
 \setlength\parskip{3mm}\raggedright
 Localization and internationalization\\[1cm]
-\TeX\\
-pdf\TeX\\
-Lua\TeX\\
-LuaHB\TeX\\
-Xe\TeX
+\largetex\\
+pdf\largetex\\
+Lua\largetex\\
+LuaHB\largetex\\
+Xe\largetex
  \vspace{20cm}
 \end{minipage}
 \end{tabular}
@@ -271,6 +283,7 @@ attributes with \textsf{fontspec}, too.
   example because typically you will need them (however, the package
   \textsf{inputenc} may be omitted with \LaTeX{} $\ge$ 2018-04-01 if
   the encoding is UTF-8):
+\setengine{pdftex}
 \begin{verbatim}
 \documentclass{article}
 
@@ -294,6 +307,7 @@ nor \textsf{inputenc} are necessary, but the document should be encoded
 in UTF-8 and a so-called Unicode font must be loaded (in this example
 |\babelfont| is used, described below).
 
+\setengine{luatex/xetex}
 \begin{verbatim}
 \documentclass{article}
 
@@ -433,6 +447,7 @@ detail: |\selectlanguage| is used for blocks of text, while
 A full bilingual document follows. The main language is |french|, which
 is activated when the document begins. The package \textsf{inputenc}
 may be omitted with \LaTeX{} $\ge$ 2018-04-01 if the encoding is UTF-8.
+\setengine{pdftex}
 \begin{verbatim}
 \documentclass{article}
 
@@ -459,6 +474,7 @@ _\foreignlanguage{french}{français}_.
   document in UTF-8 encoding just prints a couple of ‘captions’ and
   |\today| in Danish and Vietnamese. No additional packages are
   required.
+\setengine{luatex/xetex}
 \begin{verbatim}
 \documentclass{article}
 
@@ -892,12 +908,14 @@ in \textsf{english} the shorthands defined by \textsf{ngerman} with
 (You may also need to activate them as user shorthands in the preamble
 with, for example, |\useshorthands| or |\useshorthands*|.)
 
-Very often, this is a more convenient way to deactivate shorthands
-than |\shorthandoff|, for example if you want to define a macro
-to easy typing phonetic characters with \textsf{tipa}:
+\begin{example}
+  Very often, this is a more convenient way to deactivate shorthands
+  than |\shorthandoff|, for example if you want to define a macro
+  to easy typing phonetic characters with \textsf{tipa}:
 \begin{verbatim}
 \newcommand{\myipa}[1]{{\languageshorthands{none}\tipaencoding#1}}
 \end{verbatim}
+\end{example}
 
 \Describe{\babelshorthand}{\marg{shorthand}}
 With this command you can use a shorthand even if (1) not activated in
@@ -907,6 +925,15 @@ off with |\shorthandoff| or (3) deactivated with the internal
 |\bbl@deactivate|; for example, \verb|\babelshorthand{"u}| or
 \verb|\babelshorthand{:}|.  (You can conveniently define your own
 macros, or even your own user shorthands provided they do not overlap.)
+
+\begin{example}
+  Since by default shorthands are not activated until
+  |\begin{document}|, you may use this macro when defining the |\title|
+  in the preamble:
+\begin{verbatim}
+\title{Documento científico\babelshorthand{"-}técnico}
+\end{verbatim}
+\end{example}
 
 \bigskip
 
@@ -1178,6 +1205,7 @@ for auxiliary tasks.
   declare this language with an |ini| file in Unicode engines.
 \begingroup
 \setmonofont[Scale=.87,Script=Georgian]{DejaVu Sans Mono}
+\setengine{luatex/xetex}
 \begin{verbatim}
 \documentclass{book}
 
@@ -1910,6 +1938,7 @@ you may add further key/value pairs if necessary.
 \def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TLT \else
 \bgroup\textdir TRT \fontspec[Scale=.87,Script=Hebrew]{Liberation
 Mono} \fi}
+\setengine{luatex/xetex}
 \begin{verbatim}
 \documentclass{article}
 
@@ -1929,6 +1958,7 @@ Svenska \foreignlanguage{hebrew}{@2עִבְרִית@0} svenska.
 
 If on the other hand you have to resort to different fonts, you could
 replace the red line above with, say:
+\setengine{luatex/xetex}
 \begin{verbatim}
 \babelfont{rm}{Iwona}
 \babelfont[hebrew]{rm}{FreeSerif}
@@ -1941,6 +1971,7 @@ to select fonts in addition to the three basic families.
 
 \begin{example}
   Here is how to do it:
+\setengine{luatex/xetex}
 \begin{verbatim}
 \babelfont{kai}{FandolKai}
 \end{verbatim}
@@ -1950,6 +1981,7 @@ to select fonts in addition to the three basic families.
 
 \begin{note}
   You may load \textsf{fontspec} explicitly. For example:
+\setengine{luatex/xetex}
 \begin{verbatim}
 \usepackage{fontspec}
 \newfontscript{Devanagari}{deva}
@@ -2241,9 +2273,17 @@ Assigns the font for the writing direction of this language (only with
 a character has the same direction as the script for the “provided”
 language, then change its font to that set for this language’. There
 are 3 directions, following the bidi Unicode algorithm, namely,
-Arabic-like, Hebrew-like and left to right.\footnote{In future releases
-a couple of values (\texttt{language} and \texttt{script}) will be
-added.} So, there should be at most 3 directives of this kind.
+Arabic-like, Hebrew-like and left to right. So, there should be at most
+3 directives of this kind.
+
+\Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}}
+\New{3.38} This options is much like an ‘event’ called with a character
+belonging to the script of the current locale is found. There are two
+action, which can be used at the same time (separated by a space): with
+|ids| the |\language| and the |\localeid| are set to the values of this
+locale; with |fonts|, the fonts are changed to those of the current
+locale (as set with |\babelfont|). This option is not compatible with
+|mapfont|.
 
 \Describe{intraspace=}{\meta{base} \meta{shrink} \meta{stretch}}
 Sets the interword space for the writing system of the language, in em
@@ -2301,7 +2341,7 @@ bidi and fonts are processed (ie, to the node list as generated by the
 bidirectional behavior (unlike |Numbers=Arabic| in \textsf{fontspec},
 which is not recommended).
 
-\subsection{Getting the current language name}
+\subsection{Accessing language info}
 
 \Describe{\languagename}{}
 The control sequence |\languagename| contains the name of the
@@ -2317,17 +2357,39 @@ current language.
 
 If more than one language is used, it might be necessary to know which
 language is active at a specific time. This can be checked by a call
-to |\iflanguage|, but note here ``language'' is used in the \TeX\
+to |\iflanguage|, but note here ``language'' is used in the \TeX
 sense, as a set of hyphenation patterns, and \textit{not} as its
 \textsf{babel} name. This macro takes three arguments.  The first
 argument is the name of a language; the second and third arguments are
 the actions to take if the result of the test is true or false
 respectively.
 
-\begin{warning}
-  The advice about |\languagename| also applies here -- use
-  \textsf{iflang} instead of |\iflanguage| if possible.
-\end{warning}
+\Describe{\localeinfo}{\marg{field}}
+
+\New{3.38} If an |ini| file has been loaded for the current language,
+you may access the information stored in it. This macros is fully
+expandable and the available fields are:
+\begin{description}
+\itemsep=-\parskip
+\item[|name.english|] as provided by the Unicode CLDR.
+%%% \item[|name.locale|] is the equivalent of |\languagename|. Not yet
+%%% activated because the bug in \languagename is far from trivial.
+\item[|tag.ini|] is the tag of the |ini| file (the way this
+  file is identified in its name).
+\item[|tag.bcp47|] is the BCP 47 language tag.
+\item[|tag.opentype|] is the tag used by OpenType (usually, but not
+  always, the same as BCP 47).
+\item[|script.name|] as provided by the Unicode CLDR.
+\item[|script.tag.bcp47|] is the BCP 47 language tag of the script
+  used by this locale.
+\item[|script.tag.opentype|] is the tag used by OpenType (usually,
+  but not always, the same as BCP 47).
+\end{description}
+
+|ini| files are loaded with |\babelprovide| and also when languages are
+selected if there is a |\babelfont|. To ensure the |ini| files are
+loaded (and therefore the corresponding data) even if these two
+conditions are not met, write |\BabelEnsureInfo|.
 
 \subsection{Hyphenation and line breaking}
 
@@ -4160,8 +4222,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.37>>
-%<<date=2019/12/08>>
+%<<version=3.38>>
+%<<date=2020/01/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5270,7 +5332,7 @@ help from Bernd Raichle, for which I am grateful.
 % The file |babel.def| expects some definitions made in the \LaTeXe{}
 % style file. So, In \LaTeX2.09 and Plain{} we must provide at least
 % some predefined values as well some tools to set them (even if not
-% all options are available). There in no package options, and
+% all options are available). There are no package options, and
 % therefore and alternative mechanism is provided. For the moment,
 % only |\babeloptionstrings| and |\babeloptionmath| are provided,
 % which can be defined before loading \babel. |\BabelModifiers| can be
@@ -8143,6 +8205,7 @@ help from Bernd Raichle, for which I am grateful.
 %   be restored.}
 % \changes{babel~3.37}{2019/12/07}{SEA and CJK linebreaking activated
 %   by default.}
+% \changes{babel~3.38}{2020/01/15}{Code for the onchar option.}
 %
 %    \begin{macrocode}
 \bbl@trace{Creating languages and reading ini files}
@@ -8151,6 +8214,7 @@ help from Bernd Raichle, for which I am grateful.
   \edef\bbl@savelocaleid{\the\localeid}%
   % Set name and locale id
   \def\languagename{#2}%
+  % \global\@namedef{bbl@lcname@#2}{#2}%
   \bbl@id@assign
   \let\bbl@KVP@captions\@nil
   \let\bbl@KVP@import\@nil
@@ -8163,6 +8227,8 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@mapdigits\@nil
   \let\bbl@KVP@intraspace\@nil
   \let\bbl@KVP@intrapenalty\@nil
+  \let\bbl@KVP@onchar\@nil
+  \let\bbl@KVP@chargroups\@nil
   \bbl@forkv{#1}{%  TODO - error handling
     \in@{..}{##1}%
     \ifin@
@@ -8227,6 +8293,59 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\bbl@KVP@language\@nil\else
     \bbl@csarg\edef{lname@#2}{\bbl@KVP@language}%
   \fi
+   % == onchar ==
+  \ifx\bbl@KVP@onchar\@nil\else
+    \bbl@luahyphenate
+    \directlua{
+      if Babel.locale_mapped == nil then
+        Babel.locale_mapped = true
+        Babel.linebreaking.add_before(Babel.locale_map)
+        Babel.loc_to_scr = {}
+        Babel.chr_to_loc = {}
+      end}%
+    \bbl@xin@{ ids }{ \bbl@KVP@onchar\space}%
+    \ifin@
+      % TODO - error/warning if no script
+      \directlua{
+        if Babel.script_blocks['\bbl@cs{sbcp@\languagename}'] then
+          Babel.loc_to_scr[\the\localeid] =
+            Babel.script_blocks['\bbl@cs{sbcp@\languagename}']
+          Babel.locale_props[\the\localeid].lc = \the\localeid\space
+          Babel.locale_props[\the\localeid].lg = \the\@nameuse{l@\languagename}\space
+        end
+      }%
+    \fi
+    \bbl@xin@{ fonts }{ \bbl@KVP@onchar\space}%
+    \ifin@
+      \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
+      \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
+      \directlua{
+        if Babel.script_blocks['\bbl@cs{sbcp@\languagename}'] then
+          Babel.loc_to_scr[\the\localeid] =
+            Babel.script_blocks['\bbl@cs{sbcp@\languagename}']
+        end}
+      \ifx\bbl@mapselect\@undefined
+        \AtBeginDocument{%
+          \expandafter\bbl@add\csname selectfont \endcsname{{\bbl@mapselect}}%
+          {\selectfont}}%
+        \def\bbl@mapselect{%
+          \let\bbl@mapselect\relax
+          \edef\bbl@prefontid{\fontid\font}}%
+        \def\bbl@mapdir##1{%
+          {\def\languagename{##1}%
+           \let\bbl@ifrestoring\@firstoftwo % To avoid font warning
+           \bbl@switchfont
+           \directlua{
+             Babel.locale_props[\the\csname bbl@id@@##1\endcsname]%
+                     ['/\bbl@prefontid'] = \fontid\font\space}}}%
+      \fi
+      \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
+    \fi
+    % TODO - catch non-valid values
+  \fi
+%   \ifx\bbl@KVP@chargroups\@nil\else
+%      \bbl@chargroups
+%   \fi
   % == mapfont ==
   % For bidi texts, to switch the font based on direction
   \ifx\bbl@KVP@mapfont\@nil\else
@@ -8477,11 +8596,17 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \changes{babel~3.37}{2019/12/07}{Allow to define key/values
 %   (added \cs{bbl@renewlist}).}
+% \changes{babel~3.38}{2020/01/15}{Read numbers are not hardcoded
+%   (passim); use \cs{bbl@readstream}.}
 %
 %    \begin{macrocode}
+\ifx\bbl@readstream\@undefined
+  \csname newread\endcsname\bbl@readstream
+\fi
 \def\bbl@read@ini#1#2{%
-  \openin1=babel-#1.ini        % FIXME - number must not be hardcoded
-  \ifeof1
+  \global\@namedef{bbl@lini@\languagename}{#1}%
+  \openin\bbl@readstream=babel-#1.ini
+  \ifeof\bbl@readstream
     \bbl@error
       {There is no ini file for the requested language\\%
        (#1). Perhaps you misspelled it or your installation\\%
@@ -8502,9 +8627,9 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@info{Importing #2 for \languagename\\%
              from babel-#1.ini. Reported}%
     \loop
-    \if T\ifeof1F\fi T\relax % Trick, because inside \loop
+    \if T\ifeof\bbl@readstream F\fi T\relax % Trick, because inside \loop
       \endlinechar\m@ne
-      \read1 to \bbl@line
+      \read\bbl@readstream to \bbl@line
       \endlinechar`\^^M
       \ifx\bbl@line\@empty\else
         \expandafter\bbl@iniline\bbl@line\bbl@iniline
@@ -8590,14 +8715,14 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \let\bbl@inikv@identification\bbl@inikv
 \def\bbl@secpost@identification{%
-  \bbl@ifunset{bbl@@kv@identification.name.opentype}%
-    {\bbl@exportkey{lname}{identification.name.english}{}}%
-    {\bbl@exportkey{lname}{identification.name.opentype}{}}%
+  \bbl@exportkey{elname}{identification.name.english}{}%
+  \bbl@exp{\\\bbl@exportkey{lname}{identification.name.opentype}%
+    {\csname bbl@elname@\languagename\endcsname}}%
   \bbl@exportkey{lbcp}{identification.tag.bcp47}{}%
   \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
-  \bbl@ifunset{bbl@@kv@identification.script.name.opentype}%
-    {\bbl@exportkey{sname}{identification.script.name}{}}%
-    {\bbl@exportkey{sname}{identification.script.name.opentype}{}}%
+  \bbl@exportkey{esname}{identification.script.name}{}%
+  \bbl@exp{\\\bbl@exportkey{sname}{identification.script.name.opentype}%
+    {\csname bbl@esname@\languagename\endcsname}}%
   \bbl@exportkey{sbcp}{identification.script.tag.bcp47}{}%
   \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}}
 \let\bbl@inikv@typography\bbl@inikv
@@ -8790,12 +8915,45 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@ini@basic#1{%
   \def\BabelBeforeIni##1##2{%
     \begingroup
-      \bbl@add\bbl@secpost@identification{\closein1 }%
+      \bbl@add\bbl@secpost@identification{\closein\bbl@readstream }%
       \catcode`\[=12 \catcode`\]=12 \catcode`\==12 %
       \bbl@read@ini{##1}{font and identification data}%   
       \endinput          % babel- .tex may contain onlypreamble's
     \endgroup}%            boxed, to avoid extra spaces:
   {\setbox\z@\hbox{\InputIfFileExists{babel-#1.tex}{}{}}}}
+%    \end{macrocode}
+%
+% The information in the identification section can be useful, so the
+% following macro just exposes it with a user command.
+%
+% \changes{babel~3.38}{2020/01/14}{Added \cs{localeinfo}.}
+%
+%    \begin{macrocode}
+\newcommand\localeinfo[1]{%
+  \bbl@ifunset{bbl@\csname bbl@info@#1\endcsname @\languagename}%
+    {\bbl@error{I've found no info for the current locale.\\%
+                The corresponding ini file has not been loaded\\%
+                Perhaps it doesn't exist}%
+               {See the manual for details.}}%
+    {\@nameuse{bbl@\csname bbl@info@#1\endcsname @\languagename}}}
+% \@namedef{bbl@info@name.locale}{lcname}
+\@namedef{bbl@info@tag.ini}{lini}
+\@namedef{bbl@info@name.english}{elname}
+\@namedef{bbl@info@name.opentype}{lname}
+\@namedef{bbl@info@tag.bcp47}{lbcp} 
+\@namedef{bbl@info@tag.opentype}{lotf} 
+\@namedef{bbl@info@script.name}{esname}
+\@namedef{bbl@info@script.name.opentype}{sname}
+\@namedef{bbl@info@script.tag.bcp47}{sbcp} 
+\@namedef{bbl@info@script.tag.opentype}{sotf} 
+\let\bbl@ensureinfo\@gobble
+\newcommand\BabelEnsureInfo{%
+  \def\bbl@ensureinfo##1{%
+    \ifx\InputIfFileExists\@undefined\else  % not in plain
+      \bbl@ifunset{bbl@lname@##1}{\bbl@ini@basic{##1}}{}%
+    \fi}}
+%    \end{macrocode}
+%
 % \section{Adjusting the Babel bahavior}
 %
 % \changes{babel~3.36}{2019/10/30}{New macro \cs{babeladjust}}
@@ -10195,6 +10353,7 @@ help from Bernd Raichle, for which I am grateful.
          Babel = Babel or {}
          Babel.locale_props = Babel.locale_props or {}
          Babel.locale_props[\bbl@id@last] = {}
+         Babel.locale_props[\bbl@id@last].name = '\languagename'
         }%
       \fi}%
     {}%
@@ -10247,6 +10406,7 @@ help from Bernd Raichle, for which I am grateful.
   \edef\languagename{%
     \ifnum\escapechar=\expandafter`\string#1\@empty
     \else\string#1\@empty\fi}%
+  % \@namedef{bbl@lcname@#1}{#1}%
   \select@language{\languagename}%
   % write to auxs
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
@@ -10353,6 +10513,8 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \newif\ifbbl@usedategroup
 \def\bbl@switch#1{%  from select@, foreign@
+  % make sure there is info for the language if so requested
+  \bbl@ensureinfo{#1}%
   % restore
   \originalTeX
   \expandafter\def\expandafter\originalTeX\expandafter{%
@@ -10563,6 +10725,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\foreign@language#1{%
   % set name
   \edef\languagename{#1}%
+  % \@namedef{bbl@lcname@#1}{#1}%
   \bbl@fixname\languagename
   \bbl@iflanguage\languagename{%
     \expandafter\ifx\csname date\languagename\endcsname\relax
@@ -11992,6 +12155,9 @@ help from Bernd Raichle, for which I am grateful.
 %<*luatex>
 \ifx\AddBabelHook\@undefined
 \bbl@trace{Read language.dat}
+\ifx\bbl@readstream\@undefined
+  \csname newread\endcsname\bbl@readstream
+\fi
 \begingroup
   \toks@{}
   \count@\z@ % 0=start, 1=0th, 2=normal
@@ -12055,16 +12221,16 @@ help from Bernd Raichle, for which I am grateful.
   \fi
   \def\bbl@elt#1#2#3#4{\@namedef{zth@#1}{}} % Define flags
   \bbl@languages
-  \openin1=language.dat
-  \ifeof1
+  \openin\bbl@readstream=language.dat
+  \ifeof\bbl@readstream
     \bbl@warning{I couldn't find language.dat. No additional\\%
                  patterns loaded. Reported}%
   \else
     \loop
       \endlinechar\m@ne
-      \read1 to \bbl@line
+      \read\bbl@readstream to \bbl@line
       \endlinechar`\^^M
-      \if T\ifeof1F\fi T\relax
+      \if T\ifeof\bbl@readstream F\fi T\relax
         \ifx\bbl@line\@empty\else
           \edef\bbl@line{\bbl@line\space\space\space}%
           \expandafter\bbl@process@line\bbl@line\relax
@@ -12362,7 +12528,7 @@ help from Bernd Raichle, for which I am grateful.
           quad = font.getfont(last_char.font).size
           for lg, rg in pairs(sea_ranges) do
             if last_char.char > rg[1] and last_char.char < rg[2] then
-              lg = lg:sub(1, 4)
+              lg = lg:sub(1, 4)  ^^ Remove trailing number of, eg, Cyrl1
               local intraspace = Babel.intraspaces[lg]
               local intrapenalty = Babel.intrapenalties[lg]
               local n
@@ -12407,15 +12573,14 @@ help from Bernd Raichle, for which I am grateful.
                 luatexbase.registernumber'bbl@attr@locale')
           local props = Babel.locale_props[LOCALE]
 
-          class = Babel.cjk_class[item.char].c
+          local class = Babel.cjk_class[item.char].c
 
           if class == 'cp' then class = 'cl' end % )] as CL
           if class == 'id' then class = 'I' end
 
+          local br = 0
           if class and last_class and Babel.cjk_breaks[last_class][class] then 
             br = Babel.cjk_breaks[last_class][class]
-          else
-            br = 0
           end
 
           if br == 1 and props.linebreak == 'c' and
@@ -12451,13 +12616,13 @@ help from Bernd Raichle, for which I am grateful.
   \directlua{
     luatexbase.add_to_callback('hyphenate',
     function (head, tail)
-      if Babel.cjk_enabled then
-        Babel.cjk_linebreak(head)
-      end
       if Babel.linebreaking.before then
         for k, func in ipairs(Babel.linebreaking.before)  do
           func(head)
         end
+      end
+      if Babel.cjk_enabled then
+        Babel.cjk_linebreak(head)
       end
       lang.hyphenate(head)
       if Babel.linebreaking.after then
@@ -12536,6 +12701,116 @@ help from Bernd Raichle, for which I am grateful.
 <@Font selection@>
 %    \end{macrocode}
 %
+% \subsection{Automatic fonts and ids switching}
+%
+% After defining the blocks for a number of scripts (must be extended
+% and very likely fine tuned), we define a short function which just
+% traverse the node list to carry out the replacements. The table
+% |loc_to_scr| gets the locale form a script range (note the locale is
+% the key, and that there is an intermediate table built on the fly for
+% optimization). This locale is then used to get the |\language| and
+% the |\localeid| as stored in |locale_props|, as well as the font (as
+% requested). In the latter table a key starting with |/| maps the font
+% from the global one (the key) to the local one (the value). Maths are
+% skipped and discretionaries are handled in a special way.
+%
+% \changes{babel~3.38}{2020/01/15}{Automatic fonts and ids switching}
+%
+%    \begin{macrocode}
+\directlua{
+Babel.script_blocks = {
+  ['Arab'] = {{0x0600, 0x06FF}, {0x08A0, 0x08FF}, {0x0750, 0x077F},
+              {0xFE70, 0xFEFF}, {0xFB50, 0xFDFF}, {0x1EE00, 0x1EEFF}},
+  ['Armn'] = {{0x0530, 0x058F}},
+  ['Beng'] = {{0x0980, 0x09FF}}, 
+  ['Cher'] = {{0x13A0, 0x13FF}, {0xAB70, 0xABBF}},   
+  ['Cyrl'] = {{0x0400, 0x04FF}, {0x0500, 0x052F}, {0x1C80, 0x1C8F},
+              {0x2DE0, 0x2DFF}, {0xA640, 0xA69F}},
+  ['Deva'] = {{0x0900, 0x097F}, {0xA8E0, 0xA8FF}},
+  ['Ethi'] = {{0x1200, 0x137F}, {0x1380, 0x139F}, {0x2D80, 0x2DDF},
+              {0xAB00, 0xAB2F}},
+  ['Geor'] = {{0x10A0, 0x10FF}, {0x2D00, 0x2D2F}},
+  ['Grek'] = {{0x0370, 0x03FF}, {0x1F00, 0x1FFF}},
+  ['Hans'] = {{0x2E80, 0x2EFF}, {0x3000, 0x303F}, {0x31C0, 0x31EF},
+              {0x3300, 0x33FF}, {0x3400, 0x4DBF}, {0x4E00, 0x9FFF},
+              {0xF900, 0xFAFF}, {0xFE30, 0xFE4F}, {0xFF00, 0xFFEF},
+              {0x20000, 0x2A6DF}, {0x2A700, 0x2B73F},
+              {0x2B740, 0x2B81F}, {0x2B820, 0x2CEAF},
+              {0x2CEB0, 0x2EBEF}, {0x2F800, 0x2FA1F}},
+  ['Hebr'] = {{0x0590, 0x05FF}},
+  ['Japa'] = {{0x3000, 0x303F}, {0x3040, 0x309F}, {0x30A0, 0x30FF},
+              {0x4E00, 0x9FAF}, {0xFF00, 0xFFEF}},
+  ['Khmr'] = {{0x1780, 0x17FF}, {0x19E0, 0x19FF}},
+  ['Knda'] = {{0x0C80, 0x0CFF}},
+  ['Kore'] = {{0x1100, 0x11FF}, {0x3000, 0x303F}, {0x3130, 0x318F},
+              {0x4E00, 0x9FAF}, {0xA960, 0xA97F}, {0xAC00, 0xD7AF},
+              {0xD7B0, 0xD7FF}, {0xFF00, 0xFFEF}},
+  ['Laoo'] = {{0x0E80, 0x0EFF}},
+  ['Latn'] = {{0x0000, 0x007F}, {0x0080, 0x00FF}, {0x0100, 0x017F},
+              {0x0180, 0x024F}, {0x1E00, 0x1EFF}, {0x2C60, 0x2C7F},
+              {0xA720, 0xA7FF}, {0xAB30, 0xAB6F}},
+  ['Mahj'] = {{0x11150, 0x1117F}},
+  ['Mlym'] = {{0x0D00, 0x0D7F}},
+  ['Mymr'] = {{0x1000, 0x109F}, {0xAA60, 0xAA7F}, {0xA9E0, 0xA9FF}},
+  ['Orya'] = {{0x0B00, 0x0B7F}},
+  ['Sinh'] = {{0x0D80, 0x0DFF}, {0x111E0, 0x111FF}},
+  ['Taml'] = {{0x0B80, 0x0BFF}},
+  ['Telu'] = {{0x0C00, 0x0C7F}},
+  ['Tfng'] = {{0x2D30, 0x2D7F}},
+  ['Thai'] = {{0x0E00, 0x0E7F}},
+  ['Tibt'] = {{0x0F00, 0x0FFF}},
+  ['Vaii'] = {{0xA500, 0xA63F}},
+  ['Yiii']= {{0xA490, 0xA4CF}, {0xA000, 0xA48F}}
+}
+
+Babel.script_blocks.Hant = Babel.script_blocks.Hans
+
+function Babel.locale_map(head)
+  if not Babel.locale_mapped then return head end
+
+  local LOCALE = luatexbase.registernumber'bbl@attr@locale'
+  local GLYPH = node.id('glyph')
+  local inmath = false
+  for item in node.traverse(head) do
+    local toloc
+    if not inmath and item.id == GLYPH then
+      % Optimization: build a table with the chars found
+      if Babel.chr_to_loc[item.char] then
+        toloc = Babel.chr_to_loc[item.char]
+      else
+        for lc, maps in pairs(Babel.loc_to_scr) do
+          for _, rg in pairs(maps) do
+            if item.char >= rg[1] and item.char <= rg[2] then
+              Babel.chr_to_loc[item.char] = lc
+              toloc = lc
+              break
+            end
+          end
+        end
+      end
+      % Now, take action
+      if toloc then
+        if Babel.locale_props[toloc].lg then
+          item.lang = Babel.locale_props[toloc].lg
+          node.set_attribute(item, LOCALE, toloc)
+        end      
+        if Babel.locale_props[toloc]['/'..item.font] then
+          item.font = Babel.locale_props[toloc]['/'..item.font]
+        end
+      end
+    elseif not inmath and item.id == 7 then
+      item.replace = item.replace and Babel.locale_map(item.replace)
+      item.pre     = item.pre and Babel.locale_map(item.pre)
+      item.post    = item.post and Babel.locale_map(item.post)  
+    elseif item.id == node.id'math' then
+      inmath = (item.subtype == 0)
+    end
+  end
+  return head
+end
+}
+%    \end{macrocode}
+%
 % \changes{babel~3.32}{2019/05/23}{New - \cs{babelcharproperty}.}
 %
 % The code for |\babelcharproperty| is straightforward. Just note the
@@ -12599,11 +12874,11 @@ help from Bernd Raichle, for which I am grateful.
 % |tex.hyphenate|. This means the automatic hyphenation points are
 % known. As empty captures return a byte position (as explained in the
 % \luatex{} manual), we must convert it to a utf8 position. With
-% |first|, the last byte can be the leading byte in a utf8 sequence,
-% so we just remove it and add 1 to the resulting length. With |last|
-% we must take into account the capture position points to the next
-% character. Here |word_head| points to the starting node of the text to
-% be matched.
+% |first|, the last byte can be the leading byte in a utf8 sequence, so
+% we just remove it and add 1 to the resulting length. With |last| we
+% must take into account the capture position points to the next
+% character. Here |word_head| points to the starting node of the text
+% to be matched.
 %  
 %    \begin{macrocode}
 \begingroup
@@ -12775,6 +13050,7 @@ help from Bernd Raichle, for which I am grateful.
     return head
   end
 
+  &% Used below
   function Babel.capture_func(key, cap)
     local ret = "[[" .. cap:gsub('{([0-9])}', "]]..m[%1]..[[") .. "]]"
     ret = ret:gsub("%[%[%]%]%.%.", '')
@@ -12789,11 +13065,11 @@ help from Bernd Raichle, for which I am grateful.
 % These functions handle the |{|\textit{n}|}| syntax. For example,
 % |pre={1}{1}-| becomes |function(m) return m[1]..m[1]..'-' end|, where
 % |m| are the matches returned after applying the pattern. The way it
-% is done is somewhat tricky, but the effect in not dissimilar to lua
-% |load| – save the code as string in a TeX macro, and expand this
-% macro at the appropriate place. As |\directlua| does not take into
-% account the current catcode of |@|, we just avoid this character in
-% macro names (which explains the internal group, too).
+% is carried out is somewhat tricky, but the effect in not dissimilar
+% to lua |load| – save the code as string in a TeX macro, and expand
+% this macro at the appropriate place. As |\directlua| does not take
+% into account the current catcode of |@|, we just avoid this character
+% in macro names (which explains the internal group, too).
 % 
 %    \begin{macrocode}
 \catcode`\#=6
