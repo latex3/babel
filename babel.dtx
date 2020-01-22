@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/01/15 v3.38 The Babel package]
+\ProvidesFile{babel.dtx}[2020/01/22 v3.38.1894 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -239,17 +239,21 @@ Xe\largetex
   its use with Plain \TeX.
 
 \item  Changes and new features with relation to version 3.8 are
-  highlighted with \New{X.XX}\hspace{-.5em}. The most recent features
+  highlighted with \New{X.XX}\hspace{-.5em}, and there are some notes
+  for the latest versions in
+  \href{https://github.com/latex3/babel/wiki}{the \babel{} wiki}.
+  The most recent features
   could be still unstable. Please, report any issues you find in      
-  \texttt{https://github.com/latex3/babel/issues}, which is better 
+  \href{https://github.com/latex3/babel/issues}{GitHub}, which is better 
   than just complaining on an e-mail list or a web forum.
 
 \item If you are interested in the \TeX{} multilingual support, please
-  join the \textsf{kadingira} list on
-  \texttt{http://tug.org/mailman/listinfo/kadingira}. You can follow
+  join the  \href{http://tug.org/mailman/listinfo/kadingira}{kadingira
+  mail list}. You can follow
   the development of \babel{} in
-  \texttt{https://github.com/latex3/babel} (which provides some sample
-  files, too).
+  \href{https://github.com/latex3/babel}{GitHub} (which provides many
+  \href{https://github.com/latex3/babel/tree/master/samples}{sample
+  files}, too).
 
 \item  See section \ref{contribute} for contributing a language.
 
@@ -1188,9 +1192,10 @@ be the same as the option name as set in |\usepackage|!).
 
 \subsection{\texttt{ini} files}
 
-An alternative approach to define a language is by means of an
-\texttt{ini} file. Currently \babel{} provides about 200 of these
-files containing the basic data required for a language.
+An alternative approach to define a language (or, more precisely, a
+\textit{locale}) is by means of an \texttt{ini} file. Currently
+\babel{} provides about 200 of these files containing the basic data
+required for a locale.
 
 Most of them set the date, and many also the captions (Unicode and
 LICR). They will be evolving with the time to add more features
@@ -1278,6 +1283,19 @@ loads \textsf{luatexja}:
 \usepackage[japanese]{babel}
 \end{verbatim}
 \end{description}
+\end{note}
+
+\begin{note}
+  Wikipedia defines a \textit{locale} as follows: “In computing, a
+  locale is a set of parameters that defines the user’s language,
+  region and any special variant preferences that the user wants to see
+  in their user interface. Usually a locale identifier consists of at
+  least a language code and a country/region code.” \Babel{} is moving
+  gradually from the old and fuzzy concept of \textit{language} to the
+  more modern of \textit{locale}. Note each locale is by itself a
+  separate “language”, which explains why there are so many files. This
+  is on purpose, so that possible variants can be created and/or
+  redefined easily.
 \end{note}
 
 Here is the list (u means Unicode captions, and l means LICR
@@ -2012,10 +2030,10 @@ to select fonts in addition to the three basic families.
   (|rm|, |sf|, |tt|, and the like). If a language is switched when an
   \textit{ad hoc} font is active, or you select the font with this
   command, neither the script nor the language is passed. You must
-  add them by hand. This is by design, for several reasons (for
+  add them by hand. This is by design, for several reasons —for
   example, each font has its own set of features and a generic setting
   for several of them could be problematic, and also a “lower-level”
-  font selection is useful).
+  font selection is useful.
 \end{note}
 
 \begin{note}
@@ -2028,53 +2046,45 @@ to select fonts in addition to the three basic families.
 \end{note}
 
 \begin{warning}
-  Do not use |\set|\textit{xxxx}|font| and |\babelfont| at the same
-  time.  |\babelfont| follows the standard \LaTeX{} conventions to set
-  the basic families -- define |\|\textit{xx}|default|, and activate
-  it with |\|\textit{xx}|family|. On the other hand,
-  |\set|\textit{xxxx}|font| in \textsf{fontspec} takes a different
-  approach, because |\|\textit{xx}|family| is redefined with the
-  family name hardcoded (so that |\|\textit{xx}|default| becomes
-  no-op). Of course, both methods are incompatible, and if you use
-  |\set|\textit{xxxx}|font|, font switching with |\babelfont| just
-  does \textit{not} work (nor the standard |\|\textit{xx}|default|,
-  for that matter). As of \New{3.34} there is an attempt to make them
-  compatible, but the language system will not be set by \babel and
-  should be set with |fontspec| if necessary.
+  Using |\set|\textit{xxxx}|font| and |\babelfont| at the same time is
+  discouraged, but very often works as expected. However, be aware with
+  |\set|\textit{xxxx}|font| the language system will not be set by
+  \babel{} and should be set with |fontspec| if necessary.
 \end{warning}
 
 \begin{troubleshooting}
-\trouble{Package fontspec Warning: 'Language 'LANG' not available for
-font 'FONT' with script 'SCRIPT' 'Default' language used instead'}
-\textit{Package fontspec Warning: 'Language 'LANG' not available for
-font 'FONT' with script 'SCRIPT' 'Default' language used instead'}.
-\textbf{This is \textit{not} and error.}
-This warning is shown by \textsf{fontspec}, not by \babel. It could be
-irrelevant for English, but not for many other languages, including
-Urdu and Turkish. This is a useful and harmless warning, and if
-everything is fine with your document the best thing you can do is just
-to ignore it altogether.
+  \trouble{Package fontspec Warning: 'Language 'LANG' not available for
+  font 'FONT' with script 'SCRIPT' 'Default' language used instead'}
+  \textit{Package fontspec Warning: 'Language 'LANG' not available for
+  font 'FONT' with script 'SCRIPT' 'Default' language used instead'}.
+
+  \textbf{This is \textit{not} and error.} This warning is shown by
+  \textsf{fontspec}, not by \babel. It could be irrelevant for English,
+  but not for many other languages, including Urdu and Turkish. This is
+  a useful and harmless warning, and if everything is fine with your
+  document the best thing you can do is just to ignore it altogether.
 \end{troubleshooting}
 
 \begin{troubleshooting}
-\trouble{Package babel Info: The following fonts are not babel standard families}
-\textit{Package babel Info: The following fonts are not babel
-standard families}.
+  \trouble{Package babel Info: The following fonts are not babel
+  standard families} \textit{Package babel Info: The following fonts
+  are not babel standard families}.
 
-\textbf{This is \textit{not} and error.} \babel{} assumes that if you
-are using |\babelfont| for a family, very likely you want to define the
-rest of them. If you don't, you can find some inconsistencies between
-families. This checking is done at the beginning of the document, at a
-point where we cannot know which families will be used.
+  \textbf{This is \textit{not} and error.} \babel{} assumes that if you
+  are using |\babelfont| for a family, very likely you want to define
+  the rest of them. If you don't, you can find some inconsistencies
+  between families. This checking is done at the beginning of the
+  document, at a point where we cannot know which families will be
+  used.
 
-Actually, there is no real need to use |\babelfont| in a monolingual
-document, if you set the language system in |\setmainfont| (or not,
-depending on what you want).
+  Actually, there is no real need to use |\babelfont| in a monolingual
+  document, if you set the language system in |\setmainfont| (or not,
+  depending on what you want).
 
-As the message explains, \textit{there is nothing intrinsically wrong}
-with not defining all the families. In fact, there is nothing
-intrinsically wrong with not using |\babelfont| at all. But you must be
-aware that this may lead to some problems.
+  As the message explains, \textit{there is nothing intrinsically
+  wrong} with not defining all the families. In fact, there is nothing
+  intrinsically wrong with not using |\babelfont| at all. But you must
+  be aware that this may lead to some problems.
 \end{troubleshooting}
 
 \subsection{Modifying a language}
@@ -2267,23 +2277,25 @@ the script, no matter which language is active. Although somewhat
 inconsistent, this makes setting a language up easier in most typical
 cases.
 
+\Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}}
+\New{3.38} This option is much like an ‘event’ called with a character
+belonging to the script of this locale is found. There are currently
+two ‘actions’, which can be used at the same time (separated by a
+space): with |ids| the |\language| and the |\localeid| are set to the
+values of this locale; with |fonts|, the fonts are changed to those of
+the this locale (as set with |\babelfont|). This option is not
+compatible with |mapfont|. Characters can be added with
+|\babelcharproperty|.
+
 \Describe{mapfont=}{\texttt{direction}}
 Assigns the font for the writing direction of this language (only with
-|bidi=basic|). More precisely, what |mapfont=direction| means is, ‘when
-a character has the same direction as the script for the “provided”
-language, then change its font to that set for this language’. There
-are 3 directions, following the bidi Unicode algorithm, namely,
-Arabic-like, Hebrew-like and left to right. So, there should be at most
-3 directives of this kind.
-
-\Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}}
-\New{3.38} This options is much like an ‘event’ called with a character
-belonging to the script of the current locale is found. There are two
-action, which can be used at the same time (separated by a space): with
-|ids| the |\language| and the |\localeid| are set to the values of this
-locale; with |fonts|, the fonts are changed to those of the current
-locale (as set with |\babelfont|). This option is not compatible with
-|mapfont|.
+|bidi=basic|). Whenever possible, instead of this option use |onchar|,
+based on the script, which usually makes more sense. More precisely,
+what |mapfont=direction| means is, ‘when a character has the same
+direction as the script for the “provided” language, then change its
+font to that set for this language’. There are 3 directions, following
+the bidi Unicode algorithm, namely, Arabic-like, Hebrew-like and left
+to right. So, there should be at most 3 directives of this kind.
 
 \Describe{intraspace=}{\meta{base} \meta{shrink} \meta{stretch}}
 Sets the interword space for the writing system of the language, in em
@@ -2392,6 +2404,12 @@ loaded (and therefore the corresponding data) even if these two
 conditions are not met, write |\BabelEnsureInfo|.
 
 \subsection{Hyphenation and line breaking}
+
+\Babel{} deals with three kinds of line breaking rules: Western,
+typically the LGC group, South East Asian, like Thai, and CJK, but
+support depends on the engine: \textsf{pdftex} only deals with the
+former, \xetex{} also with the second one, while \luatex{} provides
+basic rules for the latter, too.
 
 \Describe{\babelhyphen}{%
   \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}\marg{type}}
@@ -2515,6 +2533,36 @@ Unicode engines, spacing is based on the ``current'' em unit (the size
 of the previous char in \luatex, and the font size set by the last
 |\selectfont| in \xetex).
 
+\Describe{\babelposthyphenation}{\marg{hyphenrules-name}%
+          \marg{lua-pattern}\marg{replacement}}
+
+\New{3.37-3.39} With \luatex{} it is now possible to define
+non-standard hyphenation rules, like |f-f| $\to$ |ff-f|, repeated
+hyphens, ranked ruled (or more precisely, ‘penalized’ hyphenation
+points), and so on. No rules are currently provided by default, but
+they can be defined as shown in the following example:
+\begin{verbatim}
+\babelposthyphenation{german}{([fmtrp]) | {1}}
+{
+  { no = {1}, pre = {1}{1}- }, % Replace first char with disc
+  remove,                      % Remove automatic disc
+  {}                           % Keep last char, untouched
+}
+\end{verbatim}
+
+In the replacements, a capture may map the captured char to another
+one, too. For example, if the first capture reads |([ΐΰ])|, the
+replacement could be \verb+{1|ΐΰ|ίύ}+, which maps \textit{ΐ} to
+\textit{ί}, and \textit{ΰ} to \textit{ύ}.
+
+Currently, this feature must be explicitly activated with:
+\begin{verbatim}
+\babeladjust{ hyphenation.extra = on }
+\end{verbatim}
+
+See the \href{https://github.com/latex3/babel/wiki}{\babel\ wiki} for a
+more detailed description and some examples.
+
 \subsection{Selecting scripts}
 
 Currently \babel{} provides no standard interface to select
@@ -2589,6 +2637,14 @@ differ in the way `weak' numeric characters are ordered (eg, Arabic
   options described below).
 \end{warning}
 
+\begin{warning}
+  If characters to be mirrored are shown without changes with \luatex,
+  try with the following line:
+\begin{verbatim}
+\babeladjust{bidi.mirroring=off}
+\end{verbatim}
+\end{warning}
+
 There are some package options controlling bidi writing.
 
 \Describe{bidi=}{\texttt{default} $\string|$ \texttt{basic}
@@ -2617,7 +2673,7 @@ for LR ones use the latter.
 (3.11), with |Renderer = Harfbuzz| in \textsf{fontspec}. Since it is
 based on \luatex, the option |basic| mostly works (You may need
 deactivate the |rtlm| or the |rtla| font features, or alternatively
-deactive mirroring in \babel{} with |\babeladjust|.)
+deactivate mirroring in \babel{} with |\babeladjust|.)
 
 There are samples on GitHub, under \texttt{/required/babel/samples}.
 See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
@@ -2676,7 +2732,7 @@ _\babelprovide[import, main]{arabic}_
 
 \usepackage[english, _bidi=basic_]{babel}
 
-\babelprovide[_mapfont=direction_]{arabic}
+\babelprovide[_onchar=ids fonts_]{arabic}
 
 \babelfont{rm}{Crimson}
 \babelfont[*arabic]{rm}{FreeSerif}
@@ -2691,7 +2747,7 @@ Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
 \end{document}
 \end{verbatim}
   \endgroup
-  In this example, and thanks to |mapfont=direction|, any Arabic letter
+  In this example, and thanks to |onchar=ids fonts|, any Arabic letter
   (because the language is |arabic|) changes its font to that set for
   this language (here defined via |*arabic|, because Crimson does not
   provide Arabic letters).
@@ -3088,12 +3144,14 @@ tables, which you can modify with the following macro (for example,
 to set them for glyphs in the PUA).
 
 \Describe{\babelcharproperty}{\marg{char-code}\oarg{to-char-code}%
-          \marg{propertry}\marg{value}}
+          \marg{property}\marg{value}}
 
 \New{3.32} Here, \marg{char-code} is a number (with \TeX{} syntax).
 With the optional argument, you can set a range of values. There are
 three properties (with a short name, taken from Unicode): |direction|
-(|bc|), |mirror| (|bmg|), |linebreak| (|lb|). The settings are global.
+(|bc|), |mirror| (|bmg|), |linebreak| (|lb|). The settings are global,
+and this command is allowed only in vertical mode (the preamble or
+between paragraphs).
 
 For example:
 \begin{verbatim}
@@ -3102,8 +3160,12 @@ For example:
 \babelcharproperty{`)}{linebreak}{cl} % or id, op, cl, ns, ex, in, hy
 \end{verbatim}
 
-This command is allowed only in vertical mode (the preamble or between
-paragraphs).
+\New{3.39} Another property is |locale|, which adds characters to the
+list used by |onchar| in |\babelprovide|, or, if the last argument is
+empty, removes them. The last argument is the locale name:
+\begin{verbatim}
+\babelcharproperty{`,}{locale}{english}
+\end{verbatim}
 
 \subsection{Tweaking some features}
 
@@ -3250,32 +3312,6 @@ get loaded with |\babelprovide|. To set, say, |digits.native| in the
 |numbers| section, use something like
 |numbers..digits.native=abcdefghij| (note the double dot between the
 section and the key name). New keys may be added, too.
-
-\medskip
-\textbf{Non-standard hyphenation}
-
-\New{3.37} With \luatex{} it is now possible to define non-standard
-hyohenation rules, like |f-f| $\to$ |ff-f|. No rules are currently
-provided by default, but they can be defined as shown in the following
-example:
-\begin{verbatim}
-\babelposthyphenation{ngerman}{([fmtrp]) | {1}}
-{
-  { no = {1}, pre = {1}{1}-}, % Replace first char with disc
-  remove,                     % Remove automatic disc
-  {}                          % Keep last char, untouched
-}
-\end{verbatim}
-
-This feature must be explicitly activated with:
-\begin{verbatim}
-\babeladjust{ hyphenation.extra = on }
-\end{verbatim}
-
-See the \babel{} wiki for a more detailed description and some examples:
-\begin{verbatim}
-https://github.com/latex3/babel/wiki
-\end{verbatim}
 
 \medskip
 \textbf{Old and deprecated stuff}
@@ -4222,8 +4258,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.38>>
-%<<date=2020/01/15>>
+%<<version=3.38.1894>>
+%<<date=2020/01/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4715,7 +4751,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \changes{babel~3.30}{2019/04/22}{Callbacks aren't specific to
 %   bidi any more, so they are moved.}
-% \changes{babel~3.32}{2019/05/30}{Consider Harf.}
 %
 %    \begin{macrocode}
 \ifx\bbl@languages\@undefined\else
@@ -4737,8 +4772,6 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@languages
 \fi
 \ifodd\bbl@engine
-  % Harftex is evolving, so the callback is not harcoded, just in case
-  \def\bbl@harfpreline{Harf pre_linebreak_filter callback}%
   \def\bbl@activate@preotf{%
     \let\bbl@activate@preotf\relax  % only once
     \directlua{
@@ -4768,23 +4801,14 @@ help from Bernd Raichle, for which I am grateful.
         Babel.pre_otfload_v,
         'Babel.pre_otfload_v',
         luatexbase.priority_in_callback('pre_linebreak_filter',
-           '\bbl@harfpreline') 
-        or luatexbase.priority_in_callback('pre_linebreak_filter',
-           'luaotfload.node_processor')
-        or nil)
+          'luaotfload.node_processor') or nil)
       %
       luatexbase.add_to_callback('hpack_filter',
         Babel.pre_otfload_h,
         'Babel.pre_otfload_h',
         luatexbase.priority_in_callback('hpack_filter',
-           '\bbl@harfpreline') 
-        or luatexbase.priority_in_callback('hpack_filter',
-           'luaotfload.node_processor')
-        or nil)
-    }%
-    \@ifpackageloaded{harfload}%
-      {\directlua{ Babel.mirroring_enabled = false }}%
-      {}}
+          'luaotfload.node_processor') or nil)
+    }}
   \let\bbl@tempa\relax
   \@ifpackagewith{babel}{bidi=basic}%
     {\def\bbl@tempa{basic}}%
@@ -6771,20 +6795,8 @@ help from Bernd Raichle, for which I am grateful.
       \ifx\bbl@known@attribs\@undefined
         \in@false
       \else
-%    \end{macrocode}
-%
-%    Now we need to see if the attribute occurs in the list of
-%    already selected attributes.
-%
-%    \begin{macrocode}
         \bbl@xin@{,\bbl@tempc-##1,}{,\bbl@known@attribs,}%
       \fi
-%    \end{macrocode}
-%
-%    When the attribute was in the list we issue a warning; this might
-%    not be the users intention.
-%
-%    \begin{macrocode}
       \ifin@
         \bbl@warning{%
           You have more than once selected the attribute '##1'\\%
@@ -8279,6 +8291,7 @@ help from Bernd Raichle, for which I am grateful.
          \bbl@read@ini{##1}{basic data}%
          \bbl@exportkey{chrng}{characters.ranges}{}%
          \bbl@exportkey{dgnat}{numbers.digits.native}{}%
+         \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
          \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
          \bbl@exportkey{intsp}{typography.intraspace}{}%
        \endgroup}%           boxed, to avoid extra spaces:
@@ -8301,7 +8314,7 @@ help from Bernd Raichle, for which I am grateful.
         Babel.locale_mapped = true
         Babel.linebreaking.add_before(Babel.locale_map)
         Babel.loc_to_scr = {}
-        Babel.chr_to_loc = {}
+        Babel.chr_to_loc = Babel.chr_to_loc or {}
       end}%
     \bbl@xin@{ ids }{ \bbl@KVP@onchar\space}%
     \ifin@
@@ -8343,9 +8356,6 @@ help from Bernd Raichle, for which I am grateful.
     \fi
     % TODO - catch non-valid values
   \fi
-%   \ifx\bbl@KVP@chargroups\@nil\else
-%      \bbl@chargroups
-%   \fi
   % == mapfont ==
   % For bidi texts, to switch the font based on direction
   \ifx\bbl@KVP@mapfont\@nil\else
@@ -8732,6 +8742,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{lfthm}{typography.lefthyphenmin}{2}%
   \bbl@exportkey{rgthm}{typography.righthyphenmin}{3}%
   \bbl@exportkey{prehc}{typography.prehyphenchar}{}%
+  \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
   \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
   \bbl@exportkey{intsp}{typography.intraspace}{}%
   \bbl@exportkey{jstfy}{typography.justify}{w}%
@@ -9851,11 +9862,7 @@ help from Bernd Raichle, for which I am grateful.
 %      and so on, but bidi text does not work out of the box and some
 %      development is necessary. It also provides tools to properly
 %      set left-to-right and right-to-left page layouts. As Lua\TeX-ja
-%      shows, vertical typesetting is possible, too. Its main drawback
-%      is font handling is often considered to be less mature than
-%      \xetex{}, mainly in Indic scripts (but there are steps to make
-%      HarfBuzz, the \xetex{} font engine, available in \luatex{}; see
-%      <https://github.com/tatzetwerk/luatex-harfbuzz>).
+%      shows, vertical typesetting is possible, too.
 %    \end{itemize}
 %
 % \changes{babel~3.15}{2017/10/30}{Use an attribute instead of tex language
@@ -12641,7 +12648,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@provide@intraspace{%
   \bbl@ifunset{bbl@intsp@\languagename}{}%
     {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
-       \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Hant,Hans,Jpan,Kore,Kana}%
+       \bbl@xin@{\bbl@cs{lnbrk@\languagename}}{c}%
        \ifin@           % cjk
          \bbl@cjkintraspace
          \directlua{
@@ -12738,7 +12745,7 @@ Babel.script_blocks = {
               {0x2B740, 0x2B81F}, {0x2B820, 0x2CEAF},
               {0x2CEB0, 0x2EBEF}, {0x2F800, 0x2FA1F}},
   ['Hebr'] = {{0x0590, 0x05FF}},
-  ['Japa'] = {{0x3000, 0x303F}, {0x3040, 0x309F}, {0x30A0, 0x30FF},
+  ['Jpan'] = {{0x3000, 0x303F}, {0x3040, 0x309F}, {0x30A0, 0x30FF},
               {0x4E00, 0x9FAF}, {0xFF00, 0xFFEF}},
   ['Khmr'] = {{0x1780, 0x17FF}, {0x19E0, 0x19FF}},
   ['Knda'] = {{0x0C80, 0x0CFF}},
@@ -12760,10 +12767,11 @@ Babel.script_blocks = {
   ['Thai'] = {{0x0E00, 0x0E7F}},
   ['Tibt'] = {{0x0F00, 0x0FFF}},
   ['Vaii'] = {{0xA500, 0xA63F}},
-  ['Yiii']= {{0xA490, 0xA4CF}, {0xA000, 0xA48F}}
+  ['Yiii'] = {{0xA000, 0xA48F}, {0xA490, 0xA4CF}}
 }
 
 Babel.script_blocks.Hant = Babel.script_blocks.Hans
+Babel.script_blocks.Kana = Babel.script_blocks.Jpan
 
 function Babel.locale_map(head)
   if not Babel.locale_mapped then return head end
@@ -12789,7 +12797,7 @@ function Babel.locale_map(head)
         end
       end
       % Now, take action
-      if toloc then
+      if toloc and toloc > -1 then
         if Babel.locale_props[toloc].lg then
           item.lang = Babel.locale_props[toloc].lg
           node.set_attribute(item, LOCALE, toloc)
@@ -12856,6 +12864,12 @@ end
     Babel.Babel.cjk_characters[\the\count@]['c'] = '#1'
   }}
 \let\bbl@chprop@lb\bbl@chprop@linebreak
+\def\bbl@chprop@locale#1{%
+  \directlua{
+    Babel.chr_to_loc = Babel.chr_to_loc or {}
+    Babel.chr_to_loc[\the\count@] =
+      \bbl@ifblank{#1}{-1000}{\the\@nameuse{bbl@id@@#1}}\space
+  }}
 %    \end{macrocode}
 %
 % Post-handling hyphenation patterns for non-standard rules, like |ff|
@@ -13050,13 +13064,40 @@ end
     return head
   end
 
-  &% Used below
+  &% The following functions belong to the next macro
+
+  &% This table stores capture maps, numbered consecutively
+  Babel.capture_maps = {}
+
   function Babel.capture_func(key, cap)
     local ret = "[[" .. cap:gsub('{([0-9])}', "]]..m[%1]..[[") .. "]]"
+    ret = ret:gsub('{([0-9])|([^|]+)|(.-)}', Babel.capture_func_map)
     ret = ret:gsub("%[%[%]%]%.%.", '')
     ret = ret:gsub("%.%.%[%[%]%]", '')
     return key .. [[=function(m) return ]] .. ret .. [[ end]]
   end
+
+  function Babel.capt_map(from, mapno)
+    return Babel.capture_maps[mapno][from] or from
+  end
+
+  &% Handle the {n|abc|ABC} syntax in captures
+  function Babel.capture_func_map(capno, from, to)
+    local froms = {}
+    for s in string.utfcharacters(from) do
+      table.insert(froms, s)
+    end
+    local cnt = 1
+    table.insert(Babel.capture_maps, {})
+    local mlen = table.getn(Babel.capture_maps)
+    for s in string.utfcharacters(to) do
+      Babel.capture_maps[mlen][froms[cnt]] = s
+      cnt = cnt + 1
+    end
+    return "]]..Babel.capt_map(m[" .. capno .. "]," ..
+           (mlen) .. ").." .. "[["
+  end
+
 }
 %    \end{macrocode}
 %
@@ -13064,7 +13105,10 @@ end
 % defined above for converting strings to functions returning a string.
 % These functions handle the |{|\textit{n}|}| syntax. For example,
 % |pre={1}{1}-| becomes |function(m) return m[1]..m[1]..'-' end|, where
-% |m| are the matches returned after applying the pattern. The way it
+% |m| are the matches returned after applying the pattern. With a
+% mapped capture the functions are similar to
+% |function(m) return Babel.capt_map(m[1],1) end|, where the last
+% argument identifies the mapping to be applied to |m[1]|. The way it
 % is carried out is somewhat tricky, but the effect in not dissimilar
 % to lua |load| – save the code as string in a TeX macro, and expand
 % this macro at the appropriate place. As |\directlua| does not take
@@ -19714,12 +19758,6 @@ Babel.fontmap[2] = {}      -- al/an
 Babel.bidi_enabled = true
 Babel.mirroring_enabled = true
 
--- Temporary:
-
-if harf then 
-  Babel.mirroring_enabled = false
-end
-
 require('babel-data-bidi.lua')
 
 local characters = Babel.characters
@@ -20010,7 +20048,10 @@ function Babel.bidi(head, ispar, hdir)
         item = nodes[r][1]    -- MIRRORING
         if Babel.mirroring_enabled and item.id == GLYPH
              and temp == 'r' and characters[item.char] then
-          item.char = characters[item.char].m or item.char
+          local font_mode = font.fonts[item.font].properties.mode
+          if font_mode ~= 'harf' and font_mode ~= 'plug' then
+            item.char = characters[item.char].m or item.char
+          end
         end
       end
       first_on = nil
@@ -20321,6 +20362,8 @@ Babel.cjk_class = setmetatable ( Babel.cjk_characters, {
   __index = function(_, k)
     if (k >= 0xAC00  and k <= 0xD7A3)      -- H2/H3
         or (k >= 0x2E80  and k <= 0x9FFF)
+        or (k >= 0xA000  and k <= 0xA48F)  -- Yi
+        or (k >= 0xA490  and k <= 0xA4CF)  -- Yi
         or (k >= 0xF900  and k <= 0xFAFF)
         or (k >= 0xFE10  and k <= 0xFE1F) 
         or (k >= 0xFE30  and k <= 0xFE6F)

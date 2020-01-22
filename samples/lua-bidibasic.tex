@@ -4,27 +4,27 @@
 
 \setlength{\parindent}{0pt}
 
-\usepackage[spanish, english, bidi=basic]{babel}
+\usepackage[bidi=basic, spanish, english]{babel}
 
-% \babelprovide[mapfont=direction]{english}
-\babelprovide[import,mapfont=direction]{arabic}
+\babelprovide[import, onchar=ids fonts]{arabic}
 \babelprovide[import=fa]{farsi}
-\babelprovide[import,mapfont=direction]{hebrew}
+\babelprovide[import, onchar=ids fonts]{hebrew}
 
 \babelfont{rm}{Crimson}
 \babelfont[*arabic]{rm}
   [Color=118811, ItalicFont=FreeSerif]
-  {FreeSerif}   % also try Amiri
+  {FreeSerif}   % You may also try Amiri
 \babelfont[*hebrew]{rm}[Color=774422]{FreeSerif}
 
 \babeltags{en = english, ar = arabic, he = hebrew}
 
 % ====================
 %
-% You may want to see what's going on. Use the following if you want.
+% You may want to see what's going on.
+% Comment the following out if you want.
 %
 % \directlua{
-%
+%+++
 % function test (head)
 %   texio.write_nl('====')
 %   texio.write_nl('')

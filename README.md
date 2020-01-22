@@ -1,4 +1,4 @@
-## Babel 3.38
+## Babel 3.38.1894
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,14 +51,20 @@ respective authors.
 ### Latest changes
 
 ```
+3.39   2020-02-??
+       - \babelcharproperty can be used to assign specific chars to a
+         locale.
+       - \babelposthyphenation: captured chars now can be mapped in
+         the replacement.
+       - Fix - Sichuan Yi: line breaking was not activated.
+
 3.38   2020-01-15
        - Automatic switching of ids (\language and \localeid), and fonts
          based on script blocks (lua).s
        - New macro - \localeinfo, to access the basic data in the ini
          file loaded by languages.
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.38
-       
-       
+
 3.37   2019-12-08
        - Preliminary code for non-standard hyphenation, like ff ->
          ff-f (lua).
