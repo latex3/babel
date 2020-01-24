@@ -57,6 +57,7 @@ respective authors.
        - \babelposthyphenation: captured chars now can be mapped in
          the replacement.
        - Fix - Sichuan Yi: line breaking was not activated.
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.39
 
 3.38   2020-01-15
        - Automatic switching of ids (\language and \localeid), and fonts
