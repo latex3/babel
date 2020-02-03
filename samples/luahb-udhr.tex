@@ -5,19 +5,9 @@
 
 \usepackage[bidi=default]{babel}
 
-% Also, the generic \babelprovide is enough, even if usually it's not
-% the recommended way to load languages:
-
-\babelprovide{arabic}
-\babelprovide{armenian}
-\babelprovide{bengali}
-\babelprovide{greek}
-\babelprovide{hebrew}
-\babelprovide{japanese}
-\babelprovide{korean}
-\babelprovide{romanian}
-\babelprovide{serbian}
-\babelprovide{vietnamese}
+% As of 3.39, no explicit loading with \babelprovide is required, as
+% languages are loaded on the fly with the most basic settings, which
+% here are enough.
 
 % With luahbtex we must add Renderer=Harfbuzz, which is just ignored by
 % other engines. FreeSerif does not contain CJK, so we use a couple of
@@ -35,8 +25,9 @@
 
 \begin{document}
 
-Requires \textsf{luaotfload} 3.11 and the development version of
-\textsf{babel} 3.37.
+Requires at least \textsf{luaotfload} 3.11 and \textsf{babel} 3.39.
+Typeset with \textsf{luahbtex}, the new default engine for
+\textsf{lualatex} in 2020.
 
 \startlocale{arabic}
 

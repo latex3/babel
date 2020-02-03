@@ -1,4 +1,4 @@
-## Babel 3.38.1894
+## Babel 3.39
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,21 +7,14 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Languages are not part of the Babel core any more; in particular, it
-shall be no longer necessary to synchronize Babel core releases with
-releases of Babel language files. See CONTRIB for further details
-about contributing a language. You may also create an ini file or
-improve the existing ones -- it's a trivial task (no programming
-skills required at all), but don't hesitate to ask for help.
+Changes in version 3.39 are described in:
+
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.39
 
 Included is a set of ini files for about 200 languages.
 
 The best way to install and/or update it is with the help of package
 managers.
-
-Changes are described in babel.pdf with the label "New <version>". The
-manual has been expanded to include some tips and tricks, but it will
-be improved in next releases.
 
 ### Reporting Bugs
 
@@ -51,17 +44,23 @@ respective authors.
 ### Latest changes
 
 ```
-3.39   2020-02-??
+3.39   2020-02-03
+       - Languages can now be loaded on the fly (via \babelprovide).
+       - With \babelposthyphenation captured chars can now be mapped in
+         the replacement (lua).
        - \babelcharproperty can be used to assign specific chars to a
-         locale.
-       - \babelposthyphenation: captured chars now can be mapped in
-         the replacement.
-       - Fix - Sichuan Yi: line breaking was not activated.
-See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.39
+         locale (lua).
+       - Fixes:
+          - Sichuan Yi: line breaking was not activated (lua).
+          - Hyphenation was not always applied with onchar (lua).
+          - bidi=basic-l/basic-r where not activated correctly (xe).
+          - Thai and turkish raised and error without import in
+            \babelprovide.
+          - Cleaned up some ini/tex locale files (de, zh, sa).
 
 3.38   2020-01-15
        - Automatic switching of ids (\language and \localeid), and fonts
-         based on script blocks (lua).s
+         based on script blocks (lua).
        - New macro - \localeinfo, to access the basic data in the ini
          file loaded by languages.
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.38

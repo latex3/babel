@@ -5,13 +5,10 @@ Author: Robin Fairbairns <[e-mail hidden]>
 Main Class: article
 Package: babel
     Options: english
-Package babel Warning: Unknown language `FRENCH'. Either you have
-(babel)                misspelled its name, it has not been installed,
-(babel)                or you requested it in a previous run. Fix its name,
-(babel)                install it or just rerun the file, respectively. In
-(babel)                some cases, you may need to remove the aux file.
-(babel)                I'll proceed, but expect wrong results.
-(babel)                Reported on input line ....
+(../babel-french.tex
+Package babel Info: Importing basic data for french
+(babel)             from babel-fr.ini. Reported on input line ....
+)
 > \box...=
 \hbox(9.47221+0.0)x36.38898
 .\OT1/cmr/m/n/10 H

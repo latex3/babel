@@ -1,7 +1,7 @@
 % \iffalse
 % This document requires lualatex
 %%
-%% Copyright (C) 2012-2019 Javier Bezos and Johannes L. Braams.
+%% Copyright (C) 2012-2020 Javier Bezos and Johannes L. Braams.
 %% Copyright (C) 1989-2012 Johannes L. Braams and
 %%           any individual authors listed elsewhere in this file.
 %% All rights reserved.
@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/01/22 v3.38.1894 The Babel package]
+\ProvidesFile{babel.dtx}[2020/02/03 v3.39 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -235,8 +235,8 @@ Xe\largetex
 \part{User guide}
 
 \begin{itemize}
-\item This user guide focuses on \LaTeX. There are also some notes on
-  its use with Plain \TeX.
+\item This user guide focuses on internationalization and localization
+  with \LaTeX. There are also some notes on its use with Plain \TeX.
 
 \item  Changes and new features with relation to version 3.8 are
   highlighted with \New{X.XX}\hspace{-.5em}, and there are some notes
@@ -496,6 +496,40 @@ _\usepackage[vietnamese,danish]{babel}_
 \end{verbatim}
 \end{example}
 
+\subsection{Mostly monolingual documents}
+
+\New{3.39} Very often, multilingual documents consist of a main
+language with small pieces of text in another languages (words, idioms,
+short sentences). Typically, all you need is to set the line breaking
+rules and, perhaps, the font. In such a case, \babel{} now does not
+require declaring these secondary languages explicitly, because the
+basic settings are loaded on the fly when the language is selected (and
+also when provided in the optional argument of |\babelfont|, if used.)
+
+This is particularly useful, too, when there are short texts of this
+kind coming from an external source whose contents are not known on
+beforehand (for example, titles in a bibliography). At this regard, it
+is worth remembering that |\babelfont| does not load any font until
+required, so that it can be used just in case.
+
+\begin{example}
+  A trivial document is:
+\setengine{luatex/xetex}
+\begin{verbatim}
+\documentclass{article}
+\usepackage[english]{babel}
+
+\babelfont[russian]{rm}{FreeSerif}
+
+\begin{document}
+
+English. \foreignlanguage{russian}{Русский}.
+\foreignlanguage{spanish}{Español}
+
+\end{document}
+\end{verbatim}
+\end{example}
+
 \subsection{Modifiers}
 
 \New{3.9c} The basic behavior of some languages can be modified when
@@ -545,6 +579,7 @@ modifiers are a more general mechanism.
   cases, the error vanishes when the document is typeset again, but in
   more severe ones you will need to remove the |aux| file.
 \end{itemize}
+
 \subsection{Plain}
 
 In Plain, load languages styles with |\input| and then use
@@ -1195,7 +1230,14 @@ be the same as the option name as set in |\usepackage|!).
 An alternative approach to define a language (or, more precisely, a
 \textit{locale}) is by means of an \texttt{ini} file. Currently
 \babel{} provides about 200 of these files containing the basic data
-required for a locale.
+required for a locale. 
+
+|ini| files are not meant only for \babel, and they has been devised as
+a resource for other packages. To easy interoperability between \TeX{}
+and other systems, they are identified with the BCP 47 codes as
+preferred by the Unicode Common Language Data Repository, which was
+used as source for most of the data provided by these files, too (the
+main exception being the |\...name| strings).
 
 Most of them set the date, and many also the captions (Unicode and
 LICR). They will be evolving with the time to add more features
@@ -1909,6 +1951,26 @@ zulu
 \endgroup
 \hrule
 
+\bigskip
+
+\textbf{Modifying and adding values to |ini| files}
+
+\New{3.39} There is a way to modify the values of |ini| files when they
+get loaded with |\babelprovide| and |import|. To set, say,
+|digits.native| in the |numbers| section, use something like
+|numbers/digits.native=abcdefghij|. Keys may be added, too. Without
+|import| you may modify the identification keys.
+
+This can be used to create private variants easily. All you need is to
+import the same |ini| file with a different locale name and different
+parameters. 
+
+% \begin{example}
+%   Let's assume you need only the basic features of `spanish`, so that
+%   the |ini| file is enough, and also a variant with your own
+%   hyphenation with  
+% \end{example}
+
 \subsection{Selecting fonts}
 
 \New{3.15} Babel provides a high level interface on top of |fontspec|
@@ -2006,22 +2068,18 @@ to select fonts in addition to the three basic families.
 \babelfont[hindi]{rm}{Shobhika}
 \end{verbatim}
   This makes sure the OpenType script for Devanagari is |deva| and not
-  |dev2| (\luatex{} does not detect automatically the correct 
-  script\footnote{And even with the correct code some fonts could be 
-  rendered incorrectly by \textsf{fontspec}, so double-check the 
-  results. \xetex{} fares better, but some fonts are still
-  problematic.}). You may also pass some options to \textsf{fontspec}:
-  with |silent|, the warnings about unavailable scripts or languages
-  are not shown (they are only really useful when the document format
-  is being set up).
+  |dev2|, in case it is not detected correctly. You may also pass some
+  options to \textsf{fontspec}: with |silent|, the warnings about
+  unavailable scripts or languages are not shown (they are only really
+  useful when the document format is being set up).
 \end{note}
 
 \begin{note}
   Directionality is a property affecting margins, indentation, column
-  order, etc., not just text. Therefore, it is under the direct
-  control of the language, which applies both the script and the
-  direction to the text. As a consequence, there is no need to set
-  \texttt{Script} when declaring a font (nor \texttt{Language}). In
+  order, etc., not just text. Therefore, it is under the direct control
+  of the language, which applies both the script and the direction to
+  the text. As a consequence, there is no need to set \texttt{Script}
+  when declaring a font with |\babelfont| (nor \texttt{Language}). In
   fact, it is even discouraged.
 \end{note}
 
@@ -2100,7 +2158,7 @@ sometimes necessary, but not always trivial.
 }
 \end{verbatim}
 As of 3.15, there is no need to hide spaces with \texttt{\%%
-} (\babel{} removes them), but it is advisable to do it.
+} (\babel{} removes them), but it is advisable to do so.
 \item The new way, which is found in |bulgarian|, |azerbaijani|,
   |spanish|, |french|, |turkish|, |icelandic|, |vietnamese| and a few
   more, as well as in languages created with |\babelprovide| and its
@@ -2187,6 +2245,17 @@ In most cases, you will only need to define a few macros.
 \end{verbatim}
 \end{example}
 
+\begin{example}
+  Locales with names based on BCP 47 codes can be created with
+  something like:
+\begin{verbatim}
+  \babelprovide[import=en-US]{enUS}
+\end{verbatim}
+  Note, however, mixing ways to identify locales can lead to problems.
+  For example, is \verb|yi| the name of the language spoken by the Yi
+  people or is it the code for Yiddish?
+\end{example}
+
 The main language is not changed (\texttt{danish} in this example).
 So, you must add |\selectlanguage{arhinish}| or other selectors where
 necessary.
@@ -2216,8 +2285,7 @@ There are about 200 |ini| files, with data taken from the |ldf| files
 and the CLDR provided by Unicode. Not all languages in the latter are
 complete, and therefore neither are the |ini| files. A few languages
 will show a warning about the current lack of suitability of the date
-format (\textsf{hindi}, \textsf{french}, \textsf{breton}, and
-\textsf{occitan}).
+format (\textsf{french}, \textsf{breton}, and \textsf{occitan}).
 
 Besides |\today|, this option defines an additional command for dates:
 |\<language>date|, which takes three arguments, namely, year, month and
@@ -2540,28 +2608,47 @@ of the previous char in \luatex, and the font size set by the last
 non-standard hyphenation rules, like |f-f| $\to$ |ff-f|, repeated
 hyphens, ranked ruled (or more precisely, ‘penalized’ hyphenation
 points), and so on. No rules are currently provided by default, but
-they can be defined as shown in the following example:
+they can be defined as shown in the following example, where |{1}| is
+the first captured char (between |()| in the pattern):
 \begin{verbatim}
 \babelposthyphenation{german}{([fmtrp]) | {1}}
 {
   { no = {1}, pre = {1}{1}- }, % Replace first char with disc
-  remove,                      % Remove automatic disc
+  remove,                      % Remove automatic disc (2nd node)
   {}                           % Keep last char, untouched
 }
 \end{verbatim}
 
-In the replacements, a capture may map the captured char to another
-one, too. For example, if the first capture reads |([ΐΰ])|, the
-replacement could be \verb+{1|ΐΰ|ίύ}+, which maps \textit{ΐ} to
-\textit{ί}, and \textit{ΰ} to \textit{ύ}.
+In the replacements, a captured char may be mapped to another, too. For
+example, if the first capture reads |([ΐΰ])|, the replacement could be
+\verb+{1|ΐΰ|ίύ}+, which maps \textit{ΐ} to \textit{ί}, and \textit{ΰ}
+to \textit{ύ}, so that the diaeresis is removed.
 
-Currently, this feature must be explicitly activated with:
-\begin{verbatim}
-\babeladjust{ hyphenation.extra = on }
-\end{verbatim}
+This feature is activated with the first |\babelposthyphenation|.
 
 See the \href{https://github.com/latex3/babel/wiki}{\babel\ wiki} for a
-more detailed description and some examples.
+more detailed description and some examples. It also describes an
+additional replacement type with the key |string|.
+
+\begin{example}
+  Although the main purpose of this command is non-standard
+  hyphenation, it may actually be used for other transformations (after
+  hyphenation is applied, so you must take discretionaries into
+  account). For example, you can use the |string| replacement to
+  replace a character (or series of them) by another character (or
+  series of them). Thus, to enter \textit{ž} as |zh| and \textit{š} as
+  |sh| in a newly created locale for transliterated Russian:
+\begin{verbatim}
+\babelprovide[hyphenrules=+]{russian-latin}   % Create locale
+\babelposthyphenation{russian-latin}{([sz])h} % Create rule
+{
+  { string = {1|sz|šž} },
+  remove
+}
+\end{verbatim}
+  In other words, it is a quite general tool. (A counterpart
+  |\babelprehyphenation| is on the way.)
+\end{example}
 
 \subsection{Selecting scripts}
 
@@ -2668,20 +2755,13 @@ consider the intrinsic direction of scripts and weak directionality.)
 tentative, but it mostly works. For RL documents use the former, and
 for LR ones use the latter.
 
-\New{3.37} There is some experimental support for \textsf{luahbtex}
-(with |lualatex-dev|) and the latest releases of \textsf{luaotfload}
-(3.11), with |Renderer = Harfbuzz| in \textsf{fontspec}. Since it is
-based on \luatex, the option |basic| mostly works (You may need
-deactivate the |rtlm| or the |rtla| font features, or alternatively
-deactivate mirroring in \babel{} with |\babeladjust|.)
-
 There are samples on GitHub, under \texttt{/required/babel/samples}.
 See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
 
 \begin{example}
   The following text comes from the Arabic Wikipedia (article about
   Arabia). Copy-pasting some text from the Wikipedia is a good way to
-  test this feature. Remember |basic-r| is available in \luatex{}
+  test this feature. Remember |basic| is available in \luatex{}
   only.
   \begingroup
 % If you are looking at the code to see how it has been written, you
@@ -2694,7 +2774,7 @@ See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
 \begin{verbatim}
 \documentclass{article}
 
-\usepackage[_bidi=basic-r_]{babel}
+\usepackage[_bidi=basic_]{babel}
 
 _\babelprovide[import, main]{arabic}_
 
@@ -2948,6 +3028,7 @@ command is available always in bidi documents, even without
 \subsection{Language attributes}
 
 \DescribeMacro{\languageattribute}
+
 This is a user-level command, to be used in the preamble of a
 document (after |\usepackage[...]{babel}|), that declares which
 attributes are to be used for a given language. It takes two
@@ -3303,15 +3384,6 @@ for a small example (|xe-bidi|).
 
 See the code section for |\foreignlanguage*| (a new starred
 version of |\foreignlanguage|).
-
-\medskip
-\textbf{Modifying, and adding, values of |ini| files}
-
-\New{3.37} There is a way to modify the values of |ini| files when they
-get loaded with |\babelprovide|. To set, say, |digits.native| in the
-|numbers| section, use something like
-|numbers..digits.native=abcdefghij| (note the double dot between the
-section and the key name). New keys may be added, too.
 
 \medskip
 \textbf{Old and deprecated stuff}
@@ -4258,8 +4330,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.38.1894>>
-%<<date=2020/01/22>>
+%<<version=3.39>>
+%<<date=2020/02/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7361,6 +7433,7 @@ help from Bernd Raichle, for which I am grateful.
   \edef\bbl@L{\zap@space#1 \@empty}%
   \edef\bbl@G{\zap@space#2 \@empty}%
   \bbl@startcmds@ii}
+\let\bbl@startcommands\StartBabelCommands
 %    \end{macrocode}
 %
 %    Parse the encoding info to get the label, input, and font parts.
@@ -7486,6 +7559,7 @@ help from Bernd Raichle, for which I am grateful.
   \endgroup
   \endgroup
   \bbl@scafter}
+\let\bbl@endcommands\EndBabelCommands
 %    \end{macrocode}
 %
 %    Now we define commands to be used inside |\StartBabelCommands|.
@@ -7614,7 +7688,7 @@ help from Bernd Raichle, for which I am grateful.
   \newcommand\SetHyphenMap[1]{%
     \bbl@forlang\bbl@tempa{%
       \expandafter\bbl@stringdef
-        \csname\bbl@tempa @bbl@hyphenmap\endcsname{##1}}}
+        \csname\bbl@tempa @bbl@hyphenmap\endcsname{##1}}}%
 %<</Macros local to BabelCommands>>
 %    \end{macrocode}
 %
@@ -8225,7 +8299,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@savelangname\languagename
   \edef\bbl@savelocaleid{\the\localeid}%
   % Set name and locale id
-  \def\languagename{#2}%
+  \edef\languagename{#2}%
   % \global\@namedef{bbl@lcname@#2}{#2}%
   \bbl@id@assign
   \let\bbl@KVP@captions\@nil
@@ -8242,7 +8316,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@onchar\@nil
   \let\bbl@KVP@chargroups\@nil
   \bbl@forkv{#1}{%  TODO - error handling
-    \in@{..}{##1}%
+    \in@{/}{##1}%
     \ifin@
       \bbl@renewinikey##1\@@{##2}%
     \else
@@ -8294,6 +8368,7 @@ help from Bernd Raichle, for which I am grateful.
          \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
          \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
          \bbl@exportkey{intsp}{typography.intraspace}{}%
+         \endinput
        \endgroup}%           boxed, to avoid extra spaces:
      {\setbox\z@\hbox{\InputIfFileExists{babel-#2.tex}{}{}}}}%
     {}%
@@ -8318,6 +8393,11 @@ help from Bernd Raichle, for which I am grateful.
       end}%
     \bbl@xin@{ ids }{ \bbl@KVP@onchar\space}%
     \ifin@
+      \ifx\bbl@starthyphens\@undefined % Needed if no explicit selection
+        \AddBabelHook{babel-onchar}{beforestart}{{\bbl@starthyphens}}%
+      \fi
+      \bbl@exp{\\\bbl@add\\\bbl@starthyphens
+        {\\\bbl@patterns@lua{\languagename}}}%
       % TODO - error/warning if no script
       \directlua{
         if Babel.script_blocks['\bbl@cs{sbcp@\languagename}'] then
@@ -8336,7 +8416,7 @@ help from Bernd Raichle, for which I am grateful.
         if Babel.script_blocks['\bbl@cs{sbcp@\languagename}'] then
           Babel.loc_to_scr[\the\localeid] =
             Babel.script_blocks['\bbl@cs{sbcp@\languagename}']
-        end}
+        end}%
       \ifx\bbl@mapselect\@undefined
         \AtBeginDocument{%
           \expandafter\bbl@add\csname selectfont \endcsname{{\bbl@mapselect}}%
@@ -8440,7 +8520,7 @@ help from Bernd Raichle, for which I am grateful.
                return head
              end
            end
-        }}
+        }}%
     \fi
   \fi
   % == require.babel in ini ==
@@ -8507,7 +8587,7 @@ help from Bernd Raichle, for which I am grateful.
   \@namedef{date#1}{}% marks lang exists - required by \StartBabelCommands
   \@namedef{extras#1}{}%
   \@namedef{noextras#1}{}%
-  \StartBabelCommands*{#1}{captions}%
+  \bbl@startcommands*{#1}{captions}%
     \ifx\bbl@KVP@captions\@nil %      and also if import, implicit
       \def\bbl@tempb##1{%             elt for \bbl@captionslist
         \ifx##1\@empty\else
@@ -8530,7 +8610,7 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@savetoday
       \bbl@savedate
     \fi
-  \EndBabelCommands
+  \bbl@endcommands
   \bbl@exp{%
     \def\<#1hyphenmins>{%
       {\bbl@ifunset{bbl@lfthm@#1}{2}{\@nameuse{bbl@lfthm@#1}}}%
@@ -8630,7 +8710,7 @@ help from Bernd Raichle, for which I am grateful.
     \def\bbl@inipreread##1=##2\@@{%
       \bbl@trim@def\bbl@tempa{##1}% Redundant below !!
       % Move trims here ??
-      \bbl@ifunset{bbl@KVP@\bbl@section..\bbl@tempa}%
+      \bbl@ifunset{bbl@KVP@\bbl@section/\bbl@tempa}%
         {\expandafter\bbl@inireader\bbl@tempa=##2\@@}%
         {}}%
     \let\bbl@inireader\bbl@iniskip
@@ -8653,6 +8733,7 @@ help from Bernd Raichle, for which I am grateful.
     \@nameuse{bbl@renew@\bbl@section}%
     \global\bbl@csarg\let{renew@\bbl@section}\relax
     \@nameuse{bbl@secpost@\bbl@section}%  
+%    \bbl@csarg\bbl@toglobal{inikeys@\languagename}%
   \fi}
 \def\bbl@iniline#1\bbl@iniline{%
   \@ifnextchar[\bbl@inisec{\@ifnextchar;\bbl@iniskip\bbl@inipreread}#1\@@}% ]
@@ -8675,14 +8756,14 @@ help from Bernd Raichle, for which I am grateful.
   \@nameuse{bbl@secpost@\bbl@section}%  ends previous section
   \def\bbl@section{#1}%                 starts current section
   \def\bbl@elt##1##2{%
-    \@namedef{bbl@KVP@#1..##1}{}}%
+    \@namedef{bbl@KVP@#1/##1}{}}%
   \@nameuse{bbl@renew@#1}%
   \@nameuse{bbl@secpre@#1}%  pre-section `hook'
   \bbl@ifunset{bbl@inikv@#1}%
     {\let\bbl@inireader\bbl@iniskip}%
     {\bbl@exp{\let\\\bbl@inireader\<bbl@inikv@#1>}}}
 \let\bbl@renewlist\@empty
-\def\bbl@renewinikey#1..#2\@@#3{%
+\def\bbl@renewinikey#1/#2\@@#3{%
   \bbl@ifunset{bbl@renew@#1}%
     {\bbl@add@list\bbl@renewlist{#1}}%
     {}%
@@ -9027,9 +9108,7 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@ADJ@layout.lists@on}{%
   \bbl@adjust@layout{\let\list\bbl@OL@list}}
 \@namedef{bbl@ADJ@hyphenation.extra@on}{%
-  \directlua{
-    Babel.linebreaking.add_after(Babel.post_hyphenate_replace)
-  }}
+  \bbl@activateposthyphen}
 %    \end{macrocode}
 %
 % \section{The kernel of Babel (\texttt{babel.def} for \LaTeX only)}
@@ -10021,18 +10100,20 @@ help from Bernd Raichle, for which I am grateful.
     \newtoks\everypar
     \everypar=\bbl@severypar
     \bbl@severypar{\bbl@xeeverypar\the\everypar}}
-  \@ifpackagewith{babel}{bidi=bidi}%
-    {\let\bbl@textdir@i\@gobbletwo
-     \let\bbl@xebidipar\@empty
-     \AddBabelHook{bidi}{foreign}{%
-       \def\bbl@tempa{\def\BabelText####1}%
-       \ifcase\bbl@thetextdir
-         \expandafter\bbl@tempa\expandafter{\BabelText{\LR{##1}}}%
-       \else
-         \expandafter\bbl@tempa\expandafter{\BabelText{\RL{##1}}}%
-       \fi}
-     \def\bbl@pardir#1{\ifcase#1\relax\setLR\else\setRL\fi}}
-    {}%
+  \def\bbl@tempb{%
+    \let\bbl@textdir@i\@gobbletwo
+    \let\bbl@xebidipar\@empty
+    \AddBabelHook{bidi}{foreign}{%
+      \def\bbl@tempa{\def\BabelText########1}%
+      \ifcase\bbl@thetextdir
+        \expandafter\bbl@tempa\expandafter{\BabelText{\LR{####1}}}%
+      \else
+        \expandafter\bbl@tempa\expandafter{\BabelText{\RL{####1}}}%
+      \fi}
+    \def\bbl@pardir##1{\ifcase##1\relax\setLR\else\setRL\fi}}
+  \@ifpackagewith{babel}{bidi=bidi}{\bbl@tempb}{}%
+  \@ifpackagewith{babel}{bidi=bidi-l}{\bbl@tempb}{}%
+  \@ifpackagewith{babel}{bidi=bidi-r}{\bbl@tempb}{}%
 \fi
 %    \end{macrocode}
 %
@@ -10413,7 +10494,6 @@ help from Bernd Raichle, for which I am grateful.
   \edef\languagename{%
     \ifnum\escapechar=\expandafter`\string#1\@empty
     \else\string#1\@empty\fi}%
-  % \@namedef{bbl@lcname@#1}{#1}%
   \select@language{\languagename}%
   % write to auxs
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
@@ -10430,8 +10510,13 @@ help from Bernd Raichle, for which I am grateful.
   % set name
   \edef\languagename{#1}%
   \bbl@fixname\languagename
+  \expandafter\ifx\csname date\languagename\endcsname\relax
+    \IfFileExists{babel-\languagename.tex}%
+      {\babelprovide{\languagename}}%
+      {}%
+  \fi
   \bbl@iflanguage\languagename{%
-    \expandafter\ifx\csname date\languagename\endcsname\relax
+     \expandafter\ifx\csname date\languagename\endcsname\relax
       \bbl@error
         {Unknown language `#1'. Either you have\\%
          misspelled its name, it has not been installed,\\%
@@ -10732,8 +10817,12 @@ help from Bernd Raichle, for which I am grateful.
 \def\foreign@language#1{%
   % set name
   \edef\languagename{#1}%
-  % \@namedef{bbl@lcname@#1}{#1}%
   \bbl@fixname\languagename
+  \expandafter\ifx\csname date\languagename\endcsname\relax
+    \IfFileExists{babel-\languagename.tex}%
+      {\babelprovide{\languagename}}%
+      {}%
+  \fi
   \bbl@iflanguage\languagename{%
     \expandafter\ifx\csname date\languagename\endcsname\relax
       \bbl@warning   % TODO - why a warning, not an error?
@@ -10952,6 +11041,7 @@ help from Bernd Raichle, for which I am grateful.
 \let\uselocale\setlocale
 \let\locale\setlocale
 \let\selectlocale\setlocale
+\let\localename\setlocale
 \let\textlocale\setlocale
 \let\textlanguage\setlocale
 \let\languagetext\setlocale
@@ -11577,6 +11667,12 @@ help from Bernd Raichle, for which I am grateful.
 \bbl@trace{Font handling with fontspec}
 \@onlypreamble\babelfont
 \newcommand\babelfont[2][]{%  1=langs/scripts 2=fam
+  \bbl@foreach{#1}{%
+    \expandafter\ifx\csname date##1\endcsname\relax
+    \IfFileExists{babel-##1.tex}%
+      {\babelprovide{##1}}%
+      {}%
+    \fi}%
   \edef\bbl@tempa{#1}%
   \def\bbl@tempb{#2}%  Used by \bbl@bblfont
   \ifx\fontspec\@undefined
@@ -12464,6 +12560,9 @@ help from Bernd Raichle, for which I am grateful.
 % \changes{babel~3.37}{2019/12/07}{Added code for non-standard
 %   hyphenation.}
 %
+% First, some general code for line breaking, used by
+% |\babelposthyphenation|.
+%
 % \textit{In progress.} Replace regular (ie, implicit) discretionaries
 % by spaceskips, based on the previous glyph (which I think makes
 % sense, because the hyphen and the previous char go always together).
@@ -13118,6 +13217,7 @@ end
 %    \begin{macrocode}
 \catcode`\#=6
 \gdef\babelposthyphenation#1#2#3{&%
+  \bbl@activateposthyphen
   \begingroup
     \def\babeltempa{\bbl@add@list\babeltempb}&%
     \let\babeltempb\@empty
@@ -13150,6 +13250,11 @@ end
     }&%
   \endgroup}
 \endgroup
+\def\bbl@activateposthyphen{%
+  \let\bbl@activateposthyphen\relax
+  \directlua{
+    Babel.linebreaking.add_after(Babel.post_hyphenate_replace)
+  }}
 %    \end{macrocode}
 %
 % \subsection{Layout}
