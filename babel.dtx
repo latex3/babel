@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/02/03 v3.39 The Babel package]
+\ProvidesFile{babel.dtx}[2020/02/11 v3.39.1914 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2408,10 +2408,12 @@ _\telugucounter{section}_
 \end{document}
 \end{verbatim}
 
-Languages providing native digits in all or some variants are
-\textit{ar, as, bn, bo, brx, ckb, dz, fa, gu, hi, km, kn, kok, ks, lo,
-lrc, ml, mr, my, mzn, ne, or, pa, ps, ta, te, th, ug, ur, uz, vai, yue,
-zh.}
+Languages providing native digits in all or some variants are Arabic,
+Assamese, Bangla, Tibetar, Bodo, Central Kurdish, Dzongkha, Persian,
+Gujarati, Hindi, Khmer, Kannada, Konkani, Kashmiri, Lao, Northern Luri,
+Malayalam, Marathi, Burmese, Mazanderani, Nepali, Odia, Punjabi,
+Pashto, Tamil, Telugu, Thai, Uyghur, Urdu, Uzbek, Vai, Cantonese,
+Chinese.
 
 \New{3.30} With \luatex{} there is an alternative approach for mapping
 digits, namely, |mapdigits|. Conversion is based on the language and it
@@ -4231,11 +4233,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \fi
 %
-% \changes{babel~3.9c}{2013/04/04}{Added the ``modifiers'' mechanism}
-% \changes{babel~3.9g}{2013/06/01}{bbplain merged}
-% \changes{babel~3.9k}{2014/03/23}{Code and doc reorganized, and some
-%    minor enhancements}
-%
 %\begingroup
 %  \catcode`<=\active%
 %  \catcode`>=\active
@@ -4330,18 +4327,14 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.39>>
-%<<date=2020/02/03>>
+%<<version=3.39.1914>>
+%<<date=2020/02/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
 % may change in the future}. This applies mainly to those recently
 % added for replacing, trimming and looping. The older ones, like
 % |\bbl@afterfi|, will not change.
-%
-% \changes{babel~3.9t}{2017/04/22}{Added new helper macros. Not all are
-%   currently used, but will be in 3.10 -- \cs{bbl@trim},
-%   \cs{bbl@ifunset}, \cs{bbl@exp}, \cs{bbl@stripslash}}
 %
 %    We define some basic macros which just make the code cleaner.
 %    |\bbl@add| is now used internally instead of |\addto| because of
@@ -4350,11 +4343,6 @@ help from Bernd Raichle, for which I am grateful.
 %    is executed twice, but we need them when defining options and
 %    \file{babel.def} cannot be load until options have been defined.
 %    This does not hurt, but should be fixed somehow.
-%
-% \changes{babel~3.9i}{2014/02/16}{\cs{@for} didn't work with
-%    Plain. Added \cs{bbl@loop}}
-% \changes{babel~3.15}{2017/10/30}{New convenience macros
-%   \cs{bbl@xin@} and \cs{bbl@cs}}
 %
 %    \begin{macrocode}
 %<<*Basic macros>>
@@ -4376,17 +4364,11 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@for#1#2#3{\bbl@loopx#1{#2}{\ifx#1\@empty\else#3\fi}}
 %    \end{macrocode}
 %
-% \changes{babel~3.9t}{2017/04/22}{Use \cs{bbl@ifunset} instead of
-%    \cs{@ifundefined}.}
-%
 %  \begin{macro}{\bbl@add@list}
 %    This internal macro adds its second argument to a comma
 %    separated list in its first argument. When the list is not
 %    defined yet (or empty), it will be initiated. It presumes
 %    expandable character strings.
-%
-% \changes{babel~3.9t}{2017/04/22}{Redefined to avoid infinite loops
-%    if the macro is \cs{relax}.}
 %
 %    \begin{macrocode}
 \def\bbl@add@list#1#2{%
@@ -4468,9 +4450,6 @@ help from Bernd Raichle, for which I am grateful.
 %   the same as |\@ifundefined|. However, in an $\epsilon$-tex engine,
 %   it is based on |\ifcsname|, which is more efficient, and do not
 %   waste memory.
-%
-% \changes{babel~3.35}{2019/09/22}{Inside a group, so that \cs{ifcsname}
-%   is still undefined.}
 %
 %    \begin{macrocode}
 \begingroup
@@ -4566,40 +4545,38 @@ help from Bernd Raichle, for which I am grateful.
 % because it is not a general purpose macro, and it is used by \babel{}
 % only when it works (an example where it does \textit{not} work is in
 % |\bbl@TG@@date|, and also fails if there are macros with spaces,
-% because they retokenized). It may change! (or even merged with
+% because they are retokenized). It may change! (or even merged with
 % |\bbl@replace|; I'm not sure ckecking the replacement is really
 % necessary or just paranoia).
 % 
-% \changes{babel~3.34}{2019/07/23}{Take into account prefixes like
-%   \cs{long} and macros with trailing spaces. Don't touch original if
-%   not necessary.}
-% 
 %    \begin{macrocode}
-\bbl@exp{\def\\\bbl@parsedef##1\detokenize{macro:}}#2->#3\relax{%
-  \def\bbl@tempa{#1}%
-  \def\bbl@tempb{#2}%
-  \def\bbl@tempe{#3}}
-\def\bbl@sreplace#1#2#3{%
-  \begingroup
-    \expandafter\bbl@parsedef\meaning#1\relax
-    \def\bbl@tempc{#2}%
-    \edef\bbl@tempc{\expandafter\strip@prefix\meaning\bbl@tempc}%
-    \def\bbl@tempd{#3}%
-    \edef\bbl@tempd{\expandafter\strip@prefix\meaning\bbl@tempd}%
-    \bbl@xin@{\bbl@tempc}{\bbl@tempe}% If not in macro, do nothing
-    \ifin@
-      \bbl@exp{\\\bbl@replace\\\bbl@tempe{\bbl@tempc}{\bbl@tempd}}%
-      \def\bbl@tempc{%     Expanded an executed below as 'uplevel'
-         \\\makeatletter % "internal" macros with @ are assumed
-         \\\scantokens{%
-           \bbl@tempa\\\@namedef{\bbl@stripslash#1}\bbl@tempb{\bbl@tempe}}%
-         \catcode64=\the\catcode64\relax}%  Restore @
-    \else
-      \let\bbl@tempc\@empty  % Not \relax
-    \fi
-    \bbl@exp{%      For the 'uplevel' assignments
-  \endgroup
-    \bbl@tempc}}  % empty or expand to set #1 with changes 
+\ifx\detokenize\@undefined\else % Unused macros if old Plain TeX
+  \bbl@exp{\def\\\bbl@parsedef##1\detokenize{macro:}}#2->#3\relax{%
+    \def\bbl@tempa{#1}%
+    \def\bbl@tempb{#2}%
+    \def\bbl@tempe{#3}}
+  \def\bbl@sreplace#1#2#3{%
+    \begingroup
+      \expandafter\bbl@parsedef\meaning#1\relax
+      \def\bbl@tempc{#2}%
+      \edef\bbl@tempc{\expandafter\strip@prefix\meaning\bbl@tempc}%
+      \def\bbl@tempd{#3}%
+      \edef\bbl@tempd{\expandafter\strip@prefix\meaning\bbl@tempd}%
+      \bbl@xin@{\bbl@tempc}{\bbl@tempe}% If not in macro, do nothing
+      \ifin@
+        \bbl@exp{\\\bbl@replace\\\bbl@tempe{\bbl@tempc}{\bbl@tempd}}%
+        \def\bbl@tempc{%     Expanded an executed below as 'uplevel'
+           \\\makeatletter % "internal" macros with @ are assumed
+           \\\scantokens{%
+             \bbl@tempa\\\@namedef{\bbl@stripslash#1}\bbl@tempb{\bbl@tempe}}%
+           \catcode64=\the\catcode64\relax}%  Restore @
+      \else
+        \let\bbl@tempc\@empty  % Not \relax
+      \fi
+      \bbl@exp{%      For the 'uplevel' assignments
+    \endgroup
+      \bbl@tempc}}  % empty or expand to set #1 with changes 
+\fi
 %    \end{macrocode}
 % \end{macro}
 %
@@ -4745,20 +4722,10 @@ help from Bernd Raichle, for which I am grateful.
 %    is used as a flag. Otherwise, we need to use the second part, so
 %    |\orig@dump| is not defined (\file{plain.def} undefines it).
 %
-% \changes{babel~3.9a}{2012/12/21}{Use \cs{orig@dump} as flag instead
-%    of \cs{adddialect}}
-%
 %    Check if the current version of \file{switch.def} has been
 %    previously loaded (mainly, \file{hyphen.cfg}). If not, load it
 %    now. We cannot load |babel.def| here because we first need to
 %    declare and process the package options.
-%
-% \changes{babel~3.9a}{2012/08/11}{Now switch.def is loaded always, so
-%    that there is no need to rebuild formats just to update babel}
-% \changes{babel~3.9a}{2012/12/13}{But switch.def is loaded only if
-%    loaded in a different version (or not loaded)}
-% \changes{babel~3.9a}{2013/01/14}{Added the debug option}
-% \changes{babel~3.9a}{2013/02/05}{Added \cs{bbl@add}}
 %
 % \section{The Package File (\LaTeX, \texttt{babel.sty})}
 %
@@ -4785,19 +4752,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \LaTeX forgets about the first loading. After |switch.def| has
 %    been loaded (above) and |\AfterBabelLanguage| defined, exits.
 %
-% \changes{babel~3.9a}{2012/10/05}{preset option started,
-%    party stolen from fontenc}
-% \changes{babel~3.9a}{2012/10/17}{Hooks started}
-% \changes{babel~3.9a}{2013/02/07}{Rejected preset, and replaced by
-%   base}
-% \changes{babel~3.9q}{2016/02/11}{Load patterns with option base.
-%    To be improved. Moved showlanguages before base}
-% \changes{babel~3.18}{2018/02/14}{Fix - prevent doble input of
-%    switch.def}
-% \changes{babel~3.19}{2018/04/23}{Split callback - vertical and
-%    horizontal}
-% \changes{babel~3.19}{2018/04/23}{Added bidi=basic, here and passim}
-%
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}[2005/12/01]
@@ -4820,9 +4774,6 @@ help from Bernd Raichle, for which I am grateful.
 % If the format created a list of loaded languages (in
 % |\bbl@languages|), get the name of the 0-th to show the actual
 % language used.
-%
-% \changes{babel~3.30}{2019/04/22}{Callbacks aren't specific to
-%   bidi any more, so they are moved.}
 %
 %    \begin{macrocode}
 \ifx\bbl@languages\@undefined\else
@@ -4931,9 +4882,6 @@ help from Bernd Raichle, for which I am grateful.
 %    modifiers are handled are left to language styles; they can use
 %    |\in@|, loop them with |\@for| or load |keyval|, for example.
 %
-% \changes{babel~3.9e}{2013/04/15}{Bug fixed - a dot was added in
-%    key=value pairs}
-%
 %    \begin{macrocode}
 \bbl@trace{key=value and another general options}
 \bbl@csarg\let{tempa\expandafter}\csname opt@babel.sty\endcsname
@@ -4961,13 +4909,6 @@ help from Bernd Raichle, for which I am grateful.
 % to use the shorthand characters in the preamble of their documents
 % this can help.
 %
-% \changes{babel~3.9a}{2012/08/14}{Implemented the \texttt{noconfigs}
-%    option}
-% \changes{babel~3.9a}{2012/09/26}{Implemented the
-%    \texttt{showlanguages} option}
-% \changes{babel~3.9g}{2013/08/07}{Options for hyphenmap}
-% \changes{babel~3.9l}{2014/07/29}{Option \texttt{silent}}
-%
 %    \begin{macrocode}
 \DeclareOption{KeepShorthandsActive}{}
 \DeclareOption{activeacute}{}
@@ -4990,9 +4931,6 @@ help from Bernd Raichle, for which I am grateful.
 % the second one loads the requested languages, except the main one if
 % set with the key |main|, and the third one loads the latter. First,
 % we ``flag'' valid keys with a nil value.
-%
-% \changes{babel~3.9a}{2012/08/10}{Added the `safe' key, including code
-%    below for selecting the redefined macros}
 %
 %    \begin{macrocode}
 \let\bbl@opt@shorthands\@nnil
@@ -5052,8 +4990,6 @@ help from Bernd Raichle, for which I am grateful.
 %    |shorthands| is empty. Also, some code makes sense only with
 %    |shorthands=...|.
 %
-% \changes{babel~3.9c}{2013/04/07}{Added t and c for tilde and comma}
-%
 %    \begin{macrocode}
 \bbl@trace{Conditional loading of shorthands}
 \def\bbl@sh@string#1{%
@@ -5103,9 +5039,6 @@ help from Bernd Raichle, for which I am grateful.
 \fi\fi
 %    \end{macrocode}
 %
-% \changes{babel~3.9a}{2012/07/30}{Code setting language in
-%    head/foots.  Related to babel/3796}
-%
 %    With |headfoot=lang| we can set the language used in heads/foots.
 %    For example, in babel/3796 just adds |headfoot=english|.  It
 %    misuses \cs{@resetactivechars} but seems to work.
@@ -5137,9 +5070,6 @@ help from Bernd Raichle, for which I am grateful.
 % For |layout| an auxiliary macro is provided, available for packages
 % and language styles.
 %
-% \changes{babel~3.16}{2018/01/02}{Added the basic layout stuff and the
-%  macro \cs{IfBabelLayout}}
-%
 %    \begin{macrocode}
 \bbl@trace{Defining IfBabelLayout}
 \ifx\bbl@opt@layout\@nnil
@@ -5156,13 +5086,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % \subsection{Language options}
-%
-% \changes{babel~3.9a}{2012/06/15}{Rewritten the loading mechanism, so
-%    that languages not declared are also correctly recognized, even
-%    if given as global options}
-% \changes{babel~3.9a}{2012/08/12}{Revised the loading mechanism}
-% \changes{babel~3.9i}{2014/03/01}{Removed German options, because
-%    they are now loaded directly}
 %
 %    Languages are loaded when processing the corresponding option
 %    \textit{except} if a |main| language has been set. In such a
@@ -5193,11 +5116,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    Now, we set language options whose names are different from |ldf| files.
 %
-% \changes{babel~3.9t}{2017/04/23}{Removed options for English, Indonesian and
-%    Malay, now handled with proxy files}
-% \changes{babel~3.13}{2017/08/24}{Removed options for French,
-%    too. ldf files now takes priority if exist, except Hebrew (to do)}
-%
 %    \begin{macrocode}
 \def\bbl@try@load@lang#1#2#3{%
     \IfFileExists{\CurrentOption.ldf}%
@@ -5227,11 +5145,6 @@ help from Bernd Raichle, for which I am grateful.
 %    file loading the actual one. You can also set the name
 %    of the file with the package option |config=<name>|, which will
 %    load |<name>.cfg| instead.
-%
-% \changes{babel~3.9a}{2012/06/28}{Added the \cs{AfterBabelLanguage}
-%    mechanism, to be used mainly with the local cfg file.}
-% \changes{babel~3.9a}{2012/06/31}{Now you can set the name of the
-%    local cfg file.}
 %
 %    \begin{macrocode}
 \ifx\bbl@opt@config\@nnil
@@ -5300,8 +5213,6 @@ help from Bernd Raichle, for which I am grateful.
 %    declared. Those already processed in the first pass are just
 %    ignored.
 %
-% \changes{babel~3.9a}{2012/12/22}{Default option does nothing}
-%
 %    The options have to be processed in the order in which the user
 %    specified them (except, of course, global options, which \LaTeX{}
 %    processes before):
@@ -5355,11 +5266,6 @@ help from Bernd Raichle, for which I am grateful.
 %    defined. If not, no language has been loaded and an error
 %    message is displayed.
 %
-% \changes{babel~3.9a}{2012/06/24}{Now babel is not loaded to prevent
-%    the document from raising errors after fixing it}
-% \changes{babel~3.21}{2018/05/09}{Requesting a language is no required
-%    any more, in case you only need \cs{babelprovide}.}
-%
 %    \begin{macrocode}
 \ifx\bbl@main@language\@undefined
   \bbl@info{%
@@ -5398,22 +5304,7 @@ help from Bernd Raichle, for which I am grateful.
 % |language.def| exists and it is the same file used when formats were
 % created.
 %
-% \changes{babel~3.9a}{2013/01/11}{Added \cs{bbl@for} for loops
-%    ignoring empties}
-% \changes{babel~3.9c}{2013/04/06}{Normalize \cs{bbl@afterlang} to
-%    relax}
-% \changes{babel~3.9i}{2014/03/10}{Make sure \cs{bbl@language@opts}
-%    is defined.}
-% \changes{babel~3.9i}{2014/03/11}{Define \cs{l@} values from
-%   \cs{lang@} values set in Plain etex/xetex/luatex}
-%
 % \subsection{Tools}
-%
-% \changes{babel~3.9k}{2014/03/24}{Added definition for
-%    \cs{uselanguage}}
-% \changes{babel~3.9n}{2015/12/21}{Define a few macros for 2.09}
-% \changes{babel~3.9p}{2016/02/05}{Added a test for lua(e)tex.}
-% \changes{babel~3.9q}{2016/02/12}{Load lua patterns if not lualatex.}
 %
 %    \begin{macrocode}
 \ifx\ldf@quit\@undefined
@@ -5525,14 +5416,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-% \changes{babel~3.9a}{2012/08/10}{Removed the \cs{peek@token} and
-%    \textsc{test@token} stuff}
-%
 %    The macro |\initiate@active@char| takes all the necessary actions
 %    to make its argument a shorthand character. The real work is
 %    performed once for each character.
-%
-% \changes{babel~3.9a}{1999/04/30}{Added \cs{bbl@withactive}}
 %
 %    \begin{macrocode}
 \def\bbl@withactive#1#2{%
@@ -5616,8 +5502,6 @@ help from Bernd Raichle, for which I am grateful.
 %  for developpers, after all. |\bbl@usehooks| is the commands used by
 %  babel to execute hooks defined for an event.
 %
-% \changes{babel~3.33}{2019/07/16}{Optional argument for languages.}
-%
 %    \begin{macrocode}
 \bbl@trace{Hooks}
 \newcommand\AddBabelHook[3][]{%
@@ -5674,17 +5558,6 @@ help from Bernd Raichle, for which I am grateful.
 % already contains |\foreignlanguage|, nothing is done.  Note this
 % macro (1) is not restricted to the preamble, and (2) changes are
 % local.
-%
-% \changes{babel~3.9i}{2014/02/14}{Macro \cs{babelensure} added}
-% \changes{babel~3.9k}{2014/03/23}{Encapsulate \cs{foreignlanguage} in
-%   \cs{bbl@ensure@}language, to "protect" strings}
-% \changes{babel~3.9s}{2017/04/10}{Bug fix - extra spaces because a
-%   missing percent}
-% \changes{babel~3.9s}{2017/04/10}{\cs{bbl@ensure@lang} defined only
-%   once}
-% \changes{babel~3.10}{2017/05/06}{\cs{bbl@ensured} renamed to
-%   \cs{bbl@captionslist} (for \cs{babelprovide}), which means
-%   \cs{today} must be given explicitly in \cs{babelensure}}
 %
 %    \begin{macrocode}
 \bbl@trace{Defining babelensure}
@@ -5783,12 +5656,6 @@ help from Bernd Raichle, for which I am grateful.
 %    |string|. When it is equal to |\@backslashchar| we are dealing
 %    with a control sequence which we can compare with |\@undefined|.
 %
-% \changes{babel~3.9a}{2012/08/11}{\cs{ldf@quit} is not delayed any
-%   more after \cs{fi} , since \cs{endinput} is not executed
-%   immediately}
-% \changes{babel~3.9g}{2012/08/11}{Preset the ``family'' of macros
-%   \cs{Babel}...}
-%
 %   If so, we call |\ldf@quit| to set the main language, restore the
 %   category code of the @-sign and call |\endinput|
 %
@@ -5851,9 +5718,6 @@ help from Bernd Raichle, for which I am grateful.
 %    a control sequence that needs to be expanded) and reset the
 %    category code of the @-sign.
 %
-% \changes{babel~3.9a}{2012/10/01}{Added \cs{bbl@afterlang} which
-%    executes the code delayed with \cs{AfterBabelLanguage}}
-%
 %    \begin{macrocode}
 \def\bbl@afterldf#1{%
   \bbl@afterlang
@@ -5898,8 +5762,6 @@ help from Bernd Raichle, for which I am grateful.
 %    We also have to make sure that some code gets executed at the
 %    beginning of the document. Languages do not set |\pagedir|, so
 %    we set here for the whole document to the main |\bodydir|.
-%
-% \changes{babel~3.34}{2019/09/20}{New hook beforestart.}
 %
 %    \begin{macrocode}
 \def\bbl@beforestart{%
@@ -5948,8 +5810,6 @@ help from Bernd Raichle, for which I am grateful.
 %    Items are added to the lists without checking its existence or
 %    the original catcode. It does not hurt, but should be fixed. It's
 %    already done with |\nfss@catcodes|, added in 3.10.
-%
-% \changes{babel~3.10}{2017/05/14}{Refactored. Add to \cs{nfss@catcodes} too.}
 %
 %    \begin{macrocode}
 \bbl@trace{Shorhands}
@@ -6025,9 +5885,6 @@ help from Bernd Raichle, for which I am grateful.
 %    |\<level>@group|, |<level>@active| and |<next-level>@active|
 %    (except in |system|).
 %
-% \changes{babel~3.9a}{2012/08/18}{New macro, with code from
-%    \cs{@initiate@active@char}}
-%
 %    \begin{macrocode}
 \def\bbl@active@def#1#2#3#4{%
   \@namedef{#3#1}{%
@@ -6051,9 +5908,6 @@ help from Bernd Raichle, for which I am grateful.
     \fi}}%
 %    \end{macrocode}
 %
-% \changes{babel~3.9a}{2012/08/18}{Removed an extra hash. Now calls
-%    \cs{@initiate@active@char} with 3 arguments.}
-%
 %    |\initiate@active@char| calls |\@initiate@active@char| with 3
 %    arguments. All of them are the same character with different
 %    catcodes: active, other (|\string|'ed) and the original one.
@@ -6066,17 +5920,6 @@ help from Bernd Raichle, for which I am grateful.
       {\expandafter\@initiate@active@char\expandafter}#1\string#1#1}%
     {}}
 %    \end{macrocode}
-%
-% \changes{babel~3.9e}{2012/08/18}{Introduced the 3-argument
-%   \cs{@initiate@active@char}, with different catcodes: active,
-%   string'ed, and original. Reorganized}
-% \changes{babel~3.9a}{2012/08/19}{The catcode is saved}
-% \changes{babel~3.9a}{2012/09/09}{The original definition is saved,
-% too}
-% \changes{babel~3.9a}{2012/12/27}{Take into account mathematically
-%   active chars, to avoid infinite loops}
-% \changes{babel~3.34}{2019/09/23}{Math active in lua has a different
-%   value}
 %
 %   The very first thing to do is saving the original catcode and the
 %   original definition, even if not active, which is possible
@@ -6150,10 +5993,6 @@ help from Bernd Raichle, for which I am grateful.
 %    the search of a definition in the user, language and system
 %    levels (or eventually |normal@char|\m{char}).
 %
-% \changes{babel~3.9a}{2012/12/27}{Added code for option math=normal}
-% \changes{babel~3.9i}{2014/02/03}{Don't call directly
-%    \cs{user@active}, but with an intermediate step}
-%
 %    \begin{macrocode}
   \let\bbl@tempa\@firstoftwo
   \if\string^#2%
@@ -6176,9 +6015,6 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@csarg\edef{doactive#2}{%
     \expandafter\noexpand\csname user@active#2\endcsname}%
 %    \end{macrocode}
-%
-% \changes{babel~3.9a}{2012/12/27}{Shorthands are not defined
-%    directly, but with a couple of intermediate macros}
 %
 %    We now define the default values which the shorthand is set to
 %    when activated or deactivated. It is set to the deactivated form
@@ -6203,9 +6039,6 @@ help from Bernd Raichle, for which I am grateful.
 %    single character shorthand. If that doesn't exist we check for a
 %    shorthand with an argument.
 %
-% \changes{babel~3.9a}{2012/08/18}{Instead of the ``copy-paste pattern''
-% a new macro is used}
-%
 %    \begin{macrocode}
   \bbl@active@def#2\user@group{user@active}{language@active}%
   \bbl@active@def#2\language@group{language@active}{system@active}%
@@ -6219,9 +6052,6 @@ help from Bernd Raichle, for which I am grateful.
 %    shorthand combination such as |''| ends up in a heading \TeX\
 %    would see |\protect'\protect'|. To prevent this from happening a
 %    couple of shorthand needs to be defined at user level.
-%
-% \changes{babel~3.9a}{2012/8/18}{Use \cs{user@group}, as above,
-%    instead of the hardwired \texttt{user}}
 %
 %    \begin{macrocode}
   \expandafter\edef\csname\user@group @sh@#2@@\endcsname
@@ -6237,21 +6067,6 @@ help from Bernd Raichle, for which I am grateful.
 %    character special care should be taken to make sure math still
 %    works. Therefore an extra level of expansion is introduced with a
 %    check for math mode on the upper level.
-%
-% \changes{babel~3.9a}{2012/09/11}{The output routine resets the quote
-%   to \cs{active@math@prime}, so we redefine the latter with the new
-%  ``normal'' value}
-% \changes{babel~3.9a}{2012/06/20}{Added a couple of missing
-%    comment characters (PR 4146)}
-% \changes{babel~3.9a}{2012/07/29}{Use \cs{textormath} instead of
-%    \cs{ifmath}}
-% \changes{babel~3.9a}{2012/11/26}{Compare the char, irrespective of
-%    its catcode.}
-% \changes{babel~3.9a}{2012/12/27}{Removed the redeclaration of
-%   \cs{normal@char'} because it is handled in a generic way above}
-% \changes{babel~3.9a}{2012/12/29}{Removed the intermediate step of
-%   \cs{bbl@act@caret} and moved above}
-% \changes{babel~3.9i}{2012/12/29}{Added the event \cs{initiateactive}}
 %
 %    \begin{macrocode}
   \if\string'#2%
@@ -6275,12 +6090,6 @@ help from Bernd Raichle, for which I am grateful.
 %    strictly necessary but it is still done for backward
 %    compatibility. So we need to restore the original catcode at the
 %    end of package \textit{and} and the end of the |ldf|.
-%
-% \changes{babel~3.9a}{2012/07/04}{Catcodes are also restored after
-%    each language, to prevent incompatibilities. Use \cs{string} instead
-%    of \cs{noexpand} and add \cs{relax}}
-% \changes{babel~3.9a}{2012/10/18}{Catcodes are deactivated in a separate
-%    macro, which is made no-op when babel exits}
 %
 %    \begin{macrocode}
 \@ifpackagewith{babel}{KeepShorthandsActive}%
@@ -6307,9 +6116,6 @@ help from Bernd Raichle, for which I am grateful.
 %    will expand to either |\bbl@firstcs| or |\bbl@scndcs|. Hence two
 %    more arguments need to follow it.
 %
-% \changes{babel~3.9a}{2012/08/18}{Removed \cs{string}s, because the
-%   char are already string'ed}
-%
 %    \begin{macrocode}
 \def\bbl@sh@select#1#2{%
   \expandafter\ifx\csname#1@sh@#2@sel\endcsname\relax
@@ -6330,8 +6136,6 @@ help from Bernd Raichle, for which I am grateful.
 %    active character to be dealt with). There are two definitions,
 %    depending of |\ifincsname| is available. If there is, the
 %    expansion will be more robust.
-%
-% \changes{babel 3.35}{2019/09/18}{Added \cs{ifincsname} test.}
 %
 %    \begin{macrocode}
 \begingroup
@@ -6395,9 +6199,6 @@ help from Bernd Raichle, for which I am grateful.
 %  \begin{macro}{\bbl@activate}
 %  \begin{macro}{\bbl@deactivate}
 %
-%  \changes{babel~3.9a}{2013/01/11}{\cs{bbl@withactive} makes sure the
-%    catcode is active}
-%
 %    Both macros take one argument, like |\initiate@active@char|. The
 %    macro is used to change the definition of an active character to
 %    expand to |\active@char|\m{char} in the case of |\bbl@activate|,
@@ -6440,8 +6241,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \item the code to be executed when the shorthand is encountered.
 %    \end{enumerate}
 %
-% \changes{babel~3.9a}{2012/07/03}{Check if shorthands are redefined}
-%
 %    \begin{macrocode}
 \def\declare@shorthand#1#2{\@decl@short{#1}#2\@nil}
 \def\@decl@short#1#2#3\@nil#4{%
@@ -6477,9 +6276,6 @@ help from Bernd Raichle, for which I am grateful.
 %    Some of the shorthands that will be declared by the language
 %    definition files have to be usable in both text and mathmode. To
 %    achieve this the helper macro |\textormath| is provided.
-%
-% \changes{babel~3.9a}{2012/12/29}{Failed if an argument had a
-%    condicional. Use the more robust mechanism of \cs{XXXoftwo}}
 %
 %    \begin{macrocode}
 \def\textormath{%
@@ -6521,11 +6317,6 @@ help from Bernd Raichle, for which I am grateful.
 %    version is also provided which activates them always after the
 %    language has been switched.
 %
-% \changes{babel~3.9a}{2012/08/05}{Now \cs{bbl@activate} makes sure
-%    the catcode is active, so this part is simplified}
-% \changes{babel~3.9a}{2012/08/12}{User shorhands can be
-%   defined even with shorthands=off}
-%
 %    \begin{macrocode}
 \def\useshorthands{%
   \@ifstar\bbl@usesh@s{\bbl@usesh@x{}}}
@@ -6548,11 +6339,6 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\defineshorthand}
-%
-% \changes{babel~3.9a}{2012/08/05}{Added optional argument, to provide
-%    a way to (re)define language shorthands}
-% \changes{babel~3.9a}{2012/08/25}{Extended for language-dependent
-%    user macros, with two new auxiliary macros}
 %
 %    Currently we only support two groups of user level shorthands,
 %    named internally |user| and |user@<lang>| (language-dependent
@@ -6612,12 +6398,6 @@ help from Bernd Raichle, for which I am grateful.
          \initiate@active@char{#2}%
 %    \end{macrocode}
 %
-% \changes{babel~3.9a}{2012/08/06}{Instead of letting the new shorthand to
-%    the original char, which very often didn't work, we define it
-%    directly}
-% \changes{babel~3.9a}{2012/08/20}{Make sure both characters (old an
-%    new) are active}
-%
 %    Then, we define the new shorthand in terms of the original
 %    one, but note with |\aliasshorthands{"}{/}| is
 %    |\active@prefix /\active@char/|, so we still need to let the
@@ -6668,8 +6448,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\bbl@switch@sh}
 %
-%   \changes{babel~3.9a}{2013/02/21}{Code revised}
-%
 %    The macro |\bbl@switch@sh| takes the list of characters apart one
 %    by  one and subsequently switches the category code of the
 %    shorthand character according to the first argument of
@@ -6709,8 +6487,6 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %  \end{macro}
 %
-% \changes{babel~3.9a}{2012/06/16}{Added code}
-%
 % Note the value is that at the expansion time, eg, in the preample
 % shorhands are usually deactivated.
 %
@@ -6742,8 +6518,6 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-% \changes{babel~3.23}{2018/08/26}{Added \cs{ifbabelshorthand}}
-%
 % You may want to test if a character is a shorthand. Note it does not
 % test whether the shorthand is on or off.
 %
@@ -6751,13 +6525,8 @@ help from Bernd Raichle, for which I am grateful.
 \newcommand\ifbabelshorthand[3]{\bbl@ifunset{bbl@active@\string#1}{#3}{#2}}
 %    \end{macrocode}
 %
-% \changes{babel~3.9a}{2012/12/27}{Removed redundant system declarations}
-%
 %  \begin{macro}{\bbl@prim@s}
 %  \begin{macro}{\bbl@pr@m@s}
-%
-% \changes{babel~3.9a}{2012/07/29}{\cs{bbl@pr@m@s} rewritten to
-%    take into account catcodes for both the quote and the hat}
 %
 % One of the internal macros that are involved in substituting |\prime|
 % for each right quote in mathmode is |\prim@s|. This checks if the
@@ -6800,10 +6569,6 @@ help from Bernd Raichle, for which I am grateful.
 %    however, for backward compatibility it is maintained (some
 %    existing documents may rely on the \babel{} value).
 %
-% \changes{babel~3.9i}{2014/02/06}{Moved from above, after
-%    \cs{bbl@usehook} has been defined}
-% \changes{babel~3.9k}{2014/02/06}{Moved again at the original place}
-%
 %    \begin{macrocode}
 \initiate@active@char{~}
 \declare@shorthand{system}{~}{\leavevmode\nobreak\ }
@@ -6840,9 +6605,6 @@ help from Bernd Raichle, for which I am grateful.
 %    which features of the language definition files he wants to
 %    enable.
 %  \begin{macro}{\languageattribute}
-%
-% \changes{babel~3.9a}{2012/09/07}{Use \cs{@expandtwoargs} with
-%   \cs{in@}}
 %
 %    The macro |\languageattribute| checks whether its arguments are
 %    valid and then activates the selected language attribute.
@@ -7133,8 +6895,6 @@ help from Bernd Raichle, for which I am grateful.
 % |\|\m{tag}. Definitions are first expanded so that they don't
 % contain |\csname| but the actual macro.
 %
-% \changes{babel~3.9i}{2014/02/21}{Macro \cs{babeltags} added}
-%
 %   \begin{macrocode}
 \bbl@trace{Short tags}
 \def\babeltags#1{%
@@ -7164,8 +6924,6 @@ help from Bernd Raichle, for which I am grateful.
 %     |\bbl@hyphenation<lang>| for language ones. See |\bbl@patterns|
 %     above for further details. We make sure there is a space between
 %     words when multiple commands are used.
-%
-%     \changes{babel~3.9a}{2012/08/28}{Macro added}
 %
 %    \begin{macrocode}
 \bbl@trace{Hyphens}
@@ -7200,13 +6958,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\bbl@allowhyphens}
 %
-% \changes{babel-3.9a}{2012/07/28}{Replaced many \cs{allowhyphens} by
-%    \cs{bbl@allowhyphen}. They were either no-op or executed always.}
-% \changes{babel-3.9i}{2014/01/29}{\cs{bbl@allowhyphens} must be
-%    ignored at the beginning of a paragraph or table cell.}
-% \changes{babel-3.9t}{2017/04/26}{Fixed misplaced \cs{nobreak} -
-%    sx366454 - soft hyphens could vanish.}
-%
 %    This macro makes hyphenation possible. Basically its definition
 %    is nothing more than |\nobreak| |\hskip| \texttt{0pt plus
 %    0pt}\footnote{\TeX\ begins and ends a word for hyphenation at a
@@ -7219,9 +6970,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %  \end{macro}
-%
-% \changes{babel-3.9a}{2012/08/27}{Added \cs{babelhyphen} and related
-%    macros}
 %
 % \begin{macro}{\babelhyphen}
 %
@@ -7310,10 +7058,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Multiencoding strings}
 %
-% \changes{babel~3.9a}{2012/09/05}{Added tentative code for string
-%  declarations}
-% \changes{babel~3.9a}{2012/12/24}{Added hooks}
-%
 % The aim following commands is to provide a commom interface for
 % strings in several encodings. They also contains several hooks which
 % can be ued by \luatex{} and \xetex. The code is organized here with
@@ -7353,9 +7097,6 @@ help from Bernd Raichle, for which I am grateful.
 %\end{verbatim}
 % and starts over (and similarly when lowercasing).
 %
-%    \changes{babel~3.9l}{2014/07/29}{Now tries to catch the parsing
-%    macro. Removed some redundant code. Option |nocase|.}
-%
 %    \begin{macrocode}
 \@ifpackagewith{babel}{nocase}%
   {\let\bbl@patchuclc\relax}%
@@ -7394,11 +7135,6 @@ help from Bernd Raichle, for which I am grateful.
 %    first use it is redefined to omit the basic setup in subsequent
 %    blocks. We make sure strings contain actual letters in the range
 %    128-255, not active characters.
-%
-%    \changes{babel~3.9g}{2013/07/29}{Added starred variant. A bit of
-%    clean up. Removed \cs{UseString}, which didn't work.}
-%    \changes{babel~3.9g}{2013/08/01}{Now several languages can be
-%    processed with \cs{BabelLanguages}, if set in the ldf.}
 %
 %    \begin{macrocode}
 \@onlypreamble\StartBabelCommands
@@ -7452,11 +7188,6 @@ help from Bernd Raichle, for which I am grateful.
 %    (above) a couple of default values to gobble the arguments. Then,
 %    these macros are redefined if necessary according to several
 %    parameters.
-%
-% \changes{babel~3.9g}{2013/08/04}{Use \cs{ProvideTextCommand}, which
-%   does with encoded strings what the manual says.}
-% \changes{babel~3.9h}{2013/11/08}{Tidied up code related to
-%  \cs{bbl@scswitch}}
 %
 %    \begin{macrocode}
 \newcommand\bbl@startcmds@ii[1][\@empty]{%
@@ -7574,9 +7305,6 @@ help from Bernd Raichle, for which I am grateful.
 %    hooks assigned to this event, preprocessing is done in the same
 %    order as defined.  Finally, the string is set.
 %
-% \changes{babel~3.9g}{2013/07/29}{Added \cs{bbl@forlang} to ignore in
-%   the preamble unknown languages, as described in the doc.}
-%
 %    \begin{macrocode}
 \def\bbl@setstring#1#2{%
   \bbl@forlang\bbl@tempa{%
@@ -7597,9 +7325,6 @@ help from Bernd Raichle, for which I am grateful.
 %     expanded in case transformations. It is |\relax| by default, but
 %     in |\MakeUppercase| and |\MakeLowercase| its value is a modified
 %     expandable |\@changed@cmd|.
-%
-% \changes{babel~3.9i}{2014/03/13}{Added code to expand captions in
-%     case transformations.}
 %
 %    \begin{macrocode}
 \ifx\bbl@opt@strings\relax
@@ -7629,9 +7354,6 @@ help from Bernd Raichle, for which I am grateful.
 %    Instead of defining a dedicated count, we just ``pre-expand''
 %    its value.
 %
-% \changes{babel~3.9h}{2013/10/16}{Tidied up and bug fixed - first
-%    element expanded prematurely.}
-%
 %    \begin{macrocode}
 %<<*Macros local to BabelCommands>>
 \def\SetStringLoop##1##2{%
@@ -7660,9 +7382,6 @@ help from Bernd Raichle, for which I am grateful.
 % The command |\SetCase| provides a way to change the behavior of
 % |\MakeUppercase| and |\MakeLowercase|. |\bbl@tempa| is set by the
 % patched |\@uclclist| to the parsing command.
-%
-% \changes{babel~3.9h}{2013/11/08}{Use \cs{bbl@encstrings} - they
-% should be defined always, even if no `strings'}
 %
 %    \begin{macrocode}
 %<<*Macros local to BabelCommands>>
@@ -7724,9 +7443,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    The following package options control the behavior of
 %    hyphenation mapping.
-%
-% \changes{babel~3.9t}{2017/04/28}{Renamed \cs{bbl@hymapopt} to
-%    \cs{bbl@opt@hyphenmap} for consistency}
 %
 %    \begin{macrocode}
 %<<*More package options>>
@@ -7905,9 +7621,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \texttt{T1} encoded fonts, but not in the \texttt{OT1} encoded
 %    fonts. Therefore we fake it for the \texttt{OT1} encoding.
 %
-% \changes{babel~3.9a}{2012/07/28}{Removed the first \cs{allowhyphens}.
-%    Moved the second one just after the kern.}
-%
 %    \begin{macrocode}
 \DeclareTextCommand{\ij}{OT1}{%
   i\kern-0.02em\bbl@allowhyphens j}
@@ -7994,9 +7707,6 @@ help from Bernd Raichle, for which I am grateful.
 %    They are defined with |\ProvideTextCommandDefault|, but this is
 %    very likely not required because their definitions are based on
 %    encoding-dependent macros.
-%
-% \changes{babel~3.16}{2018/01/02}{Adapted to TU and refactored -
-%  redundant code.}
 %
 %  \begin{macro}{\glq}
 %  \begin{macro}{\grq}
@@ -8189,9 +7899,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    Finally, the default is to use English as the main language.
 %
-% \changes{babel~3.9a}{2012-05-17}{Languages are best assigned with
-%    \cs{chardef}, not \cs{let}}
-%
 %    \begin{macrocode}
 \ifx\l@english\@undefined
   \chardef\l@english\z@
@@ -8257,41 +7964,12 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-% \changes{babel~3.18}{2018/02/14}{Moved \cs{babelprovide}, also for
-%   plain}
-%
 % \subsection{Creating languages}
 %
 % |\babelprovide| is a general purpose tool for creating and modifying
 % languages. It creates the language infrastructure, and loads, if
 % requested, an |ini| file. It may be used in conjunction to previouly
 % loaded |ldf| files.
-%
-% \changes{babel~3.10}{2017/05/19}{Added \cs{babelprovide}}
-% \changes{babel~3.13}{2017/08/30}{Added \cs{import}, which also reads
-% dates. Some refactoring in the ini reader.}
-% \changes{babel~3.15}{2017/10/30}{New keys script, language}
-% \changes{babel~3.16}{2018/01/02}{Make sure ensuring works even before
-%   the language is selected}
-% \changes{babel~3.19}{2018/04/23}{New option - mapfont. Currently
-%   only with direction}
-% \changes{babel~3.20}{2018/05/01}{Handle native digits (TeX level).
-%   New option - maparabic.}
-% \changes{babel~3.23}{2018/09/01}{Valueless import}
-% \changes{babel~3.26}{2018/10/16}{Quick fix for xetex - test the 
-%   script for intraspace}
-% \changes{babel~3.30}{2019/04/22}{Read some basic parameters from ini
-%   even without import.}
-% \changes{babel~3.30}{2019/04/22}{Native digits (lua level).}
-% \changes{babel~3.30}{2019/04/22}{New attribute in luatex for `locale'. Also
-%   \cs{localeid}}
-% \changes{babel~3.32}{2019/05/30}{Activate CJK line breaking  with an explicit
-%   intraspace.}
-% \changes{babel~3.34}{2019/09/20}{Fix - with main the language must not
-%   be restored.}
-% \changes{babel~3.37}{2019/12/07}{SEA and CJK linebreaking activated
-%   by default.}
-% \changes{babel~3.38}{2020/01/15}{Code for the onchar option.}
 %
 %    \begin{macrocode}
 \bbl@trace{Creating languages and reading ini files}
@@ -8367,6 +8045,7 @@ help from Bernd Raichle, for which I am grateful.
          \bbl@exportkey{dgnat}{numbers.digits.native}{}%
          \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
          \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
+         \bbl@exportkey{hyoth}{typography.hyphenate.other}{}%
          \bbl@exportkey{intsp}{typography.intraspace}{}%
          \endinput
        \endgroup}%           boxed, to avoid extra spaces:
@@ -8468,6 +8147,19 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
   \fi
   \bbl@provide@intraspace
+  % == hyphenate.other ==
+  \bbl@ifunset{bbl@hyoth@\languagename}{}%
+    {\bbl@csarg\bbl@replace{hyoth@\languagename}{ }{,}%
+     \bbl@startcommands*{\languagename}{}%
+       \bbl@csarg\bbl@foreach{hyoth@\languagename}{%
+         \ifcase\bbl@engine
+           \ifnum##1<257
+             \SetHyphenMap{\BabelLower{##1}{##1}}%
+           \fi
+         \else
+           \SetHyphenMap{\BabelLower{##1}{##1}}%
+         \fi}%
+     \bbl@endcommands}
   % == maparabic ==
   % Native digits, if provided in ini (TeX level, xe and lua)
   \ifcase\bbl@engine\else
@@ -8580,8 +8272,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % Depending on whether or not the language exists, we define two macros.
 %
-% \changes{babel~3.22}{2018/06/05}{Fix - Error with \cs{chapter} if empty in ini.}-
-%
 %    \begin{macrocode}
 \def\bbl@provide@new#1{%
   \@namedef{date#1}{}% marks lang exists - required by \StartBabelCommands
@@ -8639,9 +8329,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % The |hyphenrules| option is handled with an auxiliary macro.
 %
-% \changes{babel~3.14}{2017/10/03}{Take into account ini settings for
-% hyphenrules if `import'.}
-%
 %    \begin{macrocode}
 \def\bbl@provide@hyphens#1{%
   \let\bbl@tempa\relax
@@ -8683,11 +8370,6 @@ help from Bernd Raichle, for which I am grateful.
 % The reader of |ini| files. There are 3 possible cases: a section name
 % (in the form |[...]|), a comment (starting with |;|) and a
 % key/value pair.
-%
-% \changes{babel~3.37}{2019/12/07}{Allow to define key/values
-%   (added \cs{bbl@renewlist}).}
-% \changes{babel~3.38}{2020/01/15}{Read numbers are not hardcoded
-%   (passim); use \cs{bbl@readstream}.}
 %
 %    \begin{macrocode}
 \ifx\bbl@readstream\@undefined
@@ -8745,7 +8427,6 @@ help from Bernd Raichle, for which I am grateful.
 % section is not ended). By default, key=val pairs are ignored. The
 % |secpost| ``hook'' is used only by `identification', while |secpre|
 % only by |date.gregorian.licr|.
-% 
 %
 %    \begin{macrocode}
 \def\bbl@iniskip#1\@@{}%      if starts with ;
@@ -8800,12 +8481,23 @@ help from Bernd Raichle, for which I am grateful.
 % is called always (via |\bbl@inisec|), while |\bbl@after@ini| must be
 % called explicitly after |\bbl@read@ini| if necessary.
 %
-% \changes{babel~3.36}{2019/10/30}{New fields for CJK, because OpenType
-%  and the CLDR follow different models.}
-%
 %    \begin{macrocode}
+\def\bbl@iniwarning#1{%
+  \bbl@ifunset{bbl@@kv@identification.warning#1}{}%
+    {\bbl@warning{%
+       From babel-\@nameuse{bbl@lini@\languagename}.ini:\\%
+       \@nameuse{bbl@@kv@identification.warning#1}.\\%
+       Reported }}}
 \let\bbl@inikv@identification\bbl@inikv
 \def\bbl@secpost@identification{%
+  \bbl@iniwarning{}%
+  \ifcase\bbl@engine
+    \bbl@iniwarning{.pdflatex}%
+  \or
+    \bbl@iniwarning{.lualatex}%
+  \or
+    \bbl@iniwarning{.xelatex}%
+  \fi%
   \bbl@exportkey{elname}{identification.name.english}{}%
   \bbl@exp{\\\bbl@exportkey{lname}{identification.name.opentype}%
     {\csname bbl@elname@\languagename\endcsname}}%
@@ -8825,6 +8517,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{prehc}{typography.prehyphenchar}{}%
   \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
   \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
+  \bbl@exportkey{hyoth}{typography.hyphenate.other}{}%
   \bbl@exportkey{intsp}{typography.intraspace}{}%
   \bbl@exportkey{jstfy}{typography.justify}{w}%
   \bbl@exportkey{chrng}{characters.ranges}{}%
@@ -8882,9 +8575,6 @@ help from Bernd Raichle, for which I am grateful.
 % (saved months are just discarded when the LICR section is reached).
 %
 % TODO. Remove copypaste pattern.
-%
-% \changes{babel~3.16}{2018/01/02}{Fix - dates were severely broken.}
-% \changes{babel~3.28}{2019/04/01}{Start work on calendars.}
 %
 %    \begin{macrocode}
 \bbl@csarg\def{inikv@date.gregorian}#1=#2\@@{%       for defaults
@@ -8999,10 +8689,6 @@ help from Bernd Raichle, for which I am grateful.
 % file named as the language (which means any code in it must be
 % skipped, too.
 %
-% \changes{babel~3.16}{2018/01/02}{Load ids inside a box, to prevent extra
-% spaces.}
-% \changes{babel~3.34}{2019/08/05}{Added \cs{endinput}.}
-%
 %    \begin{macrocode}
 \def\bbl@ini@basic#1{%
   \def\BabelBeforeIni##1##2{%
@@ -9017,8 +8703,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % The information in the identification section can be useful, so the
 % following macro just exposes it with a user command.
-%
-% \changes{babel~3.38}{2020/01/14}{Added \cs{localeinfo}.}
 %
 %    \begin{macrocode}
 \newcommand\localeinfo[1]{%
@@ -9047,8 +8731,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % \section{Adjusting the Babel bahavior}
-%
-% \changes{babel~3.36}{2019/10/30}{New macro \cs{babeladjust}}
 %
 % A generic high level inteface is provided to adjust some global
 % and general settings.
@@ -9461,11 +9143,6 @@ help from Bernd Raichle, for which I am grateful.
 %    with the text that is put into them. To achieve this we need to
 %    adapt the definition of |\markright| and |\markboth| somewhat.
 %
-% \changes{babel~3.9t}{2017/04/23}{Refactored \cs{markright} and
-%    \cs{markboth}}
-% \changes{babel~3.23}{2018/09/01}{Trick to isolate the bidi in page 
-%    numbers}
-%
 %    We check whether the argument is empty; if it is, we just make
 %    sure the scratch token register is empty.  Next, we store the
 %    argument to |\markright| in the scratch token register. This way
@@ -9474,9 +9151,6 @@ help from Bernd Raichle, for which I am grateful.
 %    doing so, we make sure that active characters that may end up in
 %    the mark are not disabled by the output routine kicking in while
 %    \cs{@safe@activestrue} is in effect.
-%
-% \changes{babel~3.35}{2019/10/11}{Now \cs{markboth} is protected.
-%    Consider this case.}
 %
 %    \begin{macrocode}
 \bbl@trace{Marks}
@@ -9545,9 +9219,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\ifthenelse}
 %
-% \changes{babel~3.9a}{2012/09/07}{Redefine only if `ref' is `safe'}
-% \changes{babel~3.9a}{2013/01/03}{Moved to babel.def}
-%
 %    Sometimes a document writer wants to create a special effect
 %    depending on the page a certain fragment of text appears on. This
 %    can be achieved by the following piece of code:
@@ -9574,10 +9245,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %    Then we can redefine |\ifthenelse|:
-%
-% \changes{babel~3.9a}{2012/06/22}{\cs{ref} is also taken into account}
-% \changes{babel~3.9n}{2015/12/14}{Don't use generic temp
-%    macros. babel/4441}
 %
 %    \begin{macrocode}
       \bbl@redefine@long\ifthenelse#1#2#3{%
@@ -9786,13 +9453,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\ensureascii}
 %
-% \changes{babel~3.9i}{2014/02/14}{Macro added, to replace
-%    \cs{textlatin} and friends}
-% \changes{babel~3.9j}{2014/03/17}{Moved misplaced code - it should be
-%    executed only with LaTeX}
-% \changes{babel~3.23}{2018/08/28}{Added TS1, T3, TS3}
-% \changes{babel~3.35}{2019/10/01}{Added PU, PD1}
-%
 %    \begin{macrocode}
 \bbl@trace{Encoding and fonts}
 \newcommand\BabelNonASCII{LGR,X2,OT2,OT3,OT6,LHE,LWN,LMA,LMC,LMS,LMU,PU,PD1}
@@ -9857,12 +9517,6 @@ help from Bernd Raichle, for which I am grateful.
 %    internal macro |\@filelist| which contains all the filenames
 %    loaded.
 %
-% \changes{babel~3.9l}{2014/08/02}{fontspec used to set
-%    \cs{latinencoding} to EUx, but now it doesn't. So, it's done
-%    here.}
-% \changes{babel~3.9o}{2016/01/27}{With fontspec, first check if
-%   \cs{UTFencname} exists.}
-%
 %    \begin{macrocode}
 \AtBeginDocument{%
   \@ifpackageloaded{fontspec}%
@@ -9876,7 +9530,16 @@ help from Bernd Raichle, for which I am grateful.
      \ifx\cf@encoding\bbl@t@one
        \xdef\latinencoding{\bbl@t@one}%
      \else
-       \@ifl@aded{def}{t1enc}{\xdef\latinencoding{\bbl@t@one}}{}%
+       \ifx\@fontenc@load@list\@undefined
+         \@ifl@aded{def}{t1enc}{\xdef\latinencoding{\bbl@t@one}}{}%
+       \else
+         \def\@elt#1{,#1,}%
+         \edef\bbl@tempa{\expandafter\@gobbletwo\@fontenc@load@list}%
+         \bbl@xin@{,T1,}\bbl@tempa
+         \ifin@
+           \xdef\latinencoding{\bbl@t@one}%
+         \fi
+       \fi
      \fi}}
 %    \end{macrocode}
 %
@@ -9943,12 +9606,6 @@ help from Bernd Raichle, for which I am grateful.
 %      set left-to-right and right-to-left page layouts. As Lua\TeX-ja
 %      shows, vertical typesetting is possible, too.
 %    \end{itemize}
-%
-% \changes{babel~3.15}{2017/10/30}{Use an attribute instead of tex language
-%    (reserved for hyphenation).}
-% \changes{babel~3.15}{2017/10/30}{Store direction in @wdir@<lang>.}
-% \changes{babel~3.28}{2019/04/01}{Dir in boxes within math and other
-%    contexts (passim).}
 %
 %    \begin{macrocode}
 \bbl@trace{Basic (internal) bidi support}
@@ -10083,9 +9740,6 @@ help from Bernd Raichle, for which I am grateful.
 % properly handle the par direction. Note text and par dirs are
 % decoupled to some extent (although not completely).
 %
-% \changes{babel~3.16}{2018/01/02}{Fix - the direction prevented the removal
-%   of the indent to be re-placed}
-%
 %    \begin{macrocode}
   \def\bbl@xebidipar{%
     \let\bbl@xebidipar\relax
@@ -10119,8 +9773,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % A tool for weak L (mainly digits). We also disable warnings with
 % \textsf{hyperref}.
-%
-% \changes{babel~3.16}{2018/01/02}{New macro \cs{babelsublr}}
 %
 %    \begin{macrocode}
 \DeclareRobustCommand\babelsublr[1]{\leavevmode{\bbl@textdir\z@#1}}
@@ -10199,9 +9851,6 @@ help from Bernd Raichle, for which I am grateful.
 %    or variant language, for which an already defined hyphenation
 %    table can be used.
 %
-% \changes{babel~3.36}{2019/11/07}{Improved message, now showing the
-%   language name}
-%
 %    \begin{macrocode}
 \def\bbl@version{<@version@>}
 \def\bbl@date{<@date@>}
@@ -10216,15 +9865,11 @@ help from Bernd Raichle, for which I am grateful.
                   (\string\language\the\count@)}%
         \def\bbl@elt####1####2####3####4{}%
       \fi}%
-    \bbl@languages
+    \@nameuse{bbl@languages}%
   \endgroup}
 %    \end{macrocode}
 %
 %  \end{macro}
-%
-% \changes{babel~3.9a}{2012/09/07}{Added macro}
-% \changes{babel~3.9a}{2013/01/23}{New macro to normalize
-%    a macro (eg, \cs{languagename}) to lowercase if necessary}
 %
 %    |\bbl@iflanguage| executes code only if the language |l@|
 %    exists. Otherwise raises and error.
@@ -10308,9 +9953,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    If the user gives an empty argument, we provide a default
 %    argument for |\string|.  This argument should expand to nothing.
-%
-% \changes{babel~3.9a}{2012/11/16}{\cs{bbl@select@type} keep tracks of
-%    the selection method: 0 is select, 1 is foreign}
 %
 %    \begin{macrocode}
 \let\bbl@select@type\z@
@@ -10477,17 +10119,6 @@ help from Bernd Raichle, for which I am grateful.
 %    We also write a command to change the current language in the
 %    auxiliary files.
 %
-% \changes{babel~3.9a}{2012/09/09}{Added hook}
-% \changes{babel~3.9a}{2012/11/07}{Use a loop for contents files, with
-%    the help of \cs{BabelContentsFiles}}
-% \changes{babel~3.9a}{2013/03/08}{Don't write to aux if language is
-%    unknown}
-% \changes{babel~3.9h}{2013/11/20}{Error with a more helpful text }
-% \changes{babel~3.16}{2018/01/02}{New mechanism to pass the language
-% to aux, toc, etc.}
-% \changes{babel~3.22}{2018/06/05}{Unknown languages in aux files do
-%   not raise an error any more (only a warning).}
-%
 %    \begin{macrocode}
 \def\BabelContentsFiles{toc,lof,lot}
 \def\bbl@set@language#1{% from selectlanguage, pop@
@@ -10561,12 +10192,6 @@ help from Bernd Raichle, for which I am grateful.
 %    update the value of |\language| and call |\originalTeX|
 %    to bring \TeX\ in a certain pre-defined state.
 %
-% \changes{babel~3.9a}{2012/07/27}{Moved \cs{bbl@patterns} to the
-%    correct place, after setting the extras for the current
-%    language}
-% \changes{babel~3.9a}{2012/08/01}{Created \cs{bbl@switch} with code
-%    shared by \cs{select@language} and \cs{foreing@language}}
-%
 %    The name of the language is stored in the control sequence
 %    |\languagename|.
 %
@@ -10588,19 +10213,6 @@ help from Bernd Raichle, for which I am grateful.
 %    current values, then we check if |\|\langvar|hyphenmins| is
 %    defined. If it is not, we set default values (2 and 3), otherwise
 %    the values in |\|\langvar|hyphenmins| will be used.
-%
-% \changes{babel~3.9a}{2012/08/01}{Adddd \cs{bbl@iflanguagename} and
-%   \cs{select@language@x}, which is no-op if the language is the same}
-% \changes{babel~3.9a}{2013/01/23}{\cs{select@language} sets
-%   \textsc{languagename} so that it has the correct value in the aux
-%   file (eg, shorthand expansion was wrong)}
-% \changes{babel~3.9a}{2012/08/14}{Make sure the save counter is reset
-%    even if \cs{originalTeX} is used in other contexts}
-% \changes{babel~3.9c}{2013/04/08}{Removed an extra empty line}
-% \changes{babel~3.9h}{2013/11/29}{Use \cs{def} instead of
-%    \cs{renewcommand} for \cs{BabelLower}}
-% \changes{babel~3.9i}{2014/03/04}{Added `afterreset' hook}
-% \changes{babel~3.15}{2017/10/30}{Remove spaces inside captions and date.}
 %
 %    \begin{macrocode}
 \newif\ifbbl@usedategroup
@@ -10684,8 +10296,6 @@ help from Bernd Raichle, for which I am grateful.
 %    The |\ignorespaces| command is necessary to hide the environment
 %    when it is entered in horizontal mode.
 %
-% \changes{babel~3.9a}{2012/07/31}{Removed \cs{originalTeX}}
-%
 %    \begin{macrocode}
 \long\def\otherlanguage#1{%
   \ifnum\bbl@hymapsel=\@cclv\let\bbl@hymapsel\thr@@\fi
@@ -10764,16 +10374,6 @@ help from Bernd Raichle, for which I am grateful.
 %    enters into hmode with the surrounding lang, and with
 %    |\foreignlanguage*| with the new lang.
 %
-% \changes{babel~3.9a}{2012/07/30}{Removed unnecesary \cs{noextras}
-%    just before closing the group}
-% \changes{babel~3.9a}{2012/07/31}{Moved \cs{originalTeX} to
-%    \cs{foreing@language} so that it's also used in
-%    \texttt{otherlanguage*}}
-% \changes{babel~3.9a}{2012/12/24}{\cs{foreignlanguage} defined
-%    similarly to \cs{selectlanguage}, protecting the whole macro}
-% \changes{babel~3.11}{2017/03/04}{\cs{foreignlanguage*},
-%    \cs{bbl@beforeforeign} and hooks}
-%
 %    \begin{macrocode}
 \providecommand\bbl@beforeforeign{}
 \edef\foreignlanguage{%
@@ -10810,9 +10410,6 @@ help from Bernd Raichle, for which I am grateful.
 %    check that it is a known language. Then it just calls
 %    |bbl@switch|.
 %
-% \changes{babel~3.9h}{2013/11/29}{The warning shows the language
-%    actually selected (with fixed case)}
-%
 %    \begin{macrocode}
 \def\foreign@language#1{%
   % set name
@@ -10842,11 +10439,6 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\bbl@patterns}
-%
-% \changes{babel~3.9a}{2012/08/28}{Extended to set hyphenation
-%    exceptions as defined with \cs{babelhyphenation}}
-% \changes{babel~3.9m}{2015/07/25}{Preset \cs{bbl@pttnlist} and
-%    \cs{bbl@patterns@} to relax, for luatex.}
 %
 %    This macro selects the hyphenation patterns by changing the
 %    \cs{language} register.  If special hyphenation patterns
@@ -10903,9 +10495,6 @@ help from Bernd Raichle, for which I am grateful.
 %    |\lccode|'s and font encodings are not set at all, so in most
 %    cases you should use |otherlanguage*|.
 %
-% \changes{babel~3.15}{2017/10/30}{Don't set language name. Use temp macro.}
-% \changes{babel~3.15}{2018/02/14}{Fix - didn't work with polyglossia}
-%
 %    \begin{macrocode}
 \def\hyphenrules#1{%
   \edef\bbl@tempf{#1}%
@@ -10961,10 +10550,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    Depending on the format, ie, on if the former is defined, we use
 %    a similar definition or not.
-%
-%    \changes{babel~3.9a}{2012/12/09}{Save info about the babel
-%    version in the format (switch.def) so that it can be checked
-%    later if necessary}
 %
 %    \begin{macrocode}
 \ifx\ProvidesFile\@undefined
@@ -11031,8 +10616,6 @@ help from Bernd Raichle, for which I am grateful.
 % A few macro names are reserved for future releases of \babel, which
 % will use the concept of `locale':
 %
-% \changes{babel~3.9s}{2017/04/13}{Reserved macro names for `locale'}
-%
 %    \begin{macrocode}
 \providecommand\setlocale{%
   \bbl@error
@@ -11069,13 +10652,6 @@ help from Bernd Raichle, for which I am grateful.
 %    Infos are not written to the console, but on the other hand many
 %    people think warnings are errors, so a further message type is
 %    defined: an important info which is sent to the console.
-%
-% \changes{babel~3.9a}{2012/07/30}{\cs{newcommand}s replaced by
-%    \cs{def}'s, so that the file can be loaded twice}
-% \changes{babel~3.9a}{2013/01/26}{Define generic variants instead of
-%    duplicating each predefined message}
-% \changes{babel~3.37}{2019/12/07}{New message type: an into written to
-%    the console.}
 %
 %    \begin{macrocode}
 \edef\bbl@nulllanguage{\string\language=0}
@@ -11172,8 +10748,6 @@ help from Bernd Raichle, for which I am grateful.
 %  this code in the file \file{hyphen.cfg}. Code is written with lower
 %  level macros.
 %
-% \changes{babel~3.9g}{2013/05/30}{Code moved from plain.def}
-%
 %    We want to add a message to the message \LaTeX$\:$2.09 puts in
 %    the |\everyjob| register. This could be done by the following
 %    code:
@@ -11245,9 +10819,6 @@ help from Bernd Raichle, for which I am grateful.
 %    |\process@synonym| is called; otherwise the macro
 %    |\process@language| will continue.
 %
-% \changes{babel~3.9a}{2012/12/12}{Use spaces as delimiters, to avoid
-%    extra spaces. Once parsed, pass them in the traditional way}
-%
 %    \begin{macrocode}
 \def\process@line#1#2 #3 #4 {%
   \ifx=#1%
@@ -11281,8 +10852,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % We also need to copy the hyphenmin parameters for the synonym.
 %
-% \changes{babel~3.9a}{2012/06/25}{Added \cs{bbl@languages}}
-%
 %    \begin{macrocode}
 \def\process@synonym#1{%
   \ifnum\last@language=\m@ne
@@ -11310,10 +10879,6 @@ help from Bernd Raichle, for which I am grateful.
 %    The first thing to do is call |\addlanguage| to allocate a pattern
 %    register and to make that register `active'. Then the pattern file
 %    is read.
-%
-% \changes{babel~3.9a}{2012/12/10}{Removed \cs{selectfont} (I presume
-%    it was intended to catch wrong encoding codes, but I don't think
-%    this is necessary and as a side effect it might preload fonts)}
 %
 %    For some hyphenation patterns it is needed to load them with a
 %    specific font encoding selected. This can be specified in the
@@ -11343,10 +10908,6 @@ help from Bernd Raichle, for which I am grateful.
 %    the case when the third argument is not empty and when it does
 %    not contain a space token. (Note however there is no need to save
 %    hyphenation exceptions into the format.)
-%
-% \changes{babel~3.9a}{2012/06/25}{Added \cs{bbl@languages}}
-% \changes{babel~3.9f}{2013/05/16}{Restored code to set default
-%    hyphenmins, which was deleted mistakenly}
 %
 %    \cs{bbl@languages} saves a snapshot of the loaded languages in the
 %    form  \cs{bbl@elt}\marg{language-name}\marg{number}%
@@ -11397,8 +10958,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\bbl@get@enc}
 %
-%   \changes{babel~3.9a}{2012/12/11}{Code much simplified}
-%
 %  \begin{macro}{\bbl@hyph@enc}
 %    The macro |\bbl@get@enc| extracts the font encoding from the
 %    language name and stores it in |\bbl@hyph@enc|. It uses delimited
@@ -11415,9 +10974,6 @@ help from Bernd Raichle, for which I am grateful.
 %    Now, hooks are defined. For efficiency reasons, they are dealt
 %    here in a special way. Besides \luatex, format-specific
 %    configuration files are taken into account.
-%
-% \changes{babel~3.9b}{2013/03/25}{Fixed an idiot slip: \cs{def}
-%   intead of \cs{let}}
 %
 %    \begin{macrocode}
 \def\bbl@hook@everylanguage#1{}
@@ -11496,10 +11052,6 @@ help from Bernd Raichle, for which I am grateful.
     \endlinechar`\^^M
 %    \end{macrocode}
 %
-% \changes{babel~3.9a}{2012/12/14}{Test simplified and moved}
-% \changes{babel~3.9a}{2012/12/12}{Use only spaces as delimiters and
-%    not /, as previouly done}
-%
 %    If the file has reached its end, exit from the loop here. If not,
 %    empty lines are skipped. Add 3 space characters to the end of
 %    |\bbl@line|. This is needed to be able to recognize the arguments
@@ -11539,15 +11091,6 @@ help from Bernd Raichle, for which I am grateful.
 %    format and with which language patterns to the \cs{everyjob}
 %    register.
 %
-% \changes{babel~3.9a}{2012/09/25}{The list of languages is not
-%    printed every job any more (it is saved in \cs{bbl@languages}).}
-% \changes{babel~3.9g}{2013/07/28}{In non-LaTeX formats the number of
-%    languages were not printed. Moved from \cs{dump} and cleaned up:
-%    now \cs{toks}8 is expanded here.}
-% \changes{babel~3.9o}{2016/01/25}{The number of languages loaded was
-%    off by 1.}
-% \changes{babel~3.21}{2018/05/09}{The message is not printed any more.}
-%
 %    \begin{macrocode}
 \if/\the\toks@/\else
   \errhelp{language.dat loads no language, only synonyms}
@@ -11559,9 +11102,6 @@ help from Bernd Raichle, for which I am grateful.
 %    if |\toks@| is not empty. Finally load \file{switch.def}, but the
 %    latter is not required and the line inputting it may be commented
 %    out.
-%
-% \changes{babel~3.9a}{2012/12/11}{Raise error if there are synonyms
-%    without languages}
 %
 %    \begin{macrocode}
 \let\bbl@line\@undefined
@@ -11583,14 +11123,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \section{Font handling with fontspec}
 %
-% \changes{babel~3.15}{2017/10/30}{New way to select fonts, with \cs{babelfont}}
-%
 % Add the bidi handler just before luaoftload, which is loaded by default
 % by LaTeX. Just in case, consider the possibility it has not been
 % loaded. First, a couple of definitions related to bidi [misplaced].
-%
-% \changes{babel~3.30}{2019/04/22}{Ensure the current textdir inside
-%   boxes within math.}
 %
 %    \begin{macrocode}
 %<<*More package options>>
@@ -11658,9 +11193,6 @@ help from Bernd Raichle, for which I am grateful.
 % don't. Just wait and see if the language is actually activated.
 % |bbl@font| replaces hardcoded font names inside |\..family| by the
 % corresponding macro |\..default|.
-%
-% \changes{babel~3.34}{2019/08/29}{Better checks for fonts, and improved
-%   compatibility with fontspec.}
 %
 %    \begin{macrocode}
 %<<*Font selection>>
@@ -11803,9 +11335,6 @@ help from Bernd Raichle, for which I am grateful.
 % |\bbl@mapselect| because |\selectfont| is called internally when a
 % font is defined.
 %
-% \changes{babel~3.28}{2019/04/01}{\cs{babelfont} now based on
-%   \cs{newfontfamily}.}
-%
 %    \begin{macrocode}
 \def\bbl@font@set#1#2#3{% eg \bbl@rmdflt@lang \rmdefault \rmfamily
   \bbl@xin@{<>}{#1}%
@@ -11922,11 +11451,6 @@ help from Bernd Raichle, for which I am grateful.
 %    changes done by \LaTeX. Anyway, for consistency Lua\TeX{} also
 %    resets the catcodes.
 %
-% \changes{bbunicode~1.0c}{2014/03/10}{Reset ``codes'' set by \cs{LaTeX}
-%    to what xetex expects. Used also in luatex.}
-% \changes{bbunicode~1.0f}{2015/12/06}{This block was assigned to
-%    xetex, even in luatex. Fixed here and below.}
-%
 %    \begin{macrocode}
 %<<*Restore Unicode catcodes before loading patterns>>
   \begingroup
@@ -11961,8 +11485,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % Some more common code.
-%
-% \changes{babel 3.17}{2018/01/24}{Tools for bidi footnote}
 %
 %    \begin{macrocode}
 %<<*Footnote changes>>
@@ -12076,9 +11598,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Layout}
 %
-% \changes{babel~3.16}{2018/01/02}{Option layout - first available options:
-% sectioning, counters, lists, columns, contents}
-%
 % \textit{In progress.}
 %
 % Note elements like headlines and margins can be modified easily with
@@ -12092,9 +11611,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % Consider |txtbabel| as a shorthand for \textit{tex--xet babel},
 % which is the bidi model in both \pdftex{} and \xetex{}.
-%
-% \changes{babel~3.32}{2019/05/04}{\cs{@tabular}, \cs{list}, etc., are
-%   patched, instead of redefined.}
 %
 %    \begin{macrocode}
 %<*texxet>
@@ -12230,29 +11746,6 @@ help from Bernd Raichle, for which I am grateful.
 % -- just allocate a high random number and cross the fingers. To
 % complicate things, \textsf{etex.sty} changes the way languages are
 % allocated.
-%
-% \changes{bbunicode~1.0b}{2013/04/22}{luatex-hyphen is loaded with
-%   require. Changes supplied by \'{E}lie Roux.}
-% \changes{bbunicode~1.0c}{2014/03/10}{Defined hook for
-%   `initiateactive', to fetch the next token and continue only if
-%   letter or other.}
-% \changes{bbunicode~1.0d}{2014/03/21}{Removed the `misfeature' for
-%   `initiateactive'.}
-% \changes{bbunicode~1.0e}{2015/05/10}{Use brackets instead of
-%   \cs{luaescapestring}.}
-% \changes{bbunicode~1.0e}{2015/07/26}{Added function addpattern
-%   and modified the patterns hook.}
-% \changes{bbunicode~1.1a}{2016/01/26}{New hyphenation loader for
-%   luatex.}
-% \changes{bbunicode~1.1b}{2016/02/05}{Also lua(e)tex.}
-% \changes{bbunicode~1.1c}{2016/02/08}{Base reading of patterns on
-%   number, not in name.}
-% \changes{bbunicode~1.1c}{2016/02/08}{Some hacks for polyglossia. To
-%   be improved.}
-% \changes{bbunicode~1.1c}{2016/02/23}{Thoroughly revised.}
-% \changes{bbunicode~1.1d}{2016/4/22}{Lua: Fixed a line break at
-%   \cs{foreignlanguage} with unloaded patterns. Added
-%   \cs{babelcatcodetablenum}, just in case.}
 %
 %    \begin{macrocode}
 %<*luatex>
@@ -12521,7 +12014,6 @@ help from Bernd Raichle, for which I am grateful.
 %    |\bbl@patterns@| for the global ones and |\bbl@patterns@<lang>|
 %    for language ones. We make sure there is a space between words
 %    when multiple commands are used.
-% \changes{bbunicode~1.0e}{2015/07/26}{Macro \cs{babelpatterns} added}
 %
 %    \begin{macrocode}
 \@onlypreamble\babelpatterns
@@ -12553,12 +12045,6 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 % \subsection{Southeast Asian scripts}
-%
-% \changes{babel~3.24}{2018/09/24}{Lua code for interword spacing
-%   in Southeast Asian scripts.}
-% \changes{babel~3.32}{2019/05/25}{Don't break with CJK if nohyphenation.}
-% \changes{babel~3.37}{2019/12/07}{Added code for non-standard
-%   hyphenation.}
 %
 % First, some general code for line breaking, used by
 % |\babelposthyphenation|.
@@ -12791,8 +12277,6 @@ help from Bernd Raichle, for which I am grateful.
 % (fullwidth \textit{vs.} halfwidth), not yet used. There is a separate
 % file, defined below.
 %
-% \changes{babel~3.31}{2019/05/04}{Simple CJK line breaking.}
-% 
 % \textit{Work in progress.} 
 %
 % Common stuff.
@@ -12819,8 +12303,6 @@ help from Bernd Raichle, for which I am grateful.
 % requested). In the latter table a key starting with |/| maps the font
 % from the global one (the key) to the local one (the value). Maths are
 % skipped and discretionaries are handled in a special way.
-%
-% \changes{babel~3.38}{2020/01/15}{Automatic fonts and ids switching}
 %
 %    \begin{macrocode}
 \directlua{
@@ -12917,8 +12399,6 @@ function Babel.locale_map(head)
 end
 }
 %    \end{macrocode}
-%
-% \changes{babel~3.32}{2019/05/23}{New - \cs{babelcharproperty}.}
 %
 % The code for |\babelcharproperty| is straightforward. Just note the
 % modified lua table can be different.
@@ -13282,14 +12762,6 @@ end
 % \textsf{hhline}, \textsf{colortbl}, \textsf{longtable},
 % \textsf{booktabs}, etc. However, \textsf{dcolumn} still fails.
 %
-% \changes{babel~3.18}{2018/02/14}{\cs{bbl@nextfake}, similar to the old
-%   \cs{nextfakemath} in Omega}
-% \changes{babel~3.19}{2018/04/23}{Patch \cs{@eqnnum}, somewhat ad hoc. To be
-%   improved.}
-% \changes{babel~3.21}{2018/05/09}{The ad hoc \cs{@eqnnum} was buggy. Fixed.}
-% \changes{babel~3.31}{2019/05/04}{\cs{@tabular} and \cs{list} are patched,
-%   instead of redefined.}
-%
 %    \begin{macrocode}
 \bbl@trace{Redefinitions for bidi layout}
 \ifx\@eqnnum\@undefined\else
@@ -13409,8 +12881,6 @@ end
 % formatting. They have very little in common and are grouped here, as
 % a single option.
 %
-% \changes{babel~3.19}{2018/04/23}{New option extras for layout}
-%
 %    \begin{macrocode}
 \IfBabelLayout{extras}%
   {\let\bbl@OL@underline\underline
@@ -13425,10 +12895,6 @@ end
 %    \end{macrocode}
 %
 % \subsection{Auto bidi with \texttt{basic} and \texttt{basic-r}}
-%
-% \changes{babel~3.14}{2017/09/30}{LuaTeX - support for R/AL texts - basic-r}
-% \changes{babel~3.35}{2019/10/11}{Hack for unboxed boxes - The PUAs
-%   are `on'.}
 %
 % The file \textsf{babel-data-bidi.lua} currently only contains data. It is
 % a large and boring file and it is not shown here (see the generated file),
@@ -19575,10 +19041,6 @@ Babel.characters={
 % excels, because everything related to bidi writing is under our
 % control.
 %
-% \changes{babel~3.20}{2018/05/01}{Adapted to exhyphens in luatex >=
-%   1.07. Fix - now attr@dir is mod 3.}
-% \changes{babel~3.30}{2019/04/22}{Switch to enable/disable bidi.}
-%
 %    \begin{macrocode}
 %<*basic-r>
 Babel = Babel or {}
@@ -19846,8 +19308,6 @@ end
 %    \end{macrocode}
 %
 % And here the Lua code for |bidi=basic|:
-% \changes{babel~3.20}{2018/05/01}{Adapted to exhyphens in luatex >=
-%   1.07. Fix - nsm in mapfont (eg, Arabic vowels)}
 %
 %    \begin{macrocode}
 %<*basic>
@@ -20530,10 +19990,6 @@ Babel.cjk_breaks = {
 %    command, \texttt{nil} could be an `unknown' language in which
 %    case we have to make it known.
 %
-% \changes{babel-3.32}{2019/05/21}{Don't set it to
-%   \cs{l@nohyphenation}, best reserved fo special uses.}
-% \changes{babel~3.36}{2019/10/30}{Add nil to the language list.}
-%
 %    \begin{macrocode}
 \ifx\l@nil\@undefined
   \newlanguage\l@nil
@@ -20684,9 +20140,6 @@ Babel.cjk_breaks = {
 %    The following code duplicates or emulates parts of \LaTeXe\ that
 %    are needed for \babel.
 %
-% \changes{bbplain-1.0s}{2012/12/21}{\cs{loadlocalcfg} not loaded in
-%    the format}
-%
 %    \begin{macrocode}
 %<*plain>
 \def\@empty{}
@@ -20708,12 +20161,6 @@ Babel.cjk_breaks = {
 % \subsection{General tools}
 %
 %    A number of \LaTeX\ macro's that are needed later on.
-%
-% \changes{bbplain-1.0t}{2013/04/10}{Added \cs{@expandtwoargs}}
-% \changes{babel~3.9h}{2013/12/02}{Added \cs{zap@space}}
-% \changes{babel~3.9k}{2014/03/22}{Added \cs{@nnil}}
-% \changes{babel~3.9k}{2014/03/22}{Added \cs{@gobbletwo}}
-% \changes{babel~3.9k}{2014/03/22}{Added \cs{protected@edef}}
 %
 %    \begin{macrocode}
 \long\def\@firstofone#1{#1}
@@ -20790,9 +20237,6 @@ Babel.cjk_breaks = {
 %    We also have to mimick \LaTeX's |\AtEndOfPackage|. Our
 %    replacement macro is much simpler; it stores its argument in
 %    |\@endofldf|.
-%
-%  \changes{babel~3.9h}{2013/11/28}{Set \cs{bbl@opt@hyphenmap} to 0 - we
-%     presume hyphenmap=off in plain}
 %
 %    \begin{macrocode}
 \def\AtEndOfPackage#1{\g@addto@macro\@endofldf{#1}}
@@ -20887,9 +20331,6 @@ Babel.cjk_breaks = {
 %    argument. It uses the boolean |\in@|; allocating a new boolean
 %    inside conditionally executed code is not possible, hence the
 %    construct with the temporary definition of |\bbl@tempa|.
-%
-% \changes{bbplain-1.0s}{2013/01/15}{Use \cs{bbl@tempa} as
-%    documented}
 %
 %    \begin{macrocode}
 \def\bbl@tempa{\csname newif\endcsname\ifin@}

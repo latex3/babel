@@ -1,5 +1,3 @@
-% This file is part of babel. For further details see:
-% https://www.ctan.org/pkg/babel
 \ifx\BabelBeforeIni\undefined
   \PackageError{babel}%
     {This file is a component of babel and cannot\MessageBreak
@@ -7,18 +5,23 @@
     {Just use babel as documented.}%
   \stop
 \fi
-\BabelBeforeIni{tr}{%
+\BabelBeforeIni{la}{%
 }
+
+\ifcase\bbl@engine\else
+  \expandafter\addto\csname date\languagename\endcsname{%
+    \babel@save\BabelDatey
+    \def\BabelDatey#1{\@Roman{#1}}%
+    \babel@save\BabelDated
+    \def\BabelDated#1{\@Roman{#1}}}
+\fi
 
 \StartBabelCommands{\languagename}{}
   \SetCase
-    {\uccode`i=`İ\relax
-     \uccode`ı=`I\relax}
-    {\lccode`İ=`i\relax
-     \lccode`I=`ı\relax}
+    {\uccode`u=`V\relax}
+    {\lccode`V=`u\relax}
   \SetHyphenMap{%
-    \BabelLower{`İ}{`i}%
-    \BabelLower{`I}{`ı}}
+    \BabelLower{`V}{`u}}
 \EndBabelCommands
 
 \endinput

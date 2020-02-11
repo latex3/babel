@@ -11,12 +11,11 @@
 }
 
 \ifcase\bbl@engine\or\or
-  \bbl@tentative{lao}%
-  \addto\extraslao{%
+  \expandafter\addto\csname extras\languagename\endcsname{%
     \XeTeXlinebreaklocale "lo"
     \bbl@xeisp@Laoo
     \bbl@xeipn@Laoo}
-  \addto\noextraslao{%
+  \expandafter\addto\csname noextras\languagename\endcsname{%
     \XeTeXlinebreaklocale "en"}
 \fi
 

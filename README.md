@@ -1,4 +1,4 @@
-## Babel 3.39
+## Babel 3.39.1914
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.39 are described in:
+Changes in version 3.40 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.39
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.40
 
 Included is a set of ini files for about 200 languages.
 
@@ -44,6 +44,14 @@ respective authors.
 ### Latest changes
 
 ```
+3.40   2020-02-15
+       - New ini files for Latin and Greek (xe/lua).
+       - Add 'other' characters used in hyphenation patters (eg,
+         apostrophes).
+       - Fix - Old Plain TeX and Plain XeTeX raised an error.
+       - Fix - Option T1 in fontenc was not recognized to set
+         \latinencoding with LaTeX 2020-02-02.
+
 3.39   2020-02-03
        - Languages can now be loaded on the fly (via \babelprovide).
        - With \babelposthyphenation captured chars can now be mapped in
@@ -57,6 +65,7 @@ respective authors.
           - Thai and turkish raised and error without import in
             \babelprovide.
           - Cleaned up some ini/tex locale files (de, zh, sa).
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.39
 
 3.38   2020-01-15
        - Automatic switching of ids (\language and \localeid), and fonts
