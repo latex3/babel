@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/02/11 v3.39.1914 The Babel package]
+\ProvidesFile{babel.dtx}[2020/02/14 v3.40 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4327,8 +4327,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.39.1914>>
-%<<date=2020/02/11>>
+%<<version=3.40>>
+%<<date=2020/02/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8486,7 +8486,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@ifunset{bbl@@kv@identification.warning#1}{}%
     {\bbl@warning{%
        From babel-\@nameuse{bbl@lini@\languagename}.ini:\\%
-       \@nameuse{bbl@@kv@identification.warning#1}.\\%
+       \@nameuse{bbl@@kv@identification.warning#1}\\%
        Reported }}}
 \let\bbl@inikv@identification\bbl@inikv
 \def\bbl@secpost@identification{%
@@ -8523,20 +8523,6 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{chrng}{characters.ranges}{}%
   \bbl@exportkey{dgnat}{numbers.digits.native}{}%
   \bbl@exportkey{rqtex}{identification.require.babel}{}%
-  \bbl@xin@{0.5}{\@nameuse{bbl@@kv@identification.version}}%
-  \ifin@
-    \bbl@warning{%
-      There are neither captions nor date in `\languagename'.\\%
-      It may not be suitable for proper typesetting, and it\\%
-      could change. Reported}%
-  \fi
-  \bbl@xin@{0.9}{\@nameuse{bbl@@kv@identification.version}}%
-  \ifin@
-    \bbl@warning{%
-      The `\languagename' date format may not be suitable\\%
-      for proper typesetting, and therefore it very likely will\\%
-      change in a future release. Reported}%
-  \fi
   \bbl@toglobal\bbl@savetoday
   \bbl@toglobal\bbl@savedate}
 %    \end{macrocode}

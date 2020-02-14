@@ -1,4 +1,4 @@
-## Babel 3.39.1914
+## Babel 3.40
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -44,13 +44,14 @@ respective authors.
 ### Latest changes
 
 ```
-3.40   2020-02-15
+3.40   2020-02-14
        - New ini files for Latin and Greek (xe/lua).
        - Add 'other' characters used in hyphenation patters (eg,
          apostrophes).
        - Fix - Old Plain TeX and Plain XeTeX raised an error.
        - Fix - Option T1 in fontenc was not recognized to set
          \latinencoding with LaTeX 2020-02-02.
+       - Fix - Locale names were hardcoded in some babel-...tex files.
 
 3.39   2020-02-03
        - Languages can now be loaded on the fly (via \babelprovide).
