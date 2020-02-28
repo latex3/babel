@@ -1,4 +1,4 @@
-## Babel 3.40
+## Babel 3.41
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.40 are described in:
+Changes in version 3.41 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.40
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.41
 
 Included is a set of ini files for about 200 languages.
 
@@ -44,14 +44,23 @@ respective authors.
 ### Latest changes
 
 ```
+3.41   2020-02-27
+       - Counters and numerals added in some ini files, based on those
+         defined in CSS (Abjad, Alphabetic Hebrew, Japanese, etc.).
+       - Fix - A bug in the fix for #47, because \@elt was not reset
+         (#51).
+       - Fix - Error when french was loaded and an ini file read (#50).
+       - Fix - A typo in Greek files: Miriad must read Myriad.
+       
 3.40   2020-02-14
        - New ini files for Latin and Greek (xe/lua).
        - Add 'other' characters used in hyphenation patters (eg,
          apostrophes).
        - Fix - Old Plain TeX and Plain XeTeX raised an error.
        - Fix - Option T1 in fontenc was not recognized to set
-         \latinencoding with LaTeX 2020-02-02.
+         \latinencoding with LaTeX 2020-02-02 (#47)
        - Fix - Locale names were hardcoded in some babel-...tex files.
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.40
 
 3.39   2020-02-03
        - Languages can now be loaded on the fly (via \babelprovide).
