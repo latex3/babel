@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/02/28 v3.41 The Babel package]
+\ProvidesFile{babel.dtx}[2020/03/20 v3.41.1952 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -238,14 +238,14 @@ Xe\largetex
 \item This user guide focuses on internationalization and localization
   with \LaTeX. There are also some notes on its use with Plain \TeX.
 
-\item  Changes and new features with relation to version 3.8 are
+\item Changes and new features with relation to version 3.8 are
   highlighted with \New{X.XX}\hspace{-.5em}, and there are some notes
   for the latest versions in
-  \href{https://github.com/latex3/babel/wiki}{the \babel{} wiki}.
-  The most recent features
-  could be still unstable. Please, report any issues you find in      
-  \href{https://github.com/latex3/babel/issues}{GitHub}, which is better 
-  than just complaining on an e-mail list or a web forum.
+  \href{https://github.com/latex3/babel/wiki}{the \babel{} wiki}. The
+  most recent features could be still unstable. Please, report any
+  issues you find in
+  \href{https://github.com/latex3/babel/issues}{GitHub}, which is
+  better than just complaining on an e-mail list or a web forum. 
 
 \item If you are interested in the \TeX{} multilingual support, please
   join the  \href{http://tug.org/mailman/listinfo/kadingira}{kadingira
@@ -2352,14 +2352,13 @@ inconsistent, this makes setting a language up easier in most typical
 cases.
 
 \Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}}
-\New{3.38} This option is much like an ‘event’ called with a character
+\New{3.38} This option is much like an ‘event’ called when a character
 belonging to the script of this locale is found. There are currently
 two ‘actions’, which can be used at the same time (separated by a
 space): with |ids| the |\language| and the |\localeid| are set to the
 values of this locale; with |fonts|, the fonts are changed to those of
-the this locale (as set with |\babelfont|). This option is not
-compatible with |mapfont|. Characters can be added with
-|\babelcharproperty|.
+this locale (as set with |\babelfont|). This option is not compatible
+with |mapfont|. Characters can be added with |\babelcharproperty|.
 
 \Describe{mapfont=}{\texttt{direction}}
 Assigns the font for the writing direction of this language (only with
@@ -4428,8 +4427,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.41>>
-%<<date=2020/02/28>>
+%<<version=3.41.1952>>
+%<<date=2020/03/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4456,6 +4455,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@xin@{\@expandtwoargs\in@}
 \def\bbl@csarg#1#2{\expandafter#1\csname bbl@#2\endcsname}%
 \def\bbl@cs#1{\csname bbl@#1\endcsname}
+\def\bbl@cl#1{\csname bbl@#1@\languagename\endcsname}
 \def\bbl@loop#1#2#3{\bbl@@loop#1{#3}#2,\@nnil,}
 \def\bbl@loopx#1#2{\expandafter\bbl@loop\expandafter#1\expandafter{#2}}
 \def\bbl@@loop#1#2#3,{%
@@ -5617,12 +5617,12 @@ help from Bernd Raichle, for which I am grateful.
 \newcommand\DisableBabelHook[1]{\bbl@csarg\let{hk@#1}\@gobble}
 \def\bbl@usehooks#1#2{%
   \def\bbl@elt##1{%
-    \@nameuse{bbl@hk@##1}{\@nameuse{bbl@ev@##1@#1@}#2}}%
-  \@nameuse{bbl@ev@#1@}%
+    \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#1@}#2}}%
+  \bbl@cs{ev@#1@}%
   \ifx\languagename\@undefined\else % Test required for Plain (?)
     \def\bbl@elt##1{%
-      \@nameuse{bbl@hk@##1}{\@nameuse{bbl@ev@##1@#1@\languagename}#2}}%
-    \@nameuse{bbl@ev@#1@\languagename}%
+      \bbl@cs{hk@##1}{\bbl@cl{ev@##1@#1}#2}}%
+    \bbl@cl{ev@#1}%
   \fi}
 %    \end{macrocode}
 %
@@ -5638,7 +5638,7 @@ help from Bernd Raichle, for which I am grateful.
   adddialect=2,patterns=2,defaultcommands=0,encodedcommands=2,write=0,%
   beforeextras=0,afterextras=0,stopcommands=0,stringprocess=0,%
   hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0,%
-  beforestart=0}
+  beforestart=0,languagename=0}
 %    \end{macrocode}
 %
 % \begin{macro}{\babelensure}
@@ -5665,7 +5665,7 @@ help from Bernd Raichle, for which I am grateful.
 \newcommand\babelensure[2][]{%  TODO - revise test files
   \AddBabelHook{babel-ensure}{afterextras}{%
     \ifcase\bbl@select@type
-      \@nameuse{bbl@e@\languagename}%
+      \bbl@cl{e}%
     \fi}%
   \begingroup
     \let\bbl@ens@include\@empty
@@ -5869,9 +5869,9 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@usehooks{beforestart}{}%
   \global\let\bbl@beforestart\relax}
 \AtBeginDocument{%
-  \@nameuse{bbl@beforestart}%
+  \bbl@cs{beforestart}%
   \if@filesw
-    \immediate\write\@mainaux{\string\@nameuse{bbl@beforestart}}%
+    \immediate\write\@mainaux{\string\bbl@cs{beforestart}}%
   \fi
   \expandafter\selectlanguage\expandafter{\bbl@main@language}%
   \ifbbl@single  % must go after the line above
@@ -8020,16 +8020,16 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@presec@x#1[#2]#3{%
   \bbl@exp{%
     \\\select@language@x{\bbl@main@language}%
-    \\\@nameuse{bbl@sspre@#1}%
-    \\\@nameuse{bbl@ss@#1}%
+    \\\bbl@cs{sspre@#1}%
+    \\\bbl@cs{ss@#1}%
       [\\\foreignlanguage{\languagename}{\unexpanded{#2}}]%
       {\\\foreignlanguage{\languagename}{\unexpanded{#3}}}%
     \\\select@language@x{\languagename}}}
 \def\bbl@presec@s#1#2{%
   \bbl@exp{%
     \\\select@language@x{\bbl@main@language}%
-    \\\@nameuse{bbl@sspre@#1}%
-    \\\@nameuse{bbl@ss@#1}*%
+    \\\bbl@cs{sspre@#1}%
+    \\\bbl@cs{ss@#1}*%
       {\\\foreignlanguage{\languagename}{\unexpanded{#2}}}%
     \\\select@language@x{\languagename}}}
 \IfBabelLayout{sectioning}%
@@ -8089,6 +8089,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@onchar\@nil
   \let\bbl@KVP@alph\@nil
   \let\bbl@KVP@Alph\@nil
+  \let\bbl@KVP@info\@nil % Ignored with import? Or error/warning?
   \bbl@forkv{#1}{%  TODO - error handling
     \in@{/}{##1}%
     \ifin@
@@ -8139,6 +8140,7 @@ help from Bernd Raichle, for which I am grateful.
          \bbl@read@ini{##1}{basic data}%
          \bbl@exportkey{chrng}{characters.ranges}{}%
          \bbl@exportkey{dgnat}{numbers.digits.native}{}%
+         \bbl@exportkey{prehc}{typography.prehyphenchar}{}%
          \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
          \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
          \bbl@exportkey{hyoth}{typography.hyphenate.other}{}%
@@ -8175,9 +8177,9 @@ help from Bernd Raichle, for which I am grateful.
         {\\\bbl@patterns@lua{\languagename}}}%
       % TODO - error/warning if no script
       \directlua{
-        if Babel.script_blocks['\bbl@cs{sbcp@\languagename}'] then
+        if Babel.script_blocks['\bbl@cl{sbcp}'] then
           Babel.loc_to_scr[\the\localeid] =
-            Babel.script_blocks['\bbl@cs{sbcp@\languagename}']
+            Babel.script_blocks['\bbl@cl{sbcp}']
           Babel.locale_props[\the\localeid].lc = \the\localeid\space
           Babel.locale_props[\the\localeid].lg = \the\@nameuse{l@\languagename}\space
         end
@@ -8188,9 +8190,9 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
       \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
       \directlua{
-        if Babel.script_blocks['\bbl@cs{sbcp@\languagename}'] then
+        if Babel.script_blocks['\bbl@cl{sbcp}'] then
           Babel.loc_to_scr[\the\localeid] =
-            Babel.script_blocks['\bbl@cs{sbcp@\languagename}']
+            Babel.script_blocks['\bbl@cl{sbcp}']
         end}%
       \ifx\bbl@mapselect\@undefined
         \AtBeginDocument{%
@@ -8286,7 +8288,7 @@ help from Bernd Raichle, for which I am grateful.
            Babel.digits_mapped = true
            Babel.digits = Babel.digits or {}
            Babel.digits[\the\localeid] =
-             table.pack(string.utfvalue('\bbl@cs{dgnat@\languagename}'))
+             table.pack(string.utfvalue('\bbl@cl{dgnat}'))
            if not Babel.numbers then
              function Babel.numbers(head)
                local LOCALE = luatexbase.registernumber'bbl@attr@locale'
@@ -8425,8 +8427,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@endcommands
   \bbl@exp{%
     \def\<#1hyphenmins>{%
-      {\bbl@ifunset{bbl@lfthm@#1}{2}{\@nameuse{bbl@lfthm@#1}}}%
-      {\bbl@ifunset{bbl@rgthm@#1}{3}{\@nameuse{bbl@rgthm@#1}}}}}%
+      {\bbl@ifunset{bbl@lfthm@#1}{2}{\bbl@cs{lfthm@#1}}}%
+      {\bbl@ifunset{bbl@rgthm@#1}{3}{\bbl@cs{rgthm@#1}}}}}%
   \bbl@provide@hyphens{#1}%
   \ifx\bbl@KVP@main\@nil\else
      \expandafter\main@language\expandafter{#1}%
@@ -8468,25 +8470,18 @@ help from Bernd Raichle, for which I am grateful.
   \fi
   \ifx\bbl@tempa\relax %        if no opt or no language in opt found
     \ifx\bbl@KVP@import\@nil\else % if importing
-      \bbl@exp{%                and hyphenrules is not empty
-        \\\bbl@ifblank{\@nameuse{bbl@hyphr@#1}}%
+      \bbl@exp{%                    and hyphenrules is not empty
+        \\\bbl@ifblank{\bbl@cs{hyphr@#1}}%
           {}%
-          {\let\\\bbl@tempa\<l@\@nameuse{bbl@hyphr@\languagename}>}}%
+          {\let\\\bbl@tempa\<l@\bbl@cl{hyphr}>}}%
     \fi
   \fi
   \bbl@ifunset{bbl@tempa}%       ie, relax or undefined
     {\bbl@ifunset{l@#1}%         no hyphenrules found - fallback
        {\bbl@exp{\\\adddialect\<l@#1>\language}}%
        {}}%                      so, l@<lang> is ok - nothing to do
-    {\bbl@exp{\\\adddialect\<l@#1>\bbl@tempa}}% found in opt list or ini
-  \bbl@ifunset{bbl@prehc@\languagename}%
-    {}%  TODO - XeTeX, based on \babelfont and HyphenChar?
-    {\ifodd\bbl@engine\bbl@exp{%
-       \\\bbl@ifblank{\@nameuse{bbl@prehc@#1}}%
-         {}%
-         {\\\AddBabelHook[\languagename]{babel-prehc-\languagename}{patterns}%
-           {\prehyphenchar=\@nameuse{bbl@prehc@\languagename}\relax}}}%
-     \fi}}
+    {\bbl@exp{\\\adddialect\<l@#1>\bbl@tempa}}}% found in opt list or ini
+
 %    \end{macrocode}
 %
 % The reader of |ini| files. There are 3 possible cases: a section name
@@ -8497,6 +8492,16 @@ help from Bernd Raichle, for which I am grateful.
 \ifx\bbl@readstream\@undefined
   \csname newread\endcsname\bbl@readstream
 \fi
+\def\bbl@inipreread#1=#2\@@{%
+  \bbl@trim@def\bbl@tempa{#1}% Redundant below !!
+  \bbl@trim\toks@{#2}%
+  % Move trims here ??
+  \bbl@ifunset{bbl@KVP@\bbl@section/\bbl@tempa}%
+    {\bbl@exp{%
+       \\\g@addto@macro\\\bbl@inidata{%
+         \\\bbl@elt{\bbl@section}{\bbl@tempa}{\the\toks@}}}%
+     \expandafter\bbl@inireader\bbl@tempa=#2\@@}%
+    {}}%
 \def\bbl@read@ini#1#2{%
   \global\@namedef{bbl@lini@\languagename}{#1}%
   \openin\bbl@readstream=babel-#1.ini
@@ -8507,16 +8512,11 @@ help from Bernd Raichle, for which I am grateful.
        is not complete.}%
       {Fix the name or reinstall babel.}%
   \else
+    \def\bbl@inidata{\bbl@elt{identificacion}{tag.ini}{#1}}%
     \let\bbl@section\@empty
     \let\bbl@savestrings\@empty
     \let\bbl@savetoday\@empty
     \let\bbl@savedate\@empty
-    \def\bbl@inipreread##1=##2\@@{%
-      \bbl@trim@def\bbl@tempa{##1}% Redundant below !!
-      % Move trims here ??
-      \bbl@ifunset{bbl@KVP@\bbl@section/\bbl@tempa}%
-        {\expandafter\bbl@inireader\bbl@tempa=##2\@@}%
-        {}}%
     \let\bbl@inireader\bbl@iniskip
     \bbl@info{Importing #2 for \languagename\\%
              from babel-#1.ini. Reported}%
@@ -8534,10 +8534,13 @@ help from Bernd Raichle, for which I am grateful.
     \global\let\bbl@renewlist\@empty
     % Ends last section. See \bbl@inisec
     \def\bbl@elt##1##2{\bbl@inireader##1=##2\@@}%
-    \@nameuse{bbl@renew@\bbl@section}%
+    \bbl@cs{renew@\bbl@section}%
     \global\bbl@csarg\let{renew@\bbl@section}\relax
-    \@nameuse{bbl@secpost@\bbl@section}%  
-%    \bbl@csarg\bbl@toglobal{inikeys@\languagename}%
+    \bbl@cs{secpost@\bbl@section}%  
+    \bbl@csarg{\global\expandafter\let}{inidata@\languagename}\bbl@inidata
+    \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
+    \bbl@toglobal\bbl@ini@loaded
+    % \bbl@exp{\gdef\<bbl@inidata@tag@#1>{\<bbl@inidata@\languagename>}}%
   \fi}
 \def\bbl@iniline#1\bbl@iniline{%
   \@ifnextchar[\bbl@inisec{\@ifnextchar;\bbl@iniskip\bbl@inipreread}#1\@@}% ]
@@ -8553,15 +8556,22 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \def\bbl@iniskip#1\@@{}%      if starts with ;
 \def\bbl@inisec[#1]#2\@@{%    if starts with opening bracket
-  \def\bbl@elt##1##2{\bbl@inireader##1=##2\@@}%
-  \@nameuse{bbl@renew@\bbl@section}%
+  \def\bbl@elt##1##2{%
+    \expandafter\toks@\expandafter{%
+      \expandafter{\bbl@section}{##1}{##2}}%
+    \bbl@exp{%
+      \\\g@addto@macro\\\bbl@inidata{\\\bbl@elt\the\toks@}}%
+    \bbl@inireader##1=##2\@@}%
+  \bbl@cs{renew@\bbl@section}%
   \global\bbl@csarg\let{renew@\bbl@section}\relax
-  \@nameuse{bbl@secpost@\bbl@section}%  ends previous section
-  \def\bbl@section{#1}%                 starts current section
+  \bbl@cs{secpost@\bbl@section}%
+  % The previous code belongs to the previous section.
+  % Now start the current one.
+  \def\bbl@section{#1}% 
   \def\bbl@elt##1##2{%
     \@namedef{bbl@KVP@#1/##1}{}}%
-  \@nameuse{bbl@renew@#1}%
-  \@nameuse{bbl@secpre@#1}%  pre-section `hook'
+  \bbl@cs{renew@#1}%
+  \bbl@cs{secpre@#1}%  pre-section `hook'
   \bbl@ifunset{bbl@inikv@#1}%
     {\let\bbl@inireader\bbl@iniskip}%
     {\bbl@exp{\let\\\bbl@inireader\<bbl@inikv@#1>}}}
@@ -8607,8 +8617,8 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@iniwarning#1{%
   \bbl@ifunset{bbl@@kv@identification.warning#1}{}%
     {\bbl@warning{%
-       From babel-\@nameuse{bbl@lini@\languagename}.ini:\\%
-       \@nameuse{bbl@@kv@identification.warning#1}\\%
+       From babel-\bbl@cs{lini@\languagename}.ini:\\%
+       \bbl@cs{@kv@identification.warning#1}\\%
        Reported }}}
 \let\bbl@inikv@identification\bbl@inikv
 \def\bbl@secpost@identification{%
@@ -8804,6 +8814,12 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@csarg\bbl@add@list{lsys@#1}{Script=\bbl@cs{sname@#1}}%
   \bbl@ifunset{bbl@lname@#1}{}%
     {\bbl@csarg\bbl@add@list{lsys@#1}{Language=\bbl@cs{lname@#1}}}%
+  \ifcase\bbl@engine\or\or
+    \bbl@ifunset{bbl@prehc@#1}{}%
+      {\bbl@exp{\\\bbl@ifblank{\bbl@cs{prehc@#1}}}%
+        {}%
+        {\bbl@csarg\bbl@add@list{lsys@#1}{HyphenChar="200B}}}%
+  \fi
   \bbl@csarg\bbl@toglobal{lsys@#1}}
 %    \end{macrocode}
 %
@@ -8851,7 +8867,7 @@ help from Bernd Raichle, for which I am grateful.
 % special case. for a fixed form (see |babel-he.ini|, for example).
 %
 %    \begin{macrocode}
-\newcommand\localenumeral[2]{\@nameuse{bbl@cntr@#1@\languagename}{#2}}
+\newcommand\localenumeral[2]{\bbl@cs{cntr@#1@\languagename}{#2}}
 \def\bbl@localecntr#1#2{\localenumeral{#2}{#1}}
 \newcommand\localecounter[2]{%
   \expandafter\bbl@localecntr\csname c@#2\endcsname{#1}}
@@ -8867,15 +8883,15 @@ help from Bernd Raichle, for which I am grateful.
   \fi}
 \def\bbl@alphnumeral@ii#1#2#3#4#5#6#7#8{%
   \bbl@ifunset{bbl@cntr@#1.F.\number#5#6#7#8@\languagename}%
-    {\@nameuse{bbl@cntr@#1.4@\languagename}#5%
-     \@nameuse{bbl@cntr@#1.3@\languagename}#6%
-     \@nameuse{bbl@cntr@#1.2@\languagename}#7%
-     \@nameuse{bbl@cntr@#1.1@\languagename}#8%
+    {\bbl@cs{cntr@#1.4@\languagename}#5%
+     \bbl@cs{cntr@#1.3@\languagename}#6%
+     \bbl@cs{cntr@#1.2@\languagename}#7%
+     \bbl@cs{cntr@#1.1@\languagename}#8%
      \ifnum#6#7#8>\z@ % An ad hod rule for Greek. Ugly. To be fixed.
        \bbl@ifunset{bbl@cntr@#1.S.321@\languagename}{}%
-         {\@nameuse{bbl@cntr@#1.S.321@\languagename}}%
+         {\bbl@cs{cntr@#1.S.321@\languagename}}%
      \fi}%
-    {\@nameuse{bbl@cntr@#1.F.\number#5#6#7#8@\languagename}}}
+    {\bbl@cs{cntr@#1.F.\number#5#6#7#8@\languagename}}}
 \def\bbl@alphnum@invalid#1{%
   \bbl@error{Alphabetic numeral too large (#1)}%
     {Currently this is the limit.}}
@@ -8891,7 +8907,7 @@ help from Bernd Raichle, for which I am grateful.
                 The corresponding ini file has not been loaded\\%
                 Perhaps it doesn't exist}%
                {See the manual for details.}}%
-    {\@nameuse{bbl@\csname bbl@info@#1\endcsname @\languagename}}}
+    {\bbl@cs{\csname bbl@info@#1\endcsname @\languagename}}}
 % \@namedef{bbl@info@name.locale}{lcname}
 \@namedef{bbl@info@tag.ini}{lini}
 \@namedef{bbl@info@name.english}{elname}
@@ -8910,6 +8926,30 @@ help from Bernd Raichle, for which I am grateful.
     \fi}}
 %    \end{macrocode}
 %
+%  More general, but non-expandable, is |\getlocaledata|. To inspect
+%  every possible loaded |ini|, we define |\LocaleForEach|, where
+%  |bbl@ini@loaded| is a comma-separated list of locales, built by
+%  |\bbl@read@ini|. 
+%
+%    \begin{macrocode}   
+\newcommand\getlocaledata[3]{% 
+  \let#1\relax
+  \def\bbl@elt##1##2##3{%
+    \bbl@ifsamestring{##1/##2}{#3}%
+      {\providecommand#1{##3}%
+       \def\bbl@elt####1####2####3{}}%
+      {}}%
+  \bbl@cs{inidata@#2}%
+  \ifx#1\relax
+    \bbl@error
+      {Unknown key for locale '#2':\\%
+       #3\\%
+       \string#1 will be set to \relax}%
+      {Perhaps you misspelled it.}%
+  \fi}
+\newcommand\LocaleForEach{\bbl@foreach\bbl@ini@loaded}
+%    \end{macrocode}
+%
 % \section{Adjusting the Babel bahavior}
 %
 % A generic high level inteface is provided to adjust some global
@@ -8917,7 +8957,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \newcommand\babeladjust[1]{%  TODO. Error handling.
-  \bbl@forkv{#1}{\@nameuse{bbl@ADJ@##1@##2}}}
+  \bbl@forkv{#1}{\bbl@cs{ADJ@##1@##2}}}
 %
 \def\bbl@adjust@lua#1#2{%
   \ifvmode
@@ -9821,7 +9861,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@switchdir{%
   \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
   \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
-  \bbl@exp{\\\bbl@setdirs\bbl@cs{wdir@\languagename}}}
+  \bbl@exp{\\\bbl@setdirs\bbl@cl{wdir}}}
 \def\bbl@setdirs#1{% TODO - math
   \ifcase\bbl@select@type % TODO - strictly, not the right test
     \bbl@bodydir{#1}%
@@ -10046,7 +10086,7 @@ help from Bernd Raichle, for which I am grateful.
                   (\string\language\the\count@)}%
         \def\bbl@elt####1####2####3####4{}%
       \fi}%
-    \@nameuse{bbl@languages}%
+    \bbl@cs{languages}%
   \endgroup}
 %    \end{macrocode}
 %
@@ -10079,7 +10119,8 @@ help from Bernd Raichle, for which I am grateful.
           \lowercase\expandafter{\bbl@tempd}}}%
       \@empty
     \edef\bbl@tempd{\endgroup\def\noexpand#1{#1}}%
-  \bbl@tempd}
+  \bbl@tempd
+  \bbl@usehooks{languagename}{}}
 \def\bbl@iflanguage#1{%
   \@ifundefined{l@#1}{\@nolanerr{#1}\@gobble}\@firstofone}
 %    \end{macrocode}
@@ -10268,7 +10309,7 @@ help from Bernd Raichle, for which I am grateful.
         }%
       \fi}%
     {}%
-    \chardef\localeid\@nameuse{bbl@id@@\languagename}}
+    \chardef\localeid\bbl@cl{id@}}
 %    \end{macrocode}
 %
 % The unprotected part of |\selectlanguage|.
@@ -10342,20 +10383,9 @@ help from Bernd Raichle, for which I am grateful.
       \expandafter\bbl@switch\expandafter{\languagename}%
     \fi}}
 \def\babel@aux#1#2{%
-  \expandafter\ifx\csname date#1\endcsname\relax
-    \expandafter\ifx\csname bbl@auxwarn@#1\endcsname\relax
-      \@namedef{bbl@auxwarn@#1}{}%
-      \bbl@warning
-        {Unknown language `#1'. Very likely you\\%
-         requested it in a previous run. Expect some\\%
-         wrong results in this run, which should vanish\\%
-         in the next one. Reported}%
-    \fi
-  \else
-    \select@language{#1}%
-    \bbl@foreach\BabelContentsFiles{%
-      \@writefile{##1}{\babel@toc{#1}{#2}}}% %% TODO - ok in plain?
-  \fi}
+  \select@language{#1}%
+  \bbl@foreach\BabelContentsFiles{%
+    \@writefile{##1}{\babel@toc{#1}{#2}}}}% %% TODO - ok in plain?}
 \def\babel@toc#1#2{%
   \select@language{#1}}
 %    \end{macrocode}
@@ -10903,7 +10933,9 @@ help from Bernd Raichle, for which I am grateful.
     Reported}}
 \def\@nolanerr#1{%
   \bbl@error
-    {You haven't defined the language #1\space yet}%
+    {You haven't defined the language #1\space yet.\\%
+     Perhaps you misspelled it or your installation\\%
+     is not complete}%
     {Your command will be ignored, type <return> to proceed}}
 \def\@nopatterns#1{%
   \bbl@warning
@@ -11447,7 +11479,7 @@ help from Bernd Raichle, for which I am grateful.
 \gdef\bbl@switchfont{%
   \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
   \bbl@exp{%  eg Arabic -> arabic
-    \lowercase{\edef\\\bbl@tempa{\bbl@cs{sname@\languagename}}}}%
+    \lowercase{\edef\\\bbl@tempa{\bbl@cl{sname}}}}%
   \bbl@foreach\bbl@font@fams{%
     \bbl@ifunset{bbl@##1dflt@\languagename}%    (1) language?
       {\bbl@ifunset{bbl@##1dflt@*\bbl@tempa}%   (2) from script?
@@ -11467,7 +11499,7 @@ help from Bernd Raichle, for which I am grateful.
        \global\bbl@csarg\let{famrst@##1}\relax}%
       {\bbl@exp{% order is relevant
          \\\bbl@add\\\originalTeX{%
-           \\\bbl@font@rst{\bbl@cs{##1dflt@\languagename}}%
+           \\\bbl@font@rst{\bbl@cl{##1dflt}}%
                           \<##1default>\<##1family>{##1}}%
          \\\bbl@font@set\<bbl@##1dflt@\languagename>% the main part!
                         \<##1default>\<##1family>}}}%
@@ -11496,11 +11528,13 @@ help from Bernd Raichle, for which I am grateful.
              \expandafter\xdef\csname ##1default\endcsname{\f@family}}%
             {}}%
         \ifx\bbl@tempa\@empty\else
-          \bbl@infowarn{The following fonts are not babel standard families:\\%
+          \bbl@infowarn{The following font families will use the default\\%
+            settings for all languages:\\%
             \bbl@tempa
             There is nothing intrinsically wrong with it, but\\%
-            'babel' will no set Script and Language. Consider\\%
-            defining a new family with \string\babelfont.\\%
+            'babel' will no set Script and Language, which could\\%
+             be relevant in some languages. If your document uses\\%
+             these families, consider redefining them with \string\babelfont.\\%
             Reported}%
         \fi
       \endgroup}
@@ -11531,18 +11565,14 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@tempe\bbl@mapselect
   \let\bbl@mapselect\relax
   \let\bbl@temp@fam#4%       eg, '\rmfamily', to be restored below
-  \let#4\relax            %  So that can be used with \newfontfamily
+  \let#4\@empty      %       Make sure \renewfontfamily is valid
   \bbl@exp{% 
     \let\\\bbl@temp@pfam\<\bbl@stripslash#4\space>% eg, '\rmfamily '
-    \<keys_if_exist:nnF>{fontspec-opentype}%
-        {Script/\bbl@cs{sname@\languagename}}%
-      {\\\newfontscript{\bbl@cs{sname@\languagename}}%
-        {\bbl@cs{sotf@\languagename}}}%
-    \<keys_if_exist:nnF>{fontspec-opentype}%
-        {Language/\bbl@cs{lname@\languagename}}%
-      {\\\newfontlanguage{\bbl@cs{lname@\languagename}}%
-        {\bbl@cs{lotf@\languagename}}}%
-    \\\newfontfamily\\#4%
+    \<keys_if_exist:nnF>{fontspec-opentype}{Script/\bbl@cl{sname}}%
+      {\\\newfontscript{\bbl@cl{sname}}{\bbl@cl{sotf}}}%
+    \<keys_if_exist:nnF>{fontspec-opentype}{Language/\bbl@cl{lname}}%
+      {\\\newfontlanguage{\bbl@cl{lname}}{\bbl@cl{lotf}}}%
+    \\\renewfontfamily\\#4%
       [\bbl@cs{lsys@\languagename},#2]}{#3}% ie \bbl@exp{..}{#3}
   \begingroup
      #4%
@@ -11735,37 +11765,51 @@ help from Bernd Raichle, for which I am grateful.
   \xebbl@stop
   \let\xebbl@stop\relax}
 \def\bbl@intraspace#1 #2 #3\@@{%
-  \bbl@csarg\gdef{xeisp@\bbl@cs{sbcp@\languagename}}%
+  \bbl@csarg\gdef{xeisp@\languagename}%
     {\XeTeXlinebreakskip #1em plus #2em minus #3em\relax}}
 \def\bbl@intrapenalty#1\@@{%
-  \bbl@csarg\gdef{xeipn@\bbl@cs{sbcp@\languagename}}%
+  \bbl@csarg\gdef{xeipn@\languagename}%
     {\XeTeXlinebreakpenalty #1\relax}}
 \def\bbl@provide@intraspace{%
-   \bbl@xin@{\bbl@cs{sbcp@\languagename}}{Thai,Laoo,Khmr}%
-   \ifin@                % sea (currently ckj not handled)
-     \bbl@ifunset{bbl@intsp@\languagename}{}%
-       {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
-         \ifx\bbl@KVP@intraspace\@nil
-            \bbl@exp{%
-              \\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
-         \fi
-         \ifx\bbl@KVP@intrapenalty\@nil
-           \bbl@intrapenalty0\@@
-         \fi
-       \fi
-       \ifx\bbl@KVP@intraspace\@nil\else % We may override the ini
-         \expandafter\bbl@intraspace\bbl@KVP@intraspace\@@
-       \fi
-       \ifx\bbl@KVP@intrapenalty\@nil\else
-         \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
-       \fi
-       \ifx\bbl@ispacesize\@undefined
-         \AtBeginDocument{%
-           \expandafter\bbl@add
-           \csname selectfont \endcsname{\bbl@ispacesize}}%
-         \def\bbl@ispacesize{\bbl@cs{xeisp@\bbl@cs{sbcp@\languagename}}}%
-       \fi}%
-   \fi}
+  \bbl@xin@{\bbl@cl{lnbrk}}{s}%
+  \ifin@\else\bbl@xin@{\bbl@cl{lnbrk}}{c}\fi
+  \ifin@
+    \bbl@ifunset{bbl@intsp@\languagename}{}%
+      {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
+        \ifx\bbl@KVP@intraspace\@nil
+           \bbl@exp{%
+             \\\bbl@intraspace\bbl@cl{intsp}\\\@@}%
+        \fi
+        \ifx\bbl@KVP@intrapenalty\@nil
+          \bbl@intrapenalty0\@@
+        \fi
+      \fi
+      \ifx\bbl@KVP@intraspace\@nil\else % We may override the ini
+        \expandafter\bbl@intraspace\bbl@KVP@intraspace\@@
+      \fi
+      \ifx\bbl@KVP@intrapenalty\@nil\else
+        \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
+      \fi
+      \bbl@exp{%
+        \\\bbl@add\<extras\languagename>{%
+          \XeTeXlinebreaklocale "\bbl@cl{lbcp}"%
+          \<bbl@xeisp@\languagename>%
+          \<bbl@xeipn@\languagename>}%
+        \\\bbl@toglobal\<extras\languagename>%
+        \\\bbl@add\<noextras\languagename>{%
+          \XeTeXlinebreaklocale "en"}%
+        \\\bbl@toglobal\<noextras\languagename>}%
+      \ifx\bbl@ispacesize\@undefined
+        \gdef\bbl@ispacesize{\bbl@cl{xeisp}}%
+        \ifx\AtBeginDocument\@notprerr
+          \expandafter\@secondoftwo  % to execute right now
+        \fi
+        \AtBeginDocument{%
+          \expandafter\bbl@add
+          \csname selectfont \endcsname{\bbl@ispacesize}%
+          \expandafter\bbl@toglobal\csname selectfont \endcsname}%
+      \fi}%
+  \fi}
 \AddBabelHook{xetex}{loadkernel}{%
 <@Restore Unicode catcodes before loading patterns@>}
 \ifx\DisableBabelHook\@undefined\endinput\fi
@@ -12174,7 +12218,11 @@ help from Bernd Raichle, for which I am grateful.
                \number\language) }}%
         \xdef\bbl@pttnlist{\bbl@pttnlist\number\language,}%
       \fi
-    \endgroup}}
+    \endgroup}%
+  \bbl@exp{%
+    \bbl@ifunset{bbl@prehc@\languagename}{}%
+      {\\\bbl@ifblank{\bbl@cs{prehc@\languagename}}{}%
+        {\prehyphenchar=\bbl@cl{prehc}\relax}}}}
 \AddBabelHook{luatex}{everylanguage}{%
   \def\process@language##1##2##3{%
     \def\process@line####1####2 ####3 ####4 {}}}
@@ -12415,7 +12463,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@provide@intraspace{%
   \bbl@ifunset{bbl@intsp@\languagename}{}%
     {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
-       \bbl@xin@{\bbl@cs{lnbrk@\languagename}}{c}%
+       \bbl@xin@{\bbl@cl{lnbrk}}{c}%
        \ifin@           % cjk
          \bbl@cjkintraspace
          \directlua{
@@ -12423,18 +12471,18 @@ help from Bernd Raichle, for which I am grateful.
              Babel.locale_props = Babel.locale_props or {}
              Babel.locale_props[\the\localeid].linebreak = 'c'
          }%
-         \bbl@exp{\\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
+         \bbl@exp{\\\bbl@intraspace\bbl@cl{intsp}\\\@@}%
          \ifx\bbl@KVP@intrapenalty\@nil
            \bbl@intrapenalty0\@@
          \fi 
        \else            % sea
          \bbl@seaintraspace
-         \bbl@exp{\\\bbl@intraspace\bbl@cs{intsp@\languagename}\\\@@}%
+         \bbl@exp{\\\bbl@intraspace\bbl@cl{intsp}\\\@@}%
          \directlua{
             Babel = Babel or {}
             Babel.sea_ranges = Babel.sea_ranges or {}
-            Babel.set_chranges('\bbl@cs{sbcp@\languagename}', 
-                               '\bbl@cs{chrng@\languagename}')
+            Babel.set_chranges('\bbl@cl{sbcp}', 
+                               '\bbl@cl{chrng}')
          }%
          \ifx\bbl@KVP@intrapenalty\@nil
            \bbl@intrapenalty0\@@
@@ -12494,13 +12542,16 @@ Babel.script_blocks = {
   ['Armn'] = {{0x0530, 0x058F}},
   ['Beng'] = {{0x0980, 0x09FF}}, 
   ['Cher'] = {{0x13A0, 0x13FF}, {0xAB70, 0xABBF}},   
+  ['Copt'] = {{0x03E2, 0x03EF}, {0x2C80, 0x2CFF}, {0x102E0, 0x102FF}},
   ['Cyrl'] = {{0x0400, 0x04FF}, {0x0500, 0x052F}, {0x1C80, 0x1C8F},
               {0x2DE0, 0x2DFF}, {0xA640, 0xA69F}},
   ['Deva'] = {{0x0900, 0x097F}, {0xA8E0, 0xA8FF}},
   ['Ethi'] = {{0x1200, 0x137F}, {0x1380, 0x139F}, {0x2D80, 0x2DDF},
               {0xAB00, 0xAB2F}},
   ['Geor'] = {{0x10A0, 0x10FF}, {0x2D00, 0x2D2F}},
-  ['Grek'] = {{0x0370, 0x03FF}, {0x1F00, 0x1FFF}},
+  % Don't follow strictly Unicode, which places some Coptic letters in
+  % the 'Greek and Coptic' block
+  ['Grek'] = {{0x0370, 0x03E1}, {0x03F0, 0x03FF}, {0x1F00, 0x1FFF}},
   ['Hans'] = {{0x2E80, 0x2EFF}, {0x3000, 0x303F}, {0x31C0, 0x31EF},
               {0x3300, 0x33FF}, {0x3400, 0x4DBF}, {0x4E00, 0x9FFF},
               {0xF900, 0xFAFF}, {0xFE30, 0xFE4F}, {0xFF00, 0xFFEF},
@@ -12533,6 +12584,7 @@ Babel.script_blocks = {
   ['Yiii'] = {{0xA000, 0xA48F}, {0xA490, 0xA4CF}}
 }
 
+Babel.script_blocks.Cyrs = Babel.script_blocks.Cyrl
 Babel.script_blocks.Hant = Babel.script_blocks.Hans
 Babel.script_blocks.Kana = Babel.script_blocks.Jpan
 
@@ -12542,6 +12594,7 @@ function Babel.locale_map(head)
   local LOCALE = luatexbase.registernumber'bbl@attr@locale'
   local GLYPH = node.id('glyph')
   local inmath = false
+  local toloc_save
   for item in node.traverse(head) do
     local toloc
     if not inmath and item.id == GLYPH then
@@ -12559,7 +12612,15 @@ function Babel.locale_map(head)
           end
         end
       end
-      % Now, take action
+      % Now, take action, but treat composite chars in a different
+      % fashion, because they 'inherit' the previous locale. Not yet
+      % optimized.
+      if not toloc and 
+          (item.char >= 0x0300 and item.char <= 0x036F) or
+          (item.char >= 0x1AB0 and item.char <= 0x1AFF) or
+          (item.char >= 0x1DC0 and item.char <= 0x1DFF) then
+        toloc = toloc_save
+      end
       if toloc and toloc > -1 then
         if Babel.locale_props[toloc].lg then
           item.lang = Babel.locale_props[toloc].lg
@@ -12568,6 +12629,7 @@ function Babel.locale_map(head)
         if Babel.locale_props[toloc]['/'..item.font] then
           item.font = Babel.locale_props[toloc]['/'..item.font]
         end
+        toloc_save = toloc
       end
     elseif not inmath and item.id == 7 then
       item.replace = item.replace and Babel.locale_map(item.replace)
@@ -12603,7 +12665,7 @@ end
                {See the manual for futher info}}%
     {}%
   \loop
-    \@nameuse{bbl@chprop@#2}{#3}%
+    \bbl@cs{chprop@#2}{#3}%
   \ifnum\count@<\@tempcnta
     \advance\count@\@ne
   \repeat}
@@ -12629,7 +12691,7 @@ end
   \directlua{
     Babel.chr_to_loc = Babel.chr_to_loc or {}
     Babel.chr_to_loc[\the\count@] =
-      \bbl@ifblank{#1}{-1000}{\the\@nameuse{bbl@id@@#1}}\space
+      \bbl@ifblank{#1}{-1000}{\the\bbl@cs{id@@#1}}\space
   }}
 %    \end{macrocode}
 %

@@ -10,13 +10,4 @@
 \BabelBeforeIni{lo}{%
 }
 
-\ifcase\bbl@engine\or\or
-  \expandafter\addto\csname extras\languagename\endcsname{%
-    \XeTeXlinebreaklocale "lo"
-    \bbl@xeisp@Laoo
-    \bbl@xeipn@Laoo}
-  \expandafter\addto\csname noextras\languagename\endcsname{%
-    \XeTeXlinebreaklocale "en"}
-\fi
-
 \endinput

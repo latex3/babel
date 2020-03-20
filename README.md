@@ -1,4 +1,4 @@
-## Babel 3.41
+## Babel 3.41.1952
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.41 are described in:
+Changes in version 3.42 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.41
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.42
 
 Included is a set of ini files for about 200 languages.
 
@@ -44,6 +44,21 @@ respective authors.
 ### Latest changes
 
 ```
+3.42   2020-04-??
+       - Improved the line breaking support for xetex.
+       - Added ini files for Coptic and Church Slavic. Improved some
+         others (Armenian, Sanskrit).
+       - Added a new field tag.bcp47.likely to many files.
+       - \getlocaledata, to get the value of a field from the loaded
+         ini files.
+       - Fixes:
+         - Line breaking was no always correct with languages loaded on
+           the fly.
+         - Avoid a harmless warning about redefining a protected command
+           (#52). 
+         - Locale was not switched correctly with COMBINING characters
+           (#54).
+           
 3.41   2020-02-27
        - Counters and numerals added in some ini files, based on those
          defined in CSS (Abjad, Alphabetic Hebrew, Japanese, etc.).
@@ -51,6 +66,7 @@ respective authors.
          (#51).
        - Fix - Error when french was loaded and an ini file read (#50).
        - Fix - A typo in Greek files: Miriad must read Myriad.
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.41
        
 3.40   2020-02-14
        - New ini files for Latin and Greek (xe/lua).

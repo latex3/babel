@@ -15,16 +15,5 @@
   \def\BabelDated#1{{\expandafter\khmerdigits\expandafter{#1}}}%
   \babel@save\BabelDatey
   \def\BabelDatey#1{{\expandafter\khmerdigits\expandafter{#1}}}}
-  
-\ifcase\bbl@engine\or\or
-  \expandafter\addto\csname extras\languagename\endcsname{%
-    \XeTeXlinebreaklocale "kh" 
-    \bbl@xeisp@Khmr
-    \bbl@xeipn@Khmr
-  }
-  \expandafter\addto\csname noextras\languagename\endcsname{%
-   \XeTeXlinebreaklocale "en"
-  }
-\fi
 
 \endinput
