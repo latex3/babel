@@ -1,0 +1,65 @@
+\documentclass{article}
+
+\usepackage[bidi=basic,english, layout=sectioning]{babel}
+
+\babelprovide[onchar=ids fonts]{english}
+\babelprovide[import, onchar=ids fonts]{syriac}
+
+\babelfont[syriac]{rm}[Renderer=Harfbuzz]{Segoe UI Historic}
+
+% \babelcharproperty{`0}[`9]{locale}{} 
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5mm}
+
+\begin{document}
+
+The font for Syriac is Segoe UI Historic, a Windows font. Estrangelo
+Edessa is an alternative, but it does not render abbreviations
+correctly, nor does FreeSans or Noto. I have found no Mac font for
+Syriac.
+
+\section{Numerals}
+
+\selectlanguage{syriac}
+
+\localenumeral{letters}{765}
+
+\localenumeral{letters}{9164}
+
+\localenumeral{letters}{834}
+
+\localenumeral{letters}{21}
+
+\localenumeral{letters}{9}
+
+\section{From the Gospels}
+
+% \today
+
+1 ܟܬܒܐ ܕܝܠܝܕܘܬܗ ܕܝܫܘܥ ܡܫܝܚܐ ܒܪܗ ܕܕܘܝܕ ܒܪܗ ܕܐܒܪܗܡ ܀
+
+2 ܐܒܪܗܡ ܐܘܠܕ ܠܐܝܤܚܩ ܐܝܤܚܩ ܐܘܠܕ ܠܝܥܩܘܒ ܝܥܩܘܒ ܐܘܠܕ ܠܝܗܘܕܐ ܘܠܐܚܘܗܝ ܀
+
+3 ܝܗܘܕܐ ܐܘܠܕ ܠܦܪܨ ܘܠܙܪܚ ܡܢ ܬܡܪ ܦܪܨ ܐܘܠܕ ܠܚܨܪܘܢ ܚܨܪܘܢ ܐܘܠܕ ܠܐܪܡ ܀
+
+4 ܐܪܡ ܐܘܠܕ ܠܥܡܝܢܕܒ ܥܡܝܢܕܒ ܐܘܠܕ ܠܢܚܫܘܢ ܢܚܫܘܢ ܐܘܠܕ ܠܤܠܡܘܢ ܀
+
+\selectlanguage{english}
+
+\section{From Wikipedia}
+
+The East Syriac dialect is usually written in the \textit{Maḏnḥāyā}
+(ܡܲܕ݂ܢܚܵܝܵܐ‎, ‘Eastern’) form of the alphabet. Other names for the
+script include \textit{Swāḏāyā} (ܣܘܵܕ݂ܵܝܵܐ‎, ‘conversational’ or
+‘vernacular’, often translated as ‘contemporary’, reflecting its use in
+writing modern Neo-Aramaic), \textit{ʾĀṯūrāyā} (ܐܵܬ݂ܘܼܪܵܝܵܐ‎,
+‘Assyrian’, not to be confused with the traditional name for the Hebrew
+alphabet), \textit{Kaldāyā} (ܟܲܠܕܵܝܵܐ‎, ‘Chaldean’), and, inaccurately,
+“Nestorian” (a term that was originally used to refer to the Church of
+the East in the Sasanian Empire). The Eastern script resembles
+\textit{ʾEsṭrangēlā} somewhat more closely than the Western script.
+
+abcd ܐ܏ܒܓܕ efgh
+
+\end{document}
