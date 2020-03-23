@@ -1,4 +1,4 @@
-## Babel 3.41.1953
+## Babel 3.42
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -44,14 +44,16 @@ respective authors.
 ### Latest changes
 
 ```
-3.42   2020-04-??
-       - Improved the line breaking support for xetex.
+3.42   2020-03-22
+       - \getlocaleproperty, to get the value of a field from the loaded
+         ini files.
        - Added ini files for Syriac, Coptic and Church Slavic. Improved
          some others (Armenian, Sanskrit).
        - Added a new field tag.bcp47.likely to many files.
-       - \getlocaledata, to get the value of a field from the loaded
-         ini files.
+       - Improved line breaking with xetex.
        - Fixes:
+         - Remove extra space with languages loaded on the fly (bug
+           introduced in 3.41).
          - Line breaking was no always correct with languages loaded on
            the fly.
          - Avoid a harmless warning about redefining a protected command
