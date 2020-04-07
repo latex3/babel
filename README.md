@@ -1,4 +1,4 @@
-## Babel 3.42
+## Babel 3.42.1970
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -44,6 +44,9 @@ respective authors.
 ### Latest changes
 
 ```
+3.43   2020-04-??
+       - Only a few essential commands are loaded with the format.
+       -
 3.42   2020-03-22
        - \getlocaleproperty, to get the value of a field from the loaded
          ini files.

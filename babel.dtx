@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/03/22 v3.42 The Babel package]
+\ProvidesFile{babel.dtx}[2020/04/07 v3.42.1970 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -220,7 +220,6 @@ Localization and internationalization\\[1cm]
 \largetex\\
 pdf\largetex\\
 Lua\largetex\\
-LuaHB\largetex\\
 Xe\largetex
  \vspace{20cm}
 \end{minipage}
@@ -919,7 +918,7 @@ system shorthands. Language-dependent user shorthands (new in
   words are repeated at the beginning of the next line. You could then
   set:
 \begin{verbatim}
-\defineshorthand[*polish,*portugese]{"-}{\babelhyphen{repeat}}
+\defineshorthand[*polish,*portuguese]{"-}{\babelhyphen{repeat}}
 \end{verbatim}
   Here, options with |*| set a language-dependent user shorthand,
   which means the generic one above only applies for the rest of
@@ -1144,7 +1143,7 @@ encodings). Other allowed values are font encoding codes (|T1|, |T2A|,
 and the like (this feature misuses some internal \LaTeX\ tools, so use
 it only as a last resort).
 
-\Describe{hyphenmap=}{\texttt{off} $\string|$ \texttt{main}
+\Describe{hyphenmap=}{\texttt{off} $\string|$ \texttt{first}
 $\string|$ \texttt{select} $\string|$ \texttt{other} $\string|$
 \texttt{other*}}
 
@@ -3301,17 +3300,19 @@ the current options may be different. It does not include |ini| files.
 \item[Greek] greek, polutonikogreek
 \item[Hebrew] hebrew
 \item[Icelandic] icelandic
-\item[Indonesian] bahasa, indonesian, indon, bahasai
+\item[Indonesian] indonesian, bahasa, indon, bahasai
 \item[Interlingua] interlingua
 \item[Irish Gaelic] irish
 \item[Italian] italian
 \item[Latin] latin
 \item[Lower Sorbian] lowersorbian
-\item[Malay] bahasam, malay, melayu
+\item[Malay] malay, melayu, bahasam
 \item[North Sami] samin
 \item[Norwegian] norsk, nynorsk
 \item[Polish] polish
-\item[Portuguese] portuges, portuguese, brazilian, brazil
+\item[Portuguese] portuguese, portuges\footnote{This name comes from
+  the times when they had to be shortened to 8 characters}, brazilian,
+  brazil
 \item[Romanian] romanian
 \item[Russian] russian
 \item[Scottish Gaelic] scottish
@@ -4456,8 +4457,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.42>>
-%<<date=2020/03/22>>
+%<<version=3.42.1970>>
+%<<date=2020/04/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5224,6 +5225,8 @@ help from Bernd Raichle, for which I am grateful.
 %    checks (|\input| works, too, but possible errors are not catched).
 %
 %    \begin{macrocode}
+% \input switch.def
+% \input babel.def
 \bbl@trace{Language options}
 \let\bbl@afterlang\relax
 \let\BabelModifiers\relax
@@ -11220,7 +11223,30 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@hook@everylanguage#1{}
 \def\bbl@hook@loadpatterns#1{\input #1\relax}
 \let\bbl@hook@loadexceptions\bbl@hook@loadpatterns
-\let\bbl@hook@loadkernel\bbl@hook@loadpatterns
+\def\bbl@hook@loadkernel#1{%
+  \def\addlanguage{\alloc@9\language\chardef\@cclvi}%
+  \def\adddialect##1##2{%
+    \global\chardef##1##2\relax
+    \wlog{\string##1 = a dialect from \string\language##2}}%
+  \def\iflanguage##1{%
+    \expandafter\ifx\csname l@##1\endcsname\relax
+      \@nolanerr{##1}%
+    \else
+      \ifnum\csname l@##1\endcsname=\language
+        \expandafter\expandafter\expandafter\@firstoftwo
+      \else
+        \expandafter\expandafter\expandafter\@secondoftwo
+      \fi
+    \fi}%
+  \def\set@hyphenmins##1##2{%
+    \lefthyphenmin##1\relax
+    \righthyphenmin##2\relax}%
+  \def\selectlanguage{%
+    \errhelp{Selecting a language requires a package supporting it}%
+    \errmessage{Not implemented}}%
+  \let\foreignlanguage\selectlanguage
+  \let\otherlanguage\selectlanguage
+  \expandafter\let\csname otherlanguage*\endcsname\selectlanguage}
 \begingroup
   \def\AddBabelHook#1#2{%
     \expandafter\ifx\csname bbl@hook@#2\endcsname\relax
@@ -20306,6 +20332,7 @@ Babel.cjk_breaks = {
 % \section{Support for Plain \TeX\ (\texttt{plain.def})}
 %
 % \subsection{Not renaming \file{hyphen.tex}}
+%
 %    As Don Knuth has declared that the filename \file{hyphen.tex} may
 %    only be used to designate \emph{his} version of the american
 %    English hyphenation patterns, a new solution has to be found in
@@ -20323,7 +20350,7 @@ Babel.cjk_breaks = {
 %
 %    The files \file{bplain.tex} and \file{blplain.tex} can be used as
 %    replacement wrappers around \file{plain.tex} and
-%    \file{lplain.tex} to acheive the desired effect, based on the
+%    \file{lplain.tex} to achieve the desired effect, based on the
 %    \pkg{babel} package. If you load each of them with ini\TeX, you
 %    will get a file called either \file{bplain.fmt} or
 %    \file{blplain.fmt}, which you can use as replacements for
@@ -20340,47 +20367,28 @@ Babel.cjk_breaks = {
 \catcode`\#=6 % hash mark is macro parameter character
 %    \end{macrocode}
 %
-%    Now let's see if a file called \file{hyphen.cfg} can be found
-%    somewhere on \TeX's input path by trying to open it for
-%    reading...
-%
-%    \begin{macrocode}
-\openin 0 hyphen.cfg
-%    \end{macrocode}
-%
-%    If the file wasn't found the following test turns out true.
-%
-%    \begin{macrocode}
-\ifeof0
-\else
-%    \end{macrocode}
-%
-%    When \file{hyphen.cfg} could be opened we make sure that
-%    \emph{it} will be read instead of the file \file{hyphen.tex}
-%    which should (according to Don Knuth's ruling) contain the
-%    american English hyphenation patterns and nothing else.
-%
-%    We do this by first saving the original meaning of |\input| (and
-%    I use a one letter control sequence for that so as not to waste
+%    If a file called \file{hyphen.cfg} can be found, we make sure that
+%    \emph{it} will be read instead of the file \file{hyphen.tex}. We
+%    do this by first saving the original meaning of |\input| (and I
+%    use a one letter control sequence for that so as not to waste
 %    multi-letter control sequence on this in the format).
 %
 %    \begin{macrocode}
+\openin 0 hyphen.cfg
+\ifeof0
+\else
   \let\a\input
 %    \end{macrocode}
 %
 %    Then |\input| is defined to forget about its argument and load
-%    \file{hyphen.cfg} instead.
+%    \file{hyphen.cfg} instead. Once that's done the original meaning
+%    of |\input| can be restored and the definition of |\a| can be
+%    forgotten.
 %
 %    \begin{macrocode}
   \def\input #1 {%
     \let\input\a
     \a hyphen.cfg
-%    \end{macrocode}
-%
-%    Once that's done the original meaning of |\input| can be restored
-%    and the definition of |\a| can be forgotten.
-%
-%    \begin{macrocode}
     \let\a\undefined
   }
 \fi
@@ -20752,6 +20760,8 @@ Babel.cjk_breaks = {
 \def\ProvideTextCommandDefault#1{%
    \ProvideTextCommand#1?%
 }
+% \input switch.def
+% \input babel.def
 \expandafter\let\csname OT1-cmd\endcsname\@current@cmd
 \expandafter\let\csname?-cmd\endcsname\@changed@cmd
 \def\DeclareTextAccent#1#2#3{%
