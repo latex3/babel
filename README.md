@@ -1,4 +1,4 @@
-## Babel 3.42.1970
+s## Babel 3.42.1972
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.42 are described in:
+Changes in version 3.43 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.42
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.43
 
 Included is a set of ini files for about 200 languages.
 
@@ -46,7 +46,10 @@ respective authors.
 ```
 3.43   2020-04-??
        - Only a few essential commands are loaded with the format.
+       - Fix - Babel reset the \sfcode of » to 1000. It should be 0.
+       - Improvements in Assamese and Finnish.
        -
+       
 3.42   2020-03-22
        - \getlocaleproperty, to get the value of a field from the loaded
          ini files.
@@ -63,6 +66,7 @@ respective authors.
            (#52). 
          - Locale was not switched correctly with COMBINING characters
            (#54).
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.42
            
 3.41   2020-02-27
        - Counters and numerals added in some ini files, based on those

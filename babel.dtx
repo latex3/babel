@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/04/07 v3.42.1970 The Babel package]
+\ProvidesFile{babel.dtx}[2020/04/09 v3.42.1972 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3255,8 +3255,8 @@ ones, they only have a single hook and replace a default definition.
 \itemsep=-\parskip
 \item[everylanguage] (language) Executed before every language patterns
   are loaded.
-\item[loadkernel] (file) By default loads |switch.def|. It can be used
-  to load a different version of this file or to load nothing.
+\item[loadkernel] (file) By default just defines a few basic commands.
+  It can be used to define different versions of them or to load a file.
 \item[loadpatterns] (patterns file) Loads the patterns file. Used by
   \file{luababel.def}.
 \item[loadexceptions] (exceptions file) Loads the exceptions
@@ -4457,8 +4457,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.42.1970>>
-%<<date=2020/04/07>>
+%<<version=3.42.1972>>
+%<<date=2020/04/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4858,7 +4858,359 @@ help from Bernd Raichle, for which I am grateful.
 %    now. We cannot load |babel.def| here because we first need to
 %    declare and process the package options.
 %
-% \section{The Package File (\LaTeX, \texttt{babel.sty})}
+% \section{Starting code}
+%
+% The starting code is different in Plain and LaTeX. First comes that
+% for Plain.
+%
+% \subsection{Emulating some \LaTeX{} features}
+%
+%    The following code duplicates or emulates parts of \LaTeXe\ that
+%    are needed for \babel.
+%
+%    \begin{macrocode}
+%<*plain>
+\def\@empty{}
+\def\loadlocalcfg#1{%
+  \openin0#1.cfg
+  \ifeof0
+    \closein0
+  \else
+    \closein0
+    {\immediate\write16{*************************************}%
+     \immediate\write16{* Local config file #1.cfg used}%
+     \immediate\write16{*}%
+     }
+    \input #1.cfg\relax
+  \fi
+  \@endofldf}
+%    \end{macrocode}
+%
+% \subsection{General tools}
+%
+%    A number of \LaTeX\ macro's that are needed later on.
+%
+%    \begin{macrocode}
+\long\def\@firstofone#1{#1}
+\long\def\@firstoftwo#1#2{#1}
+\long\def\@secondoftwo#1#2{#2}
+\def\@nnil{\@nil}
+\def\@gobbletwo#1#2{}
+\def\@ifstar#1{\@ifnextchar *{\@firstoftwo{#1}}}
+\def\@star@or@long#1{%
+  \@ifstar
+  {\let\l@ngrel@x\relax#1}%
+  {\let\l@ngrel@x\long#1}}
+\let\l@ngrel@x\relax
+\def\@car#1#2\@nil{#1}
+\def\@cdr#1#2\@nil{#2}
+\let\@typeset@protect\relax
+\let\protected@edef\edef
+\long\def\@gobble#1{}
+\edef\@backslashchar{\expandafter\@gobble\string\\}
+\def\strip@prefix#1>{}
+\def\g@addto@macro#1#2{{%
+    \toks@\expandafter{#1#2}%
+    \xdef#1{\the\toks@}}}
+\def\@namedef#1{\expandafter\def\csname #1\endcsname}
+\def\@nameuse#1{\csname #1\endcsname}
+\def\@ifundefined#1{%
+  \expandafter\ifx\csname#1\endcsname\relax
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi}
+\def\@expandtwoargs#1#2#3{%
+  \edef\reserved@a{\noexpand#1{#2}{#3}}\reserved@a}
+\def\zap@space#1 #2{%
+  #1%
+  \ifx#2\@empty\else\expandafter\zap@space\fi
+  #2}
+%    \end{macrocode}
+%
+%    \LaTeXe\ has the command |\@onlypreamble| which adds commands to
+%    a list of commands that are no longer needed after
+%    |\begin{document}|.
+%
+%    \begin{macrocode}
+\ifx\@preamblecmds\@undefined
+  \def\@preamblecmds{}
+\fi
+\def\@onlypreamble#1{%
+  \expandafter\gdef\expandafter\@preamblecmds\expandafter{%
+    \@preamblecmds\do#1}}
+\@onlypreamble\@onlypreamble
+%    \end{macrocode}
+%
+%    Mimick \LaTeX's |\AtBeginDocument|; for this to work the user
+%    needs to add |\begindocument| to his file.
+%
+%    \begin{macrocode}
+\def\begindocument{%
+  \@begindocumenthook
+  \global\let\@begindocumenthook\@undefined
+  \def\do##1{\global\let##1\@undefined}%
+  \@preamblecmds
+  \global\let\do\noexpand}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\ifx\@begindocumenthook\@undefined
+  \def\@begindocumenthook{}
+\fi
+\@onlypreamble\@begindocumenthook
+\def\AtBeginDocument{\g@addto@macro\@begindocumenthook}
+%    \end{macrocode}
+%
+%    We also have to mimick \LaTeX's |\AtEndOfPackage|. Our
+%    replacement macro is much simpler; it stores its argument in
+%    |\@endofldf|.
+%
+%    \begin{macrocode}
+\def\AtEndOfPackage#1{\g@addto@macro\@endofldf{#1}}
+\@onlypreamble\AtEndOfPackage
+\def\@endofldf{}
+\@onlypreamble\@endofldf
+\let\bbl@afterlang\@empty
+\chardef\bbl@opt@hyphenmap\z@
+%    \end{macrocode}
+%
+%    \LaTeX\ needs to be able to switch off writing to its auxiliary
+%    files; plain doesn't have them by default.
+%
+%    \begin{macrocode}
+\ifx\if@filesw\@undefined
+  \expandafter\let\csname if@filesw\expandafter\endcsname
+    \csname iffalse\endcsname
+\fi
+%    \end{macrocode}
+%
+%    Mimick \LaTeX's commands to define control sequences.
+%
+%    \begin{macrocode}
+\def\newcommand{\@star@or@long\new@command}
+\def\new@command#1{%
+  \@testopt{\@newcommand#1}0}
+\def\@newcommand#1[#2]{%
+  \@ifnextchar [{\@xargdef#1[#2]}%
+                {\@argdef#1[#2]}}
+\long\def\@argdef#1[#2]#3{%
+  \@yargdef#1\@ne{#2}{#3}}
+\long\def\@xargdef#1[#2][#3]#4{%
+  \expandafter\def\expandafter#1\expandafter{%
+    \expandafter\@protected@testopt\expandafter #1%
+    \csname\string#1\expandafter\endcsname{#3}}%
+  \expandafter\@yargdef \csname\string#1\endcsname
+  \tw@{#2}{#4}}
+\long\def\@yargdef#1#2#3{%
+  \@tempcnta#3\relax
+  \advance \@tempcnta \@ne
+  \let\@hash@\relax
+  \edef\reserved@a{\ifx#2\tw@ [\@hash@1]\fi}%
+  \@tempcntb #2%
+  \@whilenum\@tempcntb <\@tempcnta
+  \do{%
+    \edef\reserved@a{\reserved@a\@hash@\the\@tempcntb}%
+    \advance\@tempcntb \@ne}%
+  \let\@hash@##%
+  \l@ngrel@x\expandafter\def\expandafter#1\reserved@a}
+\def\providecommand{\@star@or@long\provide@command}
+\def\provide@command#1{%
+  \begingroup
+    \escapechar\m@ne\xdef\@gtempa{{\string#1}}%
+  \endgroup
+  \expandafter\@ifundefined\@gtempa
+    {\def\reserved@a{\new@command#1}}%
+    {\let\reserved@a\relax
+     \def\reserved@a{\new@command\reserved@a}}%
+   \reserved@a}%
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\def\DeclareRobustCommand{\@star@or@long\declare@robustcommand}
+\def\declare@robustcommand#1{%
+   \edef\reserved@a{\string#1}%
+   \def\reserved@b{#1}%
+   \edef\reserved@b{\expandafter\strip@prefix\meaning\reserved@b}%
+   \edef#1{%
+      \ifx\reserved@a\reserved@b
+         \noexpand\x@protect
+         \noexpand#1%
+      \fi
+      \noexpand\protect
+      \expandafter\noexpand\csname
+         \expandafter\@gobble\string#1 \endcsname
+   }%
+   \expandafter\new@command\csname
+      \expandafter\@gobble\string#1 \endcsname
+}
+\def\x@protect#1{%
+   \ifx\protect\@typeset@protect\else
+      \@x@protect#1%
+   \fi
+}
+\def\@x@protect#1\fi#2#3{%
+   \fi\protect#1%
+}
+%    \end{macrocode}
+%
+%    The following little macro |\in@| is taken from \file{latex.ltx};
+%    it checks whether its first argument is part of its second
+%    argument. It uses the boolean |\in@|; allocating a new boolean
+%    inside conditionally executed code is not possible, hence the
+%    construct with the temporary definition of |\bbl@tempa|.
+%
+%    \begin{macrocode}
+\def\bbl@tempa{\csname newif\endcsname\ifin@}
+\ifx\in@\@undefined
+  \def\in@#1#2{%
+    \def\in@@##1#1##2##3\in@@{%
+      \ifx\in@##2\in@false\else\in@true\fi}%
+    \in@@#2#1\in@\in@@}
+\else
+  \let\bbl@tempa\@empty
+\fi
+\bbl@tempa
+%    \end{macrocode}
+%
+%    \LaTeX\ has a macro to check whether a certain package was loaded
+%    with specific options. The command has two extra arguments which
+%    are code to be executed in either the true or false case.
+%    This is used to detect whether the document needs one of the
+%    accents to be activated (\Lopt{activegrave} and
+%    \Lopt{activeacute}). For plain \TeX\ we assume that the user
+%    wants them to be active by default. Therefore the only thing we
+%    do is execute the third argument (the code for the true case).
+%
+%    \begin{macrocode}
+\def\@ifpackagewith#1#2#3#4{#3}
+%    \end{macrocode}
+%
+%    The \LaTeX\ macro |\@ifl@aded| checks whether a file was
+%    loaded. This functionality is not needed for plain \TeX\ but we
+%    need the macro to be defined as a no-op.
+%
+%    \begin{macrocode}
+\def\@ifl@aded#1#2#3#4{}
+%    \end{macrocode}
+%
+%    For the following code we need to make sure that the commands
+%    |\newcommand| and |\providecommand| exist with some sensible
+%    definition. They are not fully equivalent to their \LaTeXe\
+%    versions; just enough to make things work in plain~\TeX
+%    environments.
+%
+%    \begin{macrocode}
+\ifx\@tempcnta\@undefined
+  \csname newcount\endcsname\@tempcnta\relax
+\fi
+\ifx\@tempcntb\@undefined
+  \csname newcount\endcsname\@tempcntb\relax
+\fi
+%    \end{macrocode}
+%
+%    To prevent wasting two counters in \LaTeX$\:$2.09 (because
+%    counters with the same name are allocated later by it) we reset
+%    the counter that holds the next free counter (|\count10|).
+%
+%    \begin{macrocode}
+\ifx\bye\@undefined
+  \advance\count10 by -2\relax
+\fi
+\ifx\@ifnextchar\@undefined
+  \def\@ifnextchar#1#2#3{%
+    \let\reserved@d=#1%
+    \def\reserved@a{#2}\def\reserved@b{#3}%
+    \futurelet\@let@token\@ifnch}
+  \def\@ifnch{%
+    \ifx\@let@token\@sptoken
+      \let\reserved@c\@xifnch
+    \else
+      \ifx\@let@token\reserved@d
+        \let\reserved@c\reserved@a
+      \else
+        \let\reserved@c\reserved@b
+      \fi
+    \fi
+    \reserved@c}
+  \def\:{\let\@sptoken= } \:  % this makes \@sptoken a space token
+  \def\:{\@xifnch} \expandafter\def\: {\futurelet\@let@token\@ifnch}
+\fi
+\def\@testopt#1#2{%
+  \@ifnextchar[{#1}{#1[#2]}}
+\def\@protected@testopt#1{%
+  \ifx\protect\@typeset@protect
+    \expandafter\@testopt
+  \else
+    \@x@protect#1%
+  \fi}
+\long\def\@whilenum#1\do #2{\ifnum #1\relax #2\relax\@iwhilenum{#1\relax
+     #2\relax}\fi}
+\long\def\@iwhilenum#1{\ifnum #1\expandafter\@iwhilenum
+         \else\expandafter\@gobble\fi{#1}}
+%    \end{macrocode}
+%
+% \subsection{Encoding related macros}
+%
+%    Code from \file{ltoutenc.dtx}, adapted for use in the plain \TeX\
+%    environment.
+%
+%    \begin{macrocode}
+\def\DeclareTextCommand{%
+   \@dec@text@cmd\providecommand
+}
+\def\ProvideTextCommand{%
+   \@dec@text@cmd\providecommand
+}
+\def\DeclareTextSymbol#1#2#3{%
+   \@dec@text@cmd\chardef#1{#2}#3\relax
+}
+\def\@dec@text@cmd#1#2#3{%
+   \expandafter\def\expandafter#2%
+      \expandafter{%
+         \csname#3-cmd\expandafter\endcsname
+         \expandafter#2%
+         \csname#3\string#2\endcsname
+      }%
+%   \let\@ifdefinable\@rc@ifdefinable
+   \expandafter#1\csname#3\string#2\endcsname
+}
+\def\@current@cmd#1{%
+  \ifx\protect\@typeset@protect\else
+      \noexpand#1\expandafter\@gobble
+  \fi
+}
+\def\@changed@cmd#1#2{%
+   \ifx\protect\@typeset@protect
+      \expandafter\ifx\csname\cf@encoding\string#1\endcsname\relax
+         \expandafter\ifx\csname ?\string#1\endcsname\relax
+            \expandafter\def\csname ?\string#1\endcsname{%
+               \@changed@x@err{#1}%
+            }%
+         \fi
+         \global\expandafter\let
+           \csname\cf@encoding \string#1\expandafter\endcsname
+           \csname ?\string#1\endcsname
+      \fi
+      \csname\cf@encoding\string#1%
+        \expandafter\endcsname
+   \else
+      \noexpand#1%
+   \fi
+}
+\def\@changed@x@err#1{%
+    \errhelp{Your command will be ignored, type <return> to proceed}%
+    \errmessage{Command \protect#1 undefined in encoding \cf@encoding}}
+\def\DeclareTextCommandDefault#1{%
+   \DeclareTextCommand#1?%
+}
+\def\ProvideTextCommandDefault#1{%
+   \ProvideTextCommand#1?%
+}
+%</plain>
+%    \end{macrocode}
+%
+% \subsection{The Package File (\LaTeX, \texttt{babel.sty})}
 %
 %    In order to make use of the features of \LaTeXe, the \babel\
 %    system contains a package file, \file{babel.sty}. This file is
@@ -5214,6 +5566,20 @@ help from Bernd Raichle, for which I am grateful.
       \expandafter\@secondoftwo
     \fi}
 \fi
+%</package>
+%    \end{macrocode}
+%
+% \textbf{Common definitions.} \textit{In progress.} Still based on
+% |babel.def| and currently only LaTeX. Plain requires changes in the
+% .sty files, too. So, for the moment, omit Plain.
+%
+%    \begin{macrocode}
+%<*plain|package>
+% \input switch.def
+\ifx\DeclareTextCompositeCommand\@undefined\else
+  \input babel.def
+\fi
+%</plain|package>
 %    \end{macrocode}
 %
 % \subsection{Language options}
@@ -5224,9 +5590,16 @@ help from Bernd Raichle, for which I am grateful.
 %    The following macro inputs the ldf file and does some additional
 %    checks (|\input| works, too, but possible errors are not catched).
 %
+% \subsection{Language options}
+%
+%    Languages are loaded when processing the corresponding option
+%    \textit{except} if a |main| language has been set. In such a
+%    case, it is not loaded until all options has been processed.
+%    The following macro inputs the ldf file and does some additional
+%    checks (|\input| works, too, but possible errors are not catched).
+%
 %    \begin{macrocode}
-% \input switch.def
-% \input babel.def
+%<*package>
 \bbl@trace{Language options}
 \let\bbl@afterlang\relax
 \let\BabelModifiers\relax
@@ -11709,48 +12082,6 @@ help from Bernd Raichle, for which I am grateful.
 %    therefore it is reset always to |utf8|, which seems a sensible
 %    default.
 %
-%    \LaTeX{} sets many ``codes'' just before loading
-%    \verb|hyphen.cfg|. That is not a problem in luatex, but in xetex
-%    they must be reset to the proper value. Most of the work is done in
-%    \textsf{xe(la)tex.ini}, so here we just ``undo'' some of the
-%    changes done by \LaTeX. Anyway, for consistency Lua\TeX{} also
-%    resets the catcodes.
-%
-%    \begin{macrocode}
-%<<*Restore Unicode catcodes before loading patterns>>
-  \begingroup
-      % Reset chars "80-"C0 to category "other", no case mapping:
-    \catcode`\@=11 \count@=128
-    \loop\ifnum\count@<192
-      \global\uccode\count@=0 \global\lccode\count@=0
-      \global\catcode\count@=12 \global\sfcode\count@=1000
-      \advance\count@ by 1 \repeat
-      % Other:
-    \def\O ##1 {%
-      \global\uccode"##1=0 \global\lccode"##1=0
-      \global\catcode"##1=12 \global\sfcode"##1=1000 }%
-      % Letter:
-    \def\L ##1 ##2 ##3 {\global\catcode"##1=11
-      \global\uccode"##1="##2
-      \global\lccode"##1="##3
-      % Uppercase letters have sfcode=999:
-      \ifnum"##1="##3 \else \global\sfcode"##1=999 \fi }%
-      % Letter without case mappings:
-    \def\l ##1 {\L ##1 ##1 ##1 }%
-    \l 00AA
-    \L 00B5 039C 00B5
-    \l 00BA
-    \O 00D7
-    \l 00DF
-    \O 00F7
-    \L 00FF 0178 00FF
-  \endgroup
-  \input #1\relax
-%<</Restore Unicode catcodes before loading patterns>>
-%    \end{macrocode}
-%
-% Some more common code.
-%
 %    \begin{macrocode}
 %<<*Footnote changes>>
 \bbl@trace{Bidi footnotes}
@@ -11864,8 +12195,6 @@ help from Bernd Raichle, for which I am grateful.
           \expandafter\bbl@toglobal\csname selectfont \endcsname}%
       \fi}%
   \fi}
-\AddBabelHook{xetex}{loadkernel}{%
-<@Restore Unicode catcodes before loading patterns@>}
 \ifx\DisableBabelHook\@undefined\endinput\fi
 \AddBabelHook{babel-fontspec}{afterextras}{\bbl@switchfont}
 \AddBabelHook{babel-fontspec}{beforestart}{\bbl@ckeckstdfonts}
@@ -11979,7 +12308,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{LuaTeX}
 %
-% The new loader for luatex is based solely on |language.dat|, which
+% The loader for \luatex{} is based solely on |language.dat|, which
 % is read on the fly. The code shouldn't be executed when the format
 % is build, so we check if |\AddBabelHook| is defined. Then comes a
 % modified version of the loader in |hyphen.cfg| (without the
@@ -12021,14 +12350,21 @@ help from Bernd Raichle, for which I am grateful.
 %
 % We need catcode tables, but no format (targeted by \babel) provide a
 % command to allocate them (although there are packages like
-% \textsf{ctablestack}). For the moment, a dangerous approach is used
-% -- just allocate a high random number and cross the fingers. To
-% complicate things, \textsf{etex.sty} changes the way languages are
-% allocated.
+% \textsf{ctablestack}). FIX - This isn't true anymore. For the moment,
+% a dangerous approach is used - just allocate a high random number and
+% cross the fingers. To complicate things, \textsf{etex.sty} changes
+% the way languages are allocated.
 %
+% This files is read at three places: (1) when |plain.def|, |babel.sty|
+% starts, to read the list of available languages from |language.dat|
+% (for the |base| option); (2) at hyphen.cfg, to modify some macros;
+% (3) in the middle of |plain.def| and |babel.sty|, by |babel.def|,
+% with the commands and other definitions for |luatex| (eg,
+% |\babelpatterns|).
+%  
 %    \begin{macrocode}
 %<*luatex>
-\ifx\AddBabelHook\@undefined
+\ifx\AddBabelHook\@undefined % When plain.def, babel.sty starts
 \bbl@trace{Read language.dat}
 \ifx\bbl@readstream\@undefined
   \csname newread\endcsname\bbl@readstream
@@ -12115,29 +12451,31 @@ help from Bernd Raichle, for which I am grateful.
 \endgroup
 \bbl@trace{Macros for reading patterns files}
 \def\bbl@get@enc#1:#2:#3\@@@{\def\bbl@hyph@enc{#2}}
-% TODO - Harcoded value:
 \ifx\babelcatcodetablenum\@undefined
-  \def\babelcatcodetablenum{5211}
+  \ifx\newcatcodetable\@undefined
+    \def\babelcatcodetablenum{5211}
+    \def\bbl@pattcodes{\numexpr\babelcatcodetablenum+1\relax}
+  \else
+    \newcatcodetable\babelcatcodetablenum
+    \newcatcodetable\bbl@pattcodes
+  \fi
+\else
+  \def\bbl@pattcodes{\numexpr\babelcatcodetablenum+1\relax}
 \fi
 \def\bbl@luapatterns#1#2{%
   \bbl@get@enc#1::\@@@
   \setbox\z@\hbox\bgroup
     \begingroup
-      \ifx\catcodetable\@undefined
-        \let\savecatcodetable\luatexsavecatcodetable
-        \let\initcatcodetable\luatexinitcatcodetable
-        \let\catcodetable\luatexcatcodetable
-      \fi
       \savecatcodetable\babelcatcodetablenum\relax
-      \initcatcodetable\numexpr\babelcatcodetablenum+1\relax
-      \catcodetable\numexpr\babelcatcodetablenum+1\relax
-      \catcode`\#=6  \catcode`\$=3 \catcode`\&=4 \catcode`\^=7
-      \catcode`\_=8  \catcode`\{=1 \catcode`\}=2 \catcode`\~=13
-      \catcode`\@=11 \catcode`\^^I=10 \catcode`\^^J=12
-      \catcode`\<=12 \catcode`\>=12 \catcode`\*=12 \catcode`\.=12
-      \catcode`\-=12 \catcode`\/=12 \catcode`\[=12 \catcode`\]=12
-      \catcode`\`=12 \catcode`\'=12 \catcode`\"=12
-      \input #1\relax
+      \initcatcodetable\bbl@pattcodes\relax
+      \catcodetable\bbl@pattcodes\relax
+        \catcode`\#=6  \catcode`\$=3 \catcode`\&=4 \catcode`\^=7
+        \catcode`\_=8  \catcode`\{=1 \catcode`\}=2 \catcode`\~=13
+        \catcode`\@=11 \catcode`\^^I=10 \catcode`\^^J=12
+        \catcode`\<=12 \catcode`\>=12 \catcode`\*=12 \catcode`\.=12
+        \catcode`\-=12 \catcode`\/=12 \catcode`\[=12 \catcode`\]=12
+        \catcode`\`=12 \catcode`\'=12 \catcode`\"=12
+        \input #1\relax
       \catcodetable\babelcatcodetablenum\relax
     \endgroup
     \def\bbl@tempa{#2}%
@@ -12170,6 +12508,25 @@ help from Bernd Raichle, for which I am grateful.
        {\expandafter\expandafter\expandafter\bbl@luapatterns
           \csname bbl@hyphendata@\the\language\endcsname}}{}}
 \endinput\fi
+  % Here ends \ifx\AddBabelHook\@undefined
+  % A few lines are only read by hyphen.cfg
+\ifx\DisableBabelHook\@undefined
+  \AddBabelHook{luatex}{everylanguage}{%
+    \def\process@language##1##2##3{%
+      \def\process@line####1####2 ####3 ####4 {}}}
+  \AddBabelHook{luatex}{loadpatterns}{%
+     \input #1\relax
+     \expandafter\gdef\csname bbl@hyphendata@\the\language\endcsname
+       {{#1}{}}}
+  \AddBabelHook{luatex}{loadexceptions}{%
+     \input #1\relax
+     \def\bbl@tempb##1##2{{##1}{#1}}%
+     \expandafter\xdef\csname bbl@hyphendata@\the\language\endcsname
+       {\expandafter\expandafter\expandafter\bbl@tempb
+        \csname bbl@hyphendata@\the\language\endcsname}}
+\endinput\fi
+  % Here stops reading code for hyphen.cfg
+  % The following is read the 2nd time it's loaded
 \begingroup
 \catcode`\%=12
 \catcode`\'=12
@@ -12277,19 +12634,6 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@ifunset{bbl@prehc@\languagename}{}%
       {\\\bbl@ifblank{\bbl@cs{prehc@\languagename}}{}%
         {\prehyphenchar=\bbl@cl{prehc}\relax}}}}
-\AddBabelHook{luatex}{everylanguage}{%
-  \def\process@language##1##2##3{%
-    \def\process@line####1####2 ####3 ####4 {}}}
-\AddBabelHook{luatex}{loadpatterns}{%
-   \input #1\relax
-   \expandafter\gdef\csname bbl@hyphendata@\the\language\endcsname
-     {{#1}{}}}
-\AddBabelHook{luatex}{loadexceptions}{%
-   \input #1\relax
-   \def\bbl@tempb##1##2{{##1}{#1}}%
-   \expandafter\xdef\csname bbl@hyphendata@\the\language\endcsname
-     {\expandafter\expandafter\expandafter\bbl@tempb
-      \csname bbl@hyphendata@\the\language\endcsname}}
 %    \end{macrocode}
 %
 %  \begin{macro}{\babelpatterns}
@@ -12566,9 +12910,6 @@ help from Bernd Raichle, for which I am grateful.
 % Common stuff.
 %
 %    \begin{macrocode}
-\AddBabelHook{luatex}{loadkernel}{%
-<@Restore Unicode catcodes before loading patterns@>}
-\ifx\DisableBabelHook\@undefined\endinput\fi
 \AddBabelHook{babel-fontspec}{afterextras}{\bbl@switchfont}
 \AddBabelHook{babel-fontspec}{beforestart}{\bbl@ckeckstdfonts}
 \DisableBabelHook{babel-fontspec}
@@ -12763,7 +13104,7 @@ end
 % trying other patterns, and this is very likely the main bottleneck).
 %
 % |post_hyphenate_replace| is the callback applied after
-% |tex.hyphenate|. This means the automatic hyphenation points are
+% |lang.hyphenate|. This means the automatic hyphenation points are
 % known. As empty captures return a byte position (as explained in the
 % \luatex{} manual), we must convert it to a utf8 position. With
 % |first|, the last byte can be the leading byte in a utf8 sequence, so
@@ -20416,352 +20757,12 @@ Babel.cjk_breaks = {
 %    make a copy of blplain.tex, rename it and replace \file{plain.tex}
 %    with the name of your format file.
 %
-% \subsection{Emulating some \LaTeX{} features}
-%
-%    The following code duplicates or emulates parts of \LaTeXe\ that
-%    are needed for \babel.
+% \subsection{Ending code for \texttt{plain.def}}
 %
 %    \begin{macrocode}
-%<*plain>
-\def\@empty{}
-\def\loadlocalcfg#1{%
-  \openin0#1.cfg
-  \ifeof0
-    \closein0
-  \else
-    \closein0
-    {\immediate\write16{*************************************}%
-     \immediate\write16{* Local config file #1.cfg used}%
-     \immediate\write16{*}%
-     }
-    \input #1.cfg\relax
-  \fi
-  \@endofldf}
-%    \end{macrocode}
-%
-% \subsection{General tools}
-%
-%    A number of \LaTeX\ macro's that are needed later on.
-%
-%    \begin{macrocode}
-\long\def\@firstofone#1{#1}
-\long\def\@firstoftwo#1#2{#1}
-\long\def\@secondoftwo#1#2{#2}
-\def\@nnil{\@nil}
-\def\@gobbletwo#1#2{}
-\def\@ifstar#1{\@ifnextchar *{\@firstoftwo{#1}}}
-\def\@star@or@long#1{%
-  \@ifstar
-  {\let\l@ngrel@x\relax#1}%
-  {\let\l@ngrel@x\long#1}}
-\let\l@ngrel@x\relax
-\def\@car#1#2\@nil{#1}
-\def\@cdr#1#2\@nil{#2}
-\let\@typeset@protect\relax
-\let\protected@edef\edef
-\long\def\@gobble#1{}
-\edef\@backslashchar{\expandafter\@gobble\string\\}
-\def\strip@prefix#1>{}
-\def\g@addto@macro#1#2{{%
-    \toks@\expandafter{#1#2}%
-    \xdef#1{\the\toks@}}}
-\def\@namedef#1{\expandafter\def\csname #1\endcsname}
-\def\@nameuse#1{\csname #1\endcsname}
-\def\@ifundefined#1{%
-  \expandafter\ifx\csname#1\endcsname\relax
-    \expandafter\@firstoftwo
-  \else
-    \expandafter\@secondoftwo
-  \fi}
-\def\@expandtwoargs#1#2#3{%
-  \edef\reserved@a{\noexpand#1{#2}{#3}}\reserved@a}
-\def\zap@space#1 #2{%
-  #1%
-  \ifx#2\@empty\else\expandafter\zap@space\fi
-  #2}
-%    \end{macrocode}
-%
-%    \LaTeXe\ has the command |\@onlypreamble| which adds commands to
-%    a list of commands that are no longer needed after
-%    |\begin{document}|.
-%
-%    \begin{macrocode}
-\ifx\@preamblecmds\@undefined
-  \def\@preamblecmds{}
-\fi
-\def\@onlypreamble#1{%
-  \expandafter\gdef\expandafter\@preamblecmds\expandafter{%
-    \@preamblecmds\do#1}}
-\@onlypreamble\@onlypreamble
-%    \end{macrocode}
-%
-%    Mimick \LaTeX's |\AtBeginDocument|; for this to work the user
-%    needs to add |\begindocument| to his file.
-%
-%    \begin{macrocode}
-\def\begindocument{%
-  \@begindocumenthook
-  \global\let\@begindocumenthook\@undefined
-  \def\do##1{\global\let##1\@undefined}%
-  \@preamblecmds
-  \global\let\do\noexpand}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\ifx\@begindocumenthook\@undefined
-  \def\@begindocumenthook{}
-\fi
-\@onlypreamble\@begindocumenthook
-\def\AtBeginDocument{\g@addto@macro\@begindocumenthook}
-%    \end{macrocode}
-%
-%    We also have to mimick \LaTeX's |\AtEndOfPackage|. Our
-%    replacement macro is much simpler; it stores its argument in
-%    |\@endofldf|.
-%
-%    \begin{macrocode}
-\def\AtEndOfPackage#1{\g@addto@macro\@endofldf{#1}}
-\@onlypreamble\AtEndOfPackage
-\def\@endofldf{}
-\@onlypreamble\@endofldf
-\let\bbl@afterlang\@empty
-\chardef\bbl@opt@hyphenmap\z@
-%    \end{macrocode}
-%
-%    \LaTeX\ needs to be able to switch off writing to its auxiliary
-%    files; plain doesn't have them by default.
-%
-%    \begin{macrocode}
-\ifx\if@filesw\@undefined
-  \expandafter\let\csname if@filesw\expandafter\endcsname
-    \csname iffalse\endcsname
-\fi
-%    \end{macrocode}
-%
-%    Mimick \LaTeX's commands to define control sequences.
-%
-%    \begin{macrocode}
-\def\newcommand{\@star@or@long\new@command}
-\def\new@command#1{%
-  \@testopt{\@newcommand#1}0}
-\def\@newcommand#1[#2]{%
-  \@ifnextchar [{\@xargdef#1[#2]}%
-                {\@argdef#1[#2]}}
-\long\def\@argdef#1[#2]#3{%
-  \@yargdef#1\@ne{#2}{#3}}
-\long\def\@xargdef#1[#2][#3]#4{%
-  \expandafter\def\expandafter#1\expandafter{%
-    \expandafter\@protected@testopt\expandafter #1%
-    \csname\string#1\expandafter\endcsname{#3}}%
-  \expandafter\@yargdef \csname\string#1\endcsname
-  \tw@{#2}{#4}}
-\long\def\@yargdef#1#2#3{%
-  \@tempcnta#3\relax
-  \advance \@tempcnta \@ne
-  \let\@hash@\relax
-  \edef\reserved@a{\ifx#2\tw@ [\@hash@1]\fi}%
-  \@tempcntb #2%
-  \@whilenum\@tempcntb <\@tempcnta
-  \do{%
-    \edef\reserved@a{\reserved@a\@hash@\the\@tempcntb}%
-    \advance\@tempcntb \@ne}%
-  \let\@hash@##%
-  \l@ngrel@x\expandafter\def\expandafter#1\reserved@a}
-\def\providecommand{\@star@or@long\provide@command}
-\def\provide@command#1{%
-  \begingroup
-    \escapechar\m@ne\xdef\@gtempa{{\string#1}}%
-  \endgroup
-  \expandafter\@ifundefined\@gtempa
-    {\def\reserved@a{\new@command#1}}%
-    {\let\reserved@a\relax
-     \def\reserved@a{\new@command\reserved@a}}%
-   \reserved@a}%
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\def\DeclareRobustCommand{\@star@or@long\declare@robustcommand}
-\def\declare@robustcommand#1{%
-   \edef\reserved@a{\string#1}%
-   \def\reserved@b{#1}%
-   \edef\reserved@b{\expandafter\strip@prefix\meaning\reserved@b}%
-   \edef#1{%
-      \ifx\reserved@a\reserved@b
-         \noexpand\x@protect
-         \noexpand#1%
-      \fi
-      \noexpand\protect
-      \expandafter\noexpand\csname
-         \expandafter\@gobble\string#1 \endcsname
-   }%
-   \expandafter\new@command\csname
-      \expandafter\@gobble\string#1 \endcsname
-}
-\def\x@protect#1{%
-   \ifx\protect\@typeset@protect\else
-      \@x@protect#1%
-   \fi
-}
-\def\@x@protect#1\fi#2#3{%
-   \fi\protect#1%
-}
-%    \end{macrocode}
-%
-%    The following little macro |\in@| is taken from \file{latex.ltx};
-%    it checks whether its first argument is part of its second
-%    argument. It uses the boolean |\in@|; allocating a new boolean
-%    inside conditionally executed code is not possible, hence the
-%    construct with the temporary definition of |\bbl@tempa|.
-%
-%    \begin{macrocode}
-\def\bbl@tempa{\csname newif\endcsname\ifin@}
-\ifx\in@\@undefined
-  \def\in@#1#2{%
-    \def\in@@##1#1##2##3\in@@{%
-      \ifx\in@##2\in@false\else\in@true\fi}%
-    \in@@#2#1\in@\in@@}
-\else
-  \let\bbl@tempa\@empty
-\fi
-\bbl@tempa
-%    \end{macrocode}
-%
-%    \LaTeX\ has a macro to check whether a certain package was loaded
-%    with specific options. The command has two extra arguments which
-%    are code to be executed in either the true or false case.
-%    This is used to detect whether the document needs one of the
-%    accents to be activated (\Lopt{activegrave} and
-%    \Lopt{activeacute}). For plain \TeX\ we assume that the user
-%    wants them to be active by default. Therefore the only thing we
-%    do is execute the third argument (the code for the true case).
-%
-%    \begin{macrocode}
-\def\@ifpackagewith#1#2#3#4{#3}
-%    \end{macrocode}
-%
-%    The \LaTeX\ macro |\@ifl@aded| checks whether a file was
-%    loaded. This functionality is not needed for plain \TeX\ but we
-%    need the macro to be defined as a no-op.
-%
-%    \begin{macrocode}
-\def\@ifl@aded#1#2#3#4{}
-%    \end{macrocode}
-%
-%    For the following code we need to make sure that the commands
-%    |\newcommand| and |\providecommand| exist with some sensible
-%    definition. They are not fully equivalent to their \LaTeXe\
-%    versions; just enough to make things work in plain~\TeX
-%    environments.
-%
-%    \begin{macrocode}
-\ifx\@tempcnta\@undefined
-  \csname newcount\endcsname\@tempcnta\relax
-\fi
-\ifx\@tempcntb\@undefined
-  \csname newcount\endcsname\@tempcntb\relax
-\fi
-%    \end{macrocode}
-%
-%    To prevent wasting two counters in \LaTeX$\:$2.09 (because
-%    counters with the same name are allocated later by it) we reset
-%    the counter that holds the next free counter (|\count10|).
-%
-%    \begin{macrocode}
-\ifx\bye\@undefined
-  \advance\count10 by -2\relax
-\fi
-\ifx\@ifnextchar\@undefined
-  \def\@ifnextchar#1#2#3{%
-    \let\reserved@d=#1%
-    \def\reserved@a{#2}\def\reserved@b{#3}%
-    \futurelet\@let@token\@ifnch}
-  \def\@ifnch{%
-    \ifx\@let@token\@sptoken
-      \let\reserved@c\@xifnch
-    \else
-      \ifx\@let@token\reserved@d
-        \let\reserved@c\reserved@a
-      \else
-        \let\reserved@c\reserved@b
-      \fi
-    \fi
-    \reserved@c}
-  \def\:{\let\@sptoken= } \:  % this makes \@sptoken a space token
-  \def\:{\@xifnch} \expandafter\def\: {\futurelet\@let@token\@ifnch}
-\fi
-\def\@testopt#1#2{%
-  \@ifnextchar[{#1}{#1[#2]}}
-\def\@protected@testopt#1{%
-  \ifx\protect\@typeset@protect
-    \expandafter\@testopt
-  \else
-    \@x@protect#1%
-  \fi}
-\long\def\@whilenum#1\do #2{\ifnum #1\relax #2\relax\@iwhilenum{#1\relax
-     #2\relax}\fi}
-\long\def\@iwhilenum#1{\ifnum #1\expandafter\@iwhilenum
-         \else\expandafter\@gobble\fi{#1}}
-%    \end{macrocode}
-%
-% \subsection{Encoding related macros}
-%
-%    Code from \file{ltoutenc.dtx}, adapted for use in the plain \TeX\
-%    environment.
-%
-%    \begin{macrocode}
-\def\DeclareTextCommand{%
-   \@dec@text@cmd\providecommand
-}
-\def\ProvideTextCommand{%
-   \@dec@text@cmd\providecommand
-}
-\def\DeclareTextSymbol#1#2#3{%
-   \@dec@text@cmd\chardef#1{#2}#3\relax
-}
-\def\@dec@text@cmd#1#2#3{%
-   \expandafter\def\expandafter#2%
-      \expandafter{%
-         \csname#3-cmd\expandafter\endcsname
-         \expandafter#2%
-         \csname#3\string#2\endcsname
-      }%
-%   \let\@ifdefinable\@rc@ifdefinable
-   \expandafter#1\csname#3\string#2\endcsname
-}
-\def\@current@cmd#1{%
-  \ifx\protect\@typeset@protect\else
-      \noexpand#1\expandafter\@gobble
-  \fi
-}
-\def\@changed@cmd#1#2{%
-   \ifx\protect\@typeset@protect
-      \expandafter\ifx\csname\cf@encoding\string#1\endcsname\relax
-         \expandafter\ifx\csname ?\string#1\endcsname\relax
-            \expandafter\def\csname ?\string#1\endcsname{%
-               \@changed@x@err{#1}%
-            }%
-         \fi
-         \global\expandafter\let
-           \csname\cf@encoding \string#1\expandafter\endcsname
-           \csname ?\string#1\endcsname
-      \fi
-      \csname\cf@encoding\string#1%
-        \expandafter\endcsname
-   \else
-      \noexpand#1%
-   \fi
-}
-\def\@changed@x@err#1{%
-    \errhelp{Your command will be ignored, type <return> to proceed}%
-    \errmessage{Command \protect#1 undefined in encoding \cf@encoding}}
-\def\DeclareTextCommandDefault#1{%
-   \DeclareTextCommand#1?%
-}
-\def\ProvideTextCommandDefault#1{%
-   \ProvideTextCommand#1?%
-}
 % \input switch.def
 % \input babel.def
+%<*plain>
 \expandafter\let\csname OT1-cmd\endcsname\@current@cmd
 \expandafter\let\csname?-cmd\endcsname\@changed@cmd
 \def\DeclareTextAccent#1#2#3{%

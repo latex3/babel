@@ -25,4 +25,6 @@ Package: babel
 .\OT1/cmr/m/n/10 .
 ! OK.
 l. ......{blelloch96:_progr_paral_algor}.}\showbox0
+LaTeX Font Warning: Font shape `OT1/cmr/m/scit' undefined
+(Font)              using `OT1/cmr/m/sc' instead on input line ....
 (tlb3023.aux)
