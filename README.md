@@ -1,4 +1,4 @@
-s## Babel 3.42.1972
+## Babel 3.42.1974
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -46,8 +46,8 @@ respective authors.
 ```
 3.43   2020-04-??
        - Only a few essential commands are loaded with the format.
-       - Fix - Babel reset the \sfcode of » to 1000. It should be 0.
        - Improvements in Assamese and Finnish.
+       - Fix - Babel reset the \sfcode of » to 1000. It should be 0.
        -
        
 3.42   2020-03-22
