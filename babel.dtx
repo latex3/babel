@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/04/11 v3.42.1974 The Babel package]
+\ProvidesFile{babel.dtx}[2020/04/14 v3.42.1977 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4465,8 +4465,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.42.1974>>
-%<<date=2020/04/11>>
+%<<version=3.42.1977>>
+%<<date=2020/04/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4970,6 +4970,7 @@ help from Bernd Raichle, for which I am grateful.
 \bbl@trace{Defining option 'base'}
 \@ifpackagewith{babel}{base}{%
   \let\bbl@onlyswitch\@empty
+  \let\bbl@provide@locale\relax
   \input babel.def
   \let\bbl@onlyswitch\@undefined
   \ifx\directlua\@undefined
@@ -6554,9 +6555,42 @@ help from Bernd Raichle, for which I am grateful.
       \@empty
     \edef\bbl@tempd{\endgroup\def\noexpand#1{#1}}%
   \bbl@tempd
-  \bbl@usehooks{languagename}{}}
+  \bbl@exp{\\\bbl@usehooks{languagename}{{\languagename}{#1}}}}
 \def\bbl@iflanguage#1{%
   \@ifundefined{l@#1}{\@nolanerr{#1}\@gobble}\@firstofone}
+%    \end{macrocode}
+%
+% After a name has been ‘fixed’, the selectors will try to load the
+% language. If even the fixed name is not defined, will load it on the
+% fly, either based on its name, or if activated, its BCP47 code.
+%
+%    \begin{macrocode}
+\let\bbl@autoload@options\@empty
+\def\bbl@provide@locale{%
+  % Unfinished. To add: search if loaded with \LocaleForEach. Fallbacks
+  % like fr-FR -> fr.
+  \let\bbl@auxname\languagename
+  \ifbbl@bcpallowed
+    \let\bbl@tempa\languagename
+    \edef\languagename{bcp47-\languagename}%
+    \bbl@fixname\languagename
+    \expandafter\ifx\csname date\languagename\endcsname\relax
+      \let\languagename\bbl@tempa
+    \fi
+  \fi
+  \expandafter\ifx\csname date\languagename\endcsname\relax
+    \IfFileExists{babel-\languagename.tex}%
+       {\bbl@exp{\\\babelprovide[\bbl@autoload@options]{\languagename}}}%
+       {\ifbbl@bcpallowed
+          \IfFileExists{babel-\languagename.ini}%
+            {\let\bbl@tempa\languagename
+             \bbl@exp{\lowercase{%
+               \edef\\\languagename{bcp47-\languagename}%
+               \edef\\\localename{bcp47-\localename}}}%
+             \bbl@exp{\\\babelprovide[import=\bbl@tempa]{\languagename}}}%
+            {}%
+        \fi}%
+  \fi}
 %    \end{macrocode}
 %
 %  \begin{macro}{\iflanguage}
@@ -6676,7 +6710,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \def\bbl@push@language{%
-  \xdef\bbl@language@stack{\languagename+\bbl@language@stack}}
+  \ifx\languagename\@undefined\else
+    \xdef\bbl@language@stack{\languagename+\bbl@language@stack}%
+  \fi}
 %    \end{macrocode}
 %
 % Retrieving information from the stack is a little bit less simple, as
@@ -6688,7 +6724,7 @@ help from Bernd Raichle, for which I am grateful.
 %    (delimited by `-') in its third argument.
 %
 %    \begin{macrocode}
-\def\bbl@pop@lang#1+#2-#3{%
+\def\bbl@pop@lang#1+#2&#3{%
   \edef\languagename{#1}\xdef#3{#2}}
 %    \end{macrocode}
 %
@@ -6706,7 +6742,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \let\bbl@ifrestoring\@secondoftwo
 \def\bbl@pop@language{%
-  \expandafter\bbl@pop@lang\bbl@language@stack-\bbl@language@stack
+  \expandafter\bbl@pop@lang\bbl@language@stack&\bbl@language@stack
   \let\bbl@ifrestoring\@firstoftwo
   \expandafter\bbl@set@language\expandafter{\languagename}%
   \let\bbl@ifrestoring\@secondoftwo}
@@ -6778,34 +6814,49 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \def\BabelContentsFiles{toc,lof,lot}
 \def\bbl@set@language#1{% from selectlanguage, pop@
+  % The old buggy way. Preserved for compatibility.
   \edef\languagename{%
     \ifnum\escapechar=\expandafter`\string#1\@empty
     \else\string#1\@empty\fi}%
+  \ifcat\relax\noexpand#1%
+    \expandafter\ifx\csname date\languagename\endcsname\relax
+      \edef\languagename{#1}%
+      \let\localename\languagename
+    \else
+      \bbl@warning{Using '\string\language' instead of 'language' is\\%
+                   deprecated. If what you want is to use a macro\\%
+                   containing the actual locale, make sure it does\\%
+                   not match any language. '\string\localename' is\\%
+                   left empty. Reported on }%
+      \def\localename{}% 
+    \fi
+  \else
+    \def\localename{#1}% This one has the correct catcodes
+  \fi
   \select@language{\languagename}%
   % write to auxs
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
     \if@filesw
       \ifx\babel@aux\@gobbletwo\else % Set if single in the first, redundant
-        \protected@write\@auxout{}{\string\babel@aux{\languagename}{}}%
+        \protected@write\@auxout{}{\string\babel@aux{\bbl@auxname}{}}%
       \fi
       \bbl@usehooks{write}{}%
     \fi
   \fi}
+% 
+\newif\ifbbl@bcpallowed
+\bbl@bcpallowedfalse
 \def\select@language#1{% from set@, babel@aux
   % set hymap
   \ifnum\bbl@hymapsel=\@cclv\chardef\bbl@hymapsel4\relax\fi
   % set name
   \edef\languagename{#1}%
   \bbl@fixname\languagename
-  \expandafter\ifx\csname date\languagename\endcsname\relax
-    \IfFileExists{babel-\languagename.tex}%
-      {\babelprovide{\languagename}}%
-      {}%
-  \fi
+  \bbl@provide@locale
   \bbl@iflanguage\languagename{%
      \expandafter\ifx\csname date\languagename\endcsname\relax
       \bbl@error
-        {Unknown language `#1'. Either you have\\%
+        {Unknown language `\languagename'. Either you have\\%
          misspelled its name, it has not been installed,\\%
          or you requested it in a previous run. Fix its name,\\%
          install it or just rerun the file, respectively. In\\%
@@ -7060,11 +7111,7 @@ help from Bernd Raichle, for which I am grateful.
   % set name
   \edef\languagename{#1}%
   \bbl@fixname\languagename
-  \expandafter\ifx\csname date\languagename\endcsname\relax
-    \IfFileExists{babel-\languagename.tex}%
-      {\babelprovide{\languagename}}%
-      {}%
-  \fi
+  \bbl@provide@locale
   \bbl@iflanguage\languagename{%
     \expandafter\ifx\csname date\languagename\endcsname\relax
       \bbl@warning   % TODO - why a warning, not an error?
@@ -7548,7 +7595,7 @@ help from Bernd Raichle, for which I am grateful.
   adddialect=2,patterns=2,defaultcommands=0,encodedcommands=2,write=0,%
   beforeextras=0,afterextras=0,stopcommands=0,stringprocess=0,%
   hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0,%
-  beforestart=0,languagename=0}
+  beforestart=0,languagename=2}
 %    \end{macrocode}
 %
 % \begin{macro}{\babelensure}
@@ -9904,13 +9951,13 @@ help from Bernd Raichle, for which I am grateful.
 }
 %    \end{macrocode}
 %
-%    Finally, the default is to use English as the main language.
+%    Finally, make sure the default hyphenrules are defined (even if
+%    empty). 
 %
 %    \begin{macrocode}
 \ifx\l@english\@undefined
   \chardef\l@english\z@
 \fi
-\main@language{english}
 %    \end{macrocode}
 %
 % \subsection{Layout}
@@ -10039,6 +10086,9 @@ help from Bernd Raichle, for which I am grateful.
         \\\foreignlanguage{\languagename}%
         {####1}}}}%
     {}%
+  \bbl@exp{%
+     \\\bbl@toglobal\<bbl@ensure@\languagename>%
+     \\\bbl@toglobal\<bbl@ensure@\languagename\space>}
   % At this point all parameters are defined if 'import'. Now we
   % execute some code depending on them. But what about if nothing was
   % imported? We just load the very basic parameters: ids and a few
@@ -10868,7 +10918,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \newcommand\babeladjust[1]{%  TODO. Error handling.
-  \bbl@forkv{#1}{\bbl@cs{ADJ@##1@##2}}}
+  \bbl@forkv{#1}{%
+    \bbl@ifunset{bbl@ADJ@##1@##2}% 
+      {\bbl@cs{ADJ@##1}{##2}}%
+      {\bbl@cs{ADJ@##1@##2}}}}
 %
 \def\bbl@adjust@lua#1#2{%
   \ifvmode
@@ -10922,6 +10975,16 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@adjust@layout{\let\list\bbl@OL@list}}
 \@namedef{bbl@ADJ@hyphenation.extra@on}{%
   \bbl@activateposthyphen}
+%
+\@namedef{bbl@ADJ@autoload.bcp47@on}{%
+  \bbl@bcpallowedtrue}
+\@namedef{bbl@ADJ@autoload.bcp47@off}{%
+  \bbl@bcpallowedfalse}
+\@namedef{bbl@ADJ@autoload.options}#1{%
+  \def\bbl@autoload@options{#1}}
+%
+% As the final task, load the code for lua.
+%
 \ifx\directlua\@undefined\else
   \ifx\bbl@luapatterns\@undefined
     \input luababel.def
@@ -20476,16 +20539,17 @@ Babel.cjk_breaks = {
 %    \end{macrocode}
 %
 %    \LaTeX\ needs to be able to switch off writing to its auxiliary
-%    files; plain doesn't have them by default.
+%    files; plain doesn't have them by default. There is a trick to
+%    hide some conditional commands from the outer |\ifx|. The same
+%    trick is applied below.
 %
 %    \begin{macrocode}
-  % Ugly trick to hide the fi to the outer if when false:
-\catcode`\%=9
-  % \ifx\if@filesw\@undefined
-  %   \expandafter\let\csname if@filesw\expandafter\endcsname
-  %     \csname iffalse\endcsname
-  % \fi
-\catcode`\%=14
+\catcode`\&=\z@
+\ifx&if@filesw\@undefined
+  \expandafter\let\csname if@filesw\expandafter\endcsname
+    \csname iffalse\endcsname
+\fi
+\catcode`\&=4
 %    \end{macrocode}
 %
 %    Mimick \LaTeX's commands to define control sequences.
@@ -20552,9 +20616,8 @@ Babel.cjk_breaks = {
       \@x@protect#1%
    \fi
 }
-  % Ugly trick to hide the fi's to the outer if when false:
-\catcode`\%=9 
-  %\def\@x@protect#1\fi#2#3{\fi\protect#1}
+\catcode`\&=\z@  % Trick to hide conditionals
+  \def\@x@protect#1&fi#2#3{&fi\protect#1}
 %    \end{macrocode}
 %
 %    The following little macro |\in@| is taken from \file{latex.ltx};
@@ -20564,8 +20627,8 @@ Babel.cjk_breaks = {
 %    construct with the temporary definition of |\bbl@tempa|.
 %
 %    \begin{macrocode}
-  %\def\bbl@tempa{\csname newif\endcsname\ifin@}
-\catcode`\%=14
+  \def\bbl@tempa{\csname newif\endcsname&ifin@}
+\catcode`\&=4
 \ifx\in@\@undefined
   \def\in@#1#2{%
     \def\in@@##1#1##2##3\in@@{%

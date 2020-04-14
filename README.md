@@ -1,4 +1,4 @@
-## Babel 3.42.1974
+## Babel 3.42.1977
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -48,7 +48,7 @@ respective authors.
        - Only a few essential commands are loaded with the format.
        - Improvements in Assamese and Finnish.
        - Fix - Babel reset the \sfcode of » to 1000. It should be 0.
-       -
+       - First steps in the removal of switch.def and plain.def.  
        
 3.42   2020-03-22
        - \getlocaleproperty, to get the value of a field from the loaded

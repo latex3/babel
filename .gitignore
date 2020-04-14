@@ -1,6 +1,5 @@
 build/*
-
 *.zip
-
 *.pdf
 !*/testfiles/*.pdf
+/xbuild.lua
