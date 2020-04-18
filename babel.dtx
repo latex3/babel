@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/04/14 v3.42.1977 The Babel package]
+\ProvidesFile{babel.dtx}[2020/04/18 v3.42.1981 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4465,8 +4465,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.42.1977>>
-%<<date=2020/04/14>>
+%<<version=3.42.1981>>
+%<<date=2020/04/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4878,6 +4878,30 @@ help from Bernd Raichle, for which I am grateful.
   {\providecommand\bbl@trace[1]{}%
    \let\bbl@debug\@gobble}
 <@Basic macros@>
+  % Temporarily repeat here the code for errors
+  \def\bbl@error#1#2{%
+    \begingroup
+      \def\\{\MessageBreak}%
+      \PackageError{babel}{#1}{#2}%
+    \endgroup}
+  \def\bbl@warning#1{%
+    \begingroup
+      \def\\{\MessageBreak}%
+      \PackageWarning{babel}{#1}%
+    \endgroup}
+  \def\bbl@infowarn#1{%
+    \begingroup
+      \def\\{\MessageBreak}%
+      \GenericWarning
+        {(babel) \@spaces\@spaces\@spaces}%
+        {Package babel Info: #1}%
+    \endgroup}
+  \def\bbl@info#1{%
+    \begingroup
+      \def\\{\MessageBreak}%
+      \PackageInfo{babel}{#1}%
+    \endgroup}
+    % End of errors
 \def\AfterBabelLanguage#1{%
   \global\expandafter\bbl@add\csname#1.ldf-h@@k\endcsname}%
 %    \end{macrocode}
@@ -6564,32 +6588,74 @@ help from Bernd Raichle, for which I am grateful.
 % language. If even the fixed name is not defined, will load it on the
 % fly, either based on its name, or if activated, its BCP47 code.
 %
+% We first need a couple of macros for a simple BCP 47 look up. It also
+% makes sure, with |\bbl@bcpcase|, casing is the correct one, so that
+% sr-latn-ba becomes fr-Latn-BA. Note |#4| may contain some
+% |\@empty|'s, but they are eventually removed. |\bbl@bcplookup| either
+% returns the found |ini| or it is |\relax|.
+% 
 %    \begin{macrocode}
+\def\bbl@bcpcase#1#2#3#4\@@#5{%
+  \ifx\@empty#3%
+    \uppercase{\def#5{#1#2}}%
+  \else
+    \uppercase{\def#5{#1}}%
+    \lowercase{\edef#5{#5#2#3#4}}%
+  \fi}
+\def\bbl@bcplookup#1-#2-#3-#4\@@{%
+  \let\bbl@bcp\relax
+  \lowercase{\def\bbl@tempa{#1}}
+  \ifx\@empty#2%
+    \IfFileExists{babel-\bbl@tempa.ini}{\let\bbl@bcp\bbl@tempa}{}%
+  \else\ifx\@empty#3%
+    \bbl@bcpcase#2\@empty\@empty\@@\bbl@tempb
+    \IfFileExists{babel-\bbl@tempa-\bbl@tempb.ini}%
+      {\edef\bbl@bcp{\bbl@tempa-\bbl@tempb}}%
+      {}%
+    \ifx\bbl@bcp\relax   
+      \IfFileExists{babel-\bbl@tempa.ini}{\let\bbl@bcp\bbl@tempa}{}%
+    \fi
+  \else
+    \bbl@bcpcase#2\@empty\@empty\@@\bbl@tempb
+    \bbl@bcpcase#3\@empty\@empty\@@\bbl@tempc
+    \IfFileExists{babel-\bbl@tempa-\bbl@tempb-\bbl@tempc.ini}%
+      {\edef\bbl@bcp{\bbl@tempa-\bbl@tempb-\bbl@tempc}}%
+      {}%
+    \ifx\bbl@bcp\relax   
+      \IfFileExists{babel-\bbl@tempa-\bbl@tempc.ini}%
+        {\edef\bbl@bcp{\bbl@tempa-\bbl@tempc}}%
+        {}%
+    \fi
+    \ifx\bbl@bcp\relax   
+      \IfFileExists{babel-\bbl@tempa-\bbl@tempc.ini}%
+        {\edef\bbl@bcp{\bbl@tempa-\bbl@tempc}}%
+        {}%
+    \fi
+    \ifx\bbl@bcp\relax   
+      \IfFileExists{babel-\bbl@tempa.ini}{\let\bbl@bcp\bbl@tempa}{}%
+    \fi
+  \fi\fi}
 \let\bbl@autoload@options\@empty
 \def\bbl@provide@locale{%
-  % Unfinished. To add: search if loaded with \LocaleForEach. Fallbacks
-  % like fr-FR -> fr.
+  % Unfinished. To add: search if loaded with \LocaleForEach?
   \let\bbl@auxname\languagename
-  \ifbbl@bcpallowed
-    \let\bbl@tempa\languagename
-    \edef\languagename{bcp47-\languagename}%
-    \bbl@fixname\languagename
-    \expandafter\ifx\csname date\languagename\endcsname\relax
-      \let\languagename\bbl@tempa
-    \fi
-  \fi
+  \bbl@ifunset{bbl@bcp@map@\languagename}{}%
+    {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}}% 
   \expandafter\ifx\csname date\languagename\endcsname\relax
     \IfFileExists{babel-\languagename.tex}%
-       {\bbl@exp{\\\babelprovide[\bbl@autoload@options]{\languagename}}}%
-       {\ifbbl@bcpallowed
-          \IfFileExists{babel-\languagename.ini}%
-            {\let\bbl@tempa\languagename
-             \bbl@exp{\lowercase{%
-               \edef\\\languagename{bcp47-\languagename}%
-               \edef\\\localename{bcp47-\localename}}}%
-             \bbl@exp{\\\babelprovide[import=\bbl@tempa]{\languagename}}}%
-            {}%
-        \fi}%
+      {\bbl@exp{\\\babelprovide[\bbl@autoload@options]{\languagename}}}%
+      {\ifbbl@bcpallowed
+         \expandafter
+         \bbl@bcplookup\languagename-\@empty-\@empty-\@empty\@@
+         \ifx\bbl@bcp\relax\else  % Returned by \bbl@bcplookup
+           \edef\languagename{\bbl@bcp@prefix\bbl@bcp}%
+           \edef\localename{\bbl@bcp@prefix\bbl@bcp}%
+           \expandafter\ifx\csname date\languagename\endcsname\relax
+             \bbl@exp{\\\babelprovide[import=\bbl@tempa]{\languagename}}%
+           \fi
+           \bbl@csarg\xdef{bcp@map@\bbl@bcp}{\localename}%
+         \fi
+       \fi}%
   \fi}
 %    \end{macrocode}
 %
@@ -6823,12 +6889,18 @@ help from Bernd Raichle, for which I am grateful.
       \edef\languagename{#1}%
       \let\localename\languagename
     \else
-      \bbl@warning{Using '\string\language' instead of 'language' is\\%
-                   deprecated. If what you want is to use a macro\\%
-                   containing the actual locale, make sure it does\\%
-                   not match any language. '\string\localename' is\\%
-                   left empty. Reported on }%
-      \def\localename{}% 
+      \bbl@info{Using '\string\language' instead of 'language' is\\%
+                not recommended. If what you want is to use\\%
+                a macro containing the actual locale, make\\%
+                sure it does not not match any language. I'll\\%
+                try to fix '\string\localename', but I cannot promise\\%
+                anything. Reported on }%
+      \ifx\scantokens\@undefined
+         \def\localename{??}%
+      \else
+        \scantokens\expandafter{\expandafter
+          \def\expandafter\localename\expandafter{\languagename}}%
+      \fi
     \fi
   \else
     \def\localename{#1}% This one has the correct catcodes
@@ -9597,12 +9669,27 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%  \begin{macro}{\guillemotleft}
-%  \begin{macro}{\guillemotright}
+%  \begin{macro}{\guillemetleft}
+%  \begin{macro}{\guillemetright}
 %    The guillemet characters are not available in \texttt{OT1}
-%    encoding. They are faked.
+%    encoding. They are faked. (Wrong names with o preserved for
+%    compatibility.)
 %
 %    \begin{macrocode}
+\ProvideTextCommand{\guillemetleft}{OT1}{%
+  \ifmmode
+    \ll
+  \else
+    \save@sf@q{\nobreak
+      \raise.2ex\hbox{$\scriptscriptstyle\ll$}\bbl@allowhyphens}%
+  \fi}
+\ProvideTextCommand{\guillemetright}{OT1}{%
+  \ifmmode
+    \gg
+  \else
+    \save@sf@q{\nobreak
+      \raise.2ex\hbox{$\scriptscriptstyle\gg$}\bbl@allowhyphens}%
+  \fi}
 \ProvideTextCommand{\guillemotleft}{OT1}{%
   \ifmmode
     \ll
@@ -9623,6 +9710,10 @@ help from Bernd Raichle, for which I am grateful.
 %    \texttt{T1} is used these glyphs can still be typeset.
 %
 %    \begin{macrocode}
+\ProvideTextCommandDefault{\guillemetleft}{%
+  \UseTextSymbol{OT1}{\guillemetleft}}
+\ProvideTextCommandDefault{\guillemetright}{%
+  \UseTextSymbol{OT1}{\guillemetright}}
 \ProvideTextCommandDefault{\guillemotleft}{%
   \UseTextSymbol{OT1}{\guillemotleft}}
 \ProvideTextCommandDefault{\guillemotright}{%
@@ -9840,9 +9931,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \ProvideTextCommandDefault{\flqq}{%
-  \textormath{\guillemotleft}{\mbox{\guillemotleft}}}
+  \textormath{\guillemetleft}{\mbox{\guillemetleft}}}
 \ProvideTextCommandDefault{\frqq}{%
-  \textormath{\guillemotright}{\mbox{\guillemotright}}}
+  \textormath{\guillemetright}{\mbox{\guillemetright}}}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -10976,12 +11067,17 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@ADJ@hyphenation.extra@on}{%
   \bbl@activateposthyphen}
 %
+% 
 \@namedef{bbl@ADJ@autoload.bcp47@on}{%
   \bbl@bcpallowedtrue}
 \@namedef{bbl@ADJ@autoload.bcp47@off}{%
   \bbl@bcpallowedfalse}
+\@namedef{bbl@ADJ@autoload.bcp47.prefix}#1{%
+  \def\bbl@bcp@prefix{#1}}
+\def\bbl@bcp@prefix{bcp47-}
 \@namedef{bbl@ADJ@autoload.options}#1{%
   \def\bbl@autoload@options{#1}}
+% TODO: use babel name, override 
 %
 % As the final task, load the code for lua.
 %

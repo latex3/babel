@@ -1,4 +1,4 @@
-## Babel 3.42.1977
+## Babel 3.42.1981
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -45,6 +45,7 @@ respective authors.
 
 ```
 3.43   2020-04-??
+       - Autoloading based on the BCP47 codes, with basic lookup.
        - Only a few essential commands are loaded with the format.
        - Improvements in Assamese and Finnish.
        - Fix - Babel reset the \sfcode of » to 1000. It should be 0.
