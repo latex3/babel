@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/04/18 v3.42.1981 The Babel package]
+\ProvidesFile{babel.dtx}[2020/04/23 v3.42.1986 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -245,15 +245,16 @@ Xe\largetex
   most recent features could be still unstable. Please, report any
   issues you find in
   \href{https://github.com/latex3/babel/issues}{GitHub}, which is
-  better than just complaining on an e-mail list or a web forum. 
+  better than just complaining on an e-mail list or a web forum.
 
 \item If you are interested in the \TeX{} multilingual support, please
-  join the  \href{http://tug.org/mailman/listinfo/kadingira}{kadingira
-  mail list}. You can follow
-  the development of \babel{} in
+  join the \href{http://tug.org/mailman/listinfo/kadingira}{kadingira
+  mail list}. You can follow the development of \babel{} in
   \href{https://github.com/latex3/babel}{GitHub} (which provides many
   \href{https://github.com/latex3/babel/tree/master/samples}{sample
-  files}, too).
+  files}, too). If you are the author of a package, feel free to send
+  to me a few test files which I'll add to mine, so that possible
+  issues could be caught in the development phase.
 
 \item  See section \ref{contribute} for contributing a language.
 
@@ -4465,8 +4466,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.42.1981>>
-%<<date=2020/04/18>>
+%<<version=3.42.1986>>
+%<<date=2020/04/23>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4845,28 +4846,16 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{The Package File (\LaTeX, \texttt{babel.sty})}
 %
-%    In order to make use of the features of \LaTeXe, the \babel\
-%    system contains a package file, \file{babel.sty}. This file is
-%    loaded by the |\usepackage| command and defines all the language
-%    options whose name is different from that of the |.ldf| file
-%    (like variant spellings). It also takes care of a number of
-%    compatibility issues with other packages an defines a few
-%    aditional package options.
+% This file also takes care of a number of compatibility issues with
+% other packages an defines a few aditional package options. Apart from
+% all the language options below we also have a few options that
+% influence the behavior of language definition files.
 %
-%    Apart from all the language options below we also have a few options
-%    that influence the behavior of language definition files.
+% Many of the following options don't do anything themselves, they are
+% just defined in order to make it possible for babel and language
+% definition files to check if one of them was specified by the user.
 %
-%    Many of the following options don't do anything themselves, they
-%    are just defined in order to make it possible for babel and
-%    language definition files to check if one of them was specified
-%    by the user.
-%
-% \subsection{\texttt{base}}
-%
-%    The first option to be processed is |base|, which set the
-%    hyphenation patterns then resets |ver@babel.sty| so that
-%    \LaTeX forgets about the first loading. After |switch.def| has
-%    been loaded (above) and |\AfterBabelLanguage| defined, exits.
+% The first two options are for debugging.
 %
 %    \begin{macrocode}
 %<*package>
@@ -4901,14 +4890,50 @@ help from Bernd Raichle, for which I am grateful.
       \def\\{\MessageBreak}%
       \PackageInfo{babel}{#1}%
     \endgroup}
+    \def\bbl@nocaption{\protect\bbl@nocaption@i}
+\def\bbl@nocaption@i#1#2{% 1: text to be printed 2: caption macro \langXname
+  \global\@namedef{#2}{\textbf{?#1?}}%
+  \@nameuse{#2}%
+  \bbl@warning{%
+    \@backslashchar#2 not set. Please, define\\%
+    it in the preamble with something like:\\%
+    \string\renewcommand\@backslashchar#2{..}\\%
+    Reported}}
+\def\bbl@tentative{\protect\bbl@tentative@i}
+\def\bbl@tentative@i#1{%
+  \bbl@warning{%
+    Some functions for '#1' are tentative.\\%
+    They might not work as expected and their behavior\\%
+    could change in the future.\\%
+    Reported}}
+\def\@nolanerr#1{%
+  \bbl@error
+    {You haven't defined the language #1\space yet.\\%
+     Perhaps you misspelled it or your installation\\%
+     is not complete}%
+    {Your command will be ignored, type <return> to proceed}}
+\def\@nopatterns#1{%
+  \bbl@warning
+    {No hyphenation patterns were preloaded for\\%
+     the language `#1' into the format.\\%
+     Please, configure your TeX system to add them and\\%
+     rebuild the format. Now I will use the patterns\\%
+     preloaded for \bbl@nulllanguage\space instead}}
     % End of errors
+\@ifpackagewith{babel}{silent}
+  {\let\bbl@info\@gobble
+   \let\bbl@infowarn\@gobble
+   \let\bbl@warning\@gobble}
+  {}
+%
 \def\AfterBabelLanguage#1{%
   \global\expandafter\bbl@add\csname#1.ldf-h@@k\endcsname}%
 %    \end{macrocode}
 %
 % If the format created a list of loaded languages (in
 % |\bbl@languages|), get the name of the 0-th to show the actual
-% language used.
+% language used. Also avaliable with |base|, because it just shows
+% info.
 %
 %    \begin{macrocode}
 \ifx\bbl@languages\@undefined\else
@@ -4928,7 +4953,48 @@ help from Bernd Raichle, for which I am grateful.
       \def\bbl@elt##1##2##3##4{}%
     \fi}%
   \bbl@languages
-\fi
+\fi%
+%    \end{macrocode}
+% \subsection{\texttt{base}}
+%
+% The first `real' option to be processed is |base|, which set the
+% hyphenation patterns then resets |ver@babel.sty| so that \LaTeX
+% forgets about the first loading. After a subset of |babel.def| has
+% been loaded (the old |switch.def|) and |\AfterBabelLanguage| defined,
+% it exits.
+%
+% Now the \texttt{base} option. With it we can define (and load, with
+% \luatex) hyphenation patterns, even if we are not interesed in the
+% rest of babel.
+%
+%    \begin{macrocode}
+\bbl@trace{Defining option 'base'}
+\@ifpackagewith{babel}{base}{%
+  \let\bbl@onlyswitch\@empty
+  \let\bbl@provide@locale\relax
+  \input babel.def
+  \let\bbl@onlyswitch\@undefined
+  \ifx\directlua\@undefined
+    \DeclareOption*{\bbl@patterns{\CurrentOption}}%
+  \else
+    \input luababel.def
+    \DeclareOption*{\bbl@patterns@lua{\CurrentOption}}%
+  \fi
+  \DeclareOption{base}{}%
+  \DeclareOption{showlanguages}{}%
+  \ProcessOptions
+  \global\expandafter\let\csname opt@babel.sty\endcsname\relax
+  \global\expandafter\let\csname ver@babel.sty\endcsname\relax
+  \global\let\@ifl@ter@@\@ifl@ter
+  \def\@ifl@ter#1#2#3#4#5{\global\let\@ifl@ter\@ifl@ter@@}%
+  \endinput}{}%
+% \end{macrocode}
+%
+% TODO. Code for lua bidi options must be moved to a logical place. The
+% problem is |\RequirePackage|, which is forbidden allowed in the options
+% section.
+%
+% \begin{macrocode}
 \ifodd\bbl@engine
   \def\bbl@activate@preotf{%
     \let\bbl@activate@preotf\relax  % only once
@@ -4986,33 +5052,6 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-% Now the \texttt{base} option. With it we can define (and load, with
-% \luatex) hyphenation patterns, even if we are not interesed in the
-% rest of babel. Useful for old versions of \textsf{polyglossia}, too.
-%
-%    \begin{macrocode}
-\bbl@trace{Defining option 'base'}
-\@ifpackagewith{babel}{base}{%
-  \let\bbl@onlyswitch\@empty
-  \let\bbl@provide@locale\relax
-  \input babel.def
-  \let\bbl@onlyswitch\@undefined
-  \ifx\directlua\@undefined
-    \DeclareOption*{\bbl@patterns{\CurrentOption}}%
-  \else
-    \input luababel.def
-    \DeclareOption*{\bbl@patterns@lua{\CurrentOption}}%
-  \fi
-  \DeclareOption{base}{}%
-  \DeclareOption{showlanguages}{}%
-  \ProcessOptions
-  \global\expandafter\let\csname opt@babel.sty\endcsname\relax
-  \global\expandafter\let\csname ver@babel.sty\endcsname\relax
-  \global\let\@ifl@ter@@\@ifl@ter
-  \def\@ifl@ter#1#2#3#4#5{\global\let\@ifl@ter\@ifl@ter@@}%
-  \endinput}{}%
-%    \end{macrocode}
-%
 % \subsection{\texttt{key=value} options and other general option}
 %
 %    The following macros extract language modifiers, and only real
@@ -5043,7 +5082,7 @@ help from Bernd Raichle, for which I am grateful.
 \expandafter\let\csname opt@babel.sty\endcsname\bbl@tempc
 %    \end{macrocode}
 %
-% The next option tells \babel\ to leave shorthand characters active
+% The next option tells \babel{} to leave shorthand characters active
 % at the end of processing the package. This is \emph{not} the default
 % as it can cause problems with other packages, but for those who want
 % to use the shorthand characters in the preamble of their documents
@@ -5059,7 +5098,7 @@ help from Bernd Raichle, for which I am grateful.
 \DeclareOption{silent}{}
 \DeclareOption{mono}{}
 \DeclareOption{shorthands=off}{\bbl@tempa shorthands=\bbl@tempa}
-% Don't use. Experimental:
+% Don't use. Experimental. TODO.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
 <@More package options@>
@@ -5088,11 +5127,12 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@csarg\ifx{opt@#1}\@nnil
     \bbl@csarg\edef{opt@#1}{#2}%
   \else
-    \bbl@error{%
-      Bad option `#1=#2'. Either you have misspelled the\\%
-      key or there is a previous setting of `#1'}{%
-      Valid keys are `shorthands', `config', `strings', `main',\\%
-      `headfoot', `safe', `math', among others.}
+    \bbl@error
+     {Bad option `#1=#2'. Either you have misspelled the\\%
+      key or there is a previous setting of `#1'. Valid\\%
+      keys are, among others, `shorthands', `main', `bidi',\\%
+      `strings', `config', `headfoot', `safe', `math'.}%
+     {See the manual for further details.}
   \fi}
 %    \end{macrocode}
 %
@@ -5208,7 +5248,8 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % For |layout| an auxiliary macro is provided, available for packages
-% and language styles.
+% and language styles. Optimization: if there is no |layout|, just do
+% nothing.
 %
 %    \begin{macrocode}
 \bbl@trace{Defining IfBabelLayout}
@@ -5226,7 +5267,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % \textbf{Common definitions.} \textit{In progress.} Still based on
-% |babel.def|.
+% |babel.def|, but the code should be moved here.
 %
 %    \begin{macrocode}
 \input babel.def
@@ -5249,29 +5290,6 @@ help from Bernd Raichle, for which I am grateful.
 %    tokens in this argument should be character tokens with category
 %    `letter' or `other'.
 %
-%    The only way to accomplish this in most cases is to use the trick
-%    described in the \TeX book~\cite{DEK} (Appendix~D, page~382).
-%    The primitive |\meaning| applied to a token expands to the
-%    current meaning of this token.  For example, `|\meaning\A|' with
-%    |\A| defined as `|\def\A#1{\B}|' expands to the characters
-%    `|macro:#1->\B|' with all category codes set to `other' or
-%    `space'.
-%  \begin{macro}{\newlabel}
-%    The macro |\label| writes a line with a |\newlabel| command
-%    into the |.aux| file to define labels.
-%
-%    \begin{macrocode}
-%\bbl@redefine\newlabel#1#2{%
-%  \@safe@activestrue\org@newlabel{#1}{#2}\@safe@activesfalse}
-%    \end{macrocode}
-%
-%  \end{macro}
-%
-%  \begin{macro}{\@newl@bel}
-%    We need to change the definition of the \LaTeX-internal macro
-%    |\@newl@bel|. This is needed because we need to make sure that
-%    shorthand characters expand to their non-active version.
-%
 %    The following package options control which macros are to be
 %    redefined.
 %
@@ -5282,6 +5300,8 @@ help from Bernd Raichle, for which I am grateful.
 \DeclareOption{safe=ref}{\def\bbl@opt@safe{R}}
 %<</More package options>>
 %    \end{macrocode}
+%
+%  \begin{macro}{\@newl@bel}
 %
 %    First we open a new group to keep the changed setting of
 %    |\protect| local and then we set the |@safe@actives| switch to
@@ -5304,13 +5324,10 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\@testdef}
+%
 %    An internal \LaTeX\ macro used to test if the labels that have
 %    been written on the |.aux| file have changed.  It is called by
-%    the |\enddocument| macro. This macro needs to be completely
-%    rewritten, using |\meaning|. The reason for this is that in some
-%    cases the expansion of |\#1@#2| contains the same characters as
-%    the |#3|; but the character codes differ. Therefore \LaTeX\ keeps
-%    reporting that the labels may have changed.
+%    the |\enddocument| macro.
 %
 %    \begin{macrocode}
   \CheckCommand*\@testdef[3]{%
@@ -5321,49 +5338,25 @@ help from Bernd Raichle, for which I am grateful.
     \fi}
 %    \end{macrocode}
 %
-%    Now that we made sure that |\@testdef| still has the same
-%    definition we can rewrite it. First we make the shorthands
-%    `safe'.
+%  Now that we made sure that |\@testdef| still has the same definition
+%  we can rewrite it. First we make the shorthands `safe'. Then we use
+%  |\bbl@tempa| as an `alias' for the macro that contains the label
+%  which is being checked. Then we define |\bbl@tempb| just as
+%  |\@newl@bel| does it. When the label is defined we replace the
+%  definition of |\bbl@tempa| by its meaning. If the label didn't
+%  change, |\bbl@tempa| and |\bbl@tempb| should be identical macros.
 %
 %    \begin{macrocode}
-  \def\@testdef#1#2#3{%
+  \def\@testdef#1#2#3{%  TODO. With @samestring?
     \@safe@activestrue
-%    \end{macrocode}
-%
-%    Then we use |\bbl@tempa| as an `alias' for the macro that
-%    contains the label which is being checked.
-%
-%    \begin{macrocode}
     \expandafter\let\expandafter\bbl@tempa\csname #1@#2\endcsname
-%    \end{macrocode}
-%
-%    Then we define |\bbl@tempb| just as |\@newl@bel| does it.
-%
-%    \begin{macrocode}
     \def\bbl@tempb{#3}%
     \@safe@activesfalse
-%    \end{macrocode}
-%
-%    When the label is defined we replace the definition of
-%    |\bbl@tempa| by its meaning.
-%
-%    \begin{macrocode}
     \ifx\bbl@tempa\relax
     \else
       \edef\bbl@tempa{\expandafter\strip@prefix\meaning\bbl@tempa}%
     \fi
-%    \end{macrocode}
-%
-%    We do the same for |\bbl@tempb|.
-%
-%    \begin{macrocode}
     \edef\bbl@tempb{\expandafter\strip@prefix\meaning\bbl@tempb}%
-%    \end{macrocode}
-%
-%    If the label didn't change, |\bbl@tempa| and |\bbl@tempb| should
-%    be identical macros.
-%
-%    \begin{macrocode}
     \ifx\bbl@tempa\bbl@tempb
     \else
       \@tempswatrue
@@ -5375,11 +5368,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\ref}
 %  \begin{macro}{\pageref}
-%    The same holds for the macro |\ref| that references a label
-%    and |\pageref| to reference a page. So we redefine |\ref| and
-%    |\pageref|. While we change these macros, we make them robust as
-%    well (if they weren't already) to prevent problems if they should
-%    become expanded at the wrong moment.
+%
+%    The same holds for the macro |\ref| that references a label and
+%    |\pageref| to reference a page. We make them robust as well (if
+%    they weren't already) to prevent problems if they should become
+%    expanded at the wrong moment.
 %
 %    \begin{macrocode}
 \bbl@xin@{R}\bbl@opt@safe
@@ -5505,19 +5498,8 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
   \def\bbl@cite@choice{%
     \global\let\bibcite\bbl@bibcite
-%    \end{macrocode}
-%
-%    Then, when \pkg{natbib} is loaded we restore the original
-%    definition of |\bibcite|. For \pkg{cite} we do the same.
-%
-%    \begin{macrocode}
     \@ifpackageloaded{natbib}{\global\let\bibcite\org@bibcite}{}%
     \@ifpackageloaded{cite}{\global\let\bibcite\org@bibcite}{}%
-%    \end{macrocode}
-%
-%    Make sure this only happens once.
-%
-%    \begin{macrocode}
     \global\let\bbl@cite@choice\relax}
 %    \end{macrocode}
 %
@@ -5550,20 +5532,17 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Marks}
 %
-%  \begin{macro}{\markright}
-%    Because the output routine is asynchronous, we must
-%    pass the current language attribute to the head lines, together
-%    with the text that is put into them. To achieve this we need to
-%    adapt the definition of |\markright| and |\markboth| somewhat.
+% \begin{macro}{\markright}
+% Because the output routine is asynchronous, we must pass the
+% current language attribute to the head lines. To achieve this we
+% need to adapt the definition of |\markright| and |\markboth|
+% somewhat. However, headlines and footlines can contain text
+% outside marks; for that we must take some actions in the output
+% routine if the 'headfoot' options is used. 
 %
-%    We check whether the argument is empty; if it is, we just make
-%    sure the scratch token register is empty.  Next, we store the
-%    argument to |\markright| in the scratch token register. This way
-%    these commands will not be expanded later, and we make sure that
-%    the text is typeset using the correct language settings. While
-%    doing so, we make sure that active characters that may end up in
-%    the mark are not disabled by the output routine kicking in while
-%    \cs{@safe@activestrue} is in effect.
+% We need to make some redefinitions to the output routine
+% to avoid an endless loop and to correctly handle the page number
+% in bidi documents.
 %
 %    \begin{macrocode}
 \bbl@trace{Marks}
@@ -5573,7 +5552,7 @@ help from Bernd Raichle, for which I am grateful.
        \set@typeset@protect
        \expandafter\select@language@x\expandafter{\bbl@main@language}%
        \let\protect\noexpand
-       \edef\thepage{%
+       \edef\thepage{% TODO. Only with bidi. See also above
          \noexpand\babelsublr{\unexpanded\expandafter{\thepage}}}}%
    \fi}
   {\ifbbl@single\else
@@ -5598,7 +5577,7 @@ help from Bernd Raichle, for which I am grateful.
 %    |\markboth| in |\@mkboth|. Therefore we need to check whether
 %    |\@mkboth| has already been set. If so we neeed to do that again
 %    with the new definition of |\markboth|. (As of Oct 2019, \LaTeX{}
-%    stores the definition in an intermediate macros, so it's not
+%    stores the definition in an intermediate macro, so it's not
 %    necessary anymore, but it's preserved for older versions.)
 %
 %    \begin{macrocode}
@@ -5645,9 +5624,15 @@ help from Bernd Raichle, for which I am grateful.
 %    not in the case of this example. To overcome that, we add some
 %    code to the definition of |\ifthenelse| to make things work.
 %
-%    The first thing we need to do is check if the package
-%    \pkg{ifthen} is loaded. This should be done at |\begin{document}|
-%    time.
+%    We want to revert the definition of |\pageref| and |\ref| to
+%    their original definition for the first argument of |\ifthenelse|,
+%    so we first need to store their current meanings.
+%
+%    Then we can set the |\@safe@actives| switch and call the original
+%    |\ifthenelse|. In order to be able to use shorthands in the
+%    second and third arguments of |\ifthenelse| the resetting of the
+%    switch \emph{and} the definition of |\pageref| happens inside
+%    those arguments. 
 %
 %    \begin{macrocode}
 \bbl@trace{Preventing clashes with other packages}
@@ -5655,32 +5640,11 @@ help from Bernd Raichle, for which I am grateful.
 \ifin@
   \AtBeginDocument{%
     \@ifpackageloaded{ifthen}{%
-%    \end{macrocode}
-%
-%    Then we can redefine |\ifthenelse|:
-%
-%    \begin{macrocode}
       \bbl@redefine@long\ifthenelse#1#2#3{%
-%    \end{macrocode}
-%
-%    We want to revert the definition of |\pageref| and |\ref| to
-%    their original definition for the first argument of |\ifthenelse|,
-%    so we first need to store their current meanings.
-%
-%    \begin{macrocode}
         \let\bbl@temp@pref\pageref
         \let\pageref\org@pageref
         \let\bbl@temp@ref\ref
         \let\ref\org@ref
-%    \end{macrocode}
-%
-%    Then we can set the |\@safe@actives| switch and call the original
-%    |\ifthenelse|. In order to be able to use shorthands in the
-%    second and third arguments of |\ifthenelse| the resetting of the
-%    switch \emph{and} the definition of |\pageref| happens inside
-%    those arguments.  When the package wasn't loaded we do nothing.
-%
-%    \begin{macrocode}
         \@safe@activestrue
         \org@ifthenelse{#1}%
           {\let\pageref\bbl@temp@pref
@@ -5750,29 +5714,16 @@ help from Bernd Raichle, for which I am grateful.
 %    a problem with the \pkg{hhline} package. The reason is that it
 %    uses the `:' character which is made active by the french support
 %    in \babel. Therefore we need to \emph{reload} the package when
-%    the `:' is an active character.
-%
-%    So at |\begin{document}| we check whether \pkg{hhline} is loaded.
+%    the `:' is an active character. Note that this happens
+%    \emph{after} the category code of the @-sign has been changed to
+%    other, so we need to temporarily change it to letter again.
 %
 %    \begin{macrocode}
 \AtEndOfPackage{%
   \AtBeginDocument{%
     \@ifpackageloaded{hhline}%
-%    \end{macrocode}
-%
-%    Then we check whether the expansion of |\normal@char:| is not
-%    equal to |\relax|.
-%
-%    \begin{macrocode}
       {\expandafter\ifx\csname normal@char\string:\endcsname\relax
        \else
-%    \end{macrocode}
-%
-%    In that case we simply reload the package. Note that this happens
-%    \emph{after} the category code of the @-sign has been changed to
-%    other, so we need to temporarily change it to letter again.
-%
-%    \begin{macrocode}
          \makeatletter
          \def\@currname{hhline}\input{hhline.sty}\makeatother
        \fi}%
@@ -5790,7 +5741,8 @@ help from Bernd Raichle, for which I am grateful.
 %    following code was introduced to prevent some annoying warnings
 %    but it broke bookmarks. This was quickly fixed in \pkg{hyperref},
 %    which essentially made it no-op. However, it will not removed for
-%    the moment because \pkg{hyperref} is expecting it.
+%    the moment because \pkg{hyperref} is expecting it. TODO. Still
+%    true? 
 %
 %    \begin{macrocode}
 \AtBeginDocument{%
@@ -5819,9 +5771,11 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\substitutefontfamily}
+%
 %    The command |\substitutefontfamily| creates an
 %    \file{.fd} file on the fly. The first argument is an encoding
 %    mnemonic, the second and third arguments are font family names.
+%    This command is deprecated. Use the tools provides by \LaTeX.
 %
 %    \begin{macrocode}
 \def\substitutefontfamily#1#2#3{%
@@ -5842,11 +5796,6 @@ help from Bernd Raichle, for which I am grateful.
     }%
   \closeout15
   }
-%    \end{macrocode}
-%
-%    This command should only be used in the preamble of a document.
-%
-%    \begin{macrocode}
 \@onlypreamble\substitutefontfamily
 %    \end{macrocode}
 %
@@ -5990,7 +5939,8 @@ help from Bernd Raichle, for which I am grateful.
 % \subsection{Basic bidi support}
 %
 % \textbf{Work in progress.} This code is currently placed here for
-% practical reasons.
+% practical reasons. It will be moved to the correct place soon, I
+% hope.
 %
 % It is loosely based on |rlbabel.def|, but most of it has been
 % developed from scratch. This \babel{} module (by Johannes Braams and
@@ -6227,7 +6177,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macro}
 %
 %    Just to be compatible with \LaTeX$\:$2.09 we add a few more lines
-%    of code:
+%    of code. TODO. Necessary? Correct place? Used by some ldf file?
 %
 %    \begin{macrocode}
 \ifx\@unexpandable@protect\@undefined
@@ -6391,6 +6341,7 @@ help from Bernd Raichle, for which I am grateful.
 %    |\AfterBabelLanguage|.
 %
 %    \begin{macrocode}
+\bbl@trace{Option 'main'}
 \ifx\bbl@opt@main\@nnil
   \edef\bbl@tempa{\@classoptionslist,\bbl@language@opts}
   \let\bbl@tempc\@empty
@@ -6437,18 +6388,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \section{The kernel of Babel (\texttt{babel.def}, common)}
 %
-% The kernel of the \babel\ system is stored in either
-% \file{hyphen.cfg} or \file{switch.def} and \file{babel.def}.  The
-% file \file{babel.def} contains most of the code, while
-% \file{switch.def} defines the language-switching commands; both can
-% be read at run time. The file \file{hyphen.cfg} is a file that can
-% be loaded into the format, which is necessary when you want to be
-% able to switch hyphenation patterns (by default, it also inputs
-% \file{switch.def}, for ``historical reasons'', but it is not
-% necessary). When \file{babel.def} is loaded it checks if the current
-% version of \file{switch.def} is in the format; if not, it is
-% loaded. A further file, \file{babel.sty}, contains \LaTeX-specific
-% stuff.
+% The kernel of the \babel\ system is currently stored in
+% \file{babel.def}. The file \file{babel.def} contains most of the
+% code. The file \file{hyphen.cfg} is a file that can be loaded into
+% the format, which is necessary when you want to be able to switch
+% hyphenation patterns.
 %
 % Because plain \TeX\ users might want to use some of the features of
 % the \babel{} system too, care has to be taken that plain \TeX\ can
@@ -6465,15 +6409,10 @@ help from Bernd Raichle, for which I am grateful.
 % \subsection{Tools}
 %
 %    \begin{macrocode}
-\ifx\ldf@quit\@undefined
-\else
-  \expandafter\endinput
-\fi
+\ifx\ldf@quit\@undefined\else
+\endinput\fi % Same line!
 <@Make sure ProvidesFile is defined@>
 \ProvidesFile{babel.def}[<@date@> <@version@> Babel common definitions]
-\ifx\AtBeginDocument\@undefined
-  <@Emulate LaTeX@>
-\fi
 %    \end{macrocode}
 %
 % The file |babel.def| expects some definitions made in the \LaTeXe{}
@@ -6486,7 +6425,9 @@ help from Bernd Raichle, for which I am grateful.
 % set too (but not sure it works).
 %
 %    \begin{macrocode}
-\ifx\bbl@ifshorthand\@undefined
+\ifx\AtBeginDocument\@undefined  % TODO. change test.
+  <@Emulate LaTeX@>
+  \def\languagename{english}%
   \let\bbl@opt@shorthands\@nnil
   \def\bbl@ifshorthand#1#2#3{#2}%
   \let\bbl@language@opts\@empty
@@ -6510,26 +6451,35 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
+% Exit immediately with 2.09. An error is raised by the sty file, but
+% also try to minimize the number of errors.
+%
+%    \begin{macrocode}
+\ifx\bbl@trace\@undefined
+  \let\LdfInit\endinput
+  \def\ProvidesLanguage#1{\endinput}
+\endinput\fi % Same line!
+%    \end{macrocode}
+%
 % And continue.
 %
+% \section{Multiple languages}
 %
-% \section{Multiple languages (\texttt{switch.def)}}
+% This is not a separate file (\texttt{switch.def}) anymore.
 %
-%    This is not a separate file anymore.
-%
-%    Plain \TeX\ version~3.0 provides the primitive |\language| that
-%    is used to store the current language. When used with a pre-3.0
-%    version this function has to be implemented by allocating a
-%    counter.
+% Plain \TeX\ version~3.0 provides the primitive |\language| that
+% is used to store the current language. When used with a pre-3.0
+% version this function has to be implemented by allocating a
+% counter.
 %
 %    \begin{macrocode}
 <@Define core switching macros@>
 %    \end{macrocode}
 %
-%  \begin{macro}{\adddialect}
-%    The macro |\adddialect| can be used to add the name of a dialect
-%    or variant language, for which an already defined hyphenation
-%    table can be used.
+% \begin{macro}{\adddialect}
+% The macro |\adddialect| can be used to add the name of a dialect
+% or variant language, for which an already defined hyphenation
+% table can be used.
 %
 %    \begin{macrocode}
 \def\bbl@version{<@version@>}
@@ -6637,9 +6587,9 @@ help from Bernd Raichle, for which I am grateful.
   \fi\fi}
 \let\bbl@autoload@options\@empty
 \def\bbl@provide@locale{%
-  % Unfinished. To add: search if loaded with \LocaleForEach?
-  \let\bbl@auxname\languagename
-  \bbl@ifunset{bbl@bcp@map@\languagename}{}%
+% TODO. Option to search if loaded with \LocaleForEach
+  \let\bbl@auxname\languagename % Still necessary. TODO
+  \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
     {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}}% 
   \expandafter\ifx\csname date\languagename\endcsname\relax
     \IfFileExists{babel-\languagename.tex}%
@@ -6683,32 +6633,10 @@ help from Bernd Raichle, for which I am grateful.
 % \subsection{Selecting the language}
 %
 %  \begin{macro}{\selectlanguage}
+%
 %    The macro |\selectlanguage| checks whether the language is
 %    already defined before it performs its actual task, which is to
 %    update |\language| and activate language-specific definitions.
-%
-%    To allow the call of |\selectlanguage| either with a control
-%    sequence name or with a simple string as argument, we have to use
-%    a trick to delete the optional escape character.
-%
-%    To convert a control sequence to a string, we use the |\string|
-%    primitive.  Next we have to look at the first character of this
-%    string and compare it with the escape character.  Because this
-%    escape character can be changed by setting the internal integer
-%    |\escapechar| to a character number, we have to compare this
-%    number with the character of the string.  To do this we have to
-%    use \TeX's backquote notation to specify the character as a
-%    number.
-%
-%    If the first character of the |\string|'ed argument is the
-%    current escape character, the comparison has stripped this
-%    character and the rest in the `then' part consists of the rest of
-%    the control sequence name.  Otherwise we know that either the
-%    argument is not a control sequence or |\escapechar| is set to a
-%    value outside of the character range~$0$--$255$.
-%
-%    If the user gives an empty argument, we provide a default
-%    argument for |\string|.  This argument should expand to nothing.
 %
 %    \begin{macrocode}
 \let\bbl@select@type\z@
@@ -6726,19 +6654,11 @@ help from Bernd Raichle, for which I am grateful.
 \ifx\@undefined\protect\let\protect\relax\fi
 %    \end{macrocode}
 %
-%    As \LaTeX$\:$2.09 writes to files \textit{expanded} whereas
-%    \LaTeXe\ takes care \textit{not} to expand the arguments of
-%    |\write| statements we need to be a bit clever about the way we
-%    add information to \file{.aux} files. Therefore we introduce the
-%    macro |\xstring| which should expand to the right amount of
-%    |\string|'s.
+% The following definition is preserved for backwards compatibility. It
+% is related to a trick for 2.09.
 %
 %    \begin{macrocode}
-\ifx\documentclass\@undefined
-  \def\xstring{\string\string\string}
-\else
-  \let\xstring\string
-\fi
+\let\xstring\string
 %    \end{macrocode}
 %
 % \end{macro}
@@ -6746,7 +6666,9 @@ help from Bernd Raichle, for which I am grateful.
 %    Since version 3.5 \babel\ writes entries to the auxiliary files in
 %    order to typeset table of contents etc. in the correct language
 %    environment.
+%
 %  \begin{macro}{\bbl@pop@language}
+%
 %    \emph{But} when the language change happens \emph{inside} a group
 %    the end of the group doesn't write anything to the auxiliary
 %    files. Therefore we need \TeX's |aftergroup| mechanism to help
@@ -6803,7 +6725,7 @@ help from Bernd Raichle, for which I am grateful.
 %    contains one or more language names, each followed by a `+'-sign
 %    (zero language names won't occur as this macro will only be
 %    called after something has been pushed on the stack) followed by
-%    the `-'-sign and finally the reference to the stack.
+%    the `\&'-sign and finally the reference to the stack.
 %
 %    \begin{macrocode}
 \let\bbl@ifrestoring\@secondoftwo
@@ -6825,7 +6747,8 @@ help from Bernd Raichle, for which I am grateful.
 %  with a numerical value is introduced in 3.30. This is one of the
 %  first steps for a new interface based on the concept of locale,
 %  which explains the name of |\localeid|. This means |\l@...| will be
-%  reserved for hyphenation patterns.
+%  reserved for hyphenation patterns (so that two locales can share the
+%  same rules).
 %
 %    \begin{macrocode}
 \chardef\localeid\z@
@@ -6894,7 +6817,7 @@ help from Bernd Raichle, for which I am grateful.
                 a macro containing the actual locale, make\\%
                 sure it does not not match any language. I'll\\%
                 try to fix '\string\localename', but I cannot promise\\%
-                anything. Reported on }%
+                anything. Reported}%
       \ifx\scantokens\@undefined
          \def\localename{??}%
       \else
@@ -6924,6 +6847,7 @@ help from Bernd Raichle, for which I am grateful.
   % set name
   \edef\languagename{#1}%
   \bbl@fixname\languagename
+  % TODO. name@map must be here?
   \bbl@provide@locale
   \bbl@iflanguage\languagename{%
      \expandafter\ifx\csname date\languagename\endcsname\relax
@@ -6945,13 +6869,6 @@ help from Bernd Raichle, for which I am grateful.
     \@writefile{##1}{\babel@toc{#1}{#2}}}}% %% TODO - ok in plain?
 \def\babel@toc#1#2{%
   \select@language{#1}}
-%    \end{macrocode}
-%
-% A bit of optimization. Select in heads/foots the language only if
-% necessary. The real thing is in \texttt{babel.def}.
-%
-%    \begin{macrocode}
-\let\select@language@x\select@language
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -7132,10 +7049,9 @@ help from Bernd Raichle, for which I am grateful.
 %    enters in vmode and then selects the language (which in turn sets the
 %    paragraph direction).
 %
-%    (3.11) Also experimental are the hook |foreign| and
-%    |foreign*|. With them you can redefine |\BabelText| which by
-%    default does nothing. Its
-%    behavior is not well defined yet. So, use it in
+%    (3.11) Also experimental are the hook |foreign| and |foreign*|.
+%    With them you can redefine |\BabelText| which by default does
+%    nothing. Its behavior is not well defined yet. So, use it in
 %    horizontal mode only if you do not want surprises.
 %
 %    In other words, at the beginning of a paragraph |\foreignlanguage|
@@ -7172,17 +7088,18 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\foreign@language}
-%    This macro does the
-%    work for |\foreignlanguage| and the \Lenv{otherlanguage*}
-%    environment. First we need to store the name of the language and
-%    check that it is a known language. Then it just calls
-%    |bbl@switch|.
+%
+%    This macro does the work for |\foreignlanguage| and the
+%    \Lenv{otherlanguage*} environment. First we need to store the name
+%    of the language and check that it is a known language. Then it
+%    just calls |bbl@switch|.
 %
 %    \begin{macrocode}
 \def\foreign@language#1{%
   % set name
   \edef\languagename{#1}%
   \bbl@fixname\languagename
+  % TODO. name@map here?
   \bbl@provide@locale
   \bbl@iflanguage\languagename{%
     \expandafter\ifx\csname date\languagename\endcsname\relax
@@ -7210,8 +7127,8 @@ help from Bernd Raichle, for which I am grateful.
 %    use them instead of the default.
 %
 %    It also sets hyphenation exceptions, but only once, because they
-%    are global (here language |\lccode|'s has been set,
-%    too). |\bbl@hyphenation@| is set to relax until the very first
+%    are global (here language |\lccode|'s has been set, too).
+%    |\bbl@hyphenation@| is set to relax until the very first
 %    |\babelhyphenation|, so do nothing with this value. If the
 %    exceptions for a language (by its number, not its name, so that
 %    |:ENC| is taken into account) has been set, then use
@@ -7252,6 +7169,7 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{environment}{hyphenrules}
+%
 %    The environment \Lenv{hyphenrules} can be used to select
 %    \emph{just} the hyphenation rules. This environment does
 %    \emph{not} change |\languagename| and when the hyphenation rules
@@ -7277,12 +7195,12 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{environment}
 %
-%  \begin{macro}{\providehyphenmins}
-%    The macro |\providehyphenmins| should be used in the language
-%    definition files to provide a \emph{default} setting for the
-%    hyphenation parameters |\lefthyphenmin| and |\righthyphenmin|. If
-%    the macro |\|\langvar|hyphenmins| is already defined this command
-%    has no effect.
+% \begin{macro}{\providehyphenmins}
+% The macro |\providehyphenmins| should be used in the language
+% definition files to provide a \emph{default} setting for the
+% hyphenation parameters |\lefthyphenmin| and |\righthyphenmin|. If
+% the macro |\|\langvar|hyphenmins| is already defined this command
+% has no effect.
 %
 %    \begin{macrocode}
 \def\providehyphenmins#1#2{%
@@ -7303,17 +7221,17 @@ help from Bernd Raichle, for which I am grateful.
   \righthyphenmin#2\relax}
 %    \end{macrocode}
 %
-%  \end{macro}
+% \end{macro}
 %
-%  \begin{macro}{\ProvidesLanguage}
-%    The identification code for each file is something that was
-%    introduced in \LaTeXe. When the command |\ProvidesFile| does not
-%    exist, a dummy definition is provided temporarily. For use in the
-%    language definition file the command |\ProvidesLanguage| is
-%    defined by \babel.
+% \begin{macro}{\ProvidesLanguage}
+% The identification code for each file is something that was
+% introduced in \LaTeXe. When the command |\ProvidesFile| does not
+% exist, a dummy definition is provided temporarily. For use in the
+% language definition file the command |\ProvidesLanguage| is
+% defined by \babel.
 %
-%    Depending on the format, ie, on if the former is defined, we use
-%    a similar definition or not.
+% Depending on the format, ie, on if the former is defined, we use
+% a similar definition or not.
 %
 %    \begin{macrocode}
 \ifx\ProvidesFile\@undefined
@@ -7346,7 +7264,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %    Because this part of the code can be included in a format, we
-%    make sure that the macro which initialises the save mechanism,
+%    make sure that the macro which initializes the save mechanism,
 %    |\babel@beginsave|, is not considered to be undefined.
 %
 %    \begin{macrocode}
@@ -7397,7 +7315,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \edef\bbl@nulllanguage{\string\language=0}
-\ifx\PackageError\@undefined
+\ifx\PackageError\@undefined  % TODO. Move to Plain
   \def\bbl@error#1#2{%
     \begingroup
       \newlinechar=`\^^J
@@ -7417,35 +7335,7 @@ help from Bernd Raichle, for which I am grateful.
       \def\\{^^J}%
       \wlog{#1}%
     \endgroup}
-\else
-  \def\bbl@error#1#2{%
-    \begingroup
-      \def\\{\MessageBreak}%
-      \PackageError{babel}{#1}{#2}%
-    \endgroup}
-  \def\bbl@warning#1{%
-    \begingroup
-      \def\\{\MessageBreak}%
-      \PackageWarning{babel}{#1}%
-    \endgroup}
-  \def\bbl@infowarn#1{%
-    \begingroup
-      \def\\{\MessageBreak}%
-      \GenericWarning
-        {(babel) \@spaces\@spaces\@spaces}%
-        {Package babel Info: #1}%
-    \endgroup}
-  \def\bbl@info#1{%
-    \begingroup
-      \def\\{\MessageBreak}%
-      \PackageInfo{babel}{#1}%
-    \endgroup}
 \fi
-\@ifpackagewith{babel}{silent}
-  {\let\bbl@info\@gobble
-   \let\bbl@infowarn\@gobble
-   \let\bbl@warning\@gobble}
-  {}
 \def\bbl@nocaption{\protect\bbl@nocaption@i}
 \def\bbl@nocaption@i#1#2{% 1: text to be printed 2: caption macro \langXname
   \global\@namedef{#2}{\textbf{?#1?}}%
@@ -7492,7 +7382,7 @@ help from Bernd Raichle, for which I am grateful.
 \bbl@trace{Compatibility with language.def}
 \ifx\bbl@languages\@undefined
   \ifx\directlua\@undefined
-    \openin1 = language.def
+    \openin1 = language.def % TODO. Remove hardcoded number
     \ifeof1
       \closein1
       \message{I couldn't find the file language.def}
@@ -7514,21 +7404,14 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %  \begin{macro}{\addto}
-%    For each language four control sequences have to be defined that
-%    control the language-specific definitions. To be able to add
-%    something to these macro once they have been defined the macro
-%    |\addto| is introduced. It takes two arguments, a \meta{control
-%    sequence} and \TeX-code to be added to the \meta{control
-%    sequence}.
+% It takes two arguments, a \meta{control sequence} and \TeX-code to
+% be added to the \meta{control sequence}.
 %
-%    If the \meta{control sequence} has not been defined before it is
-%    defined now.  The control sequence could also expand to |\relax|,
-%    in which case a circular definition results. The net result is a
-%    stack overflow.  Otherwise the replacement text for the
-%    \meta{control sequence} is expanded and stored in a token
-%    register, together with the \TeX-code to be added.  Finally the
-%    \meta{control sequence} is \emph{re}defined, using the contents
-%    of the token register.
+% If the \meta{control sequence} has not been defined before it is
+% defined now.  The control sequence could also expand to |\relax|,
+% in which case a circular definition results. The net result is a
+% stack overflow.  Note there is an inconsistency, because the
+% assignment in the last branch is global. 
 %
 %    \begin{macrocode}
 \def\addto#1#2{%
@@ -7546,9 +7429,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%    The macro |\initiate@active@char| takes all the necessary actions
-%    to make its argument a shorthand character. The real work is
-%    performed once for each character.
+%    The macro |\initiate@active@char| below takes all the necessary
+%    actions to make its argument a shorthand character. The real work
+%    is performed once for each character. But first we define a little
+%    tool. TODO. Always used with additional expansions. Move them here?
+%    Move the macro to basic?
 %
 %    \begin{macrocode}
 \def\bbl@withactive#1#2{%
@@ -7558,26 +7443,19 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %  \begin{macro}{\bbl@redefine}
-%    To redefine a command, we save the old meaning of the macro.
-%    Then we redefine it to call the original macro with the
-%    `sanitized' argument.  The reason why we do it this way is that
-%    we don't want to redefine the \LaTeX\ macros completely in case
-%    their definitions change (they have changed in the past).
 %
-%    Because we need to redefine a number of commands we define the
-%    command |\bbl@redefine| which takes care of this. It creates a
-%    new control sequence, |\org@...|
+%    To redefine a command, we save the old meaning of the macro. Then
+%    we redefine it to call the original macro with the `sanitized'
+%    argument. The reason why we do it this way is that we don't want
+%    to redefine the \LaTeX\ macros completely in case their
+%    definitions change (they have changed in the past). A macro named
+%    |\macro| will be saved new control sequences named |\org@macro|.
 %
 %    \begin{macrocode}
 \def\bbl@redefine#1{%
   \edef\bbl@tempa{\bbl@stripslash#1}%
   \expandafter\let\csname org@\bbl@tempa\endcsname#1%
   \expandafter\def\csname\bbl@tempa\endcsname}
-%    \end{macrocode}
-%
-%    This command should only be used in the preamble of the document.
-%
-%    \begin{macrocode}
 \@onlypreamble\bbl@redefine
 %    \end{macrocode}
 %
@@ -7613,11 +7491,6 @@ help from Bernd Raichle, for which I am grateful.
      \bbl@exp{\def\\#1{\\\protect\<\bbl@tempa\space>}}}%
     {\bbl@exp{\let\<org@\bbl@tempa>\<\bbl@tempa\space>}}%
     \@namedef{\bbl@tempa\space}}
-%    \end{macrocode}
-%
-%    This command should only be used in the preamble of the document.
-%
-%    \begin{macrocode}
 \@onlypreamble\bbl@redefinerobust
 %    \end{macrocode}
 %
@@ -7625,12 +7498,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Hooks}
 %
-%  Note they are loaded in babel.def. switch.def only provides a
-%  ``hook'' for hooks (with a default value which is a no-op,
-%  below). Admittedly, the current implementation is a somewhat
-%  simplistic and does vety little to catch errors, but it is intended
-%  for developpers, after all. |\bbl@usehooks| is the commands used by
-%  babel to execute hooks defined for an event.
+%  Admittedly, the current implementation is a somewhat simplistic and
+%  does very little to catch errors, but it is meant for developers,
+%  after all. |\bbl@usehooks| is the commands used by \babel{} to execute
+%  hooks defined for an event.
 %
 %    \begin{macrocode}
 \bbl@trace{Hooks}
@@ -7716,7 +7587,7 @@ help from Bernd Raichle, for which I am grateful.
   \def\<bbl@e@#2>{\the\toks@{\bbl@ens@fontenc}}}}
 \def\bbl@ensure#1#2#3{% 1: include 2: exclude 3: fontenc
   \def\bbl@tempb##1{% elt for (excluding) \bbl@captionslist list
-    \ifx##1\@undefined % 3.32 - Don't assume the macros exists
+    \ifx##1\@undefined % 3.32 - Don't assume the macro exists
       \edef##1{\noexpand\bbl@nocaption
         {\bbl@stripslash##1}{\languagename\bbl@stripslash##1}}%
     \fi
@@ -7761,7 +7632,7 @@ help from Bernd Raichle, for which I am grateful.
 % \subsection{Setting up language files}
 %
 % \begin{macro}{\LdfInit}
-%    The second version of |\LdfInit| macro takes two arguments. The first
+%    |\LdfInit| macro takes two arguments. The first
 %    argument is the name of the language that will be defined in the
 %    language definition file; the second argument is either a control
 %    sequence or a string from which a control sequence should be
@@ -7796,7 +7667,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \bbl@trace{Macros for setting language files up}
-\def\bbl@ldfinit{%
+\def\bbl@ldfinit{% TODO. Merge into the next macro? Unused elsewhere
   \let\bbl@screset\@empty
   \let\BabelStrings\bbl@opt@string
   \let\BabelOptions\@empty
@@ -7849,7 +7720,7 @@ help from Bernd Raichle, for which I am grateful.
 %    category code of the @-sign.
 %
 %    \begin{macrocode}
-\def\bbl@afterldf#1{%
+\def\bbl@afterldf#1{% TODO. Merge into the next macro? Unused elsewhere
   \bbl@afterlang
   \let\bbl@afterlang\relax
   \let\BabelModifiers\relax
@@ -7886,31 +7757,33 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \def\main@language#1{%
   \def\bbl@main@language{#1}%
-  \let\languagename\bbl@main@language
+  \let\languagename\bbl@main@language % TODO. Set localename
   \bbl@id@assign
   \bbl@patterns{\languagename}}
 %    \end{macrocode}
 %
 %    We also have to make sure that some code gets executed at the
-%    beginning of the document. Languages do not set |\pagedir|, so
-%    we set here for the whole document to the main |\bodydir|.
+%    beginning of the document, either when the |aux| file is read or,
+%    if it does not exist, when the |\AtBeginDocument| is executed.
+%    Languages do not set |\pagedir|, so we set here for the whole
+%    document to the main |\bodydir|.
 %
 %    \begin{macrocode}
 \def\bbl@beforestart{%
   \bbl@usehooks{beforestart}{}%
   \global\let\bbl@beforestart\relax}
 \AtBeginDocument{%
-  \bbl@cs{beforestart}%
+  \@nameuse{bbl@beforestart}%
   \if@filesw
-    \immediate\write\@mainaux{\string\bbl@cs{beforestart}}%
+    \immediate\write\@mainaux{\string\@nameuse{bbl@beforestart}}%
   \fi
   \expandafter\selectlanguage\expandafter{\bbl@main@language}%
-  \ifbbl@single  % must go after the line above
+  \ifbbl@single  % must go after the line above.
     \renewcommand\selectlanguage[1]{}%
     \renewcommand\foreignlanguage[2]{#2}%
     \global\let\babel@aux\@gobbletwo  % Also as flag
   \fi
-  \ifcase\bbl@engine\or\pagedir\bodydir\fi}  % TODO - a better place
+  \ifcase\bbl@engine\or\pagedir\bodydir\fi} % TODO - a better place
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -8271,7 +8144,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \begingroup
-\bbl@ifunset{ifincsname}%
+\bbl@ifunset{ifincsname}% TODO. Ugly. Correct?
   {\gdef\active@prefix#1{%
      \ifx\protect\@typeset@protect
      \else
@@ -8334,8 +8207,7 @@ help from Bernd Raichle, for which I am grateful.
 %    Both macros take one argument, like |\initiate@active@char|. The
 %    macro is used to change the definition of an active character to
 %    expand to |\active@char|\m{char} in the case of |\bbl@activate|,
-%    or |\normal@char|\m{char} in the case of
-%    |\bbl@deactivate|.
+%    or |\normal@char|\m{char} in the case of |\bbl@deactivate|.
 %
 %    \begin{macrocode}
 \def\bbl@activate#1{%
@@ -8351,8 +8223,8 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\bbl@firstcs}
 %  \begin{macro}{\bbl@scndcs}
-%    These macros have two arguments. They use one of their arguments
-%    to build a control sequence from.
+%
+% These macros are used only as a trick when declaring shorthands.
 %
 %    \begin{macrocode}
 \def\bbl@firstcs#1#2{\csname#1\endcsname}
@@ -8431,7 +8303,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \def\user@group{user}
-\def\language@group{english}
+\def\language@group{english} % TODO. I don't like defaults
 \def\system@group{system}
 %    \end{macrocode}
 %
@@ -8440,11 +8312,9 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\useshorthands}
-%    This is the user level command to tell \LaTeX\ that user level
-%    shorthands will be used in the document. It takes one argument,
-%    the character that starts a shorthand. First note that this is
-%    user level, and then initialize and activate the character for
-%    use as a shorthand character (ie, it's active in the
+%
+%    This is the user level macro. It initializes and activates the
+%    character for use as a shorthand character (ie, it's active in the
 %    preamble). Languages can deactivate shorthands, so a starred
 %    version is also provided which activates them always after the
 %    language has been switched.
@@ -8506,10 +8376,11 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\languageshorthands}
+%
 %    A user level command to change the language from which shorthands
 %    are used. Unfortunately, \babel{} currently does not keep track
 %    of defined groups, and therefore there is no way to catch a
-%    possible change in casing.
+%    possible change in casing [TODO. Unclear].
 %
 %    \begin{macrocode}
 \def\languageshorthands#1{\def\language@group{#1}}
@@ -8518,7 +8389,11 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\aliasshorthand}
-%    First the new shorthand needs to be initialized,
+%    First the new shorthand needs to be initialized. Then, we define
+%    the new shorthand in terms of the original one, but note with
+%    |\aliasshorthands{"}{/}| is |\active@prefix /\active@char/|, so we
+%    still need to let the lattest to |\active@char"|.
+%
 %
 %    \begin{macrocode}
 \def\aliasshorthand#1#2{%
@@ -8528,14 +8403,6 @@ help from Bernd Raichle, for which I am grateful.
          \@notshorthand{#2}%
        \else
          \initiate@active@char{#2}%
-%    \end{macrocode}
-%
-%    Then, we define the new shorthand in terms of the original
-%    one, but note with |\aliasshorthands{"}{/}| is
-%    |\active@prefix /\active@char/|, so we still need to let the
-%    lattest to |\active@char"|.
-%
-%    \begin{macrocode}
          \expandafter\let\csname active@char\string#2\expandafter\endcsname
            \csname active@char\string#1\endcsname
          \expandafter\let\csname normal@char\string#2\expandafter\endcsname
@@ -8581,19 +8448,18 @@ help from Bernd Raichle, for which I am grateful.
 %  \begin{macro}{\bbl@switch@sh}
 %
 %    The macro |\bbl@switch@sh| takes the list of characters apart one
-%    by  one and subsequently switches the category code of the
+%    by one and subsequently switches the category code of the
 %    shorthand character according to the first argument of
 %    |\bbl@switch@sh|.
 %
-%    But before any of this switching takes place we make sure that
-%    the character we are dealing with is known as a shorthand
-%    character. If it is, a macro such as |\active@char"| should
-%    exist.
+%    But before any of this switching takes place we make sure that the
+%    character we are dealing with is known as a shorthand character.
+%    If it is, a macro such as |\active@char"| should exist.
 %
-%    Switching off and on is easy -- we just set the category
-%    code to `other' (12) and |\active|. With the starred version, the
-%    original catcode and the original definition, saved
-%    in |@initiate@active@char|, are restored.
+%    Switching off and on is easy -- we just set the category code to
+%    `other' (12) and |\active|. With the starred version, the original
+%    catcode and the original definition, saved in
+%    |@initiate@active@char|, are restored.
 %
 %    \begin{macrocode}
 \def\bbl@switch@sh#1#2{%
@@ -8619,7 +8485,7 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %  \end{macro}
 %
-% Note the value is that at the expansion time, eg, in the preample
+% Note the value is that at the expansion time; eg, in the preample
 % shorhands are usually deactivated.
 %
 %    \begin{macrocode}
@@ -8782,11 +8648,6 @@ help from Bernd Raichle, for which I am grateful.
         {\csname\bbl@tempc @attr@##1\endcsname}%
         {\@attrerr{\bbl@tempc}{##1}}%
      \fi}}}
-%    \end{macrocode}
-%
-%    This command should only be used in the preamble of a document.
-%
-%    \begin{macrocode}
 \@onlypreamble\languageattribute
 %    \end{macrocode}
 %
@@ -8835,31 +8696,19 @@ help from Bernd Raichle, for which I am grateful.
 %    attribute being checked, and the third and fourth arguments are
 %    the true and false clauses.
 %
+%    First we need to find out if any attributes were set; if not we're
+%    done. Then we need to check the list of known attributes. When
+%    we're this far |\ifin@| has a value indicating if the attribute in
+%    question was set or not. Just to be safe the code to be executed
+%    is `thrown over the |\fi|'.
+%
 %    \begin{macrocode}
 \def\bbl@ifattributeset#1#2#3#4{%
-%    \end{macrocode}
-%
-%    First we need to find out if any attributes were set; if not
-%    we're done.
-%
-%    \begin{macrocode}
   \ifx\bbl@known@attribs\@undefined
     \in@false
   \else
-%    \end{macrocode}
-%
-%    The we need to check the list of known attributes.
-%
-%    \begin{macrocode}
     \bbl@xin@{,#1-#2,}{,\bbl@known@attribs,}%
   \fi
-%    \end{macrocode}
-%
-%    When we're this far |\ifin@| has a value indicating if the
-%    attribute in question was set or not. Just to be safe the code to
-%    be executed is `thrown over the |\fi|'.
-%
-%    \begin{macrocode}
   \ifin@
     \bbl@afterelse#3%
   \else
@@ -8876,36 +8725,20 @@ help from Bernd Raichle, for which I am grateful.
 %    attribute list, the \TeX-code to be executed when the attribute
 %    is known and the \TeX-code to be executed otherwise.
 %
+%    We first assume the attribute is unknown. Then we loop over the
+%    list of known attributes, trying to find a match. When a match is
+%    found the definition of |\bbl@tempa| is changed. Finally we
+%    execute |\bbl@tempa|.
+%
 %    \begin{macrocode}
 \def\bbl@ifknown@ttrib#1#2{%
-%    \end{macrocode}
-%
-%    We first assume the attribute is unknown.
-%
-%    \begin{macrocode}
   \let\bbl@tempa\@secondoftwo
-%    \end{macrocode}
-%
-%    Then we loop over the list of known attributes, trying to find a
-%    match.
-%
-%    \begin{macrocode}
   \bbl@loopx\bbl@tempb{#2}{%
     \expandafter\in@\expandafter{\expandafter,\bbl@tempb,}{,#1,}%
     \ifin@
-%    \end{macrocode}
-%
-%    When a match is found the definition of |\bbl@tempa| is changed.
-%
-%    \begin{macrocode}
       \let\bbl@tempa\@firstoftwo
     \else
     \fi}%
-%    \end{macrocode}
-%
-%    Finally we execute |\bbl@tempa|.
-%
-%    \begin{macrocode}
   \bbl@tempa
 }
 %    \end{macrocode}
@@ -8967,15 +8800,15 @@ help from Bernd Raichle, for which I am grateful.
 %  \begin{macro}{\babel@save}
 %  \begin{macro}{\babel@savevariable}
 %
-%    The macro |\babel@save|\meta{csname} saves the current meaning of
-%    the control sequence \meta{csname} to
-%    |\originalTeX|\footnote{\cs{originalTeX} has to be expandable,
-%    i.\,e.\ you shouldn't let it to \cs{relax}.}. To do this, we let
-%    the current meaning to a temporary control sequence, the restore
-%    commands are appended to |\originalTeX| and the counter is
-%    incremented. The macro |\babel@savevariable|\meta{variable} saves
-%    the value of the variable. \meta{variable} can be anything allowed
-%    after the |\the| primitive.
+% The macro |\babel@save|\meta{csname} saves the current meaning of the
+% control sequence \meta{csname} to
+% |\originalTeX|\footnote{\cs{originalTeX} has to be expandable,
+% i.\,e.\ you shouldn't let it to \cs{relax}.}. To do this, we let the
+% current meaning to a temporary control sequence, the restore commands
+% are appended to |\originalTeX| and the counter is incremented. The
+% macro |\babel@savevariable|\meta{variable} saves the value of the
+% variable. \meta{variable} can be anything allowed after the |\the|
+% primitive.
 %
 %    \begin{macrocode}
 \def\babel@save#1{%
@@ -8994,10 +8827,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\bbl@frenchspacing}
 %  \begin{macro}{\bbl@nonfrenchspacing}
-%    Some languages need to have |\frenchspacing| in effect. Others
-%    don't want that. The command |\bbl@frenchspacing| switches it on
-%    when it isn't already in effect and |\bbl@nonfrenchspacing|
-%    switches it off if necessary.
+% Some languages need to have |\frenchspacing| in effect. Others
+% don't want that. The command |\bbl@frenchspacing| switches it on
+% when it isn't already in effect and |\bbl@nonfrenchspacing|
+% switches it off if necessary.
 %
 %    \begin{macrocode}
 \def\bbl@frenchspacing{%
@@ -9045,11 +8878,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\babelhyphenation}
 %
-%     This macro saves hyphenation exceptions. Two macros are used to
-%     store them: |\bbl@hyphenation@| for the global ones and
-%     |\bbl@hyphenation<lang>| for language ones. See |\bbl@patterns|
-%     above for further details. We make sure there is a space between
-%     words when multiple commands are used.
+% This macro saves hyphenation exceptions. Two macros are used to
+% store them: |\bbl@hyphenation@| for the global ones and
+% |\bbl@hyphenation<lang>| for language ones. See |\bbl@patterns|
+% above for further details. We make sure there is a space between
+% words when multiple commands are used.
 %
 %    \begin{macrocode}
 \bbl@trace{Hyphens}
@@ -9084,10 +8917,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\bbl@allowhyphens}
 %
-%    This macro makes hyphenation possible. Basically its definition
-%    is nothing more than |\nobreak| |\hskip| \texttt{0pt plus
-%    0pt}\footnote{\TeX\ begins and ends a word for hyphenation at a
-%    glue node. The penalty prevents a linebreak at this glue node.}.
+% This macro makes hyphenation possible. Basically its definition
+% is nothing more than |\nobreak| |\hskip| \texttt{0pt plus
+% 0pt}\footnote{\TeX\ begins and ends a word for hyphenation at a
+% glue node. The penalty prevents a linebreak at this glue node.}.
 %
 %    \begin{macrocode}
 \def\bbl@allowhyphens{\ifvmode\else\nobreak\hskip\z@skip\fi}
@@ -9099,10 +8932,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \begin{macro}{\babelhyphen}
 %
-%    Macros to insert common hyphens. Note the space before |@| in
-%    |\babelhyphen|. Instead of protecting it with
-%    |\DeclareRobustCommand|, which could insert a |\relax|, we use
-%    the same procedure as shorthands, with |\active@prefix|.
+% Macros to insert common hyphens. Note the space before |@| in
+% |\babelhyphen|. Instead of protecting it with
+% |\DeclareRobustCommand|, which could insert a |\relax|, we use
+% the same procedure as shorthands, with |\active@prefix|.
 %
 %    \begin{macrocode}
 \newcommand\babelnullhyphen{\char\hyphenchar\font}
@@ -9115,18 +8948,18 @@ help from Bernd Raichle, for which I am grateful.
     {\csname bbl@hy@#1#2\@empty\endcsname}}
 %    \end{macrocode}
 %
-%    The following two commands are used to wrap the ``hyphen'' and
-%    set the behavior of the rest of the word -- the version with a
-%    single |@| is used when further hyphenation is allowed, while
-%    that with |@@| if no more hyphens are allowed. In both cases, if
-%    the hyphen is preceded by a positive space, breaking after the
-%    hyphen is disallowed.
+% The following two commands are used to wrap the ``hyphen'' and
+% set the behavior of the rest of the word -- the version with a
+% single |@| is used when further hyphenation is allowed, while
+% that with |@@| if no more hyphens are allowed. In both cases, if
+% the hyphen is preceded by a positive space, breaking after the
+% hyphen is disallowed.
 %
-%    There should not be a discretionary after a hyphen at the
-%    beginning of a word, so it is prevented if preceded by a
-%    skip. Unfortunately, this does handle cases like ``(-suffix)''.
-%    |\nobreak| is always preceded by |\leavevmode|, in case the
-%    shorthand starts a paragraph.
+% There should not be a discretionary after a hyphen at the
+% beginning of a word, so it is prevented if preceded by a
+% skip. Unfortunately, this does handle cases like ``(-suffix)''.
+% |\nobreak| is always preceded by |\leavevmode|, in case the
+% shorthand starts a paragraph.
 %
 %    \begin{macrocode}
 \def\bbl@usehyphen#1{%
@@ -9186,7 +9019,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % The aim following commands is to provide a commom interface for
 % strings in several encodings. They also contains several hooks which
-% can be ued by \luatex{} and \xetex. The code is organized here with
+% can be used by \luatex{} and \xetex. The code is organized here with
 % pseudo-guards, so we start with the basic commands.
 %
 %  \paragraph{Tools}
@@ -9197,7 +9030,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \bbl@trace{Multiencoding strings}
 \def\bbl@toglobal#1{\global\let#1#1}
-\def\bbl@recatcode#1{%
+\def\bbl@recatcode#1{% TODO. Used only once?
   \@tempcnta="7F
   \def\bbl@tempa{%
     \ifnum\@tempcnta>"FF\else
@@ -9257,10 +9090,10 @@ help from Bernd Raichle, for which I am grateful.
 %<</More package options>>
 %    \end{macrocode}
 %
-%    \paragraph{Main command} This is the main command.  With the
-%    first use it is redefined to omit the basic setup in subsequent
-%    blocks. We make sure strings contain actual letters in the range
-%    128-255, not active characters.
+% \paragraph{Main command} This is the main command. With the first
+% use it is redefined to omit the basic setup in subsequent blocks.
+% We make sure strings contain actual letters in the range 128-255,
+% not active characters.
 %
 %    \begin{macrocode}
 \@onlypreamble\StartBabelCommands
@@ -9298,22 +9131,22 @@ help from Bernd Raichle, for which I am grateful.
 \let\bbl@startcommands\StartBabelCommands
 %    \end{macrocode}
 %
-%    Parse the encoding info to get the label, input, and font parts.
+% Parse the encoding info to get the label, input, and font parts.
 %
-%    Select the behavior of |\SetString|. Thre are two main cases,
-%    depending of if there is an optional argument: without it and
-%    |strings=encoded|, strings are defined
-%    always; otherwise, they are set only if they are still undefined
-%    (ie, fallback values). With labelled blocks and
-%    |strings=encoded|, define the strings, but with another value,
-%    define strings only if the current label or font encoding is the
-%    value of |strings|; otherwise (ie, no |strings| or a block whose
-%    label is not in |strings=|) do nothing.
+% Select the behavior of |\SetString|. Thre are two main cases,
+% depending of if there is an optional argument: without it and
+% |strings=encoded|, strings are defined
+% always; otherwise, they are set only if they are still undefined
+% (ie, fallback values). With labelled blocks and
+% |strings=encoded|, define the strings, but with another value,
+% define strings only if the current label or font encoding is the
+% value of |strings|; otherwise (ie, no |strings| or a block whose
+% label is not in |strings=|) do nothing.
 %
-%    We presume the current block is not loaded, and therefore set
-%    (above) a couple of default values to gobble the arguments. Then,
-%    these macros are redefined if necessary according to several
-%    parameters.
+% We presume the current block is not loaded, and therefore set
+% (above) a couple of default values to gobble the arguments. Then,
+% these macros are redefined if necessary according to several
+% parameters.
 %
 %    \begin{macrocode}
 \newcommand\bbl@startcmds@ii[1][\@empty]{%
@@ -9377,18 +9210,19 @@ help from Bernd Raichle, for which I am grateful.
   \fi}
 %    \end{macrocode}
 %
-%    There are two versions of |\bbl@scswitch|. The first version is
-%    used when |ldf|s are read, and it makes sure
-%    |\|\m{group}\m{language} is reset, but only once (|\bbl@screset|
-%    is used to keep track of this). The second version is used in the
-%    preamble and packages loaded after \babel{} and does nothing. The
-%    macro |\bbl@forlang| loops |\bbl@L| but its body is executed only
-%    if the value is in |\BabelLanguages| (inside \babel) or
-%    |\date|\m{language} is defined (after \babel{} has been loaded).
-%    There are also two version of |\bbl@forlang|. The first one skips
-%    the current iteration if the language is not in |\BabelLanguages|
-%    (used in |ldf|s), and the second one skips undefined languages
-%    (after \babel{} has been loaded) .
+% There are two versions of |\bbl@scswitch|. The first version is used
+% when |ldf|s are read, and it makes sure |\|\m{group}\m{language} is
+% reset, but only once (|\bbl@screset| is used to keep track of this).
+% The second version is used in the preamble and packages loaded after
+% \babel{} and does nothing.
+%
+% The macro |\bbl@forlang| loops |\bbl@L| but its body is executed only
+% if the value is in |\BabelLanguages| (inside \babel) or
+% |\date|\m{language} is defined (after \babel{} has been loaded).
+% There are also two version of |\bbl@forlang|. The first one skips the
+% current iteration if the language is not in |\BabelLanguages| (used
+% in |ldf|s), and the second one skips undefined languages (after
+% \babel{} has been loaded) .
 %
 %   \begin{macrocode}
 \def\bbl@forlang#1#2{%
@@ -9419,17 +9253,17 @@ help from Bernd Raichle, for which I am grateful.
 \let\bbl@endcommands\EndBabelCommands
 %    \end{macrocode}
 %
-%    Now we define commands to be used inside |\StartBabelCommands|.
+% Now we define commands to be used inside |\StartBabelCommands|.
 %
-%    \paragraph{Strings} The following macro is the actual definition
-%    of |\SetString| when it is ``active''
+% \paragraph{Strings} The following macro is the actual definition
+% of |\SetString| when it is ``active''
 %
-%    First save the ``switcher''. Create it if undefined. Strings are
-%    defined only if undefined (ie, like |\providescommmand|). With
-%    the event |stringprocess| you can preprocess the string by
-%    manipulating the value of |\BabelString|. If there are several
-%    hooks assigned to this event, preprocessing is done in the same
-%    order as defined.  Finally, the string is set.
+% First save the ``switcher''. Create it if undefined. Strings are
+% defined only if undefined (ie, like |\providescommmand|). With
+% the event |stringprocess| you can preprocess the string by
+% manipulating the value of |\BabelString|. If there are several
+% hooks assigned to this event, preprocessing is done in the same
+% order as defined.  Finally, the string is set.
 %
 %    \begin{macrocode}
 \def\bbl@setstring#1#2{%
@@ -9473,12 +9307,11 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-%    Define |\SetStringLoop|, which is actually set inside
-%    |\StartBabelCommands|. The current definition is
-%    somewhat complicated because we need a count, but |\count@| is
-%    not under our control (remember |\SetString| may call hooks).
-%    Instead of defining a dedicated count, we just ``pre-expand''
-%    its value.
+% Define |\SetStringLoop|, which is actually set inside
+% |\StartBabelCommands|. The current definition is somewhat complicated
+% because we need a count, but |\count@| is not under our control
+% (remember |\SetString| may call hooks). Instead of defining a
+% dedicated count, we just ``pre-expand'' its value.
 %
 %    \begin{macrocode}
 %<<*Macros local to BabelCommands>>
@@ -9494,8 +9327,8 @@ help from Bernd Raichle, for which I am grateful.
 %<</Macros local to BabelCommands>>
 %    \end{macrocode}
 %
-%    \paragraph{Delaying code} Now the definition of
-%    |\AfterBabelCommands| when it is activated.
+% \paragraph{Delaying code} Now the definition of |\AfterBabelCommands|
+% when it is activated.
 %
 %    \begin{macrocode}
 \def\bbl@aftercmds#1{%
@@ -9567,8 +9400,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@tempa}
 %    \end{macrocode}
 %
-%    The following package options control the behavior of
-%    hyphenation mapping.
+% The following package options control the behavior of
+% hyphenation mapping.
 %
 %    \begin{macrocode}
 %<<*More package options>>
@@ -9594,8 +9427,9 @@ help from Bernd Raichle, for which I am grateful.
 % \subsection{Macros common to a number of languages}
 %
 %  \begin{macro}{\set@low@box}
-%    The following macro is used to lower quotes to the same level as
-%    the comma.  It prepares its argument in box register~0.
+%
+% The following macro is used to lower quotes to the same level as
+% the comma.  It prepares its argument in box register~0.
 %
 %    \begin{macrocode}
 \bbl@trace{Macros related to glyphs}
@@ -9621,18 +9455,18 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Making glyphs available}
 %
-%    This section makes a number of glyphs available that either do not
-%    exist in the \texttt{OT1} encoding and have to be `faked', or
-%    that are not accessible through \file{T1enc.def}.
+% This section makes a number of glyphs available that either do not
+% exist in the \texttt{OT1} encoding and have to be `faked', or
+% that are not accessible through \file{T1enc.def}.
 %
 % \subsubsection{Quotation marks}
 %
 %  \begin{macro}{\quotedblbase}
-%    In the \texttt{T1} encoding the opening double quote at the
-%    baseline is available as a separate character, accessible via
-%    |\quotedblbase|. In the \texttt{OT1} encoding it is not
-%    available, therefore we make it available by lowering the normal
-%    open quote character to the baseline.
+% In the \texttt{T1} encoding the opening double quote at the
+% baseline is available as a separate character, accessible via
+% |\quotedblbase|. In the \texttt{OT1} encoding it is not
+% available, therefore we make it available by lowering the normal
+% open quote character to the baseline.
 %
 %    \begin{macrocode}
 \ProvideTextCommand{\quotedblbase}{OT1}{%
@@ -9640,8 +9474,8 @@ help from Bernd Raichle, for which I am grateful.
     \box\z@\kern-.04em\bbl@allowhyphens}}
 %    \end{macrocode}
 %
-%    Make sure that when an encoding other than \texttt{OT1} or
-%    \texttt{T1} is used this glyph can still be typeset.
+% Make sure that when an encoding other than \texttt{OT1} or
+% \texttt{T1} is used this glyph can still be typeset.
 %
 %    \begin{macrocode}
 \ProvideTextCommandDefault{\quotedblbase}{%
@@ -9671,9 +9505,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\guillemetleft}
 %  \begin{macro}{\guillemetright}
-%    The guillemet characters are not available in \texttt{OT1}
-%    encoding. They are faked. (Wrong names with o preserved for
-%    compatibility.)
+% The guillemet characters are not available in \texttt{OT1}
+% encoding. They are faked. (Wrong names with o preserved for
+% compatibility.)
 %
 %    \begin{macrocode}
 \ProvideTextCommand{\guillemetleft}{OT1}{%
@@ -9706,8 +9540,8 @@ help from Bernd Raichle, for which I am grateful.
   \fi}
 %    \end{macrocode}
 %
-%    Make sure that when an encoding other than \texttt{OT1} or
-%    \texttt{T1} is used these glyphs can still be typeset.
+% Make sure that when an encoding other than \texttt{OT1} or
+% \texttt{T1} is used these glyphs can still be typeset.
 %
 %    \begin{macrocode}
 \ProvideTextCommandDefault{\guillemetleft}{%
@@ -9745,8 +9579,8 @@ help from Bernd Raichle, for which I am grateful.
   \fi}
 %    \end{macrocode}
 %
-%    Make sure that when an encoding other than \texttt{OT1} or
-%    \texttt{T1} is used these glyphs can still be typeset.
+% Make sure that when an encoding other than \texttt{OT1} or
+% \texttt{T1} is used these glyphs can still be typeset.
 %
 %    \begin{macrocode}
 \ProvideTextCommandDefault{\guilsinglleft}{%
@@ -9762,9 +9596,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\ij}
 %  \begin{macro}{\IJ}
-%    The dutch language uses the letter `ij'. It is available in
-%    \texttt{T1} encoded fonts, but not in the \texttt{OT1} encoded
-%    fonts. Therefore we fake it for the \texttt{OT1} encoding.
+% The dutch language uses the letter `ij'. It is available in
+% \texttt{T1} encoded fonts, but not in the \texttt{OT1} encoded
+% fonts. Therefore we fake it for the \texttt{OT1} encoding.
 %
 %    \begin{macrocode}
 \DeclareTextCommand{\ij}{OT1}{%
@@ -9788,15 +9622,15 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %  \end{macro}
 %
-%  \begin{macro}{\dj}
-%  \begin{macro}{\DJ}
-%    The croatian language needs the letters |\dj| and |\DJ|; they are
-%    available in the \texttt{T1} encoding, but not in the
-%    \texttt{OT1} encoding by default.
+% \begin{macro}{\dj}
+% \begin{macro}{\DJ}
+% The croatian language needs the letters |\dj| and |\DJ|; they are
+% available in the \texttt{T1} encoding, but not in the
+% \texttt{OT1} encoding by default.
 %
-%    Some code to construct these glyphs for the \texttt{OT1} encoding
-%    was made available to me by Stipčević Mario,
-%    (\texttt{stipcevic@olimp.irb.hr}).
+% Some code to construct these glyphs for the \texttt{OT1} encoding
+% was made available to me by Stipčević Mario,
+% (\texttt{stipcevic@olimp.irb.hr}).
 %
 %    \begin{macrocode}
 \def\crrtic@{\hrule height0.1ex width0.3em}
@@ -10042,8 +9876,8 @@ help from Bernd Raichle, for which I am grateful.
 }
 %    \end{macrocode}
 %
-%    Finally, make sure the default hyphenrules are defined (even if
-%    empty). 
+% Finally, make sure the default hyphenrules are defined (even if
+% empty). 
 %
 %    \begin{macrocode}
 \ifx\l@english\@undefined
@@ -10109,7 +9943,7 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-% \subsection{Creating languages}
+% \subsection{Creating and modifying languages}
 %
 % |\babelprovide| is a general purpose tool for creating and modifying
 % languages. It creates the language infrastructure, and loads, if
@@ -10978,10 +10812,10 @@ help from Bernd Raichle, for which I am grateful.
     \fi}}
 %    \end{macrocode}
 %
-%  More general, but non-expandable, is |\getlocaleproperty|. To inspect
-%  every possible loaded |ini|, we define |\LocaleForEach|, where
-%  |\bbl@ini@loaded| is a comma-separated list of locales, built by
-%  |\bbl@read@ini|. 
+% More general, but non-expandable, is |\getlocaleproperty|. To inspect
+% every possible loaded |ini|, we define |\LocaleForEach|, where
+% |\bbl@ini@loaded| is a comma-separated list of locales, built by
+% |\bbl@read@ini|. 
 %
 %    \begin{macrocode}   
 \newcommand\getlocaleproperty[3]{% 
@@ -11067,7 +10901,6 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@ADJ@hyphenation.extra@on}{%
   \bbl@activateposthyphen}
 %
-% 
 \@namedef{bbl@ADJ@autoload.bcp47@on}{%
   \bbl@bcpallowedtrue}
 \@namedef{bbl@ADJ@autoload.bcp47@off}{%
@@ -11106,55 +10939,24 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \section{Loading hyphenation patterns}
 %
-%  The following code is meant to be read by ini\TeX\ because it
-%  should instruct \TeX\ to read hyphenation patterns. To this end the
-%  \texttt{docstrip} option \texttt{patterns} can be used to include
-%  this code in the file \file{hyphen.cfg}. Code is written with lower
-%  level macros.
+% The following code is meant to be read by ini\TeX\ because it
+% should instruct \TeX\ to read hyphenation patterns. To this end the
+% \texttt{docstrip} option \texttt{patterns} can be used to include
+% this code in the file \file{hyphen.cfg}. Code is written with lower
+% level macros.
 %
-%    We want to add a message to the message \LaTeX$\:$2.09 puts in
-%    the |\everyjob| register. This could be done by the following
-%    code:
-%\begin{verbatim}
-%    \let\orgeveryjob\everyjob
-%    \def\everyjob#1{%
-%      \orgeveryjob{#1}%
-%      \orgeveryjob\expandafter{\the\orgeveryjob\immediate\write16{%
-%          hyphenation patterns for \the\loaded@patterns loaded.}}%
-%      \let\everyjob\orgeveryjob\let\orgeveryjob\@undefined}
-%\end{verbatim}
-%    The code above redefines the control sequence \cs{everyjob}
-%    in order to be able to add something to the current contents of
-%    the register. This is necessary because the processing of
-%    hyphenation patterns happens long before \LaTeX\ fills the
-%    register.
+% To make sure that \LaTeX$\:$2.09 executes the |\@begindocumenthook|
+% we would want to alter |\begin{document}|, but as this done too often
+% already, we add the new code at the front of |\@preamblecmds|. But we
+% can only do that after it has been defined, so we add this piece of
+% code to |\dump|.
 %
-%    There are some problems with this approach though.
-%  \begin{itemize}
-%    \item When someone wants to use several hyphenation patterns with
-%    \SliTeX\ the above scheme won't work. The reason is that \SliTeX\
-%    overwrites the contents of the |\everyjob| register with its own
-%    message.
-%    \item Plain \TeX\ does not use the |\everyjob| register so the
-%    message would not be displayed.
-%  \end{itemize}
-%    To circumvent this a `dirty trick' can be used. As this code is
-%    only processed when creating a new format file there is one
-%    command that is sure to be used, |\dump|. Therefore the original
-%    |\dump| is saved in |\org@dump| and a new definition is supplied.
+% This new definition starts by adding an instruction to write a
+% message on the terminal and in the transcript file to inform the
+% user of the preloaded hyphenation patterns.
 %
-%    To make sure that \LaTeX$\:$2.09 executes the
-%    |\@begindocumenthook| we would want to alter |\begin{document}|,
-%    but as this done too often already, we add the new code at the
-%    front of |\@preamblecmds|. But we can only do that after it has
-%    been defined, so we add this piece of code to |\dump|.
-%
-%    This new definition starts by adding an instruction to write a
-%    message on the terminal and in the transcript file to inform the
-%    user of the preloaded hyphenation patterns.
-%
-%    Then everything is restored to the old situation and the format
-%    is dumped.
+% Then everything is restored to the old situation and the format
+% is dumped.
 %
 %    \begin{macrocode}
 <@Make sure ProvidesFile is defined@>
@@ -11199,9 +11001,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\process@synonym}
 %
-%    This macro takes care of the lines which start with an
-%    \texttt{=}. It needs an empty token register to begin with.
-%    |\bbl@languages| is also set to empty.
+% This macro takes care of the lines which start with an
+% \texttt{=}. It needs an empty token register to begin with.
+% |\bbl@languages| is also set to empty.
 %
 %    \begin{macrocode}
 \toks@{}
@@ -11234,55 +11036,56 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%  \begin{macro}{\process@language}
-%    The macro |\process@language| is used to process a non-empty line
-%    from the `configuration file'. It has three arguments, each
-%    delimited by white space. The first argument is the `name' of a
-%    language; the second is the name of the file that contains the
-%    patterns. The optional third argument is the name of a file
-%    containing hyphenation exceptions.
+% \begin{macro}{\process@language}
 %
-%    The first thing to do is call |\addlanguage| to allocate a pattern
-%    register and to make that register `active'. Then the pattern file
-%    is read.
+% The macro |\process@language| is used to process a non-empty line
+% from the `configuration file'. It has three arguments, each
+% delimited by white space. The first argument is the `name' of a
+% language; the second is the name of the file that contains the
+% patterns. The optional third argument is the name of a file
+% containing hyphenation exceptions.
 %
-%    For some hyphenation patterns it is needed to load them with a
-%    specific font encoding selected. This can be specified in the
-%    file \file{language.dat} by adding for instance `\texttt{:T1}' to
-%    the name of the language. The macro |\bbl@get@enc| extracts the
-%    font encoding from the language name and stores it in
-%    |\bbl@hyph@enc|. The latter can be used in hyphenation files if
-%    you need to set a behavior depending on the given encoding (it
-%    is set to empty if no encoding is given).
+% The first thing to do is call |\addlanguage| to allocate a pattern
+% register and to make that register `active'. Then the pattern file
+% is read.
 %
-%    Pattern files may contain assignments to |\lefthyphenmin| and
-%    |\righthyphenmin|. \TeX\ does not keep track of these
-%    assignments. Therefore we try to detect such assignments and
-%    store them in the |\|\langvar|hyphenmins| macro. When no
-%    assignments were made we provide a default setting.
+% For some hyphenation patterns it is needed to load them with a
+% specific font encoding selected. This can be specified in the
+% file \file{language.dat} by adding for instance `\texttt{:T1}' to
+% the name of the language. The macro |\bbl@get@enc| extracts the
+% font encoding from the language name and stores it in
+% |\bbl@hyph@enc|. The latter can be used in hyphenation files if
+% you need to set a behavior depending on the given encoding (it
+% is set to empty if no encoding is given).
 %
-%    Some pattern files contain changes to the |\lccode| en |\uccode|
-%    arrays. Such changes should remain local to the language;
-%    therefore we process the pattern file in a group; the |\patterns|
-%    command acts globally so its effect will be remembered.
+% Pattern files may contain assignments to |\lefthyphenmin| and
+% |\righthyphenmin|. \TeX\ does not keep track of these
+% assignments. Therefore we try to detect such assignments and
+% store them in the |\|\langvar|hyphenmins| macro. When no
+% assignments were made we provide a default setting.
 %
-%    Then we globally store the settings of |\lefthyphenmin| and
-%    |\righthyphenmin| and close the group.
+% Some pattern files contain changes to the |\lccode| en |\uccode|
+% arrays. Such changes should remain local to the language;
+% therefore we process the pattern file in a group; the |\patterns|
+% command acts globally so its effect will be remembered.
 %
-%    When the hyphenation patterns have been processed we need to see
-%    if a file with hyphenation exceptions needs to be read. This is
-%    the case when the third argument is not empty and when it does
-%    not contain a space token. (Note however there is no need to save
-%    hyphenation exceptions into the format.)
+% Then we globally store the settings of |\lefthyphenmin| and
+% |\righthyphenmin| and close the group.
 %
-%    \cs{bbl@languages} saves a snapshot of the loaded languages in the
-%    form  \cs{bbl@elt}\marg{language-name}\marg{number}%
-%    \marg{patterns-file}\marg{exceptions-file}. Note the last 2
-%    arguments are empty in `dialects' defined in |language.dat| with
-%    |=|. Note also the language name can have encoding info.
+% When the hyphenation patterns have been processed we need to see
+% if a file with hyphenation exceptions needs to be read. This is
+% the case when the third argument is not empty and when it does
+% not contain a space token. (Note however there is no need to save
+% hyphenation exceptions into the format.)
 %
-%    Finally, if the counter |\language| is equal to zero we execute the
-%    synonyms stored.
+% \cs{bbl@languages} saves a snapshot of the loaded languages in the
+% form  \cs{bbl@elt}\marg{language-name}\marg{number}%
+% \marg{patterns-file}\marg{exceptions-file}. Note the last 2
+% arguments are empty in `dialects' defined in |language.dat| with
+% |=|. Note also the language name can have encoding info.
+%
+% Finally, if the counter |\language| is equal to zero we execute the
+% synonyms stored.
 %
 %    \begin{macrocode}
 \def\process@language#1#2#3{%
@@ -11322,24 +11125,25 @@ help from Bernd Raichle, for which I am grateful.
   \fi}
 %    \end{macrocode}
 %
-%  \begin{macro}{\bbl@get@enc}
+% \begin{macro}{\bbl@get@enc}
 %
-%  \begin{macro}{\bbl@hyph@enc}
-%    The macro |\bbl@get@enc| extracts the font encoding from the
-%    language name and stores it in |\bbl@hyph@enc|. It uses delimited
-%    arguments to achieve this.
+% \begin{macro}{\bbl@hyph@enc}
+% The macro |\bbl@get@enc| extracts the font encoding from the
+% language name and stores it in |\bbl@hyph@enc|. It uses delimited
+% arguments to achieve this.
 %
 %    \begin{macrocode}
 \def\bbl@get@enc#1:#2:#3\@@@{\def\bbl@hyph@enc{#2}}
 %    \end{macrocode}
 %
-%  \end{macro}
-%  \end{macro}
-%  \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
-%    Now, hooks are defined. For efficiency reasons, they are dealt
-%    here in a special way. Besides \luatex, format-specific
-%    configuration files are taken into account.
+% Now, hooks are defined. For efficiency reasons, they are dealt
+% here in a special way. Besides \luatex, format-specific
+% configuration files are taken into account. |loadkernel| currently
+% loads nothing, but define some basic macros instead.
 %
 %    \begin{macrocode}
 \def\bbl@hook@everylanguage#1{}
@@ -11428,28 +11232,24 @@ help from Bernd Raichle, for which I am grateful.
 \else
 %    \end{macrocode}
 %
-%    Pattern registers are allocated using count register
-%    |\last@language|. Its initial value is~0. The definition of the
-%    macro |\newlanguage| is such that it first increments the count
-%    register and then defines the language. In order to have the
-%    first patterns loaded in pattern register number~0 we initialize
-%    |\last@language| with the value~$-1$.
+% Pattern registers are allocated using count register
+% |\last@language|. Its initial value is~0. The definition of the
+% macro |\newlanguage| is such that it first increments the count
+% register and then defines the language. In order to have the
+% first patterns loaded in pattern register number~0 we initialize
+% |\last@language| with the value~$-1$.
 %
 %    \begin{macrocode}
   \last@language\m@ne
 %    \end{macrocode}
 %
-%    We now read lines from the file until the end is found
+% We now read lines from the file until the end is found. While
+% reading from the input, it is useful to switch off recognition of
+% the end-of-line character. This saves us stripping off spaces from
+% the contents of the control sequence.
 %
 %    \begin{macrocode}
   \loop
-%    \end{macrocode}
-%
-%    While reading from the input, it is useful to switch off
-%    recognition of the end-of-line character. This saves us stripping
-%    off spaces from the contents of the control sequence.
-%
-%    \begin{macrocode}
     \endlinechar\m@ne
     \read1 to \bbl@line
     \endlinechar`\^^M
@@ -11470,8 +11270,9 @@ help from Bernd Raichle, for which I am grateful.
   \repeat
 %    \end{macrocode}
 %
-%    Check for the end of the file. We must reverse the test for
-%    |\ifeof| without |\else|. Then reactivate the default patterns.
+% Check for the end of the file. We must reverse the test for
+% |\ifeof| without |\else|. Then reactivate the default patterns,
+% and close the configuration file.
 %
 %    \begin{macrocode}
   \begingroup
@@ -11482,17 +11283,12 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@languages
   \endgroup
 \fi
-%    \end{macrocode}
-%
-%    and close the configuration file.
-%
-%    \begin{macrocode}
 \closein1
 %    \end{macrocode}
 %
-%    We add a message about the fact that babel is loaded in the
-%    format and with which language patterns to the \cs{everyjob}
-%    register.
+% We add a message about the fact that babel is loaded in the
+% format and with which language patterns to the \cs{everyjob}
+% register.
 %
 %    \begin{macrocode}
 \if/\the\toks@/\else
@@ -20437,32 +20233,32 @@ Babel.cjk_breaks = {
 %
 % \subsection{Not renaming \file{hyphen.tex}}
 %
-%    As Don Knuth has declared that the filename \file{hyphen.tex} may
-%    only be used to designate \emph{his} version of the american
-%    English hyphenation patterns, a new solution has to be found in
-%    order to be able to load hyphenation patterns for other languages
-%    in a plain-based \TeX-format.
-%    When asked he responded:
-%    \begin{quote}
-%      That file name is ``sacred'', and if anybody changes it they will
-%      cause severe upward/downward compatibility headaches.
+% As Don Knuth has declared that the filename \file{hyphen.tex} may
+% only be used to designate \emph{his} version of the american
+% English hyphenation patterns, a new solution has to be found in
+% order to be able to load hyphenation patterns for other languages
+% in a plain-based \TeX-format.
+% When asked he responded:
+% \begin{quote}
+%   That file name is ``sacred'', and if anybody changes it they will
+%   cause severe upward/downward compatibility headaches.
 %
-%      People can have a file localhyphen.tex or whatever they like,
-%      but they mustn't diddle with hyphen.tex (or plain.tex except to
-%      preload additional fonts).
-%    \end{quote}
+%   People can have a file localhyphen.tex or whatever they like,
+%   but they mustn't diddle with hyphen.tex (or plain.tex except to
+%   preload additional fonts).
+% \end{quote}
 %
-%    The files \file{bplain.tex} and \file{blplain.tex} can be used as
-%    replacement wrappers around \file{plain.tex} and
-%    \file{lplain.tex} to achieve the desired effect, based on the
-%    \pkg{babel} package. If you load each of them with ini\TeX, you
-%    will get a file called either \file{bplain.fmt} or
-%    \file{blplain.fmt}, which you can use as replacements for
-%    \file{plain.fmt} and \file{lplain.fmt}.
+% The files \file{bplain.tex} and \file{blplain.tex} can be used as
+% replacement wrappers around \file{plain.tex} and
+% \file{lplain.tex} to achieve the desired effect, based on the
+% \pkg{babel} package. If you load each of them with ini\TeX, you
+% will get a file called either \file{bplain.fmt} or
+% \file{blplain.fmt}, which you can use as replacements for
+% \file{plain.fmt} and \file{lplain.fmt}.
 %
-%    As these files are going to be read as the first thing ini\TeX\
-%    sees, we need to set some category codes just to be able to
-%    change the definition of |\input|
+% As these files are going to be read as the first thing ini\TeX\
+% sees, we need to set some category codes just to be able to
+% change the definition of |\input|.
 %
 %    \begin{macrocode}
 %<*bplain|blplain>
@@ -20471,11 +20267,11 @@ Babel.cjk_breaks = {
 \catcode`\#=6 % hash mark is macro parameter character
 %    \end{macrocode}
 %
-%    If a file called \file{hyphen.cfg} can be found, we make sure that
-%    \emph{it} will be read instead of the file \file{hyphen.tex}. We
-%    do this by first saving the original meaning of |\input| (and I
-%    use a one letter control sequence for that so as not to waste
-%    multi-letter control sequence on this in the format).
+% If a file called \file{hyphen.cfg} can be found, we make sure that
+% \emph{it} will be read instead of the file \file{hyphen.tex}. We
+% do this by first saving the original meaning of |\input| (and I
+% use a one letter control sequence for that so as not to waste
+% multi-letter control sequence on this in the format).
 %
 %    \begin{macrocode}
 \openin 0 hyphen.cfg
@@ -20484,10 +20280,10 @@ Babel.cjk_breaks = {
   \let\a\input
 %    \end{macrocode}
 %
-%    Then |\input| is defined to forget about its argument and load
-%    \file{hyphen.cfg} instead. Once that's done the original meaning
-%    of |\input| can be restored and the definition of |\a| can be
-%    forgotten.
+% Then |\input| is defined to forget about its argument and load
+% \file{hyphen.cfg} instead. Once that's done the original meaning
+% of |\input| can be restored and the definition of |\a| can be
+% forgotten.
 %
 %    \begin{macrocode}
   \def\input #1 {%
@@ -20499,31 +20295,31 @@ Babel.cjk_breaks = {
 %</bplain|blplain>
 %    \end{macrocode}
 %
-%    Now that we have made sure that \file{hyphen.cfg} will be loaded
-%    at the right moment it is time to load \file{plain.tex}.
+% Now that we have made sure that \file{hyphen.cfg} will be loaded
+% at the right moment it is time to load \file{plain.tex}.
 %
 %    \begin{macrocode}
 %<bplain>\a plain.tex
 %<blplain>\a lplain.tex
 %    \end{macrocode}
 %
-%    Finally we change the contents of |\fmtname| to indicate that
-%    this is \emph{not} the plain format, but a format based on plain
-%    with the \pkg{babel} package preloaded.
+% Finally we change the contents of |\fmtname| to indicate that
+% this is \emph{not} the plain format, but a format based on plain
+% with the \pkg{babel} package preloaded.
 %
 %    \begin{macrocode}
 %<bplain>\def\fmtname{babel-plain}
 %<blplain>\def\fmtname{babel-lplain}
 %    \end{macrocode}
 %
-%    When you are using a different format, based on plain.tex you can
-%    make a copy of blplain.tex, rename it and replace \file{plain.tex}
-%    with the name of your format file.
+% When you are using a different format, based on plain.tex you can
+% make a copy of blplain.tex, rename it and replace \file{plain.tex}
+% with the name of your format file.
 %
 % \subsection{Emulating some \LaTeX{} features}
 %
-%    The following code duplicates or emulates parts of \LaTeXe\ that
-%    are needed for \babel.
+% The following code duplicates or emulates parts of \LaTeXe\ that
+% are needed for \babel.
 %
 %    \begin{macrocode}
 %<<*Emulate LaTeX>>
