@@ -1,4 +1,4 @@
-## Babel 3.42.1989
+## Babel 3.43
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -44,18 +44,17 @@ respective authors.
 ### Latest changes
 
 ```
-3.43   2020-04-??
+3.43   2020-04-28
        - Autoloading based on the BCP47 codes, with basic lookup.
-       - Now only a few essential commands are loaded with the format.
+       - Now only a few essential commands are loaded in the format.
        - Improvements in Assamese, Luxembourgish, Marathi, Armenian,
          Bengali, and Finnish.
        - First steps in the removal of switch.def and plain.def.
        - Fixes:
          - Babel reset the \sfcode of » to 1000. It should be 0.
-         - With autoloading the hyphenmins were set to the default
-           values.
-         - With autoloading and counters an error could be raised in
-           pdftex.
+         - \guillemotleft and \guillemotleft renamed to \guillemetleft
+           and \guillemetleft (#63).
+         - A couple of bugs related to autoloading.
        
 3.42   2020-03-22
        - \getlocaleproperty, to get the value of a field from the loaded
@@ -159,30 +158,6 @@ See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.36
        - Basic support for the picture environment (with pict2e) and pgf
          (lua, somewhat experimental).
        - Start support for harftex (just try - it may work).
-
-3.31   2019-05-04
-       - Basic support for line breaking with CJK scripts (lua)
-       - layout=tabular now works with the 'array' package (and some
-         others; lua).
-
-3.30   2019-04-22
-       - Fix - dir in boxes inside math (hopefully now it works; lua).
-       - Option mapdigits for \babelprovide, which converts European
-         digits to local ones (lua).
-
-3.29    2019-04-03
-       - The fix for boxes inside math is incompatible with ams.
-         Removed (a better fix is under study).
-       - Options bidi-l and bidi-r (for the bidi package; xe).
-
-3.28    2019-04-01
-       - Fixes - wrong dir after math, in math inside tabular, in weak L
-         inside R inside L, and in boxes inside math.
-       - \babelfont now takes into account \defaultfontfeatures. This
-         is a potential source of backwards incompatibilities, but
-         very likely the risks are very low, and it is, I think, the
-         expected behavior.
-
 ```
 
 Javier Bezos
