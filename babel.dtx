@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/03/28 v3.43 The Babel package]
+\ProvidesFile{babel.dtx}[2020/04/30 v3.43.1993 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4530,8 +4530,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.43>>
-%<<date=2020/03/28>>
+%<<version=3.43.1993>>
+%<<date=2020/04/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5673,30 +5673,30 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsubsection{\pkg{ifthen}}
 %
-%  \begin{macro}{\ifthenelse}
+% \begin{macro}{\ifthenelse}
 %
-%    Sometimes a document writer wants to create a special effect
-%    depending on the page a certain fragment of text appears on. This
-%    can be achieved by the following piece of code:
+% Sometimes a document writer wants to create a special effect
+% depending on the page a certain fragment of text appears on. This
+% can be achieved by the following piece of code:
 %\begin{verbatim}
 %    \ifthenelse{\isodd{\pageref{some:label}}}
 %               {code for odd pages}
 %               {code for even pages}
 %\end{verbatim}
-%    In order for this to work the argument of |\isodd| needs to be
-%    fully expandable. With the above redefinition of |\pageref| it is
-%    not in the case of this example. To overcome that, we add some
-%    code to the definition of |\ifthenelse| to make things work.
+% In order for this to work the argument of |\isodd| needs to be
+% fully expandable. With the above redefinition of |\pageref| it is
+% not in the case of this example. To overcome that, we add some
+% code to the definition of |\ifthenelse| to make things work.
 %
-%    We want to revert the definition of |\pageref| and |\ref| to
-%    their original definition for the first argument of |\ifthenelse|,
-%    so we first need to store their current meanings.
+% We want to revert the definition of |\pageref| and |\ref| to
+% their original definition for the first argument of |\ifthenelse|,
+% so we first need to store their current meanings.
 %
-%    Then we can set the |\@safe@actives| switch and call the original
-%    |\ifthenelse|. In order to be able to use shorthands in the
-%    second and third arguments of |\ifthenelse| the resetting of the
-%    switch \emph{and} the definition of |\pageref| happens inside
-%    those arguments. 
+% Then we can set the |\@safe@actives| switch and call the original
+% |\ifthenelse|. In order to be able to use shorthands in the
+% second and third arguments of |\ifthenelse| the resetting of the
+% switch \emph{and} the definition of |\pageref| happens inside
+% those arguments. 
 %
 %    \begin{macrocode}
 \bbl@trace{Preventing clashes with other packages}
@@ -5728,14 +5728,14 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsubsection{\pkg{varioref}}
 %
-%  \begin{macro}{\@@vpageref}
-%  \begin{macro}{\vrefpagenum}
-%  \begin{macro}{\Ref}
+% \begin{macro}{\@@vpageref}
+% \begin{macro}{\vrefpagenum}
+% \begin{macro}{\Ref}
 %
-%    When the package varioref is in use we need to modify its
-%    internal command |\@@vpageref| in order to prevent problems when
-%    an active character ends up in the argument of |\vref|. The same
-%    needs to happen for |\vrefpagenum|.
+% When the package varioref is in use we need to modify its
+% internal command |\@@vpageref| in order to prevent problems when
+% an active character ends up in the argument of |\vref|. The same
+% needs to happen for |\vrefpagenum|.
 %
 %    \begin{macrocode}
   \AtBeginDocument{%
@@ -5750,14 +5750,14 @@ help from Bernd Raichle, for which I am grateful.
         \@safe@activesfalse}%
 %    \end{macrocode}
 %
-%    The package \pkg{varioref} defines |\Ref| to be a robust command
-%    wich uppercases the first character of the reference text. In
-%    order to be able to do that it needs to access the expandable form
-%    of |\ref|. So we employ a little trick here. We redefine the
-%    (internal) command \verb*|\Ref | to call |\org@ref| instead of
-%    |\ref|. The disadvantage of this solution is that whenever the
-%    definition of |\Ref| changes, this definition needs to be updated
-%    as well.
+% The package \pkg{varioref} defines |\Ref| to be a robust command
+% wich uppercases the first character of the reference text. In
+% order to be able to do that it needs to access the expandable form
+% of |\ref|. So we employ a little trick here. We redefine the
+% (internal) command \verb*|\Ref | to call |\org@ref| instead of
+% |\ref|. The disadvantage of this solution is that whenever the
+% definition of |\Ref| changes, this definition needs to be updated
+% as well.
 %
 %    \begin{macrocode}
       \expandafter\def\csname Ref \endcsname#1{%
@@ -5773,14 +5773,15 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsubsection{\pkg{hhline}}
 %
-%  \begin{macro}{\hhline}
-%    Delaying the activation of the shorthand characters has introduced
-%    a problem with the \pkg{hhline} package. The reason is that it
-%    uses the `:' character which is made active by the french support
-%    in \babel. Therefore we need to \emph{reload} the package when
-%    the `:' is an active character. Note that this happens
-%    \emph{after} the category code of the @-sign has been changed to
-%    other, so we need to temporarily change it to letter again.
+% \begin{macro}{\hhline}
+%
+% Delaying the activation of the shorthand characters has introduced
+% a problem with the \pkg{hhline} package. The reason is that it
+% uses the `:' character which is made active by the french support
+% in \babel. Therefore we need to \emph{reload} the package when
+% the `:' is an active character. Note that this happens
+% \emph{after} the category code of the @-sign has been changed to
+% other, so we need to temporarily change it to letter again.
 %
 %    \begin{macrocode}
 \AtEndOfPackage{%
@@ -5798,15 +5799,15 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsubsection{\pkg{hyperref}}
 %
-%  \begin{macro}{\pdfstringdefDisableCommands}
+% \begin{macro}{\pdfstringdefDisableCommands}
 %
-%    A number of interworking problems between \pkg{babel} and
-%    \pkg{hyperref} are tackled by \pkg{hyperref} itself. The
-%    following code was introduced to prevent some annoying warnings
-%    but it broke bookmarks. This was quickly fixed in \pkg{hyperref},
-%    which essentially made it no-op. However, it will not removed for
-%    the moment because \pkg{hyperref} is expecting it. TODO. Still
-%    true? 
+% A number of interworking problems between \pkg{babel} and
+% \pkg{hyperref} are tackled by \pkg{hyperref} itself. The
+% following code was introduced to prevent some annoying warnings
+% but it broke bookmarks. This was quickly fixed in \pkg{hyperref},
+% which essentially made it no-op. However, it will not removed for
+% the moment because \pkg{hyperref} is expecting it. TODO. Still
+% true? 
 %
 %    \begin{macrocode}
 \AtBeginDocument{%
@@ -5819,13 +5820,14 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsubsection{\pkg{fancyhdr}}
 %
-%  \begin{macro}{\FOREIGNLANGUAGE}
-%    The package \pkg{fancyhdr} treats the running head and fout lines
-%    somewhat differently as the standard classes. A symptom of this is
-%    that the command |\foreignlanguage| which \babel\ adds to the
-%    marks can end up inside the argument of |\MakeUppercase|. To
-%    prevent unexpected results we need to define |\FOREIGNLANGUAGE|
-%    here.
+% \begin{macro}{\FOREIGNLANGUAGE}
+%
+% The package \pkg{fancyhdr} treats the running head and fout lines
+% somewhat differently as the standard classes. A symptom of this is
+% that the command |\foreignlanguage| which \babel\ adds to the
+% marks can end up inside the argument of |\MakeUppercase|. To
+% prevent unexpected results we need to define |\FOREIGNLANGUAGE|
+% here.
 %
 %    \begin{macrocode}
 \DeclareRobustCommand{\FOREIGNLANGUAGE}[1]{%
@@ -5834,12 +5836,12 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%  \begin{macro}{\substitutefontfamily}
+% \begin{macro}{\substitutefontfamily}
 %
-%    The command |\substitutefontfamily| creates an
-%    \file{.fd} file on the fly. The first argument is an encoding
-%    mnemonic, the second and third arguments are font family names.
-%    This command is deprecated. Use the tools provides by \LaTeX.
+% The command |\substitutefontfamily| creates an
+% \file{.fd} file on the fly. The first argument is an encoding
+% mnemonic, the second and third arguments are font family names.
+% This command is deprecated. Use the tools provides by \LaTeX.
 %
 %    \begin{macrocode}
 \def\substitutefontfamily#1#2#3{%
@@ -9932,17 +9934,17 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%    For all vowels we declare |\"| to be a composite command which
-%    uses |\bbl@umlauta| or |\bbl@umlaute| to position the umlaut
-%    character. We need to be sure that these definitions override the
-%    ones that are provided when the package \pkg{fontenc} with
-%    option \Lopt{OT1} is used. Therefore these declarations are
-%    postponed until the beginning of the document. Note these
-%    definitions only apply to some languages, but
-%    babel sets them for \textit{all} languages -- you may want to
-%    redefine |\bbl@umlauta| and/or |\bbl@umlaute| for a language
-%    in the corresponding |ldf| (using the babel switching mechanism,
-%    of course).
+% For all vowels we declare |\"| to be a composite command which
+% uses |\bbl@umlauta| or |\bbl@umlaute| to position the umlaut
+% character. We need to be sure that these definitions override the
+% ones that are provided when the package \pkg{fontenc} with
+% option \Lopt{OT1} is used. Therefore these declarations are
+% postponed until the beginning of the document. Note these
+% definitions only apply to some languages, but
+% babel sets them for \textit{all} languages -- you may want to
+% redefine |\bbl@umlauta| and/or |\bbl@umlaute| for a language
+% in the corresponding |ldf| (using the babel switching mechanism,
+% of course).
 %
 %    \begin{macrocode}
 \AtBeginDocument{%
@@ -9956,8 +9958,7 @@ help from Bernd Raichle, for which I am grateful.
   \DeclareTextCompositeCommand{\"}{OT1}{E}{\bbl@umlaute{E}}%
   \DeclareTextCompositeCommand{\"}{OT1}{I}{\bbl@umlaute{I}}%
   \DeclareTextCompositeCommand{\"}{OT1}{O}{\bbl@umlauta{O}}%
-  \DeclareTextCompositeCommand{\"}{OT1}{U}{\bbl@umlauta{U}}%
-}
+  \DeclareTextCompositeCommand{\"}{OT1}{U}{\bbl@umlauta{U}}}
 %    \end{macrocode}
 %
 % Finally, make sure the default hyphenrules are defined (even if
@@ -10109,7 +10110,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@ifunset{bbl@lname@#2}%  TODO. Duplicated
     {\def\BabelBeforeIni##1##2{%
        \begingroup
-         \catcode`\[=12 \catcode`\]=12 \catcode`\==12  \catcode`\;=12 %
+         \catcode`\[=12 \catcode`\]=12 \catcode`\==12
+         \catcode`\;=12 \catcode`\|=12 %
          \let\bbl@ini@captions@aux\@gobbletwo
          \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
          \bbl@read@ini{##1}{basic data}%
@@ -10341,9 +10343,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 % A tool to define the macros for native digits from the list provided 
 % in the |ini| file. Somewhat convoluted because there are 10 digits, 
-% but only 9 arguments in \TeX.
+% but only 9 arguments in \TeX. Non-digits characters are kept. The
+% first macro is the generic “localized” command.
 %
 %    \begin{macrocode}
+\newcommand\localedigits{\@nameuse{\languagename digits}}
 \def\bbl@setdigits#1#2#3#4#5{%
   \bbl@exp{%
     \def\<\languagename digits>####1{%       ie, \langdigits
@@ -10414,7 +10418,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@ifunset{bbl@lname@#1}%     TODO. Duplicated
     {\def\BabelBeforeIni##1##2{%
        \begingroup
-         \catcode`\[=12 \catcode`\]=12 \catcode`\==12  \catcode`\;=12 %
+         \catcode`\[=12 \catcode`\]=12 \catcode`\==12
+         \catcode`\;=12 \catcode`\|=12 %
          \let\bbl@ini@captions@aux\@gobbletwo
          \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
          \bbl@read@ini{##1}{basic data}%
@@ -10813,9 +10818,13 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@replace\bbl@toreplace{[y]}{\BabelDatey{####1}}%
   \bbl@replace\bbl@toreplace{[yy]}{\BabelDateyy{####1}}%
   \bbl@replace\bbl@toreplace{[yyyy]}{\BabelDateyyyy{####1}}%
+  \bbl@replace\bbl@toreplace{[y|}{\bbl@datecntr[####1|}%
+  \bbl@replace\bbl@toreplace{[m|}{\bbl@datecntr[####2|}%
+  \bbl@replace\bbl@toreplace{[d|}{\bbl@datecntr[####3|}%
 % Note after \bbl@replace \toks@ contains the resulting string.
 % TODO - Using this implicit behavior doesn't seem a good idea.
   \bbl@replace@finish@iii\bbl@toreplace}
+\def\bbl@datecntr[#1|#2]{\localenumeral{#2}{#1}}
 %    \end{macrocode}
 %
 % Language and Script values to be used when defining a font or
@@ -10854,7 +10863,8 @@ help from Bernd Raichle, for which I am grateful.
   \def\BabelBeforeIni##1##2{%
     \begingroup
       \bbl@add\bbl@secpost@identification{\closein\bbl@readstream }%
-      \catcode`\[=12 \catcode`\]=12 \catcode`\==12 \catcode`\;=12 %
+      \catcode`\[=12 \catcode`\]=12 \catcode`\==12
+      \catcode`\;=12 \catcode`\|=12 %
       \bbl@read@ini{##1}{font and identification data}%   
       \endinput          % babel- .tex may contain onlypreamble's
     \endgroup}%            boxed, to avoid extra spaces:
@@ -10882,7 +10892,7 @@ help from Bernd Raichle, for which I am grateful.
 % number of digits in the number to be converted. This explains the
 % reverse set |76543210|. Digits above 10000 are not handled yet. When
 % the key contains the subkey |.F.|, the number after is treated as an
-% special case. for a fixed form (see |babel-he.ini|, for example).
+% special case, for a fixed form (see |babel-he.ini|, for example).
 %
 %    \begin{macrocode}
 \newcommand\localenumeral[2]{\bbl@cs{cntr@#1@\languagename}{#2}}
@@ -10905,7 +10915,7 @@ help from Bernd Raichle, for which I am grateful.
      \bbl@cs{cntr@#1.3@\languagename}#6%
      \bbl@cs{cntr@#1.2@\languagename}#7%
      \bbl@cs{cntr@#1.1@\languagename}#8%
-     \ifnum#6#7#8>\z@ % An ad hod rule for Greek. Ugly. To be fixed.
+     \ifnum#6#7#8>\z@ % TODO. An ad hoc rule for Greek. Ugly.
        \bbl@ifunset{bbl@cntr@#1.S.321@\languagename}{}%
          {\bbl@cs{cntr@#1.S.321@\languagename}}%
      \fi}%

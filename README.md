@@ -1,4 +1,4 @@
-## Babel 3.43
+## Babel 3.43.1993
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -9,7 +9,7 @@ The latest stable version is available on <https://ctan.org/pkg/babel>.
 
 Changes in version 3.43 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.43
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
 
 Included is a set of ini files for about 200 languages.
 
@@ -44,6 +44,11 @@ respective authors.
 ### Latest changes
 
 ```
+3.44   2020-05-??
+       - \localedigits
+       - [|] syntax in dates
+       -
+       
 3.43   2020-04-28
        - Autoloading based on the BCP47 codes, with basic lookup.
        - Now only a few essential commands are loaded in the format.
@@ -55,6 +60,7 @@ respective authors.
          - \guillemotleft and \guillemotleft renamed to \guillemetleft
            and \guillemetleft (#63).
          - A couple of bugs related to autoloading.
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
        
 3.42   2020-03-22
        - \getlocaleproperty, to get the value of a field from the loaded
