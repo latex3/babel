@@ -1,4 +1,4 @@
-## Babel 3.43.1993
+## Babel 3.43.1997
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -45,7 +45,7 @@ respective authors.
 
 ```
 3.44   2020-05-??
-       - \localedigits
+       - \localedigits, \localedate
        - [|] syntax in dates
        -
        

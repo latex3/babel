@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/04/30 v3.43.1993 The Babel package]
+\ProvidesFile{babel.dtx}[2020/05/04 v3.43.1997 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -955,7 +955,7 @@ with, for example, |\useshorthands| or |\useshorthands*|.)
   than |\shorthandoff|, for example if you want to define a macro
   to easy typing phonetic characters with \textsf{tipa}:
 \begin{verbatim}
-\newcommand{\myipa}[1]{{\languageshorthands{none}\tipaencoding#1}}
+\newcommand{\myipa}[1]{{_\languageshorthands{none}_\tipaencoding#1}}
 \end{verbatim}
 \end{example}
 
@@ -973,7 +973,7 @@ macros, or even your own user shorthands provided they do not overlap.)
   |\begin{document}|, you may use this macro when defining the |\title|
   in the preamble:
 \begin{verbatim}
-\title{Documento científico\babelshorthand{"-}técnico}
+\title{Documento científico_\babelshorthand{"-}_técnico}
 \end{verbatim}
 \end{example}
 
@@ -1070,7 +1070,7 @@ $\string|$ \texttt{off}}
 The only language shorthands activated
 are those given, like, eg:
 \begin{verbatim}
-\usepackage[esperanto,french,shorthands=:;!?]{babel}
+\usepackage[esperanto,french,_shorthands=:;!?_]{babel}
 \end{verbatim}
 If \verb|'| is included, \texttt{activeacute} is set; if \verb|`| is
 included, \texttt{activegrave} is set.  Active characters (like
@@ -1265,7 +1265,7 @@ for auxiliary tasks.
 \documentclass{book}
 
 \usepackage{babel}
-\babelprovide[import, main]{georgian}
+_\babelprovide[import, main]{georgian}_
 
 \babelfont{rm}{DejaVu Sans}
 
@@ -2198,6 +2198,13 @@ As of 3.15, there is no need to hide spaces with \texttt{\%%
 \end{verbatim}
 There is a counterpart for code to be run when a language is
 unselected: |\noextras|\m{lang}.
+\item With data |import|’ed from |ini| files, you can modify the values
+of specific keys, like:
+\begin{verbatim}
+\babelprovide[import, _captions/listtable = Lista de tablas_]{spanish}
+\end{verbatim}
+(In this particular case, instead of the |captions| group you may need
+to modify the |captions.licr| one.)
 \end{itemize}
 
 \begin{note} Do \textit{not} redefine a caption in the following way:
@@ -2610,13 +2617,29 @@ loaded (and therefore the corresponding data) even if these two
 conditions are not met, write |\BabelEnsureInfo| in the preamble.
 \end{note}
 
+\Describe{\localeid}{}
+
+Each language in the \babel{} sense has its own unique numeric
+identifier, which can be retrieved with |\localeid|.
+
+\begin{note}
+  The |\localeid| is not the same as the |\language| identifier, which
+  refers to a set of hyphenation patters (which, in turn, is just a
+  component of the line breaking algorithm described in the next
+  section). The data about preloaded patterns are store in an internal
+  macro named |\bbl@languages| (see the code for further details), but
+  note several locales may share a single |\language|, so they are
+  separated concepts. In \luatex, the |\localeid| is saved in each node
+  (where it makes sense) as an attribute, too.
+\end{note}
+
 \subsection{Hyphenation and line breaking}
 
 \Babel{} deals with three kinds of line breaking rules: Western,
 typically the LGC group, South East Asian, like Thai, and CJK, but
 support depends on the engine: \textsf{pdftex} only deals with the
-former, \xetex{} also with the second one, while \luatex{} provides
-basic rules for the latter, too.
+former, \xetex{} also with the second one (although in a limited way),
+while \luatex{} provides basic rules for the latter, too.
 
 \Describe{\babelhyphen}{%
   \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}\marg{type}}
@@ -2743,7 +2766,7 @@ of the previous char in \luatex, and the font size set by the last
 \Describe{\babelposthyphenation}{\marg{hyphenrules-name}%
           \marg{lua-pattern}\marg{replacement}}
 
-\New{3.37-3.39} With \luatex{} it is now possible to define
+\New{3.37-3.39} \textit{With \luatex{}} it is now possible to define
 non-standard hyphenation rules, like |f-f| $\to$ |ff-f|, repeated
 hyphens, ranked ruled (or more precisely, ‘penalized’ hyphenation
 points), and so on. No rules are currently provided by default, but
@@ -2793,7 +2816,7 @@ additional replacement type with the key |string|.
 
 \New{3.43} The recommended way to select languages is that described at
 the beginning of this document. However, BCP 47 tags are becoming
-customary, particularly in document (or parts of documents) generated
+customary, particularly in documents (or parts of documents) generated
 by external sources, and therefore \babel{} will provide a set of tools
 to select the locales in different situations, adapted to the
 particular needs of each case. Currently, \babel{} provides autoloading
@@ -2844,7 +2867,7 @@ The behaviour is adjusted with |\babeladjust| with the following parameters:
 \item \texttt{autoload.bcp47.options}, which are passed to
   |\babelprovide|; empty by default, but you may add \texttt{import}
   (features defined in the corresponding |babel-...tex| file might not
-  available).
+  be available).
 \item \texttt{autoload.bcp47.prefix}. Although the public name used in
   selectors is the tag, the internal name will be different and
   generated by prepending a prefix, which by default is
@@ -3371,19 +3394,19 @@ the current options may be different. It does not include |ini| files.
 \item[Greek] greek, polutonikogreek
 \item[Hebrew] hebrew
 \item[Icelandic] icelandic
-\item[Indonesian] indonesian, bahasa, indon, bahasai
+\item[Indonesian] indonesian (bahasa, indon, bahasai)
 \item[Interlingua] interlingua
 \item[Irish Gaelic] irish
 \item[Italian] italian
 \item[Latin] latin
 \item[Lower Sorbian] lowersorbian
-\item[Malay] malay, melayu, bahasam
+\item[Malay] malay, melayu (bahasam)
 \item[North Sami] samin
 \item[Norwegian] norsk, nynorsk
 \item[Polish] polish
-\item[Portuguese] portuguese, portuges\footnote{This name comes from
-  the times when they had to be shortened to 8 characters}, brazilian,
-  brazil
+\item[Portuguese] portuguese, brazilian (portuges, brazil)\footnote{The
+two last name comes from the times when they had to be shortened to 8
+characters}
 \item[Romanian] romanian
 \item[Russian] russian
 \item[Scottish Gaelic] scottish
@@ -4458,24 +4481,24 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \section{Identification and loading of required files}
 %
-%    \textit{Code documentation is still under revision.}
+% \textit{Code documentation is still under revision.}
 %
-%  \textbf{The following description is no longer valid, because switch
-%  and plain have been merged into babel.def.}
+% \textbf{The following description is no longer valid, because switch
+% and plain have been merged into babel.def.}
 %
-%    The \babel{} package after unpacking consists of the following files:
-%    \begin{description}
-%    \itemsep=-\parskip
-%    \item[switch.def] defines macros to set and switch languages.
-%    \item[babel.def] defines the rest of macros. It has tow parts: a
-%    generic one and a second one only for LaTeX{}.
-%    \item[babel.sty] is the \LaTeX{} package, which set options and
-%    load language styles.
-%  \item[plain.def] defines some \LaTeX{} macros required by
-%    \file{babel.def} and provides a few tools for Plain.
-%   \item[hyphen.cfg] is the file to be used when generating the
-%    formats to load hyphenation patterns.
-%    \end{description}
+% The \babel{} package after unpacking consists of the following files:
+% \begin{description}
+% \itemsep=-\parskip
+% \item[switch.def] defines macros to set and switch languages.
+% \item[babel.def] defines the rest of macros. It has tow parts: a
+%   generic one and a second one only for LaTeX{}.
+% \item[babel.sty] is the \LaTeX{} package, which set options and
+%   load language styles.
+% \item[plain.def] defines some \LaTeX{} macros required by
+%   \file{babel.def} and provides a few tools for Plain.
+% \item[hyphen.cfg] is the file to be used when generating the
+%   formats to load hyphenation patterns.
+% \end{description}
 %
 % The \babel{} installer extends \textsf{docstrip} with a few
 % ``pseudo-guards'' to set ``variables'' used at installation time.
@@ -4522,16 +4545,17 @@ help from Bernd Raichle, for which I am grateful.
 %
 % Keys may be further qualified in a particular language with a suffix
 % starting with a uppercase letter. It can be just a letter (eg,
-% babel.name.A, babel.name.B) or a name (eg, date.long.Nominative,
-% date.long.Formal, but no language is currently using the latter).
-% Multi-letter qualifiers are forward compatible in the sense they
-% won’t conflict with new ``global'' keys (all lowercase).
+% |babel.name.A|, |babel.name.B|) or a name (eg,
+% |date.long.Nominative|, |date.long.Formal|, but no language is
+% currently using the latter). \textit{Multi-letter} qualifiers are
+% forward compatible in the sense they won’t conflict with new
+% ``global'' keys (which start always with a lowercase case).
 %
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.43.1993>>
-%<<date=2020/04/30>>
+%<<version=3.43.1997>>
+%<<date=2020/05/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4539,13 +4563,13 @@ help from Bernd Raichle, for which I am grateful.
 % added for replacing, trimming and looping. The older ones, like
 % |\bbl@afterfi|, will not change.
 %
-%    We define some basic macros which just make the code cleaner.
-%    |\bbl@add| is now used internally instead of |\addto| because of
-%    the unpredictable behavior of the latter. Used in
-%    \file{babel.def} and in \file{babel.sty}, which means in \LaTeX{}
-%    is executed twice, but we need them when defining options and
-%    \file{babel.def} cannot be load until options have been defined.
-%    This does not hurt, but should be fixed somehow.
+% We define some basic macros which just make the code cleaner.
+% |\bbl@add| is now used internally instead of |\addto| because of
+% the unpredictable behavior of the latter. Used in
+% \file{babel.def} and in \file{babel.sty}, which means in \LaTeX{}
+% is executed twice, but we need them when defining options and
+% \file{babel.def} cannot be load until options have been defined.
+% This does not hurt, but should be fixed somehow.
 %
 %    \begin{macrocode}
 %<<*Basic macros>>
@@ -4832,13 +4856,14 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Multiple languages}
 %
-%  \begin{macro}{\language}
-%    Plain \TeX\ version~3.0 provides the primitive |\language| that
-%    is used to store the current language. When used with a pre-3.0
-%    version this function has to be implemented by allocating a
-%    counter. The following block is used in \file{switch.def} and
-%    \file{hyphen.cfg}; the latter may seem redundant, but remember
-%    \babel{} doesn't requires loading \file{switch.def} in the format.
+% \begin{macro}{\language}
+%
+% Plain \TeX\ version~3.0 provides the primitive |\language| that
+% is used to store the current language. When used with a pre-3.0
+% version this function has to be implemented by allocating a
+% counter. The following block is used in \file{switch.def} and
+% \file{hyphen.cfg}; the latter may seem redundant, but remember
+% \babel{} doesn't requires loading \file{switch.def} in the format.
 %
 %    \begin{macrocode}
 %<<*Define core switching macros>>
@@ -4848,28 +4873,29 @@ help from Bernd Raichle, for which I am grateful.
 %<</Define core switching macros>>
 %    \end{macrocode}
 %
-%  \end{macro}
+% \end{macro}
 %
-%  \begin{macro}{\last@language}
-%    Another counter is used to store the last language defined.  For
-%    pre-3.0 formats an extra counter has to be allocated.
+% \begin{macro}{\last@language}
 %
-%  \begin{macro}{\addlanguage}
+% Another counter is used to store the last language defined.  For
+% pre-3.0 formats an extra counter has to be allocated.
 %
-%    To add languages to \TeX's memory plain \TeX\ version~3.0
-%    supplies |\newlanguage|, in a pre-3.0 environment a similar macro
-%    has to be provided. For both cases a new macro is defined here,
-%    because the original |\newlanguage| was defined to be |\outer|.
+% \begin{macro}{\addlanguage}
 %
-%    For a format based on plain version~2.x, the definition of
-%    |\newlanguage| can not be copied because |\count 19| is used for
-%    other purposes in these formats. Therefore |\addlanguage| is
-%    defined using a definition based on the macros used to define
-%    |\newlanguage| in plain \TeX\ version~3.0.
+% To add languages to \TeX's memory plain \TeX\ version~3.0
+% supplies |\newlanguage|, in a pre-3.0 environment a similar macro
+% has to be provided. For both cases a new macro is defined here,
+% because the original |\newlanguage| was defined to be |\outer|.
 %
-%    For formats based on plain version~3.0 the definition of
-%    |\newlanguage| can be simply copied, removing |\outer|.
-%    Plain \TeX\ version 3.0 uses |\count 19| for this purpose.
+% For a format based on plain version~2.x, the definition of
+% |\newlanguage| can not be copied because |\count 19| is used for
+% other purposes in these formats. Therefore |\addlanguage| is
+% defined using a definition based on the macros used to define
+% |\newlanguage| in plain \TeX\ version~3.0.
+%
+% For formats based on plain version~3.0 the definition of
+% |\newlanguage| can be simply copied, removing |\outer|.
+% Plain \TeX\ version 3.0 uses |\count 19| for this purpose.
 %
 %    \begin{macrocode}
 %<<*Define core switching macros>>
@@ -5054,68 +5080,6 @@ help from Bernd Raichle, for which I am grateful.
   \endinput}{}%
 % \end{macrocode}
 %
-% TODO. Code for lua bidi options must be moved to a logical place. The
-% problem is |\RequirePackage|, which is forbidden allowed in the options
-% section.
-%
-% \begin{macrocode}
-\ifodd\bbl@engine
-  \def\bbl@activate@preotf{%
-    \let\bbl@activate@preotf\relax  % only once
-    \directlua{
-      Babel = Babel or {}
-      %
-      function Babel.pre_otfload_v(head)
-        if Babel.numbers and Babel.digits_mapped then
-          head = Babel.numbers(head)
-        end
-        if Babel.bidi_enabled then
-          head = Babel.bidi(head, false, dir)
-        end
-        return head
-      end
-      %
-      function Babel.pre_otfload_h(head, gc, sz, pt, dir)
-        if Babel.numbers and Babel.digits_mapped then
-          head = Babel.numbers(head)
-        end
-        if Babel.bidi_enabled then
-          head = Babel.bidi(head, false, dir)
-        end
-        return head
-      end
-      %
-      luatexbase.add_to_callback('pre_linebreak_filter',
-        Babel.pre_otfload_v,
-        'Babel.pre_otfload_v',
-        luatexbase.priority_in_callback('pre_linebreak_filter',
-          'luaotfload.node_processor') or nil)
-      %
-      luatexbase.add_to_callback('hpack_filter',
-        Babel.pre_otfload_h,
-        'Babel.pre_otfload_h',
-        luatexbase.priority_in_callback('hpack_filter',
-          'luaotfload.node_processor') or nil)
-    }}
-  \let\bbl@tempa\relax
-  \@ifpackagewith{babel}{bidi=basic}%
-    {\def\bbl@tempa{basic}}%
-    {\@ifpackagewith{babel}{bidi=basic-r}%
-      {\def\bbl@tempa{basic-r}}%
-      {}}
-  \ifx\bbl@tempa\relax\else
-    \let\bbl@beforeforeign\leavevmode
-    \AtEndOfPackage{\EnableBabelHook{babel-bidi}}%
-    \RequirePackage{luatexbase}%
-    \directlua{
-      require('babel-data-bidi.lua')
-      require('babel-bidi-\bbl@tempa.lua')
-    }
-    \bbl@activate@preotf
-  \fi
-\fi
-%    \end{macrocode}
-%
 % \subsection{\texttt{key=value} options and other general option}
 %
 %    The following macros extract language modifiers, and only real
@@ -5217,7 +5181,7 @@ help from Bernd Raichle, for which I am grateful.
   \fi}
 %    \end{macrocode}
 %
-%    Now we finish the first pass (and start over).
+% Now we finish the first pass (and start over).
 %
 %    \begin{macrocode}
 \ProcessOptions*
@@ -5225,14 +5189,14 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Conditional loading of shorthands}
 %
-%    If there is no |shorthands=<chars>|, the original \textsf{babel}
-%    macros are left untouched, but if there is, these macros are
-%    wrapped (in |babel.def|) to define only those given.
+% If there is no |shorthands=<chars>|, the original \textsf{babel}
+% macros are left untouched, but if there is, these macros are
+% wrapped (in |babel.def|) to define only those given.
 %
-%    A bit of optimization: if there is no |shorthands=|, then
-%    |\bbl@ifshorthand| is always true, and it is always false if
-%    |shorthands| is empty. Also, some code makes sense only with
-%    |shorthands=...|.
+% A bit of optimization: if there is no |shorthands=|, then
+% |\bbl@ifshorthand| is always true, and it is always false if
+% |shorthands| is empty. Also, some code makes sense only with
+% |shorthands=...|.
 %
 %    \begin{macrocode}
 \bbl@trace{Conditional loading of shorthands}
@@ -5264,16 +5228,16 @@ help from Bernd Raichle, for which I am grateful.
     \fi}
 %    \end{macrocode}
 %
-%    We make sure all chars in the string are `other', with the help
-%    of an auxiliary macro defined above (which also zaps spaces).
+% We make sure all chars in the string are `other', with the help
+% of an auxiliary macro defined above (which also zaps spaces).
 %
 %    \begin{macrocode}
   \edef\bbl@opt@shorthands{%
     \expandafter\bbl@sh@string\bbl@opt@shorthands\@empty}%
 %    \end{macrocode}
 %
-%    The following is ignored with |shorthands=off|, since it is
-%    intended to take some aditional actions for certain chars.
+% The following is ignored with |shorthands=off|, since it is
+% intended to take some aditional actions for certain chars.
 %
 %    \begin{macrocode}
   \bbl@ifshorthand{'}%
@@ -5283,9 +5247,9 @@ help from Bernd Raichle, for which I am grateful.
 \fi\fi
 %    \end{macrocode}
 %
-%    With |headfoot=lang| we can set the language used in heads/foots.
-%    For example, in babel/3796 just adds |headfoot=english|.  It
-%    misuses \cs{@resetactivechars} but seems to work.
+% With |headfoot=lang| we can set the language used in heads/foots.
+% For example, in babel/3796 just adds |headfoot=english|.  It
+% misuses \cs{@resetactivechars} but seems to work.
 %
 %    \begin{macrocode}
 \ifx\bbl@opt@headfoot\@nnil\else
@@ -5339,23 +5303,23 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Cross referencing macros}
 %
-%    The \LaTeX\ book states:
-%  \begin{quote}
-%    The \emph{key} argument is any sequence of letters, digits, and
-%    punctuation symbols; upper- and lowercase letters are regarded as
-%    different.
-%  \end{quote}
-%    When the above quote should still be true when a document is
-%    typeset in a language that has active characters, special care
-%    has to be taken of the category codes of these characters when
-%    they appear in an argument of the cross referencing macros.
+% The \LaTeX\ book states:
+% \begin{quote}
+%   The \emph{key} argument is any sequence of letters, digits, and
+%   punctuation symbols; upper- and lowercase letters are regarded as
+%   different.
+% \end{quote}
+% When the above quote should still be true when a document is
+% typeset in a language that has active characters, special care
+% has to be taken of the category codes of these characters when
+% they appear in an argument of the cross referencing macros.
 %
-%    When a cross referencing command processes its argument, all
-%    tokens in this argument should be character tokens with category
-%    `letter' or `other'.
+% When a cross referencing command processes its argument, all
+% tokens in this argument should be character tokens with category
+% `letter' or `other'.
 %
-%    The following package options control which macros are to be
-%    redefined.
+% The following package options control which macros are to be
+% redefined.
 %
 %    \begin{macrocode}
 %<<*More package options>>
@@ -5365,12 +5329,12 @@ help from Bernd Raichle, for which I am grateful.
 %<</More package options>>
 %    \end{macrocode}
 %
-%  \begin{macro}{\@newl@bel}
+% \begin{macro}{\@newl@bel}
 %
-%    First we open a new group to keep the changed setting of
-%    |\protect| local and then we set the |@safe@actives| switch to
-%    true to make sure that any shorthand that appears in any of the
-%    arguments immediately expands to its non-active self.
+% First we open a new group to keep the changed setting of
+% |\protect| local and then we set the |@safe@actives| switch to
+% true to make sure that any shorthand that appears in any of the
+% arguments immediately expands to its non-active self.
 %
 %    \begin{macrocode}
 \bbl@trace{Cross referencing macros}
@@ -5389,9 +5353,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \begin{macro}{\@testdef}
 %
-%    An internal \LaTeX\ macro used to test if the labels that have
-%    been written on the |.aux| file have changed.  It is called by
-%    the |\enddocument| macro.
+% An internal \LaTeX\ macro used to test if the labels that have
+% been written on the |.aux| file have changed.  It is called by
+% the |\enddocument| macro.
 %
 %    \begin{macrocode}
   \CheckCommand*\@testdef[3]{%
@@ -5402,13 +5366,13 @@ help from Bernd Raichle, for which I am grateful.
     \fi}
 %    \end{macrocode}
 %
-%  Now that we made sure that |\@testdef| still has the same definition
-%  we can rewrite it. First we make the shorthands `safe'. Then we use
-%  |\bbl@tempa| as an `alias' for the macro that contains the label
-%  which is being checked. Then we define |\bbl@tempb| just as
-%  |\@newl@bel| does it. When the label is defined we replace the
-%  definition of |\bbl@tempa| by its meaning. If the label didn't
-%  change, |\bbl@tempa| and |\bbl@tempb| should be identical macros.
+% Now that we made sure that |\@testdef| still has the same definition
+% we can rewrite it. First we make the shorthands `safe'. Then we use
+% |\bbl@tempa| as an `alias' for the macro that contains the label
+% which is being checked. Then we define |\bbl@tempb| just as
+% |\@newl@bel| does it. When the label is defined we replace the
+% definition of |\bbl@tempa| by its meaning. If the label didn't
+% change, |\bbl@tempa| and |\bbl@tempb| should be identical macros.
 %
 %    \begin{macrocode}
   \def\@testdef#1#2#3{%  TODO. With @samestring?
@@ -5430,13 +5394,13 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%  \begin{macro}{\ref}
-%  \begin{macro}{\pageref}
+% \begin{macro}{\ref}
+% \begin{macro}{\pageref}
 %
-%    The same holds for the macro |\ref| that references a label and
-%    |\pageref| to reference a page. We make them robust as well (if
-%    they weren't already) to prevent problems if they should become
-%    expanded at the wrong moment.
+% The same holds for the macro |\ref| that references a label and
+% |\pageref| to reference a page. We make them robust as well (if
+% they weren't already) to prevent problems if they should become
+% expanded at the wrong moment.
 %
 %    \begin{macrocode}
 \bbl@xin@{R}\bbl@opt@safe
@@ -5454,13 +5418,14 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %  \end{macro}
 %
-%  \begin{macro}{\@citex}
-%    The macro used to cite from a bibliography, |\cite|, uses an
-%    internal macro, |\@citex|.
-%    It is this internal macro that picks up the argument(s),
-%    so we redefine this internal macro and leave |\cite| alone. The
-%    first argument is used for typesetting, so the shorthands need
-%    only be deactivated in the second argument.
+% \begin{macro}{\@citex}
+%
+% The macro used to cite from a bibliography, |\cite|, uses an
+% internal macro, |\@citex|.
+% It is this internal macro that picks up the argument(s),
+% so we redefine this internal macro and leave |\cite| alone. The
+% first argument is used for typesetting, so the shorthands need
+% only be deactivated in the second argument.
 %
 %    \begin{macrocode}
 \bbl@xin@{B}\bbl@opt@safe
@@ -5470,25 +5435,25 @@ help from Bernd Raichle, for which I am grateful.
     \org@@citex[#1]{\@tempa}}
 %    \end{macrocode}
 %
-%    Unfortunately, the packages \pkg{natbib} and \pkg{cite} need a
-%    different definition of |\@citex|...
-%    To begin with, \pkg{natbib} has a definition for |\@citex| with
-%    \emph{three} arguments... We only know that a package is loaded
-%    when |\begin{document}| is executed, so we need to postpone the
-%    different redefinition.
+% Unfortunately, the packages \pkg{natbib} and \pkg{cite} need a
+% different definition of |\@citex|...
+% To begin with, \pkg{natbib} has a definition for |\@citex| with
+% \emph{three} arguments... We only know that a package is loaded
+% when |\begin{document}| is executed, so we need to postpone the
+% different redefinition.
 %
 %    \begin{macrocode}
   \AtBeginDocument{%
     \@ifpackageloaded{natbib}{%
 %    \end{macrocode}
 %
-%    Notice that we use |\def| here instead of |\bbl@redefine| because
-%    |\org@@citex| is already defined and we don't want to overwrite
-%    that definition (it would result in parameter stack overflow
-%    because of a circular definition).
+% Notice that we use |\def| here instead of |\bbl@redefine| because
+% |\org@@citex| is already defined and we don't want to overwrite
+% that definition (it would result in parameter stack overflow
+% because of a circular definition).
 %
-%   (Recent versions of \pkg{natbib} change dynamically |\@citex|, so PR4087
-%    doesn't seem fixable in a simple way. Just load \pkg{natbib} before.)
+% (Recent versions of \pkg{natbib} change dynamically |\@citex|, so PR4087
+% doesn't seem fixable in a simple way. Just load \pkg{natbib} before.)
 %
 %    \begin{macrocode}
     \def\@citex[#1][#2]#3{%
@@ -5497,8 +5462,8 @@ help from Bernd Raichle, for which I am grateful.
     }{}}
 %    \end{macrocode}
 %
-%    The package \pkg{cite} has a definition of |\@citex| where the
-%    shorthands need to be turned off in both arguments.
+% The package \pkg{cite} has a definition of |\@citex| where the
+% shorthands need to be turned off in both arguments.
 %
 %    \begin{macrocode}
   \AtBeginDocument{%
@@ -5510,9 +5475,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%  \begin{macro}{\nocite}
-%    The macro |\nocite| which is used to instruct BiB\TeX\ to
-%    extract uncited references from the database.
+% \begin{macro}{\nocite}
+%
+% The macro |\nocite| which is used to instruct BiB\TeX\ to
+% extract uncited references from the database.
 %
 %    \begin{macrocode}
   \bbl@redefine\nocite#1{%
@@ -5521,19 +5487,20 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%  \begin{macro}{\bibcite}
-%  The macro that is used in the |.aux| file to
-%  define citation labels. When packages such as \pkg{natbib} or
-%  \pkg{cite} are not loaded its second argument is used to typeset the
-%  citation label. In that case, this second argument can contain
-%  active characters but is used in an environment where
-%  |\@safe@activestrue| is in effect. This switch needs to be reset
-%  inside the |\hbox| which contains the citation label. In order to
-%  determine during \file{.aux} file processing which definition of
-%  |\bibcite| is needed we define |\bibcite| in such a way that it
-%  redefines itself with the proper definition. We call
-%  |\bbl@cite@choice| to select the proper definition for |\bibcite|.
-%  This new definition is then activated.
+% \begin{macro}{\bibcite}
+%
+% The macro that is used in the |.aux| file to
+% define citation labels. When packages such as \pkg{natbib} or
+% \pkg{cite} are not loaded its second argument is used to typeset the
+% citation label. In that case, this second argument can contain
+% active characters but is used in an environment where
+% |\@safe@activestrue| is in effect. This switch needs to be reset
+% inside the |\hbox| which contains the citation label. In order to
+% determine during \file{.aux} file processing which definition of
+% |\bibcite| is needed we define |\bibcite| in such a way that it
+% redefines itself with the proper definition. We call
+% |\bbl@cite@choice| to select the proper definition for |\bibcite|.
+% This new definition is then activated.
 %
 %    \begin{macrocode}
   \bbl@redefine\bibcite{%
@@ -5543,9 +5510,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%  \begin{macro}{\bbl@bibcite}
-%    The macro |\bbl@bibcite| holds the definition of |\bibcite|
-%    needed when neither \pkg{natbib} nor \pkg{cite} is loaded.
+% \begin{macro}{\bbl@bibcite}
+%
+% The macro |\bbl@bibcite| holds the definition of |\bibcite|
+% needed when neither \pkg{natbib} nor \pkg{cite} is loaded.
 %
 %    \begin{macrocode}
   \def\bbl@bibcite#1#2{%
@@ -5554,10 +5522,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%  \begin{macro}{\bbl@cite@choice}
-%    The macro |\bbl@cite@choice| determines which definition of
-%    |\bibcite| is needed. First we give |\bibcite| its default
-%    definition.
+% \begin{macro}{\bbl@cite@choice}
+%
+% The macro |\bbl@cite@choice| determines which definition of
+% |\bibcite| is needed. First we give |\bibcite| its default
+% definition.
 %
 %    \begin{macrocode}
   \def\bbl@cite@choice{%
@@ -5567,9 +5536,9 @@ help from Bernd Raichle, for which I am grateful.
     \global\let\bbl@cite@choice\relax}
 %    \end{macrocode}
 %
-%    When a document is run for the first time, no \file{.aux} file is
-%    available, and |\bibcite| will not yet be properly defined. In
-%    this case, this has to happen before the document starts.
+% When a document is run for the first time, no \file{.aux} file is
+% available, and |\bibcite| will not yet be properly defined. In
+% this case, this has to happen before the document starts.
 %
 %    \begin{macrocode}
   \AtBeginDocument{\bbl@cite@choice}
@@ -5577,9 +5546,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \end{macro}
 %
-%  \begin{macro}{\@bibitem}
-%    One of the two internal \LaTeX\ macros called by |\bibitem|
-%    that write the citation label on the |.aux| file.
+% \begin{macro}{\@bibitem}
+%
+% One of the two internal \LaTeX\ macros called by |\bibitem|
+% that write the citation label on the |.aux| file.
 %
 %    \begin{macrocode}
   \bbl@redefine\@bibitem#1{%
@@ -6022,25 +5992,147 @@ help from Bernd Raichle, for which I am grateful.
 % by introducing a “middle layer” just below the user interface
 % (sectioning, footnotes).
 %
-%    \begin{itemize}
-%    \item pdftex provides a minimal support for bidi text, and it
-%      must be done by hand. Vertical typesetting is not possible.
-%    \item \xetex{} is somewhat better, thanks to its font engine
-%      (even if not always reliable) and a few additional tools. However,
-%      very little is done at the paragraph level. Another challenging
-%      problem is text direction does not honour \TeX{} grouping.
-%    \item \luatex{} can provide the most complete solution, as we can
-%      manipulate almost freely the node list, the generated lines,
-%      and so on, but bidi text does not work out of the box and some
-%      development is necessary. It also provides tools to properly
-%      set left-to-right and right-to-left page layouts. As Lua\TeX-ja
-%      shows, vertical typesetting is possible, too.
-%    \end{itemize}
+% \begin{itemize}
+% \item pdftex provides a minimal support for bidi text, and it
+%   must be done by hand. Vertical typesetting is not possible.
+% \item \xetex{} is somewhat better, thanks to its font engine
+%   (even if not always reliable) and a few additional tools. However,
+%   very little is done at the paragraph level. Another challenging
+%   problem is text direction does not honour \TeX{} grouping.
+% \item \luatex{} can provide the most complete solution, as we can
+%   manipulate almost freely the node list, the generated lines,
+%   and so on, but bidi text does not work out of the box and some
+%   development is necessary. It also provides tools to properly
+%   set left-to-right and right-to-left page layouts. As Lua\TeX-ja
+%   shows, vertical typesetting is possible, too.
+% \end{itemize}
+%
+% As a frist step, add a handler for bidi and digits (and potentially
+% other processes) just before \textsf{luaoftload} is applied, which is
+% loaded by default by \LaTeX. Just in case, consider the possibility
+% it has not been loaded.
 %
 %    \begin{macrocode}
-\bbl@trace{Basic (internal) bidi support}
+\ifodd\bbl@engine
+  \def\bbl@activate@preotf{%
+    \let\bbl@activate@preotf\relax  % only once
+    \directlua{
+      Babel = Babel or {}
+      %
+      function Babel.pre_otfload_v(head)
+        if Babel.numbers and Babel.digits_mapped then
+          head = Babel.numbers(head)
+        end
+        if Babel.bidi_enabled then
+          head = Babel.bidi(head, false, dir)
+        end
+        return head
+      end
+      %
+      function Babel.pre_otfload_h(head, gc, sz, pt, dir)
+        if Babel.numbers and Babel.digits_mapped then
+          head = Babel.numbers(head)
+        end
+        if Babel.bidi_enabled then
+          head = Babel.bidi(head, false, dir)
+        end
+        return head
+      end
+      %
+      luatexbase.add_to_callback('pre_linebreak_filter',
+        Babel.pre_otfload_v,
+        'Babel.pre_otfload_v',
+        luatexbase.priority_in_callback('pre_linebreak_filter',
+          'luaotfload.node_processor') or nil)
+      %
+      luatexbase.add_to_callback('hpack_filter',
+        Babel.pre_otfload_h,
+        'Babel.pre_otfload_h',
+        luatexbase.priority_in_callback('hpack_filter',
+          'luaotfload.node_processor') or nil)
+    }}
+\fi
+%    \end{macrocode}
+%
+% The basic setup. In luatex, the output is modified at a very low
+% level to set the |\bodydir| to the |\pagedir|.
+%
+%    \begin{macrocode}
+\bbl@trace{Loading basic (internal) bidi support}
+\ifodd\bbl@engine
+  \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200
+    \let\bbl@beforeforeign\leavevmode
+    \AtEndOfPackage{\EnableBabelHook{babel-bidi}}
+    \RequirePackage{luatexbase}
+    \bbl@activate@preotf
+    \directlua{
+      require('babel-data-bidi.lua')
+      \ifcase\expandafter\@gobbletwo\the\bbl@bidimode\or
+        require('babel-bidi-basic.lua')
+      \or
+        require('babel-bidi-basic-r.lua')
+      \fi}
+    % TODO - to locale_props, not as separate attribute
+    \newattribute\bbl@attr@dir
+    % TODO. I don't like it, hackish:
+    \bbl@exp{\output{\bodydir\pagedir\the\output}}
+    \AtEndOfPackage{\EnableBabelHook{babel-bidi}}
+  \fi\fi
+\else
+  \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200
+    \bbl@error
+      {The bidi method `basic' is available only in\\%
+       luatex. I'll continue with `bidi=default', so\\%
+       expect wrong results}%
+      {See the manual for further details.}%
+    \let\bbl@beforeforeign\leavevmode
+    \AtEndOfPackage{%
+      \EnableBabelHook{babel-bidi}%
+      \bbl@xebidipar}
+  \fi\fi
+  \def\bbl@loadxebidi#1{%
+    \ifx\RTLfootnotetext\@undefined
+      \AtEndOfPackage{%
+        \EnableBabelHook{babel-bidi}%
+        \ifx\fontspec\@undefined
+          \usepackage{fontspec}% bidi needs fontspec
+        \fi
+        \usepackage#1{bidi}}%
+    \fi}
+  \ifnum\bbl@bidimode>200
+    \ifcase\expandafter\@gobbletwo\the\bbl@bidimode\or
+      \bbl@tentative{bidi=bidi}
+      \bbl@loadxebidi{}
+    \or
+      \bbl@tentative{bidi=bidi-r}
+      \bbl@loadxebidi{[rldocument]}
+    \or
+      \bbl@tentative{bidi=bidi-l}
+      \bbl@loadxebidi{}
+    \fi
+  \fi
+\fi
+\ifnum\bbl@bidimode=\@ne
+  \let\bbl@beforeforeign\leavevmode
+  \ifodd\bbl@engine
+    \newattribute\bbl@attr@dir
+    \bbl@exp{\output{\bodydir\pagedir\the\output}}%
+  \fi
+  \AtEndOfPackage{%
+    \EnableBabelHook{babel-bidi}%
+    \ifodd\bbl@engine\else
+      \bbl@xebidipar
+    \fi}
+\fi
+%    \end{macrocode}
+%
+% Now come the macros used to set the direction when a language is
+% switched. First the (mostly) common macros.
+%
+%    \begin{macrocode}
+\bbl@trace{Macros to switch the text direction}
 \def\bbl@alscripts{,Arabic,Syriac,Thaana,}
-\def\bbl@rscripts{%
+\def\bbl@rscripts{% TODO. Base on codes ??
   ,Imperial Aramaic,Avestan,Cypriot,Hatran,Hebrew,%
   Old Hungarian,Old Hungarian,Lydian,Mandaean,Manichaean,%
   Manichaean,Meroitic Cursive,Meroitic,Old North Arabian,%
@@ -6077,9 +6169,16 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@pardir{#1}%
   \fi
   \bbl@textdir{#1}}
+% TODO. Only if \bbl@bidimode > 0?:
+\AddBabelHook{babel-bidi}{afterextras}{\bbl@switchdir}
+\DisableBabelHook{babel-bidi}
+%    \end{macrocode}
+%
+% Now the engine-dependent macros. TODO. Must be moved to the engine
+% files?
+%
+%    \begin{macrocode} 
 \ifodd\bbl@engine  % luatex=1
-  \AddBabelHook{babel-bidi}{afterextras}{\bbl@switchdir}
-  \DisableBabelHook{babel-bidi}
   \chardef\bbl@thetextdir\z@
   \chardef\bbl@thepardir\z@
   \def\bbl@getluadir#1{%
@@ -6117,9 +6216,11 @@ help from Bernd Raichle, for which I am grateful.
     \else
       \everyhbox{\textdir TRT\relax}%
     \fi}
+  \frozen@everymath\expandafter{%
+    \expandafter\bbl@mathboxdir\the\frozen@everymath}
+  \frozen@everydisplay\expandafter{%
+    \expandafter\bbl@mathboxdir\the\frozen@everydisplay}
 \else % pdftex=0, xetex=2
-  \AddBabelHook{babel-bidi}{afterextras}{\bbl@switchdir}
-  \DisableBabelHook{babel-bidi}
   \newcount\bbl@dirlevel
   \chardef\bbl@thetextdir\z@
   \chardef\bbl@thepardir\z@
@@ -6184,20 +6285,18 @@ help from Bernd Raichle, for which I am grateful.
     \newtoks\everypar
     \everypar=\bbl@severypar
     \bbl@severypar{\bbl@xeeverypar\the\everypar}}
-  \def\bbl@tempb{%
+  \ifnum\bbl@bidimode>200
     \let\bbl@textdir@i\@gobbletwo
     \let\bbl@xebidipar\@empty
     \AddBabelHook{bidi}{foreign}{%
-      \def\bbl@tempa{\def\BabelText########1}%
+      \def\bbl@tempa{\def\BabelText####1}%
       \ifcase\bbl@thetextdir
-        \expandafter\bbl@tempa\expandafter{\BabelText{\LR{####1}}}%
+        \expandafter\bbl@tempa\expandafter{\BabelText{\LR{##1}}}%
       \else
-        \expandafter\bbl@tempa\expandafter{\BabelText{\RL{####1}}}%
+        \expandafter\bbl@tempa\expandafter{\BabelText{\RL{##1}}}%
       \fi}
-    \def\bbl@pardir##1{\ifcase##1\relax\setLR\else\setRL\fi}}
-  \@ifpackagewith{babel}{bidi=bidi}{\bbl@tempb}{}%
-  \@ifpackagewith{babel}{bidi=bidi-l}{\bbl@tempb}{}%
-  \@ifpackagewith{babel}{bidi=bidi-r}{\bbl@tempb}{}%
+    \def\bbl@pardir#1{\ifcase#1\relax\setLR\else\setRL\fi}
+  \fi
 \fi
 %    \end{macrocode}
 %
@@ -6216,16 +6315,17 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Local Language Configuration}
 %
-%  \begin{macro}{\loadlocalcfg}
-%    At some sites it may be necessary to add site-specific actions to
-%    a language definition file. This can be done by creating a file
-%    with the same name as the language definition file, but with the
-%    extension \file{.cfg}. For instance the file \file{norsk.cfg}
-%    will be loaded when the language definition file \file{norsk.ldf}
-%    is loaded.
+% \begin{macro}{\loadlocalcfg}
 %
-%    For plain-based formats we don't want to override the definition
-%    of |\loadlocalcfg| from \file{plain.def}.
+% At some sites it may be necessary to add site-specific actions to
+% a language definition file. This can be done by creating a file
+% with the same name as the language definition file, but with the
+% extension \file{.cfg}. For instance the file \file{norsk.cfg}
+% will be loaded when the language definition file \file{norsk.ldf}
+% is loaded. 
+%
+% For plain-based formats we don't want to override the definition
+% of |\loadlocalcfg| from \file{plain.def}.
 %
 %    \begin{macrocode}
 \bbl@trace{Local Language Configuration}
@@ -6242,8 +6342,8 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}%
 %    \end{macro}
 %
-%    Just to be compatible with \LaTeX$\:$2.09 we add a few more lines
-%    of code. TODO. Necessary? Correct place? Used by some ldf file?
+% Just to be compatible with \LaTeX$\:$2.09 we add a few more lines
+% of code. TODO. Necessary? Correct place? Used by some ldf file?
 %
 %    \begin{macrocode}
 \ifx\@unexpandable@protect\@undefined
@@ -6261,11 +6361,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Language options}
 %
-%    Languages are loaded when processing the corresponding option
-%    \textit{except} if a |main| language has been set. In such a
-%    case, it is not loaded until all options has been processed.
-%    The following macro inputs the ldf file and does some additional
-%    checks (|\input| works, too, but possible errors are not catched).
+% Languages are loaded when processing the corresponding option
+% \textit{except} if a |main| language has been set. In such a
+% case, it is not loaded until all options has been processed.
+% The following macro inputs the ldf file and does some additional
+% checks (|\input| works, too, but possible errors are not catched).
 %
 %    \begin{macrocode}
 \bbl@trace{Language options}
@@ -6288,7 +6388,10 @@ help from Bernd Raichle, for which I am grateful.
        headfoot=, strings=, config=, hyphenmap=, or a language name.}}}
 %    \end{macrocode}
 %
-%    Now, we set language options whose names are different from |ldf| files.
+% Now, we set a few language options whose names are different from
+% |ldf| files. These declarations are preserved for backwards
+% compatibility, but they must be eventually removed. Use proxy files
+% instead.
 %
 %    \begin{macrocode}
 \def\bbl@try@load@lang#1#2#3{%
@@ -6296,8 +6399,6 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@load@language{\CurrentOption}}%
       {#1\bbl@load@language{#2}#3}}
 \DeclareOption{afrikaans}{\bbl@try@load@lang{}{dutch}{}}
-\DeclareOption{brazil}{\bbl@try@load@lang{}{portuges}{}}
-\DeclareOption{brazilian}{\bbl@try@load@lang{}{portuges}{}}
 \DeclareOption{hebrew}{%
   \input{rlbabel.def}%
   \bbl@load@language{hebrew}}
@@ -6306,19 +6407,18 @@ help from Bernd Raichle, for which I am grateful.
 \DeclareOption{nynorsk}{\bbl@try@load@lang{}{norsk}{}}
 \DeclareOption{polutonikogreek}{%
   \bbl@try@load@lang{}{greek}{\languageattribute{greek}{polutoniko}}}
-\DeclareOption{portuguese}{\bbl@try@load@lang{}{portuges}{}}
 \DeclareOption{russian}{\bbl@try@load@lang{}{russianb}{}}
 \DeclareOption{ukrainian}{\bbl@try@load@lang{}{ukraineb}{}}
 \DeclareOption{uppersorbian}{\bbl@try@load@lang{}{usorbian}{}}
 %    \end{macrocode}
 %
-%    Another way to extend the list of `known' options for \babel\ was
-%    to create the file \file{bblopts.cfg} in which one can add option
-%    declarations. However, this mechanism is deprecated -- if you
-%    want an alternative name for a language, just create a new |.ldf|
-%    file loading the actual one. You can also set the name
-%    of the file with the package option |config=<name>|, which will
-%    load |<name>.cfg| instead.
+% Another way to extend the list of `known' options for \babel\ was
+% to create the file \file{bblopts.cfg} in which one can add option
+% declarations. However, this mechanism is deprecated -- if you
+% want an alternative name for a language, just create a new |.ldf|
+% file loading the actual one. You can also set the name
+% of the file with the package option |config=<name>|, which will
+% load |<name>.cfg| instead.
 %
 %    \begin{macrocode}
 \ifx\bbl@opt@config\@nnil
@@ -6339,13 +6439,13 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-%    Recognizing global options in packages not having a closed set of
-%    them is not trivial, as for them to be processed they must be
-%    defined explicitly. So, package options not yet taken into
-%    account and stored in |bbl@language@opts| are assumed to be
-%    languages (note this list also contains the language given with
-%    |main|). If not declared above, the names of the option and the
-%    file are the same.
+% Recognizing global options in packages not having a closed set of
+% them is not trivial, as for them to be processed they must be
+% defined explicitly. So, package options not yet taken into
+% account and stored in |bbl@language@opts| are assumed to be
+% languages (note this list also contains the language given with
+% |main|). If not declared above, the names of the option and the
+% file are the same.
 %
 %    \begin{macrocode}
 \bbl@for\bbl@tempa\bbl@language@opts{%
@@ -6358,11 +6458,11 @@ help from Bernd Raichle, for which I am grateful.
      \@empty}
 %    \end{macrocode}
 %
-%    Now, we make sure an option is explicitly declared for any
-%    language set as global option, by checking if an |ldf|
-%    exists. The previous step was, in fact, somewhat redundant, but
-%    that way we minimize accesing the file system just to see if the
-%    option could be a language.
+% Now, we make sure an option is explicitly declared for any
+% language set as global option, by checking if an |ldf|
+% exists. The previous step was, in fact, somewhat redundant, but
+% that way we minimize accesing the file system just to see if the
+% option could be a language.
 %
 %    \begin{macrocode}
 \bbl@foreach\@classoptionslist{%
@@ -6383,13 +6483,13 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-%    And we are done, because all options for this pass has been
-%    declared. Those already processed in the first pass are just
-%    ignored.
+% And we are done, because all options for this pass has been
+% declared. Those already processed in the first pass are just
+% ignored.
 %
-%    The options have to be processed in the order in which the user
-%    specified them (except, of course, global options, which \LaTeX{}
-%    processes before):
+% The options have to be processed in the order in which the user
+% specified them (except, of course, global options, which \LaTeX{}
+% processes before):
 %
 %    \begin{macrocode}
 \def\AfterBabelLanguage#1{%
@@ -6398,13 +6498,13 @@ help from Bernd Raichle, for which I am grateful.
 \ProcessOptions*
 %    \end{macrocode}
 %
-%    This finished the second pass. Now the third one begins, which
-%    loads the main language set with the key |main|. A warning is
-%    raised if the main language is not the same as the last named
-%    one, or if the value of the key |main| is not a language. Then
-%    execute directly the option (because it could be used only in
-%    |main|). After loading all languages, we deactivate
-%    |\AfterBabelLanguage|.
+% This finished the second pass. Now the third one begins, which
+% loads the main language set with the key |main|. A warning is
+% raised if the main language is not the same as the last named
+% one, or if the value of the key |main| is not a language. Then
+% execute directly the option (because it could be used only in
+% |main|). After loading all languages, we deactivate
+% |\AfterBabelLanguage|.
 %
 %    \begin{macrocode}
 \bbl@trace{Option 'main'}
@@ -6436,10 +6536,10 @@ help from Bernd Raichle, for which I am grateful.
     {Languages have been loaded, so I can do nothing}}
 %    \end{macrocode}
 %      
-%    In order to catch the case where the user forgot to specify a
-%    language we check whether |\bbl@main@language|, has become
-%    defined. If not, no language has been loaded and an error
-%    message is displayed.
+% In order to catch the case where the user forgot to specify a
+% language we check whether |\bbl@main@language|, has become
+% defined. If not, no language has been loaded and an error
+% message is displayed.
 %
 %    \begin{macrocode}
 \ifx\bbl@main@language\@undefined
@@ -6514,6 +6614,7 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\@uclclist\@undefined\let\@uclclist\@empty\fi
   \ifx\bbl@trace\@undefined\def\bbl@trace#1{}\fi
   \expandafter\newif\csname ifbbl@single\endcsname
+  \chardef\bbl@bidimode\z@
 \fi
 %    \end{macrocode}
 %
@@ -10752,6 +10853,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@csarg\def{secpre@date.gregorian.licr}{%         discard uni
     \ifcase\bbl@engine\let\bbl@savedate\@empty\fi}
 \fi
+% TODO. With the following there is no need to ensure if \select...
+\newcommand\localedate{\@nameuse{\languagename date}}
 % eg: 1=months, 2=wide, 3=1, 4=dummy
 \def\bbl@inidate#1.#2.#3.#4\relax#5#6{% TODO - ignore with 'captions'
   \bbl@trim@def\bbl@tempa{#1.#2}%
@@ -11474,63 +11577,13 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 %<<*More package options>>
-\ifodd\bbl@engine
-  \DeclareOption{bidi=basic-r}%
-    {\ExecuteOptions{bidi=basic}}
-  \DeclareOption{bidi=basic}%
-    {\let\bbl@beforeforeign\leavevmode
-     % TODO - to locale_props, not as separate attribute
-     \newattribute\bbl@attr@dir
-     % I don't like it, hackish:
-     \frozen@everymath\expandafter{%
-       \expandafter\bbl@mathboxdir\the\frozen@everymath}%
-     \frozen@everydisplay\expandafter{%
-       \expandafter\bbl@mathboxdir\the\frozen@everydisplay}%
-     \bbl@exp{\output{\bodydir\pagedir\the\output}}%
-     \AtEndOfPackage{\EnableBabelHook{babel-bidi}}}
-\else
-  \DeclareOption{bidi=basic-r}%
-    {\ExecuteOptions{bidi=basic}}
-  \DeclareOption{bidi=basic}%
-    {\bbl@error
-      {The bidi method `basic' is available only in\\%
-       luatex. I'll continue with `bidi=default', so\\%
-       expect wrong results}%
-      {See the manual for further details.}%
-    \let\bbl@beforeforeign\leavevmode
-    \AtEndOfPackage{%
-      \EnableBabelHook{babel-bidi}%
-      \bbl@xebidipar}}
-  \def\bbl@loadxebidi#1{%
-    \ifx\RTLfootnotetext\@undefined
-      \AtEndOfPackage{% 
-        \EnableBabelHook{babel-bidi}%
-        \ifx\fontspec\@undefined
-          \usepackage{fontspec}% bidi needs fontspec 
-        \fi
-        \usepackage#1{bidi}}%
-    \fi}
-  \DeclareOption{bidi=bidi}%
-    {\bbl@tentative{bidi=bidi}%
-     \bbl@loadxebidi{}}
-  \DeclareOption{bidi=bidi-r}%
-    {\bbl@tentative{bidi=bidi-r}%
-     \bbl@loadxebidi{[rldocument]}}
-  \DeclareOption{bidi=bidi-l}%
-    {\bbl@tentative{bidi=bidi-l}%
-     \bbl@loadxebidi{}}
-\fi
-\DeclareOption{bidi=default}%
-  {\let\bbl@beforeforeign\leavevmode
-   \ifodd\bbl@engine
-     \newattribute\bbl@attr@dir
-     \bbl@exp{\output{\bodydir\pagedir\the\output}}%
-   \fi
-   \AtEndOfPackage{%
-     \EnableBabelHook{babel-bidi}%
-     \ifodd\bbl@engine\else
-       \bbl@xebidipar
-     \fi}}
+\chardef\bbl@bidimode\z@
+\DeclareOption{bidi=default}{\chardef\bbl@bidimode=\@ne}
+\DeclareOption{bidi=basic}{\chardef\bbl@bidimode=101 }
+\DeclareOption{bidi=basic-r}{\chardef\bbl@bidimode=102 }
+\DeclareOption{bidi=bidi}{\chardef\bbl@bidimode=201 }
+\DeclareOption{bidi=bidi-r}{\chardef\bbl@bidimode=202 }
+\DeclareOption{bidi=bidi-l}{\chardef\bbl@bidimode=203 }
 %<</More package options>>
 %    \end{macrocode}
 %
@@ -11790,7 +11843,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 %<<*Footnote changes>>
 \bbl@trace{Bidi footnotes}
-\ifx\bbl@beforeforeign\leavevmode
+\ifnum\bbl@bidimode>\z@
   \def\bbl@footnote#1#2#3{%
     \@ifnextchar[%
       {\bbl@footnote@o{#1}{#2}{#3}}%
@@ -13117,7 +13170,7 @@ end
   \fi
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
-\ifx\bbl@beforeforeign\leavevmode % A poor test for bidi=
+\ifnum\bbl@bidimode>\z@
   \def\bbl@nextfake#1{%  non-local changes, use always inside a group!
     \bbl@exp{%
       \mathdir\the\bodydir  
