@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/05/05 v3.43.1998 The Babel package]
+\ProvidesFile{babel.dtx}[2020/05/09 v3.43.2002 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -389,6 +389,15 @@ Package babel Warning: No hyphenation patterns were preloaded for
   Mik\TeX, \TeX Live, etc.) for further info about how to configure
   it.
 \end{troubleshooting}
+
+\begin{note}
+  With \textsf{hyperref} you may want to set the document language with
+  something like:
+\begin{verbatim}
+\usepackage[_pdflang=es-MX_]{hyperref}
+\end{verbatim}
+This is not currently done by \babel{} and you must set it by hand.
+\end{note}
 
 \subsection{Multilingual documents}
 
@@ -1411,6 +1420,7 @@ captions):
 \tag{ebu} Embu
 \tag{ee} Ewe
 \tag{el} Greek\hascapu\hascapl
+\tag{el-polyton} Polytonic Greek\hascapu\hascapl
 \tag{en-AU} English\hascapu\hascapl
 \tag{en-CA} English\hascapu\hascapl
 \tag{en-GB} English\hascapu\hascapl
@@ -1438,6 +1448,7 @@ captions):
 \tag{ga} Irish\hascapu\hascapl
 \tag{gd} Scottish Gaelic\hascapu\hascapl
 \tag{gl} Galician\hascapu\hascapl
+\tag{grc} Ancient Greek\hascapu\hascapl
 \tag{gsw} Swiss German
 \tag{gu} Gujarati
 \tag{guz} Gusii
@@ -1639,6 +1650,7 @@ akan\\
 albanian\\
 american\\
 amharic\\
+ancientgreek\\
 arabic\\
 arabic-algeria\\
 arabic-DZ\\
@@ -1848,6 +1860,7 @@ pashto\\
 persian\\
 piedmontese\\
 polish\\
+polytonicgreek\\
 portuguese-br\\
 portuguese-brazil\\
 portuguese-portugal\\
@@ -4554,8 +4567,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.43.1998>>
-%<<date=2020/05/05>>
+%<<version=3.43.2002>>
+%<<date=2020/05/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7109,13 +7122,24 @@ help from Bernd Raichle, for which I am grateful.
       \csname date#1\endcsname\relax
     \fi
   \else
-    \ifbbl@usedategroup   % if \foreign... within \<lang>date
-      \bbl@usedategroupfalse
-      \ifhmode
-        \hskip\z@skip % trick to ignore spaces
+    \ifhmode
+      \hskip\z@skip % trick to ignore spaces
+      \bbl@xin@{,captions,}{,\bbl@select@opts,}%
+      \ifin@
+        \csname captions#1\endcsname\relax
+      \fi
+      \bbl@xin@{,date,}{,\bbl@select@opts,}%
+      \ifin@  % if \foreign... within \<lang>date
         \csname date#1\endcsname\relax
-        \loop\ifdim\lastskip>\z@\unskip\repeat\unskip
-      \else
+      \fi
+      \loop\ifdim\lastskip>\z@\unskip\repeat\unskip
+    \else
+      \bbl@xin@{,captions,}{,\bbl@select@opts,}%
+      \ifin@ 
+        \csname captions#1\endcsname\relax
+      \fi
+      \bbl@xin@{,date,}{,\bbl@select@opts,}%
+      \ifin@
         \csname date#1\endcsname\relax
       \fi
     \fi
@@ -7188,9 +7212,12 @@ help from Bernd Raichle, for which I am grateful.
 % This environment makes use of |\foreign@language|.
 %
 %    \begin{macrocode}
-\expandafter\def\csname otherlanguage*\endcsname#1{%
+\expandafter\def\csname otherlanguage*\endcsname{%
+  \@ifnextchar[\bbl@otherlanguage@s{\bbl@otherlanguage@s[]}}
+\def\bbl@otherlanguage@s[#1]#2{%
   \ifnum\bbl@hymapsel=\@cclv\chardef\bbl@hymapsel4\relax\fi
-  \foreign@language{#1}}
+  \def\bbl@select@opts{#1}%
+  \foreign@language{#2}}
 %    \end{macrocode}
 %
 % At the end of the environment we need to switch off the extra
@@ -7249,13 +7276,14 @@ help from Bernd Raichle, for which I am grateful.
   \expandafter\noexpand\csname foreignlanguage \endcsname}
 \expandafter\def\csname foreignlanguage \endcsname{%
   \@ifstar\bbl@foreign@s\bbl@foreign@x}
-\def\bbl@foreign@x#1#2{%
+\newcommand\bbl@foreign@x[3][]{%
   \begingroup
+    \def\bbl@select@opts{#1}%
     \let\BabelText\@firstofone
     \bbl@beforeforeign
-    \foreign@language{#1}%
+    \foreign@language{#2}%
     \bbl@usehooks{foreign}{}%
-    \BabelText{#2}% Now in horizontal mode!
+    \BabelText{#3}% Now in horizontal mode!
   \endgroup}
 \def\bbl@foreign@s#1#2{% TODO - \shapemode, \@setpar, ?\@@par
   \begingroup
@@ -7282,6 +7310,10 @@ help from Bernd Raichle, for which I am grateful.
 \def\foreign@language#1{%
   % set name
   \edef\languagename{#1}%
+  \ifbbl@usedategroup
+    \bbl@add\bbl@select@opts{,date,}%
+    \bbl@usedategroupfalse
+  \fi
   \bbl@fixname\languagename
   % TODO. name@map here?
   \bbl@provide@locale
@@ -10871,7 +10903,7 @@ help from Bernd Raichle, for which I am grateful.
     \ifcase\bbl@engine\let\bbl@savedate\@empty\fi}
 \fi
 % TODO. With the following there is no need to ensure if \select...
-\newcommand\localedate{\@nameuse{\languagename date}}
+\newcommand\localedate{\@nameuse{bbl@date@\languagename}}
 % eg: 1=months, 2=wide, 3=1, 4=dummy
 \def\bbl@inidate#1.#2.#3.#4\relax#5#6{% TODO - ignore with 'captions'
   \bbl@trim@def\bbl@tempa{#1.#2}%

@@ -1,4 +1,4 @@
-## Babel 3.43.1998
+## Babel 3.43.2002
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -44,10 +44,15 @@ respective authors.
 ### Latest changes
 
 ```
-3.44   2020-05-??
-       - \localedigits, \localedate
-       - [|] syntax in dates
-       - Line breaking in Amharic
+3.44   2020-05-14??
+       - \localedigits, \localedate, to print digits and date with the
+         current locale.
+       - [|] syntax in dates, to represent a value with any counter
+         defined in the ini files.
+       - Amharic: line breaking, counters
+       - Improvements in French, Portuguese
+       - Optional argument in \foreignlanguage and otherlanguage*,
+         to switch date and/or captions.
        
 3.43   2020-04-28
        - Autoloading based on the BCP47 codes, with basic lookup.
