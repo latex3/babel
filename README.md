@@ -1,4 +1,4 @@
-## Babel 3.43.2002
+## Babel 3.43.2004
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -53,6 +53,7 @@ respective authors.
        - Improvements in French, Portuguese
        - Optional argument in \foreignlanguage and otherlanguage*,
          to switch date and/or captions.
+       - Preliminary code for \babelprehyphenation.
        
 3.43   2020-04-28
        - Autoloading based on the BCP47 codes, with basic lookup.

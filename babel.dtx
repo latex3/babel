@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/05/09 v3.43.2002 The Babel package]
+\ProvidesFile{babel.dtx}[2020/05/11 v3.43.2004 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4567,8 +4567,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.43.2002>>
-%<<date=2020/05/09>>
+%<<version=3.43.2004>>
+%<<date=2020/05/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12390,6 +12390,7 @@ help from Bernd Raichle, for which I am grateful.
 \endgroup
 \ifx\newattribute\@undefined\else
   \newattribute\bbl@attr@locale
+  \directlua{ Babel.attr_locale = luatexbase.registernumber'bbl@attr@locale'}
   \AddBabelHook{luatex}{beforeextras}{%
     \setattribute\bbl@attr@locale\localeid}
 \fi
@@ -12926,7 +12927,8 @@ end
 \catcode`\%=12
 \catcode`\&=14
 \directlua{
-  Babel.linebreaking.replacements = {}
+  Babel.linebreaking.post_replacements = {}
+  Babel.linebreaking.pre_replacements = {}
 
   function Babel.str_to_nodes(fn, matches, base)
     local n, head, last    
@@ -12984,7 +12986,7 @@ end
 
   function Babel.post_hyphenate_replace(head)
     local u = unicode.utf8
-    local lbkr = Babel.linebreaking.replacements
+    local lbkr = Babel.linebreaking.post_replacements
     local word_head = head
 
     while true do
@@ -13089,6 +13091,147 @@ end
     end  &% for words
     return head
   end
+  
+  &%%%
+  &% Preliminary code for \babelprehyphenation
+  &% TODO. Copypaste pattern. Merge with fetch_word
+  function Babel.fetch_subtext(head, funct)
+    local word_string = ''
+    local word_nodes = {}
+    local lang
+    local item = head
+
+    while item do
+
+      if item.id == 29 then     
+        local locale = node.get_attribute(item, Babel.attr_locale)
+
+        if not(item.char == 124) &% ie, not | = space
+            and (locale == lang or lang == nil) then
+          lang = lang or locale
+          word_string = word_string .. unicode.utf8.char(item.char)
+          word_nodes[#word_nodes+1] = item
+        end
+
+        if item == node.tail(head) then 
+          item = nil
+          return word_string, word_nodes, item, lang
+        end
+
+      elseif item.id == 12 and item.subtype == 13 then
+        word_string = word_string .. '|'       
+        word_nodes[#word_nodes+1] = item
+
+        if item == node.tail(head) then 
+          item = nil
+          return word_string, word_nodes, item, lang
+        end
+
+      elseif word_string == '' then
+        &% pass
+
+      else
+        return word_string, word_nodes, item, lang
+      end
+
+      item = item.next
+    end
+  end
+  
+  &% TODO. Copypaste pattern. Merge with pre_hyphenate_replace
+  function Babel.pre_hyphenate_replace(head)
+    local u = unicode.utf8
+    local lbkr = Babel.linebreaking.pre_replacements
+    local word_head = head
+
+    while true do
+      local w, wn, nw, lang = Babel.fetch_subtext(word_head)
+      if not lang then return head end
+
+      if not lbkr[lang] then
+        break
+      end
+
+      for k=1, #lbkr[lang] do
+        local p = lbkr[lang][k].pattern 
+        local r = lbkr[lang][k].replace
+
+        while true do
+          local matches = { u.match(w, p) }
+          if #matches < 2 then break end
+
+          local first = table.remove(matches, 1)
+          local last =  table.remove(matches, #matches)
+
+          &% Fix offsets, from bytes to unicode.
+          first = u.len(w:sub(1, first-1)) + 1
+          last  = u.len(w:sub(1, last-1))
+
+          local new  &% used when inserting and removing nodes
+          local changed = 0
+
+          &% This loop traverses the replace list and takes the
+          &% corresponding actions
+          for q = first, last do   
+            local crep = r[q-first+1]
+            local char_node = wn[q]
+            local char_base = char_node
+
+            if crep and crep.data then
+              char_base = wn[crep.data+first-1]
+            end
+
+            if crep == {} then
+              break
+            elseif crep == nil then
+              changed = changed + 1
+              node.remove(head, char_node)
+            elseif crep and crep.string then
+              changed = changed + 1
+              local str = crep.string(matches)
+              if str == '' then 
+                if q == 1 then
+                  word_head = char_node.next
+                end
+                head, new = node.remove(head, char_node)
+              elseif char_node.id == 29 and u.len(str) == 1 then
+                char_node.char = string.utfvalue(str)
+              else
+                local n
+                for s in string.utfvalues(str) do
+                  if char_node.id == 7 then
+                    log('Automatic hyphens cannot be replaced, just removed.')
+                  else
+                    n = node.copy(char_base)
+                  end
+                  n.char = s
+                  if q == 1 then
+                    head, new = node.insert_before(head, char_node, n)   
+                    word_head = new
+                  else 
+                    node.insert_before(head, char_node, n)   
+                  end
+                end
+
+                node.remove(head, char_node)
+              end  &% string length
+            end  &% if char and char.string
+          end  &% for char in match
+          if changed > 20 then
+            texio.write('Too many changes. Ignoring the rest.')
+          elseif changed > 0 then
+            &% For one-to-one can we modifiy directly the
+            &% values without re-fetching? Very likely.
+            w, wn, nw = Babel.fetch_subtext(word_head)   
+          end
+
+        end  &% for match
+      end  &% for patterns
+      word_head = nw
+    end  &% for words
+    return head
+  end
+  &%%% en of preliminary code for \babelprehyphenation
 
   &% The following functions belong to the next macro
 
@@ -13123,7 +13266,6 @@ end
     return "]]..Babel.capt_map(m[" .. capno .. "]," ..
            (mlen) .. ").." .. "[["
   end
-
 }
 %    \end{macrocode}
 %
@@ -13160,7 +13302,7 @@ end
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
     \directlua{
-      local lbkr = Babel.linebreaking.replacements
+      local lbkr = Babel.linebreaking.post_replacements
       local u = unicode.utf8
       &% Convert pattern:
       local patt = string.gsub([[#2]], '%s', '')
@@ -13176,17 +13318,52 @@ end
                    { pattern = patt, replace = { \babeltempb } })
     }&%
   \endgroup}
+% TODO. Working !!! Copypaste pattern. 
+\gdef\babelprehyphenation#1#2#3{&%
+  \bbl@activateprehyphen
+  \begingroup
+    \def\babeltempa{\bbl@add@list\babeltempb}&%
+    \let\babeltempb\@empty
+    \bbl@foreach{#3}{&%
+      \bbl@ifsamestring{##1}{remove}&%
+        {\bbl@add@list\babeltempb{nil}}&%
+        {\directlua{
+           local rep = [[##1]]
+           rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
+           tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
+         }}}&%
+    \directlua{
+      local lbkr = Babel.linebreaking.pre_replacements
+      local u = unicode.utf8
+      &% Convert pattern:
+      local patt = string.gsub([[#2]], '%s', '')
+      if not u.find(patt, '()', nil, true) then
+        patt = '()' .. patt .. '()'
+      end
+      patt = u.gsub(patt, '{(.)}', 
+                function (n)
+                  return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
+                end)
+      lbkr[\the\csname bbl@id@@#1\endcsname] = lbkr[\the\csname  bbl@id@@#1\endcsname] or {}
+      table.insert(lbkr[\the\csname bbl@id@@#1\endcsname],
+                   { pattern = patt, replace = { \babeltempb } })
+    }&%
+  \endgroup}
 \endgroup
 \def\bbl@activateposthyphen{%
   \let\bbl@activateposthyphen\relax
   \directlua{
     Babel.linebreaking.add_after(Babel.post_hyphenate_replace)
   }}
+% TODO. Working !!! 
+\def\bbl@activateprehyphen{%
+  \let\bbl@activateprehyphen\relax
+  \directlua{
+    Babel.linebreaking.add_before(Babel.pre_hyphenate_replace)
+  }}
 %    \end{macrocode}
 %
 % \subsection{Layout}
-%
-% \textbf{Work in progress}.
 %
 % Unlike \xetex{}, \luatex{} requires only minimal changes for
 % right-to-left layouts, particularly in monolingual documents (the
