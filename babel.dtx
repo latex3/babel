@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/05/11 v3.43.2004 The Babel package]
+\ProvidesFile{babel.dtx}[2020/05/13 v3.44 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -649,18 +649,31 @@ This command can be used as environment, too.
   code with an additional grouping level.
 \end{warning}
 
-\Describe{\foreignlanguage}{\marg{language}\marg{text}}
-The command |\foreignlanguage| takes two arguments; the second
-argument is a phrase to be typeset according to the rules of the
-language named in its first one. This command (1) only switches the
-extra definitions and the hyphenation rules for the language,
-\emph{not} the names and dates, (2) does not send information about
-the language to auxiliary files (i.e., the surrounding language is
-still in force), and (3) it works even if the language has not been
-set as package option (but in such a case it only sets the hyphenation
-patterns and a warning is shown). With the |bidi| option, it also 
-enters in horizontal mode (this is not done always for backwards 
-compatibility).
+\Describe{\foreignlanguage}{\oarg{option-list}\marg{language}\marg{text}}
+
+The command |\foreignlanguage| takes two arguments; the second argument
+is a phrase to be typeset according to the rules of the language named
+in its first one.
+
+This command (1) only switches the extra definitions and the
+hyphenation rules for the language, \emph{not} the names and dates, (2)
+does not send information about the language to auxiliary files (i.e.,
+the surrounding language is still in force), and (3) it works even if
+the language has not been set as package option (but in such a case it
+only sets the hyphenation patterns and a warning is shown). With the
+|bidi| option, it also enters in horizontal mode (this is not done
+always for backwards compatibility).
+
+\New{3.44} As already said, captions and dates are not switched.
+However, with the optional argument you can switch them, too. So, you
+can write:
+\begin{verbatim}
+\foreignlanguage[date]{polish}{\today}
+\end{verbatim}
+In addition, captions can be switched with |captions| (or both, of
+course, with |date, captions|). Until 3.43 you had to write something
+like |{\selectlanguage{..} ..}|, which was not always the most
+convenient way.
 
 \subsection{Auxiliary language selectors}
 
@@ -685,7 +698,7 @@ environment with an additional grouping, like braces |{}|.
 Spaces after the environment are ignored.
 
 \Describe{\begin\menv{otherlanguage*}}%
-{\marg{language}\Eenv{otherlanguage*}}
+{\oarg{option-list}\marg{language}\Eenv{otherlanguage*}}
 
 Same as |\foreignlanguage| but as environment. Spaces after the
 environment are \textit{not} ignored.
@@ -2335,7 +2348,9 @@ format (\textsf{french}, \textsf{breton}, and \textsf{occitan}).
 Besides |\today|, this option defines an additional command for dates:
 |\<language>date|, which takes three arguments, namely, year, month and
 day numbers. In fact, |\today| calls |\<language>today|, which in turn
-calls |\<language>date{\the\year}{\the\month}{\the\day}|.
+calls |\<language>date{\the\year}{\the\month}{\the\day}|. \New{3.44}
+More convenient is usually |\localedate|, with prints the date for the
+current locale.
 
 \Describe{captions=}{\meta{language-tag}}
 Loads only the strings. For example:
@@ -3624,28 +3639,27 @@ for a small example (|xe-bidi|).
 See the code section for |\foreignlanguage*| (a new starred
 version of |\foreignlanguage|).
 
-\medskip
-\textbf{Old and deprecated stuff}
+For old an deprecated functions, see the wiki.
 
-A couple of tentative macros were provided by \babel{} ($\ge$3.9g) with
-a partial solution for ``Unicode'' fonts. These macros are now
-deprecated --- use |\babelfont|. A short description follows, for
-reference:
-\begin{itemize}
-\item |\babelFSstore|\marg{babel-language} sets the current three
-  basic families (rm, sf, tt) as the default for the language
-  given.
-\item |\babelFSdefault|\marg{babel-language}\marg{fontspec-features}
-  patches |\fontspec| so that the given features are always passed as
-  the optional argument or added to it (not an ideal solution).
-\end{itemize}
-So, for example:
-\begin{verbatim}
-\setmainfont[Language=Turkish]{Minion Pro}
-\babelFSstore{turkish}
-\setmainfont{Minion Pro}
-\babelFSfeatures{turkish}{Language=Turkish}
-\end{verbatim}
+\medskip
+\textbf{\string\babelprehyphenation}
+
+\New{3.44} Note it is tentative, but the current behavior for glyphs
+should be correct.
+
+It is similar to |\babelposthyphenation|, but (as its name implies)
+applied before hyphenation. There are other differences: (1) the first
+argument is the locale instead the name of hyphenation patterns; (2) in
+the search patterns |=| has no special meaning (\verb+|+ is still
+reserved, but currently unused); (3) in the replacement,
+discretionaries are not accepted, only remove, {}, and string = ...
+
+Currently it handles glyphs, not discretionaries or spaces (in
+particular, it will not catch the hyphen and you can't insert or remove
+spaces). Also, you are limited to substitutions as done by lua,
+although a future implementation may alternatively accept lpeg.
+
+Performance is still somewhat poor.
 
 \section{Loading languages with \file{language.dat}}
 
@@ -4567,8 +4581,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.43.2004>>
-%<<date=2020/05/11>>
+%<<version=3.44>>
+%<<date=2020/05/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10102,6 +10116,7 @@ help from Bernd Raichle, for which I am grateful.
 \ifx\l@english\@undefined
   \chardef\l@english\z@
 \fi
+% The following is used to cancel rules in ini files (see Amharic).
 \ifx\l@babelnohyhens\@undefined
   \newlanguage\l@babelnohyphens
 \fi
@@ -10384,13 +10399,13 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@ifunset{bbl@hyots@\languagename}{}%
     {\bbl@csarg\bbl@replace{hyots@\languagename}{ }{,}%
      \bbl@csarg\bbl@foreach{hyots@\languagename}{%
-         \ifcase\bbl@engine
-           \ifnum##1<257
-             \global\lccode##1=##1\relax
-           \fi
-         \else
+       \ifcase\bbl@engine
+         \ifnum##1<257
            \global\lccode##1=##1\relax
-         \fi}}%
+         \fi
+       \else
+         \global\lccode##1=##1\relax
+       \fi}}%
   % == maparabic ==
   % Native digits, if provided in ini (TeX level, xe and lua)
   \ifcase\bbl@engine\else
@@ -10496,7 +10511,8 @@ help from Bernd Raichle, for which I am grateful.
 % first macro is the generic “localized” command.
 %
 %    \begin{macrocode}
-\newcommand\localedigits{\@nameuse{\languagename digits}}
+% TODO. Merge with \localenumeral:
+% \newcommand\localedigits{\@nameuse{\languagename digits}}
 \def\bbl@setdigits#1#2#3#4#5{%
   \bbl@exp{%
     \def\<\languagename digits>####1{%       ie, \langdigits
@@ -10816,6 +10832,11 @@ help from Bernd Raichle, for which I am grateful.
 \let\bbl@inikv@characters\bbl@inikv
 \let\bbl@inikv@numbers\bbl@inikv
 \def\bbl@inikv@counters#1=#2\@@{%
+  \bbl@ifsamestring{#1}{digits}%
+    {\bbl@error{The counter name 'digits' is reserved for mapping\\%
+                decimal digits}%
+               {Use another name.}}%
+    {}%
   \def\bbl@tempc{#1}%
   \bbl@trim@def{\bbl@tempb*}{#2}%
   \in@{.1$}{#1$}%
@@ -11049,6 +11070,8 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \newcommand\localenumeral[2]{\bbl@cs{cntr@#1@\languagename}{#2}}
 \def\bbl@localecntr#1#2{\localenumeral{#2}{#1}}
+% TODO. \localecounter{digits}{..} What a mistake on my part!!
+% But the solution seems even logical ;-)
 \newcommand\localecounter[2]{%
   \expandafter\bbl@localecntr\csname c@#2\endcsname{#1}}
 \def\bbl@alphnumeral#1#2{%
@@ -12954,24 +12977,29 @@ end
     local word_nodes = {}
     local lang
     local item = head
+    local inmath = false
 
     while item do
 
       if item.id == 29
           and not(item.char == 124) &% ie, not |
           and not(item.char == 61)  &% ie, not =
+          and not inmath
           and (item.lang == lang or lang == nil) then
         lang = lang or item.lang
         word_string = word_string .. unicode.utf8.char(item.char)
         word_nodes[#word_nodes+1] = item
 
-      elseif item.id == 7 and item.subtype == 2 then
+      elseif item.id == 7 and item.subtype == 2 and not inmath then
         word_string = word_string .. '='
         word_nodes[#word_nodes+1] = item
 
-      elseif item.id == 7 and item.subtype == 3 then
+      elseif item.id == 7 and item.subtype == 3 and not inmath then
         word_string = word_string .. '|'       
         word_nodes[#word_nodes+1] = item
+        
+      elseif item.id == node.id'math' then
+        inmath = (item.subtype == 0)
 
       elseif word_string == '' then
         &% pass
@@ -13100,6 +13128,7 @@ end
     local word_nodes = {}
     local lang
     local item = head
+    local inmath = false
 
     while item do
 
@@ -13107,6 +13136,7 @@ end
         local locale = node.get_attribute(item, Babel.attr_locale)
 
         if not(item.char == 124) &% ie, not | = space
+            and not inmath
             and (locale == lang or lang == nil) then
           lang = lang or locale
           word_string = word_string .. unicode.utf8.char(item.char)
@@ -13118,7 +13148,7 @@ end
           return word_string, word_nodes, item, lang
         end
 
-      elseif item.id == 12 and item.subtype == 13 then
+      elseif item.id == 12 and item.subtype == 13 and not inmath then
         word_string = word_string .. '|'       
         word_nodes[#word_nodes+1] = item
 
@@ -13126,6 +13156,9 @@ end
           item = nil
           return word_string, word_nodes, item, lang
         end
+      
+      elseif item.id == node.id'math' then
+        inmath = (item.subtype == 0)
 
       elseif word_string == '' then
         &% pass
@@ -13231,7 +13264,7 @@ end
     end  &% for words
     return head
   end
-  &%%% en of preliminary code for \babelprehyphenation
+  &%%% end of preliminary code for \babelprehyphenation
 
   &% The following functions belong to the next macro
 
@@ -13305,7 +13338,7 @@ end
       local lbkr = Babel.linebreaking.post_replacements
       local u = unicode.utf8
       &% Convert pattern:
-      local patt = string.gsub([[#2]], '%s', '')
+      local patt = string.gsub([==[#2]==], '%s', '')
       if not u.find(patt, '()', nil, true) then
         patt = '()' .. patt .. '()'
       end
@@ -13336,7 +13369,7 @@ end
       local lbkr = Babel.linebreaking.pre_replacements
       local u = unicode.utf8
       &% Convert pattern:
-      local patt = string.gsub([[#2]], '%s', '')
+      local patt = string.gsub([==[#2]==], '%s', '')
       if not u.find(patt, '()', nil, true) then
         patt = '()' .. patt .. '()'
       end

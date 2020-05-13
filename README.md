@@ -1,4 +1,4 @@
-## Babel 3.43.2004
+## Babel 3.44
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,7 +7,7 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.43 are described in:
+Changes in version 3.44 are described in:
 
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
 
@@ -44,16 +44,22 @@ respective authors.
 ### Latest changes
 
 ```
-3.44   2020-05-14??
-       - \localedigits, \localedate, to print digits and date with the
-         current locale.
+3.44   2020-05-13
+       - WARNING. If you need the Portuguese style you must update
+         babel-portuges.
+       - \localedate, to print date with the current locale.
        - [|] syntax in dates, to represent a value with any counter
          defined in the ini files.
-       - Amharic: line breaking, counters
-       - Improvements in French, Portuguese
+       - Amharic: line breaking (modern and traditional), counters.
+       - Improvements in French, Portuguese.
        - Optional argument in \foreignlanguage and otherlanguage*,
          to switch date and/or captions.
        - Preliminary code for \babelprehyphenation.
+       - Fixes:
+         - \babelcharproperty{..}{linebreak]{..} raised an error.
+         - \babelposthyphenation raised an error if the last char in
+           the pattern was ].       
+         - \babelposthyphenation is now deativated in math.
        
 3.43   2020-04-28
        - Autoloading based on the BCP47 codes, with basic lookup.
