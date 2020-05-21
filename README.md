@@ -1,4 +1,4 @@
-## Babel 3.44
+## Babel 3.44.2014
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.44 are described in:
+Changes in version 3.45 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.45
 
 Included is a set of ini files for about 200 languages.
 
@@ -44,6 +44,15 @@ respective authors.
 ### Latest changes
 
 ```
+3.45   2020-05-??
+       - Minor changes in Hindi, Greek.
+       - Improvements in Kurdish
+       - Fixes
+         - Improved handling of math with \babelposthyphenation and
+           \babelprehyphenation (it was ignoring too much).
+         - An error related to \bbl@foreign@x could be raised in some
+           rare cases.
+
 3.44   2020-05-13
        - WARNING. If you need the Portuguese style you must update
          babel-portuges.
@@ -60,6 +69,7 @@ respective authors.
          - \babelposthyphenation raised an error if the last char in
            the pattern was ].       
          - \babelposthyphenation is now deativated in math.
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
        
 3.43   2020-04-28
        - Autoloading based on the BCP47 codes, with basic lookup.
@@ -72,7 +82,7 @@ respective authors.
          - \guillemotleft and \guillemotleft renamed to \guillemetleft
            and \guillemetleft (#63).
          - A couple of bugs related to autoloading.
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.43
        
 3.42   2020-03-22
        - \getlocaleproperty, to get the value of a field from the loaded

@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/05/13 v3.44 The Babel package]
+\ProvidesFile{babel.dtx}[2020/05/21 v3.44.2014 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1275,7 +1275,8 @@ LICR). They will be evolving with the time to add more features
 following section shows how to make use of them currently (by means of
 |\babelprovide|), but a higher interface, based on package options, in
 under study. In other words, |\babelprovide| is mainly meant
-for auxiliary tasks.
+for auxiliary tasks, and as alternative when the |ldf|, for some
+reason, does work as expected.
 
 \begin{example}
   Although Georgian has its own \texttt{ldf} file, here is how to
@@ -2380,8 +2381,21 @@ for example:
 In other engines it just suppresses hyphenation (because the pattern
 list is empty).
 
-\Describe{main}{} This valueless option makes the language the main
-one. Only in newly defined languages.
+\Describe{main}{} This valueless option makes the language the main one
+(thus overriding that set when \babel\ is loaded). Only in newly defined
+languages.
+\begin{example}
+  Let's assume your document is mainly in Polytonic Greek, but with some
+  sections in Italian. Then, the first attempt should be:
+\begin{verbatim}
+\usepackage[italian, greek.polutonic]{babel}
+\end{verbatim}
+  But if, say, accents in Greek are not shown correctly, you could try: 
+\begin{verbatim}
+\usepackage[italian]{babel}
+\babelprovide[import, main]{polytonicgreek}
+\end{verbatim}
+\end{example}
 
 \Describe{script=}{\meta{script-name}}
 \New{3.15} Sets the script name to be used by \textsf{fontspec} (eg,
@@ -3856,10 +3870,9 @@ known. The first two are related to hyphenation patterns.
 
 \DescribeMacro{\addlanguage}
 The macro |\addlanguage| is a non-outer version of the macro
-|\newlanguage|, defined in \file{plain.tex} version~3.x. For older
-versions of \file{plain.tex} and \file{lplain.tex} a substitute
-definition is used. Here ``language'' is used in the \TeX{} sense of
-set of hyphenation patterns.
+|\newlanguage|, defined in \file{plain.tex} version~3.x. Here
+``language'' is used in the \TeX{} sense of set of hyphenation
+patterns.
 
 \DescribeMacro{\adddialect}
 The macro |\adddialect| can be used when two languages can (or
@@ -4581,8 +4594,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.44>>
-%<<date=2020/05/13>>
+%<<version=3.44.2014>>
+%<<date=2020/05/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4909,37 +4922,14 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \begin{macro}{\addlanguage}
 %
-% To add languages to \TeX's memory plain \TeX\ version~3.0
-% supplies |\newlanguage|, in a pre-3.0 environment a similar macro
-% has to be provided. For both cases a new macro is defined here,
-% because the original |\newlanguage| was defined to be |\outer|.
-%
-% For a format based on plain version~2.x, the definition of
-% |\newlanguage| can not be copied because |\count 19| is used for
-% other purposes in these formats. Therefore |\addlanguage| is
-% defined using a definition based on the macros used to define
-% |\newlanguage| in plain \TeX\ version~3.0.
-%
-% For formats based on plain version~3.0 the definition of
-% |\newlanguage| can be simply copied, removing |\outer|.
-% Plain \TeX\ version 3.0 uses |\count 19| for this purpose.
+% This macro was introduced for \TeX{} $<$ 2. Preserved for
+% compatibility.
 %
 %    \begin{macrocode}
 %<<*Define core switching macros>>
-\ifx\newlanguage\@undefined
-  \csname newcount\endcsname\last@language
-  \def\addlanguage#1{%
-    \global\advance\last@language\@ne
-    \ifnum\last@language<\@cclvi
-    \else
-      \errmessage{No room for a new \string\language!}%
-    \fi
-    \global\chardef#1\last@language
-    \wlog{\string#1 = \string\language\the\last@language}}
-\else
-  \countdef\last@language=19
-  \def\addlanguage{\alloc@9\language\chardef\@cclvi}
-\fi
+%<<*Define core switching macros>>
+\countdef\last@language=19  % TODO. why? remove?
+\def\addlanguage{\csname newlanguage\endcsname}
 %<</Define core switching macros>>
 %    \end{macrocode}
 %
@@ -7290,7 +7280,7 @@ help from Bernd Raichle, for which I am grateful.
   \expandafter\noexpand\csname foreignlanguage \endcsname}
 \expandafter\def\csname foreignlanguage \endcsname{%
   \@ifstar\bbl@foreign@s\bbl@foreign@x}
-\newcommand\bbl@foreign@x[3][]{%
+\providecommand\bbl@foreign@x[3][]{%
   \begingroup
     \def\bbl@select@opts{#1}%
     \let\BabelText\@firstofone
@@ -8008,6 +7998,9 @@ help from Bernd Raichle, for which I am grateful.
 \AtBeginDocument{%
   \@nameuse{bbl@beforestart}%
   \if@filesw
+    \providecommand\babel@aux[2]{}%
+    \immediate\write\@mainaux{%
+      \string\providecommand\string\babel@aux[2]{}}%
     \immediate\write\@mainaux{\string\@nameuse{bbl@beforestart}}%
   \fi
   \expandafter\selectlanguage\expandafter{\bbl@main@language}%
@@ -11470,7 +11463,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@hook@loadpatterns#1{\input #1\relax}
 \let\bbl@hook@loadexceptions\bbl@hook@loadpatterns
 \def\bbl@hook@loadkernel#1{%
-  \def\addlanguage{\alloc@9\language\chardef\@cclvi}%
+  \def\addlanguage{\csname newlanguage\endcsname}%
   \def\adddialect##1##2{%
     \global\chardef##1##2\relax
     \wlog{\string##1 = a dialect from \string\language##2}}%
@@ -12997,9 +12990,9 @@ end
       elseif item.id == 7 and item.subtype == 3 and not inmath then
         word_string = word_string .. '|'       
         word_nodes[#word_nodes+1] = item
-        
-      elseif item.id == node.id'math' then
-        inmath = (item.subtype == 0)
+
+      elseif item.id == 11 and item.subtype == 0 then
+        inmath = true
 
       elseif word_string == '' then
         &% pass
@@ -13119,7 +13112,7 @@ end
     end  &% for words
     return head
   end
-  
+
   &%%%
   &% Preliminary code for \babelprehyphenation
   &% TODO. Copypaste pattern. Merge with fetch_word
@@ -13156,9 +13149,9 @@ end
           item = nil
           return word_string, word_nodes, item, lang
         end
-      
-      elseif item.id == node.id'math' then
-        inmath = (item.subtype == 0)
+
+      elseif item.id == 11 and item.subtype == 0 then
+          inmath = true
 
       elseif word_string == '' then
         &% pass
@@ -13170,7 +13163,7 @@ end
       item = item.next
     end
   end
-  
+
   &% TODO. Copypaste pattern. Merge with pre_hyphenate_replace
   function Babel.pre_hyphenate_replace(head)
     local u = unicode.utf8
@@ -20366,8 +20359,6 @@ end
 %    \begin{macrocode}
 %<*cjkdata>
 Babel = Babel or {}
-
-
 
 Babel.cjk_characters = {
   [0x0021]={c='ex'},
