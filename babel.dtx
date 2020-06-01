@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/05/21 v3.44.2014 The Babel package]
+\ProvidesFile{babel.dtx}[2020/06/01 v3.44.2025 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1308,7 +1308,9 @@ _\babelprovide[import, main]{georgian}_
 \begin{note}
   The \texttt{ini} files just define and set some parameters, but the
   corresponding behavior is not always implemented. Also, there are 
-  some limitations in the engines. A few remarks follows:
+  some limitations in the engines. A few remarks follow (which could
+  no longer be valid when you read this manual, if the packages involved
+  han been updated):
 \begin{description}
 \itemsep=-\parskip
 \item[Arabic] Monolingual documents mostly work in \luatex, but it must
@@ -1319,8 +1321,8 @@ _\babelprovide[import, main]{georgian}_
   cantillation marks are misplaced (\xetex{} or \luatex{} with Harfbuzz
   seems better, but still problematic).
 \item[Devanagari] In \luatex{} and the the default renderer many fonts
-work, but some others do not, the main issue being the ‘ra’. It is
-advisable to set explicitly the script to either |deva| or |dev2|, eg:
+work, but some others do not, the main issue being the ‘ra’. You may
+need to set explicitly the script to either |deva| or |dev2|, eg:
 \begin{verbatim}
 \newfontscript{Devanagari}{deva}
 \end{verbatim}  
@@ -1355,6 +1357,18 @@ loads \textsf{luatexja}:
 \documentclass{ltjbook}
 \usepackage[japanese]{babel}
 \end{verbatim}
+\item[Latin, Greek, Cyrillic] Combining chars with the default
+\luatex{} font renderer might be wrong; on then other hand, with the
+Harfbuzz renderer diacritics are stacked correctly, but many
+hyphenations points are discarded (this bug seems related to kerning,
+so it depends on the font). Fortunately, fonts can be loaded twice with
+different renderers; for example:
+\begin{verbatim}
+\babelfont[spanish]{rm}{FreeSerif}  
+\babelfont[hindi]{rm}[Renderer=Harfbuzz]{FreeSerif}
+\end{verbatim}
+With \xetex{} both combining characters and hyphenation work as
+expected.
 \end{description}
 \end{note}
 
@@ -4589,13 +4603,15 @@ help from Bernd Raichle, for which I am grateful.
 % |date.long.Nominative|, |date.long.Formal|, but no language is
 % currently using the latter). \textit{Multi-letter} qualifiers are
 % forward compatible in the sense they won’t conflict with new
-% ``global'' keys (which start always with a lowercase case).
+% ``global'' keys (which start always with a lowercase case). There is
+% an exception, however: the section |counters| has been devised to
+% have arbitrary keys, so you can add lowercased keys if you want.
 %
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.44.2014>>
-%<<date=2020/05/21>>
+%<<version=3.44.2025>>
+%<<date=2020/06/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10510,6 +10526,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exp{%
     \def\<\languagename digits>####1{%       ie, \langdigits
       \<bbl@digits@\languagename>####1\\\@nil}%
+    \let\<bbl@cntr@digits@\languagename>\<\languagename digits>%
     \def\<\languagename counter>####1{%      ie, \langcounter
       \\\expandafter\<bbl@counter@\languagename>%
       \\\csname c@####1\endcsname}%
@@ -10747,7 +10764,28 @@ help from Bernd Raichle, for which I am grateful.
   \global\bbl@csarg\let{renew@\bbl@section}\relax
   \bbl@cs{secpost@\bbl@section}%
   % The previous code belongs to the previous section.
+  % --------------------------
   % Now start the current one.
+  \in@{=date.}{=#1}%
+  \ifin@
+    \lowercase{\def\bbl@tempa{=#1=}}%
+    \bbl@replace\bbl@tempa{=date.gregorian}{}%
+    \bbl@replace\bbl@tempa{=date.}{}%
+    \bbl@replace\bbl@tempa{=}{}%
+    \in@{.licr.}{#1.}%
+    \ifin@
+      \ifcase\bbl@engine
+        \bbl@replace\bbl@tempa{.licr}{}%
+      \else
+        \let\bbl@tempa\relax
+      \fi
+    \fi
+    \ifx\bbl@tempa\relax\else
+      \bbl@exp{%
+        \def\<bbl@inikv@#1>####1=####2\\\@@{% 
+          \\\bbl@inidate####1...\relax{####2}{\bbl@tempa}}}%
+    \fi
+  \fi
   \def\bbl@section{#1}% 
   \def\bbl@elt##1##2{%
     \@namedef{bbl@KVP@#1/##1}{}}%
@@ -10893,54 +10931,74 @@ help from Bernd Raichle, for which I am grateful.
       \\\SetString\<\bbl@tempa name>{\the\toks@}}}}
 %    \end{macrocode}
 %
-% But dates are more complex. The full date format is stores in
-% |date.gregorian|, so we must read it in non-Unicode engines, too
-% (saved months are just discarded when the LICR section is reached).
-%
-% TODO. Remove copypaste pattern.
+% TODO. Document
 %
 %    \begin{macrocode}
-\bbl@csarg\def{inikv@date.gregorian}#1=#2\@@{%       for defaults
-  \bbl@inidate#1...\relax{#2}{}}
-\bbl@csarg\def{inikv@date.islamic}#1=#2\@@{%
-  \bbl@inidate#1...\relax{#2}{islamic}}
-\bbl@csarg\def{inikv@date.hebrew}#1=#2\@@{% 
-  \bbl@inidate#1...\relax{#2}{hebrew}}
-\bbl@csarg\def{inikv@date.persian}#1=#2\@@{%
-  \bbl@inidate#1...\relax{#2}{persian}}
-\bbl@csarg\def{inikv@date.indian}#1=#2\@@{% 
-  \bbl@inidate#1...\relax{#2}{indian}}
-\ifcase\bbl@engine
-  \bbl@csarg\def{inikv@date.gregorian.licr}#1=#2\@@{%  override
-    \bbl@inidate#1...\relax{#2}{}}
-  \bbl@csarg\def{secpre@date.gregorian.licr}{%         discard uni
-    \ifcase\bbl@engine\let\bbl@savedate\@empty\fi}
-\fi
-% TODO. With the following there is no need to ensure if \select...
-\newcommand\localedate{\@nameuse{bbl@date@\languagename}}
-% eg: 1=months, 2=wide, 3=1, 4=dummy
+% Arguments are _not_ protected.
+\let\bbl@calendar\@empty
+\DeclareRobustCommand\localedate[1][]{\bbl@localedate{#1}}
+\def\bbl@localedate#1#2#3#4{%
+  \begingroup
+    \ifx\@empty#1\@empty\else
+      \let\bbl@ld@calendar\@empty
+      \let\bbl@ld@format\@empty
+      \edef\bbl@tempa{\zap@space#1 \@empty}%
+      \def\bbl@tempb##1=##2\@@{\@namedef{bbl@ld@##1}{##2}}%
+      \bbl@foreach\bbl@tempa{\bbl@tempb##1\@@}%
+      \edef\bbl@tempc{\bbl@ld@calendar\bbl@ld@format}%
+      \ifx\bbl@tempc\@empty\else
+        \edef\bbl@calendar{%
+          \ifx\bbl@ld@calendar\@empty
+            %gregorian%
+          \else
+            \bbl@ld@calendar
+          \fi
+          \ifx\bbl@ld@format\@empty\else
+            .\bbl@ld@format
+          \fi}%
+      \fi
+      \def\bbl@tempb{gregorian}%
+      \ifx\bbl@calendar\bbl@tempb
+        \let\bbl@calendar\@empty
+      \fi
+    \fi
+    \@nameuse{bbl@date@\languagename @\bbl@calendar}{#2}{#3}{#4}%
+  \endgroup}
+% eg: 1=months, 2=wide, 3=1, 4=dummy, 5=value, 6=calendar
 \def\bbl@inidate#1.#2.#3.#4\relax#5#6{% TODO - ignore with 'captions'
   \bbl@trim@def\bbl@tempa{#1.#2}%
   \bbl@ifsamestring{\bbl@tempa}{months.wide}%      to savedate
     {\bbl@trim@def\bbl@tempa{#3}%
      \bbl@trim\toks@{#5}%
-     \bbl@exp{%
-      \\\bbl@add\\\bbl@savedate{%
-        \\\SetString\<month\romannumeral\bbl@tempa#6name>{\the\toks@}}}}%
+     \@temptokena\expandafter{\bbl@savedate}%
+     \bbl@exp{%   Reverse order - in ini last wins
+       \def\\\bbl@savedate{%
+         \\\SetString\<month\romannumeral\bbl@tempa#6name>{\the\toks@}%
+         \the\@temptokena}}}%
     {\bbl@ifsamestring{\bbl@tempa}{date.long}%     defined now
-      {\bbl@trim@def\bbl@toreplace{#5}%
+      {\bbl@ifblank{#6}%
+         {\let\bbl@tempb\@empty}%
+         {\lowercase{\def\bbl@tempb{#6}}}%
+       \bbl@trim@def\bbl@toreplace{#5}%
        \bbl@TG@@date
-       \global\bbl@csarg\let{date@\languagename}\bbl@toreplace
-       \bbl@exp{%
-         \gdef\<\languagename date>{\\\protect\<\languagename date >}%
-         \gdef\<\languagename date >####1####2####3{%
-           \\\bbl@usedategrouptrue
-           \<bbl@ensure@\languagename>{%
-             \<bbl@date@\languagename>{####1}{####2}{####3}}}%
-         \\\bbl@add\\\bbl@savetoday{%
-           \\\SetString\\\today{%
-             \<\languagename date>{\\\the\year}{\\\the\month}{\\\the\day}}}}}}%
-      {}}
+       \bbl@ifunset{bbl@date@\languagename @}%
+         {\global\bbl@csarg\let{date@\languagename @}\bbl@toreplace
+         % TODO. Move to a better place.
+          \bbl@exp{%
+            \gdef\<\languagename date>{\\\protect\<\languagename date >}%
+            \gdef\<\languagename date >####1####2####3{%
+              \\\bbl@usedategrouptrue
+              \<bbl@ensure@\languagename>{%
+                \\\localedate{####1}{####2}{####3}}}%
+            \\\bbl@add\\\bbl@savetoday{%
+              \\\SetString\\\today{%
+                \<\languagename date>%   
+                   {\\\the\year}{\\\the\month}{\\\the\day}}}}}%
+         {}%
+       \ifx\bbl@tempb\@empty\else
+         \global\bbl@csarg\let{date@\languagename @\bbl@tempb}\bbl@toreplace
+       \fi}%
+      {}}}
 %    \end{macrocode}
 %
 % Dates will require some macros for the basic formatting. They may be
@@ -11063,10 +11121,9 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \newcommand\localenumeral[2]{\bbl@cs{cntr@#1@\languagename}{#2}}
 \def\bbl@localecntr#1#2{\localenumeral{#2}{#1}}
-% TODO. \localecounter{digits}{..} What a mistake on my part!!
-% But the solution seems even logical ;-)
 \newcommand\localecounter[2]{%
-  \expandafter\bbl@localecntr\csname c@#2\endcsname{#1}}
+  \expandafter\bbl@localecntr
+  \expandafter{\number\csname c@#2\endcsname}{#1}}
 \def\bbl@alphnumeral#1#2{%
   \expandafter\bbl@alphnumeral@i\number#2 76543210\@@{#1}}
 \def\bbl@alphnumeral@i#1#2#3#4#5#6#7#8\@@#9{%
