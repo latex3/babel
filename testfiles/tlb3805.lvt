@@ -29,7 +29,7 @@ or pdflatex run.
 \usepackage{varioref}
 \labelformat{section}{section~#1}
 \usepackage{hyperref}
-\listfiles
+
 \begin{document}
 \TIMO
 

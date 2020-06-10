@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/06/01 v3.44.2025 The Babel package]
+\ProvidesFile{babel.dtx}[2020/06/10 v3.45 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1307,10 +1307,17 @@ _\babelprovide[import, main]{georgian}_
 
 \begin{note}
   The \texttt{ini} files just define and set some parameters, but the
-  corresponding behavior is not always implemented. Also, there are 
-  some limitations in the engines. A few remarks follow (which could
-  no longer be valid when you read this manual, if the packages involved
-  han been updated):
+  corresponding behavior is not always implemented. Also, there are
+  some limitations in the engines. A few remarks follow (which could no
+  longer be valid when you read this manual, if the packages involved
+  han been updated). The Harfbuzz renderer has still some issues, so as
+  a rule of thumb prefer the default renderer, and resort to Harfbuzz
+  only if the former does work for you. Fortunately, fonts can be
+  loaded twice with different renderers; for example:
+\begin{verbatim}
+\babelfont[spanish]{rm}{FreeSerif}  
+\babelfont[hindi]{rm}[Renderer=Harfbuzz]{FreeSerif}
+\end{verbatim}
 \begin{description}
 \itemsep=-\parskip
 \item[Arabic] Monolingual documents mostly work in \luatex, but it must
@@ -1327,10 +1334,9 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
 \newfontscript{Devanagari}{deva}
 \end{verbatim}  
   Other Indic scripts are still under development in the default
-  \luatex{} renderer, but should work with the option
-  |Renderer=Harfbuzz| in \textsc{fontspec}. They also work with
-  \xetex{}, although fine tuning the font behaviour is not always
-  possible.
+  \luatex{} renderer, but should work with |Renderer=Harfbuzz|. They
+  also work with \xetex{}, although fine tuning the font behavior is
+  not always possible.
 \item[Southeast scripts] Thai works in both \luatex{} and \xetex{}, but
   line breaking differs (rules can be modified in \luatex; they are
   hard-coded in \xetex). Lao seems to work, too, but there are no
@@ -1346,29 +1352,24 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
 \end{verbatim}
 \endgroup
 \item[East Asia scripts] Settings for either Simplified of Traditional
-should work out of the box, with basic line breaking. Although
-for a few words and shorts texts the |ini| files should be fine, CJK
-texts are best set with a dedicated framework (\textsf{CJK},
-\textsf{luatexja}, \textsf{kotex}, \textsf{CTeX}, etc.). This is what
-the class |ltjbook| does with \luatex, which can be used in conjunction
-with the |ldf| for |japanese|, because the following piece of code
-loads \textsf{luatexja}:
+  should work out of the box, with basic line breaking with any
+  renderer. Although for a few words and shorts texts the |ini| files
+  should be fine, CJK texts are best set with a dedicated framework
+  (\textsf{CJK}, \textsf{luatexja}, \textsf{kotex}, \textsf{CTeX},
+  etc.). This is what the class |ltjbook| does with \luatex, which can
+  be used in conjunction with the |ldf| for |japanese|, because the
+  following piece of code loads \textsf{luatexja}:
 \begin{verbatim}
 \documentclass{ltjbook}
 \usepackage[japanese]{babel}
 \end{verbatim}
 \item[Latin, Greek, Cyrillic] Combining chars with the default
-\luatex{} font renderer might be wrong; on then other hand, with the
-Harfbuzz renderer diacritics are stacked correctly, but many
-hyphenations points are discarded (this bug seems related to kerning,
-so it depends on the font). Fortunately, fonts can be loaded twice with
-different renderers; for example:
-\begin{verbatim}
-\babelfont[spanish]{rm}{FreeSerif}  
-\babelfont[hindi]{rm}[Renderer=Harfbuzz]{FreeSerif}
-\end{verbatim}
-With \xetex{} both combining characters and hyphenation work as
-expected.
+ \luatex{} font renderer might be wrong; on then other hand, with the
+ Harfbuzz renderer diacritics are stacked correctly, but many
+ hyphenations points are discarded (this bug seems related to kerning,
+ so it depends on the font). With \xetex{} both combining characters
+ and hyphenation work as expected (not quite, but in most cases it
+ works; the problem here are font clusters).
 \end{description}
 \end{note}
 
@@ -2040,14 +2041,18 @@ also the package \textsf{combofont} for a complementary approach.}
 
 \Describe\babelfont{\oarg{language-list}\marg{font-family}%
   \oarg{font-options}\marg{font-name}}
+  
+\begin{note}
+  See the note in the previous section about some issues in
+  specific languages.
+\end{note}
 
-The main purpose of |\babelfont| is to define at once in a
-multilingual document the fonts required by the different languages,
-with their corresponding language systems (script and language). So, if
-you load, say, 4 languages, |\babelfont{rm}{FreeSerif}| defines 4 fonts
-(with their variants, of course), which are switched with the language
-by \babel. It is a tool to make things easier and transparent to the
-user.
+The main purpose of |\babelfont| is to define at once in a multilingual
+document the fonts required by the different languages, with their
+corresponding language systems (script and language). So, if you load,
+say, 4 languages, |\babelfont{rm}{FreeSerif}| defines 4 fonts (with
+their variants, of course), which are switched with the language by
+\babel. It is a tool to make things easier and transparent to the user.
 
 Here \textit{font-family} is |rm|, |sf| or |tt| (or newly defined
 ones, as explained below), and \textit{font-name} is the same as in
@@ -2425,6 +2430,11 @@ Overrides the value in the |ini| file. If \textsf{fontspec} does not
 define it, then \babel{} sets its tag to that provided by the |ini|
 file. Not so important, but sometimes still relevant.
 
+\Describe{alph=}{\meta{counter-name}} Assigns to |\alph| that counter.
+See the next section.
+
+\Describe{Alph=}{\meta{counter-name}} Same for |\Alph|.
+
 \bigskip
 
 A few options (only \luatex) set some properties of the writing system
@@ -2540,10 +2550,11 @@ bidi and fonts are processed (ie, to the node list as generated by the
 bidirectional behavior (unlike |Numbers=Arabic| in \textsf{fontspec},
 which is not recommended).
 
-\New{4.41} Many `ini` locale files has been extended with information about
-non-positional numerical systems, based on those predefined in CSS.
-They only work with \xetex{} and \luatex{} and are fully expendable (even
-inside an |\edef|). Currently, they are limited to numbers below 10000.
+\New{4.41} Many `ini` locale files has been extended with information
+about non-positional numerical systems, based on those predefined in
+CSS. They only work with \xetex{} and \luatex{} and are fully
+expendable (even inside an unprotected |\edef|). Currently, they are
+limited to numbers below 10000.
 
 There are several ways to use them (for the availabe styles in each
 language, see the list below):
@@ -2565,9 +2576,17 @@ The styles are:
 \itemsep=-\parskip
 \item[Ancient Greek] |lower.ancient|, |upper.ancient|
 
-\item[Arabic] |abjad|, |maghrebi.abjad| 
+\item[Amharic] |afar|, |agaw|, |ari|, |blin|, |dizi|, |gedeo|, |gumuz|,
+|hadiyya|, |harari|, |kaffa|, |kebena|, |kembata|, |konso|, |kunama|,
+|meen|, |oromo|, |saho|, |sidama|, |silti|, |tigre|, |wolaita|, |yemsa|
+
+\item[Arabic] |abjad|, |maghrebi.abjad|
 
 \item[Belarusan, Bulgarian, Macedonian, Serbian] |lower|, |upper| 
+
+\item[Bengali] |alphabetic|
+
+\item[Coptic] |epact|,|lower.letters|
 
 \item[Hebrew] |letters| (neither geresh nor gershayim yet)
 
@@ -2591,9 +2610,13 @@ The styles are:
 |hanja.formal|, |hangul.formal|, |cjk-earthly-branch|,
 |cjk-heavenly-stem|, |fullwidth.lower.alpha|, |fullwidth.upper.alpha|
 
+\item[Marathi] |alphabetic|
+
 \item[Persian] |abjad|, |alphabetic| 
 
 \item[Russian] |lower|, |lower.full|, |upper|, |upper.full|
+
+\item[Syriac] |letters|
 
 \item[Tamil] |ancient|
 
@@ -2604,6 +2627,29 @@ The styles are:
 \item[Chinese] |cjk-earthly-branch|, |cjk-heavenly-stem|,
 |fullwidth.lower.alpha|, |fullwidth.upper.alpha|
 \end{description}
+
+\New{3.45} In addition, native digits (in languages defining them) may
+be printed with the numeral style |digits|.
+
+\subsection{Dates}
+
+\New{3.45} When the data is taken from an |ìni| file, you may print the
+date corresponding to the Gregorian calendar and other lunisolar systems
+with the following command.
+
+\Describe{\localedate}{\o{calendar=.., variant=..}%
+  {\m{year}\m{month}\m{day}}}
+  
+By default the calendar is the Gregorian, but a |ini| files may define
+strings for other calendars (currently |ar|, |ar-|*, |he|, |fa|, |hi|.)
+In the latter case, the three arguments are the year, the month, and
+the day in those in the corresponding calendar. They are \textit{not}
+the Gregorian data to be converted (which means, say, 13 is a valid
+month number with |calendar=hebrew|).
+
+Even with a certain calendar there may be variants. In Kurmanji the
+default variant prints something like \textit{30. Çileya Pêşîn 2019},
+but with |variant=izafa| it prints \textit{31’ê Çileya Pêşînê 2019}.
 
 \subsection{Accessing language info}
 
@@ -4610,8 +4656,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.44.2025>>
-%<<date=2020/06/01>>
+%<<version=3.45>>
+%<<date=2020/06/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10771,16 +10817,16 @@ help from Bernd Raichle, for which I am grateful.
     \lowercase{\def\bbl@tempa{=#1=}}%
     \bbl@replace\bbl@tempa{=date.gregorian}{}%
     \bbl@replace\bbl@tempa{=date.}{}%
-    \bbl@replace\bbl@tempa{=}{}%
-    \in@{.licr.}{#1.}%
+    \in@{.licr=}{#1=}%
     \ifin@
       \ifcase\bbl@engine
-        \bbl@replace\bbl@tempa{.licr}{}%
+        \bbl@replace\bbl@tempa{.licr=}{}%
       \else
         \let\bbl@tempa\relax
       \fi
     \fi
     \ifx\bbl@tempa\relax\else
+      \bbl@replace\bbl@tempa{=}{}%
       \bbl@exp{%
         \def\<bbl@inikv@#1>####1=####2\\\@@{% 
           \\\bbl@inidate####1...\relax{####2}{\bbl@tempa}}}%
@@ -10937,32 +10983,35 @@ help from Bernd Raichle, for which I am grateful.
 % Arguments are _not_ protected.
 \let\bbl@calendar\@empty
 \DeclareRobustCommand\localedate[1][]{\bbl@localedate{#1}}
+\def\bbl@cased{%  TODO. Move
+  \ifx\oe\OE
+    \expandafter\in@\expandafter
+      {\expandafter\OE\expandafter}\expandafter{\oe}%
+    \ifin@
+      \bbl@afterelse\expandafter\MakeUppercase
+    \else  
+      \bbl@afterfi\expandafter\MakeLowercase
+    \fi  
+  \else
+    \expandafter\@firstofone
+  \fi}
 \def\bbl@localedate#1#2#3#4{%
   \begingroup
     \ifx\@empty#1\@empty\else
       \let\bbl@ld@calendar\@empty
-      \let\bbl@ld@format\@empty
+      \let\bbl@ld@variant\@empty
       \edef\bbl@tempa{\zap@space#1 \@empty}%
       \def\bbl@tempb##1=##2\@@{\@namedef{bbl@ld@##1}{##2}}%
       \bbl@foreach\bbl@tempa{\bbl@tempb##1\@@}%
-      \edef\bbl@tempc{\bbl@ld@calendar\bbl@ld@format}%
-      \ifx\bbl@tempc\@empty\else
-        \edef\bbl@calendar{%
-          \ifx\bbl@ld@calendar\@empty
-            %gregorian%
-          \else
-            \bbl@ld@calendar
-          \fi
-          \ifx\bbl@ld@format\@empty\else
-            .\bbl@ld@format
-          \fi}%
-      \fi
-      \def\bbl@tempb{gregorian}%
-      \ifx\bbl@calendar\bbl@tempb
-        \let\bbl@calendar\@empty
-      \fi
+      \edef\bbl@calendar{%
+        \bbl@ld@calendar
+        \ifx\bbl@ld@variant\@empty\else
+          .\bbl@ld@variant
+        \fi}%
+      \bbl@replace\bbl@calendar{gregorian}{}%
     \fi
-    \@nameuse{bbl@date@\languagename @\bbl@calendar}{#2}{#3}{#4}%
+    \bbl@cased
+      {\@nameuse{bbl@date@\languagename @\bbl@calendar}{#2}{#3}{#4}}%
   \endgroup}
 % eg: 1=months, 2=wide, 3=1, 4=dummy, 5=value, 6=calendar
 \def\bbl@inidate#1.#2.#3.#4\relax#5#6{% TODO - ignore with 'captions'
@@ -10976,9 +11025,7 @@ help from Bernd Raichle, for which I am grateful.
          \\\SetString\<month\romannumeral\bbl@tempa#6name>{\the\toks@}%
          \the\@temptokena}}}%
     {\bbl@ifsamestring{\bbl@tempa}{date.long}%     defined now
-      {\bbl@ifblank{#6}%
-         {\let\bbl@tempb\@empty}%
-         {\lowercase{\def\bbl@tempb{#6}}}%
+      {\lowercase{\def\bbl@tempb{#6}}%
        \bbl@trim@def\bbl@toreplace{#5}%
        \bbl@TG@@date
        \bbl@ifunset{bbl@date@\languagename @}%

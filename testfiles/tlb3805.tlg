@@ -112,44 +112,6 @@ Package atveryend Info: Empty hook `BeforeClearDocument' on input line ....
 Package atveryend Info: Empty hook `AfterLastShipout' on input line ....
 (tlb3805.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line ....
- *File List*
-  test2e.tex
- article.cls    ....-..-.. v... Standard LaTeX document class
-  size10.clo    ....-..-.. v... Standard LaTeX file (size option)
-   babel.sty    ....-..-.. 3.42.1971 The Babel package
-american.ldf    ....-..-.. v... English support from the babel system
- nameref.sty    ....-..-.. v... Cross-referencing by name of section
-refcount.sty    ....-..-.. v... Data extraction from label references (HO)
- ltxcmds.sty    ....-..-.. v... LaTeX kernel commands for general use (HO)
-infwarerr.sty    ....-..-.. v... Providing info/warning/error messages (HO)
-gettitlestring.sty    ....-..-.. v... Cleanup title references (HO)
-kvoptions.sty    ....-..-.. v... Key value format for package options (HO)
-  keyval.sty    ....-..-.. v... key=value parser (DPC)
-kvsetkeys.sty    ....-..-.. v... Key value parser (HO)
-varioref.sty    ....-..-.. v... package for extended references (FMi)
-hyperref.sty    ....-..-.. v... Hypertext links for LaTeX
-   iftex.sty    ....-..-.. v... TeX engine tests
-pdftexcmds.sty    ....-..-.. v... Utility functions of pdfTeX for LuaTeX (HO)
-kvdefinekeys.sty    ....-..-.. v... Define keys (HO)
-pdfescape.sty    ....-..-.. v... Implements pdfTeX's escape features (HO)
- hycolor.sty    ....-..-.. v... Color options for hyperref/bookmark (HO)
-letltxmacro.sty    ....-..-.. v... Let assignment for LaTeX macros (HO)
- auxhook.sty    ....-..-.. v... Hooks for auxiliary files (HO)
-  pd1enc.def    ....-..-.. v... Hyperref: PDFDocEncoding definition (HO)
- intcalc.sty    ....-..-.. v... Expandable calculations with integers (HO)
-etexcmds.sty    ....-..-.. v... Avoid name clashes with e-TeX commands (HO)
-     url.sty    ....-..-..  ver 3.4  Verb mode for urls, etc.
-  bitset.sty    ....-..-.. v... Handle bit-vector datatype (HO)
-bigintcalc.sty    ....-..-.. v... Expandable calculations on big integers (HO)
-atbegshi.sty    ....-..-.. v... At begin shipout hook (HO)
- hpdftex.def    ....-..-.. v... Hyperref driver for pdfTeX
-atveryend.sty    ....-..-.. v... Hooks at the very end of document (HO)
-rerunfilecheck.sty    ....-..-.. v... Rerun checks for auxiliary files (HO)
-uniquecounter.sty    ....-..-.. v... Provide unlimited unique counter (HO)
-l3backend-pdfmode.def    ....-..-.. L3 backend support: PDF mode
- tlb3805.out
- tlb3805.out
- ***********
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line ....
 Package rerunfilecheck Info: File `tlb3805.out' has not changed.
 (rerunfilecheck)             Checksum: AA17619E6E82725D0F081947CEDB48FD;38.

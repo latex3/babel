@@ -8,11 +8,6 @@ Package: babel
 (../babel-french.tex
 Package babel Info: Importing basic data for french
 (babel)             from babel-fr.ini. Reported on input line ....
-Package babel Warning: From babel-fr.ini:
-(babel)                The `french' date format may not be suitable
-(babel)                for proper typesetting, and therefore very likely
-(babel)                it will change in a future release.
-(babel)                Reported  on input line ....
 )
 > \box...=
 \hbox(9.47221+0.0)x36.38898

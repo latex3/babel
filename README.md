@@ -1,4 +1,4 @@
-## Babel 3.44.2025
+## Babel 3.45
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -44,12 +44,15 @@ respective authors.
 ### Latest changes
 
 ```
-3.45   2020-06-??
-       (Under development - things may change)
-       - Minor changes in Hindi, Ancient Greek.
-       - Improvements in Kurdish
-       - \localedate[calendar=..., format=...]{y}{m}{d}
-       - \localenumeral{digits}{..}, \localecounter{digits}{cntr}
+3.45   2020-06-10
+       - Minor fixes in Hindi, Ancient Greek, Macedonian.
+       - Improvements in Kurdish, Marathi.
+       - Alternative date formats with \localedate[calendar=...,
+         variant=...]{y}{m}{d} (note: no calendar computations, just
+         strings).
+       - \today is (again) case-aware.
+       - \localenumeral{digits}{..} and \localecounter{digits}{cntr}
+         for native digits.
        - Fixes
          - Improved handling of math with \babelposthyphenation and
            \babelprehyphenation (it was ignoring too much).
