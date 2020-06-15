@@ -1,4 +1,4 @@
-## Babel 3.45
+## Babel 3.45.2039
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.45 are described in:
+Changes in version 3.46 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.45
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.46
 
 Included is a set of ini files for about 200 languages.
 
@@ -44,6 +44,10 @@ respective authors.
 ### Latest changes
 
 ```
+3.46   2020-07-??
+       - Fixes:
+         - Getting rid of the hyphen in XeTeX was not working as
+           expected. A new procedure has been devised.
 3.45   2020-06-10
        - Minor fixes in Hindi, Ancient Greek, Macedonian.
        - Improvements in Kurdish, Marathi.
@@ -58,6 +62,7 @@ respective authors.
            \babelprehyphenation (it was ignoring too much).
          - An error related to \bbl@foreign@x could be raised in some
            rare cases.
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.45
 
 3.44   2020-05-13
        - WARNING. If you need the Portuguese style you must update
