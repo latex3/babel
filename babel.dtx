@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/06/15 v3.45.2039 The Babel package]
+\ProvidesFile{babel.dtx}[2020/06/22 v3.45.2046 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2677,8 +2677,8 @@ respectively.
 \Describe{\localeinfo}{\marg{field}}
 
 \New{3.38} If an |ini| file has been loaded for the current language,
-you may access the information stored in it. This macros is fully
-expandable and the available fields are:
+you may access the information stored in it. This macro is fully
+expandable, and the available fields are:
 \begin{description}
 \itemsep=-\parskip
 \item[|name.english|] as provided by the Unicode CLDR.
@@ -4656,8 +4656,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.45.2039>>
-%<<date=2020/06/15>>
+%<<version=3.45.2046>>
+%<<date=2020/06/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7165,7 +7165,7 @@ help from Bernd Raichle, for which I am grateful.
 \newif\ifbbl@usedategroup
 \def\bbl@switch#1{%  from select@, foreign@
   % make sure there is info for the language if so requested
-  \bbl@ensureinfo{#1}%
+  \bbl@ensureinfo{\localename}%
   % restore
   \originalTeX
   \expandafter\def\expandafter\originalTeX\expandafter{%
@@ -10636,6 +10636,10 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@savedate
     \fi
   \bbl@endcommands
+  \bbl@ifsamestring{\bbl@ensured@main}{#1}%
+    {\bbl@csarg\let{bbl@lname@#1}\relax
+     \let\bbl@ensured@main\relax}%
+    {}%
   \bbl@ifunset{bbl@lname@#1}%     TODO. Duplicated
     {\def\BabelBeforeIni##1##2{%
        \begingroup
@@ -10904,7 +10908,10 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exp{\\\bbl@exportkey{sname}{identification.script.name.opentype}%
     {\csname bbl@esname@\languagename\endcsname}}%
   \bbl@exportkey{sbcp}{identification.script.tag.bcp47}{}%
-  \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}}
+  \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}%
+  \ifbbl@bcptoname
+    \bbl@csarg\xdef{bcp@map@\bbl@cl{lbcp}}{\languagename}%
+  \fi}
 \let\bbl@inikv@typography\bbl@inikv
 \let\bbl@inikv@characters\bbl@inikv
 \let\bbl@inikv@numbers\bbl@inikv
@@ -11056,7 +11063,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \let\bbl@calendar\@empty
 \newcommand\BabelDateSpace{\nobreakspace}
-\newcommand\BabelDateDot{.\@}
+\newcommand\BabelDateDot{.\@}  % TODO. \let instead of repeating
 \newcommand\BabelDated[1]{{\number#1}}
 \newcommand\BabelDatedd[1]{{\ifnum#1<10 0\fi\number#1}}
 \newcommand\BabelDateM[1]{{\number#1}}
@@ -11095,7 +11102,8 @@ help from Bernd Raichle, for which I am grateful.
 % Note after \bbl@replace \toks@ contains the resulting string.
 % TODO - Using this implicit behavior doesn't seem a good idea.
   \bbl@replace@finish@iii\bbl@toreplace}
-\def\bbl@datecntr[#1|#2]{\localenumeral{#2}{#1}}
+\def\bbl@datecntr{\expandafter\bbl@xdatecntr\expandafter}
+\def\bbl@xdatecntr[#1|#2]{\localenumeral{#2}{#1}}
 %    \end{macrocode}
 %
 % Language and Script values to be used when defining a font or
@@ -11124,6 +11132,7 @@ help from Bernd Raichle, for which I am grateful.
            \AtBeginDocument{%
              \expandafter\bbl@add
              \csname selectfont \endcsname{\bbl@xenohyph}%
+             \expandafter\selectlanguage\expandafter{\languagename}%
              \expandafter\bbl@toglobal\csname selectfont \endcsname}%
         \fi}}%
   \fi
@@ -11166,7 +11175,7 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@add\bbl@secpost@identification{\closein\bbl@readstream }%
       \catcode`\[=12 \catcode`\]=12 \catcode`\==12
       \catcode`\;=12 \catcode`\|=12 %
-      \bbl@read@ini{##1}{font and identification data}%   
+      \bbl@read@ini{##1}{font and identification data}%      
       \endinput          % babel- .tex may contain onlypreamble's
     \endgroup}%            boxed, to avoid extra spaces:
   {\setbox\z@\hbox{\InputIfFileExists{babel-#1.tex}{}{}}}}
@@ -11243,17 +11252,24 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@info@name.english}{elname}
 \@namedef{bbl@info@name.opentype}{lname}
 \@namedef{bbl@info@tag.bcp47}{lbcp} 
-\@namedef{bbl@info@tag.opentype}{lotf} 
+\@namedef{bbl@info@tag.opentype}{lotf}
 \@namedef{bbl@info@script.name}{esname}
 \@namedef{bbl@info@script.name.opentype}{sname}
 \@namedef{bbl@info@script.tag.bcp47}{sbcp} 
 \@namedef{bbl@info@script.tag.opentype}{sotf} 
 \let\bbl@ensureinfo\@gobble
+\let\bbl@ensured@main\relax
 \newcommand\BabelEnsureInfo{%
+  \AddBabelHook{babel-ensureinfo}{beforestart}{%
+    \bbl@foreach\bbl@loaded{{%
+      \def\languagename{####1}%
+      \bbl@ensureinfo{####1}}}}%
   \def\bbl@ensureinfo##1{%
-    \ifx\InputIfFileExists\@undefined\else  % not in plain
+    \ifx\InputIfFileExists\@undefined\else  % not in plain - move out
       \bbl@ifunset{bbl@lname@##1}{\bbl@ini@basic{##1}}{}%
-    \fi}}
+    \fi}%
+  \bbl@ensureinfo{\bbl@main@language}%
+  \let\bbl@ensured@main\bbl@main@language}  % A flag. TODO. Better solution.
 %    \end{macrocode}
 %
 % More general, but non-expandable, is |\getlocaleproperty|. To inspect
@@ -11277,6 +11293,7 @@ help from Bernd Raichle, for which I am grateful.
        \string#1 will be set to \relax}%
       {Perhaps you misspelled it.}%
   \fi}
+\let\bbl@ini@loaded\@empty
 \newcommand\LocaleForEach{\bbl@foreach\bbl@ini@loaded}
 %    \end{macrocode}
 %
@@ -11357,6 +11374,11 @@ help from Bernd Raichle, for which I am grateful.
 \let\bbl@autoload@bcpoptions\@empty
 \@namedef{bbl@ADJ@autoload.bcp47.options}#1{%
   \def\bbl@autoload@bcpoptions{#1}}
+\newif\ifbbl@bcptoname
+\@namedef{bbl@ADJ@bcp47.toname@on}{%
+  \bbl@bcptonametrue}
+\@namedef{bbl@ADJ@bcp47.toname@off}{%
+  \bbl@bcptonamefalse}
 % TODO: use babel name, override 
 %
 % As the final task, load the code for lua.
