@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/06/22 v3.45.2046 The Babel package]
+\ProvidesFile{babel.dtx}[2020/06/29 v3.45.2053 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2452,6 +2452,13 @@ values of this locale; with |fonts|, the fonts are changed to those of
 this locale (as set with |\babelfont|). This option is not compatible
 with |mapfont|. Characters can be added with |\babelcharproperty|.
 
+\begin{note}
+  An alternative approach with \luatex{} and Harfbuzz is the font
+  option |RawFeature={multiscript=auto}|. It does not switch the
+  \babel{} language and therefore the line breaking rules, but in many
+  cases it could be enough.
+\end{note}
+
 \Describe{mapfont=}{\texttt{direction}}
 Assigns the font for the writing direction of this language (only with
 |bidi=basic|). Whenever possible, instead of this option use |onchar|,
@@ -2637,8 +2644,8 @@ be printed with the numeral style |digits|.
 date corresponding to the Gregorian calendar and other lunisolar systems
 with the following command.
 
-\Describe{\localedate}{\o{calendar=.., variant=..}%
-  {\m{year}\m{month}\m{day}}}
+\Describe{\localedate}{\oarg{calendar=.., variant=..}%
+  {\marg{year}\m{month}\m{day}}}
   
 By default the calendar is the Gregorian, but a |ini| files may define
 strings for other calendars (currently |ar|, |ar-|*, |he|, |fa|, |hi|.)
@@ -2686,11 +2693,12 @@ expandable, and the available fields are:
 %%% activated because the bug in \languagename is far from trivial.
 \item[|tag.ini|] is the tag of the |ini| file (the way this
   file is identified in its name).
-\item[|tag.bcp47|] is the BCP 47 language tag.
+\item[|tag.bcp47|] is the full BCP 47 tag.
+\item[|language.tag.bcp47|] is the BCP 47 language tag.
 \item[|tag.opentype|] is the tag used by OpenType (usually, but not
   always, the same as BCP 47).
-\item[|script.name|] as provided by the Unicode CLDR.
-\item[|script.tag.bcp47|] is the BCP 47 language tag of the script
+\item[|script.name|], as provided by the Unicode CLDR.
+\item[|script.tag.bcp47|] is the BCP 47 tag of the script
   used by this locale.
 \item[|script.tag.opentype|] is the tag used by OpenType (usually,
   but not always, the same as BCP 47).
@@ -4656,8 +4664,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.45.2046>>
-%<<date=2020/06/22>>
+%<<version=3.45.2053>>
+%<<date=2020/06/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7165,7 +7173,7 @@ help from Bernd Raichle, for which I am grateful.
 \newif\ifbbl@usedategroup
 \def\bbl@switch#1{%  from select@, foreign@
   % make sure there is info for the language if so requested
-  \bbl@ensureinfo{\localename}%
+  \bbl@ensureinfo{#1}%
   % restore
   \originalTeX
   \expandafter\def\expandafter\originalTeX\expandafter{%
@@ -10265,7 +10273,8 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@onchar\@nil
   \let\bbl@KVP@alph\@nil
   \let\bbl@KVP@Alph\@nil
-  \let\bbl@KVP@info\@nil % Ignored with import? Or error/warning?
+  \let\bbl@KVP@labels\@nil
+  \bbl@csarg\let{KVP@labels*}\@nil
   \bbl@forkv{#1}{%  TODO - error handling
     \in@{/}{##1}%
     \ifin@
@@ -10279,7 +10288,7 @@ help from Bernd Raichle, for which I am grateful.
       {\ifx\bbl@initoload\relax
          \begingroup
            \def\BabelBeforeIni##1##2{\gdef\bbl@KVP@import{##1}\endinput}%
-           \InputIfFileExists{babel-#2.tex}{}{}%
+           \bbl@exp{\lowercase{\\\InputIfFileExists{babel-#2.tex}{}{}}}%
          \endgroup
        \else
          \xdef\bbl@KVP@import{\bbl@initoload}%
@@ -10336,7 +10345,8 @@ help from Bernd Raichle, for which I am grateful.
        \endgroup}%
      \begingroup       % boxed, to avoid extra spaces:
        \ifx\bbl@initoload\relax
-         \setbox\z@\hbox{\InputIfFileExists{babel-#2.tex}{}{}}%
+         \setbox\z@\hbox{%
+           \bbl@exp{\lowercase{\\\InputIfFileExists{babel-#2.tex}{}{}}}}%
        \else
          \setbox\z@\hbox{\BabelBeforeIni{\bbl@initoload}{}}%
        \fi
@@ -10549,7 +10559,8 @@ help from Bernd Raichle, for which I am grateful.
        \let\BabelBeforeIni\@gobbletwo
        \chardef\atcatcode=\catcode`\@
        \catcode`\@=11\relax
-       \InputIfFileExists{babel-\bbl@cs{rqtex@\languagename}.tex}{}{}%
+       \bbl@exp{\lowercase{\\\InputIfFileExists  
+         {babel-\bbl@cs{rqtex@\languagename}.tex}{}{}}}%
        \catcode`\@=\atcatcode
        \let\atcatcode\relax
      \fi}%
@@ -10661,7 +10672,8 @@ help from Bernd Raichle, for which I am grateful.
        \endgroup}%
      \begingroup       % boxed, to avoid extra spaces:
        \ifx\bbl@initoload\relax
-         \setbox\z@\hbox{\InputIfFileExists{babel-#1.tex}{}{}}%
+         \setbox\z@\hbox{%
+           \bbl@exp{\lowercase{\\\InputIfFileExists{babel-#1.tex}{}{}}}}%
        \else
          \setbox\z@\hbox{\BabelBeforeIni{\bbl@initoload}{}}%
        \fi
@@ -10761,7 +10773,7 @@ help from Bernd Raichle, for which I am grateful.
        is not complete.}%
       {Fix the name or reinstall babel.}%
   \else
-    \bbl@exp{\def\\\bbl@inidata{\\\bbl@elt{identificacion}{tag.ini}{#1}}}%
+    \bbl@exp{\def\\\bbl@inidata{\\\bbl@elt{identification}{tag.ini}{#1}}}%
     \let\bbl@section\@empty
     \let\bbl@savestrings\@empty
     \let\bbl@savetoday\@empty
@@ -10902,7 +10914,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{elname}{identification.name.english}{}%
   \bbl@exp{\\\bbl@exportkey{lname}{identification.name.opentype}%
     {\csname bbl@elname@\languagename\endcsname}}%
-  \bbl@exportkey{lbcp}{identification.tag.bcp47}{}%
+  \bbl@exportkey{lbcp}{identification.tag.bcp47}{}% TODO
   \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
   \bbl@exportkey{esname}{identification.script.name}{}%
   \bbl@exp{\\\bbl@exportkey{sname}{identification.script.name.opentype}%
@@ -11178,7 +11190,8 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@read@ini{##1}{font and identification data}%      
       \endinput          % babel- .tex may contain onlypreamble's
     \endgroup}%            boxed, to avoid extra spaces:
-  {\setbox\z@\hbox{\InputIfFileExists{babel-#1.tex}{}{}}}}
+  {\setbox\z@\hbox{%
+    \bbl@exp{\lowercase{\\\InputIfFileExists{babel-#1.tex}{}{}}}}}}
 %    \end{macrocode}
 %
 % Alphabetic counters must be converted from a space separated list to
@@ -11251,7 +11264,7 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@info@tag.ini}{lini}
 \@namedef{bbl@info@name.english}{elname}
 \@namedef{bbl@info@name.opentype}{lname}
-\@namedef{bbl@info@tag.bcp47}{lbcp} 
+\@namedef{bbl@info@tag.bcp47}{lbcp} % TODO
 \@namedef{bbl@info@tag.opentype}{lotf}
 \@namedef{bbl@info@script.name}{esname}
 \@namedef{bbl@info@script.name.opentype}{sname}
@@ -11261,7 +11274,7 @@ help from Bernd Raichle, for which I am grateful.
 \let\bbl@ensured@main\relax
 \newcommand\BabelEnsureInfo{%
   \AddBabelHook{babel-ensureinfo}{beforestart}{%
-    \bbl@foreach\bbl@loaded{{%
+    \bbl@foreach\bbl@loaded{{%  TODO. Always with bcp47.toname?
       \def\languagename{####1}%
       \bbl@ensureinfo{####1}}}}%
   \def\bbl@ensureinfo##1{%
