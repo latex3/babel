@@ -1,4 +1,4 @@
-## Babel 3.45.2053
+## Babel 3.46
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -44,15 +44,18 @@ respective authors.
 ### Latest changes
 
 ```
-3.46   2020-07-??
-       - \BabelEnsureInfo now loads the basic data for the main
-         language. 
+3.46   2020-07-06
+       - \BabelEnsureInfo now loads the basic data for the requested
+         languages immediately (formerly it was done at the end of the
+         preamble).
        - Fixes:
          - Getting rid of the hyphen in XeTeX was not working as
            expected. A new procedure has been devised.
-         - tag.bcp47 (#79).
+         - tag.bcp47 now contains what its name promises, instead of
+           just the language subtag (#70).
          - Locale info was not loaded if the name had uppercase letters
-           in some OS (#80).
+           in some OSs (#80).
+         - The [..|..] syntax in ini dates didn't recognize 'digits'.
          
 3.45   2020-06-10
        - Minor fixes in Hindi, Ancient Greek, Macedonian.
