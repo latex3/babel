@@ -1,4 +1,4 @@
-## Babel 3.46
+## Babel 3.47
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,11 +7,11 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.46 are described in:
+Changes in version 3.47 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.46
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.47
 
-Included is a set of ini files for about 200 languages.
+Included is a set of ini files for about 200 languages. 
 
 The best way to install and/or update it is with the help of package
 managers.
@@ -44,7 +44,19 @@ respective authors.
 ### Latest changes
 
 ```
+3.47   2020-07-13
+       - Fixes:
+         - Spurious spaces when autoloading locales (bug introduced
+           in 3.46 when fixing #80).
+         - In dtx files, autoloading printed some spurious text
+           (because % is set to ignore, #87).
+       - New - \getlocaleproperty*, which doesn't raise an error.
+       - Basic ini+tex templates for about 500 languages in the GitHub
+         repository.
+         
 3.46   2020-07-06
+       - Languages can now be optionally selected with their BCP 47
+         tags.
        - \BabelEnsureInfo now loads the basic data for the requested
          languages immediately (formerly it was done at the end of the
          preamble).
@@ -56,6 +68,7 @@ respective authors.
          - Locale info was not loaded if the name had uppercase letters
            in some OSs (#80).
          - The [..|..] syntax in ini dates didn't recognize 'digits'.
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.46
          
 3.45   2020-06-10
        - Minor fixes in Hindi, Ancient Greek, Macedonian.

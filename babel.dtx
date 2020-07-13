@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/07/07 v3.46 The Babel package]
+\ProvidesFile{babel.dtx}[2020/07/13 v3.47 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2304,13 +2304,15 @@ Conveniently, some options allow to fill the language, and \babel{}
 warns you about what to do if there is a missing string. Very likely
 you will find alerts like that in the |log| file:
 \begin{verbatim}
-Package babel Warning: \mylangchaptername not set. Please, define
-(babel)                it in the preamble with something like:
+Package babel Warning: \mylangchaptername not set. Please, define it
+(babel)                after the language has been loaded (typically
+(babel)                in the preamble) with something like:
 (babel)                \renewcommand\maylangchaptername{..}
 (babel)                Reported on input line 18.
 \end{verbatim}
 
-In most cases, you will only need to define a few macros.
+In most cases, you will only need to define a few macros. Note
+languages loaded on the fly are not yet available in the preamble. 
 
 \begin{example}
   If you need a language named |arhinish|:
@@ -2710,7 +2712,9 @@ expandable, and the available fields are:
   counterintuitive.
 \end{warning}
 
-\Describe{\getlocaleproperty}{\marg{macro}\marg{locale}\marg{property}}
+\Describe{\getlocaleproperty}{%
+  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
+  \marg{macro}\marg{locale}\marg{property}}
 
 \New{3.42} The value of any locale property as set by the |ini| files
 (or added/modified with |\babelprovide|) can be retrieved and stored in
@@ -2720,6 +2724,10 @@ a macro with this command. For example, after:
 \end{verbatim}
 the macro |\hechap| will contain the string
 {\fontspec[Scale=.87,Script=Hebrew]{Liberation Mono}\textdir TRT פרק}.
+
+If the key does not exist, the macro is set to |\relax| and an error is
+raised. \New{3.47} With the starred version no error is raised, so that
+you can take your own actions with undefined properties.
 
 \Babel{} remembers which |ini| files have been loaded. There is a loop
 named |\LocaleForEach| to traverse the list, where |#1| is the name of
@@ -3942,7 +3950,8 @@ but if you want to do it, here are a few guidelines.
 \end{itemize}
 
 The following page provides a starting point:
-\texttt{http://www.texnia.com/incubator.html}.
+\texttt{http://www.texnia.com/incubator.html}. See also
+\texttt{https://github.com/latex3/babel/wiki/List-of-locale-templates}.
 
 If you need further assistance and technical advice in the
 development of language styles, I am willing to help you.  And of
@@ -4682,8 +4691,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.46>>
-%<<date=2020/07/07>>
+%<<version=3.47>>
+%<<date=2020/07/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4965,6 +4974,19 @@ help from Bernd Raichle, for which I am grateful.
   \else
     \@ne
   \fi
+%    \end{macrocode}
+%
+% A somewhat hackish tool (hence its name) to avoid spurious spaces in
+% some contexts.
+%
+%    \begin{macrocode}
+\def\bbl@bsphack{%
+  \ifhmode
+    \hskip\z@skip
+    \def\bbl@esphack{\loop\ifdim\lastskip>\z@\unskip\repeat\unskip}%
+  \else
+    \let\bbl@esphack\@empty
+  \fi}
 %<</Basic macros>>
 %    \end{macrocode}
 %
@@ -5090,8 +5112,9 @@ help from Bernd Raichle, for which I am grateful.
   \global\@namedef{#2}{\textbf{?#1?}}%
   \@nameuse{#2}%
   \bbl@warning{%
-    \@backslashchar#2 not set. Please, define\\%
-    it in the preamble with something like:\\%
+    \@backslashchar#2 not set. Please, define it\\%
+    after the language has been loaded (typically\\%
+    in the preamble) with something like:\\%
     \string\renewcommand\@backslashchar#2{..}\\%
     Reported}}
 \def\bbl@tentative{\protect\bbl@tentative@i}
@@ -7204,18 +7227,12 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@id@assign
   % switch captions, date
   \ifcase\bbl@select@type
-    \ifhmode
-      \hskip\z@skip % trick to ignore spaces
+    \bbl@bsphack
       \csname captions#1\endcsname\relax
       \csname date#1\endcsname\relax
-      \loop\ifdim\lastskip>\z@\unskip\repeat\unskip
-    \else
-      \csname captions#1\endcsname\relax
-      \csname date#1\endcsname\relax
-    \fi
+    \bbl@esphack
   \else
-    \ifhmode
-      \hskip\z@skip % trick to ignore spaces
+    \bbl@bsphack
       \bbl@xin@{,captions,}{,\bbl@select@opts,}%
       \ifin@
         \csname captions#1\endcsname\relax
@@ -7224,17 +7241,7 @@ help from Bernd Raichle, for which I am grateful.
       \ifin@  % if \foreign... within \<lang>date
         \csname date#1\endcsname\relax
       \fi
-      \loop\ifdim\lastskip>\z@\unskip\repeat\unskip
-    \else
-      \bbl@xin@{,captions,}{,\bbl@select@opts,}%
-      \ifin@ 
-        \csname captions#1\endcsname\relax
-      \fi
-      \bbl@xin@{,date,}{,\bbl@select@opts,}%
-      \ifin@
-        \csname date#1\endcsname\relax
-      \fi
-    \fi
+    \bbl@esphack
   \fi
   % switch extras
   \bbl@usehooks{beforeextras}{}%
@@ -7651,8 +7658,9 @@ help from Bernd Raichle, for which I am grateful.
   \global\@namedef{#2}{\textbf{?#1?}}%
   \@nameuse{#2}%
   \bbl@warning{%
-    \@backslashchar#2 not set. Please, define\\%
-    it in the preamble with something like:\\%
+    \@backslashchar#2 not set. Please, define it\\%
+    after the language has been loaded (typically\\%
+    in the preamble) with something like:\\%
     \string\renewcommand\@backslashchar#2{..}\\%
     Reported}}
 \def\bbl@tentative{\protect\bbl@tentative@i}
@@ -10278,6 +10286,7 @@ help from Bernd Raichle, for which I am grateful.
   % \global\@namedef{bbl@lcname@#2}{#2}%
   \bbl@id@assign
   \let\bbl@KVP@captions\@nil
+  \let\bbl@KVP@date\@nil
   \let\bbl@KVP@import\@nil
   \let\bbl@KVP@main\@nil
   \let\bbl@KVP@script\@nil
@@ -10306,7 +10315,7 @@ help from Bernd Raichle, for which I am grateful.
       {\ifx\bbl@initoload\relax
          \begingroup
            \def\BabelBeforeIni##1##2{\gdef\bbl@KVP@import{##1}\endinput}%
-           \bbl@input@ini{#2}%
+           \bbl@input@texini{#2}%
          \endgroup
        \else
          \xdef\bbl@KVP@import{\bbl@initoload}%
@@ -10548,7 +10557,7 @@ help from Bernd Raichle, for which I am grateful.
        \let\BabelBeforeIni\@gobbletwo
        \chardef\atcatcode=\catcode`\@
        \catcode`\@=11\relax
-       \bbl@input@ini{\bbl@cs{rqtex@\languagename}}%
+       \bbl@input@texini{\bbl@cs{rqtex@\languagename}}%
        \catcode`\@=\atcatcode
        \let\atcatcode\relax
      \fi}%
@@ -10674,7 +10683,7 @@ help from Bernd Raichle, for which I am grateful.
     {\def\BabelBeforeIni##1##2{%
        \begingroup
          \catcode`\[=12 \catcode`\]=12 \catcode`\==12
-         \catcode`\;=12 \catcode`\|=12 %
+         \catcode`\;=12 \catcode`\|=12 \catcode`\%=14
          \let\bbl@ini@captions@aux\@gobbletwo
          \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
          \bbl@read@ini{##1}0%
@@ -10692,7 +10701,7 @@ help from Bernd Raichle, for which I am grateful.
        \endgroup}%
      \begingroup       % boxed, to avoid extra spaces:
        \ifx\bbl@initoload\relax
-         \bbl@input@ini{#1}%
+         \bbl@input@texini{#1}%
        \else
          \setbox\z@\hbox{\BabelBeforeIni{\bbl@initoload}{}}%
        \fi
@@ -10748,8 +10757,13 @@ help from Bernd Raichle, for which I am grateful.
 \ifx\bbl@readstream\@undefined
   \csname newread\endcsname\bbl@readstream
 \fi
-\def\bbl@input@ini#1{%
-  \bbl@exp{\lowercase{\\\InputIfFileExists{babel-#1.tex}{}{}}}}
+\def\bbl@input@texini#1{%
+  \bbl@bsphack
+    \bbl@exp{%
+      \catcode`\\\%=14
+      \lowercase{\\\InputIfFileExists{babel-#1.tex}{}{}}%
+      \catcode`\\\%=\the\catcode`\%\relax}%
+  \bbl@esphack}
 \def\bbl@inipreread#1=#2\@@{%
   \bbl@trim@def\bbl@tempa{#1}% Redundant below !!
   \bbl@trim\toks@{#2}%
@@ -11187,11 +11201,11 @@ help from Bernd Raichle, for which I am grateful.
     \begingroup
       \bbl@add\bbl@secpost@identification{\closein\bbl@readstream }%
       \catcode`\[=12 \catcode`\]=12 \catcode`\==12
-      \catcode`\;=12 \catcode`\|=12 %
+      \catcode`\;=12 \catcode`\|=12 \catcode`\%=14
       \bbl@read@ini{##1}1%    
       \endinput          % babel- .tex may contain onlypreamble's
     \endgroup}%            boxed, to avoid extra spaces:
-  {\bbl@input@ini{#1}}}
+  {\bbl@input@texini{#1}}}
 %    \end{macrocode}
 %
 % Alphabetic counters must be converted from a space separated list to
@@ -11287,14 +11301,18 @@ help from Bernd Raichle, for which I am grateful.
 % |\bbl@read@ini|. 
 %
 %    \begin{macrocode}   
-\newcommand\getlocaleproperty[3]{% 
+\newcommand\getlocaleproperty{%
+  \@ifstar\bbl@getproperty@s\bbl@getproperty@x}
+\def\bbl@getproperty@s#1#2#3{%
   \let#1\relax
   \def\bbl@elt##1##2##3{%
     \bbl@ifsamestring{##1/##2}{#3}%
       {\providecommand#1{##3}%
        \def\bbl@elt####1####2####3{}}%
       {}}%
-  \bbl@cs{inidata@#2}%
+  \bbl@cs{inidata@#2}}%
+\def\bbl@getproperty@x#1#2#3{%
+  \bbl@getproperty@s{#1}{#2}{#3}%
   \ifx#1\relax
     \bbl@error
       {Unknown key for locale '#2':\\%
@@ -11386,8 +11404,7 @@ help from Bernd Raichle, for which I am grateful.
 \newif\ifbbl@bcptoname
 \@namedef{bbl@ADJ@bcp47.toname@on}{%
   \bbl@bcptonametrue
-  \BabelEnsureInfo
-  }
+  \BabelEnsureInfo}
 \@namedef{bbl@ADJ@bcp47.toname@off}{%
   \bbl@bcptonamefalse}
 % TODO: use babel name, override 
