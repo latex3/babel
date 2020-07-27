@@ -1,4 +1,4 @@
-## Babel 3.47
+## Babel 3.47.2081
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.47 are described in:
+Changes in version 3.48 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.47
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.48
 
 Included is a set of ini files for about 200 languages. 
 
@@ -44,6 +44,9 @@ respective authors.
 ### Latest changes
 
 ```
+3.48   2020-07-27 (development)
+       - New keys to customize labels (chapter, enumerate, etc.).
+
 3.47   2020-07-13
        - Fixes:
          - Spurious spaces when autoloading locales (bug introduced
@@ -53,7 +56,8 @@ respective authors.
        - New - \getlocaleproperty*, which doesn't raise an error.
        - Basic ini+tex templates for about 500 languages in the GitHub
          repository.
-         
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.47
+
 3.46   2020-07-06
        - Languages can now be optionally selected with their BCP 47
          tags.
@@ -69,7 +73,7 @@ respective authors.
            in some OSs (#80).
          - The [..|..] syntax in ini dates didn't recognize 'digits'.
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.46
-         
+
 3.45   2020-06-10
        - Minor fixes in Hindi, Ancient Greek, Macedonian.
        - Improvements in Kurdish, Marathi.
@@ -103,7 +107,7 @@ See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.45
            the pattern was ].       
          - \babelposthyphenation is now deativated in math.
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
-       
+
 3.43   2020-04-28
        - Autoloading based on the BCP47 codes, with basic lookup.
        - Now only a few essential commands are loaded in the format.
@@ -116,7 +120,7 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
            and \guillemetleft (#63).
          - A couple of bugs related to autoloading.
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.43
-       
+
 3.42   2020-03-22
        - \getlocaleproperty, to get the value of a field from the loaded
          ini files.
@@ -134,7 +138,7 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.43
          - Locale was not switched correctly with COMBINING characters
            (#54).
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.42
-           
+
 3.41   2020-02-27
        - Counters and numerals added in some ini files, based on those
          defined in CSS (Abjad, Alphabetic Hebrew, Japanese, etc.).
@@ -143,7 +147,7 @@ See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.42
        - Fix - Error when french was loaded and an ini file read (#50).
        - Fix - A typo in Greek files: Miriad must read Myriad.
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.41
-       
+
 3.40   2020-02-14
        - New ini files for Latin and Greek (xe/lua).
        - Add 'other' characters used in hyphenation patters (eg,

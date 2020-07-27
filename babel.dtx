@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/07/13 v3.47 The Babel package]
+\ProvidesFile{babel.dtx}[2020/07/27 v3.47.2081 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4691,8 +4691,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.47>>
-%<<date=2020/07/13>>
+%<<version=3.47.2081>>
+%<<date=2020/07/27>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5905,13 +5905,13 @@ help from Bernd Raichle, for which I am grateful.
 % but it broke bookmarks. This was quickly fixed in \pkg{hyperref},
 % which essentially made it no-op. However, it will not removed for
 % the moment because \pkg{hyperref} is expecting it. TODO. Still
-% true? 
+% true? Commented out in 2020/07/27.
 %
 %    \begin{macrocode}
-\AtBeginDocument{%
-  \ifx\pdfstringdefDisableCommands\@undefined\else
-    \pdfstringdefDisableCommands{\languageshorthands{system}}%
-  \fi}
+% \AtBeginDocument{%
+%   \ifx\pdfstringdefDisableCommands\@undefined\else
+%     \pdfstringdefDisableCommands{\languageshorthands{system}}%
+%   \fi}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -7226,23 +7226,23 @@ help from Bernd Raichle, for which I am grateful.
   % set the locale id
   \bbl@id@assign
   % switch captions, date
-  \ifcase\bbl@select@type
-    \bbl@bsphack
-      \csname captions#1\endcsname\relax
-      \csname date#1\endcsname\relax
-    \bbl@esphack
-  \else
-    \bbl@bsphack
-      \bbl@xin@{,captions,}{,\bbl@select@opts,}%
-      \ifin@
+  % No text is supposed to be added here, so we remove any
+  % spurious spaces.  
+  \bbl@bsphack
+    \ifcase\bbl@select@type
         \csname captions#1\endcsname\relax
-      \fi
-      \bbl@xin@{,date,}{,\bbl@select@opts,}%
-      \ifin@  % if \foreign... within \<lang>date
         \csname date#1\endcsname\relax
-      \fi
-    \bbl@esphack
-  \fi
+    \else
+        \bbl@xin@{,captions,}{,\bbl@select@opts,}%
+        \ifin@
+          \csname captions#1\endcsname\relax
+        \fi
+        \bbl@xin@{,date,}{,\bbl@select@opts,}%
+        \ifin@  % if \foreign... within \<lang>date
+          \csname date#1\endcsname\relax
+        \fi
+    \fi
+  \bbl@esphack
   % switch extras
   \bbl@usehooks{beforeextras}{}%
   \csname extras#1\endcsname\relax
@@ -10336,7 +10336,11 @@ help from Bernd Raichle, for which I am grateful.
         {Use this macro as documented}}%
       {\bbl@provide@renew{#2}}}%
   % Post tasks
-  \bbl@exp{\\\babelensure[exclude=\\\today]{#2}}%
+  \bbl@ifunset{bbl@extracaps@#2}%
+    {\bbl@exp{\\\babelensure[exclude=\\\today]{#2}}}%
+    {\toks@\expandafter\expandafter\expandafter
+      {\csname bbl@extracaps@#2\endcsname}%
+     \bbl@exp{\\\babelensure[exclude=\\\today,include=\the\toks@}]{#2}}%
   \bbl@ifunset{bbl@ensure@\languagename}%
     {\bbl@exp{%
       \\\DeclareRobustCommand\<bbl@ensure@\languagename>[1]{%
@@ -11008,10 +11012,85 @@ help from Bernd Raichle, for which I am grateful.
     {\bbl@trim\toks@{#2}}%
   \bbl@exp{%
     \\\bbl@add\\\bbl@savestrings{%
-      \\\SetString\<\bbl@tempa name>{\the\toks@}}}}
+      \\\SetString\<\bbl@tempa name>{\the\toks@}}}%
+  \toks@\expandafter{\bbl@captionslist}%
+  \bbl@exp{\\\in@{\<\bbl@tempa name>}{\the\toks@}}%
+  \ifin@\else
+    \bbl@exp{%
+      \\\bbl@add\<bbl@extracaps@\languagename>{\<\bbl@tempa name>}%
+      \\\bbl@toglobal\<bbl@extracaps@\languagename>}%
+  \fi}
 %    \end{macrocode}
 %
-% TODO. Document
+% \textbf{Labels.} Captions must contain just strings, no
+% format at all, so there is new group in ini files.
+% 
+%    \begin{macrocode}
+\def\bbl@bktoname[[#1]]{\csname#1name\endcsname} % TODO - ugly
+\def\bbl@bktothe[#1]{\csname the#1\endcsname}
+\def\bbl@inikv@labels#1=#2\@@{%
+  \def\bbl@toreplace{#2}%
+  \bbl@replace\bbl@toreplace{[ ]}{\nobreakspace{}}%
+  \bbl@replace\bbl@toreplace{[[}{\bbl@bktoname[[}%
+  \bbl@replace\bbl@toreplace{[}{\bbl@bktothe[}% 
+  \bbl@replace\bbl@toreplace{\bbl@bktothe[\bbl@bktothe}{[}% Ugly
+  \in@{,#1,}{,chapter,}%
+  \ifin@
+    \bbl@patchchapter
+    \global\bbl@csarg\let{chapfmt@\languagename}\bbl@toreplace
+  \fi 
+  \in@{,#1,}{,appendix,}%
+  \ifin@
+    \bbl@patchchapter
+    \global\bbl@csarg\let{appxfmt@\languagename}\bbl@toreplace
+  \fi 
+  %
+  \in@{,#1,}{,figure,table,}%
+  \ifin@
+    \toks@\expandafter{\bbl@toreplace}%
+    \bbl@exp{\gdef\<fnum@#1>{\the\toks@}}%
+  \fi
+  %
+  \in@{enumerate.}{#1}%
+  \ifin@
+    \def\bbl@tempa{#1}%
+    \bbl@replace\bbl@tempa{enumerate.}{}%
+    \toks@\expandafter{\bbl@toreplace}%
+    \bbl@exp{%
+      \\\bbl@add\<extras\languagename>{%
+        \\\babel@save\<labelenum\romannumeral\bbl@tempa>%
+        \def\<labelenum\romannumeral\bbl@tempa>{\the\toks@}}%
+      \\\bbl@toglobal\<extras\languagename>}%
+  \fi}
+%    \end{macrocode}
+%% 
+% To show correctly some captions in a few languages, we need to patch
+% some internal macros, because the order is hardcoded. For example, in
+% Japanese the chapter number is surrounded by two string, while
+% in Hungarian is placed after. 
+
+%    \begin{macrocode}
+\def\bbl@chaptype{chap}
+\ifx\@makechapterhead\@undefined
+  \let\bbl@patchchapter\relax
+\else
+  \def\bbl@patchchapter{%
+    \global\let\bbl@patchchapter\relax
+    \bbl@add\appendix{\def\bbl@chaptype{appx}}% Not harmful, I hope
+    \bbl@toglobal\appendix
+    % This replacement works in many classes, but not all
+    \bbl@sreplace\@makechapterhead
+      {\@chapapp\space\thechapter}%
+      {\bbl@chapterformat}%
+    \bbl@toglobal\@makechapterhead
+    \gdef\bbl@chapterformat{%
+      \bbl@ifunset{bbl@\bbl@chaptype fmt@\languagename}%
+        {\@chapapp\space\thechapter}
+        {\@nameuse{bbl@\bbl@chaptype fmt@\languagename}}}}
+\fi
+%    \end{macrocode}
+%
+% \textbf{Date.} TODO. Document
 %
 %    \begin{macrocode}
 % Arguments are _not_ protected.
@@ -11082,9 +11161,9 @@ help from Bernd Raichle, for which I am grateful.
       {}}}
 %    \end{macrocode}
 %
-% Dates will require some macros for the basic formatting. They may be
-% redefined by language, so ``semi-public'' names (camel case) are
-% used. Oddly enough, the CLDR places particles like “de”
+% \textbf{Dates} will require some macros for the basic formatting.
+% They may be redefined by language, so ``semi-public'' names (camel
+% case) are used. Oddly enough, the CLDR places particles like “de”
 % inconsistently in either in the date or in the month name.
 %
 %    \begin{macrocode}
