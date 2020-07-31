@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/07/27 v3.47.2081 The Babel package]
+\ProvidesFile{babel.dtx}[2020/07/31 v3.47.2085 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -506,6 +506,11 @@ _\usepackage[vietnamese,danish]{babel}_
 \end{verbatim}
 \end{example}
 
+\begin{note}
+  Once loaded a language, you can select it with the corresponding
+  BCP47 tag. See section \ref{bcp47} for further details.
+\end{note}
+
 \subsection{Mostly monolingual documents}
 
 \New{3.39} Very often, multilingual documents consist of a main
@@ -519,8 +524,8 @@ also when provided in the optional argument of |\babelfont|, if used.)
 This is particularly useful, too, when there are short texts of this
 kind coming from an external source whose contents are not known on
 beforehand (for example, titles in a bibliography). At this regard, it
-is worth remembering that |\babelfont| does not load any font until
-required, so that it can be used just in case.
+is worth remembering that |\babelfont| does \textit{not} load any font
+until required, so that it can be used just in case.
 
 \begin{example}
   A trivial document is:
@@ -539,6 +544,13 @@ English. \foreignlanguage{russian}{Русский}.
 \end{document}
 \end{verbatim}
 \end{example}
+
+\begin{note}
+  Instead of its name, you may prefer to select the language with the
+corresponding BCP47 tag. This alternative, however, must be activated
+explicitly, because a two- or tree-letter word is a valid name for a
+language (eg, |yi|). See section \ref{bcp47} for further details.
+\end{note}
 
 \subsection{Modifiers}
 
@@ -2937,6 +2949,7 @@ additional replacement type with the key |string|.
 \end{example}
 
 \subsection{Selection based on BCP 47 tags}
+\label{bcp47}
 
 \New{3.43} The recommended way to select languages is that described at
 the beginning of this document. However, BCP 47 tags are becoming
@@ -2964,15 +2977,18 @@ Here is a minimal example:
 
 \usepackage[danish]{babel}
 
-\babeladjust{ autoload.bcp47 = on }
+\babeladjust{
+  autoload.bcp47 = on,
+  autoload.bcp47.options = import
+}
 
 \begin{document}
 
-\today
+Chapter in Danish: \chaptername.
 
-\selectlanguage{fr-CA}
+\selectlanguage{de-AT}
 
-\today
+\localedate{2020}{1}{30}
 
 \end{document}
 \end{verbatim}
@@ -3924,10 +3940,17 @@ recommended.
 \subsection{Guidelines for contributed languages}
 \label{contribute}
 
-Now language files are “outsourced” and are located in a separate
-directory (\texttt{/macros/latex/contrib/babel-contrib}), so that they
-are contributed directly to CTAN (please, do not send to me language
-styles just to upload them to CTAN).
+Currently, the easiest way to contribute a new language is by taking
+one the the 500 or so |ini| templates available on GitHub as a basis.
+Just make a pull request o dowonload it and then, after filling the
+fields, sent it to me. Fell free to ask for help or to make feature
+requests.
+
+As to \texttt{ldf} files, now language files are “outsourced” and are
+located in a separate directory
+(\texttt{/macros/latex/contrib/babel-contrib}), so that they are
+contributed directly to CTAN (please, do not send to me language styles
+just to upload them to CTAN).
 
 Of course, placing your style files in this directory is not mandatory,
 but if you want to do it, here are a few guidelines.
@@ -3949,7 +3972,7 @@ but if you want to do it, here are a few guidelines.
   own directory.
 \end{itemize}
 
-The following page provides a starting point:
+The following page provides a starting point for \texttt{ldf} files:
 \texttt{http://www.texnia.com/incubator.html}. See also
 \texttt{https://github.com/latex3/babel/wiki/List-of-locale-templates}.
 
@@ -4691,8 +4714,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.47.2081>>
-%<<date=2020/07/27>>
+%<<version=3.47.2085>>
+%<<date=2020/07/31>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11023,51 +11046,89 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % \textbf{Labels.} Captions must contain just strings, no
-% format at all, so there is new group in ini files.
+% format at all, so there is new group in ini files. Currently there
+% are two 
 % 
 %    \begin{macrocode}
-\def\bbl@bktoname[[#1]]{\csname#1name\endcsname} % TODO - ugly
-\def\bbl@bktothe[#1]{\csname the#1\endcsname}
+\def\bbl@bktoname#1\@@{\csname#1name\endcsname} % TODO - ugly
+\def\bbl@bktothe#1\@@{\csname the#1\endcsname}
+\def\bbl@list@the{%
+  part,chapter,section,subsection,subsubsection,paragraph,%
+  subparagraph,enumi,enumii,enumiii,enumiv,equation,figure,%
+  table,page,footnote,mpfootnote,mpfn} % Include \thempfn?
+\def\bbl@map@cnt#1{%  #1:roman,etc, // #2:enumi,etc
+  \bbl@ifunset{bbl@map@#1@\languagename}%
+    {\@nameuse{#1}}%
+    {\@nameuse{bbl@map@#1@\languagename}}}
 \def\bbl@inikv@labels#1=#2\@@{%
-  \def\bbl@toreplace{#2}%
-  \bbl@replace\bbl@toreplace{[ ]}{\nobreakspace{}}%
-  \bbl@replace\bbl@toreplace{[[}{\bbl@bktoname[[}%
-  \bbl@replace\bbl@toreplace{[}{\bbl@bktothe[}% 
-  \bbl@replace\bbl@toreplace{\bbl@bktothe[\bbl@bktothe}{[}% Ugly
-  \in@{,#1,}{,chapter,}%
+  \in@{map.}{#1}%
   \ifin@
-    \bbl@patchchapter
-    \global\bbl@csarg\let{chapfmt@\languagename}\bbl@toreplace
-  \fi 
-  \in@{,#1,}{,appendix,}%
-  \ifin@
-    \bbl@patchchapter
-    \global\bbl@csarg\let{appxfmt@\languagename}\bbl@toreplace
-  \fi 
-  %
-  \in@{,#1,}{,figure,table,}%
-  \ifin@
-    \toks@\expandafter{\bbl@toreplace}%
-    \bbl@exp{\gdef\<fnum@#1>{\the\toks@}}%
-  \fi
-  %
-  \in@{enumerate.}{#1}%
-  \ifin@
-    \def\bbl@tempa{#1}%
-    \bbl@replace\bbl@tempa{enumerate.}{}%
-    \toks@\expandafter{\bbl@toreplace}%
+    \def\bbl@tempc{#1}%
+    \bbl@replace\bbl@tempc{map.}{}%
+    \in@{,#2,}{,arabic,roman,Roman,alph,Alph,}%
     \bbl@exp{%
-      \\\bbl@add\<extras\languagename>{%
-        \\\babel@save\<labelenum\romannumeral\bbl@tempa>%
-        \def\<labelenum\romannumeral\bbl@tempa>{\the\toks@}}%
-      \\\bbl@toglobal\<extras\languagename>}%
+      \gdef\<bbl@map@\bbl@tempc @\languagename>%
+        {\ifin@\<#2>\else\\\localecounter{#2}\fi}}%
+    \bbl@foreach\bbl@list@the{%
+      \bbl@exp{\let\\\bbl@tempd\<the##1>}%
+      \bbl@exp{%
+        \\\bbl@sreplace\<the##1>%
+          {\<\bbl@tempc>{##1}}{\\\bbl@map@cnt{\bbl@tempc}{##1}}%
+        \\\bbl@sreplace\<the##1>%
+          {\<\@empty @\bbl@tempc>\<c@##1>}{\\\bbl@map@cnt{\bbl@tempc}{##1}}}%
+      \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
+        \toks@\expandafter\expandafter\expandafter{%
+          \csname the##1\endcsname}
+        \expandafter\xdef\csname the##1\endcsname{{\the\toks@}}%
+      \fi}%
+    %
+  \else
+    \def\bbl@toreplace{#2}%
+    \bbl@replace\bbl@toreplace{[ ]}{\nobreakspace{}}%
+    \bbl@replace\bbl@toreplace{[[}{\bbl@bktoname}%
+    \bbl@replace\bbl@toreplace{[}{\bbl@bktothe}% 
+    \bbl@replace\bbl@toreplace{]]}{\@@}% 
+    \bbl@replace\bbl@toreplace{]}{\@@}% 
+    \in@{,#1,}{,chapter,}%
+    \ifin@
+      \bbl@patchchapter
+      \global\bbl@csarg\let{chapfmt@\languagename}\bbl@toreplace
+    \fi 
+    \in@{,#1,}{,appendix,}%
+    \ifin@
+      \bbl@patchchapter
+      \global\bbl@csarg\let{appxfmt@\languagename}\bbl@toreplace
+    \fi 
+    \in@{,#1,}{,part,}%
+    \ifin@
+      \bbl@patchpart
+      \global\bbl@csarg\let{partfmt@\languagename}\bbl@toreplace
+    \fi 
+    \in@{,#1,}{,figure,table,}%
+    \ifin@
+      \toks@\expandafter{\bbl@toreplace}%
+      \bbl@exp{\gdef\<fnum@#1>{\the\toks@}}%
+    \fi
+    %
+    \in@{enumerate.}{#1}%
+    \ifin@
+      \def\bbl@tempa{#1}%
+      \bbl@replace\bbl@tempa{enumerate.}{}%
+      \toks@\expandafter{\bbl@toreplace}%
+      \bbl@exp{%
+        \\\bbl@add\<extras\languagename>{%
+          \\\babel@save\<labelenum\romannumeral\bbl@tempa>%
+          \def\<labelenum\romannumeral\bbl@tempa>{\the\toks@}}%
+        \\\bbl@toglobal\<extras\languagename>}%
+    \fi
   \fi}
 %    \end{macrocode}
 %% 
 % To show correctly some captions in a few languages, we need to patch
 % some internal macros, because the order is hardcoded. For example, in
-% Japanese the chapter number is surrounded by two string, while
-% in Hungarian is placed after. 
+% Japanese the chapter number is surrounded by two string, while in
+% Hungarian is placed after. These replacement works in many classes,
+% but not all.
 
 %    \begin{macrocode}
 \def\bbl@chaptype{chap}
@@ -11078,7 +11139,6 @@ help from Bernd Raichle, for which I am grateful.
     \global\let\bbl@patchchapter\relax
     \bbl@add\appendix{\def\bbl@chaptype{appx}}% Not harmful, I hope
     \bbl@toglobal\appendix
-    % This replacement works in many classes, but not all
     \bbl@sreplace\@makechapterhead
       {\@chapapp\space\thechapter}%
       {\bbl@chapterformat}%
@@ -11087,6 +11147,20 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@ifunset{bbl@\bbl@chaptype fmt@\languagename}%
         {\@chapapp\space\thechapter}
         {\@nameuse{bbl@\bbl@chaptype fmt@\languagename}}}}
+\fi
+\ifx\@part\@undefined
+  \let\bbl@patchpart\relax
+\else
+  \def\bbl@patchpart{%
+    \global\let\bbl@patchpart\relax
+    \bbl@sreplace\@part
+      {\partname\nobreakspace\thepart}%
+      {\bbl@partformat}%
+    \bbl@toglobal\@part
+    \gdef\bbl@partformat{%
+      \bbl@ifunset{bbl@partfmt@\languagename}%
+        {\partname\nobreakspace\thepart}
+        {\@nameuse{bbl@partfmt@\languagename}}}}
 \fi
 %    \end{macrocode}
 %
