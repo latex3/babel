@@ -1,4 +1,4 @@
-## Babel 3.47.2085
+## Babel 3.47.2089
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -45,7 +45,8 @@ respective authors.
 
 ```
 3.48   2020-07-31 (development)
-       - New keys to customize labels (chapter, enumerate, etc.).
+       - New tools to customize some labels (like chapters in CJK and
+         Hungarian).
 
 3.47   2020-07-13
        - Fixes:
