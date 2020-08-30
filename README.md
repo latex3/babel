@@ -1,4 +1,4 @@
-## Babel 3.47.2089
+## Babel 3.47.2115
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -47,6 +47,10 @@ respective authors.
 3.48   2020-07-31 (development)
        - New tools to customize some labels (like chapters in CJK and
          Hungarian).
+       - Warning instead of error if neither 0 nor ZERO WIDTH SPACE is
+         found in Southeast Asian languages.
+       - Fixes:
+         - \babelshorthand didn't work with some dialects.
 
 3.47   2020-07-13
        - Fixes:
