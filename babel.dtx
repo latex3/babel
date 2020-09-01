@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/08/30 v3.47.2115 The Babel package]
+\ProvidesFile{babel.dtx}[2020/09/01 v3.48 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -249,25 +249,26 @@ and usually it can be ignored.
   most recent features can be still unstable. 
 
 \item[\sffamily\color{messages}Can I help?] Sure! If you are interested
-  in the \TeX{} multilingual support, please join the
-  \href{http://tug.org/mailman/listinfo/kadingira}{kadingira mail
-  list}. You can follow the development of \babel{} in
-  \href{https://github.com/latex3/babel}{GitHub}; feel free to fork it
-  and make pull requests. If you are the author of a package, send to
-  me a few test files which I'll add to mine, so that possible issues
-  can be caught in the development phase.
+in the \TeX{} multilingual support, please join the
+\href{http://tug.org/mailman/listinfo/kadingira}{kadingira mail list}.
+You can follow the development of \babel{} in
+\href{https://github.com/latex3/babel}{GitHub} and make suggestions; feel
+free to fork it and make pull requests. If you are the author of a
+package, send to me a few test files which I'll add to mine, so that
+possible issues can be caught in the development phase.
   
-\item[\sffamily\color{messages}I’ve found an error.] Please, report any
-  issues you find in
-  \href{https://github.com/latex3/babel/issues}{GitHub}, which is
-  better than just complaining on an e-mail list or a web forum.
+\item[\sffamily\color{messages}It doesn't work for me!] You can ask for
+help in some forums like \textsf{tex.stackexchange}, but if you have
+found a bug, I strongly beg you to report it in
+\href{https://github.com/latex3/babel/issues}{GitHub}, which is much
+better than just complaining on an e-mail list or a web forum.
 
 \item[\sffamily\color{messages}How can I contribute a new
 language?] See section \ref{contribute} for contributing a language.
 
 \item[\sffamily\color{messages}I only need learn the most basic
 features.] The first subsections (1.1-1.3) describe the traditional way
-of loading a language (with |ldf| files), and usually is all you need.
+of loading a language (with |ldf| files), which is usually all you need.
 The alternative way based on |ini| files, which complements the
 previous one (it does \textit{not} replace it, although it is still
 necessary in some languages), is described below; go to \ref{inifiles}.
@@ -3787,6 +3788,14 @@ version of |\foreignlanguage|).
 For old an deprecated functions, see the wiki.
 
 \medskip
+\textbf{Labels}
+
+\New{3.48} There is some work in progress for \babel{} to deal with
+labels, both with the relation to captions (chapters, part), and how
+counters are used to define them. It is still somewhat tentative
+because it is far from trivial -- see the wiki for further details.
+
+\medskip
 \textbf{\string\babelprehyphenation}
 
 \New{3.44} Note it is tentative, but the current behavior for glyphs
@@ -4735,8 +4744,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.47.2115>>
-%<<date=2020/08/30>>
+%<<version=3.48>>
+%<<date=2020/09/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5758,8 +5767,10 @@ help from Bernd Raichle, for which I am grateful.
        \set@typeset@protect
        \expandafter\select@language@x\expandafter{\bbl@main@language}%
        \let\protect\noexpand
-       \edef\thepage{% TODO. Only with bidi. See also above
-         \noexpand\babelsublr{\unexpanded\expandafter{\thepage}}}}%
+       \ifcase\bbl@bidimode\else % Only with bidi. See also above
+         \edef\thepage{%
+           \noexpand\babelsublr{\unexpanded\expandafter{\thepage}}}%
+       \fi}%
    \fi}
   {\ifbbl@single\else
      \bbl@ifunset{markright }\bbl@redefine\bbl@redefinerobust
@@ -7062,11 +7073,12 @@ help from Bernd Raichle, for which I am grateful.
 %  \begin{macro}{\bbl@pop@lang}
 %    This macro stores its first element (which is delimited by the
 %    `+'-sign) in |\languagename| and stores the rest of the string
-%    (delimited by `-') in its third argument.
+%    in |\bbl@language@stack|.
 %
 %    \begin{macrocode}
-\def\bbl@pop@lang#1+#2&#3{%
-  \edef\languagename{#1}\xdef#3{#2}}
+\def\bbl@pop@lang#1+#2\@@{%
+  \edef\languagename{#1}%
+  \xdef\bbl@language@stack{#2}}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -7077,13 +7089,12 @@ help from Bernd Raichle, for which I am grateful.
 % result of that is that the argument string of |\bbl@pop@lang|
 % contains one or more language names, each followed by a `+'-sign
 % (zero language names won't occur as this macro will only be
-% called after something has been pushed on the stack) followed by
-% the `\&'-sign and finally the reference to the stack.
+% called after something has been pushed on the stack).
 %
 %    \begin{macrocode}
 \let\bbl@ifrestoring\@secondoftwo
 \def\bbl@pop@language{%
-  \expandafter\bbl@pop@lang\bbl@language@stack&\bbl@language@stack
+  \expandafter\bbl@pop@lang\bbl@language@stack\@@
   \let\bbl@ifrestoring\@firstoftwo
   \expandafter\bbl@set@language\expandafter{\languagename}%
   \let\bbl@ifrestoring\@secondoftwo}
@@ -10257,8 +10268,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Layout}
 %
-% \textbf{Work in progress}.
-%
 % Layout is mainly intended to set bidi documents, but there is at
 % least a tool useful in general.
 %
@@ -11055,10 +11064,10 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@replace\bbl@tempa{.template}{}%
     \def\bbl@toreplace{#2}%
     \bbl@replace\bbl@toreplace{[ ]}{\nobreakspace{}}%
-    \bbl@replace\bbl@toreplace{[[}{\bbl@bktoname}%
-    \bbl@replace\bbl@toreplace{[}{\bbl@bktothe}% 
-    \bbl@replace\bbl@toreplace{]]}{\@@}% 
-    \bbl@replace\bbl@toreplace{]}{\@@}% 
+    \bbl@replace\bbl@toreplace{[[}{\csname}%
+    \bbl@replace\bbl@toreplace{[}{\csname the}% 
+    \bbl@replace\bbl@toreplace{]]}{name\endcsname{}}%
+    \bbl@replace\bbl@toreplace{]}{\endcsname{}}% 
     \bbl@xin@{,\bbl@tempa,}{,chapter,}%
     \ifin@
       \bbl@patchchapter
@@ -11098,29 +11107,26 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % \textbf{Labels.} Captions must contain just strings, no
-% format at all, so there is new group in ini files. Currently there
-% are two 
+% format at all, so there is new group in ini files. 
 % 
 %    \begin{macrocode}
-\def\bbl@bktoname#1\@@{\csname#1name\endcsname} % TODO - ugly
-\def\bbl@bktothe#1\@@{\csname the#1\endcsname}
 \def\bbl@list@the{%
   part,chapter,section,subsection,subsubsection,paragraph,%
   subparagraph,enumi,enumii,enumiii,enumiv,equation,figure,%
-  table,page,footnote,mpfootnote,mpfn} % Include \thempfn?
+  table,page,footnote,mpfootnote,mpfn}
 \def\bbl@map@cnt#1{%  #1:roman,etc, // #2:enumi,etc
   \bbl@ifunset{bbl@map@#1@\languagename}%
     {\@nameuse{#1}}%
     {\@nameuse{bbl@map@#1@\languagename}}}
 \def\bbl@inikv@labels#1=#2\@@{%
-  \in@{map.}{#1}%
+  \in@{.map}{#1}%
   \ifin@
     \ifx\bbl@KVP@labels\@nil\else
-      \bbl@xin@{ maps }{ \bbl@KVP@labels\space}%
+      \bbl@xin@{ map }{ \bbl@KVP@labels\space}%
       \ifin@
         \def\bbl@tempc{#1}%
-        \bbl@replace\bbl@tempc{map.}{}%
-        \in@{,#2,}{,arabic,roman,Roman,alph,Alph,}%
+        \bbl@replace\bbl@tempc{.map}{}%
+        \in@{,#2,}{,arabic,roman,Roman,alph,Alph,fnsymbol,}%
         \bbl@exp{%
           \gdef\<bbl@map@\bbl@tempc @\languagename>%
             {\ifin@\<#2>\else\\\localecounter{#2}\fi}}%
@@ -11143,11 +11149,16 @@ help from Bernd Raichle, for which I am grateful.
   \else
     %
     % The following code is still under study. You can test it and make
-    % suggestions.
+    % suggestions. Eg, enumerate.2 = ([enumi]).([enumii]). It's
+    % language dependent.
     \in@{enumerate.}{#1}%
     \ifin@
       \def\bbl@tempa{#1}%
       \bbl@replace\bbl@tempa{enumerate.}{}%
+      \def\bbl@toreplace{#2}%
+      \bbl@replace\bbl@toreplace{[ ]}{\nobreakspace{}}%
+      \bbl@replace\bbl@toreplace{[}{\csname the}% 
+      \bbl@replace\bbl@toreplace{]}{\endcsname{}}% 
       \toks@\expandafter{\bbl@toreplace}%
       \bbl@exp{%
         \\\bbl@add\<extras\languagename>{%
@@ -11157,13 +11168,13 @@ help from Bernd Raichle, for which I am grateful.
     \fi
   \fi}
 %    \end{macrocode}
-%% 
+%
 % To show correctly some captions in a few languages, we need to patch
 % some internal macros, because the order is hardcoded. For example, in
 % Japanese the chapter number is surrounded by two string, while in
 % Hungarian is placed after. These replacement works in many classes,
-% but not all.
-
+% but not all. Actually, the following lines are somewhat tentative.
+%
 %    \begin{macrocode}
 \def\bbl@chaptype{chap}
 \ifx\@makechapterhead\@undefined
@@ -11376,7 +11387,7 @@ help from Bernd Raichle, for which I am grateful.
          \bbl@warning
            {Neither 0 nor ZERO WIDTH SPACE are available\\%
             in the current font, and therefore the hyphen\\%
-            will be printed. Try changing the fontspec\\%
+            will be printed. Try changing the fontspec's\\%
             'HyphenChar' to another value, but be aware\\%
             this setting is not safe (see the manual)}%
          \hyphenchar\font\defaulthyphenchar     
