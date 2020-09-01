@@ -1,4 +1,4 @@
-## Babel 3.47.2115
+## Babel 3.48
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -44,13 +44,15 @@ respective authors.
 ### Latest changes
 
 ```
-3.48   2020-07-31 (development)
-       - New tools to customize some labels (like chapters in CJK and
-         Hungarian).
+3.48   2020-09-01
+       - New (tentative) tools to customize some labels (like chapters
+         in CJK and Hungarian). 
        - Warning instead of error if neither 0 nor ZERO WIDTH SPACE is
-         found in Southeast Asian languages.
+         found in some Southeast Asian languages.
        - Fixes:
-         - \babelshorthand didn't work with some dialects.
+         - \babelshorthand didn't work with some dialects (#91).
+         - \selectlanguage and otherlanguage raised an error inside
+           tabular.
 
 3.47   2020-07-13
        - Fixes:
@@ -185,49 +187,11 @@ See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.39
          file loaded by languages.
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.38
 
-3.37   2019-12-08
-       - Preliminary code for non-standard hyphenation, like ff ->
-         ff-f (lua).
-       - \babelprovide now can be used to add or modify values for the
-         keys in ini files.
-       - Line breaking in South East Asian and CKJ is assimilated to
-         hyphenation, and it is activated even without 'import' (lua).      
+3.37   2019-12-08    
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.37
 
-3.36   2019-11-14
-       - New - \babeladjust, with options: bidi.text, bidi.mirroring,
-         bidi.mapdigits, layout.tabular, layout.lists, linebreak.sea,
-         linebreak.cjk. There are still some limitations (lua).
-       - New - ini for Polytonic Greek, thanks to Claudio Beccari.
-       - Fix - Language and script set for Chinese Tradicional and
-         Chinese Simplified.        
+3.36   2019-11-14 
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.36
-
-3.35   2019-10-15
-       - \markboth and \markright made robust with a recent LaTeX.
-       - Shorthands work in bibs and refs even with safe=none.
-       - Fix - Another issue related to \ensureascii and LGR (#30)
-       - A temporary hack for issue #25.
-
-3.34   2019-09-27
-       - Improved compatibility for \babelfont vs \setmainfont.
-       - Fix - active ' entered in an infinite loop with lua (#27).
-       - Fix - main in \babelprovide was not set until begin document.
-
-3.33   2019-07-19
-       - \prehyphenchar set to 0 in languages requiring it: kannada,
-         marathi, tamil, etc. (lua).
-       - \AddBabelHook can be set for specific languages.
-       - Fix - !\grq in T1 behaved like the ligature !` (#19).
-       - Minimal preliminary support for the experimental harftex.
-
-3.32   2019-06-03
-       - CJK line breaking is now disabled in verbatim (lua).
-       - New - \babelcharproperty, to change the direction, mirroring
-         glyph and line break properties (lua).
-       - Basic support for the picture environment (with pict2e) and pgf
-         (lua, somewhat experimental).
-       - Start support for harftex (just try - it may work).
 ```
 
 Javier Bezos
