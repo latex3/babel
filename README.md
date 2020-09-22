@@ -1,4 +1,4 @@
-## Babel 3.48
+## Babel 3.48.2138
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,11 +7,11 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.48 are described in:
+Changes in version 3.49 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.48
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.49
 
-Included is a set of ini files for about 200 languages. 
+Included is a set of ini files for about 250 languages. 
 
 The best way to install and/or update it is with the help of package
 managers.
@@ -44,6 +44,11 @@ respective authors.
 ### Latest changes
 
 ```
+3.49   2020-09-22
+       - Allow standard LaTeX syntax to recognize locales based on ini
+         files in the most common cases.
+       - Fixes:
+       
 3.48   2020-09-01
        - New (tentative) tools to customize some labels (like chapters
          in CJK and Hungarian). 
@@ -53,6 +58,7 @@ respective authors.
          - \babelshorthand didn't work with some dialects (#91).
          - \selectlanguage and otherlanguage raised an error inside
            tabular.
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.48       
 
 3.47   2020-07-13
        - Fixes:

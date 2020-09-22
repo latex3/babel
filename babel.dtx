@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/09/01 v3.48 The Babel package]
+\ProvidesFile{babel.dtx}[2020/09/22 v3.48.2138 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -256,7 +256,7 @@ You can follow the development of \babel{} in
 free to fork it and make pull requests. If you are the author of a
 package, send to me a few test files which I'll add to mine, so that
 possible issues can be caught in the development phase.
-  
+
 \item[\sffamily\color{messages}It doesn't work for me!] You can ask for
 help in some forums like \textsf{tex.stackexchange}, but if you have
 found a bug, I strongly beg you to report it in
@@ -272,7 +272,7 @@ of loading a language (with |ldf| files), which is usually all you need.
 The alternative way based on |ini| files, which complements the
 previous one (it does \textit{not} replace it, although it is still
 necessary in some languages), is described below; go to \ref{inifiles}.
-  
+
 \item[\sffamily\color{messages}I don’t like manuals. I prefer sample
   files.] This manual contains lots of examples and tips, but in GitHub
   there are many
@@ -330,9 +330,9 @@ in UTF-8 and a so-called Unicode font must be loaded (in this example
 
 \setengine{luatex/xetex}
 \begin{verbatim}
-\documentclass{article}
+\documentclass[russian]{article}
 
-_\usepackage[russian]{babel}_
+_\usepackage{babel}_
 
 \babelfont{rm}{DejaVu Serif}
 
@@ -547,8 +547,8 @@ until required, so that it can be used just in case.
   A trivial document is:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\documentclass{article}
-\usepackage[english]{babel}
+\documentclass[english]{article}
+\usepackage{babel}
 
 \babelfont[russian]{rm}{FreeSerif}
 
@@ -1389,8 +1389,8 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
   be used in conjunction with the |ldf| for |japanese|, because the
   following piece of code loads \textsf{luatexja}:
 \begin{verbatim}
-\documentclass{ltjbook}
-\usepackage[japanese]{babel}
+\documentclass[japanese]{ltjbook}
+\usepackage{babel}
 \end{verbatim}
 \item[Latin, Greek, Cyrillic] Combining chars with the default
  \luatex{} font renderer might be wrong; on then other hand, with the
@@ -4744,8 +4744,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.48>>
-%<<date=2020/09/01>>
+%<<version=3.48.2138>>
+%<<date=2020/09/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5273,17 +5273,24 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \bbl@trace{key=value and another general options}
 \bbl@csarg\let{tempa\expandafter}\csname opt@babel.sty\endcsname
-\def\bbl@tempb#1.#2{%
+\def\bbl@tempb#1.#2{%  Remove trailing dot
    #1\ifx\@empty#2\else,\bbl@afterfi\bbl@tempb#2\fi}%
-\def\bbl@tempd#1.#2\@nnil{%
+\def\bbl@tempd#1.#2\@nnil{%  TODO. Refactor lists?
   \ifx\@empty#2%
     \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1}%
   \else
-    \in@{=}{#1}\ifin@
-      \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1.#2}%
+    \in@{,ini,}{,#1,}%
+    \ifin@
+      \edef\bbl@tempc{%
+        \ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1.\bbl@tempb#2}%
     \else
-      \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1}%
-      \bbl@csarg\edef{mod@#1}{\bbl@tempb#2}%
+      \in@{=}{#1}%
+      \ifin@
+        \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1.#2}%
+      \else    
+        \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1}%
+        \bbl@csarg\edef{mod@#1}{\bbl@tempb#2}%
+      \fi
     \fi
   \fi}
 \let\bbl@tempc\@empty
@@ -5310,6 +5317,10 @@ help from Bernd Raichle, for which I am grateful.
 % Don't use. Experimental. TODO.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
+\chardef\bbl@iniflag\z@
+\DeclareOption{ini=*}{\chardef\bbl@iniflag\@ne}     % main -> +1
+\DeclareOption{ini.+=*}{\chardef\bbl@iniflag\tw@}   % add = 2
+\DeclareOption{ini.*=*}{\chardef\bbl@iniflag\thr@@} % add + main
 <@More package options@>
 %    \end{macrocode}
 %
@@ -6278,7 +6289,7 @@ help from Bernd Raichle, for which I am grateful.
       \AtEndOfPackage{%
         \EnableBabelHook{babel-bidi}%
         \ifx\fontspec\@undefined
-          \usepackage{fontspec}% bidi needs fontspec
+          \bbl@loadfontspec % bidi needs fontspec
         \fi
         \usepackage#1{bidi}}%
     \fi}
@@ -6287,10 +6298,8 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@tentative{bidi=bidi}
       \bbl@loadxebidi{}
     \or
-      \bbl@tentative{bidi=bidi-r}
       \bbl@loadxebidi{[rldocument]}
     \or
-      \bbl@tentative{bidi=bidi-l}
       \bbl@loadxebidi{}
     \fi
   \fi
@@ -6566,7 +6575,7 @@ help from Bernd Raichle, for which I am grateful.
     {\bbl@error{%
        Unknown option `\CurrentOption'. Either you misspelled it\\%
        or the language definition file \CurrentOption.ldf was not found}{%
-       Valid options are: shorthands=, KeepShorthandsActive,\\%
+       Valid options are, among others: shorthands=, KeepShorthandsActive,\\%
        activeacute, activegrave, noconfigs, safe=, main=, math=\\%
        headfoot=, strings=, config=, hyphenmap=, or a language name.}}}
 %    \end{macrocode}
@@ -6578,9 +6587,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \def\bbl@try@load@lang#1#2#3{%
-    \IfFileExists{\CurrentOption.ldf}%
-      {\bbl@load@language{\CurrentOption}}%
-      {#1\bbl@load@language{#2}#3}}
+  \IfFileExists{\CurrentOption.ldf}%
+    {\bbl@load@language{\CurrentOption}}%
+    {#1\bbl@load@language{#2}#3}}
 \DeclareOption{afrikaans}{\bbl@try@load@lang{}{dutch}{}}
 \DeclareOption{hebrew}{%
   \input{rlbabel.def}%
@@ -6631,38 +6640,83 @@ help from Bernd Raichle, for which I am grateful.
 % file are the same.
 %
 %    \begin{macrocode}
-\bbl@for\bbl@tempa\bbl@language@opts{%
-  \bbl@ifunset{ds@\bbl@tempa}%
-    {\edef\bbl@tempb{%
-       \noexpand\DeclareOption
-         {\bbl@tempa}%
-         {\noexpand\bbl@load@language{\bbl@tempa}}}%
-     \bbl@tempb}%
-     \@empty}
+\let\bbl@tempc\relax
+\bbl@foreach\bbl@language@opts{%
+  \ifcase\bbl@iniflag
+    \bbl@ifunset{ds@#1}%
+      {\DeclareOption{#1}{\bbl@load@language{#1}}}%
+      {}%
+  \or
+    \@gobble % case 2 same as 1
+  \or
+    \bbl@ifunset{ds@#1}%
+      {\IfFileExists{#1.ldf}{}%
+        {\IfFileExists{babel-#1.tex}{}{\DeclareOption{#1}{}}}}%
+      {}%
+    \bbl@ifunset{ds@#1}%
+      {\def\bbl@tempc{#1}%
+       \DeclareOption{#1}{%
+         \ifnum\bbl@iniflag>\@ne
+           \bbl@ldfinit
+           \babelprovide[import]{#1}%
+           \bbl@afterldf{}%
+         \else
+           \bbl@load@language{#1}%
+         \fi}}%
+      {}%
+  \or
+    \def\bbl@tempc{#1}%
+    \bbl@ifunset{ds@#1}%
+      {\DeclareOption{#1}{%
+         \bbl@ldfinit
+         \babelprovide[import]{#1}%
+         \bbl@afterldf{}}}%
+      {}%
+  \fi}
 %    \end{macrocode}
 %
 % Now, we make sure an option is explicitly declared for any
 % language set as global option, by checking if an |ldf|
 % exists. The previous step was, in fact, somewhat redundant, but
-% that way we minimize accesing the file system just to see if the
+% that way we minimize accessing the file system just to see if the
 % option could be a language.
 %
 %    \begin{macrocode}
+\let\bbl@tempb\@nnil
 \bbl@foreach\@classoptionslist{%
   \bbl@ifunset{ds@#1}%
-    {\IfFileExists{#1.ldf}%
-      {\DeclareOption{#1}{\bbl@load@language{#1}}}%
-      {}}%
+    {\IfFileExists{#1.ldf}{}%
+      {\IfFileExists{babel-#1.tex}{}{\DeclareOption{#1}{}}}}%
+    {}%
+  \bbl@ifunset{ds@#1}%
+    {\def\bbl@tempb{#1}%
+     \DeclareOption{#1}{%
+       \ifnum\bbl@iniflag>\@ne
+         \bbl@ldfinit
+         \babelprovide[import]{#1}%
+         \bbl@afterldf{}%
+       \else
+         \bbl@load@language{#1}%
+       \fi}}%
     {}}
 %    \end{macrocode}
 %
 %    If a main language has been set, store it for the third pass.
 %
 %    \begin{macrocode}
+\ifnum\bbl@iniflag=\z@\else
+  \ifx\bbl@opt@main\@nnil
+    \ifx\bbl@tempc\relax
+      \let\bbl@opt@main\bbl@tempb
+    \else
+      \let\bbl@opt@main\bbl@tempc
+    \fi
+  \fi
+\fi
 \ifx\bbl@opt@main\@nnil\else
   \expandafter
   \let\expandafter\bbl@loadmain\csname ds@\bbl@opt@main\endcsname
-  \DeclareOption{\bbl@opt@main}{}
+  \expandafter\let\csname ds@\bbl@opt@main\endcsname\@empty
 \fi
 %    \end{macrocode}
 %
@@ -6708,10 +6762,16 @@ help from Bernd Raichle, for which I am grateful.
       option. Reported}%
   \fi
 \else
-  \DeclareOption{\bbl@opt@main}{\bbl@loadmain}
-  \ExecuteOptions{\bbl@opt@main}
-  \DeclareOption*{}
-  \ProcessOptions*
+  \ifodd\bbl@iniflag  % case 1,3
+    \bbl@ldfinit
+    \bbl@exp{\\\babelprovide[import,main]{\bbl@opt@main}}
+    \bbl@afterldf{}%
+  \else % case 0,2
+    \chardef\bbl@iniflag\z@  % Force ldf 
+    \expandafter\let\csname ds@\bbl@opt@main\endcsname\bbl@loadmain
+    \DeclareOption*{}%
+    \ProcessOptions*
+  \fi
 \fi
 \def\AfterBabelLanguage{%
   \bbl@error
@@ -7229,7 +7289,7 @@ help from Bernd Raichle, for which I am grateful.
       \let\bbl@select@type\z@
       \expandafter\bbl@switch\expandafter{\languagename}%
     \fi}}
-\def\babel@aux#1#2{%
+\def\babel@aux#1#2{% TODO. See how to avoid undefined nil's
   \select@language{#1}%
   \bbl@foreach\BabelContentsFiles{%
     \@writefile{##1}{\babel@toc{#1}{#2}}}}% %% TODO - ok in plain?
@@ -8757,7 +8817,8 @@ help from Bernd Raichle, for which I am grateful.
 %    A user level command to change the language from which shorthands
 %    are used. Unfortunately, \babel{} currently does not keep track
 %    of defined groups, and therefore there is no way to catch a
-%    possible change in casing [TODO. Unclear].
+%    possible change in casing to fix it in the same way languages names
+%    are fixed. [TODO].
 %
 %    \begin{macrocode}
 \def\languageshorthands#1{\def\language@group{#1}}
@@ -9643,13 +9704,12 @@ help from Bernd Raichle, for which I am grateful.
 % order as defined.  Finally, the string is set.
 %
 %    \begin{macrocode}
-\def\bbl@setstring#1#2{%
+\def\bbl@setstring#1#2{% eg, \prefacename{<string>}
   \bbl@forlang\bbl@tempa{%
     \edef\bbl@LC{\bbl@tempa\bbl@stripslash#1}%
     \bbl@ifunset{\bbl@LC}% eg, \germanchaptername
-      {\global\expandafter  % TODO - con \bbl@exp ?
-       \bbl@add\csname\bbl@G\bbl@tempa\expandafter\endcsname\expandafter
-         {\expandafter\bbl@scset\expandafter#1\csname\bbl@LC\endcsname}}%
+      {\bbl@exp{%
+         \global\\\bbl@add\<\bbl@G\bbl@tempa>{\\\bbl@scset\\#1\<\bbl@LC>}}}%
       {}%
     \def\BabelString{#2}%
     \bbl@usehooks{stringprocess}{}%
@@ -10631,8 +10691,6 @@ help from Bernd Raichle, for which I am grateful.
 % first macro is the generic “localized” command.
 %
 %    \begin{macrocode}
-% TODO. Merge with \localenumeral:
-% \newcommand\localedigits{\@nameuse{\languagename digits}}
 \def\bbl@setdigits#1#2#3#4#5{%
   \bbl@exp{%
     \def\<\languagename digits>####1{%       ie, \langdigits
@@ -10831,8 +10889,10 @@ help from Bernd Raichle, for which I am grateful.
          \\\bbl@elt{\bbl@section}{\bbl@tempa}{\the\toks@}}}%
      \expandafter\bbl@inireader\bbl@tempa=#2\@@}%
     {}}%
-\def\bbl@read@ini#1#2{%
-  \bbl@csarg\edef{lini@\languagename}{#1}%
+\def\bbl@fetch@ini#1#2{%
+  \bbl@exp{\def\\\bbl@inidata{%
+    \\\bbl@elt{identification}{tag.ini}{#1}%
+    \\\bbl@elt{identification}{load.level}{#2}}}%
   \openin\bbl@readstream=babel-#1.ini
   \ifeof\bbl@readstream
     \bbl@error
@@ -10841,14 +10901,6 @@ help from Bernd Raichle, for which I am grateful.
        is not complete.}%
       {Fix the name or reinstall babel.}%
   \else
-    \bbl@exp{\def\\\bbl@inidata{%
-      \\\bbl@elt{identification}{tag.ini}{#1}%
-      \\\bbl@elt{identification}{load.level}{#2}}}%
-    \let\bbl@section\@empty
-    \let\bbl@savestrings\@empty
-    \let\bbl@savetoday\@empty
-    \let\bbl@savedate\@empty
-    \let\bbl@inireader\bbl@iniskip
     \bbl@info{Importing
                 \ifcase#2 \or font and identification \or basic \fi
                 data for \languagename\\%
@@ -10862,28 +10914,35 @@ help from Bernd Raichle, for which I am grateful.
         \expandafter\bbl@iniline\bbl@line\bbl@iniline
       \fi
     \repeat
-    \bbl@foreach\bbl@renewlist{%
-      \bbl@ifunset{bbl@renew@##1}{}{\bbl@inisec[##1]\@@}}%
-    \global\let\bbl@renewlist\@empty
-    % Ends last section. See \bbl@inisec
-    \def\bbl@elt##1##2{\bbl@inireader##1=##2\@@}%
-    \bbl@cs{renew@\bbl@section}%
-    \global\bbl@csarg\let{renew@\bbl@section}\relax
-    \bbl@cs{secpost@\bbl@section}%  
-    \bbl@csarg{\global\expandafter\let}{inidata@\languagename}\bbl@inidata
-    \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
-    \bbl@toglobal\bbl@ini@loaded
   \fi}
+\def\bbl@read@ini#1#2{%
+  \bbl@csarg\edef{lini@\languagename}{#1}%
+  \let\bbl@section\@empty
+  \let\bbl@savestrings\@empty
+  \let\bbl@savetoday\@empty
+  \let\bbl@savedate\@empty
+  \let\bbl@inireader\bbl@iniskip
+  \bbl@fetch@ini{#1}{#2}%
+  \bbl@foreach\bbl@renewlist{%
+    \bbl@ifunset{bbl@renew@##1}{}{\bbl@inisec[##1]\@@}}%
+  \global\let\bbl@renewlist\@empty
+  % Ends last section. See \bbl@inisec
+  \def\bbl@elt##1##2{\bbl@inireader##1=##2\@@}%
+  \bbl@cs{renew@\bbl@section}%
+  \global\bbl@csarg\let{renew@\bbl@section}\relax
+  \bbl@cs{secpost@\bbl@section}%  
+  \bbl@csarg{\global\expandafter\let}{inidata@\languagename}\bbl@inidata
+  \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
+  \bbl@toglobal\bbl@ini@loaded}
 \def\bbl@iniline#1\bbl@iniline{%
   \@ifnextchar[\bbl@inisec{\@ifnextchar;\bbl@iniskip\bbl@inipreread}#1\@@}% ]
 %    \end{macrocode}
 %
 % The special cases for comment lines and sections are handled by the
 % two following commands. In sections, we provide the posibility to
-% take extra actions at the end or at the start (TODO - but note the last
-% section is not ended). By default, key=val pairs are ignored. The
-% |secpost| ``hook'' is used only by `identification', while |secpre|
-% only by |date.gregorian.licr|.
+% take extra actions at the end or at the start. By default, key=val
+% pairs are ignored. The |secpost| ``hook'' is used only by
+% `identification', while |secpre| only by |date.gregorian.licr|.
 %
 %    \begin{macrocode}
 \def\bbl@iniskip#1\@@{}%      if starts with ;
@@ -12051,9 +12110,35 @@ help from Bernd Raichle, for which I am grateful.
 % |bbl@font| replaces hardcoded font names inside |\..family| by the
 % corresponding macro |\..default|.
 %
+% At the time of this writing, \textsf{fontspec} shows a warning about
+% there are languages not available, which some people think refers to
+% \babel{}, even if there is nothing wrong. Here is hack to patch
+% \textsf{fontspec} to avoid the misleading message, which is replaced
+% ba a more explanatory one.
+%
 %    \begin{macrocode}
 %<<*Font selection>>
 \bbl@trace{Font handling with fontspec}
+\ifx\ExplSyntaxOn\@undefined\else
+  \ExplSyntaxOn
+  \catcode`\ =10
+  \def\bbl@loadfontspec{%
+    \usepackage{fontspec}%
+    \expandafter
+    \def\csname msg~text~>~fontspec/language-not-exist\endcsname##1##2##3##4{%
+      Font '\l_fontspec_fontname_tl' is using the\\%
+      default features for language '##1'.\\%
+      That's usually fine, because many languages\\%
+      require no specific features, but if the output is\\%
+      not as expected, consider selecting another font.}
+    \expandafter
+    \def\csname msg~text~>~fontspec/no-script\endcsname##1##2##3##4{%
+      Font '\l_fontspec_fontname_tl' is using the\\%
+      default features for script '##2'.\\%
+      That's not always wrong, but if the output is\\%
+      not as expected, consider selecting another font.}}
+  \ExplSyntaxOff
+\fi
 \@onlypreamble\babelfont
 \newcommand\babelfont[2][]{%  1=langs/scripts 2=fam
   \bbl@foreach{#1}{%
@@ -12065,7 +12150,7 @@ help from Bernd Raichle, for which I am grateful.
   \edef\bbl@tempa{#1}%
   \def\bbl@tempb{#2}%  Used by \bbl@bblfont
   \ifx\fontspec\@undefined
-    \usepackage{fontspec}%
+    \bbl@loadfontspec
   \fi
   \EnableBabelHook{babel-fontspec}% Just calls \bbl@switchfont
   \bbl@bblfont}
@@ -12210,7 +12295,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@mapselect\relax
   \let\bbl@temp@fam#4%       eg, '\rmfamily', to be restored below
   \let#4\@empty      %       Make sure \renewfontfamily is valid
-  \bbl@exp{% 
+  \bbl@exp{%
     \let\\\bbl@temp@pfam\<\bbl@stripslash#4\space>% eg, '\rmfamily '
     \<keys_if_exist:nnF>{fontspec-opentype}{Script/\bbl@cl{sname}}%
       {\\\newfontscript{\bbl@cl{sname}}{\bbl@cl{sotf}}}%
@@ -13729,6 +13814,9 @@ end
       if not u.find(patt, '()', nil, true) then
         patt = '()' .. patt .. '()'
       end
+      patt = string.gsub(patt, '%(%)%^', '^()')
+      patt = string.gsub(patt, '%$%(%)', '()$')
+      texio.write('***************' .. patt)
       patt = u.gsub(patt, '{(.)}', 
                 function (n)
                   return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
