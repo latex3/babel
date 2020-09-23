@@ -1,4 +1,4 @@
-## Babel 3.48.2138
+## Babel 3.48.2139
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -48,6 +48,7 @@ respective authors.
        - Allow standard LaTeX syntax to recognize locales based on ini
          files in the most common cases.
        - Fixes:
+         - layout.lists=off didn't work (#94)
        
 3.48   2020-09-01
        - New (tentative) tools to customize some labels (like chapters
