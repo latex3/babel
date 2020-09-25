@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/09/23 v3.48.2139 The Babel package]
+\ProvidesFile{babel.dtx}[2020/09/25 v3.48.2141 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4744,8 +4744,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.48.2139>>
-%<<date=2020/09/23>>
+%<<version=3.48.2141>>
+%<<date=2020/09/25>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5279,7 +5279,7 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\@empty#2%
     \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1}%
   \else
-    \in@{,ini,}{,#1,}%
+    \in@{,provide,}{,#1,}%
     \ifin@
       \edef\bbl@tempc{%
         \ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1.\bbl@tempb#2}%
@@ -5318,9 +5318,9 @@ help from Bernd Raichle, for which I am grateful.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
 \chardef\bbl@iniflag\z@
-\DeclareOption{ini=*}{\chardef\bbl@iniflag\@ne}     % main -> +1
-\DeclareOption{ini.+=*}{\chardef\bbl@iniflag\tw@}   % add = 2
-\DeclareOption{ini.*=*}{\chardef\bbl@iniflag\thr@@} % add + main
+\DeclareOption{provide=*}{\chardef\bbl@iniflag\@ne}     % main -> +1
+\DeclareOption{provide+=*}{\chardef\bbl@iniflag\tw@}   % add = 2
+\DeclareOption{provide*=*}{\chardef\bbl@iniflag\thr@@} % add + main
 <@More package options@>
 %    \end{macrocode}
 %
@@ -7358,10 +7358,37 @@ help from Bernd Raichle, for which I am grateful.
       \fi
     \fi
   \bbl@esphack
+  % (non)french spacing (1/2) save current values
+  \def\bbl@elt##1##2##3{\sfcode`##1=\the\sfcode`##1\relax}%
+  \edef\bbl@fs@presave{\bbl@fs@chars}%
+  %\show\bbl@fs@presave
   % switch extras
   \bbl@usehooks{beforeextras}{}%
   \csname extras#1\endcsname\relax
   \bbl@usehooks{afterextras}{}%
+  % (non)french spacing (2/2) set new values
+  \bbl@ifunset{bbl@frspc@#1}{}%
+    {\edef\bbl@tempa{\bbl@cl{frspc}}%
+     \edef\bbl@tempa{\expandafter\@car\bbl@tempa\@nil}%
+     \if u\bbl@tempa          % do nothing
+     \else\if n\bbl@tempa     % non french
+       \bbl@fs@presave        % ignore settings in extras
+       \def\bbl@elt##1##2##3{%
+         \ifnum\sfcode`##1=##2\relax
+           \babel@savevariable{\sfcode`##1}%
+           \sfcode`##1=##3\relax
+         \fi}%
+       \bbl@fs@chars
+     \else\if y\bbl@tempa     % french
+       \bbl@fs@presave        % ignore settings in extras
+       \def\bbl@elt##1##2##3{%
+         \ifnum\sfcode`##1=##3\relax
+           \babel@savevariable{\sfcode`##1}%
+           \sfcode`##1=##2\relax
+         \fi}%
+       \bbl@fs@chars
+     \fi\fi\fi
+     }%
   %  > babel-ensure
   %  > babel-sh-<short>
   %  > babel-bidi
@@ -9279,6 +9306,12 @@ help from Bernd Raichle, for which I am grateful.
     \let\bbl@nonfrenchspacing\nonfrenchspacing
   \fi}
 \let\bbl@nonfrenchspacing\nonfrenchspacing
+%
+\let\bbl@elt\relax
+\edef\bbl@fs@chars{%
+  \bbl@elt{\string.}\@m{3000}\bbl@elt{\string?}\@m{3000}%
+  \bbl@elt{\string!}\@m{3000}\bbl@elt{\string:}\@m{2000}%
+  \bbl@elt{\string;}\@m{1500}\bbl@elt{\string,}\@m{1250}}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -11090,7 +11123,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{hyotl}{typography.hyphenate.other.locale}{}%
   \bbl@exportkey{hyots}{typography.hyphenate.other.script}{}%
   \bbl@exportkey{intsp}{typography.intraspace}{}%
-  \bbl@exportkey{jstfy}{typography.justify}{w}%
+  \bbl@exportkey{jstfy}{typography.justify}{w}%  TODO. Unused?
+  \bbl@exportkey{frspc}{typography.frenchspacing}{u}% unset
   \bbl@exportkey{chrng}{characters.ranges}{}%
   \bbl@exportkey{dgnat}{numbers.digits.native}{}%
   \bbl@exportkey{rqtex}{identification.require.babel}{}%
