@@ -1,4 +1,4 @@
-## Babel 3.48.2141
+## Babel 3.48.2145
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -46,7 +46,7 @@ respective authors.
 3.49   2020-09-22
        - Allow standard LaTeX syntax to recognize locales based on ini
          files in the most common cases.
-       - [[frenchspacing in ini files.]]
+       - frenchspacing is set with ini files.
        - Fixes:
          - layout.lists=off didn't work (#94)
        

@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/09/25 v3.48.2141 The Babel package]
+\ProvidesFile{babel.dtx}[2020/09/29 v3.48.2145 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -287,9 +287,14 @@ necessary in some languages), is described below; go to \ref{inifiles}.
 In most cases, a single language is required, and then all you need in
 \LaTeX{} is to load the package using its standard mechanism for this
 purpose, namely, passing that language as an optional argument. In
-addition, you may want to set the font and input encodings.
+addition, you may want to set the font and input encodings. 
 
-Many languages are compatible with \textsf{xetex} and \textsf{luatex}.
+Another approach is making the language a global option in order to let
+other packages detect and use it. This is the standard way in \LaTeX{}
+for an option – in this case a language – to be recognized by several
+packages.
+
+Many languages are compatible with \textsf{xetex} and \textsf{luatex},.
 With them you can use \babel{} to localize the documents. When these
 engines are used, the Latin script is covered by default in current
 \LaTeX{} (provided the document encoding is UTF-8), because the font
@@ -319,6 +324,15 @@ Plus ça change, plus c'est la même chose!
 
 \end{document}
 \end{verbatim}
+
+Now consider something like:
+\begin{verbatim}
+_\documentclass[french]{article}_
+\usepackage{babel}
+\usepackage{varioref}
+\end{verbatim}
+With this setting, the package \texttt{varioref} will also see
+the option |french| and will be able to use it.
 \end{example}
 
 \begin{example}
@@ -330,11 +344,11 @@ in UTF-8 and a so-called Unicode font must be loaded (in this example
 
 \setengine{luatex/xetex}
 \begin{verbatim}
-\documentclass[russian]{article}
+_\documentclass[russian]{article}_
 
-_\usepackage{babel}_
+\usepackage{babel}
 
-\babelfont{rm}{DejaVu Serif}
+_\babelfont{rm}{DejaVu Serif}_
 
 \begin{document}
 
@@ -362,17 +376,6 @@ Or the more explanatory:
 \end{verbatim}
 Make sure you set the encoding actually used by your editor.
 \end{troubleshooting}
-
-Another approach is making the language (\Lopt{french} in the example)
-a global option in order to let other packages detect and use it:
-\begin{verbatim}
-_\documentclass[french]{article}_
-\usepackage{babel}
-\usepackage{varioref}
-\end{verbatim}
-
-In this last example, the package \texttt{varioref} will also see
-the option and will be able to use it.
 
 \begin{note}
   Because of the way \babel{} has evolved, ``language'' can refer to
@@ -4744,8 +4747,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.48.2141>>
-%<<date=2020/09/25>>
+%<<version=3.48.2145>>
+%<<date=2020/09/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -4895,12 +4898,15 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \begin{macro}{\bbl@ifblank}
 %   A tool from \textsf{url}, by Donald Arseneau, which tests if a
-%   string is empty or space.
+%   string is empty or space. The companion macros tests if a macro is
+%   defined with some `real' value, ie, not |\relax| and not empty,
 %
 %    \begin{macrocode}
 \def\bbl@ifblank#1{%
   \bbl@ifblank@i#1\@nil\@nil\@secondoftwo\@firstoftwo\@nil}
 \long\def\bbl@ifblank@i#1#2\@nil#3#4#5\@nil{#4}
+\def\bbl@ifset#1#2#3{% 
+  \bbl@ifunset{#1}{#3}{\bbl@exp{\\\bbl@ifblank{#1}}{#3}{#2}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -5039,6 +5045,25 @@ help from Bernd Raichle, for which I am grateful.
     \def\bbl@esphack{\loop\ifdim\lastskip>\z@\unskip\repeat\unskip}%
   \else
     \let\bbl@esphack\@empty
+  \fi}
+%    \end{macrocode}
+%
+% Another hackish tool, to apply case changes inside a protected
+% macros. It's based on the internal |\let|'s made by |\MakeUppercase|
+% and |\MakeLowercase| between things like |\oe| and |\OE|.
+%
+%    \begin{macrocode}
+\def\bbl@cased{%
+  \ifx\oe\OE
+    \expandafter\in@\expandafter
+      {\expandafter\OE\expandafter}\expandafter{\oe}%
+    \ifin@
+      \bbl@afterelse\expandafter\MakeUppercase
+    \else  
+      \bbl@afterfi\expandafter\MakeLowercase
+    \fi  
+  \else
+    \expandafter\@firstofone
   \fi}
 %<</Basic macros>>
 %    \end{macrocode}
@@ -7358,37 +7383,10 @@ help from Bernd Raichle, for which I am grateful.
       \fi
     \fi
   \bbl@esphack
-  % (non)french spacing (1/2) save current values
-  \def\bbl@elt##1##2##3{\sfcode`##1=\the\sfcode`##1\relax}%
-  \edef\bbl@fs@presave{\bbl@fs@chars}%
-  %\show\bbl@fs@presave
   % switch extras
   \bbl@usehooks{beforeextras}{}%
   \csname extras#1\endcsname\relax
   \bbl@usehooks{afterextras}{}%
-  % (non)french spacing (2/2) set new values
-  \bbl@ifunset{bbl@frspc@#1}{}%
-    {\edef\bbl@tempa{\bbl@cl{frspc}}%
-     \edef\bbl@tempa{\expandafter\@car\bbl@tempa\@nil}%
-     \if u\bbl@tempa          % do nothing
-     \else\if n\bbl@tempa     % non french
-       \bbl@fs@presave        % ignore settings in extras
-       \def\bbl@elt##1##2##3{%
-         \ifnum\sfcode`##1=##2\relax
-           \babel@savevariable{\sfcode`##1}%
-           \sfcode`##1=##3\relax
-         \fi}%
-       \bbl@fs@chars
-     \else\if y\bbl@tempa     % french
-       \bbl@fs@presave        % ignore settings in extras
-       \def\bbl@elt##1##2##3{%
-         \ifnum\sfcode`##1=##3\relax
-           \babel@savevariable{\sfcode`##1}%
-           \sfcode`##1=##2\relax
-         \fi}%
-       \bbl@fs@chars
-     \fi\fi\fi
-     }%
   %  > babel-ensure
   %  > babel-sh-<short>
   %  > babel-bidi
@@ -10718,45 +10716,6 @@ help from Bernd Raichle, for which I am grateful.
   \fi}
 %    \end{macrocode}
 %
-% A tool to define the macros for native digits from the list provided 
-% in the |ini| file. Somewhat convoluted because there are 10 digits, 
-% but only 9 arguments in \TeX. Non-digits characters are kept. The
-% first macro is the generic “localized” command.
-%
-%    \begin{macrocode}
-\def\bbl@setdigits#1#2#3#4#5{%
-  \bbl@exp{%
-    \def\<\languagename digits>####1{%       ie, \langdigits
-      \<bbl@digits@\languagename>####1\\\@nil}%
-    \let\<bbl@cntr@digits@\languagename>\<\languagename digits>%
-    \def\<\languagename counter>####1{%      ie, \langcounter
-      \\\expandafter\<bbl@counter@\languagename>%
-      \\\csname c@####1\endcsname}%
-    \def\<bbl@counter@\languagename>####1{% ie, \bbl@counter@lang
-      \\\expandafter\<bbl@digits@\languagename>%
-      \\\number####1\\\@nil}}%
-  \def\bbl@tempa##1##2##3##4##5{%
-    \bbl@exp{%    Wow, quite a lot of hashes! :-(
-      \def\<bbl@digits@\languagename>########1{%
-       \\\ifx########1\\\@nil              % ie, \bbl@digits@lang
-       \\\else
-         \\\ifx0########1#1%
-         \\\else\\\ifx1########1#2%
-         \\\else\\\ifx2########1#3%
-         \\\else\\\ifx3########1#4%
-         \\\else\\\ifx4########1#5%
-         \\\else\\\ifx5########1##1%
-         \\\else\\\ifx6########1##2%
-         \\\else\\\ifx7########1##3%
-         \\\else\\\ifx8########1##4%
-         \\\else\\\ifx9########1##5%
-         \\\else########1%
-         \\\fi\\\fi\\\fi\\\fi\\\fi\\\fi\\\fi\\\fi\\\fi\\\fi
-         \\\expandafter\<bbl@digits@\languagename>%
-       \\\fi}}}%
-  \bbl@tempa}
-%    \end{macrocode}
-%
 % Depending on whether or not the language exists, we define two macros.
 %
 %    \begin{macrocode}
@@ -10793,14 +10752,43 @@ help from Bernd Raichle, for which I am grateful.
     \fi
   \bbl@endcommands
   \bbl@load@basic{#1}%
+  % == hyphenmins == (only if new)
   \bbl@exp{%
     \gdef\<#1hyphenmins>{%
       {\bbl@ifunset{bbl@lfthm@#1}{2}{\bbl@cs{lfthm@#1}}}%
       {\bbl@ifunset{bbl@rgthm@#1}{3}{\bbl@cs{rgthm@#1}}}}}%
+  % == hyphenrules == TODO. In both new and renew, so-
   \bbl@provide@hyphens{#1}%
+  % == frenchspacing == (only if new)
+  \bbl@ifunset{bbl@frspc@#1}{}%
+    {\edef\bbl@tempa{\bbl@cl{frspc}}%
+     \edef\bbl@tempa{\expandafter\@car\bbl@tempa\@nil}%
+     \if u\bbl@tempa          % do nothing
+     \else\if n\bbl@tempa     % non french
+       \expandafter\bbl@add\csname extras#1\endcsname{%
+         \let\bbl@elt\bbl@fs@elt@i
+         \bbl@fs@chars}%
+     \else\if y\bbl@tempa     % french
+       \expandafter\bbl@add\csname extras#1\endcsname{%
+         \let\bbl@elt\bbl@fs@elt@ii
+         \bbl@fs@chars}%
+     \fi\fi\fi}%
+  %
   \ifx\bbl@KVP@main\@nil\else
      \expandafter\main@language\expandafter{#1}%
   \fi}
+% A couple of macros used above, to avoid hashes #######...
+\def\bbl@fs@elt@i#1#2#3{%
+  \ifnum\sfcode`#1=#2\relax
+    \babel@savevariable{\sfcode`#1}%
+    \sfcode`#1=#3\relax
+  \fi}%
+\def\bbl@fs@elt@ii#1#2#3{%
+  \ifnum\sfcode`#1=#3\relax
+    \babel@savevariable{\sfcode`#1}%
+    \sfcode`#1=#2\relax
+  \fi}%
+%
 \def\bbl@provide@renew#1{%
   \ifx\bbl@KVP@captions\@nil\else
     \StartBabelCommands*{#1}{captions}%
@@ -10821,6 +10809,16 @@ help from Bernd Raichle, for which I am grateful.
 % more), while captions and dates are left out. But it may happen some
 % data has been loaded before automatically, so we first discard the
 % saved values.
+\def\bbl@linebreak@export{%
+  \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
+  \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
+  \bbl@exportkey{lfthm}{typography.lefthyphenmin}{2}%
+  \bbl@exportkey{rgthm}{typography.righthyphenmin}{3}%         
+  \bbl@exportkey{prehc}{typography.prehyphenchar}{}%
+  \bbl@exportkey{hyotl}{typography.hyphenate.other.locale}{}%
+  \bbl@exportkey{hyots}{typography.hyphenate.other.script}{}%
+  \bbl@exportkey{intsp}{typography.intraspace}{}%
+  \bbl@exportkey{chrng}{characters.ranges}{}}
 \def\bbl@load@basic#1{%
   \bbl@ifunset{bbl@inidata@\languagename}{}%
     {\getlocaleproperty\bbl@tempa{\languagename}{identification/load.level}%
@@ -10830,21 +10828,12 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@ifunset{bbl@lname@#1}% 
     {\def\BabelBeforeIni##1##2{%
        \begingroup
-         \catcode`\[=12 \catcode`\]=12 \catcode`\==12
-         \catcode`\;=12 \catcode`\|=12 \catcode`\%=14
          \let\bbl@ini@captions@aux\@gobbletwo
          \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
          \bbl@read@ini{##1}0%
-         \bbl@exportkey{prehc}{typography.prehyphenchar}{}%
-         \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
-         \bbl@exportkey{lfthm}{typography.lefthyphenmin}{2}%
-         \bbl@exportkey{rgthm}{typography.righthyphenmin}{3}%         
-         \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
-         \bbl@exportkey{hyotl}{typography.hyphenate.other.locale}{}%
-         \bbl@exportkey{hyots}{typography.hyphenate.other.script}{}%
-         \bbl@exportkey{intsp}{typography.intraspace}{}%
-         \bbl@exportkey{chrng}{characters.ranges}{}%
+         \bbl@linebreak@export
          \bbl@exportkey{dgnat}{numbers.digits.native}{}%
+         \bbl@exportkey{frspc}{typography.frenchspacing}{u}% unset
          \ifx\bbl@initoload\relax\endinput\fi
        \endgroup}%
      \begingroup       % boxed, to avoid extra spaces:
@@ -10934,6 +10923,8 @@ help from Bernd Raichle, for which I am grateful.
        is not complete.}%
       {Fix the name or reinstall babel.}%
   \else
+    \catcode`\[=12 \catcode`\]=12 \catcode`\==12
+    \catcode`\;=12 \catcode`\|=12 \catcode`\%=14
     \bbl@info{Importing
                 \ifcase#2 \or font and identification \or basic \fi
                 data for \languagename\\%
@@ -11115,19 +11106,10 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@csarg{\global\expandafter\let}{cntr@#1@\languagename}\bbl@tempa
   \fi}
 \def\bbl@after@ini{%
-  \bbl@exportkey{lfthm}{typography.lefthyphenmin}{2}%
-  \bbl@exportkey{rgthm}{typography.righthyphenmin}{3}%
-  \bbl@exportkey{prehc}{typography.prehyphenchar}{}%
-  \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
-  \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
-  \bbl@exportkey{hyotl}{typography.hyphenate.other.locale}{}%
-  \bbl@exportkey{hyots}{typography.hyphenate.other.script}{}%
-  \bbl@exportkey{intsp}{typography.intraspace}{}%
-  \bbl@exportkey{jstfy}{typography.justify}{w}%  TODO. Unused?
-  \bbl@exportkey{frspc}{typography.frenchspacing}{u}% unset
-  \bbl@exportkey{chrng}{characters.ranges}{}%
+  \bbl@linebreak@export
   \bbl@exportkey{dgnat}{numbers.digits.native}{}%
   \bbl@exportkey{rqtex}{identification.require.babel}{}%
+  \bbl@exportkey{frspc}{typography.frenchspacing}{u}% unset
   \bbl@toglobal\bbl@savetoday
   \bbl@toglobal\bbl@savedate}
 %    \end{macrocode}
@@ -11320,18 +11302,6 @@ help from Bernd Raichle, for which I am grateful.
 % Arguments are _not_ protected.
 \let\bbl@calendar\@empty
 \DeclareRobustCommand\localedate[1][]{\bbl@localedate{#1}}
-\def\bbl@cased{%  TODO. Move
-  \ifx\oe\OE
-    \expandafter\in@\expandafter
-      {\expandafter\OE\expandafter}\expandafter{\oe}%
-    \ifin@
-      \bbl@afterelse\expandafter\MakeUppercase
-    \else  
-      \bbl@afterfi\expandafter\MakeLowercase
-    \fi  
-  \else
-    \expandafter\@firstofone
-  \fi}
 \def\bbl@localedate#1#2#3#4{%
   \begingroup
     \ifx\@empty#1\@empty\else
@@ -11467,8 +11437,6 @@ help from Bernd Raichle, for which I am grateful.
         \fi}}%
   \fi
   \bbl@csarg\bbl@toglobal{lsys@#1}}
-\def\bbl@ifset#1#2#3{%   TODO. Move to the correct place.
-  \bbl@ifunset{#1}{#3}{\bbl@exp{\\\bbl@ifblank{#1}}{#3}{#2}}}
 \def\bbl@xenohyph@d{%
   \bbl@ifset{bbl@prehc@\languagename}%
     {\ifnum\hyphenchar\font=\defaulthyphenchar
@@ -11503,12 +11471,49 @@ help from Bernd Raichle, for which I am grateful.
   \def\BabelBeforeIni##1##2{%
     \begingroup
       \bbl@add\bbl@secpost@identification{\closein\bbl@readstream }%
-      \catcode`\[=12 \catcode`\]=12 \catcode`\==12
-      \catcode`\;=12 \catcode`\|=12 \catcode`\%=14
       \bbl@read@ini{##1}1%    
       \endinput          % babel- .tex may contain onlypreamble's
     \endgroup}%            boxed, to avoid extra spaces:
   {\bbl@input@texini{#1}}}
+%    \end{macrocode}
+%
+% A tool to define the macros for native digits from the list provided 
+% in the |ini| file. Somewhat convoluted because there are 10 digits, 
+% but only 9 arguments in \TeX. Non-digits characters are kept. The
+% first macro is the generic “localized” command.
+%
+%    \begin{macrocode}
+\def\bbl@setdigits#1#2#3#4#5{%
+  \bbl@exp{%
+    \def\<\languagename digits>####1{%       ie, \langdigits
+      \<bbl@digits@\languagename>####1\\\@nil}%
+    \let\<bbl@cntr@digits@\languagename>\<\languagename digits>%
+    \def\<\languagename counter>####1{%      ie, \langcounter
+      \\\expandafter\<bbl@counter@\languagename>%
+      \\\csname c@####1\endcsname}%
+    \def\<bbl@counter@\languagename>####1{% ie, \bbl@counter@lang
+      \\\expandafter\<bbl@digits@\languagename>%
+      \\\number####1\\\@nil}}%
+  \def\bbl@tempa##1##2##3##4##5{%
+    \bbl@exp{%    Wow, quite a lot of hashes! :-(
+      \def\<bbl@digits@\languagename>########1{%
+       \\\ifx########1\\\@nil              % ie, \bbl@digits@lang
+       \\\else
+         \\\ifx0########1#1%
+         \\\else\\\ifx1########1#2%
+         \\\else\\\ifx2########1#3%
+         \\\else\\\ifx3########1#4%
+         \\\else\\\ifx4########1#5%
+         \\\else\\\ifx5########1##1%
+         \\\else\\\ifx6########1##2%
+         \\\else\\\ifx7########1##3%
+         \\\else\\\ifx8########1##4%
+         \\\else\\\ifx9########1##5%
+         \\\else########1%
+         \\\fi\\\fi\\\fi\\\fi\\\fi\\\fi\\\fi\\\fi\\\fi\\\fi
+         \\\expandafter\<bbl@digits@\languagename>%
+       \\\fi}}}%
+  \bbl@tempa}
 %    \end{macrocode}
 %
 % Alphabetic counters must be converted from a space separated list to
