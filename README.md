@@ -1,4 +1,4 @@
-## Babel 3.48.2145
+## Babel 3.49
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -43,7 +43,7 @@ respective authors.
 
 ### Latest changes
 ```
-3.49   2020-09-22
+3.49   2020-10-03
        - Allow standard LaTeX syntax to recognize locales based on ini
          files in the most common cases.
        - frenchspacing is set with ini files.
