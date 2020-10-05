@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/10/03 v3.49 The Babel package]
+\ProvidesFile{babel.dtx}[2020/10/05 v3.49.2151 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2405,8 +2405,8 @@ If the language has been loaded as an argument in |\documentclass| or
 |\usepackage|, then |\babelprovide| redefines the requested data.
 
 \Describe{import=}{\meta{language-tag}}
-\New{3.13} Imports data from an |ini| file, including captions, date,
-and hyphenmins. For example:
+\New{3.13} Imports data from an |ini| file, including captions and date
+(also line breaking rules in newly defined languages). For example:
 \begin{verbatim}
 \babelprovide[_import=hu_]{hungarian}
 \end{verbatim}
@@ -2422,11 +2422,11 @@ be written:
 \babelprovide[_import_]{hungarian}
 \end{verbatim}
 
-There are about 200 |ini| files, with data taken from the |ldf| files
+There are about 250 |ini| files, with data taken from the |ldf| files
 and the CLDR provided by Unicode. Not all languages in the latter are
 complete, and therefore neither are the |ini| files. A few languages
-will show a warning about the current lack of suitability of the date
-format (\textsf{french}, \textsf{breton}, and \textsf{occitan}).
+may show a warning about the current lack of suitability of some
+features.
 
 Besides |\today|, this option defines an additional command for dates:
 |\<language>date|, which takes three arguments, namely, year, month and
@@ -2508,12 +2508,14 @@ cases.
 
 \Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}}
 \New{3.38} This option is much like an ‘event’ called when a character
-belonging to the script of this locale is found. There are currently
-two ‘actions’, which can be used at the same time (separated by a
-space): with |ids| the |\language| and the |\localeid| are set to the
-values of this locale; with |fonts|, the fonts are changed to those of
-this locale (as set with |\babelfont|). This option is not compatible
-with |mapfont|. Characters can be added with |\babelcharproperty|.
+belonging to the script of this locale is found (as its name implies,
+it acts on characters, not on spaces). There are currently two
+‘actions’, which can be used at the same time (separated by a space):
+with |ids| the |\language| and the |\localeid| are set to the values of
+this locale; with |fonts|, the fonts are changed to those of this
+locale (as set with |\babelfont|). This option is not compatible with
+|mapfont|. Characters can be added or modified with
+|\babelcharproperty|.
 
 \begin{note}
   An alternative approach with \luatex{} and Harfbuzz is the font
@@ -2521,16 +2523,6 @@ with |mapfont|. Characters can be added with |\babelcharproperty|.
   \babel{} language and therefore the line breaking rules, but in many
   cases it can be enough.
 \end{note}
-
-\Describe{mapfont=}{\texttt{direction}}
-Assigns the font for the writing direction of this language (only with
-|bidi=basic|). Whenever possible, instead of this option use |onchar|,
-based on the script, which usually makes more sense. More precisely,
-what |mapfont=direction| means is, ‘when a character has the same
-direction as the script for the “provided” language, then change its
-font to that set for this language’. There are 3 directions, following
-the bidi Unicode algorithm, namely, Arabic-like, Hebrew-like and left
-to right. So, there should be at most 3 directives of this kind.
 
 \Describe{intraspace=}{\meta{base} \meta{shrink} \meta{stretch}}
 Sets the interword space for the writing system of the language, in em
@@ -2543,6 +2535,16 @@ CJK.
 Sets the interword penalty for the writing system of this language.
 Currently used only in Southeast Asian scrips, like Thai. Ignored if 0
 (which is the default value). 
+
+\Describe{mapfont=}{\texttt{direction}}
+Assigns the font for the writing direction of this language (only with
+|bidi=basic|). Whenever possible, instead of this option use |onchar|,
+based on the script, which usually makes more sense. More precisely,
+what |mapfont=direction| means is, ‘when a character has the same
+direction as the script for the “provided” language, then change its
+font to that set for this language’. There are 3 directions, following
+the bidi Unicode algorithm, namely, Arabic-like, Hebrew-like and left
+to right. So, there should be at most 3 directives of this kind.
 
 \begin{note}
   (1) If you need shorthands, you can define them with |\useshorthands|
@@ -4776,8 +4778,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.49>>
-%<<date=2020/10/03>>
+%<<version=3.49.2151>>
+%<<date=2020/10/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6828,6 +6830,7 @@ help from Bernd Raichle, for which I am grateful.
   \else % case 0,2
     \chardef\bbl@iniflag\z@  % Force ldf 
     \expandafter\let\csname ds@\bbl@opt@main\endcsname\bbl@loadmain
+    \ExecuteOptions{\bbl@opt@main}
     \DeclareOption*{}%
     \ProcessOptions*
   \fi
@@ -10469,7 +10472,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@main\@nil
   \let\bbl@KVP@script\@nil
   \let\bbl@KVP@language\@nil
-  \let\bbl@KVP@hyphenrules\@nil  % only for provide@new
+  \let\bbl@KVP@hyphenrules\@nil
   \let\bbl@KVP@mapfont\@nil
   \let\bbl@KVP@maparabic\@nil
   \let\bbl@KVP@mapdigits\@nil
@@ -11090,6 +11093,7 @@ help from Bernd Raichle, for which I am grateful.
        From babel-\bbl@cs{lini@\languagename}.ini:\\%
        \bbl@cs{@kv@identification.warning#1}\\%
        Reported }}}
+%
 \let\bbl@inikv@identification\bbl@inikv
 \def\bbl@secpost@identification{%
   \bbl@iniwarning{}%
@@ -11113,9 +11117,23 @@ help from Bernd Raichle, for which I am grateful.
   \ifbbl@bcptoname
     \bbl@csarg\xdef{bcp@map@\bbl@cl{lbcp}}{\languagename}%
   \fi}
+%    \end{macrocode}
+%
+% By default, the following sections are just read. Actions are taken
+% later.
+%
+%    \begin{macrocode}
 \let\bbl@inikv@typography\bbl@inikv
 \let\bbl@inikv@characters\bbl@inikv
 \let\bbl@inikv@numbers\bbl@inikv
+%    \end{macrocode}
+%
+% Additive numerals require an additional definition. When |.1| is
+% found, two macros are defined -- the basic one, without |.1| called
+% by |\localenumeral|, and another one preserving the trailing |.1| for
+% the ‘units’. 
+%
+%    \begin{macrocode}
 \def\bbl@inikv@counters#1=#2\@@{%
   \bbl@ifsamestring{#1}{digits}%
     {\bbl@error{The counter name 'digits' is reserved for mapping\\%
