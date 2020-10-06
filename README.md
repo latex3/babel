@@ -1,4 +1,4 @@
-## Babel 3.49
+## Babel 3.50
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.49 are described in:
+Changes in version 3.50 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.49
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.50
 
 Included is a set of ini files for about 250 languages. 
 
@@ -43,12 +43,19 @@ respective authors.
 
 ### Latest changes
 ```
+3.50   2020-10-06
+       - Fixes:
+         - main=<language> stopped working in some cases (#96).
+         - Footnotes were not \long with layout=footnotes.
+         
 3.49   2020-10-03
+       - BUG. This version has a severe bug with main= (fixed in 3.50).
        - Allow standard LaTeX syntax to recognize locales based on ini
          files in the most common cases.
        - frenchspacing is set with ini files.
        - Fixes:
          - layout.lists=off didn't work (#94)
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.49
        
 3.48   2020-09-01
        - New (tentative) tools to customize some labels (like chapters

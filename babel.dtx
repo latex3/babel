@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/10/05 v3.49.2151 The Babel package]
+\ProvidesFile{babel.dtx}[2020/10/06 v3.50 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4778,8 +4778,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.49.2151>>
-%<<date=2020/10/05>>
+%<<version=3.50>>
+%<<date=2020/10/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12483,12 +12483,12 @@ help from Bernd Raichle, for which I am grateful.
     \@ifnextchar[%
       {\bbl@footnote@o{#1}{#2}{#3}}%
       {\bbl@footnote@x{#1}{#2}{#3}}}
-  \def\bbl@footnote@x#1#2#3#4{%
+  \long\def\bbl@footnote@x#1#2#3#4{%
     \bgroup
       \select@language@x{\bbl@main@language}%
       \bbl@fn@footnote{#2#1{\ignorespaces#4}#3}%
     \egroup}
-  \def\bbl@footnote@o#1#2#3[#4]#5{%
+  \long\def\bbl@footnote@o#1#2#3[#4]#5{%
     \bgroup
       \select@language@x{\bbl@main@language}%
       \bbl@fn@footnote[#4]{#2#1{\ignorespaces#5}#3}%
@@ -12497,12 +12497,12 @@ help from Bernd Raichle, for which I am grateful.
     \@ifnextchar[%
       {\bbl@footnotetext@o{#1}{#2}{#3}}%
       {\bbl@footnotetext@x{#1}{#2}{#3}}}
-  \def\bbl@footnotetext@x#1#2#3#4{%
+  \long\def\bbl@footnotetext@x#1#2#3#4{%
     \bgroup
       \select@language@x{\bbl@main@language}%
       \bbl@fn@footnotetext{#2#1{\ignorespaces#4}#3}%
     \egroup}
-  \def\bbl@footnotetext@o#1#2#3[#4]#5{%
+  \long\def\bbl@footnotetext@o#1#2#3[#4]#5{%
     \bgroup
       \select@language@x{\bbl@main@language}%
       \bbl@fn@footnotetext[#4]{#2#1{\ignorespaces#5}#3}%
@@ -14061,7 +14061,8 @@ end
    \AtBeginDocument
      {\ifx\tikz@atbegin@node\@undefined\else
         \let\bbl@OL@pgfpicture\pgfpicture
-        \bbl@sreplace\pgfpicture{\pgfpicturetrue}{\bbl@pictsetdir\pgfpicturetrue}%
+        \bbl@sreplace\pgfpicture{\pgfpicturetrue}%
+          {\bbl@pictsetdir\pgfpicturetrue}%
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
       \fi}}
