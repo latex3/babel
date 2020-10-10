@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/10/06 v3.50 The Babel package]
+\ProvidesFile{babel.dtx}[2020/10/10 v3.50.2156 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4778,8 +4778,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.50>>
-%<<date=2020/10/06>>
+%<<version=3.50.2156>>
+%<<date=2020/10/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10490,6 +10490,7 @@ help from Bernd Raichle, for which I am grateful.
     \else
       \bbl@csarg\def{KVP@##1}{##2}%
     \fi}%
+  \let\bbl@saverenew@captions\bbl@renew@captions
   % == import, captions ==
   \ifx\bbl@KVP@import\@nil\else
     \bbl@exp{\\\bbl@ifblank{\bbl@KVP@import}}%
@@ -10624,13 +10625,13 @@ help from Bernd Raichle, for which I am grateful.
     \fi
     \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
   \fi
-  % == intraspace, intrapenalty ==
+  % == Line breaking: intraspace, intrapenalty ==
   % For CJK, East Asian, Southeast Asian, if interspace in ini
   \ifx\bbl@KVP@intraspace\@nil\else % We can override the ini or set
     \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
   \fi
   \bbl@provide@intraspace
-  % == hyphenate.other.locale ==
+  % == Line breaking: hyphenate.other.locale ==
   \bbl@ifunset{bbl@hyotl@\languagename}{}%
     {\bbl@csarg\bbl@replace{hyotl@\languagename}{ }{,}%
      \bbl@startcommands*{\languagename}{}%
@@ -10643,7 +10644,7 @@ help from Bernd Raichle, for which I am grateful.
            \SetHyphenMap{\BabelLower{##1}{##1}}%
          \fi}%
      \bbl@endcommands}%
-  % == hyphenate.other.script ==
+  % == Line breaking: hyphenate.other.script ==
   \bbl@ifunset{bbl@hyots@\languagename}{}%
     {\bbl@csarg\bbl@replace{hyots@\languagename}{ }{,}%
      \bbl@csarg\bbl@foreach{hyots@\languagename}{%
@@ -10654,7 +10655,7 @@ help from Bernd Raichle, for which I am grateful.
        \else
          \global\lccode##1=##1\relax
        \fi}}%
-  % == maparabic ==
+  % == Counters: maparabic ==
   % Native digits, if provided in ini (TeX level, xe and lua)
   \ifcase\bbl@engine\else
     \bbl@ifunset{bbl@dgnat@\languagename}{}%
@@ -10672,7 +10673,7 @@ help from Bernd Raichle, for which I am grateful.
         \fi
       \fi}%
   \fi
-  % == mapdigits ==
+  % == Counters: mapdigits ==
   % Native digits (lua level).
   \ifodd\bbl@engine
     \ifx\bbl@KVP@mapdigits\@nil\else
@@ -10709,7 +10710,7 @@ help from Bernd Raichle, for which I am grateful.
         }}%
     \fi
   \fi
-  % == alph, Alph ==
+  % == Counters: alph, Alph ==
   % What if extras<lang> contains a \babel@save\@alph? It won't be
   % restored correctly when exiting the language, so we ignore 
   % this change with the \bbl@alph@saved trick.
@@ -10746,6 +10747,16 @@ help from Bernd Raichle, for which I am grateful.
        \catcode`\@=\atcatcode
        \let\atcatcode\relax
      \fi}%
+  % == caption redefinition ==
+  \ifx\bbl@KVP@captions\@nil
+    \def\bbl@elt##1##2{%
+      \bbl@ifunset{\languagename ##1name}%
+        {\toks@{##2}%
+         \bbl@exp{%
+           \\\bbl@add\<captions\languagename>{\def\<##1name>{\the\toks@}}}}%
+        {\@namedef{\languagename##1name}{##2}}}%
+    \@nameuse{bbl@saverenew@captions}%
+  \fi
   % == main ==
   \ifx\bbl@KVP@main\@nil  % Restore only if not 'main'
     \let\languagename\bbl@savelangname
@@ -10960,7 +10971,7 @@ help from Bernd Raichle, for which I am grateful.
        is not complete.}%
       {Fix the name or reinstall babel.}%
   \else
-    \catcode`\[=12 \catcode`\]=12 \catcode`\==12
+    \catcode`\[=12 \catcode`\]=12 \catcode`\==12 \catcode`\&=12
     \catcode`\;=12 \catcode`\|=12 \catcode`\%=14
     \bbl@info{Importing
                 \ifcase#2 \or font and identification \or basic \fi

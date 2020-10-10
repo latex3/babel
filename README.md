@@ -1,4 +1,4 @@
-## Babel 3.50
+## Babel 3.50.2156
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.50 are described in:
+Changes in version 3.51 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.50
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.51
 
 Included is a set of ini files for about 250 languages. 
 
@@ -43,11 +43,17 @@ respective authors.
 
 ### Latest changes
 ```
+3.51   2020-10-??
+       - Common interface to redefine captions (with \babelprovide).
+       - Fixes:
+         - Error when loading a language on the fly in tabular (#97)
+
 3.50   2020-10-06
        - Fixes:
          - main=<language> stopped working in some cases (#96).
          - Footnotes were not \long with layout=footnotes.
-         
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.50
+
 3.49   2020-10-03
        - BUG. This version has a severe bug with main= (fixed in 3.50).
        - Allow standard LaTeX syntax to recognize locales based on ini
@@ -56,7 +62,7 @@ respective authors.
        - Fixes:
          - layout.lists=off didn't work (#94)
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.49
-       
+
 3.48   2020-09-01
        - New (tentative) tools to customize some labels (like chapters
          in CJK and Hungarian). 
@@ -161,51 +167,16 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.43
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.42
 
 3.41   2020-02-27
-       - Counters and numerals added in some ini files, based on those
-         defined in CSS (Abjad, Alphabetic Hebrew, Japanese, etc.).
-       - Fix - A bug in the fix for #47, because \@elt was not reset
-         (#51).
-       - Fix - Error when french was loaded and an ini file read (#50).
-       - Fix - A typo in Greek files: Miriad must read Myriad.
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.41
 
 3.40   2020-02-14
-       - New ini files for Latin and Greek (xe/lua).
-       - Add 'other' characters used in hyphenation patters (eg,
-         apostrophes).
-       - Fix - Old Plain TeX and Plain XeTeX raised an error.
-       - Fix - Option T1 in fontenc was not recognized to set
-         \latinencoding with LaTeX 2020-02-02 (#47)
-       - Fix - Locale names were hardcoded in some babel-...tex files.
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.40
 
 3.39   2020-02-03
-       - Languages can now be loaded on the fly (via \babelprovide).
-       - With \babelposthyphenation captured chars can now be mapped in
-         the replacement (lua).
-       - \babelcharproperty can be used to assign specific chars to a
-         locale (lua).
-       - Fixes:
-          - Sichuan Yi: line breaking was not activated (lua).
-          - Hyphenation was not always applied with onchar (lua).
-          - bidi=basic-l/basic-r where not activated correctly (xe).
-          - Thai and turkish raised and error without import in
-            \babelprovide.
-          - Cleaned up some ini/tex locale files (de, zh, sa).
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.39
 
 3.38   2020-01-15
-       - Automatic switching of ids (\language and \localeid), and fonts
-         based on script blocks (lua).
-       - New macro - \localeinfo, to access the basic data in the ini
-         file loaded by languages.
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.38
-
-3.37   2019-12-08    
-See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.37
-
-3.36   2019-11-14 
-See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.36
 ```
 
 Javier Bezos
