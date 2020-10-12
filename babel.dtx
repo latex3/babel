@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/10/10 v3.50.2156 The Babel package]
+\ProvidesFile{babel.dtx}[2020/10/12 v3.50.2158 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4778,8 +4778,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.50.2156>>
-%<<date=2020/10/10>>
+%<<version=3.50.2158>>
+%<<date=2020/10/12>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7441,8 +7441,15 @@ help from Bernd Raichle, for which I am grateful.
     \fi
   \fi
   \global\let\bbl@hymapsel\@cclv
-  % hyphenation - patterns
+  % hyphenation - select patterns
   \bbl@patterns{#1}%
+  % hyphenation - allow stretching with babelnohyphens
+  \ifnum\language=\l@babelnohyphens
+    \babel@savevariable\emergencystretch
+    \emergencystretch\maxdimen
+    \babel@savevariable\hbadness
+    \hbadness\@M
+  \fi
   % hyphenation - mins
   \babel@savevariable\lefthyphenmin
   \babel@savevariable\righthyphenmin
@@ -8745,6 +8752,12 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{enumerate}
 %
 %    \begin{macrocode}
+\def\bbl@pdfortexormath#1#2#3{%
+  \ifx\texorpdfstring\@undefined
+    \textormath{#2}{#3}%
+  \else
+    \texorpdfstring{\textormath{#2}{#3}}{}%
+  \fi}
 \def\declare@shorthand#1#2{\@decl@short{#1}#2\@nil}
 \def\@decl@short#1#2#3\@nil#4{%
   \def\bbl@tempa{#3}%
@@ -13225,7 +13238,9 @@ help from Bernd Raichle, for which I am grateful.
             node.insert_before(head, item, n)
           end
 
-          quad = font.getfont(item.font).size
+          if font.getfont(item.font) then
+            quad = font.getfont(item.font).size
+          end
           last_class = class
           last_lang = lang
         else % if penalty, glue or anything else
