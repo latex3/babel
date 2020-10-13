@@ -1,4 +1,4 @@
-## Babel 3.50.2158
+## Babel 3.50.2159
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -45,9 +45,12 @@ respective authors.
 ```
 3.51   2020-10-??
        - Common interface to redefine captions (with \babelprovide).
-       - frenchspacing filled in many languages.
+       - frenchspacing filled in many ini files.
        - Fixes:
          - Error when loading a language on the fly in tabular (#97).
+         - 'hyphenrules' raised an error with 'base' option (#59).
+         - Better handling of autoloaded languages (eg, catcodes).
+         - An error was raised with CJK and a null font (#99).
 
 3.50   2020-10-06
        - Fixes:

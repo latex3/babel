@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/10/12 v3.50.2158 The Babel package]
+\ProvidesFile{babel.dtx}[2020/10/13 v3.50.2159 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4778,8 +4778,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.50.2158>>
-%<<date=2020/10/12>>
+%<<version=3.50.2159>>
+%<<date=2020/10/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5377,9 +5377,12 @@ help from Bernd Raichle, for which I am grateful.
 % Don't use. Experimental. TODO.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
-\DeclareOption{provide@=*}{} % autoload with cat @=letter
+\let\bbl@autoload@options\@empty
+% autoload with cat @=letter
+\DeclareOption{provide@=*}{\def\bbl@autoload@options{import}}
 \makeatother
-\DeclareOption{provide@=*}{} % autoload with cat @=other
+\DeclareOption{provide@=*}% autoload with cat @=other
+  {\expandafter\def\csname bbl@autoload@options\endcsname{import}}
 \makeatletter
 <@More package options@>
 %    \end{macrocode}
@@ -7057,7 +7060,6 @@ help from Bernd Raichle, for which I am grateful.
       \IfFileExists{babel-\bbl@tempa.ini}{\let\bbl@bcp\bbl@tempa}{}%
     \fi
   \fi\fi}
-\let\bbl@autoload@options\@empty
 \let\bbl@initoload\relax
 \def\bbl@provide@locale{%
   \ifx\babelprovide\@undefined
@@ -7682,7 +7684,9 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@fixname\bbl@tempf
   \bbl@iflanguage\bbl@tempf{%
     \expandafter\bbl@patterns\expandafter{\bbl@tempf}%
-    \languageshorthands{none}%
+    \ifx\languageshorthands\@undefined\else
+      \languageshorthands{none}%
+    \fi
     \expandafter\ifx\csname\bbl@tempf hyphenmins\endcsname\relax
       \set@hyphenmins\tw@\thr@@\relax
     \else
@@ -8752,11 +8756,11 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{enumerate}
 %
 %    \begin{macrocode}
-\def\bbl@pdfortexormath#1#2#3{%
+\def\bbl@texormathorpdf#1#2#3{%
   \ifx\texorpdfstring\@undefined
-    \textormath{#2}{#3}%
+    \textormath{#1}{#2}%
   \else
-    \texorpdfstring{\textormath{#2}{#3}}{}%
+    \texorpdfstring{\textormath{#1}{#2}}{#3}%
   \fi}
 \def\declare@shorthand#1#2{\@decl@short{#1}#2\@nil}
 \def\@decl@short#1#2#3\@nil#4{%
@@ -10751,15 +10755,17 @@ help from Bernd Raichle, for which I am grateful.
   \fi
   % == require.babel in ini ==
   % To load or reaload the babel-*.tex, if require.babel in ini
-  \bbl@ifunset{bbl@rqtex@\languagename}{}%
-    {\expandafter\ifx\csname bbl@rqtex@\languagename\endcsname\@empty\else
-       \let\BabelBeforeIni\@gobbletwo
-       \chardef\atcatcode=\catcode`\@
-       \catcode`\@=11\relax
-       \bbl@input@texini{\bbl@cs{rqtex@\languagename}}%
-       \catcode`\@=\atcatcode
-       \let\atcatcode\relax
-     \fi}%
+  \ifx\bbl@beforestart\relax\else  % But only in preamble
+    \bbl@ifunset{bbl@rqtex@\languagename}{}%
+      {\expandafter\ifx\csname bbl@rqtex@\languagename\endcsname\@empty\else
+         \let\BabelBeforeIni\@gobbletwo
+         \chardef\atcatcode=\catcode`\@
+         \catcode`\@=11\relax
+         \bbl@input@texini{\bbl@cs{rqtex@\languagename}}%
+         \catcode`\@=\atcatcode
+         \let\atcatcode\relax
+       \fi}%
+  \fi
   % == caption redefinition ==
   \ifx\bbl@KVP@captions\@nil
     \def\bbl@elt##1##2{%
@@ -10958,9 +10964,13 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@input@texini#1{%
   \bbl@bsphack
     \bbl@exp{%
-      \catcode`\\\%=14
+      \catcode`\\\%=14 \catcode`\\\\=0
+      \catcode`\\\{=1  \catcode`\\\}=2 
       \lowercase{\\\InputIfFileExists{babel-#1.tex}{}{}}%
-      \catcode`\\\%=\the\catcode`\%\relax}%
+      \catcode`\\\%=\the\catcode`\%\relax
+      \catcode`\\\\=\the\catcode`\\\relax
+      \catcode`\\\{=\the\catcode`\{\relax
+      \catcode`\\\}=\the\catcode`\}\relax}%
   \bbl@esphack}
 \def\bbl@inipreread#1=#2\@@{%
   \bbl@trim@def\bbl@tempa{#1}% Redundant below !!
@@ -21829,7 +21839,6 @@ Babel.cjk_breaks = {
 \input babel.def
 %</plain>
 %    \end{macrocode}
-
 %
 % \Finale
 %
