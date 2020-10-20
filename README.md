@@ -1,4 +1,4 @@
-## Babel 3.50.2159
+## Babel 3.50.2166
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,6 +51,7 @@ respective authors.
          - 'hyphenrules' raised an error with 'base' option (#59).
          - Better handling of autoloaded languages (eg, catcodes).
          - An error was raised with CJK and a null font (#99).
+         - ??? #92 Bold + Small Caps [still testing] 
 
 3.50   2020-10-06
        - Fixes:
