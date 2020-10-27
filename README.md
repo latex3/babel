@@ -1,4 +1,4 @@
-## Babel 3.50.2166
+## Babel 3.51
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -43,15 +43,19 @@ respective authors.
 
 ### Latest changes
 ```
-3.51   2020-10-??
-       - Common interface to redefine captions (with \babelprovide).
+3.51   2020-10-27
+       - Common interface to (re)define captions (with
+         \setlocalecaption).
        - frenchspacing filled in many ini files.
+       - A new internal macro (for ldf files) named \babel@texpdf, to
+         ease interoperativity with hyperref in shorthands.
        - Fixes:
          - Error when loading a language on the fly in tabular (#97).
          - 'hyphenrules' raised an error with 'base' option (#59).
          - Better handling of autoloaded languages (eg, catcodes).
          - An error was raised with CJK and a null font (#99).
-         - ??? #92 Bold + Small Caps [still testing] 
+         - language.tag.bcp47 and tag.ini in \localeinfo didn't work
+           (#102).
 
 3.50   2020-10-06
        - Fixes:

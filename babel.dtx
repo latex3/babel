@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/10/20 v3.50.2166 The Babel package]
+\ProvidesFile{babel.dtx}[2020/10/27 v3.51 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -261,7 +261,9 @@ possible issues can be caught in the development phase.
 help in some forums like \textsf{tex.stackexchange}, but if you have
 found a bug, I strongly beg you to report it in
 \href{https://github.com/latex3/babel/issues}{GitHub}, which is much
-better than just complaining on an e-mail list or a web forum.
+better than just complaining on an e-mail list or a web forum. Remember
+\textit{warnings are not errors} by themselves, they just warn about
+possible problems or incompatibilities.
 
 \item[\sffamily\color{messages}How can I contribute a new
 language?] See section \ref{contribute} for contributing a language.
@@ -2279,40 +2281,57 @@ to select fonts in addition to the three basic families.
 
 \subsection{Modifying a language}
 
-Modifying the behavior of a language (say, the chapter “caption”), is
-sometimes necessary, but not always trivial.
-\begin{itemize}
-\item The old way, still valid for many languages, to redefine a
-  caption is the following:
+Modifying the behavior of a language (say, the chapter
+“caption”), is sometimes necessary, but not always trivial. In the case
+of caption names a specific macro is provided, because this is perhaps
+the most frequent change:
+
+\Describe{\setlocalecaption}{%
+  \marg{language-name}\marg{caption-name}\marg{string}}
+
+\New{3.51} Here \textit{caption-name} is the name as string without the
+trailing |name|. An example, which also shows caption names are often a
+stylistic choice, is:
+\begin{verbatim}
+\setlocalecaption{english}{contents}{Table of Contents}
+\end{verbatim}
+This works not only with existing caption names, because it also serves to
+define new ones by setting the \textit{caption-name} to the name of
+your choice (|name| will be postpended). Captions so defined or
+redefined behave with the ‘new way’ described in the following note.
+
+\begin{note}
+  There are a few alternative methods:
+  \begin{itemize}
+\item With data |import|’ed from |ini| files, you can modify the values
+  of specific keys, like:
+\begin{verbatim}
+\babelprovide[import, _captions/listtable = Lista de tablas_]{spanish}
+\end{verbatim}
+  (In this particular case, instead of the |captions| group you may need
+  to modify the |captions.licr| one.)
+  
+\item The ‘old way’, still valid for many languages, to redefine a
+    caption is the following:
 \begin{verbatim}
 \addto\captionsenglish{%
   \renewcommand\contentsname{Foo}%
 }
 \end{verbatim}
-As of 3.15, there is no need to hide spaces with \texttt{\%%
-} (\babel{} removes them), but it is advisable to do so.
-\item The new way, which is found in |bulgarian|, |azerbaijani|,
-  |spanish|, |french|, |turkish|, |icelandic|, |vietnamese| and a few
-  more, as well as in languages created with |\babelprovide| and its
-  key |import|, is:
+  As of 3.15, there is no need to hide spaces with \texttt{\%%
+  } (\babel{} removes them), but it is advisable to do so. This
+  redefinition is not activated until the language is selected.
+
+\item The ‘new way’, which is found in |bulgarian|, |azerbaijani|,
+    |spanish|, |french|, |turkish|, |icelandic|, |vietnamese| and a few
+    more, as well as in languages created with |\babelprovide| and its
+    key |import|, is:
 \begin{verbatim}
 \renewcommand\spanishchaptername{Foo}
 \end{verbatim}
-\item Macros to be run when a language is selected can be add to
-  |\extras|\m{lang}:
-\begin{verbatim}
-\addto\extrasrussian{\mymacro}
-\end{verbatim}
-There is a counterpart for code to be run when a language is
-unselected: |\noextras|\m{lang}.
-\item With data |import|’ed from |ini| files, you can modify the values
-of specific keys, like:
-\begin{verbatim}
-\babelprovide[import, _captions/listtable = Lista de tablas_]{spanish}
-\end{verbatim}
-(In this particular case, instead of the |captions| group you may need
-to modify the |captions.licr| one.)
+This redefinition is immediate.
 \end{itemize}
+\end{note}
 
 \begin{note} Do \textit{not} redefine a caption in the following way:
 \begin{verbatim}
@@ -2321,6 +2340,14 @@ to modify the |captions.licr| one.)
 The changes may be discarded with a language selector, and the original
 value restored.
 \end{note}
+
+Macros to be run when a language is selected can be add to
+  |\extras|\m{lang}:
+\begin{verbatim}
+\addto\extrasrussian{\mymacro}
+\end{verbatim}
+There is a counterpart for code to be run when a language is
+unselected: |\noextras|\m{lang}.
 
 \begin{note}
   These macros (|\captions|\m{lang}, |\extras|\m{lang}) may be
@@ -3354,18 +3381,19 @@ bidirectional (with both R and L paragraphs) documents in \luatex{}.
   required in \xetex{} and \pdftex{} in some styles (support for the
   latter two engines is still experimental) \New{3.18}.
 
-\item[tabular] required in \luatex{} for R |tabular| (it has been
-  tested only with simple tables, so expect some readjustments in the
-  future); ignored in \pdftex{} or \xetex{} (which will not support a
-  similar option in the short term). It patches an internal command, so
-  it might be ignored by some packages and classes (or even raise an
-  error). \New{3.18}.
-
+\item[tabular] required in \luatex{} for R |tabular|, so that the first
+  column is the right one (it has been tested only with simple tables,
+  so expect some readjustments in the future); ignored in \pdftex{} or
+  \xetex{} (which will not support a similar option in the short term).
+  It patches an internal command, so it might be ignored by some
+  packages and classes (or even raise an error). \New{3.18}.
+  
 \item[graphics] modifies the |picture| environment so that the whole
-  figure is L but the text is R. It \textit{does not} work with the
-  standard |picture|, and \textit{pict2e} is required if you want
-  sloped lines. It attempts to do the same for \textsf{pgf/tikz}.
-  Somewhat experimental. \New{3.32}.
+figure is L but the text is R. It \textit{does not} work with the
+standard |picture|, and \textit{pict2e} is required if you want sloped
+lines \textbf{(With recent versions of \LaTeX, this feature has
+stopped working)}. It attempts to do the same for \textsf{pgf/tikz}.
+Somewhat experimental. \New{3.32}.
 
 \item[extras] is used for miscellaneous readjustments which do not fit into
   the previous groups. Currently redefines in \luatex{} |\underline| and
@@ -3820,6 +3848,15 @@ See the code section for |\foreignlanguage*| (a new starred
 version of |\foreignlanguage|).
 
 For old an deprecated functions, see the wiki.
+
+\medskip
+\textbf{Options for locales loaded on the fly}
+
+\New{3.51} |\babeladjust{ autoload.options = ... }| sets the options
+when a language is loaded on the fly (by default, no options). A
+typical value would be |import|, which defines captions, date,
+numerals, etc., but ignores the code in the |tex| file (for example,
+extended numerals in Greek).
 
 \medskip
 \textbf{Labels}
@@ -4778,8 +4815,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.50.2166>>
-%<<date=2020/10/20>>
+%<<version=3.51>>
+%<<date=2020/10/27>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5374,16 +5411,12 @@ help from Bernd Raichle, for which I am grateful.
 \DeclareOption{provide=*}{\chardef\bbl@iniflag\@ne}    % main -> +1
 \DeclareOption{provide+=*}{\chardef\bbl@iniflag\tw@}   % add = 2
 \DeclareOption{provide*=*}{\chardef\bbl@iniflag\thr@@} % add + main
+% A separate option
+\let\bbl@autoload@options\@empty
+\DeclareOption{provide@=*}{\def\bbl@autoload@options{import}}
 % Don't use. Experimental. TODO.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
-\let\bbl@autoload@options\@empty
-% autoload with cat @=letter
-\DeclareOption{provide@=*}{\def\bbl@autoload@options{import}}
-\makeatother
-\DeclareOption{provide@=*}% autoload with cat @=other
-  {\expandafter\def\csname bbl@autoload@options\endcsname{import}}
-\makeatletter
 <@More package options@>
 %    \end{macrocode}
 %
@@ -8755,13 +8788,23 @@ help from Bernd Raichle, for which I am grateful.
 %    \item the code to be executed when the shorthand is encountered.
 %    \end{enumerate}
 %
+% The auxiliary macro |\babel@texpdf| improves the interoperativity with
+% \textsf{hyperref} and takes 4 arguments: (1) The \TeX{} code in text
+% mode, (2) the string for \textsf{hyperref}, (3) the \TeX{} code in
+% math mode, and (4), which is currently ignored, but it's meant for a
+% string in math mode, like a minus sign instead of an hyphen
+% (currently \textsf{hyperref} doesn't discriminate the mode). This
+% macro may be used in |ldf| files.
+
 %    \begin{macrocode}
-\def\bbl@texormathorpdf#1#2#3{%
+\def\babel@texpdf#1#2#3#4{%
   \ifx\texorpdfstring\@undefined
     \textormath{#1}{#2}%
   \else
-    \texorpdfstring{\textormath{#1}{#2}}{#3}%
+    \texorpdfstring{\textormath{#1}{#3}}{#2}%
+    % \texorpdfstring{\textormath{#1}{#3}}{\textormath{#2}{#4}}%
   \fi}
+%
 \def\declare@shorthand#1#2{\@decl@short{#1}#2\@nil}
 \def\@decl@short#1#2#3\@nil#4{%
   \def\bbl@tempa{#3}%
@@ -9946,6 +9989,64 @@ help from Bernd Raichle, for which I am grateful.
   \fi}
 %    \end{macrocode}
 %
+% This sections ends with a general tool for resetting the caption
+% names with a unique interface. With the old way, which mixes the
+% switcher and the string, we convert it to the new one, which
+% separates these two steps.
+%
+%    \begin{macrocode}
+\newcommand\setlocalecaption{%  TODO. Catch typos. What about ensure?
+  \@ifstar\bbl@setcaption@s\bbl@setcaption@x}
+\def\bbl@setcaption@x#1#2#3{%  language caption-name string
+  \edef\bbl@tempa{#1}%
+  \edef\bbl@tempd{%
+    \expandafter\expandafter\expandafter
+    \strip@prefix\expandafter\meaning\csname captions#1\endcsname}%
+  \bbl@xin@
+    {\expandafter\string\csname #2name\endcsname}%
+    {\bbl@tempd}%
+  \ifin@ % Renew caption
+    \bbl@xin@{\string\bbl@scset}{\bbl@tempd}% 
+    \ifin@
+      \bbl@exp{%
+        \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
+          {\\\bbl@scset\<#2name>\<#1#2name>}%
+          {}}%
+    \else % Old way converts to new way
+      \bbl@ifunset{#1#2name}%
+        {\bbl@exp{%
+          \\\bbl@add\<captions#1>{\def\<#2name>{\<#1#2name>}}%
+          \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
+            {\def\<#2name>{\<#1#2name>}}%
+            {}}}%
+        {}%
+    \fi
+  \else
+    \bbl@xin@{\string\bbl@scset}{\bbl@tempd}% New
+    \ifin@ % New way
+      \bbl@exp{%
+        \\\bbl@add\<captions#1>{\\\bbl@scset\<#2name>\<#1#2name>}%
+        \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
+          {\\\bbl@scset\<#2name>\<#1#2name>}%
+          {}}%
+    \else  % Old way, but defined in the new way
+      \bbl@exp{%
+        \\\bbl@add\<captions#1>{\def\<#2name>{\<#1#2name>}}%      
+        \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
+          {\def\<#2name>{\<#1#2name>}}%
+          {}}%
+    \fi%
+  \fi
+  \@namedef{#1#2name}{#3}%
+  \toks@\expandafter{\bbl@captionslist}%
+  \bbl@exp{\\\in@{\<#2name>}{\the\toks@}}%
+  \ifin@\else
+    \bbl@exp{\\\bbl@add\\\bbl@captionslist{\<#2name>}}%
+    \bbl@toglobal\bbl@captionslist
+  \fi}
+% \def\bbl@setcaption@s#1#2#3{}  % Not yet implemented
+%    \end{macrocode}
+%
 % \subsection{Macros common to a number of languages}
 %
 %  \begin{macro}{\set@low@box}
@@ -10507,7 +10608,6 @@ help from Bernd Raichle, for which I am grateful.
     \else
       \bbl@csarg\def{KVP@##1}{##2}%
     \fi}%
-  \let\bbl@saverenew@captions\bbl@renew@captions
   % == import, captions ==
   \ifx\bbl@KVP@import\@nil\else
     \bbl@exp{\\\bbl@ifblank{\bbl@KVP@import}}%
@@ -10755,7 +10855,7 @@ help from Bernd Raichle, for which I am grateful.
   \fi
   % == require.babel in ini ==
   % To load or reaload the babel-*.tex, if require.babel in ini
-  \ifx\bbl@beforestart\relax\else  % But only in preamble
+  \ifx\bbl@beforestart\relax\else  % But not in doc aux or body
     \bbl@ifunset{bbl@rqtex@\languagename}{}%
       {\expandafter\ifx\csname bbl@rqtex@\languagename\endcsname\@empty\else
          \let\BabelBeforeIni\@gobbletwo
@@ -10765,16 +10865,6 @@ help from Bernd Raichle, for which I am grateful.
          \catcode`\@=\atcatcode
          \let\atcatcode\relax
        \fi}%
-  \fi
-  % == caption redefinition ==
-  \ifx\bbl@KVP@captions\@nil
-    \def\bbl@elt##1##2{%
-      \bbl@ifunset{\languagename ##1name}%
-        {\toks@{##2}%
-         \bbl@exp{%
-           \\\bbl@add\<captions\languagename>{\def\<##1name>{\the\toks@}}}}%
-        {\@namedef{\languagename##1name}{##2}}}%
-    \@nameuse{bbl@saverenew@captions}%
   \fi
   % == main ==
   \ifx\bbl@KVP@main\@nil  % Restore only if not 'main'
@@ -11011,7 +11101,7 @@ help from Bernd Raichle, for which I am grateful.
     \repeat
   \fi}
 \def\bbl@read@ini#1#2{%
-  \bbl@csarg\edef{lini@\languagename}{#1}%
+  \bbl@csarg\xdef{lini@\languagename}{#1}%
   \let\bbl@section\@empty
   \let\bbl@savestrings\@empty
   \let\bbl@savetoday\@empty
@@ -11141,7 +11231,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{elname}{identification.name.english}{}%
   \bbl@exp{\\\bbl@exportkey{lname}{identification.name.opentype}%
     {\csname bbl@elname@\languagename\endcsname}}%
-  \bbl@exportkey{lbcp}{identification.tag.bcp47}{}% TODO
+  \bbl@exportkey{tbcp}{identification.tag.bcp47}{}%
+  \bbl@exportkey{lbcp}{identification.language.tag.bcp47}{}%
   \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
   \bbl@exportkey{esname}{identification.script.name}{}%
   \bbl@exp{\\\bbl@exportkey{sname}{identification.script.name.opentype}%
@@ -11149,7 +11240,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{sbcp}{identification.script.tag.bcp47}{}%
   \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}%
   \ifbbl@bcptoname
-    \bbl@csarg\xdef{bcp@map@\bbl@cl{lbcp}}{\languagename}%
+    \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
   \fi}
 %    \end{macrocode}
 %
@@ -11672,7 +11763,8 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@info@tag.ini}{lini}
 \@namedef{bbl@info@name.english}{elname}
 \@namedef{bbl@info@name.opentype}{lname}
-\@namedef{bbl@info@tag.bcp47}{lbcp} % TODO
+\@namedef{bbl@info@tag.bcp47}{tbcp}
+\@namedef{bbl@info@language.tag.bcp47}{lbcp}
 \@namedef{bbl@info@tag.opentype}{lotf}
 \@namedef{bbl@info@script.name}{esname}
 \@namedef{bbl@info@script.name.opentype}{sname}
@@ -12351,7 +12443,7 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@ifunset{bbl@##1dflt@\languagename}%
       {\bbl@cs{famrst@##1}%
        \global\bbl@csarg\let{famrst@##1}\relax}%
-      {\bbl@exp{% order is relevant
+      {\bbl@exp{% order is relevant. TODO: but sometimes wrong!
          \\\bbl@add\\\originalTeX{%
            \\\bbl@font@rst{\bbl@cl{##1dflt}}%
                           \<##1default>\<##1family>{##1}}%
@@ -12405,17 +12497,6 @@ help from Bernd Raichle, for which I am grateful.
 % font is defined.
 %
 %    \begin{macrocode}
-\ifx\AddToHook\@undefined\else
-  \AddToHook{rmfamily}{\bbl@set@fontseries\bfseries@rm@kernel}
-  \AddToHook{sffamily}{\bbl@set@fontseries\bfseries@sf@kernel}
-  \AddToHook{ttfamily}{\bbl@set@fontseries\bfseries@tt@kernel}
-  \def\bbl@set@fontseries#1{%
-    \ifx#1\@undefined\else
-      \expandafter
-      \in@\expandafter{\f@family}{cmr,cmss,cmtt,lcmss,lcmtt,lmr,lmss,lmtt}%
-      \ifin@\let\bfdefault#1\else\def\bfdefault{b}\fi
-    \fi}
-\fi
 \def\bbl@font@set#1#2#3{% eg \bbl@rmdflt@lang \rmdefault \rmfamily
   \bbl@xin@{<>}{#1}%
   \ifin@
@@ -12619,7 +12700,7 @@ help from Bernd Raichle, for which I am grateful.
       \fi
       \bbl@exp{%
         \\\bbl@add\<extras\languagename>{%
-          \XeTeXlinebreaklocale "\bbl@cl{lbcp}"%
+          \XeTeXlinebreaklocale "\bbl@cl{tbcp}"%
           \<bbl@xeisp@\languagename>%
           \<bbl@xeipn@\languagename>}%
         \\\bbl@toglobal\<extras\languagename>%
