@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/11/21 v3.51.2198 The Babel package]
+\ProvidesFile{babel.dtx}[2020/11/23 v3.51.2200 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4823,8 +4823,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.51.2198>>
-%<<date=2020/11/21>>
+%<<version=3.51.2200>>
+%<<date=2020/11/23>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5234,9 +5234,17 @@ help from Bernd Raichle, for which I am grateful.
 \ProvidesPackage{babel}[<@date@> <@version@> The Babel package]
 \@ifpackagewith{babel}{debug}
   {\providecommand\bbl@trace[1]{\message{^^J[ #1 ]}}%
-   \let\bbl@debug\@firstofone}
+   \let\bbl@debug\@firstofone
+   \ifx\directlua\@undefined\else
+     \directlua{ Babel = Babel or {}
+       Babel.debug = true }%
+   \fi}
   {\providecommand\bbl@trace[1]{}%
-   \let\bbl@debug\@gobble}
+   \let\bbl@debug\@gobble
+   \ifx\directlua\@undefined\else
+     \directlua{ Babel = Babel or {}
+       Babel.debug = false }%
+   \fi}
 <@Basic macros@>
   % Temporarily repeat here the code for errors
   \def\bbl@error#1#2{%
@@ -13806,12 +13814,9 @@ end
 
         local last_match = 0
 
-        & print('====' .. p)
-
         &% For every match. 
         while true do
           local new  &% used when inserting and removing nodes
-          local changed = 0
           local refetch = false
 
           local matches = { u.match(w, p, last_match) }
@@ -13821,15 +13826,16 @@ end
           &% number with the position), and keep actual captures
           &% (from (...)), if any, in matches.
           local first = table.remove(matches, 1)
-          local last =  table.remove(matches, #matches)
-          local save_last = last
-          
-          &% print('*')
-          &% print(first, last, w)
+          local last  = table.remove(matches, #matches)
+          local save_last = last &% with A()BC()D, points to D
 
           &% Fix offsets, from bytes to unicode. Explained above.
           first = u.len(w:sub(1, first-1)) + 1
-          last  = u.len(w:sub(1, last-1))
+          last  = u.len(w:sub(1, last-1)) &% now last points to C
+          
+          if Babel.debug then
+            print('', 'sc', 'first', 'last', 'last_m', 'w')
+          end
 
           &% This loop traverses the matched substring and takes the
           &% corresponding action stored in the replacement list.
@@ -13848,23 +13854,21 @@ end
               char_base = wn[crep.data+first-1]
             end
 
+            if Babel.debug then
+              print('*', sc, first, last, last_match, w)
+            end
+
             if crep and next(crep) == nil then &% {}
               &% pass
 
             elseif crep == nil then &% remove
-              changed = changed + 1
-              &% print('*')
-              &% print(sc, last_match, w)
               node.remove(head, char_node)
               table.remove(wn, sc)
               w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
               last_match = utf8.offset(w, sc)
-              &% print(sc, last_match, w)
               sc = sc - 1
 
             elseif mode == 1 and crep and (crep.pre or crep.no or crep.post) then
-              changed = changed + 1              
-              refetch = true
               d = node.new(7, 0)   &% (disc, discretionary)
               d.pre     = Babel.str_to_nodes(crep.pre, matches, char_base)
               d.post    = Babel.str_to_nodes(crep.post, matches, char_base)
@@ -13876,14 +13880,19 @@ end
                 d.penalty = crep.penalty or tex.exhyphenpenalty
               end
               head, new = node.insert_before(head, char_node, d)
-              node.remove(head, char_node)
               if sc == 1 then
                 word_head = new
               end
+              if crep.insert then           
+                last_match = save_last
+              else
+                node.remove(head, char_node)
+                table.remove(wn, sc)
+                w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
+                last_match = utf8.offset(w, sc)
+              end
 
-            elseif mode == 0 and crep and crep.penalty then 
-              if crep.insert then         
-                changed = changed + 1
+            elseif mode == 0 and crep and crep.penalty then         
                 d = node.new(14, 0)   &% (penalty, userpenalty)          
                 d.attr = char_base.attr
                 d.penalty = crep.penalty
@@ -13891,11 +13900,16 @@ end
                 if sc == 1 then
                   word_head = new
                 end           
-                last_match = save_last &% is utf8.offset(w, sc+1) ok?
-              end
+                if crep.insert then
+                  last_match = save_last &% is utf8.offset(w, sc+1) ok?
+                else
+                  node.remove(head, char_node)
+                  table.remove(wn, sc)
+                  w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
+                  last_match = utf8.offset(w, sc)
+                end
 
             elseif crep and crep.string then
-              changed = changed + 1
               local str = crep.string(matches)
               if str == '' then 
                 refetch = true
@@ -13932,15 +13946,14 @@ end
             end  &% if char and char.string
           end  &% for char in match
 
-          if changed > 20 then  &% TODO. Useful?
-            texio.write('Too many changes. Ignoring the rest.')
-          elseif changed > 0 then
-            if refetch then
-              w, wn, nw, lang = Babel.fetch_subtext[mode](word_head)
-            else           
-              refetch = true
-            end              
+          if Babel.debug then
+            print('/', sc, first, last, last_match, w)
           end
+
+          &% TODO. refetch must be eventually unnecesary
+          if refetch then
+            w, wn, nw, lang = Babel.fetch_subtext[mode](word_head)
+          end              
 
         end  &% for match
       end  &% for patterns
