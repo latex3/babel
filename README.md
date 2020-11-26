@@ -1,4 +1,4 @@
-## Babel 3.51.2200
+## Babel 3.51.2203
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -48,6 +48,9 @@ respective authors.
        - Fixes:
          - A couple of issues with \localeinfo and \getlocaleproperty
            (#102, #105).
+         - Save size overflow with many \selectlanguage's (#109).
+         - Albanian: fix a typo in contents name (#104)
+
 3.51   2020-10-27
        - Common interface to (re)define captions (with
          \setlocalecaption).
