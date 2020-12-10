@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/11/26 v3.51.2203 The Babel package]
+\ProvidesFile{babel.dtx}[2020/12/10 v3.51.2217 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4823,8 +4823,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.51.2203>>
-%<<date=2020/11/26>>
+%<<version=3.51.2217>>
+%<<date=2020/12/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6753,13 +6753,13 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \let\bbl@tempc\relax
 \bbl@foreach\bbl@language@opts{%
-  \ifcase\bbl@iniflag
+  \ifcase\bbl@iniflag  % Default
     \bbl@ifunset{ds@#1}%
       {\DeclareOption{#1}{\bbl@load@language{#1}}}%
       {}%
-  \or
+  \or    % provide=*
     \@gobble % case 2 same as 1
-  \or
+  \or    % provide+=*
     \bbl@ifunset{ds@#1}%
       {\IfFileExists{#1.ldf}{}%
         {\IfFileExists{babel-#1.tex}{}{\DeclareOption{#1}{}}}}%
@@ -6775,7 +6775,7 @@ help from Bernd Raichle, for which I am grateful.
            \bbl@load@language{#1}%
          \fi}}%
       {}%
-  \or
+  \or    % provide*=*
     \def\bbl@tempc{#1}%
     \bbl@ifunset{ds@#1}%
       {\DeclareOption{#1}{%
@@ -6786,11 +6786,11 @@ help from Bernd Raichle, for which I am grateful.
   \fi}
 %    \end{macrocode}
 %
-% Now, we make sure an option is explicitly declared for any
-% language set as global option, by checking if an |ldf|
-% exists. The previous step was, in fact, somewhat redundant, but
-% that way we minimize accessing the file system just to see if the
-% option could be a language.
+% Now, we make sure an option is explicitly declared for any language
+% set as global option, by checking if an |ldf| exists. The previous
+% step was, in fact, somewhat redundant, but that way we minimize
+% accessing the file system just to see if the option could be a
+% language.
 %
 %    \begin{macrocode}
 \let\bbl@tempb\@nnil
@@ -13275,7 +13275,7 @@ help from Bernd Raichle, for which I am grateful.
     function Babel.sea_disc_to_space (head)
       local sea_ranges = Babel.sea_ranges
       local last_char = nil
-      local quad = 655360      ^^ 10 pt = 655360 = 10 * 65536
+      local quad = 655360      ^% 10 pt = 655360 = 10 * 65536
       for item in node.traverse(head) do
         local i = item.id
         if i == node.id'glyph' then
@@ -13285,16 +13285,16 @@ help from Bernd Raichle, for which I am grateful.
           quad = font.getfont(last_char.font).size
           for lg, rg in pairs(sea_ranges) do
             if last_char.char > rg[1] and last_char.char < rg[2] then
-              lg = lg:sub(1, 4)  ^^ Remove trailing number of, eg, Cyrl1
+              lg = lg:sub(1, 4)  ^% Remove trailing number of, eg, Cyrl1
               local intraspace = Babel.intraspaces[lg]
               local intrapenalty = Babel.intrapenalties[lg]
               local n
               if intrapenalty ~= 0 then
-                n = node.new(14, 0)     ^^ penalty
+                n = node.new(14, 0)     ^% penalty
                 n.penalty = intrapenalty
                 node.insert_before(head, item, n)
               end    
-              n = node.new(12, 13)      ^^ (glue, spaceskip)
+              n = node.new(12, 13)      ^% (glue, spaceskip)
               node.setglue(n, intraspace.b * quad,
                               intraspace.p * quad,
                               intraspace.m * quad)
@@ -13655,6 +13655,7 @@ end
 %  
 %    \begin{macrocode}
 \begingroup % TODO - to a lua file
+\catcode`\~=12
 \catcode`\#=12
 \catcode`\%=12
 \catcode`\&=14
@@ -13691,50 +13692,61 @@ end
     local lang
     local item = head
     local inmath = false
-    local mode = 0 &%%%% 'word' first steps in merging with subtext
 
     while item do
 
+      &% print('++', item)
+
+      if item.id == 11 then
+        inmath = (item.subtype == 0)
+        if inmath then
+          word_string = word_string .. Babel.us_char
+          word_nodes[#word_nodes+1] = item  &% Will be ignored
+        end
+      end
+      if inmath then
+        goto next
+      end
+
       if item.id == 29
-          and not(item.char == 124) &% ie, not |
-          and not(item.char == 61)  &% ie, not =
-          and not inmath
+          and (item.char ~= 124) &% ie, not |
+          and (item.char ~= 61)  &% ie, not =
           and (item.lang == lang or lang == nil) then
         lang = lang or item.lang
         word_string = word_string .. unicode.utf8.char(item.char)
         word_nodes[#word_nodes+1] = item
 
-      elseif item.id == 7 and item.subtype == 2
-             and not inmath and mode == 0 then
+      elseif item.id == 7 and item.subtype == 2 then
         word_string = word_string .. '='
         word_nodes[#word_nodes+1] = item
 
-      elseif item.id == 7 and item.subtype == 3
-             and not inmath and mode == 0 then
+      elseif item.id == 7 and item.subtype == 3 then
         word_string = word_string .. '|'       
         word_nodes[#word_nodes+1] = item
 
-      elseif item.id == 11 and item.subtype == 0 then
-        inmath = true
-
-      elseif mode > 0 and item.id == 12 and item.subtype == 13 then
-        word_string = word_string .. '|'       
-        word_nodes[#word_nodes+1] = item
-
+      &% (1) Go to next word if nothing was found, and (2) implictly
+      &% remove leading USs.
       elseif word_string == '' then
         &% pass
 
-      else
-        return word_string, word_nodes, item, lang
+      &% This is the responsible for splitting by words.
+      elseif (item.id == 12 and item.subtype == 13) then
+        break
+
+      else 
+        word_string = word_string .. Babel.us_char   
+        word_nodes[#word_nodes+1] = item  &% Will be ignored
       end
 
+      ::next::
       item = item.next
     end
+
+    word_string = unicode.utf8.gsub(word_string, Babel.us_char .. '+$', '')
+    return word_string, word_nodes, item, lang
   end
 
-    &%%%
-  &% Preliminary code for \babelprehyphenation
-  &% TODO. Copypaste pattern. Merge
+  &% TODO. Merge with [1]?? Maybe not - too many differences.
   Babel.fetch_subtext[0] = function(head)
     local word_string = ''
     local word_nodes = {}
@@ -13744,44 +13756,53 @@ end
 
     while item do
 
+      &% print('++', item)
+
+      if item.id == 11 then
+        inmath = (item.subtype == 0)
+        if inmath then
+          word_string = word_string .. Babel.us_char
+          word_nodes[#word_nodes+1] = item  &% Will be ignored
+        end
+      end
+      if inmath then
+        goto next
+      end
+
       if item.id == 29 then
         local locale = node.get_attribute(item, Babel.attr_locale)
-
-        if not(item.char == 124) &% ie, not | = space
-            and not inmath
-            and (locale == lang or lang == nil) then
-          lang = lang or locale
-          word_string = word_string .. unicode.utf8.char(item.char)
-          word_nodes[#word_nodes+1] = item
+        &% print('++', locale)
+        if lang == locale or lang == nil then
+          if (item.char ~= 124) then &% ie, not | = space
+            lang = lang or locale
+            word_string = word_string .. unicode.utf8.char(item.char)
+            word_nodes[#word_nodes+1] = item
+          end
+        else
+          break
         end
 
-        if item == node.tail(head) then 
-          item = nil
-          return word_string, word_nodes, item, lang
-        end
-
-      elseif item.id == 12 and item.subtype == 13 and not inmath then
+      elseif item.id == 12 and item.subtype == 13 then
         word_string = word_string .. '|'
         word_nodes[#word_nodes+1] = item
 
-        if item == node.tail(head) then 
-          item = nil
-          return word_string, word_nodes, item, lang
-        end
-
-      elseif item.id == 11 and item.subtype == 0 then
-          inmath = true
-
-      elseif word_string == '' then
-        &% pass
-
-      else
-        return word_string, word_nodes, item, lang
-
+      &% Ignore leading unrecognized nodes, too.
+      elseif word_string ~= '' then
+        word_string = word_string .. Babel.us_char   
+        word_nodes[#word_nodes+1] = item  &% Will be ignored
       end
 
+      ::next::
       item = item.next
     end
+
+    &% Here and above we remove some trailing chars but not the
+    &% corresponding nodes. But they aren't accessed. 
+    if word_string:sub(-1) == '|' then
+      word_string = word_string:sub(1,-2)
+    end
+    word_string = unicode.utf8.gsub(word_string, Babel.us_char .. '+$', '')
+    return word_string, word_nodes, item, lang
   end
 
   function Babel.pre_hyphenate_replace(head)
@@ -13792,6 +13813,8 @@ end
     Babel.hyphenate_replace(head, 1)
   end
 
+  Babel.us_char = string.char(31)
+
   function Babel.hyphenate_replace(head, mode)
     local u = unicode.utf8
     local lbkr = Babel.linebreaking.replacements[mode]
@@ -13801,16 +13824,26 @@ end
     while true do  &% for each subtext block
 
       local w, wn, nw, lang = Babel.fetch_subtext[mode](word_head)
-      if not lang then return head end
 
-      if not lbkr[lang] then
-        break
+      if Babel.debug then
+        print()
+        print('@@@@@', w, nw)
       end
 
-      &% For each saved (pre|post)hyphenation
+      if nw == nil and w == '' then break end
+
+      if not lang then goto next end
+      if not lbkr[lang] then goto next end
+
+      &% For each saved (pre|post)hyphenation. TODO. Reconsider how
+      &% loops are nested.
       for k=1, #lbkr[lang] do
         local p = lbkr[lang][k].pattern 
         local r = lbkr[lang][k].replace
+
+        if Babel.debug then
+          print('=====', p, mode)
+        end
 
         &% This variable is set in some cases below to the first *byte*
         &% after the match, either as found by u.match (faster) or the
@@ -13819,6 +13852,9 @@ end
 
         &% For every match. 
         while true do
+          if Babel.debug then
+            print('-----')
+          end
           local new  &% used when inserting and removing nodes
           local refetch = false
 
@@ -13829,7 +13865,11 @@ end
           &% number with the position), and keep actual captures
           &% (from (...)), if any, in matches.
           local first = table.remove(matches, 1)
-          local last  = table.remove(matches, #matches)
+          local last  = table.remove(matches, #matches)         
+          &% Non re-fetched substrings may contain \31, which separates
+          &% subsubstrings.
+          if string.find(w:sub(first, last-1), Babel.us_char) then break end
+
           local save_last = last &% with A()BC()D, points to D
 
           &% Fix offsets, from bytes to unicode. Explained above.
@@ -13848,6 +13888,9 @@ end
           local sc = first-1
           local rc = 0
           while rc < last-first+1 do &% for each replacement
+            if Babel.debug then
+              print('.....')
+            end
             sc = sc + 1
             rc = rc + 1
             local crep = r[rc]
@@ -13872,7 +13915,7 @@ end
               w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
               last_match = utf8.offset(w, sc)
               sc = sc - 1  &% Nothing has been inserted
-            
+
             elseif mode == 1 and crep and (crep.pre or crep.no or crep.post) then
               local d = node.new(7, 0)   &% (disc, discretionary)
               d.pre     = Babel.str_to_nodes(crep.pre, matches, char_base)
@@ -13911,7 +13954,8 @@ end
                 local n
                 for s in string.utfvalues(str) do
                   if char_node.id == 7 then
-                    log('Automatic hyphens cannot be replaced, just removed.')
+                    &% TODO. Remove this limitation.
+                    texio.write_nl('Automatic hyphens cannot be replaced, just removed.')
                   else
                     n = node.copy(char_base)
                   end
@@ -13926,10 +13970,8 @@ end
                 node.remove(head, char_node)
               end  &% string length
             end  &% if char and char.string (ie replacement cases)
-            
-            &% Shared by disc and penalty. With them, the inserted item
-            &% does NOT go to w because it's neither = nor | nor a
-            &% char.
+
+            &% Shared by disc and penalty.
             if end_replacement then
               if sc == 1 then
                 word_head = new
@@ -13938,8 +13980,7 @@ end
                 last_match = save_last
               else
                 node.remove(head, char_node)
-                table.remove(wn, sc)
-                w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
+                w = u.sub(w, 1, sc-1) .. Babel.us_char .. u.sub(w, sc+1)
                 last_match = utf8.offset(w, sc)
               end
             end
@@ -13949,15 +13990,17 @@ end
             print('/', sc, first, last, last_match, w)
           end
 
-          &% TODO. refetch must be eventually unnecesary
+          &% TODO. refetch must be eventually unnecesary. 
           if refetch then
             w, wn, nw, lang = Babel.fetch_subtext[mode](word_head)
           end              
 
         end  &% for match
       end  &% for patterns
+
+      ::next::
       word_head = nw
-    end  &% for words
+    end  &% for substring
     return head
   end
 
@@ -14048,7 +14091,7 @@ end
                    { pattern = patt, replace = { \babeltempb } })
     }&%
   \endgroup}
-% TODO. Working !!! Copypaste pattern. 
+% TODO. Copypaste pattern. 
 \gdef\babelprehyphenation#1#2#3{&%
   \bbl@activateprehyphen
   \begingroup
@@ -14088,7 +14131,6 @@ end
   \directlua{
     Babel.linebreaking.add_after(Babel.post_hyphenate_replace)
   }}
-% TODO. Working !!! 
 \def\bbl@activateprehyphen{%
   \let\bbl@activateprehyphen\relax
   \directlua{

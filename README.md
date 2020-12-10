@@ -1,4 +1,4 @@
-## Babel 3.51.2203
+## Babel 3.51.2217
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -44,7 +44,8 @@ respective authors.
 ### Latest changes
 ```
 3.52   2020-12-??
-       - Improved \babelprehyphenation and \babelprehyphenation.
+       - Improved \babelprehyphenation and \babelprehyphenation (with
+         some bugs fixed).
        - Fixes:
          - A couple of issues with \localeinfo and \getlocaleproperty
            (#102, #105).
