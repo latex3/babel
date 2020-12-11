@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/12/10 v3.51.2217 The Babel package]
+\ProvidesFile{babel.dtx}[2020/12/11 v3.51.2218 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4823,8 +4823,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.51.2217>>
-%<<date=2020/12/10>>
+%<<version=3.51.2218>>
+%<<date=2020/12/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6752,6 +6752,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \let\bbl@tempc\relax
+\let\bbl@temp@lg\@empty
 \bbl@foreach\bbl@language@opts{%
   \ifcase\bbl@iniflag  % Default
     \bbl@ifunset{ds@#1}%
@@ -6762,7 +6763,7 @@ help from Bernd Raichle, for which I am grateful.
   \or    % provide+=*
     \bbl@ifunset{ds@#1}%
       {\IfFileExists{#1.ldf}{}%
-        {\IfFileExists{babel-#1.tex}{}{\DeclareOption{#1}{}}}}%
+        {\IfFileExists{babel-#1.tex}{}{\@namedef{ds@#1}{}}}}%
       {}%
     \bbl@ifunset{ds@#1}%
       {\def\bbl@tempc{#1}%
@@ -6797,7 +6798,7 @@ help from Bernd Raichle, for which I am grateful.
 \bbl@foreach\@classoptionslist{%
   \bbl@ifunset{ds@#1}%
     {\IfFileExists{#1.ldf}{}%
-      {\IfFileExists{babel-#1.tex}{}{\DeclareOption{#1}{}}}}%
+      {\IfFileExists{babel-#1.tex}{}{\@namedef{ds@#1}{}}}}%
     {}%
   \bbl@ifunset{ds@#1}%
     {\def\bbl@tempb{#1}%
@@ -13686,6 +13687,61 @@ end
 
   Babel.fetch_subtext = {}
 
+    &% TODO. Merge with [1]?? Maybe not - too many differences.
+  Babel.fetch_subtext[0] = function(head)
+    local word_string = ''
+    local word_nodes = {}
+    local lang
+    local item = head
+    local inmath = false
+
+    while item do
+
+      &% print('++', item)
+
+      if item.id == 11 then
+        inmath = (item.subtype == 0)
+      end
+      if inmath then
+        goto next
+      end
+
+      if item.id == 29 then
+        local locale = node.get_attribute(item, Babel.attr_locale)
+        &% print('++', locale)
+        if lang == locale or lang == nil then
+          if (item.char ~= 124) then &% ie, not | = space
+            lang = lang or locale
+            word_string = word_string .. unicode.utf8.char(item.char)
+            word_nodes[#word_nodes+1] = item
+          end
+        else
+          break
+        end
+
+      elseif item.id == 12 and item.subtype == 13 then
+        word_string = word_string .. '|'
+        word_nodes[#word_nodes+1] = item
+
+      &% Ignore leading unrecognized nodes, too.
+      elseif word_string ~= '' then
+        word_string = word_string .. Babel.us_char   
+        word_nodes[#word_nodes+1] = item  &% Will be ignored
+      end
+
+      ::next::
+      item = item.next
+    end
+
+    &% Here and above we remove some trailing chars but not the
+    &% corresponding nodes. But they aren't accessed. 
+    if word_string:sub(-1) == '|' then
+      word_string = word_string:sub(1,-2)
+    end
+    word_string = unicode.utf8.gsub(word_string, Babel.us_char .. '+$', '')
+    return word_string, word_nodes, item, lang
+  end
+
   Babel.fetch_subtext[1] = function(head)
     local word_string = ''
     local word_nodes = {}
@@ -13699,10 +13755,6 @@ end
 
       if item.id == 11 then
         inmath = (item.subtype == 0)
-        if inmath then
-          word_string = word_string .. Babel.us_char
-          word_nodes[#word_nodes+1] = item  &% Will be ignored
-        end
       end
       if inmath then
         goto next
@@ -13742,65 +13794,6 @@ end
       item = item.next
     end
 
-    word_string = unicode.utf8.gsub(word_string, Babel.us_char .. '+$', '')
-    return word_string, word_nodes, item, lang
-  end
-
-  &% TODO. Merge with [1]?? Maybe not - too many differences.
-  Babel.fetch_subtext[0] = function(head)
-    local word_string = ''
-    local word_nodes = {}
-    local lang
-    local item = head
-    local inmath = false
-
-    while item do
-
-      &% print('++', item)
-
-      if item.id == 11 then
-        inmath = (item.subtype == 0)
-        if inmath then
-          word_string = word_string .. Babel.us_char
-          word_nodes[#word_nodes+1] = item  &% Will be ignored
-        end
-      end
-      if inmath then
-        goto next
-      end
-
-      if item.id == 29 then
-        local locale = node.get_attribute(item, Babel.attr_locale)
-        &% print('++', locale)
-        if lang == locale or lang == nil then
-          if (item.char ~= 124) then &% ie, not | = space
-            lang = lang or locale
-            word_string = word_string .. unicode.utf8.char(item.char)
-            word_nodes[#word_nodes+1] = item
-          end
-        else
-          break
-        end
-
-      elseif item.id == 12 and item.subtype == 13 then
-        word_string = word_string .. '|'
-        word_nodes[#word_nodes+1] = item
-
-      &% Ignore leading unrecognized nodes, too.
-      elseif word_string ~= '' then
-        word_string = word_string .. Babel.us_char   
-        word_nodes[#word_nodes+1] = item  &% Will be ignored
-      end
-
-      ::next::
-      item = item.next
-    end
-
-    &% Here and above we remove some trailing chars but not the
-    &% corresponding nodes. But they aren't accessed. 
-    if word_string:sub(-1) == '|' then
-      word_string = word_string:sub(1,-2)
-    end
     word_string = unicode.utf8.gsub(word_string, Babel.us_char .. '+$', '')
     return word_string, word_nodes, item, lang
   end

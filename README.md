@@ -1,4 +1,4 @@
-## Babel 3.51.2217
+## Babel 3.51.2218
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -43,14 +43,15 @@ respective authors.
 
 ### Latest changes
 ```
-3.52   2020-12-??
-       - Improved \babelprehyphenation and \babelprehyphenation (with
+3.52   2020-12-[16?]
+       - Improved \babelprehyphenation and \babelprehyphenation (and
          some bugs fixed).
        - Fixes:
          - A couple of issues with \localeinfo and \getlocaleproperty
            (#102, #105).
          - Save size overflow with many \selectlanguage's (#109).
          - Albanian: fix a typo in contents name (#104)
+         - Missing ‘Unused global option(s)’ warning (#110)
 
 3.51   2020-10-27
        - Common interface to (re)define captions (with
