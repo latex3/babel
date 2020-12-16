@@ -14,14 +14,16 @@ Package: babel
 \arhinishchaptername = \long macro:->Chapitula
 \prefacename = macro:->\bbl@ensure@arhinish {\arhinishprefacename }
 \arhinishprefacename = \long macro:->\bbl@nocaption {prefacename}{arhinishprefacename}
-Package babel Warning: \arhinishprefacename not set. Please, define
-(babel)                it in the preamble with something like:
+Package babel Warning: \arhinishprefacename not set. Please, define it
+(babel)                after the language has been loaded (typically
+(babel)                in the preamble) with something like:
 (babel)                \renewcommand\arhinishprefacename{..}
 (babel)                Reported on input line ....
 \prefacename \prefacename  = 147.15198pt, 6.94444pt, 1.94444pt
 \refname \chaptername  = 84.05573pt, 6.94444pt, 1.94444pt
-Package babel Warning: \arhinishtoday not set. Please, define
-(babel)                it in the preamble with something like:
+Package babel Warning: \arhinishtoday not set. Please, define it
+(babel)                after the language has been loaded (typically
+(babel)                in the preamble) with something like:
 (babel)                \renewcommand\arhinishtoday{..}
 (babel)                Reported on input line ....
 \today  = 39.13171pt, 6.94444pt, 1.94444pt

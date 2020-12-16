@@ -1,4 +1,4 @@
-## Babel 3.51.2218
+## Babel 3.52
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.51 are described in:
+Changes in version 3.52 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.51
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.52
 
 Included is a set of ini files for about 250 languages. 
 
@@ -43,10 +43,14 @@ respective authors.
 
 ### Latest changes
 ```
-3.52   2020-12-[16?]
-       - Improved \babelprehyphenation and \babelprehyphenation (and
-         some bugs fixed).
-       - Fixes:
+3.52   2020-12-16
+       * WARNING. If you need the style for Afrikaans you must update
+         babel-dutch.
+       * Improved \babelposthyphenation and \babelprehyphenation:
+         - Ordinary spaces can be matched in the latter.
+         - Keys 'insert' and 'penalty'.
+         - Some bugs fixed.
+       * Fixes:
          - A couple of issues with \localeinfo and \getlocaleproperty
            (#102, #105).
          - Save size overflow with many \selectlanguage's (#109).
@@ -54,63 +58,64 @@ respective authors.
          - Missing ‘Unused global option(s)’ warning (#110)
 
 3.51   2020-10-27
-       - Common interface to (re)define captions (with
+       * Common interface to (re)define captions (with
          \setlocalecaption).
-       - frenchspacing filled in many ini files.
-       - A new internal macro (for ldf files) named \babel@texpdf, to
+       * frenchspacing filled in many ini files.
+       * A new internal macro (for ldf files) named \babel@texpdf, to
          ease interoperativity with hyperref in shorthands.
-       - Fixes:
+       * Fixes:
          - Error when loading a language on the fly in tabular (#97).
          - 'hyphenrules' raised an error with 'base' option (#59).
          - Better handling of autoloaded languages (eg, catcodes).
          - An error was raised with CJK and a null font (#99).
          - language.tag.bcp47 and tag.ini in \localeinfo didn't work
            (#102).
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.52
 
 3.50   2020-10-06
-       - Fixes:
+       * Fixes:
          - main=<language> stopped working in some cases (#96).
          - Footnotes were not \long with layout=footnotes.
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.50
 
 3.49   2020-10-03
-       - BUG. This version has a severe bug with main= (fixed in 3.50).
-       - Allow standard LaTeX syntax to recognize locales based on ini
+       * BUG. This version has a severe bug with main= (fixed in 3.50).
+       * Allow standard LaTeX syntax to recognize locales based on ini
          files in the most common cases.
-       - frenchspacing is set with ini files.
-       - Fixes:
+       * frenchspacing is set with ini files.
+       * Fixes:
          - layout.lists=off didn't work (#94)
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.49
 
 3.48   2020-09-01
-       - New (tentative) tools to customize some labels (like chapters
+       * New (tentative) tools to customize some labels (like chapters
          in CJK and Hungarian). 
-       - Warning instead of error if neither 0 nor ZERO WIDTH SPACE is
+       * Warning instead of error if neither 0 nor ZERO WIDTH SPACE is
          found in some Southeast Asian languages.
-       - Fixes:
+       * Fixes:
          - \babelshorthand didn't work with some dialects (#91).
          - \selectlanguage and otherlanguage raised an error inside
            tabular.
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.48       
 
 3.47   2020-07-13
-       - Fixes:
+       * Fixes:
          - Spurious spaces when autoloading locales (bug introduced
            in 3.46 when fixing #80).
          - In dtx files, autoloading printed some spurious text
            (because % is set to ignore, #87).
-       - New - \getlocaleproperty*, which doesn't raise an error.
-       - Basic ini+tex templates for about 500 languages in the GitHub
+       * New - \getlocaleproperty*, which doesn't raise an error.
+       * Basic ini+tex templates for about 500 languages in the GitHub
          repository.
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.47
 
 3.46   2020-07-06
-       - Languages can now be optionally selected with their BCP 47
+       * Languages can now be optionally selected with their BCP 47
          tags.
-       - \BabelEnsureInfo now loads the basic data for the requested
+       * \BabelEnsureInfo now loads the basic data for the requested
          languages immediately (formerly it was done at the end of the
          preamble).
-       - Fixes:
+       * Fixes:
          - Getting rid of the hyphen in XeTeX was not working as
            expected. A new procedure has been devised.
          - tag.bcp47 now contains what its name promises, instead of
@@ -121,15 +126,15 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.47
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.46
 
 3.45   2020-06-10
-       - Minor fixes in Hindi, Ancient Greek, Macedonian.
-       - Improvements in Kurdish, Marathi.
-       - Alternative date formats with \localedate[calendar=...,
+       * Minor fixes in Hindi, Ancient Greek, Macedonian.
+       * Improvements in Kurdish, Marathi.
+       * Alternative date formats with \localedate[calendar=...,
          variant=...]{y}{m}{d} (note: no calendar computations, just
          strings).
-       - \today is (again) case-aware.
-       - \localenumeral{digits}{..} and \localecounter{digits}{cntr}
+       * \today is (again) case-aware.
+       * \localenumeral{digits}{..} and \localecounter{digits}{cntr}
          for native digits.
-       - Fixes
+       * Fixes
          - Improved handling of math with \babelposthyphenation and
            \babelprehyphenation (it was ignoring too much).
          - An error related to \bbl@foreign@x could be raised in some
@@ -137,52 +142,12 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.46
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.45
 
 3.44   2020-05-13
-       - WARNING. If you need the Portuguese style you must update
-         babel-portuges.
-       - \localedate, to print date with the current locale.
-       - [|] syntax in dates, to represent a value with any counter
-         defined in the ini files.
-       - Amharic: line breaking (modern and traditional), counters.
-       - Improvements in French, Portuguese.
-       - Optional argument in \foreignlanguage and otherlanguage*,
-         to switch date and/or captions.
-       - Preliminary code for \babelprehyphenation.
-       - Fixes:
-         - \babelcharproperty{..}{linebreak]{..} raised an error.
-         - \babelposthyphenation raised an error if the last char in
-           the pattern was ].       
-         - \babelposthyphenation is now deativated in math.
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
 
 3.43   2020-04-28
-       - Autoloading based on the BCP47 codes, with basic lookup.
-       - Now only a few essential commands are loaded in the format.
-       - Improvements in Assamese, Luxembourgish, Marathi, Armenian,
-         Bengali, and Finnish.
-       - First steps in the removal of switch.def and plain.def.
-       - Fixes:
-         - Babel reset the \sfcode of » to 1000. It should be 0.
-         - \guillemotleft and \guillemotleft renamed to \guillemetleft
-           and \guillemetleft (#63).
-         - A couple of bugs related to autoloading.
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.43
 
 3.42   2020-03-22
-       - \getlocaleproperty, to get the value of a field from the loaded
-         ini files.
-       - Added ini files for Syriac, Coptic and Church Slavic. Improved
-         some others (Armenian, Sanskrit).
-       - Added a new field tag.bcp47.likely to many files.
-       - Improved line breaking with xetex.
-       - Fixes:
-         - Remove extra space with languages loaded on the fly (bug
-           introduced in 3.41).
-         - Line breaking was no always correct with languages loaded on
-           the fly.
-         - Avoid a harmless warning about redefining a protected command
-           (#52). 
-         - Locale was not switched correctly with COMBINING characters
-           (#54).
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.42
 
 3.41   2020-02-27

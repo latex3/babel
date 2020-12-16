@@ -14,11 +14,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line ....
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line ....
-LaTeX Warning: Command \th invalid in math mode on input line ....
-Missing character: There is no ^^fe in font cmr10!
 > \box...=
-\vbox(6.8872+1.94397)x345.0
-.\hbox(6.8872+1.94397)x345.0, glue set 313.89282fil
+\vbox(6.8872+1.94444)x345.0
+.\hbox(6.8872+1.94444)x345.0, glue set 291.5039fil
 ..\hbox(0.0+0.0)x15.0
 ..\T1/cmr/m/n/10 ^^fe
 ..\penalty 10000
@@ -26,6 +24,13 @@ Missing character: There is no ^^fe in font cmr10!
 ..\T1/cmr/m/n/10 ;
 ..\glue 3.33252 plus 1.66626 minus 1.11084
 ..\mathon
+..\hbox(6.15079+1.94444)x22.38892
+...\OT1/cmr/m/n/10 a
+...\OT1/cmr/m/n/10 r
+...\OT1/cmr/m/n/10 c
+...\OT1/cmr/m/n/10 t
+...\OT1/cmr/m/n/10 g
+...\kern0.13887
 ..\mathoff
 ..\T1/cmr/m/n/10 .
 ..\penalty 10000
@@ -42,15 +47,19 @@ Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 > \box...=
-\vbox(6.94444+1.94397)x345.0
-.\hbox(6.94444+1.94397)x345.0, glue set 311.66881fil
+\vbox(6.15079+1.94444)x345.0
+.\hbox(6.15079+1.94444)x345.0, glue set 298.72437fil
 ..\hbox(0.0+0.0)x15.0
 ..\T2A/cmr/m/n/10 ;
 ..\glue 3.33252 plus 1.66626 minus 1.11084
 ..\mathon
-..\hbox(6.94444+0.0)x9.44447
+..\hbox(6.15079+1.94444)x22.38892
+...\OT1/cmr/m/n/10 a
+...\OT1/cmr/m/n/10 r
+...\OT1/cmr/m/n/10 c
 ...\OT1/cmr/m/n/10 t
-...\OT1/cmr/m/n/10 h
+...\OT1/cmr/m/n/10 g
+...\kern0.13887
 ..\mathoff
 ..\T2A/cmr/m/n/10 .
 ..\penalty 10000

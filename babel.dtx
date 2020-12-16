@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/12/11 v3.51.2218 The Babel package]
+\ProvidesFile{babel.dtx}[2020/12/16 v3.52 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3013,30 +3013,64 @@ example, if the first capture reads |([ΐΰ])|, the replacement could be
 \verb+{1|ΐΰ|ίύ}+, which maps \textit{ΐ} to \textit{ί}, and \textit{ΰ}
 to \textit{ύ}, so that the diaeresis is removed.
 
-This feature is activated with the first |\babelposthyphenation|.
+This feature is activated with the first |\babelposthyphenation| or
+|\babelprehyphenation|.
 
 See the \href{https://github.com/latex3/babel/wiki}{\babel\ wiki} for a
-more detailed description and some examples. It also describes an
-additional replacement type with the key |string|.
+more detailed description and some examples. It also describes a few
+additional replacement types (|string|, |penalty|).
+
+Although the main purpose of this command is non-standard hyphenation,
+it may actually be used for other transformations (after hyphenation is
+applied, so you must take discretionaries into account).
+
+You are limited to substitutions as done by \textsf{lua}, although a
+future implementation may alternatively accept \textsf{lpeg}.
+
+\Describe{\babelprehyphenation}{\marg{locale-name}%
+          \marg{lua-pattern}\marg{replacement}}
+          
+\New{3.44-3-52} This command is not strictly about hyphenation, but
+it is include here because it is a clear counterpart of
+|\babelposthyphenation|. It is similar to the latter, but (as its name
+implies) applied before hyphenation. There are other differences: (1)
+the first argument is the locale instead the name of hyphenation
+patterns; (2) in the search patterns |=| has no special meaning, while
+\verb+|+ stands for an ordinary space; (3) in the replacement,
+discretionaries are not accepted.
+
+It handles glyphs and spaces (but you can not insert spaces).
+
+Performance is still somewhat poor in some cases, but it is fast in the
+most the typical ones.
+
+This feature is activated with the first |\babelposthyphenation| or
+|\babelprehyphenation|.
 
 \begin{example}
-  Although the main purpose of this command is non-standard
-  hyphenation, it may actually be used for other transformations (after
-  hyphenation is applied, so you must take discretionaries into
-  account). For example, you can use the |string| replacement to
-  replace a character (or series of them) by another character (or
-  series of them). Thus, to enter \textit{ž} as |zh| and \textit{š} as
-  |sh| in a newly created locale for transliterated Russian:
+  You can replace a character (or series of them) by another character
+  (or series of them). Thus, to enter \textit{ž} as |zh| and \textit{š}
+  as |sh| in a newly created locale for transliterated Russian:
 \begin{verbatim}
 \babelprovide[hyphenrules=+]{russian-latin}   % Create locale
-\babelposthyphenation{russian-latin}{([sz])h} % Create rule
+\babelprehyphenation{russian-latin}{([sz])h}  % Create rule
 {
-  { string = {1|sz|šž} },
+  string = {1|sz|šž},
   remove
 }
 \end{verbatim}
-  In other words, it is a quite general tool. (A counterpart
-  |\babelprehyphenation| is on the way.)
+\end{example}
+
+\begin{example}
+  The following rule prevent the word “a” from being at the
+  end of a line:
+\begin{verbatim}
+\babelprehyphenation{english}{|a|}
+  {}, {},                     % Keep first space and a
+  {insert, penalty = 10000},  % Insert penalty
+  {}                          % Keep last space
+}
+\end{verbatim}
 \end{example}
 
 \subsection{Selection based on BCP 47 tags}
@@ -3873,26 +3907,6 @@ extended numerals in Greek).
 labels, both with the relation to captions (chapters, part), and how
 counters are used to define them. It is still somewhat tentative
 because it is far from trivial -- see the wiki for further details.
-
-\medskip
-\textbf{\string\babelprehyphenation}
-
-\New{3.44} Note it is tentative, but the current behavior for glyphs
-should be correct.
-
-It is similar to |\babelposthyphenation|, but (as its name implies)
-applied before hyphenation. There are other differences: (1) the first
-argument is the locale instead the name of hyphenation patterns; (2) in
-the search patterns |=| has no special meaning (\verb+|+ is still
-reserved, but currently unused); (3) in the replacement,
-discretionaries are not accepted, only remove, {}, and string = ...
-
-Currently it handles glyphs, not discretionaries or spaces (in
-particular, it will not catch the hyphen and you can't insert or remove
-spaces). Also, you are limited to substitutions as done by lua,
-although a future implementation may alternatively accept lpeg.
-
-Performance is still somewhat poor.
 
 \section{Loading languages with \file{language.dat}}
 
@@ -4823,8 +4837,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.51.2218>>
-%<<date=2020/12/11>>
+%<<version=3.52>>
+%<<date=2020/12/16>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6752,7 +6766,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \let\bbl@tempc\relax
-\let\bbl@temp@lg\@empty
 \bbl@foreach\bbl@language@opts{%
   \ifcase\bbl@iniflag  % Default
     \bbl@ifunset{ds@#1}%
@@ -13687,7 +13700,8 @@ end
 
   Babel.fetch_subtext = {}
 
-    &% TODO. Merge with [1]?? Maybe not - too many differences.
+  &% Merging both functions doesn't seen feasible, because there are too
+  &% many differences.
   Babel.fetch_subtext[0] = function(head)
     local word_string = ''
     local word_nodes = {}
@@ -13697,18 +13711,16 @@ end
 
     while item do
 
-      &% print('++', item)
-
       if item.id == 11 then
         inmath = (item.subtype == 0)
       end
-      if inmath then
-        goto next
-      end
 
-      if item.id == 29 then
+      if inmath then
+        &% pass
+
+      elseif item.id == 29 then
         local locale = node.get_attribute(item, Babel.attr_locale)
-        &% print('++', locale)
+
         if lang == locale or lang == nil then
           if (item.char ~= 124) then &% ie, not | = space
             lang = lang or locale
@@ -13729,7 +13741,6 @@ end
         word_nodes[#word_nodes+1] = item  &% Will be ignored
       end
 
-      ::next::
       item = item.next
     end
 
@@ -13751,22 +13762,23 @@ end
 
     while item do
 
-      &% print('++', item)
-
       if item.id == 11 then
         inmath = (item.subtype == 0)
       end
-      if inmath then
-        goto next
-      end
 
-      if item.id == 29
-          and (item.char ~= 124) &% ie, not |
-          and (item.char ~= 61)  &% ie, not =
-          and (item.lang == lang or lang == nil) then
-        lang = lang or item.lang
-        word_string = word_string .. unicode.utf8.char(item.char)
-        word_nodes[#word_nodes+1] = item
+      if inmath then
+        &% pass
+
+      elseif item.id == 29 then
+        if item.lang == lang or lang == nil then
+          if (item.char ~= 124) and (item.char ~= 61) then &% not =, not |
+            lang = lang or item.lang
+            word_string = word_string .. unicode.utf8.char(item.char)
+            word_nodes[#word_nodes+1] = item
+          end
+        else
+          break
+        end
 
       elseif item.id == 7 and item.subtype == 2 then
         word_string = word_string .. '='
@@ -13790,7 +13802,6 @@ end
         word_nodes[#word_nodes+1] = item  &% Will be ignored
       end
 
-      ::next::
       item = item.next
     end
 
@@ -13854,7 +13865,7 @@ end
           local matches = { u.match(w, p, last_match) }
           if #matches < 2 then break end
 
-          &% Get and remove empty captures (with (), which return a
+          &% Get and remove empty captures (with ()'s, which return a
           &% number with the position), and keep actual captures
           &% (from (...)), if any, in matches.
           local first = table.remove(matches, 1)
@@ -13983,7 +13994,7 @@ end
             print('/', sc, first, last, last_match, w)
           end
 
-          &% TODO. refetch must be eventually unnecesary. 
+          &% TODO. refetch will be eventually unnecesary. 
           if refetch then
             w, wn, nw, lang = Babel.fetch_subtext[mode](word_head)
           end              
