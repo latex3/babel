@@ -1,4 +1,4 @@
-## Babel 3.52
+## Babel 3.52.2228
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.52 are described in:
+Changes in version 3.53 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.52
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.53
 
 Included is a set of ini files for about 250 languages. 
 
@@ -43,6 +43,10 @@ respective authors.
 
 ### Latest changes
 ```
+3.53   2021-01-??
+       * Extended \setlocalecaption to allow .template (related to
+         #111).
+
 3.52   2020-12-16
        * WARNING. If you need the style for Afrikaans you must update
          babel-dutch.
@@ -56,6 +60,7 @@ respective authors.
          - Save size overflow with many \selectlanguage's (#109).
          - Albanian: fix a typo in contents name (#104)
          - Missing ‘Unused global option(s)’ warning (#110)
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.52
 
 3.51   2020-10-27
        * Common interface to (re)define captions (with

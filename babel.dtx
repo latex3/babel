@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/12/16 v3.52 The Babel package]
+\ProvidesFile{babel.dtx}[2020/12/21 v3.52.2228 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4837,8 +4837,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.52>>
-%<<date=2020/12/16>>
+%<<version=3.52.2228>>
+%<<date=2020/12/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8236,7 +8236,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \bbl@trace{Macros for setting language files up}
-\def\bbl@ldfinit{% TODO. Merge into the next macro? Unused elsewhere
+\def\bbl@ldfinit{%
   \let\bbl@screset\@empty
   \let\BabelStrings\bbl@opt@string
   \let\BabelOptions\@empty
@@ -10027,53 +10027,58 @@ help from Bernd Raichle, for which I am grateful.
 \newcommand\setlocalecaption{%  TODO. Catch typos. What about ensure?
   \@ifstar\bbl@setcaption@s\bbl@setcaption@x}
 \def\bbl@setcaption@x#1#2#3{%  language caption-name string
-  \edef\bbl@tempa{#1}%
-  \edef\bbl@tempd{%
-    \expandafter\expandafter\expandafter
-    \strip@prefix\expandafter\meaning\csname captions#1\endcsname}%
-  \bbl@xin@
-    {\expandafter\string\csname #2name\endcsname}%
-    {\bbl@tempd}%
-  \ifin@ % Renew caption
-    \bbl@xin@{\string\bbl@scset}{\bbl@tempd}% 
-    \ifin@
-      \bbl@exp{%
-        \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
-          {\\\bbl@scset\<#2name>\<#1#2name>}%
-          {}}%
-    \else % Old way converts to new way
-      \bbl@ifunset{#1#2name}%
-        {\bbl@exp{%
-          \\\bbl@add\<captions#1>{\def\<#2name>{\<#1#2name>}}%
+  \bbl@trim@def\bbl@tempa{#2}%
+  \bbl@xin@{.template}{\bbl@tempa}%
+  \ifin@
+    \bbl@ini@captions@template{#3}{#1}%
+  \else
+    \edef\bbl@tempd{%
+      \expandafter\expandafter\expandafter
+      \strip@prefix\expandafter\meaning\csname captions#1\endcsname}%
+    \bbl@xin@
+      {\expandafter\string\csname #2name\endcsname}%
+      {\bbl@tempd}%
+    \ifin@ % Renew caption
+      \bbl@xin@{\string\bbl@scset}{\bbl@tempd}% 
+      \ifin@
+        \bbl@exp{%
+          \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
+            {\\\bbl@scset\<#2name>\<#1#2name>}%
+            {}}%
+      \else % Old way converts to new way
+        \bbl@ifunset{#1#2name}%
+          {\bbl@exp{%
+            \\\bbl@add\<captions#1>{\def\<#2name>{\<#1#2name>}}%
+            \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
+              {\def\<#2name>{\<#1#2name>}}%
+              {}}}%
+          {}%
+      \fi
+    \else
+      \bbl@xin@{\string\bbl@scset}{\bbl@tempd}% New
+      \ifin@ % New way
+        \bbl@exp{%
+          \\\bbl@add\<captions#1>{\\\bbl@scset\<#2name>\<#1#2name>}%
+          \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
+            {\\\bbl@scset\<#2name>\<#1#2name>}%
+            {}}%
+      \else  % Old way, but defined in the new way
+        \bbl@exp{%
+          \\\bbl@add\<captions#1>{\def\<#2name>{\<#1#2name>}}%      
           \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
             {\def\<#2name>{\<#1#2name>}}%
-            {}}}%
-        {}%
+            {}}%
+      \fi%
     \fi
-  \else
-    \bbl@xin@{\string\bbl@scset}{\bbl@tempd}% New
-    \ifin@ % New way
-      \bbl@exp{%
-        \\\bbl@add\<captions#1>{\\\bbl@scset\<#2name>\<#1#2name>}%
-        \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
-          {\\\bbl@scset\<#2name>\<#1#2name>}%
-          {}}%
-    \else  % Old way, but defined in the new way
-      \bbl@exp{%
-        \\\bbl@add\<captions#1>{\def\<#2name>{\<#1#2name>}}%      
-        \\\bbl@ifsamestring{\bbl@tempa}{\languagename}%
-          {\def\<#2name>{\<#1#2name>}}%
-          {}}%
-    \fi%
-  \fi
-  \@namedef{#1#2name}{#3}%
-  \toks@\expandafter{\bbl@captionslist}%
-  \bbl@exp{\\\in@{\<#2name>}{\the\toks@}}%
-  \ifin@\else
-    \bbl@exp{\\\bbl@add\\\bbl@captionslist{\<#2name>}}%
-    \bbl@toglobal\bbl@captionslist
+    \@namedef{#1#2name}{#3}%
+    \toks@\expandafter{\bbl@captionslist}%
+    \bbl@exp{\\\in@{\<#2name>}{\the\toks@}}%
+    \ifin@\else
+      \bbl@exp{\\\bbl@add\\\bbl@captionslist{\<#2name>}}%
+      \bbl@toglobal\bbl@captionslist
+    \fi
   \fi}
-% \def\bbl@setcaption@s#1#2#3{}  % Not yet implemented
+% \def\bbl@setcaption@s#1#2#3{}  % TODO. Not yet implemented
 %    \end{macrocode}
 %
 % \subsection{Macros common to a number of languages}
@@ -10637,6 +10642,10 @@ help from Bernd Raichle, for which I am grateful.
     \else
       \bbl@csarg\def{KVP@##1}{##2}%
     \fi}%
+  % == init ==
+  \ifx\bbl@screset\@undefined
+    \bbl@ldfinit
+  \fi
   % == import, captions ==
   \ifx\bbl@KVP@import\@nil\else
     \bbl@exp{\\\bbl@ifblank{\bbl@KVP@import}}%
@@ -11338,37 +11347,39 @@ help from Bernd Raichle, for which I am grateful.
 % The auxiliary macro for captions define |\<caption>name|.
 %
 %    \begin{macrocode}
+\def\bbl@ini@captions@template#1#2{% string language tempa=capt-name
+  \bbl@replace\bbl@tempa{.template}{}%
+  \def\bbl@toreplace{#1{}}%
+  \bbl@replace\bbl@toreplace{[ ]}{\nobreakspace{}}%
+  \bbl@replace\bbl@toreplace{[[}{\csname}%
+  \bbl@replace\bbl@toreplace{[}{\csname the}% 
+  \bbl@replace\bbl@toreplace{]]}{name\endcsname{}}%
+  \bbl@replace\bbl@toreplace{]}{\endcsname{}}% 
+  \bbl@xin@{,\bbl@tempa,}{,chapter,}% TODO. copypaste pattern
+  \ifin@
+    \bbl@patchchapter
+    \global\bbl@csarg\let{chapfmt@#2}\bbl@toreplace
+  \fi 
+  \bbl@xin@{,\bbl@tempa,}{,appendix,}%
+  \ifin@
+    \bbl@patchchapter
+    \global\bbl@csarg\let{appxfmt@#2}\bbl@toreplace
+  \fi 
+  \bbl@xin@{,\bbl@tempa,}{,part,}%
+  \ifin@
+    \bbl@patchpart
+    \global\bbl@csarg\let{partfmt@#2}\bbl@toreplace
+  \fi 
+  \bbl@xin@{,\bbl@tempa,}{,figure,table,}%
+  \ifin@
+    \toks@\expandafter{\bbl@toreplace}%
+    \bbl@exp{\gdef\<fnum@\bbl@tempa>{\the\toks@}}%
+  \fi}
 \def\bbl@ini@captions@aux#1#2{%
   \bbl@trim@def\bbl@tempa{#1}%
   \bbl@xin@{.template}{\bbl@tempa}%
   \ifin@
-    \bbl@replace\bbl@tempa{.template}{}%
-    \def\bbl@toreplace{#2}%
-    \bbl@replace\bbl@toreplace{[ ]}{\nobreakspace{}}%
-    \bbl@replace\bbl@toreplace{[[}{\csname}%
-    \bbl@replace\bbl@toreplace{[}{\csname the}% 
-    \bbl@replace\bbl@toreplace{]]}{name\endcsname{}}%
-    \bbl@replace\bbl@toreplace{]}{\endcsname{}}% 
-    \bbl@xin@{,\bbl@tempa,}{,chapter,}%
-    \ifin@
-      \bbl@patchchapter
-      \global\bbl@csarg\let{chapfmt@\languagename}\bbl@toreplace
-    \fi 
-    \bbl@xin@{,\bbl@tempa,}{,appendix,}%
-    \ifin@
-      \bbl@patchchapter
-      \global\bbl@csarg\let{appxfmt@\languagename}\bbl@toreplace
-    \fi 
-    \bbl@xin@{,\bbl@tempa,}{,part,}%
-    \ifin@
-      \bbl@patchpart
-      \global\bbl@csarg\let{partfmt@\languagename}\bbl@toreplace
-    \fi 
-    \bbl@xin@{,\bbl@tempa,}{,figure,table,}%
-    \ifin@
-      \toks@\expandafter{\bbl@toreplace}%
-      \bbl@exp{\gdef\<fnum@\bbl@tempa>{\the\toks@}}%
-    \fi
+    \bbl@ini@captions@template{#2}\languagename
   \else
     \bbl@ifblank{#2}%
       {\bbl@exp{%
@@ -13230,10 +13241,10 @@ help from Bernd Raichle, for which I am grateful.
 % First, some general code for line breaking, used by
 % |\babelposthyphenation|.
 %
-% \textit{In progress.} Replace regular (ie, implicit) discretionaries
-% by spaceskips, based on the previous glyph (which I think makes
-% sense, because the hyphen and the previous char go always together).
-% Other discretionaries are not touched. See Unicode UAX 14.
+% Replace regular (ie, implicit) discretionaries by spaceskips, based
+% on the previous glyph (which I think makes sense, because the hyphen
+% and the previous char go always together). Other discretionaries are
+% not touched. See Unicode UAX 14.
 %
 %    \begin{macrocode}
 % TODO - to a lua file
@@ -13486,6 +13497,7 @@ help from Bernd Raichle, for which I am grateful.
 % TODO - to a lua file
 \directlua{
 Babel.script_blocks = {
+  ['dflt'] = {},
   ['Arab'] = {{0x0600, 0x06FF}, {0x08A0, 0x08FF}, {0x0750, 0x077F},
               {0xFE70, 0xFEFF}, {0xFB50, 0xFDFF}, {0x1EE00, 0x1EEFF}},
   ['Armn'] = {{0x0530, 0x058F}},
