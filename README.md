@@ -1,4 +1,4 @@
-## Babel 3.52.2228
+## Babel 3.52.2245
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -46,6 +46,11 @@ respective authors.
 3.53   2021-01-??
        * Extended \setlocalecaption to allow .template (related to
          #111).
+       * Allow access to some features in `ini` files even with `ldf`
+         ones.
+       * Fixes:
+         - Not really a fix, but I started working on `picture` with
+           bidi in lua.
 
 3.52   2020-12-16
        * WARNING. If you need the style for Afrikaans you must update

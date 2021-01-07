@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2020/12/21 v3.52.2228 The Babel package]
+\ProvidesFile{babel.dtx}[2021/01/07 v3.52.2245 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -202,13 +202,14 @@
 Version \csname @gobble\expandafter\endcsname\fileversion\newline
 \filedate
 
-\vspace{1cm}
-\textit{Original author}\newline
-Johannes L. Braams
+\LARGE
+\vspace{1.2cm}
+Johannes L. Braams\\[-.5ex]
+{\large Original author}
 
 \vspace{.3cm}
-\textit{Current maintainer}\newline
-Javier Bezos
+Javier Bezos\\[-.5ex]
+{\large Current maintainer}
 \end{minipage}
 &\cellcolor[rgb]{.92, .86, .73}
 \vspace{2cm}
@@ -782,6 +783,18 @@ It defines |\text|\m{tag1}\marg{text} to be
 to be |\begin{otherlanguage*}|\marg{language1}, and so on. Note
 |\|\m{tag1} is also allowed, but remember to set it locally inside a
 group.
+
+% \begin{warning}
+%   There is a clear drawback in this feature, namely, the ‘prefix’
+%   |\text...| is heavily overloaded in \LaTeX{} and there can some
+%   conflicts with existing macros (|\textlatin|, |\textbar|,
+%   |\textit|, |\textcolor| and so on). The same applies to
+%   environments, because |arabic| conflicts with |\arabic|. Except if
+%   there is a reason for this ‘syntactical sugar’, the best option is
+%   to stick to the default selectors or to define your own
+%   alternatives.
+% \end{warning}
+
 \begin{example}
 With
 \begin{verbatim}
@@ -2511,6 +2524,10 @@ languages.
 \begin{verbatim}
 \usepackage[italian]{babel}
 \babelprovide[import, main]{polytonicgreek}
+\end{verbatim}
+Remerber there is an alternative syntax for the latter:
+\begin{verbatim}
+\usepackage[italian, polytonicgreek, provide=*]{babel}
 \end{verbatim}
 \end{example}
 
@@ -4837,8 +4854,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.52.2228>>
-%<<date=2020/12/21>>
+%<<version=3.52.2245>>
+%<<date=2021/01/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10666,11 +10683,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@ifunset{date#2}%
     {\bbl@provide@new{#2}}%
     {\bbl@ifblank{#1}%
-      {\bbl@error
-        {If you want to modify `#2' you must tell how in\\%
-         the optional argument. See the manual for the\\%
-         available options.}%
-        {Use this macro as documented}}%
+      {}%
       {\bbl@provide@renew{#2}}}%
   % Post tasks
   \bbl@ifunset{bbl@extracaps@#2}%
@@ -11355,20 +11368,10 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@replace\bbl@toreplace{[}{\csname the}% 
   \bbl@replace\bbl@toreplace{]]}{name\endcsname{}}%
   \bbl@replace\bbl@toreplace{]}{\endcsname{}}% 
-  \bbl@xin@{,\bbl@tempa,}{,chapter,}% TODO. copypaste pattern
+  \bbl@xin@{,\bbl@tempa,}{,chapter,appendix,part,}%
   \ifin@
-    \bbl@patchchapter
-    \global\bbl@csarg\let{chapfmt@#2}\bbl@toreplace
-  \fi 
-  \bbl@xin@{,\bbl@tempa,}{,appendix,}%
-  \ifin@
-    \bbl@patchchapter
-    \global\bbl@csarg\let{appxfmt@#2}\bbl@toreplace
-  \fi 
-  \bbl@xin@{,\bbl@tempa,}{,part,}%
-  \ifin@
-    \bbl@patchpart
-    \global\bbl@csarg\let{partfmt@#2}\bbl@toreplace
+    \@nameuse{bbl@patch\bbl@tempa}%
+    \global\bbl@csarg\let{\bbl@tempa fmt@#2}\bbl@toreplace
   \fi 
   \bbl@xin@{,\bbl@tempa,}{,figure,table,}%
   \ifin@
@@ -11468,7 +11471,7 @@ help from Bernd Raichle, for which I am grateful.
 % but not all. Actually, the following lines are somewhat tentative.
 %
 %    \begin{macrocode}
-\def\bbl@chaptype{chap}
+\def\bbl@chaptype{chapter}
 \ifx\@makechapterhead\@undefined
   \let\bbl@patchchapter\relax
 \else\ifx\thechapter\@undefined
@@ -11478,7 +11481,7 @@ help from Bernd Raichle, for which I am grateful.
 \else
   \def\bbl@patchchapter{%
     \global\let\bbl@patchchapter\relax
-    \bbl@add\appendix{\def\bbl@chaptype{appx}}% Not harmful, I hope
+    \bbl@add\appendix{\def\bbl@chaptype{appendix}}% Not harmful, I hope
     \bbl@toglobal\appendix
     \bbl@sreplace\ps@headings
       {\@chapapp\ \thechapter}%
@@ -11496,6 +11499,7 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@ifunset{bbl@\bbl@chaptype fmt@\languagename}%
         {\@chapapp\space\thechapter}
         {\@nameuse{bbl@\bbl@chaptype fmt@\languagename}}}}
+  \let\bbl@patchappendix\bbl@patchchapter
 \fi\fi\fi
 \ifx\@part\@undefined
   \let\bbl@patchpart\relax
@@ -14236,26 +14240,23 @@ end
   {}
 \IfBabelLayout{graphics}
   {\let\bbl@pictresetdir\relax
-   \def\bbl@pictsetdir{%
+   \def\bbl@pictsetdir#1{%
      \ifcase\bbl@thetextdir
        \let\bbl@pictresetdir\relax
      \else
-       \textdir TLT\relax
-       \def\bbl@pictresetdir{\textdir TRT\relax}%
+       \bodydir TLT
+       % \(text|par)dir required in pgf:
+       \def\bbl@pictresetdir{\bodydir TRT\pardir TRT\textdir TRT\relax}%
      \fi}%
-   \let\bbl@OL@@picture\@picture
-   \let\bbl@OL@put\put
-   \bbl@sreplace\@picture{\hskip-}{\bbl@pictsetdir\hskip-}%
-   \def\put(#1,#2)#3{%  Not easy to patch. Better redefine.
-     \@killglue
-     \raise#2\unitlength
-     \hb@xt@\z@{\kern#1\unitlength{\bbl@pictresetdir#3}\hss}}%
+   \ifx\AddToHook\@undefined\else
+     \AddToHook{env/picture/begin}{\bbl@pictsetdir\z@}%
+   \fi
    \AtBeginDocument
      {\ifx\tikz@atbegin@node\@undefined\else
         \let\bbl@OL@pgfpicture\pgfpicture
         \bbl@sreplace\pgfpicture{\pgfpicturetrue}%
-          {\bbl@pictsetdir\pgfpicturetrue}%
-        \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir}%
+          {\bbl@pictsetdir\@ne\pgfpicturetrue}%
+        \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\@ne}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
       \fi}}
   {}
