@@ -6,20 +6,15 @@
 \usepackage[
   nil,
   bidi=basic,
-  layout=tabular % counters % not for hebrew
+  layout=tabular % Don't set 'counters' for hebrew
   ]{babel}
 
-\babelprovide[import,main]{hebrew}
+\babelprovide[import, main, alph=letters]{hebrew}
 
 \babelfont{rm}{Libertinus Serif}
 \babelfont{sf}[Scale=MatchLowercase]{FreeSans}
 
 \babeltags{lr = nil, he = hebrew}
-
-% A quick dirty trick for Hebrew alph counters:
-\makeatletter
-\def\@alph#1{\char\numexpr1487+#1\relax}
-\makeatother
 
 % See below:
 \newcommand\refrange[2]{\babelsublr{\texthe{\ref{#1}}-\texthe{\ref{#2}}}} 
@@ -72,7 +67,7 @@ W=\Delta E_k
 
   \item מסת כבידה אקטיבית: מדד לכוח הכבידה
   שהגוף מפעיל על גופים אחרים.
-\begin{enumerate}[\theenumi a,noitemsep]
+\begin{enumerate}[\theenumi a),noitemsep]
   \item מסת כבידה פסיבית: מדד להשפעה של כוח הכבידה על הגוף.
 \end{enumerate}
 \end{enumerate}

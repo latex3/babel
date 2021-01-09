@@ -1,4 +1,4 @@
-## Babel 3.52.2245
+## Babel 3.52.2247
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -51,6 +51,7 @@ respective authors.
        * Fixes:
          - Not really a fix, but I started working on `picture` with
            bidi in lua.
+         - Parenthesis sometimes mirrored at the end of math.
 
 3.52   2020-12-16
        * WARNING. If you need the style for Afrikaans you must update

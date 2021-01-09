@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/01/07 v3.52.2245 The Babel package]
+\ProvidesFile{babel.dtx}[2021/01/09 v3.52.2247 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -784,16 +784,16 @@ to be |\begin{otherlanguage*}|\marg{language1}, and so on. Note
 |\|\m{tag1} is also allowed, but remember to set it locally inside a
 group.
 
-% \begin{warning}
-%   There is a clear drawback in this feature, namely, the ‘prefix’
-%   |\text...| is heavily overloaded in \LaTeX{} and there can some
-%   conflicts with existing macros (|\textlatin|, |\textbar|,
-%   |\textit|, |\textcolor| and so on). The same applies to
-%   environments, because |arabic| conflicts with |\arabic|. Except if
-%   there is a reason for this ‘syntactical sugar’, the best option is
-%   to stick to the default selectors or to define your own
-%   alternatives.
-% \end{warning}
+\begin{warning}
+  There is a clear drawback in this feature, namely, the ‘prefix’
+  |\text...| is heavily overloaded in \LaTeX{} and there can some
+  conflicts with existing macros (|\textlatin|, |\textbar|,
+  |\textit|, |\textcolor| and so on). The same applies to
+  environments, because |arabic| conflicts with |\arabic|. Except if
+  there is a reason for this ‘syntactical sugar’, the best option is
+  to stick to the default selectors or to define your own
+  alternatives.
+\end{warning}
 
 \begin{example}
 With
@@ -4854,8 +4854,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.52.2245>>
-%<<date=2021/01/07>>
+%<<version=3.52.2247>>
+%<<date=2021/01/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -20963,7 +20963,10 @@ function Babel.bidi(head, ispar, hdir)
       first_et = nil
       has_en = false
     end
-
+    
+    -- Force mathdir in math (currently works as expected with 'l')
+    if inmath then d = ('TRT' == tex.mathdir) and 'r' or 'l' end
+      
     if d then
       if d == 'al' then
         d = 'r'
