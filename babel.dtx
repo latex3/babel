@@ -1,7 +1,7 @@
 % \iffalse
 % This document requires lualatex
 %%
-%% Copyright (C) 2012-2020 Javier Bezos and Johannes L. Braams.
+%% Copyright (C) 2012-2021 Javier Bezos and Johannes L. Braams.
 %% Copyright (C) 1989-2012 Johannes L. Braams and
 %%           any individual authors listed elsewhere in this file.
 %% All rights reserved.
@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/01/09 v3.52.2247 The Babel package]
+\ProvidesFile{babel.dtx}[2021/01/18 v3.52.2256 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4854,8 +4854,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.52.2247>>
-%<<date=2021/01/09>>
+%<<version=3.52.2256>>
+%<<date=2021/01/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7402,12 +7402,28 @@ help from Bernd Raichle, for which I am grateful.
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
     \if@filesw
       \ifx\babel@aux\@gobbletwo\else % Set if single in the first, redundant
+        % \bbl@savelastskip
         \protected@write\@auxout{}{\string\babel@aux{\bbl@auxname}{}}%
+        % \bbl@restorelastskip
       \fi
       \bbl@usehooks{write}{}%
     \fi
   \fi}
-% 
+% The following is used above to deal with skips before the write
+% whatsit. Adapted from hyperref, but it might fail, so for the moment
+% it's not activated. TODO.
+\def\bbl@savelastskip{%
+  \let\bbl@restorelastskip\relax
+  \ifvmode
+    \ifdim\lastskip=\z@
+      \let\bbl@restorelastskip\nobreak
+    \else
+      \bbl@exp{%
+        \def\\\bbl@restorelastskip{%
+          \skip@=\the\lastskip
+          \\\nobreak \vskip-\skip@ \vskip\skip@}}%
+    \fi
+  \fi}
 \newif\ifbbl@bcpallowed
 \bbl@bcpallowedfalse
 \def\select@language#1{% from set@, babel@aux
@@ -10686,20 +10702,25 @@ help from Bernd Raichle, for which I am grateful.
       {}%
       {\bbl@provide@renew{#2}}}%
   % Post tasks
-  \bbl@ifunset{bbl@extracaps@#2}%
-    {\bbl@exp{\\\babelensure[exclude=\\\today]{#2}}}%
-    {\toks@\expandafter\expandafter\expandafter
-      {\csname bbl@extracaps@#2\endcsname}%
-     \bbl@exp{\\\babelensure[exclude=\\\today,include=\the\toks@}]{#2}}%
-  \bbl@ifunset{bbl@ensure@\languagename}%
-    {\bbl@exp{%
-      \\\DeclareRobustCommand\<bbl@ensure@\languagename>[1]{%
-        \\\foreignlanguage{\languagename}%
-        {####1}}}}%
-    {}%
-  \bbl@exp{%
-     \\\bbl@toglobal\<bbl@ensure@\languagename>%
-     \\\bbl@toglobal\<bbl@ensure@\languagename\space>}%
+  % ----------
+  % == ensure captions ==
+  \ifx\bbl@KVP@captions\@nil\else
+    \bbl@ifunset{bbl@extracaps@#2}%
+      {\bbl@exp{\\\babelensure[exclude=\\\today]{#2}}}%
+      {\toks@\expandafter\expandafter\expandafter
+        {\csname bbl@extracaps@#2\endcsname}%
+       \bbl@exp{\\\babelensure[exclude=\\\today,include=\the\toks@}]{#2}}%
+    \bbl@ifunset{bbl@ensure@\languagename}%
+      {\bbl@exp{%
+        \\\DeclareRobustCommand\<bbl@ensure@\languagename>[1]{%
+          \\\foreignlanguage{\languagename}%
+          {####1}}}}%
+      {}%
+    \bbl@exp{%
+       \\\bbl@toglobal\<bbl@ensure@\languagename>%
+       \\\bbl@toglobal\<bbl@ensure@\languagename\space>}%
+  \fi
+  % ==
   % At this point all parameters are defined if 'import'. Now we
   % execute some code depending on them. But what about if nothing was
   % imported? We just load the very basic parameters.
@@ -20964,8 +20985,11 @@ function Babel.bidi(head, ispar, hdir)
       has_en = false
     end
     
-    -- Force mathdir in math (currently works as expected with 'l')
-    if inmath then d = ('TRT' == tex.mathdir) and 'r' or 'l' end
+    -- Force mathdir in math if ON (currently works as expected only
+    -- with 'l')
+    if inmath and d == 'on' then
+      d = ('TRT' == tex.mathdir) and 'r' or 'l'
+    end
       
     if d then
       if d == 'al' then

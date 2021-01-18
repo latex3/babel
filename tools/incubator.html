@@ -7,8 +7,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width" />
 
-
-<link href="texytipo.css" rel="stylesheet" type="text/css" />
+<link href="http://www.texnia.com/texytipo.css" rel="stylesheet" type="text/css" />
 <style>
   form.ldf label { display:inline-block; width: 15em; }
   form.ldf input { display:inline-block; width: 20em; }
@@ -59,10 +58,10 @@ function doCreate() {
          softhy + '}{\\bbl@hy@soft}'; }
     if ( hardhy != '' ) {
       decl += '\n\\declare@shorthand{' + lang + '}{' +
-         hardhy + '}{\\bbl@hy@hard}'; }
+         hardhy + '}{\\babel@texpdf{\\bbl@hy@hard}{-}{-}{\\textminus}}'; }
     if ( breakligs != '' ) {
       decl += '\n\\declare@shorthand{' + lang + '}{' +
-         breakligs + '}{\\discretionary{-}{}{\kern.03em}}'; }
+         breakligs + '}{\\babel@texpdf{\\discretionary{-}{}{\\kern.03em}}{}{}{}}'; }
     doc = doc.replace(/\[=initiate=]/, decl);
     var shorts = '\n  \\languageshorthands{' + lang + '}%\n'
     shorts += '  \\bbl@activate{"}'
@@ -155,29 +154,27 @@ function getToday() {
 
 <h1>Language incubator for babel</h1>
 
+<small><i>Version 0.2. 2021-01-12.</i></small>
 
-<small><i>Version 0.1. 2015-01-31.</i></small>
-
-<p>Creating an <code>ldf</code> file for <a href="babel_news.html">babel</a> can be
-intimidating.  This page provides a simple way to create a simple
-language definition file for the babel system. This is still very
-rudimentary, but even so you may find it a very convenient way to, at
-least, start the work.</p>
+<p>Creating an <code>ldf</code> file for babel can be intimidating.
+This page provides a simple way to create a simple language definition
+file for the babel system. This is still very rudimentary, but even so
+you may find it a very convenient way to, at least, start the work.</p>
 
 <p>Currently only the skeleton, the minimal structure, is generated.
-Anyway, it can be used directly, even if it is not fully adapted to
-the typographical conventions.  Future work will provide more tools
-and very likely integration with <a href="http://cldr.unicode.org/">CLDR</a> in
-order the ease localizing TeX. Output for polyglossia is also
-intended.</p>
+Anyway, it can be used directly, even if it is not fully adapted to the
+typographical conventions. Future work will provide more tools and very
+likely integration with <a href="http://cldr.unicode.org/">CLDR</a> in
+order the ease localizing TeX.</p>
 
-<p>String are currently not converted to the <span class="caps">LICR</span> for traditional engines
-(you must still do it by hand &#8212; to be fixed).</p>
+<p>String are currently not converted to the <span
+class="caps">LICR</span> for traditional engines (you must still do it
+by hand &#8212; to be fixed).</p>
 
-<p>Another nice improvement would be beautifying this page, of course.</p>
+<p>Another nice improvement would be beautifying this page, of
+course.</p>
 
 <p>Note also I haven&#8217;t said it&#8217;s bug free.</p>
-
 
 <form class="ldf">
 <h2>Identification</h2>
@@ -556,7 +553,7 @@ of this file under its original name.
 \Msg{* Happy TeXing}
 \Msg{***********************************************************}
 }
- 
+
 \endinput
 </script>
 
@@ -564,7 +561,7 @@ of this file under its original name.
 </div>
 <div class="toc">
 <p class="credits">
-&#169; 2000-2015<br />Javier Bezos<br />All Rights Reserved</p>
+&#169; 2015-2021<br />Javier Bezos<br />License: MIT</p>
 
 </div>
 </div>

@@ -1,4 +1,4 @@
-## Babel 3.52.2247
+## Babel 3.52.2256
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -48,6 +48,8 @@ respective authors.
          #111).
        * Allow access to some features in `ini` files even with `ldf`
          ones.
+       * Tool to create ldf files with a (more or less) GUI.
+       * Captions for Sinhala (thanks to Nisal D Bandara).
        * Fixes:
          - Not really a fix, but I started working on `picture` with
            bidi in lua.
