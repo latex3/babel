@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/01/18 v3.52.2256 The Babel package]
+\ProvidesFile{babel.dtx}[2021/01/26 v3.53 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -297,7 +297,7 @@ other packages detect and use it. This is the standard way in \LaTeX{}
 for an option – in this case a language – to be recognized by several
 packages.
 
-Many languages are compatible with \textsf{xetex} and \textsf{luatex},.
+Many languages are compatible with \textsf{xetex} and \textsf{luatex}.
 With them you can use \babel{} to localize the documents. When these
 engines are used, the Latin script is covered by default in current
 \LaTeX{} (provided the document encoding is UTF-8), because the font
@@ -309,15 +309,13 @@ attributes with \textsf{fontspec}, too.
   Here is a simple full example for “traditional” \TeX{} engines
   (see below for \xetex{} and \luatex{}). The packages |fontenc| and
   |inputenc| do not belong to \babel, but they are included in the
-  example because typically you will need them (however, the package
-  \textsf{inputenc} may be omitted with \LaTeX{} $\ge$ 2018-04-01 if
-  the encoding is UTF-8):
+  example because typically you will need them. It assumes UTF-8, the
+  default encoding:
 \setengine{pdftex}
 \begin{verbatim}
 \documentclass{article}
 
 \usepackage[T1]{fontenc}
-% \usepackage[utf8]{inputenc} % Uncomment if LaTeX < 2018-04-01
 
 _\usepackage[french]{babel}_
 
@@ -488,15 +486,13 @@ detail: |\selectlanguage| is used for blocks of text, while
 |\foreignlanguage| is for chunks of text inside paragraphs.
 
 \begin{example}
-A full bilingual document follows. The main language is |french|, which
-is activated when the document begins. The package \textsf{inputenc}
-may be omitted with \LaTeX{} $\ge$ 2018-04-01 if the encoding is UTF-8.
+A full bilingual document with \pdftex{} follows. The main language is
+|french|, which is activated when the document begins. It assumes UTF-8:
 \setengine{pdftex}
 \begin{verbatim}
 \documentclass{article}
 
 \usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
 
 _\usepackage[english,french]{babel}_
 
@@ -558,18 +554,19 @@ is worth remembering that |\babelfont| does \textit{not} load any font
 until required, so that it can be used just in case.
 
 \begin{example}
-  A trivial document is:
+  A trivial document with the default font in English and Spanish, and
+  FreeSerif in Russian is:
 \setengine{luatex/xetex}
 \begin{verbatim}
 \documentclass[english]{article}
 \usepackage{babel}
 
-\babelfont[russian]{rm}{FreeSerif}
+_\babelfont[russian]{rm}{FreeSerif}_
 
 \begin{document}
 
-English. \foreignlanguage{russian}{Русский}.
-\foreignlanguage{spanish}{Español}
+English. _\foreignlanguage{russian}{Русский}_.
+_\foreignlanguage{spanish}{Español}_.
 
 \end{document}
 \end{verbatim}
@@ -713,7 +710,7 @@ can write:
 \foreignlanguage[date]{polish}{\today}
 \end{verbatim}
 In addition, captions can be switched with |captions| (or both, of
-course, with |date, captions|). Until 3.43 you had to write something
+course, with |date,| |captions|). Until 3.43 you had to write something
 like |{\selectlanguage{..} ..}|, which was not always the most
 convenient way.
 
@@ -762,11 +759,11 @@ for instance be used to select `nohyphenation', provided that in
 loading \file{zerohyph.tex}. It deactivates language shorthands, too
 (but not user shorthands).
 
-Except for these simple uses, |hyphenrules| is discouraged and
-|otherlanguage*| (the starred version) is preferred, as the former does
-not take into account possible changes in encodings of characters like,
-say, |'| done by some languages (eg, \textsf{italian}, \textsf{french},
-\textsf{ukraineb}). To set hyphenation exceptions, use
+Except for these simple uses, |hyphenrules| is deprecated and
+|otherlanguage*| (the starred version) is preferred, because the former
+does not take into account possible changes in encodings of characters
+like, say, |'| done by some languages (eg, \textsf{italian},
+\textsf{french}, \textsf{ukraineb}). To set hyphenation exceptions, use
 |\babelhyphenation| (see below).
 
 \subsection{More on selection}
@@ -785,14 +782,13 @@ to be |\begin{otherlanguage*}|\marg{language1}, and so on. Note
 group.
 
 \begin{warning}
-  There is a clear drawback in this feature, namely, the ‘prefix’
-  |\text...| is heavily overloaded in \LaTeX{} and there can some
-  conflicts with existing macros (|\textlatin|, |\textbar|,
-  |\textit|, |\textcolor| and so on). The same applies to
-  environments, because |arabic| conflicts with |\arabic|. Except if
-  there is a reason for this ‘syntactical sugar’, the best option is
-  to stick to the default selectors or to define your own
-  alternatives.
+  There is a clear drawback to this feature, namely, the ‘prefix’
+  |\text...| is heavily overloaded in \LaTeX{} and conflicts with
+  existing macros may arise (|\textlatin|, |\textbar|, |\textit|,
+  |\textcolor| and many others). The same applies to environments,
+  because |arabic| conflicts with |\arabic|. Except if there is a
+  reason for this ‘syntactical sugar’, the best option is to stick to
+  the default selectors or to define your own alternatives. 
 \end{warning}
 
 \begin{example}
@@ -847,7 +843,7 @@ language to wrap them with a selector:
 By default only the basic captions and |\today| are redefined, but you
 can add further macros with the key |include| in the optional argument
 (without commas). Macros not to be modified are listed in
-|exclude|. You can also enforce a font encoding with
+|exclude|. You can also enforce a font encoding with the option
 |fontenc|.\footnote{With it, encoded strings may not work as expected.}
 A couple of examples:
 \begin{verbatim}
@@ -867,7 +863,7 @@ With |ini| files (see below), captions are ensured by default.
 A \textit{shorthand} is a sequence of one or two characters that
 expands to arbitrary \TeX{} code.
 
-Shorthands can be used for different kinds of things, for example:
+Shorthands can be used for different kinds of things; for example:
 (1) in some languages shorthands such as |"a| are defined to be able
 to hyphenate the word if the encoding is |OT1|; (2) in some languages
 shorthands such as |!| are used to insert the right amount of white
@@ -882,22 +878,20 @@ Unicode characters). As to the point 2, now \textsf{pdfTeX} provides
 |\knbccode|, and \luatex{} can manipulate the glyph list. Tools for
 point 3 can be still very useful in general.
 
-There are three levels of shorthands: \textit{user},
-\textit{language}, and \textit{system} (by order of
-precedence). Version 3.9 introduces the \textit{language user} level
-on top of the user level, as described below. In most cases, you will
-use only shorthands provided by languages.
+There are four levels of shorthands: \textit{user}, \textit{language},
+\textit{system}, and \textit{language user} (by order of precedence).
+In most cases, you will use only shorthands provided by languages.
 
-\begin{note} Note the following:
+\begin{note} Keep in mind the following:
 \begin{enumerate}
 \item Activated chars used for two-char shorthands cannot be followed
   by a closing brace |}| and the spaces following are gobbled.  With
   one-char shorthands (eg,~|:|), they are preserved.
-\item If on a certain level (system, language, user) there is a
-  one-char shorthand, two-char ones starting with that
-  char and on the same level are ignored.
+\item If on a certain level (system, language, user, language user)
+  there is a one-char shorthand, two-char ones starting with that char
+  and on the same level are ignored.
 \item Since they are active, a shorthand cannot contain the same
-  character in its definition (except if it is deactivated with, eg,
+  character in its definition (except if deactivated with, eg,
   |\string|).
 \end{enumerate}
 \end{note}
@@ -1405,12 +1399,11 @@ Or also:
 \begin{description}
 \itemsep=-\parskip
 \item[Arabic] Monolingual documents mostly work in \luatex, but it must
-  be fine tuned, and a recent version of
-  \textsf{fontspec}/\textsf{loaotfload} is required. In \xetex{}
+  be fine tuned, particularly graphical elements like |picture|. In \xetex{}
   \babel{} resorts to the \textsf{bidi} package, which seems to work.
-\item[Hebrew] Niqqud marks seem to work in both engines, but
-  cantillation marks are misplaced (\xetex{} or \luatex{} with Harfbuzz
-  seems better, but still problematic).
+\item[Hebrew] Niqqud marks seem to work in both engines, but depending 
+  on the font cantillation marks might be misplaced (\xetex{} or
+  \luatex{} with Harfbuzz seems better, but still problematic).
 \item[Devanagari] In \luatex{} and the the default renderer many fonts
 work, but some others do not, the main issue being the ‘ra’. You may
 need to set explicitly the script to either |deva| or |dev2|, eg:
@@ -1419,8 +1412,8 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
 \end{verbatim}  
   Other Indic scripts are still under development in the default
   \luatex{} renderer, but should work with |Renderer=Harfbuzz|. They
-  also work with \xetex{}, although fine tuning the font behavior is
-  not always possible.
+  also work with \xetex{}, although unlike with \luatex{} fine tuning
+  the font behavior is not always possible.
 \item[Southeast scripts] Thai works in both \luatex{} and \xetex{}, but
   line breaking differs (rules can be modified in \luatex; they are
   hard-coded in \xetex). Lao seems to work, too, but there are no
@@ -2245,8 +2238,8 @@ to select fonts in addition to the three basic families.
   command, neither the script nor the language is passed. You must
   add them by hand. This is by design, for several reasons —for
   example, each font has its own set of features and a generic setting
-  for several of them can be problematic, and also a “lower-level”
-  font selection is useful.
+  for several of them can be problematic, and also preserving a
+  “lower-level” font selection is useful.
 \end{note}
 
 \begin{note}
@@ -2381,11 +2374,13 @@ is by means of |\babelprovide|, described below in depth. So,
 something like:
 \begin{verbatim}
 \usepackage[danish]{babel}
-\babelprovide[captions=da,hyphenrules=nohyphenation]{danish}
+\babelprovide[captions=da, hyphenrules=nohyphenation]{danish}
 \end{verbatim}
 first loads |danish.ldf|, and then redefines the captions for
 \texttt{danish} (as provided by the |ini| file) and prevents
 hyphenation. The rest of the language definitions are not touched.
+Without the optional argument it just loads some aditional tools if
+provided by the |ini| file, like extra counters.
 
 \subsection{Creating a language}
 
@@ -2415,8 +2410,9 @@ you will find alerts like that in the |log| file:
 \begin{verbatim}
 Package babel Warning: \mylangchaptername not set. Please, define it
 (babel)                after the language has been loaded (typically
-(babel)                in the preamble) with something like:
-(babel)                \renewcommand\maylangchaptername{..}
+(babel)                in the preamble) with the help of
+(babel)                \setlocalecaption. An example is:
+(babel)                \setlocalecaption{mylang}{chapter}{..}
 (babel)                Reported on input line 18.
 \end{verbatim}
 
@@ -2428,8 +2424,8 @@ languages loaded on the fly are not yet available in the preamble.
 \begin{verbatim}
 \usepackage[danish]{babel}
 \babelprovide{arhinish}
-\renewcommand\arhinishchaptername{Chapitula}
-\renewcommand\arhinishrefname{Refirenke}
+\setlocalecaption{arhinish}{chapter}{Chapitula}
+\setlocalecaption{arhinish}{refname}{Refirenke}
 \renewcommand\arhinishhyphenmins{22}
 \end{verbatim}
 \end{example}
@@ -3048,7 +3044,7 @@ future implementation may alternatively accept \textsf{lpeg}.
           \marg{lua-pattern}\marg{replacement}}
           
 \New{3.44-3-52} This command is not strictly about hyphenation, but
-it is include here because it is a clear counterpart of
+it is included here because it is a clear counterpart of
 |\babelposthyphenation|. It is similar to the latter, but (as its name
 implies) applied before hyphenation. There are other differences: (1)
 the first argument is the locale instead the name of hyphenation
@@ -3059,7 +3055,7 @@ discretionaries are not accepted.
 It handles glyphs and spaces (but you can not insert spaces).
 
 Performance is still somewhat poor in some cases, but it is fast in the
-most the typical ones.
+typical ones.
 
 This feature is activated with the first |\babelposthyphenation| or
 |\babelprehyphenation|.
@@ -3119,16 +3115,16 @@ Here is a minimal example:
 
 \usepackage[danish]{babel}
 
-\babeladjust{
-  autoload.bcp47 = on,
-  autoload.bcp47.options = import
-}
+_\babeladjust{_
+_  autoload.bcp47 = on,_
+_  autoload.bcp47.options = import_
+_}_
 
 \begin{document}
 
 Chapter in Danish: \chaptername.
 
-\selectlanguage{de-AT}
+_\selectlanguage{de-AT}_
 
 \localedate{2020}{1}{30}
 
@@ -3145,7 +3141,7 @@ options make sense depending on the particular needs of each document
 
 The behaviour is adjusted with |\babeladjust| with the following parameters:
 \begin{description}
-\item \texttt{autoload.bcp47} with values on and off.
+\item \texttt{autoload.bcp47} with values |on| and |off|.
 \item \texttt{autoload.bcp47.options}, which are passed to
   |\babelprovide|; empty by default, but you may add \texttt{import}
   (features defined in the corresponding |babel-...tex| file might not
@@ -3817,7 +3813,6 @@ deactivate other related options (like paragraph direction with
 \addto\extrasfrench{\inputencoding{latin1}}
 \addto\extrasrussian{\inputencoding{koi8-r}}
 \end{verbatim}
-   (A recent version of \textsf{inputenc} is required.)
  \item For the hyphenation to work correctly, lccodes cannot change,
    because \TeX{} only takes into account the values when the
    paragraph is hyphenated, i.e., when it has been
@@ -4770,6 +4765,8 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \part{Source code}
 %
+% \small
+%
 % \babel{} is being developed incrementally, which means parts of the
 % code are under development and therefore incomplete. Only documented
 % features are considered complete. In other words, use \babel{} only
@@ -4854,8 +4851,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.52.2256>>
-%<<date=2021/01/18>>
+%<<version=3.53>>
+%<<date=2021/01/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5304,11 +5301,12 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@nocaption@i#1#2{% 1: text to be printed 2: caption macro \langXname
   \global\@namedef{#2}{\textbf{?#1?}}%
   \@nameuse{#2}%
-  \bbl@warning{%
+  \bbl@warning{% TODO.
     \@backslashchar#2 not set. Please, define it\\%
     after the language has been loaded (typically\\%
-    in the preamble) with something like:\\%
-    \string\renewcommand\@backslashchar#2{..}\\%
+    in the preamble) with the help of\\%
+    \string\setlocalecaption. An example is:\\% 
+    \string\setlocalecaption{mylang}{chapter}{..}\\
     Reported}}
 \def\bbl@tentative{\protect\bbl@tentative@i}
 \def\bbl@tentative@i#1{%
@@ -7943,8 +7941,9 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@warning{%
     \@backslashchar#2 not set. Please, define it\\%
     after the language has been loaded (typically\\%
-    in the preamble) with something like:\\%
-    \string\renewcommand\@backslashchar#2{..}\\%
+    in the preamble) with the help of\\%
+    \string\setlocalecaption. An example is\\%
+    \string\setlocalecaption{mylang}{chapter}{..}\\
     Reported}}
 \def\bbl@tentative{\protect\bbl@tentative@i}
 \def\bbl@tentative@i#1{%
@@ -10679,6 +10678,16 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\bbl@screset\@undefined
     \bbl@ldfinit
   \fi
+  % ==
+  \let\bbl@lbkflag\relax % \@empty = do setup linebreak
+  \bbl@ifunset{date#2}%
+    {\let\bbl@lbkflag\@empty}% new
+    {\ifx\bbl@KVP@hyphenrules\@nil\else
+       \let\bbl@lbkflag\@empty
+     \fi
+     \ifx\bbl@KVP@import\@nil\else
+       \let\bbl@lbkflag\@empty
+     \fi}%
   % == import, captions ==
   \ifx\bbl@KVP@import\@nil\else
     \bbl@exp{\\\bbl@ifblank{\bbl@KVP@import}}%
@@ -10699,7 +10708,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@ifunset{date#2}%
     {\bbl@provide@new{#2}}%
     {\bbl@ifblank{#1}%
-      {}%
+      {}%  With \bbl@load@basic below
       {\bbl@provide@renew{#2}}}%
   % Post tasks
   % ----------
@@ -10723,7 +10732,7 @@ help from Bernd Raichle, for which I am grateful.
   % ==
   % At this point all parameters are defined if 'import'. Now we
   % execute some code depending on them. But what about if nothing was
-  % imported? We just load the very basic parameters.
+  % imported? We just set the very basic parameters.
   \bbl@load@basic{#2}%
   % == script, language ==
   % Override the values from ini or defines them
@@ -10820,30 +10829,31 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
   \fi
   \bbl@provide@intraspace
-  % == Line breaking: hyphenate.other.locale ==
-  \bbl@ifunset{bbl@hyotl@\languagename}{}%
-    {\bbl@csarg\bbl@replace{hyotl@\languagename}{ }{,}%
-     \bbl@startcommands*{\languagename}{}%
-       \bbl@csarg\bbl@foreach{hyotl@\languagename}{%
+  % == Line breaking: hyphenate.other.locale/.script==
+  \ifx\bbl@lbkflag\@empty
+    \bbl@ifunset{bbl@hyotl@\languagename}{}%
+      {\bbl@csarg\bbl@replace{hyotl@\languagename}{ }{,}%
+       \bbl@startcommands*{\languagename}{}%
+         \bbl@csarg\bbl@foreach{hyotl@\languagename}{%
+           \ifcase\bbl@engine
+             \ifnum##1<257
+               \SetHyphenMap{\BabelLower{##1}{##1}}%
+             \fi
+           \else
+             \SetHyphenMap{\BabelLower{##1}{##1}}%
+           \fi}%
+       \bbl@endcommands}%
+    \bbl@ifunset{bbl@hyots@\languagename}{}%
+      {\bbl@csarg\bbl@replace{hyots@\languagename}{ }{,}%
+       \bbl@csarg\bbl@foreach{hyots@\languagename}{%
          \ifcase\bbl@engine
            \ifnum##1<257
-             \SetHyphenMap{\BabelLower{##1}{##1}}%
+             \global\lccode##1=##1\relax
            \fi
          \else
-           \SetHyphenMap{\BabelLower{##1}{##1}}%
-         \fi}%
-     \bbl@endcommands}%
-  % == Line breaking: hyphenate.other.script ==
-  \bbl@ifunset{bbl@hyots@\languagename}{}%
-    {\bbl@csarg\bbl@replace{hyots@\languagename}{ }{,}%
-     \bbl@csarg\bbl@foreach{hyots@\languagename}{%
-       \ifcase\bbl@engine
-         \ifnum##1<257
            \global\lccode##1=##1\relax
-         \fi
-       \else
-         \global\lccode##1=##1\relax
-       \fi}}%
+         \fi}}%
+  \fi
   % == Counters: maparabic ==
   % Native digits, if provided in ini (TeX level, xe and lua)
   \ifcase\bbl@engine\else
@@ -11033,7 +11043,9 @@ help from Bernd Raichle, for which I am grateful.
    \EndBabelCommands
   \fi
   % == hyphenrules ==
-  \bbl@provide@hyphens{#1}}
+  \ifx\bbl@lbkflag\@empty
+    \bbl@provide@hyphens{#1}%
+  \fi}
 % Load the basic parameters (ids, typography, counters, and a few
 % more), while captions and dates are left out. But it may happen some
 % data has been loaded before automatically, so we first discard the
@@ -11092,10 +11104,10 @@ help from Bernd Raichle, for which I am grateful.
           {\bbl@exp{\let\bbl@tempa\<l@##1>}}%
       \fi}%
   \fi
-  \ifx\bbl@tempa\relax %        if no opt or no language in opt found
+  \ifx\bbl@tempa\relax %         if no opt or no language in opt found
     \ifx\bbl@KVP@import\@nil
       \ifx\bbl@initoload\relax\else
-        \bbl@exp{%                    and hyphenrules is not empty
+        \bbl@exp{%               and hyphenrules is not empty
           \\\bbl@ifblank{\bbl@cs{hyphr@#1}}%
             {}%
             {\let\\\bbl@tempa\<l@\bbl@cl{hyphr}>}}%
@@ -11112,7 +11124,6 @@ help from Bernd Raichle, for which I am grateful.
        {\bbl@exp{\\\adddialect\<l@#1>\language}}%
        {}}%                      so, l@<lang> is ok - nothing to do
     {\bbl@exp{\\\adddialect\<l@#1>\bbl@tempa}}}% found in opt list or ini
-
 %    \end{macrocode}
 %
 % The reader of |ini| files. There are 3 possible cases: a section name
