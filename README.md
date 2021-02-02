@@ -1,4 +1,4 @@
-## Babel 3.53
+## Babel 3.53.2271
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.53 are described in:
+Changes in version 3.54 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.53
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.54
 
 Included is a set of ini files for about 250 languages. 
 
@@ -43,7 +43,10 @@ respective authors.
 
 ### Latest changes
 ```
-3.53   2021-01-??
+3.54   2021-02-??
+       *
+       
+3.53   2021-01-26
        * Extended \setlocalecaption to allow .template (related to
          #111).
        * Allow access to some features in `ini` files even with `ldf`
@@ -55,6 +58,7 @@ respective authors.
            bidi in lua.
          - Parenthesis sometimes mirrored at the end of math with
            bidi=basic.
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.53
 
 3.52   2020-12-16
        * WARNING. If you need the style for Afrikaans you must update

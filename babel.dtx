@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/01/26 v3.53 The Babel package]
+\ProvidesFile{babel.dtx}[2021/02/02 v3.53.2271 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4851,8 +4851,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.53>>
-%<<date=2021/01/26>>
+%<<version=3.53.2271>>
+%<<date=2021/02/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10667,6 +10667,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@Alph\@nil
   \let\bbl@KVP@labels\@nil
   \bbl@csarg\let{KVP@labels*}\@nil
+  \global\let\bbl@inidata\@empty
   \bbl@forkv{#1}{%  TODO - error handling
     \in@{/}{##1}%
     \ifin@
@@ -10732,7 +10733,8 @@ help from Bernd Raichle, for which I am grateful.
   % ==
   % At this point all parameters are defined if 'import'. Now we
   % execute some code depending on them. But what about if nothing was
-  % imported? We just set the very basic parameters.
+  % imported? We just set the basic parameters, but still loading the
+  % whole ini file.
   \bbl@load@basic{#2}%
   % == script, language ==
   % Override the values from ini or defines them
@@ -10974,12 +10976,10 @@ help from Bernd Raichle, for which I am grateful.
       \expandafter\bbl@tempb\bbl@captionslist\@empty
     \else
       \ifx\bbl@initoload\relax
-        \bbl@read@ini{\bbl@KVP@captions}0%  Here letters cat = 11
+        \bbl@read@ini{\bbl@KVP@captions}2%  % Here letters cat = 11
       \else
-        \bbl@read@ini{\bbl@initoload}0%  Here all letters cat = 11
+        \bbl@read@ini{\bbl@initoload}2%     % Same
       \fi
-      \bbl@after@ini
-      \bbl@savestrings
     \fi
   \StartBabelCommands*{#1}{date}%
     \ifx\bbl@KVP@import\@nil
@@ -11031,9 +11031,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@provide@renew#1{%
   \ifx\bbl@KVP@captions\@nil\else
     \StartBabelCommands*{#1}{captions}%
-      \bbl@read@ini{\bbl@KVP@captions}0%   Here all letters cat = 11
-      \bbl@after@ini
-      \bbl@savestrings
+      \bbl@read@ini{\bbl@KVP@captions}2%   % Here all letters cat = 11
     \EndBabelCommands
  \fi
  \ifx\bbl@KVP@import\@nil\else
@@ -11050,20 +11048,10 @@ help from Bernd Raichle, for which I am grateful.
 % more), while captions and dates are left out. But it may happen some
 % data has been loaded before automatically, so we first discard the
 % saved values.
-\def\bbl@linebreak@export{%
-  \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
-  \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
-  \bbl@exportkey{lfthm}{typography.lefthyphenmin}{2}%
-  \bbl@exportkey{rgthm}{typography.righthyphenmin}{3}%         
-  \bbl@exportkey{prehc}{typography.prehyphenchar}{}%
-  \bbl@exportkey{hyotl}{typography.hyphenate.other.locale}{}%
-  \bbl@exportkey{hyots}{typography.hyphenate.other.script}{}%
-  \bbl@exportkey{intsp}{typography.intraspace}{}%
-  \bbl@exportkey{chrng}{characters.ranges}{}}
 \def\bbl@load@basic#1{%
   \bbl@ifunset{bbl@inidata@\languagename}{}%
     {\getlocaleproperty\bbl@tempa{\languagename}{identification/load.level}%
-     \ifcase\bbl@tempa\else
+     \ifcase\bbl@tempa
        \bbl@csarg\let{lname@\languagename}\relax
      \fi}%
   \bbl@ifunset{bbl@lname@#1}% 
@@ -11071,10 +11059,7 @@ help from Bernd Raichle, for which I am grateful.
        \begingroup
          \let\bbl@ini@captions@aux\@gobbletwo
          \def\bbl@inidate ####1.####2.####3.####4\relax ####5####6{}%
-         \bbl@read@ini{##1}0%
-         \bbl@linebreak@export
-         \bbl@exportkey{dgnat}{numbers.digits.native}{}%
-         \bbl@exportkey{frspc}{typography.frenchspacing}{u}% unset
+         \bbl@read@ini{##1}1%
          \ifx\bbl@initoload\relax\endinput\fi
        \endgroup}%
      \begingroup       % boxed, to avoid extra spaces:
@@ -11126,14 +11111,10 @@ help from Bernd Raichle, for which I am grateful.
     {\bbl@exp{\\\adddialect\<l@#1>\bbl@tempa}}}% found in opt list or ini
 %    \end{macrocode}
 %
-% The reader of |ini| files. There are 3 possible cases: a section name
-% (in the form |[...]|), a comment (starting with |;|) and a
-% key/value pair.
+% The reader of |babel-...tex| files. We reset temporarily some
+% catcodes.
 %
 %    \begin{macrocode}
-\ifx\bbl@readstream\@undefined
-  \csname newread\endcsname\bbl@readstream
-\fi
 \def\bbl@input@texini#1{%
   \bbl@bsphack
     \bbl@exp{%
@@ -11145,20 +11126,51 @@ help from Bernd Raichle, for which I am grateful.
       \catcode`\\\{=\the\catcode`\{\relax
       \catcode`\\\}=\the\catcode`\}\relax}%
   \bbl@esphack}
-\def\bbl@inipreread#1=#2\@@{%
-  \bbl@trim@def\bbl@tempa{#1}% Redundant below !!
+%    \end{macrocode}
+%
+% The following macros read and store |ini| files (but don't process
+% them). For each line, there are 3 possible actions: ignore if starts
+% with |;|, switch section if starts with |[|, and store otherwise.
+% There are used in the first step of |\bbl@read@ini|.
+%
+%    \begin{macrocode}
+\def\bbl@iniline#1\bbl@iniline{%
+  \@ifnextchar[\bbl@inisect{\@ifnextchar;\bbl@iniskip\bbl@inistore}#1\@@}% ]
+\def\bbl@inisect[#1]#2\@@{\def\bbl@section{#1}}% 
+\def\bbl@iniskip#1\@@{}%      if starts with ;
+\def\bbl@inistore#1=#2\@@{%      full (default)
+  \bbl@trim@def\bbl@tempa{#1}%
   \bbl@trim\toks@{#2}%
-  % Move trims here ??
   \bbl@ifunset{bbl@KVP@\bbl@section/\bbl@tempa}%
     {\bbl@exp{%
-       \\\g@addto@macro\\\bbl@inidata{%
-         \\\bbl@elt{\bbl@section}{\bbl@tempa}{\the\toks@}}}%
-     \expandafter\bbl@inireader\bbl@tempa=#2\@@}%
+      \\\g@addto@macro\\\bbl@inidata{%
+        \\\bbl@elt{\bbl@section}{\bbl@tempa}{\the\toks@}}}}%
     {}}%
-\def\bbl@fetch@ini#1#2{%
-  \bbl@exp{\def\\\bbl@inidata{%
-    \\\bbl@elt{identification}{tag.ini}{#1}%
-    \\\bbl@elt{identification}{load.level}{#2}}}%
+\def\bbl@inistore@min#1=#2\@@{%  minimal (maybe set in \bbl@read@ini)
+  \bbl@trim@def\bbl@tempa{#1}%
+  \bbl@trim\toks@{#2}%
+  \bbl@xin@{.identification.}{.\bbl@section.}%
+  \ifin@
+    \bbl@exp{\\\g@addto@macro\\\bbl@inidata{%
+      \\\bbl@elt{identification}{\bbl@tempa}{\the\toks@}}}%
+  \fi}%
+%    \end{macrocode}
+%
+% Now, the ‘main loop’, which \textbf{**must be executed inside a
+% group**}. At this point, |\bbl@inidata| may contain data declared in
+% |\babelprovide|, with ‘slashed’ keys. There are 3 steps: first read
+% the ini file and store it; then traverse the stored values, and
+% process some groups if required (date, captions, labels, counters);
+% finally, ‘export’ some values by defining global macros
+% (identification, typography, characters, numbers). The second
+% argument is 0 when called to read the minimal data for fonts; with
+% |\babelprovide| it's either 1 or 2.
+%
+%    \begin{macrocode}
+\ifx\bbl@readstream\@undefined
+  \csname newread\endcsname\bbl@readstream
+\fi
+\def\bbl@read@ini#1#2{%
   \openin\bbl@readstream=babel-#1.ini
   \ifeof\bbl@readstream
     \bbl@error
@@ -11167,12 +11179,20 @@ help from Bernd Raichle, for which I am grateful.
        is not complete.}%
       {Fix the name or reinstall babel.}%
   \else
+    % Store ini data in \bbl@inidata
     \catcode`\[=12 \catcode`\]=12 \catcode`\==12 \catcode`\&=12
     \catcode`\;=12 \catcode`\|=12 \catcode`\%=14 \catcode`\-=12
     \bbl@info{Importing
-                \ifcase#2 \or font and identification \or basic \fi
-                data for \languagename\\%
+                \ifcase#2font and identification \or basic \fi
+                 data for \languagename\\%
               from babel-#1.ini. Reported}%
+    \ifnum#2=\z@
+      \global\let\bbl@inidata\@empty
+      \let\bbl@inistore\bbl@inistore@min    % Remember it's local
+    \fi
+    \def\bbl@section{identification}%
+    \bbl@exp{\\\bbl@inistore tag.ini=#1\\\@@}%
+    \bbl@inistore load.level=#2\@@
     \loop
     \if T\ifeof\bbl@readstream F\fi T\relax % Trick, because inside \loop
       \endlinechar\m@ne
@@ -11182,95 +11202,68 @@ help from Bernd Raichle, for which I am grateful.
         \expandafter\bbl@iniline\bbl@line\bbl@iniline
       \fi
     \repeat
-  \fi}
-\def\bbl@read@ini#1#2{%
-  \bbl@csarg\xdef{lini@\languagename}{#1}%
-  \let\bbl@section\@empty
-  \let\bbl@savestrings\@empty
-  \let\bbl@savetoday\@empty
-  \let\bbl@savedate\@empty
-  \let\bbl@inireader\bbl@iniskip
-  \bbl@fetch@ini{#1}{#2}%
-  \bbl@foreach\bbl@renewlist{%
-    \bbl@ifunset{bbl@renew@##1}{}{\bbl@inisec[##1]\@@}}%
-  \global\let\bbl@renewlist\@empty
-  % Ends last section. See \bbl@inisec
-  \def\bbl@elt##1##2{\bbl@inireader##1=##2\@@}%
-  \bbl@cs{renew@\bbl@section}%
-  \global\bbl@csarg\let{renew@\bbl@section}\relax
-  \bbl@cs{secpost@\bbl@section}%  
-  \bbl@csarg{\global\expandafter\let}{inidata@\languagename}\bbl@inidata
-  \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
-  \bbl@toglobal\bbl@ini@loaded}
-\def\bbl@iniline#1\bbl@iniline{%
-  \@ifnextchar[\bbl@inisec{\@ifnextchar;\bbl@iniskip\bbl@inipreread}#1\@@}% ]
-%    \end{macrocode}
-%
-% The special cases for comment lines and sections are handled by the
-% two following commands. In sections, we provide the posibility to
-% take extra actions at the end or at the start. By default, key=val
-% pairs are ignored. The |secpost| ``hook'' is used only by
-% `identification', while |secpre| only by |date.gregorian.licr|.
-%
-%    \begin{macrocode}
-\def\bbl@iniskip#1\@@{}%      if starts with ;
-\def\bbl@inisec[#1]#2\@@{%    if starts with opening bracket
-  \def\bbl@elt##1##2{%
-    \expandafter\toks@\expandafter{%
-      \expandafter{\bbl@section}{##1}{##2}}%
-    \bbl@exp{%
-      \\\g@addto@macro\\\bbl@inidata{\\\bbl@elt\the\toks@}}%
-    \bbl@inireader##1=##2\@@}%
-  \bbl@cs{renew@\bbl@section}%
-  \global\bbl@csarg\let{renew@\bbl@section}\relax
-  \bbl@cs{secpost@\bbl@section}%
-  % The previous code belongs to the previous section.
-  % --------------------------
-  % Now start the current one.
-  \in@{=date.}{=#1}%
-  \ifin@
-    \lowercase{\def\bbl@tempa{=#1=}}%
-    \bbl@replace\bbl@tempa{=date.gregorian}{}%
-    \bbl@replace\bbl@tempa{=date.}{}%
-    \in@{.licr=}{#1=}%
-    \ifin@
-      \ifcase\bbl@engine
-        \bbl@replace\bbl@tempa{.licr=}{}%
-      \else
-        \let\bbl@tempa\relax
+    % Process stored data
+    \bbl@csarg\xdef{lini@\languagename}{#1}%
+    \let\bbl@savestrings\@empty
+    \let\bbl@savetoday\@empty
+    \let\bbl@savedate\@empty
+    \def\bbl@elt##1##2##3{%
+      \def\bbl@section{##1}%
+      \in@{=date.}{=##1}% Find a better place
+      \ifin@
+        \bbl@ini@calendar{##1}%
       \fi
-    \fi
-    \ifx\bbl@tempa\relax\else
-      \bbl@replace\bbl@tempa{=}{}%
-      \bbl@exp{%
-        \def\<bbl@inikv@#1>####1=####2\\\@@{% 
-          \\\bbl@inidate####1...\relax{####2}{\bbl@tempa}}}%
-    \fi
-  \fi
-  \def\bbl@section{#1}% 
-  \def\bbl@elt##1##2{%
-    \@namedef{bbl@KVP@#1/##1}{}}%
-  \bbl@cs{renew@#1}%
-  \bbl@cs{secpre@#1}%  pre-section `hook'
-  \bbl@ifunset{bbl@inikv@#1}%
-    {\let\bbl@inireader\bbl@iniskip}%
-    {\bbl@exp{\let\\\bbl@inireader\<bbl@inikv@#1>}}}
-\let\bbl@renewlist\@empty
-\def\bbl@renewinikey#1/#2\@@#3{%
-  \bbl@ifunset{bbl@renew@#1}%
-    {\bbl@add@list\bbl@renewlist{#1}}%
-    {}%
-  \bbl@csarg\bbl@add{renew@#1}{\bbl@elt{#2}{#3}}}
+      \global\bbl@csarg\let{bbl@KVP@##1/##2}\relax
+      \bbl@ifunset{bbl@inikv@##1}{}%
+        {\csname bbl@inikv@##1\endcsname{##2}{##3}}}%
+    \bbl@inidata
+    % 'Export' data
+    \bbl@ini@exports{#2}%
+    \global\bbl@csarg\let{inidata@\languagename}\bbl@inidata
+    \global\let\bbl@inidata\@empty
+    \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
+    \bbl@toglobal\bbl@ini@loaded
+  \fi}
 %    \end{macrocode}
 %
-% Reads a key=val line and stores the trimmed val in
-% |\bbl@@kv@<section>.<key>|.
+% A somewhat hackish tool to handle calendar sections. To be improved.
 %
 %    \begin{macrocode}
-\def\bbl@inikv#1=#2\@@{%     key=value
-  \bbl@trim@def\bbl@tempa{#1}%
-  \bbl@trim\toks@{#2}%
-  \bbl@csarg\edef{@kv@\bbl@section.\bbl@tempa}{\the\toks@}}
+\def\bbl@ini@calendar#1{%
+ \lowercase{\def\bbl@tempa{=#1=}}%
+ \bbl@replace\bbl@tempa{=date.gregorian}{}%
+ \bbl@replace\bbl@tempa{=date.}{}%
+ \in@{.licr=}{#1=}%
+ \ifin@
+   \ifcase\bbl@engine
+     \bbl@replace\bbl@tempa{.licr=}{}%
+   \else
+     \let\bbl@tempa\relax
+   \fi
+ \fi
+ \ifx\bbl@tempa\relax\else
+   \bbl@replace\bbl@tempa{=}{}%
+   \bbl@exp{%
+     \def\<bbl@inikv@#1>####1####2{% 
+       \\\bbl@inidate####1...\relax{####2}{\bbl@tempa}}}%
+ \fi}
+%    \end{macrocode}
+%
+% A key with a slash in |\babelprovide| replaces the value in the |ini|
+% file (which is ignored altogether). The mechanism is simple: add the
+% data to the |ini| one (at this point the |ini| file has not yet been
+% read), and define a macro with the value. When the |ini| file is
+% read, just skip the corresponding key (in |\bbl@inistore| above).
+%
+%    \begin{macrocode}
+\def\bbl@renewinikey#1/#2\@@#3{%
+  \edef\bbl@tempa{\zap@space #1 \@empty}%   section
+  \edef\bbl@tempb{\zap@space #2 \@empty}%   key
+  \bbl@trim\toks@{#3}%                      value
+  \bbl@exp{%
+    \global\let\<bbl@KVP@\bbl@tempa/\bbl@tempb>\\\@empty % just a flag
+    \\\g@addto@macro\\\bbl@inidata{%
+       \\\bbl@elt{\bbl@tempa}{\bbl@tempb}{\the\toks@}}}}%
 %    \end{macrocode}
 %
 % The previous assignments are local, so we need to export them. If
@@ -11289,7 +11282,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % Key-value pairs are treated differently depending on the section in
 % the |ini| file. The following macros are the readers for
-% |identification| and |typography|. Note |\bbl@secpost@identification|
+% |identification| and |typography|. Note |\bbl@ini@exports|
 % is called always (via |\bbl@inisec|), while |\bbl@after@ini| must be
 % called explicitly after |\bbl@read@ini| if necessary.
 %
@@ -11301,8 +11294,8 @@ help from Bernd Raichle, for which I am grateful.
        \bbl@cs{@kv@identification.warning#1}\\%
        Reported }}}
 %
-\let\bbl@inikv@identification\bbl@inikv
-\def\bbl@secpost@identification{%
+\def\bbl@ini@exports#1{%
+  % Identification always exported
   \bbl@iniwarning{}%
   \ifcase\bbl@engine
     \bbl@iniwarning{.pdflatex}%
@@ -11324,13 +11317,43 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}%
   \ifbbl@bcptoname
     \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
+  \fi
+  % Conditional
+  \ifnum#1>\z@         % 0 = only info, 1, 2 = basic, (re)new
+    \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
+    \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
+    \bbl@exportkey{lfthm}{typography.lefthyphenmin}{2}%
+    \bbl@exportkey{rgthm}{typography.righthyphenmin}{3}%         
+    \bbl@exportkey{prehc}{typography.prehyphenchar}{}%
+    \bbl@exportkey{hyotl}{typography.hyphenate.other.locale}{}%
+    \bbl@exportkey{hyots}{typography.hyphenate.other.script}{}%
+    \bbl@exportkey{intsp}{typography.intraspace}{}%
+    \bbl@exportkey{chrng}{characters.ranges}{}%
+    \bbl@exportkey{dgnat}{numbers.digits.native}{}%
+    \bbl@exportkey{frspc}{typography.frenchspacing}{u}%
+    \ifnum#1=\tw@           % only (re)new
+      \bbl@exportkey{rqtex}{identification.require.babel}{}%
+      \bbl@toglobal\bbl@savetoday
+      \bbl@toglobal\bbl@savedate
+      \bbl@savestrings
+    \fi
   \fi}
+%    \end{macrocode}
+%
+% A shared handler for key=val lines to be stored in
+% |\bbl@@kv@<section>.<key>|.
+%
+%    \begin{macrocode}
+\def\bbl@inikv#1#2{%     key=value
+  \toks@{#2}%            This hides #'s from ini values
+  \bbl@csarg\edef{@kv@\bbl@section.#1}{\the\toks@}}
 %    \end{macrocode}
 %
 % By default, the following sections are just read. Actions are taken
 % later.
 %
 %    \begin{macrocode}
+\let\bbl@inikv@identification\bbl@inikv
 \let\bbl@inikv@typography\bbl@inikv
 \let\bbl@inikv@characters\bbl@inikv
 \let\bbl@inikv@numbers\bbl@inikv
@@ -11342,7 +11365,7 @@ help from Bernd Raichle, for which I am grateful.
 % the ‘units’. 
 %
 %    \begin{macrocode}
-\def\bbl@inikv@counters#1=#2\@@{%
+\def\bbl@inikv@counters#1#2{%
   \bbl@ifsamestring{#1}{digits}%
     {\bbl@error{The counter name 'digits' is reserved for mapping\\%
                 decimal digits}%
@@ -11365,13 +11388,6 @@ help from Bernd Raichle, for which I am grateful.
     \expandafter\bbl@buildifcase\bbl@tempb* \\ % Space after \\
     \bbl@csarg{\global\expandafter\let}{cntr@#1@\languagename}\bbl@tempa
   \fi}
-\def\bbl@after@ini{%
-  \bbl@linebreak@export
-  \bbl@exportkey{dgnat}{numbers.digits.native}{}%
-  \bbl@exportkey{rqtex}{identification.require.babel}{}%
-  \bbl@exportkey{frspc}{typography.frenchspacing}{u}% unset
-  \bbl@toglobal\bbl@savetoday
-  \bbl@toglobal\bbl@savedate}
 %    \end{macrocode}
 %
 % Now |captions| and |captions.licr|, depending on the engine. And
@@ -11381,10 +11397,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \ifcase\bbl@engine
-  \bbl@csarg\def{inikv@captions.licr}#1=#2\@@{%
+  \bbl@csarg\def{inikv@captions.licr}#1#2{%
     \bbl@ini@captions@aux{#1}{#2}}
 \else
-  \def\bbl@inikv@captions#1=#2\@@{%
+  \def\bbl@inikv@captions#1#2{%
     \bbl@ini@captions@aux{#1}{#2}}
 \fi
 %    \end{macrocode}
@@ -11445,7 +11461,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@ifunset{bbl@map@#1@\languagename}%
     {\@nameuse{#1}}%
     {\@nameuse{bbl@map@#1@\languagename}}}
-\def\bbl@inikv@labels#1=#2\@@{%
+\def\bbl@inikv@labels#1#2{%
   \in@{.map}{#1}%
   \ifin@
     \ifx\bbl@KVP@labels\@nil\else
@@ -11665,7 +11681,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \def\bbl@provide@lsys#1{%
   \bbl@ifunset{bbl@lname@#1}%
-    {\bbl@ini@basic{#1}}%
+    {\bbl@load@info{#1}}%
     {}%
   \bbl@csarg\let{lsys@#1}\@empty
   \bbl@ifunset{bbl@sname@#1}{\bbl@csarg\gdef{sname@#1}{Default}}{}%
@@ -11717,14 +11733,13 @@ help from Bernd Raichle, for which I am grateful.
 % must be enabled. This means we must make sure a few characters are
 % not active. The |ini| is not read directly, but with a proxy |tex|
 % file named as the language (which means any code in it must be
-% skipped, too.
+% skipped, too).
 %
 %    \begin{macrocode}
-\def\bbl@ini@basic#1{%
+\def\bbl@load@info#1{%
   \def\BabelBeforeIni##1##2{%
     \begingroup
-      \bbl@add\bbl@secpost@identification{\closein\bbl@readstream }%
-      \bbl@read@ini{##1}1%    
+      \bbl@read@ini{##1}0%
       \endinput          % babel- .tex may contain onlypreamble's
     \endgroup}%            boxed, to avoid extra spaces:
   {\bbl@input@texini{#1}}}
@@ -11850,7 +11865,7 @@ help from Bernd Raichle, for which I am grateful.
 \newcommand\BabelEnsureInfo{%
   \ifx\InputIfFileExists\@undefined\else
     \def\bbl@ensureinfo##1{%
-      \bbl@ifunset{bbl@lname@##1}{\bbl@ini@basic{##1}}{}}%
+      \bbl@ifunset{bbl@lname@##1}{\bbl@load@info{##1}}{}}%
   \fi
   \bbl@foreach\bbl@loaded{{%
     \def\languagename{##1}%
