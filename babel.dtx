@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/02/02 v3.53.2271 The Babel package]
+\ProvidesFile{babel.dtx}[2021/02/19 v3.53.2288 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2408,12 +2408,11 @@ Conveniently, some options allow to fill the language, and \babel{}
 warns you about what to do if there is a missing string. Very likely
 you will find alerts like that in the |log| file:
 \begin{verbatim}
-Package babel Warning: \mylangchaptername not set. Please, define it
-(babel)                after the language has been loaded (typically
-(babel)                in the preamble) with the help of
-(babel)                \setlocalecaption. An example is:
+Package babel Warning: \chaptername not set for 'mylang'. Please,
+(babel)                define it after the language has been loaded
+(babel)                (typically in the preamble) with:
 (babel)                \setlocalecaption{mylang}{chapter}{..}
-(babel)                Reported on input line 18.
+(babel)                Reported on input line 26.
 \end{verbatim}
 
 In most cases, you will only need to define a few macros. Note
@@ -4851,8 +4850,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.53.2271>>
-%<<date=2021/02/02>>
+%<<version=3.53.2288>>
+%<<date=2021/02/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5274,7 +5273,7 @@ help from Bernd Raichle, for which I am grateful.
        Babel.debug = false }%
    \fi}
 <@Basic macros@>
-  % Temporarily repeat here the code for errors
+  % Temporarily repeat here the code for errors. TODO.
   \def\bbl@error#1#2{%
     \begingroup
       \def\\{\MessageBreak}%
@@ -5297,16 +5296,18 @@ help from Bernd Raichle, for which I am grateful.
       \def\\{\MessageBreak}%
       \PackageInfo{babel}{#1}%
     \endgroup}
-    \def\bbl@nocaption{\protect\bbl@nocaption@i}
+\def\bbl@nocaption{\protect\bbl@nocaption@i}
+% TODO - Wrong for \today !!! Must be a separate macro.
 \def\bbl@nocaption@i#1#2{% 1: text to be printed 2: caption macro \langXname
   \global\@namedef{#2}{\textbf{?#1?}}%
   \@nameuse{#2}%
-  \bbl@warning{% TODO.
-    \@backslashchar#2 not set. Please, define it\\%
-    after the language has been loaded (typically\\%
-    in the preamble) with the help of\\%
-    \string\setlocalecaption. An example is:\\% 
-    \string\setlocalecaption{mylang}{chapter}{..}\\
+  \edef\bbl@tempa{#1}%
+  \bbl@sreplace\bbl@tempa{name}{}%
+  \bbl@warning{%
+    \@backslashchar#1 not set for '\languagename'. Please,\\%
+    define it after the language has been loaded\\%
+    (typically in the preamble) with\\% 
+    \string\setlocalecaption{\languagename}{\bbl@tempa}{..}\\%
     Reported}}
 \def\bbl@tentative{\protect\bbl@tentative@i}
 \def\bbl@tentative@i#1{%
@@ -7938,12 +7939,13 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@nocaption@i#1#2{% 1: text to be printed 2: caption macro \langXname
   \global\@namedef{#2}{\textbf{?#1?}}%
   \@nameuse{#2}%
-  \bbl@warning{%
-    \@backslashchar#2 not set. Please, define it\\%
-    after the language has been loaded (typically\\%
-    in the preamble) with the help of\\%
-    \string\setlocalecaption. An example is\\%
-    \string\setlocalecaption{mylang}{chapter}{..}\\
+  \edef\bbl@tempa{#1}%
+  \bbl@sreplace\bbl@tempa{name}{}%
+  \bbl@warning{% TODO.
+    \@backslashchar#1 not set for '\languagename'. Please,\\%
+    define it after the language has been loaded\\%
+    (typically in the preamble) with:\\% 
+    \string\setlocalecaption{\languagename}{\bbl@tempa}{..}\\%
     Reported}}
 \def\bbl@tentative{\protect\bbl@tentative@i}
 \def\bbl@tentative@i#1{%
@@ -9317,12 +9319,6 @@ help from Bernd Raichle, for which I am grateful.
 %    attribute being checked, and the third and fourth arguments are
 %    the true and false clauses.
 %
-%    First we need to find out if any attributes were set; if not we're
-%    done. Then we need to check the list of known attributes. When
-%    we're this far |\ifin@| has a value indicating if the attribute in
-%    question was set or not. Just to be safe the code to be executed
-%    is `thrown over the |\fi|'.
-%
 %    \begin{macrocode}
 \def\bbl@ifattributeset#1#2#3#4{%
   \ifx\bbl@known@attribs\@undefined
@@ -9334,8 +9330,7 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@afterelse#3%
   \else
     \bbl@afterfi#4%
-  \fi
-  }
+  \fi}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -9347,9 +9342,7 @@ help from Bernd Raichle, for which I am grateful.
 %    is known and the \TeX-code to be executed otherwise.
 %
 %    We first assume the attribute is unknown. Then we loop over the
-%    list of known attributes, trying to find a match. When a match is
-%    found the definition of |\bbl@tempa| is changed. Finally we
-%    execute |\bbl@tempa|.
+%    list of known attributes, trying to find a match. 
 %
 %    \begin{macrocode}
 \def\bbl@ifknown@ttrib#1#2{%
@@ -9360,8 +9353,7 @@ help from Bernd Raichle, for which I am grateful.
       \let\bbl@tempa\@firstoftwo
     \else
     \fi}%
-  \bbl@tempa
-}
+  \bbl@tempa}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -9451,7 +9443,10 @@ help from Bernd Raichle, for which I am grateful.
 % Some languages need to have |\frenchspacing| in effect. Others
 % don't want that. The command |\bbl@frenchspacing| switches it on
 % when it isn't already in effect and |\bbl@nonfrenchspacing|
-% switches it off if necessary.
+% switches it off if necessary. A more refined way to switch the
+% catcodes is done with |ini| files. Here an auxiliary macro is
+% defined, but the main part is in |\babelprovide|. This new method
+% should be ideally the default one.
 %
 %    \begin{macrocode}
 \def\bbl@frenchspacing{%
@@ -9462,7 +9457,6 @@ help from Bernd Raichle, for which I am grateful.
     \let\bbl@nonfrenchspacing\nonfrenchspacing
   \fi}
 \let\bbl@nonfrenchspacing\nonfrenchspacing
-%
 \let\bbl@elt\relax
 \edef\bbl@fs@chars{%
   \bbl@elt{\string.}\@m{3000}\bbl@elt{\string?}\@m{3000}%
@@ -9503,7 +9497,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsection{Hyphens}
 %
-%  \begin{macro}{\babelhyphenation}
+% \begin{macro}{\babelhyphenation}
 %
 % This macro saves hyphenation exceptions. Two macros are used to
 % store them: |\bbl@hyphenation@| for the global ones and
@@ -9534,7 +9528,7 @@ help from Bernd Raichle, for which I am grateful.
         \bbl@iflanguage\bbl@tempa{%
           \bbl@csarg\protected@edef{hyphenation@\bbl@tempa}{%
             \bbl@ifunset{bbl@hyphenation@\bbl@tempa}%
-              \@empty
+              {}%
               {\csname bbl@hyphenation@\bbl@tempa\endcsname\space}%
             #2}}}%
     \fi}}
@@ -11044,10 +11038,14 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\bbl@lbkflag\@empty
     \bbl@provide@hyphens{#1}%
   \fi}
+%    \end{macrocode}
+%
 % Load the basic parameters (ids, typography, counters, and a few
 % more), while captions and dates are left out. But it may happen some
 % data has been loaded before automatically, so we first discard the
 % saved values.
+%
+%    \begin{macrocode}
 \def\bbl@load@basic#1{%
   \bbl@ifunset{bbl@inidata@\languagename}{}%
     {\getlocaleproperty\bbl@tempa{\languagename}{identification/load.level}%
@@ -11250,10 +11248,12 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % A key with a slash in |\babelprovide| replaces the value in the |ini|
-% file (which is ignored altogether). The mechanism is simple: add the
-% data to the |ini| one (at this point the |ini| file has not yet been
-% read), and define a macro with the value. When the |ini| file is
-% read, just skip the corresponding key (in |\bbl@inistore| above).
+% file (which is ignored altogether). The mechanism is simple (but
+% suboptimal): add the data to the |ini| one (at this point the |ini|
+% file has not yet been read), and define a dummy macro. When the |ini|
+% file is read, just skip the corresponding key and reset the macro (in
+% |\bbl@inistore| above).
+% 
 %
 %    \begin{macrocode}
 \def\bbl@renewinikey#1/#2\@@#3{%
@@ -11315,6 +11315,7 @@ help from Bernd Raichle, for which I am grateful.
     {\csname bbl@esname@\languagename\endcsname}}%
   \bbl@exportkey{sbcp}{identification.script.tag.bcp47}{}%
   \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}%
+  % Also maps bcp47 -> languagename
   \ifbbl@bcptoname
     \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
   \fi
@@ -14305,7 +14306,13 @@ end
           {\bbl@pictsetdir\@ne\pgfpicturetrue}%
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\@ne}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
-      \fi}}
+        \bbl@sreplace\tikz{\begingroup}%
+          {\begingroup\bbl@pictsetdir\@one\textdir TLT }%
+      \fi
+      \ifx\AddToHook\@undefined\else
+        \AddToHook{env/tcolorbox/begin}{\textdir TLT }%
+      \fi
+      }}
   {}
 %    \end{macrocode}
 %
