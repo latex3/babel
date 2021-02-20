@@ -1,4 +1,4 @@
-## Babel 3.53.2288
+## Babel 3.53.2289
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -43,8 +43,11 @@ respective authors.
 
 ### Latest changes
 ```
-3.54   2021-02-??
-       *
+3.54   2021-02-23??
+       * RTL text inside \put (with pict2e) correctly rendered in
+         typical cases (#98).
+       * Same for \tikz.
+       * 
        
 3.53   2021-01-26
        * Extended \setlocalecaption to allow .template (related to

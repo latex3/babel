@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/02/19 v3.53.2288 The Babel package]
+\ProvidesFile{babel.dtx}[2021/02/20 v3.53.2289 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4850,8 +4850,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.53.2288>>
-%<<date=2021/02/19>>
+%<<version=3.53.2289>>
+%<<date=2021/02/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14298,6 +14298,65 @@ end
      \fi}%
    \ifx\AddToHook\@undefined\else
      \AddToHook{env/picture/begin}{\bbl@pictsetdir\z@}%
+     \directlua{
+       Babel.get_picture_dir = true
+       Babel.picture_has_bidi = 0
+       function Babel.picture_dir (head)
+         if not Babel.get_picture_dir then return head end
+         for item in node.traverse(head) do
+           if item.id == node.id'glyph' then
+             local itemchar = item.char
+             % TODO. Copypaste pattern from Babel.bidi (-r)
+             local chardata = Babel.characters[itemchar]
+             local dir = chardata and chardata.d or nil
+             if not dir then
+               for nn, et in ipairs(Babel.ranges) do
+                 if itemchar < et[1] then
+                   break
+                 elseif itemchar <= et[2] then
+                   dir = et[3]
+                   break
+                 end
+               end
+             end
+             if dir and (dir == 'al' or dir == 'r') then
+               Babel.picture_has_bidi = 1
+             end
+           end
+         end
+         return head
+       end
+       luatexbase.add_to_callback("hpack_filter", Babel.picture_dir,
+         "Babel.picture_dir")
+     }%
+   \long\def\put(#1,#2)#3{%
+     \@killglue 
+     % Try:
+     \ifx\bbl@pictresetdir\relax
+       \count@=\z@
+     \else
+       \directlua{
+         Babel.get_picture_dir = true
+         Babel.picture_has_bidi = 0
+       }%
+       \setbox\z@\hb@xt@\z@{%
+         \@defaultunitsset\@tempdimc{#1}\unitlength
+         \kern\@tempdimc
+         #3\hss}%
+       \directlua{
+         Babel.get_picture_dir = false;
+         tex.print( [[\string\count@=]] .. Babel.picture_has_bidi );
+       }%
+       \relax % 'Close' the number
+     \fi
+     % Do:
+     \@defaultunitsset\@tempdimc{#2}\unitlength
+     \raise\@tempdimc\hb@xt@\z@{%
+       \@defaultunitsset\@tempdimc{#1}\unitlength
+       \kern\@tempdimc
+       {\ifnum\count@>\z@\bbl@pictresetdir\fi#3}\hss}% 
+     \ignorespaces}
+     \MakeRobust\put
    \fi
    \AtBeginDocument
      {\ifx\tikz@atbegin@node\@undefined\else
