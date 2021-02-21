@@ -1,4 +1,4 @@
-## Babel 3.53.2289
+## Babel 3.53.2290
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -43,11 +43,11 @@ respective authors.
 
 ### Latest changes
 ```
-3.54   2021-02-23??
+3.54   2021-02-22??
        * RTL text inside \put (with pict2e) correctly rendered in
          typical cases (#98).
        * Same for \tikz.
-       * 
+       * The main change in internal (loader of ini files refactored).
        
 3.53   2021-01-26
        * Extended \setlocalecaption to allow .template (related to
@@ -61,7 +61,7 @@ respective authors.
            bidi in lua.
          - Parenthesis sometimes mirrored at the end of math with
            bidi=basic.
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.53
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.53
 
 3.52   2020-12-16
        * WARNING. If you need the style for Afrikaans you must update
@@ -76,7 +76,7 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.53
          - Save size overflow with many \selectlanguage's (#109).
          - Albanian: fix a typo in contents name (#104)
          - Missing ‘Unused global option(s)’ warning (#110)
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.52
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.52
 
 3.51   2020-10-27
        * Common interface to (re)define captions (with
@@ -91,13 +91,13 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.52
          - An error was raised with CJK and a null font (#99).
          - language.tag.bcp47 and tag.ini in \localeinfo didn't work
            (#102).
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.52
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.52
 
 3.50   2020-10-06
        * Fixes:
          - main=<language> stopped working in some cases (#96).
          - Footnotes were not \long with layout=footnotes.
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.50
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.50
 
 3.49   2020-10-03
        * BUG. This version has a severe bug with main= (fixed in 3.50).
@@ -106,7 +106,7 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.50
        * frenchspacing is set with ini files.
        * Fixes:
          - layout.lists=off didn't work (#94)
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.49
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.49
 
 3.48   2020-09-01
        * New (tentative) tools to customize some labels (like chapters
@@ -117,7 +117,7 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.49
          - \babelshorthand didn't work with some dialects (#91).
          - \selectlanguage and otherlanguage raised an error inside
            tabular.
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.48       
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.48       
 
 3.47   2020-07-13
        * Fixes:
@@ -128,7 +128,7 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.48
        * New - \getlocaleproperty*, which doesn't raise an error.
        * Basic ini+tex templates for about 500 languages in the GitHub
          repository.
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.47
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.47
 
 3.46   2020-07-06
        * Languages can now be optionally selected with their BCP 47
@@ -147,26 +147,13 @@ https://github.com/latex3/babel/wiki/What's-new-in-babel-3.47
 https://github.com/latex3/babel/wiki/What's-new-in-babel-3.46
 
 3.45   2020-06-10
-       * Minor fixes in Hindi, Ancient Greek, Macedonian.
-       * Improvements in Kurdish, Marathi.
-       * Alternative date formats with \localedate[calendar=...,
-         variant=...]{y}{m}{d} (note: no calendar computations, just
-         strings).
-       * \today is (again) case-aware.
-       * \localenumeral{digits}{..} and \localecounter{digits}{cntr}
-         for native digits.
-       * Fixes
-         - Improved handling of math with \babelposthyphenation and
-           \babelprehyphenation (it was ignoring too much).
-         - An error related to \bbl@foreign@x could be raised in some
-           rare cases.
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.45
 
 3.44   2020-05-13
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.44
 
 3.43   2020-04-28
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.43
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.43
 
 3.42   2020-03-22
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.42

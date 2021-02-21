@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/02/20 v3.53.2289 The Babel package]
+\ProvidesFile{babel.dtx}[2021/02/21 v3.53.2290 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4850,8 +4850,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.53.2289>>
-%<<date=2021/02/20>>
+%<<version=3.53.2290>>
+%<<date=2021/02/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13389,7 +13389,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@cjkintraspace\relax
   \directlua{
     Babel = Babel or {}
-    require'babel-data-cjk.lua'
+    require('babel-data-cjk.lua')
     Babel.cjk_enabled = true
     function Babel.cjk_linebreak(head)
       local GLYPH = node.id'glyph'
@@ -14292,7 +14292,10 @@ end
      \ifcase\bbl@thetextdir
        \let\bbl@pictresetdir\relax
      \else
-       \bodydir TLT
+       \ifcase#1\bodydir TLT  % Remember this sets the inner boxes
+         \or\textdir TLT
+         \else\bodydir TLT \textdir TLT
+       \fi
        % \(text|par)dir required in pgf:
        \def\bbl@pictresetdir{\bodydir TRT\pardir TRT\textdir TRT\relax}%
      \fi}%
@@ -14329,47 +14332,44 @@ end
        luatexbase.add_to_callback("hpack_filter", Babel.picture_dir,
          "Babel.picture_dir")
      }%
-   \long\def\put(#1,#2)#3{%
-     \@killglue 
-     % Try:
-     \ifx\bbl@pictresetdir\relax
-       \count@=\z@
-     \else
-       \directlua{
-         Babel.get_picture_dir = true
-         Babel.picture_has_bidi = 0
-       }%
-       \setbox\z@\hb@xt@\z@{%
+   \AtBeginDocument{%
+     \long\def\put(#1,#2)#3{%
+       \@killglue 
+       % Try:
+       \ifx\bbl@pictresetdir\relax
+         \def\bbl@tempc{0}%
+       \else
+         \directlua{
+           Babel.get_picture_dir = true
+           Babel.picture_has_bidi = 0
+         }%
+         \setbox\z@\hb@xt@\z@{%
+           \@defaultunitsset\@tempdimc{#1}\unitlength
+           \kern\@tempdimc
+           #3\hss}%
+         \edef\bbl@tempc{\directlua{tex.print(Babel.picture_has_bidi)}}%
+       \fi
+       % Do:
+       \@defaultunitsset\@tempdimc{#2}\unitlength
+       \raise\@tempdimc\hb@xt@\z@{%
          \@defaultunitsset\@tempdimc{#1}\unitlength
          \kern\@tempdimc
-         #3\hss}%
-       \directlua{
-         Babel.get_picture_dir = false;
-         tex.print( [[\string\count@=]] .. Babel.picture_has_bidi );
-       }%
-       \relax % 'Close' the number
-     \fi
-     % Do:
-     \@defaultunitsset\@tempdimc{#2}\unitlength
-     \raise\@tempdimc\hb@xt@\z@{%
-       \@defaultunitsset\@tempdimc{#1}\unitlength
-       \kern\@tempdimc
-       {\ifnum\count@>\z@\bbl@pictresetdir\fi#3}\hss}% 
-     \ignorespaces}
-     \MakeRobust\put
+         {\ifnum\bbl@tempc>\z@\bbl@pictresetdir\fi#3}\hss}% 
+       \ignorespaces}%
+       \MakeRobust\put}%
    \fi
    \AtBeginDocument
      {\ifx\tikz@atbegin@node\@undefined\else
         \let\bbl@OL@pgfpicture\pgfpicture
         \bbl@sreplace\pgfpicture{\pgfpicturetrue}%
-          {\bbl@pictsetdir\@ne\pgfpicturetrue}%
-        \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\@ne}%
+          {\bbl@pictsetdir\z@\pgfpicturetrue}%
+        \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\z@}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
         \bbl@sreplace\tikz{\begingroup}%
-          {\begingroup\bbl@pictsetdir\@one\textdir TLT }%
+          {\begingroup\bbl@pictsetdir\tw@}%
       \fi
       \ifx\AddToHook\@undefined\else
-        \AddToHook{env/tcolorbox/begin}{\textdir TLT }%
+        \AddToHook{env/tcolorbox/begin}{\bbl@pictsetdir\@ne}%
       \fi
       }}
   {}
