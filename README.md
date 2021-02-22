@@ -1,4 +1,4 @@
-## Babel 3.53.2290
+## Babel 3.54
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -43,11 +43,13 @@ respective authors.
 
 ### Latest changes
 ```
-3.54   2021-02-22??
+3.54   2021-02-22
        * RTL text inside \put (with pict2e) correctly rendered in
-         typical cases (#98).
-       * Same for \tikz.
+         typical cases (lua, #98).
+       * Same for \tikz (lua).
        * The main change in internal (loader of ini files refactored).
+       * Fixes:
+         - The tentative \foreignlanguage* stopped working.
        
 3.53   2021-01-26
        * Extended \setlocalecaption to allow .template (related to
@@ -144,7 +146,7 @@ See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.47
          - Locale info was not loaded if the name had uppercase letters
            in some OSs (#80).
          - The [..|..] syntax in ini dates didn't recognize 'digits'.
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.46
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.46
 
 3.45   2020-06-10
 See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.45

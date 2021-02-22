@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/02/21 v3.53.2290 The Babel package]
+\ProvidesFile{babel.dtx}[2021/02/22 v3.54 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3444,10 +3444,8 @@ bidirectional (with both R and L paragraphs) documents in \luatex{}.
 
 \item[graphics] modifies the |picture| environment so that the whole
 figure is L but the text is R. It \textit{does not} work with the
-standard |picture|, and \textit{pict2e} is required if you want sloped
-lines \textbf{(With recent versions of \LaTeX, this feature has
-stopped working)}. It attempts to do the same for \textsf{pgf/tikz}.
-Somewhat experimental. \New{3.32}.
+standard |picture|, and \textit{pict2e} is required. It attempts to do
+the same for \textsf{pgf/tikz}. Somewhat experimental. \New{3.32}.
 
 \item[extras] is used for miscellaneous readjustments which do not fit into
   the previous groups. Currently redefines in \luatex{} |\underline| and
@@ -4850,8 +4848,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.53.2290>>
-%<<date=2021/02/21>>
+%<<version=3.54>>
+%<<date=2021/02/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7667,6 +7665,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@foreign@s#1#2{% TODO - \shapemode, \@setpar, ?\@@par
   \begingroup
     {\par}%
+    \let\bbl@select@opts\@empty
     \let\BabelText\@firstofone
     \foreign@language{#1}%
     \bbl@usehooks{foreign*}{}%
@@ -14300,7 +14299,7 @@ end
        \def\bbl@pictresetdir{\bodydir TRT\pardir TRT\textdir TRT\relax}%
      \fi}%
    \ifx\AddToHook\@undefined\else
-     \AddToHook{env/picture/begin}{\bbl@pictsetdir\z@}%
+     \AddToHook{env/picture/begin}{\bbl@pictsetdir\tw@}%
      \directlua{
        Babel.get_picture_dir = true
        Babel.picture_has_bidi = 0
