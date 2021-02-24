@@ -1,8 +1,4 @@
-
-**Note.** GitHub hides the project wikis for crawlers, which means they are
-essentialy unuseful. This directory will contain the articles (with
-news and guides) currently in the babel wiki.
-# Babel
+![Babel](media/babel-top.png)
 
 **Localization and internationalization**<br/>
 **pdfTeX, LuaTeX and XeTeX**
