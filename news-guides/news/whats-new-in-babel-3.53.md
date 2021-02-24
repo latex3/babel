@@ -10,7 +10,7 @@ This new feature is related to issue [#111](https://github.com/latex3/babel/issu
 
 ## `\babelprovide` with `ldf` files
 
-Until now, `\babelprovide` was not allowed without the optional argument when the language was loaded as the `ldf` file. However, now some `ini` files provide additional features which can be useful, like [counters](whats-new-in-babel-3.41). Therefore, this restriction has been lifted.
+Until now, `\babelprovide` was not allowed without the optional argument when the language was loaded as the `ldf` file. However, now some `ini` files provide additional features which can be useful, like [counters](whats-new-in-babel-3.41.md). Therefore, this restriction has been lifted.
 
 See also: [Using `\babelprovide` to modify or extend locales](../guides/using-babelprovide-to-modify-or-extend-locales.md).
 
