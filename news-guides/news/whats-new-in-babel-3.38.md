@@ -11,7 +11,7 @@ currently to line breaking) and fonts can be automatically set based on
 script blocks, without explicit mark up (only `luatex`). A full example
 is:
 
-```
+```tex
 \documentclass{article}
 
 % Load russian and english
@@ -47,6 +47,6 @@ Until now, the information in the `identification` section was stored
 in ‘private’ macros (ie, with `@`s). Now, they are exposed with the
 fully expandable command `\localeinfo`. For example, to get the
 locale code:
-```
+```tex
 \localeinfo{tag.bcp47}
 ```

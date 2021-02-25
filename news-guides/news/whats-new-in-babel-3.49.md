@@ -9,7 +9,7 @@
 The standard way to set a language in LaTeX is by means of class or package options. Class options can be recognized by packages to act accordingly, and `babel` is not an exception. However, until now `ini` files had to be loaded following a separate mechanism, which was clearly not ideal, because it doesn't set the language as a global option, which may be required in many applications.
 
 Now there is a package option to tell `babel` to load all or some languages passed as options with `\babelprovide` and not from the `ldf` file, with a few typical cases, as for instance:
-```
+```tex
 \documentclass[hindi]{article}
 
 \usepackage[provide=*]{babel}

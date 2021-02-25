@@ -5,7 +5,7 @@
 ## Common interface to redefine captions 
 
 The way strings for captions are defined has evolved to overcome some limitations in older versions, and as a result there were several procedures to modify them, depending on the language or how the language is loaded. Now they can be redefined with `\setlocalecaption`, as for instance:
-```
+```tex
 \setlocalecaption{english}{contents}{Table of Contents}
 ```
 

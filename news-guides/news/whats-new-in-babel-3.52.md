@@ -13,7 +13,7 @@ The code has been refactored and in many cases there will be a huge speed boost 
 ### Penalties
 
 Penalties can be inserted with both `\babelprehyphenation` and `\babelposthyphenation` with the key `penalty`, which can be combined (and usually must be) with `insert` (described below). Since in `\babelprehyphenation` `|` stands for a space, you can prevent, for example, the word «a» from being at the beginning of a line with:
-```
+```tex
 \babelprehyphenation{english}{|a|}{
  {insert, penalty=10000},
  {}, {}, {}}

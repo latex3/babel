@@ -11,23 +11,23 @@ _Document under development. Only XeTeX and LuaTeX._ (I like to thank Loren Davi
 There are two ways to load a language, which use different definition files. At first this duality may seem inconvenient, but this way the transition to a more modern system where locales can be easily defined and interoperate can be done smoothly.
 
 The first one is:
-```
+```tex
 \usepackage[italian]{babel}
 ```
 It will load the old good Italian language definition file. This procedure is the **preferred one in most languages where an `ldf` exists**, but there are exceptions (for example, Arabic and Hebrew). In general, you should do this for **European languages written in Latin and Cyrillic** scripts, as well as for **Vietnamese**. For **Greek**, it may depend on your needs, and very often both methods will be fine. If you want modern and ancient Greek at the same time, the next one is usually better.
 
 The second method is:
-```
+```tex
 \usepackage[thai, provide=*]{babel}
 ```
 This will load data from an `ini` file. This is usually the correct method for languages written in **non-European scripts**, like Thai, Hindi, Sanskrit, Marathi, Malayalam, Lao, Khemer, Bengali, Gujarati, Telugu, Kannada, Sinhala, Tamil, Amharic, or Burmese. In short **simple CJK** texts, this is also the preferred method, but in more complex ones you should resort to some CKJ framework like luatexja, xeCJK, kotex, and the like.
 
 Some languages may require additional options. Examples are Arabic, Hebrew and Syriac. With LuaTeX:
-``` 
+```tex
 \usepackage[arabic, bidi=basic, provide=*]{babel}
 ```
 With XeTeX:
-``` 
+```tex
 \usepackage[arabic, bidi=bidi-r, provide=*]{babel}
 ```
 
@@ -82,7 +82,7 @@ Some examples follow (well, not yet). Remember there are  [examples here](https:
 ### Arabic
 
 Recommended basic settings for a monolingual Arabic document in `luatex` (please, note your browser might not be rendering correctly the source code):
-```
+```tex
 \documentclass{article}
 
 \usepackage[arabic, provide=*, bidi=basic, layout=counters.tabular]{babel}

@@ -3,11 +3,11 @@
 ## More BCP 47
 
 Now, BCP 47 codes may be used to select languages loaded as package or class options, if desired. Because this feature is mainly meant for special uses, it must be explicitly turned on with:
-```
+```tex
 \babeladjust{ bcp47.toname = on }
 ```
 The best place for this feature to be activated is just after loading `babel`, especially if there are some `\babelprovide`. For example, 
-```
+```tex
 \documentclass{book}
 \usepackage[spanish, english]{babel}
 \babeladjust{ bcp47.toname = on }

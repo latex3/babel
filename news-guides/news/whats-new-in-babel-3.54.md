@@ -13,7 +13,7 @@ Graphical elements in bidi texts are particularly problematic because they must 
 This version improves the situation and now RTL inside a `\put` in the `picture` environment is correctly detected and properly typeset, at least in typical cases. Requires `pict2e`. There is a minor caveat: the contents of `\put` are parsed twice in order to detect if it contains some RTL text, which means global assignments are executed also twice. This is, however, very infrequent.
 
 Support for `pgfpicture` has been improved and now `\tikz` is recognized, too. Here is an example:
-```
+```tex
 \documentclass{article}
 
 \usepackage[arabic, provide=*, bidi=basic]{babel}

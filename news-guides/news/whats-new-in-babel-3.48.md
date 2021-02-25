@@ -11,7 +11,7 @@ For the reasons explained [here](../guides/localizing-counters.md), the new feat
 Captions for numbered elements are hardcoded with the counter placed after it, clearly having English and a few other languages in mind. But in Hungarian, for example, the counter comes before, and in CJK languages it can be even surrounded by two strings (第 1 章). Now, keys in the `captions` section ending with `.template` set how the elements are ordered.
 
 For example:
-```
+```ini
 [captions]
 chapter.template = [[prechapter]] [chapter] [[postchapter]]
 prechapter = 第
@@ -28,7 +28,7 @@ The captions allowing this king of templating are `chapter`, `appendix` in `book
 There is a new section in `ini`  files for labels and how counters are used in some contexts.
 
 As a first tool, there is a way to map some standard counters to another ones, with keys ending with `map`, preceded by `arabic`, `roman`, `Roman`, `alph`, `Alph`, `fnsymbol`. For example:
-```
+```ini
 [labels]
 ; Map roman to informal (eg, Japanese 一 二 三 四 etc.):
 roman.map = informal   

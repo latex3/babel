@@ -42,7 +42,7 @@ A couple of wrong settings have been fixed: `prehyphenchar` in Hindi was set to 
 ## Appendix. Using an external program for dates
 
 An example with Windows and Powershell. Create a file named `hijridate.ps1`:
-```
+```powershell
 $today = [datetime]::Now
 
 $calendar = New-Object System.Globalization.HijriCalendar
@@ -56,7 +56,7 @@ Then:
 PowerShell.exe -WindowStyle hidden ./hijridate.ps1 >today.tex 
 ```
 and a file is generated with something like:
-```
+```tex
 \def\HijriDay{9}
 \def\HijriMonth{10}
 \def\HijriYear{1441}

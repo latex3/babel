@@ -12,7 +12,7 @@ There are several way to use them (for the availabe styles in each language, see
 * `\localecounter{style}{counter}`. like  `\localecounter{lower}{section}` 
 * In `\babelprovide`, as an argument to the keys `alph` and `Alph`, which redefine what `\alph` and `\Alph` print:
 
-```
+```tex
 \documentclass{article}
 
 \usepackage{babel}

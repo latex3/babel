@@ -9,7 +9,7 @@
 ## Optional argument for `\foreignlanguage`
 
 By default, neither `\foreignlanguage` nor `otherlanguage*` switch the date or the captions. If for some reason you needed them, you had to write something like `{\selectlanguage{..} ..}`, which is not always the most convenient way. Now, you can write, say:
-```
+```tex
 \foreignlanguage[date]{polish}{\today}
 ```
 In addition, you can switch captions with `captions`. There are plans to add more options and to extend this mechanism to `\selectlanguage`. 
@@ -52,7 +52,7 @@ Performance is still somewhat poor.
 ### Example 1: transliteration
 
 Here is an example of what can be done currently. Consider the following definitions:
-```
+```tex
 \babelprovide[import=ru]{transrussian}
 
 % Note the order is relevant. First 3-letter groups, then 2-letter ones
@@ -99,7 +99,7 @@ we get the following output:
 ### Example 2: combining chars
 
 Currently, `lualatex` doesn't deal with combining chars out of the box. As a result, and depending on the language, chars could not be composed correctly and valid hyphenation points could be discarded. As a workaround, you can use `\babelprehyphenation` in the following way:
-```
+```tex
 \documentclass{article}
 
 \usepackage[spanish]{babel}

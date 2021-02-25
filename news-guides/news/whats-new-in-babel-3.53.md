@@ -4,7 +4,10 @@
 
 ## Templates in `\setlocalecaption`
 
-`\setlocalecaption` has been extended to recognize the templating mechanism already available in `ini` files for some captions, explained in [What's new in babel 3.48](whats-new-in-babel-3.48.md). It can be used in `ldf` files, too. Usage is simple: ``` \setlocalecaption{japanese}{chapter.template}{[[prechapter]] [chapter] [[postchapter]]} ```
+`\setlocalecaption` has been extended to recognize the templating mechanism already available in `ini` files for some captions, explained in [What's new in babel 3.48](whats-new-in-babel-3.48.md). It can be used in `ldf` files, too. Usage is simple:
+```tex
+\setlocalecaption{japanese}{chapter.template}{[[prechapter]] [chapter] [[postchapter]]}
+```
 
 This new feature is related to issue [#111](https://github.com/latex3/babel/issues/111)
 

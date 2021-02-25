@@ -6,7 +6,7 @@
 
 The most relevant new feature is the [loading on the fly](whats-new-in-babel-3.39.md) based on BCP 47 codes. It must be activated explicitly, because they are meant for special tasks (most document are mainly monolingual). Mapping from BCP 47 codes to locale names are not hardcoded in `babel`. Instead the data is taken from the `ini` files, which means currently about 250 tags are already recognized
 
-```
+```tex
 \documentclass{article}
 
 \usepackage[danish]{babel}
