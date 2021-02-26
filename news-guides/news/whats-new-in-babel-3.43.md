@@ -52,7 +52,7 @@ The behaviour is adjusted with `\babeladjust` with the following parameters:
 ## Macros in `\selectlanguage`
 
 Since its beginnings, an alternative syntax was allowed in the argument of `\selectlanguage`, so that, say, `\selectlanguage{\dutch}` is the same as `\selectlanguage{dutch}`. Now, if the passed macro doesn't match a loaded language, it's treated as expected, that is, the string contained in the macro will be the name of the language to be selected. For example, the following piece of code will select `dutch`
-```
+```tex
 \newcommand{\mylang}{dutch}
 \selectlanguage{\mylang}
 ```

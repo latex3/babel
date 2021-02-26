@@ -5,13 +5,13 @@
 ## Getting properties from `ini` files
 
 Let's say you need the string for the chapter name in Hebrew. You can write:
-```
+```tex
 \getlocaleproperty{\hechap}{hebrew}{captions/chapter}
 ```
 And `\hechap` is set to the corresponding value.
 
 `\LocaleForEach` loops the loaded `ini` files with `#1` as the locale name. Here is a somewhat low level example:
-```
+```tex
 \LocaleForEach{%
   \getlocaleproperty\savetag{#1}{identification/tag.bcp47}%
   \expandafter\xdef\csname tagtolocale\savetag\endcsname{#1}%

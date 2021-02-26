@@ -1,4 +1,4 @@
-## Babel 3.54
+## Babel 3.54.2295
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages.  Many
@@ -7,9 +7,9 @@ lualatex out of the box.  A few even work with plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.54 are described in:
+Changes in version 3.55 are described in:
 
-https://github.com/latex3/babel/wiki/What's-new-in-babel-3.54
+https://github.com/latex3/babel/wiki/What's-new-in-babel-3.55
 
 Included is a set of ini files for about 250 languages. 
 
@@ -43,6 +43,10 @@ respective authors.
 
 ### Latest changes
 ```
+3.55   2021-03-??
+       * Fixes:
+         - Romanian ...
+
 3.54   2021-02-22
        * RTL text inside \put (with pict2e) correctly rendered in
          typical cases (lua, #98).
@@ -50,7 +54,8 @@ respective authors.
        * The main change in internal (loader of ini files refactored).
        * Fixes:
          - The tentative \foreignlanguage* stopped working.
-       
+See https://github.com/latex3/babel/wiki/What's-new-in-babel-3.54
+ 
 3.53   2021-01-26
        * Extended \setlocalecaption to allow .template (related to
          #111).
