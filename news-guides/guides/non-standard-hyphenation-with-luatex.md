@@ -117,11 +117,21 @@ In cases like this, you may want to use maps as described above.
 ```
 * To duplicate explicit hyphens:
 ```tex
-\babelposthyphenation{polish}{.=.}{
+\babelposthyphenation{polish}{{a}={a}}{
   {},
   { no = -, pre = -, post = -, data = 1 },
   {}
 }
 ```
 
-* See another example here: https://tex.stackexchange.com/questions/554760/apply-lefthyphenmin-to-parts-of-a-word-spelled-with-hyphens/554788#554788
+* To prevent a line break if there is a single letter followed by a
+  hyphen and a word (eg, “e-mail”):
+```tex
+\babelposthyphenation{ngerman}{ ^{A}*(){a}=() }{
+  {},
+  { pre=-, no=-, penalty=10000 }
+}
+```
+With `{A}*` we consider the possibility of leading characters like `(`
+or `“`, because `{A}` it's the same as `%A` in lua. This part is placed
+before that to be processed, which is enclosed between `() ()`.

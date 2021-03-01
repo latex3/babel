@@ -1,5 +1,7 @@
 # What's new in babel 3.46
 
+2020-07-06
+
 ## More BCP 47
 
 Now, BCP 47 codes may be used to select languages loaded as package or class options, if desired. Because this feature is mainly meant for special uses, it must be explicitly turned on with:
