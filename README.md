@@ -1,4 +1,4 @@
-## Babel 3.54.2298
+## Babel 3.55
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,7 +10,7 @@ The latest stable version is available on <https://ctan.org/pkg/babel>.
 
 Changes in version 3.55 are described in:
 
-https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.55
+https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.55.md
 
 Apart from the manual, you can find information on some aspects of babel at:
 
