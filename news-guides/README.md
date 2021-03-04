@@ -25,6 +25,7 @@ This is the home page for Babel, a multilingual environment for latex (and somet
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.55](news/whats-new-in-babel-3.55.md) | Mainly internal changes. Captions in Uyghur. |
 | [3.54](news/whats-new-in-babel-3.54.md) | Improved `picture`. |
 | [3.53](news/whats-new-in-babel-3.53.md) | Templates in \setlocalecaption. Captions in Sinhala. |
 | [3.52](news/whats-new-in-babel-3.52.md) | Improvements in `\babelprehyphenation` and `\babelposthyphenation`. |
