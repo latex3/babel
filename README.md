@@ -1,4 +1,4 @@
-## Babel 3.55
+## Babel 3.55.2304
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.55 are described in:
+Changes in version 3.56 are described in:
 
-https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.55.md
+https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.56.md
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,6 +46,9 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.56   2021-03-23??
+       * Key 'space' in \babelprehyphenation.
+         
 3.55   2021-03-03??
        * Captions for Uyghur.
        * Fixes:
@@ -57,5 +60,5 @@ respective authors.
 
 ### Previous changes
 
-See https://github.com/latex3/babel/blob/master/news-guides/news/
+See https://github.com/latex3/babel/blob/master/news-guides/README.md#whats-new
 

@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/03/03 v3.55 The Babel package]
+\ProvidesFile{babel.dtx}[2021/03/07 v3.55.2304 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3042,7 +3042,7 @@ future implementation may alternatively accept \textsf{lpeg}.
 
 \Describe{\babelprehyphenation}{\marg{locale-name}%
           \marg{lua-pattern}\marg{replacement}}
-          
+
 \New{3.44-3-52} This command is not strictly about hyphenation, but
 it is included here because it is a clear counterpart of
 |\babelposthyphenation|. It is similar to the latter, but (as its name
@@ -4849,8 +4849,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.55>>
-%<<date=2021/03/03>>
+%<<version=3.55.2304>>
+%<<date=2021/03/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13906,7 +13906,7 @@ end
       &% For each saved (pre|post)hyphenation. TODO. Reconsider how
       &% loops are nested.
       for k=1, #lbkr[lang] do
-        local p = lbkr[lang][k].pattern 
+        local p = lbkr[lang][k].pattern
         local r = lbkr[lang][k].replace
 
         if Babel.debug then
@@ -13918,7 +13918,7 @@ end
         &% computed position based on sc if w has changed.
         local last_match = 0
 
-        &% For every match. 
+        &% For every match.
         while true do
           if Babel.debug then
             print('-----')
@@ -13933,7 +13933,7 @@ end
           &% number with the position), and keep actual captures
           &% (from (...)), if any, in matches.
           local first = table.remove(matches, 1)
-          local last  = table.remove(matches, #matches)         
+          local last  = table.remove(matches, #matches)
           &% Non re-fetched substrings may contain \31, which separates
           &% subsubstrings.
           if string.find(w:sub(first, last-1), Babel.us_char) then break end
@@ -13946,7 +13946,7 @@ end
 
           if Babel.debug then
             print(p)
-            print('', 'sc', 'first', 'last', 'last_m', 'w')
+            print('', 'sc', 'first', 'last', 'last_m', '#w', rc, 'w')
           end
 
           &% This loop traverses the matched substring and takes the
@@ -13961,17 +13961,32 @@ end
             end
             sc = sc + 1
             rc = rc + 1
+            
+            if Babel.debug then
+              local ss = ''
+              for pp = 1, 10 do
+                if wn[pp].id == 29 then
+                  ss = ss .. unicode.utf8.char(wn[pp].char)
+                else
+                  ss = ss .. '='
+                end
+              end
+              print(ss)
+            end
+
             local crep = r[rc]
             local char_node = wn[sc]
             local char_base = char_node
             local end_replacement = false
+            local placeholder = Babel.us_char
 
             if crep and crep.data then
               char_base = wn[crep.data+first-1]
             end
 
             if Babel.debug then
-              print('*', sc, first, last, last_match, w)
+              if char_node.id == 29 then print('++', char_node.char) end
+              print('*', sc, first, last, last_match, char_node.id, rc, w)
             end
 
             if crep and next(crep) == nil then &% {}
@@ -13998,6 +14013,17 @@ end
               head, new = node.insert_before(head, char_node, d)
               end_replacement = true
 
+            elseif crep and crep.space then
+              &% local quad = 655360      &% 10 pt = 655360 = 10 * 65536
+              quad = font.getfont(char_base.font).size
+              local d = node.new(12, 13)      &% (glue, spaceskip)
+              node.setglue(d, crep.space[1] * quad,
+                              crep.space[2] * quad,
+                              crep.space[3] * quad)
+              placeholder = '|'
+              head, new = node.insert_before(head, char_node, d)
+              end_replacement = true
+
             elseif crep and crep.penalty then
               local d = node.new(14, 0)   &% (penalty, userpenalty)
               d.attr = char_base.attr
@@ -14007,7 +14033,7 @@ end
 
             elseif crep and crep.string then
               local str = crep.string(matches)
-              if str == '' then  &% Gather with nil 
+              if str == '' then  &% Gather with nil
                 refetch = true
                 if sc == 1 then
                   word_head = char_node.next
@@ -14017,7 +14043,7 @@ end
                 char_node.char = string.utfvalue(str)
                 w = u.sub(w, 1, sc-1) .. str .. u.sub(w, sc+1)
                 last_match = utf8.offset(w, sc+1)
-              else          
+              else
                 refetch = true
                 local n
                 for s in string.utfvalues(str) do
@@ -14030,40 +14056,49 @@ end
                   n.char = s
                   if sc == 1 then
                     head, new = node.insert_before(head, char_node, n)
-                    word_head = new
-                  else 
+                    word_head = head
+                  else
                     node.insert_before(head, char_node, n)
                   end
                 end
                 node.remove(head, char_node)
               end  &% string length
             end  &% if char and char.string (ie replacement cases)
-
-            &% Shared by disc and penalty.
+            
+            &% Shared by disc, space and penalty.
             if end_replacement then
               if sc == 1 then
-                word_head = new
+                word_head = head
               end
               if crep.insert then
+                &% TODO. For this to work, it seem we need 'split' rc 
+                &% w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc)
                 last_match = save_last
+                last = last + 1
+                sc = sc - 1
+                refetch = true &% Temp: restore refetch :(
               else
                 node.remove(head, char_node)
-                w = u.sub(w, 1, sc-1) .. Babel.us_char .. u.sub(w, sc+1)
+                w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc+1)
                 last_match = utf8.offset(w, sc)
               end
             end
           end  &% for each replacement
 
           if Babel.debug then
-            print('/', sc, first, last, last_match, w)
+            print('/', sc, first, last, last_match, #w, rc,  w)
           end
 
-          &% TODO. refetch will be eventually unnecesary. 
+          &% TODO. refetch will be eventually unnecesary.
           if refetch then
             w, wn, nw, lang = Babel.fetch_subtext[mode](word_head)
-          end              
+          end
 
         end  &% for match
+
+        if Babel.debug then
+           print('//', sc, first, last, last_match, '#w', rc,  w)
+        end
       end  &% for patterns
 
       ::next::
@@ -14172,6 +14207,8 @@ end
            local rep = [[##1]]
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
+           rep = rep:gsub( '(space)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
+             'space = {' .. '%2, %3, %4' .. '}')
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
     \directlua{
@@ -21080,13 +21117,13 @@ function Babel.bidi(head, ispar, hdir)
       first_et = nil
       has_en = false
     end
-    
+
     -- Force mathdir in math if ON (currently works as expected only
     -- with 'l')
     if inmath and d == 'on' then
       d = ('TRT' == tex.mathdir) and 'r' or 'l'
     end
-      
+
     if d then
       if d == 'al' then
         d = 'r'
