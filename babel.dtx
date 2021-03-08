@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/03/07 v3.55.2304 The Babel package]
+\ProvidesFile{babel.dtx}[2021/03/08 v3.55.2305 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4849,8 +4849,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.55.2304>>
-%<<date=2021/03/07>>
+%<<version=3.55.2305>>
+%<<date=2021/03/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13949,26 +13949,39 @@ end
             print('', 'sc', 'first', 'last', 'last_m', '#w', rc, 'w')
           end
 
+          &% This loop stores in n small table the nodes
+          &% corresponding to the pattern. Used by 'data' to provide a
+          &% predictable behavior with 'insert' (now wn is modified on
+          &% the fly), and also access to 'remove'd nodes.
+          local sc = first-1           &% Used below, too
+          local data_nodes = {}
+          
+          for q = 1, last-first+1 do
+            data_nodes[q] = wn[sc+q]
+          end
+          
           &% This loop traverses the matched substring and takes the
           &% corresponding action stored in the replacement list.
           &% sc = the position in substr nodes / string
           &% rc = the replacement table index
-          local sc = first-1
           local rc = 0
+
           while rc < last-first+1 do &% for each replacement
             if Babel.debug then
-              print('.....')
+              print('.....', #data_nodes)
             end
             sc = sc + 1
             rc = rc + 1
-            
+
             if Babel.debug then
               local ss = ''
-              for pp = 1, 10 do
-                if wn[pp].id == 29 then
-                  ss = ss .. unicode.utf8.char(wn[pp].char)
-                else
-                  ss = ss .. '='
+              for pp = 1, 20 do
+                if wn[pp] then
+                  if wn[pp].id == 29 then
+                    ss = ss .. unicode.utf8.char(wn[pp].char)
+                  else
+                    ss = ss .. '{' .. wn[pp].id .. '}'
+                  end
                 end
               end
               print(ss)
@@ -13981,23 +13994,22 @@ end
             local placeholder = Babel.us_char
 
             if crep and crep.data then
-              char_base = wn[crep.data+first-1]
+              char_base = data_nodes[crep.data]
             end
 
             if Babel.debug then
-              if char_node.id == 29 then print('++', char_node.char) end
               print('*', sc, first, last, last_match, char_node.id, rc, w)
             end
 
-            if crep and next(crep) == nil then &% {}
+            if crep and next(crep) == nil then &% = {}
               last_match = save_last
 
-            elseif crep == nil then &% remove
+            elseif crep == nil then &% = remove
               node.remove(head, char_node)
               table.remove(wn, sc)
               w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
               last_match = utf8.offset(w, sc)
-              sc = sc - 1  &% Nothing has been inserted
+              sc = sc - 1  &% Nothing has been inserted.
 
             elseif mode == 1 and crep and (crep.pre or crep.no or crep.post) then
               local d = node.new(7, 0)   &% (disc, discretionary)
@@ -14014,8 +14026,10 @@ end
               end_replacement = true
 
             elseif crep and crep.space then
-              &% local quad = 655360      &% 10 pt = 655360 = 10 * 65536
-              quad = font.getfont(char_base.font).size
+              local quad = 655360      &% 10 pt = 655360 = 10 * 65536
+              if char_base.font then
+                local quad = font.getfont(char_base.font).size
+              end 
               local d = node.new(12, 13)      &% (glue, spaceskip)
               node.setglue(d, crep.space[1] * quad,
                               crep.space[2] * quad,
@@ -14064,19 +14078,17 @@ end
                 node.remove(head, char_node)
               end  &% string length
             end  &% if char and char.string (ie replacement cases)
-            
+
             &% Shared by disc, space and penalty.
             if end_replacement then
               if sc == 1 then
                 word_head = head
               end
               if crep.insert then
-                &% TODO. For this to work, it seem we need 'split' rc 
-                &% w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc)
-                last_match = save_last
+                w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc)
+                table.insert(wn, sc, new)
                 last = last + 1
-                sc = sc - 1
-                refetch = true &% Temp: restore refetch :(
+                last_match = save_last
               else
                 node.remove(head, char_node)
                 w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc+1)
@@ -14106,7 +14118,6 @@ end
     end  &% for substring
     return head
   end
-
   &% This table stores capture maps, numbered consecutively
   Babel.capture_maps = {}
 

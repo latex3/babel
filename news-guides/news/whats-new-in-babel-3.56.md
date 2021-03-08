@@ -1,10 +1,10 @@
-# What's new in babel 3.55
+# What's new in babel 3.56
 
 (Under development.)
 
 ## Inserting spaces (with `luatex`)
 
-Some languages require readjusting the space before or after somo
+Some languages require readjusting the space before or after some
 characters (a well-known case is French). There is a new key to add a
 space, with takes 3 numbers for the natural width, the `plus` and the
 `minus` in em units. You may need to set where the quad value is taken
@@ -40,7 +40,8 @@ necessary when a space is added.
 ## Fixes
 
 * When writing the previous feature, some anomalous behavior when
-  inserting items (either with a multi-letter `string` or with
-  `insert`). The fix is not efficient, but at least now it should work.
+  inserting items was detecte, either with a multi-letter `string` or
+  with `insert`. In these cases, `data` was somewhat unpredictable,
+  too.
 
  
