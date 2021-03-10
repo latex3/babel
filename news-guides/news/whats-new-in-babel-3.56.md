@@ -40,7 +40,7 @@ necessary when a space is added.
 ## Fixes
 
 * When writing the previous feature, some anomalous behavior when
-  inserting items was detecte, either with a multi-letter `string` or
+  inserting items were detected, either with a multi-letter `string` or
   with `insert`. In these cases, `data` was somewhat unpredictable,
   too.
 
