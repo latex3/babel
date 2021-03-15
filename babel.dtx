@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/03/08 v3.55.2305 The Babel package]
+\ProvidesFile{babel.dtx}[2021/03/15 v3.55.2312 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4849,8 +4849,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.55.2305>>
-%<<date=2021/03/08>>
+%<<version=3.55.2312>>
+%<<date=2021/03/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13881,6 +13881,31 @@ end
     Babel.hyphenate_replace(head, 1)
   end
 
+  function Babel.debug_hyph(w, wn, sc, first, last, last_match)
+    local ss = ''
+    for pp = 1, 40 do
+      if wn[pp] then
+        if wn[pp].id == 29 then
+          ss = ss .. unicode.utf8.char(wn[pp].char)
+        else
+          ss = ss .. '{' .. wn[pp].id .. '}'
+        end
+      end
+    end
+    print('nod', ss)
+    print('lst_m',
+      string.rep(' ', unicode.utf8.len(
+         string.sub(w, 1, last_match))-1) .. '>')
+    print('str', w)
+    print('sc', string.rep(' ', sc-1) .. '^')
+    if first == last then
+      print('f=l', string.rep(' ', first-1) .. '!')
+    else
+      print('f/l', string.rep(' ', first-1) .. '[' ..
+        string.rep(' ', last-first-1) .. ']')
+    end
+  end
+
   Babel.us_char = string.char(31)
 
   function Babel.hyphenate_replace(head, mode)
@@ -13891,11 +13916,11 @@ end
 
     while true do  &% for each subtext block
 
-      local w, wn, nw, lang = Babel.fetch_subtext[mode](word_head)
+      local w, w_nodes, nw, lang = Babel.fetch_subtext[mode](word_head)
 
       if Babel.debug then
         print()
-        print('@@@@@', w, nw)
+        print((mode == 0) and '@@@@<' or '@@@@>', w)
       end
 
       if nw == nil and w == '' then break end
@@ -13910,7 +13935,7 @@ end
         local r = lbkr[lang][k].replace
 
         if Babel.debug then
-          print('=====', p, mode)
+          print('*****', p, mode)
         end
 
         &% This variable is set in some cases below to the first *byte*
@@ -13921,7 +13946,7 @@ end
         &% For every match.
         while true do
           if Babel.debug then
-            print('-----')
+            print('=====')
           end
           local new  &% used when inserting and removing nodes
           local refetch = false
@@ -13944,22 +13969,17 @@ end
           first = u.len(w:sub(1, first-1)) + 1
           last  = u.len(w:sub(1, last-1)) &% now last points to C
 
-          if Babel.debug then
-            print(p)
-            print('', 'sc', 'first', 'last', 'last_m', '#w', rc, 'w')
-          end
-
           &% This loop stores in n small table the nodes
           &% corresponding to the pattern. Used by 'data' to provide a
-          &% predictable behavior with 'insert' (now wn is modified on
+          &% predictable behavior with 'insert' (now w_nodes is modified on
           &% the fly), and also access to 'remove'd nodes.
           local sc = first-1           &% Used below, too
           local data_nodes = {}
-          
+
           for q = 1, last-first+1 do
-            data_nodes[q] = wn[sc+q]
+            data_nodes[q] = w_nodes[sc+q]
           end
-          
+
           &% This loop traverses the matched substring and takes the
           &% corresponding action stored in the replacement list.
           &% sc = the position in substr nodes / string
@@ -13968,149 +13988,143 @@ end
 
           while rc < last-first+1 do &% for each replacement
             if Babel.debug then
-              print('.....', #data_nodes)
+              print('.....', rc + 1)
             end
             sc = sc + 1
             rc = rc + 1
 
             if Babel.debug then
-              local ss = ''
-              for pp = 1, 20 do
-                if wn[pp] then
-                  if wn[pp].id == 29 then
-                    ss = ss .. unicode.utf8.char(wn[pp].char)
-                  else
-                    ss = ss .. '{' .. wn[pp].id .. '}'
-                  end
-                end
-              end
-              print(ss)
+              Babel.debug_hyph(w, w_nodes, sc, first, last, last_match)
             end
 
             local crep = r[rc]
-            local char_node = wn[sc]
-            local char_base = char_node
-            local end_replacement = false
+            local item = w_nodes[sc]
+            local item_base = item
             local placeholder = Babel.us_char
+            local d
 
             if crep and crep.data then
-              char_base = data_nodes[crep.data]
-            end
-
-            if Babel.debug then
-              print('*', sc, first, last, last_match, char_node.id, rc, w)
+              item_base = data_nodes[crep.data]
             end
 
             if crep and next(crep) == nil then &% = {}
-              last_match = save_last
+              last_match = save_last    &% Optimization
+              goto next
 
             elseif crep == nil then &% = remove
-              node.remove(head, char_node)
-              table.remove(wn, sc)
+              node.remove(head, item)
+              table.remove(w_nodes, sc)
               w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
-              last_match = utf8.offset(w, sc)
               sc = sc - 1  &% Nothing has been inserted.
+              last_match = utf8.offset(w, sc+1)
+              goto next
+
+            elseif crep and crep.string then
+              local str = crep.string(matches)
+              if str == '' then  &% Gather with nil
+                node.remove(head, item)
+                table.remove(w_nodes, sc)
+                w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
+                sc = sc - 1  &% Nothing has been inserted.
+              else
+                local loop_first = true
+                for s in string.utfvalues(str) do
+                  d = node.copy(item_base)
+                  d.char = s
+                  if loop_first then
+                    loop_first = false
+                    head, new = node.insert_before(head, item, d)
+                    if sc == 1 then
+                      word_head = head
+                    end
+                    w_nodes[sc] = d
+                    w = u.sub(w, 1, sc-1) .. u.char(s) .. u.sub(w, sc+1)
+                  else
+                    sc = sc + 1
+                    head, new = node.insert_before(head, item, d)
+                    table.insert(w_nodes, sc, new)
+                    w = u.sub(w, 1, sc-1) .. u.char(s) .. u.sub(w, sc)
+                  end
+                  if Babel.debug then
+                    print('.....', 'str')
+                    Babel.debug_hyph(w, w_nodes, sc, first, last, last_match)
+                  end
+                end  &% for
+                node.remove(head, item)
+              end  &% if ''
+              last_match = utf8.offset(w, sc+1)
+              goto next
 
             elseif mode == 1 and crep and (crep.pre or crep.no or crep.post) then
-              local d = node.new(7, 0)   &% (disc, discretionary)
-              d.pre     = Babel.str_to_nodes(crep.pre, matches, char_base)
-              d.post    = Babel.str_to_nodes(crep.post, matches, char_base)
-              d.replace = Babel.str_to_nodes(crep.no, matches, char_base)
-              d.attr = char_base.attr
+              d = node.new(7, 0)   &% (disc, discretionary)
+              d.pre     = Babel.str_to_nodes(crep.pre, matches, item_base)
+              d.post    = Babel.str_to_nodes(crep.post, matches, item_base)
+              d.replace = Babel.str_to_nodes(crep.no, matches, item_base)
+              d.attr = item_base.attr
               if crep.pre == nil then  &% TeXbook p96
                 d.penalty = crep.penalty or tex.hyphenpenalty
               else
                 d.penalty = crep.penalty or tex.exhyphenpenalty
               end
-              head, new = node.insert_before(head, char_node, d)
-              end_replacement = true
+              placeholder = '|'
+              head, new = node.insert_before(head, item, d)
+
+            elseif mode == 0 and crep and (crep.pre or crep.no or crep.post) then
+              &% ERROR
+
+            elseif crep and crep.penalty then
+              d = node.new(14, 0)   &% (penalty, userpenalty)
+              d.attr = item_base.attr
+              d.penalty = crep.penalty
+              head, new = node.insert_before(head, item, d)
 
             elseif crep and crep.space then
-              local quad = 655360      &% 10 pt = 655360 = 10 * 65536
-              if char_base.font then
-                local quad = font.getfont(char_base.font).size
-              end 
-              local d = node.new(12, 13)      &% (glue, spaceskip)
+              &% 655360 = 10 pt = 10 * 65536 sp
+              d = node.new(12, 13)      &% (glue, spaceskip)
+              local quad = font.getfont(item_base.font).size or 655360
               node.setglue(d, crep.space[1] * quad,
                               crep.space[2] * quad,
                               crep.space[3] * quad)
-              placeholder = '|'
-              head, new = node.insert_before(head, char_node, d)
-              end_replacement = true
-
-            elseif crep and crep.penalty then
-              local d = node.new(14, 0)   &% (penalty, userpenalty)
-              d.attr = char_base.attr
-              d.penalty = crep.penalty
-              head, new = node.insert_before(head, char_node, d)
-              end_replacement = true
-
-            elseif crep and crep.string then
-              local str = crep.string(matches)
-              if str == '' then  &% Gather with nil
-                refetch = true
-                if sc == 1 then
-                  word_head = char_node.next
-                end
-                head, new = node.remove(head, char_node)
-              elseif char_node.id == 29 and u.len(str) == 1 then
-                char_node.char = string.utfvalue(str)
-                w = u.sub(w, 1, sc-1) .. str .. u.sub(w, sc+1)
-                last_match = utf8.offset(w, sc+1)
-              else
-                refetch = true
-                local n
-                for s in string.utfvalues(str) do
-                  if char_node.id == 7 then
-                    &% TODO. Remove this limitation.
-                    texio.write_nl('Automatic hyphens cannot be replaced, just removed.')
-                  else
-                    n = node.copy(char_base)
-                  end
-                  n.char = s
-                  if sc == 1 then
-                    head, new = node.insert_before(head, char_node, n)
-                    word_head = head
-                  else
-                    node.insert_before(head, char_node, n)
-                  end
-                end
-                node.remove(head, char_node)
-              end  &% string length
-            end  &% if char and char.string (ie replacement cases)
-
-            &% Shared by disc, space and penalty.
-            if end_replacement then
-              if sc == 1 then
-                word_head = head
+              if mode == 0 then
+                placeholder = '|'
               end
-              if crep.insert then
-                w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc)
-                table.insert(wn, sc, new)
-                last = last + 1
-                last_match = save_last
-              else
-                node.remove(head, char_node)
-                w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc+1)
-                last_match = utf8.offset(w, sc)
-              end
+              head, new = node.insert_before(head, item, d)
+
+            elseif mode == 0 and crep and crep.space then
+              &% ERROR
+
+            end  &% ie replacement cases
+
+            &% Shared by disc, space and penalty. 
+            if sc == 1 then
+              word_head = head
             end
+            if crep.insert then
+              w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc)
+              table.insert(w_nodes, sc, new)
+              last = last + 1
+            else
+              w_nodes[sc] = d
+              node.remove(head, item)
+              w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc+1)
+            end
+          
+            last_match = utf8.offset(w, sc+1)
+          
+            ::next::
+            
           end  &% for each replacement
 
-          if Babel.debug then
-            print('/', sc, first, last, last_match, #w, rc,  w)
-          end
+          &% si son 'iguales', estamos al final
 
-          &% TODO. refetch will be eventually unnecesary.
-          if refetch then
-            w, wn, nw, lang = Babel.fetch_subtext[mode](word_head)
+
+          if Babel.debug then
+              print('.....', '/')
+              Babel.debug_hyph(w, w_nodes, sc, first, last, last_match)
           end
 
         end  &% for match
 
-        if Babel.debug then
-           print('//', sc, first, last, last_match, '#w', rc,  w)
-        end
       end  &% for patterns
 
       ::next::
@@ -14118,6 +14132,7 @@ end
     end  &% for substring
     return head
   end
+  
   &% This table stores capture maps, numbered consecutively
   Babel.capture_maps = {}
 

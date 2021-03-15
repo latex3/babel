@@ -37,6 +37,11 @@ then matches):
 As you can see, now multiple insertions are allowed, which is often
 necessary when a space is added.
 
+In addition, the code has been refactored, to improve both stability
+with overlapping patterns and speed. With those changes, the next step
+is to will be new keys in `ini` files to define transformation rules.
+French spacing is a case in point.
+
 ## Fixes
 
 * When writing the previous feature, some anomalous behavior when

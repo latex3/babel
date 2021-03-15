@@ -1,4 +1,4 @@
-## Babel 3.55.2305
+## Babel 3.55.2312
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -50,7 +50,7 @@ respective authors.
        * Key 'space' in \babelprehyphenation.
        * Multiple 'insert's allowed.
        * Fixes:
-         - 'insert' and 'data' not always set/get the expected node.
+         - 'insert' and 'data' didn't always set/get the expected node.
          
 3.55   2021-03-03??
        * Captions for Uyghur.

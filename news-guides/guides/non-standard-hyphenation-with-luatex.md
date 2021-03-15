@@ -1,6 +1,5 @@
 # Non-standard hyphenation with `luatex`
 
-These notes refer to a new feature in babel, in 3.37. With works only with LaTeX using the luatex engine.
 
 Here is a simple example of a declaration:
 ```tex
@@ -9,24 +8,55 @@ Here is a simple example of a declaration:
   {}
 }
 ```
+It consists of:
+* the language the transformation is applied to (here `ngerman`);
+* a pattern with the string to be handled (here `ck`);
+* a replacement with a list containing exactly the same number of
+  elements as the pattern (except if there are inserted elements, as
+  explained below).
 
-It consists of the language the transformation is applied to (here `ngerman`), a pattern with the string to be handled (here `ck`) and a replacement with a list containing exactly the same number of elements as the pattern. The language here refers to a set of hyphenation rules, ie, to `\language`. So, the first letter in the pattern is replaced with the first item in the list, the second letter with the second item and so on. (This is not strictly true, because the replace list is filled with nil's if shorter.)
+The language here refers to a set of hyphenation rules, ie, to
+`\language`. So, the first letter in the pattern is replaced with the
+first item in the list, the second letter with the second item and so
+on. (This is not strictly true, because the replace list is filled with
+nil's if shorter.)
 
-‘Automatic’ hyphenation points, as inserted by the hyphenation algorithm, are entered in the pattern as vertical bars (`|`). Explicit hyphens are entered as `=`. Spaces are allowed for clarity, but they are discarded.
+## Rules
+
+‘Automatic’ hyphenation points, as inserted by the hyphenation
+algorithm, are entered in the pattern as vertical bars (`|`). Explicit
+hyphens are entered as `=`. Spaces are allowed for clarity, but they
+are discarded.
 
 The items in the replacement list are of four kinds:
 
-1) An empty group `{}` leaves the corresponding item untouched.
+1. An empty group `{}` leaves the corresponding item **untouched**.
+2. A list like `{ no = c, pre = k-, post = }` replaces the letter by
+the corresponding **discretionary**. Only one of the keys is necessary,
+and the rest defaults to empty. By default the penalty is
+`\hyphenpenalty` or `\exhyphenpenalty` (_TeXbook_, p96), but a
+different value can be set with the key `penalty`. A further field is
+`data` - automatic hyphens contain no information about the font and
+the like, and with this key you can set which element in the list (as
+captured) they will the taken from.
+3. The key `string` replaces the character with the string. If empty,
+the char node is removed; to insert chars, just use a multi-character
+string. The nodes created are literal copies of the original, but with
+new characters.
+4. With `remove` the node is, well, removed (ie, it's like and empty
+`string=`).
+5. (Development) **Spaces** are declared with something like `space =.2
+.1 0`. The values are in em units, and they are the natural width, the
+`plus`, and the `minus`. Here, you may need `data`, too.
 
-2) A list like `{ no = c, pre = k-, post = }` replaces the letter by the corresponding discretionary. Only one of the keys is necessary, and the rest defaults to empty. By default the penalty is `\hyphenpenalty` or `\exhyphenpenalty` (_TeXbook_, p96), but a different value can be set with the key `penalty`. A further field is `data` - automatic hyphens contain no information about the font and the like, and with this key you can set which element in the list (as captured) they will the taken from.
+A few keys can be used in conjunction with `insert`, which must be the
+very first one in the replacement. 
 
-3) The key `string` replaces the character with the string. If empty, the char node is removed; to insert chars, just use a multi-character string. The nodes created are literal copies of the original, but with new characters.
-
-4) With `remove` the node is, well, removed (ie, it's like and empty `string=`).
-
-The pattern is matched with lua empty captures, which are automatically added before and after the string. You may set other empty captures, to reduce the number of items in the replacement list, like
+The pattern is matched with lua empty captures, which are automatically
+added before and after the string. You may set different empty captures,
+to reduce the number of items in the replacement list:
 ```tex
-\babelposthyphenation{ngerman}{avery()long()pattern}{
+\babelposthyphenation{ngerman}{very()long()pattern}{
   string = L,
   string = OOO,
   string = N,
@@ -34,9 +64,16 @@ The pattern is matched with lua empty captures, which are automatically added be
 }
 ```
 
-Dots, characters classes (with %) and char-sets (with `[]`, including complementing and ranges) are allowed, too. When using the dot, be aware it matches `|` and `=`, too. A matched `|` or `=` cannot be currently replaced by a string.
+Dots, characters classes (with %) and char-sets (with `[]`, including
+complementing and ranges) are allowed, too. When using the dot, be
+aware it matches `|` and `=`, too. A matched `|` or `=` cannot be
+currently replaced by a string.
 
-Ordinary captures are allowed _inside_ the empty captures (the must resolve to exactly one character). In the pattern, the syntax {n} is a backreference matching the _n_-th capture inside the empty captures. This syntax can be used in the replacement strings, with the corresponding capture:
+Ordinary captures are allowed _inside_ the empty captures (they must
+resolve to exactly one character). In the pattern, **the syntax `{n}`**
+is a backreference matching the _n_-th capture inside the empty
+captures. This syntax can be used in the replacement strings, with the
+corresponding capture:
 ```tex
 \babelposthyphenation{ngerman}{([fmtrp]) | {1}}{
   { no = {1}, pre = {1}{1}- },
@@ -49,7 +86,10 @@ Ordinary captures are allowed _inside_ the empty captures (the must resolve to e
 }
 ```
 
-Since the percent sign has a quite different meaning in lua and tex, as a convenience the {} syntax can be used to enter character classes in the pattern, too (ie, {d} becomes %d, but note {1} is not the same as %1).
+Since the percent sign has a quite different meaning in lua and tex, as
+a convenience the {} syntax can be used to enter **character classes**
+in the pattern, too (ie, `{d}` becomes `%d`, but note `{1}` is not
+internally the same as `%1`).
 
 And here is a complete example:
 ```tex
@@ -77,7 +117,13 @@ Aufführende Aufführendem Aufführenden Aufführender Aufführendes
 \end{document}
 ```
 
-In the replacement list, there is an extended syntax which allows to map the captured characters. For example, `{2|ΐΰῒῢ|ίύὶὺ}` means: if the second captured char is ΐ replace it with ί, ύ with ύ, and so on. This feature is particularly useful when a letter changes if there is a hyphen, and also when transliterating. Here is a partial example of the latter (the full example is [here](../news/whats-new-in-babel-3.44.md), with digraphs and trigraphs):
+In the replacement list, there is an extended syntax which allows to
+**map the captured characters**. For example, `{2|ΐΰῒῢ|ίύὶὺ}` means: if
+the second captured char is ΐ replace it with ί, ύ with ύ, and so on.
+This feature is particularly useful when a letter changes if there is a
+hyphen, and also when transliterating. Here is a partial example of the
+latter (the full example is [here](../news/whats-new-in-babel-3.44.md),
+with digraphs and trigraphs):
 ```tex
 \babelprehyphenation{transrussian}
   {([ABVGDEËZIJKLMNOPRSTUFHÈY"abvgdeëzijklmnoprstufhèy'])}{
@@ -86,16 +132,19 @@ In the replacement list, there is an extended syntax which allows to map the cap
 }
 ```
 
-A few further examples:
+## Short examples
 
-* In Spanish, if there are one or two vowels between two hyphenation points, the first one takes precedence (in other words, the second one is penalised):
+* In Spanish, if there are one or two vowels between two hyphenation
+  points, the first one takes precedence (in other words, the second
+  one is penalised):
 ```tex
 \babelposthyphenation{ngerman}{[aeiouáéíóú]|[aeiouáéíóú][aeiouáéíóú]|}{
   {}, {}, {}, {},
   { pre=-, penalty=1000, data=4 },
 }
 ```
-* In Greek, a diaeresis disappears if the vowel group is broken (see Németh, _TUGboat_ 87):
+* In Greek, a diaeresis disappears if the vowel group is broken (see
+  Németh, _TUGboat_ 87):
 ```tex
 \babelposthyphenation{ngerman}{greek}{α|ΐο}{
   {},
@@ -135,3 +184,13 @@ In cases like this, you may want to use maps as described above.
 With `{A}*` we consider the possibility of leading characters like `(`
 or `“`, because `{A}` it's the same as `%A` in lua. This part is placed
 before that to be processed, which is enclosed between `() ()`.
+
+* Here is an example showing how to group two similar rules. The
+  pattern means ‘either < or > repeated’. Then, the first replacement
+  selects the character based on the captured one.
+```tex
+\babelprehyphenation{english}{ ([<>]){1} }{
+  string = {1|<>|“”},
+  remove
+}
+```
