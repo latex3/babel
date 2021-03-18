@@ -1,4 +1,4 @@
-## Babel 3.55.2312
+## Babel 3.55.2315
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -51,6 +51,7 @@ respective authors.
        * Multiple 'insert's allowed.
        * Fixes:
          - 'insert' and 'data' didn't always set/get the expected node.
+         - Hyphen was not shown in Marathi (#123)
          
 3.55   2021-03-03??
        * Captions for Uyghur.
