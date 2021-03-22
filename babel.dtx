@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/03/18 v3.55.2315 The Babel package]
+\ProvidesFile{babel.dtx}[2021/03/22 v3.55.2319 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -749,29 +749,6 @@ never complied with the documented behavior and it is just a version as
 environment of |\foreignlanguage|, except when the option |bidi| is 
 set -- in this case, |\foreignlanguage| emits a |\leavevmode|, while 
 |otherlanguage*| does not.
-
-\Describe{\begin\menv{hyphenrules}}{\marg{language}\Eenv{hyphenrules}}
-
-The environment \Lenv{hyphenrules} can be used to select \emph{only} the
-hyphenation rules to be used (it can be used as command, too). This can
-for instance be used to select `nohyphenation', provided that in
-\file{language.dat} the `language' \textsf{nohyphenation} is defined by
-loading \file{zerohyph.tex}. It deactivates language shorthands, too
-(but not user shorthands).
-
-Except for these simple uses, |hyphenrules| is deprecated and
-|otherlanguage*| (the starred version) is preferred, because the former
-does not take into account possible changes in encodings of characters
-like, say, |'| done by some languages (eg, \textsf{italian},
-\textsf{french}, \textsf{ukraineb}).
-
-\begin{note}
-  To set hyphenation exceptions in the preamble before any language is
-  explicitly set with a selector, use |\babelhyphenation| (see below)
-  instead of |\hyphenation|. The reason is the same — in the preamble
-  the hyphenation rules are not always fully set up and an error can by
-  raised.
-\end{note}
 
 \subsection{More on selection}
 
@@ -2974,6 +2951,28 @@ font encodings are the same, like in Unicode based engines.
   language, you can add at least some typical cases.
 \end{note}
 
+\begin{note}
+  To set hyphenation exceptions in the preamble before any language is
+  explicitly set with a selector, use |\babelhyphenation| instead of
+  |\hyphenation|. In the preamble the hyphenation rules are not always
+  fully set up and an error can be raised.
+\end{note}
+
+\Describe{\begin\menv{hyphenrules}}{\marg{language}\Eenv{hyphenrules}}
+
+The environment \Lenv{hyphenrules} can be used to select \emph{only} the
+hyphenation rules to be used (it can be used as command, too). This can
+for instance be used to select `nohyphenation', provided that in
+\file{language.dat} the `language' \textsf{nohyphenation} is defined by
+loading \file{zerohyph.tex}. It deactivates language shorthands, too
+(but not user shorthands).
+
+Except for these simple uses, |hyphenrules| is deprecated and
+|otherlanguage*| (the starred version) is preferred, because the former
+does not take into account possible changes in encodings of characters
+like, say, |'| done by some languages (eg, \textsf{italian},
+\textsf{french}, \textsf{ukraineb}).
+
 \Describe{\babelpatterns}{\texttt{[}\langlist\texttt{]}%
     \marg{patterns}}
 
@@ -3008,6 +3007,12 @@ automatically if a language with one of those scripts are loaded with
 Unicode engines, spacing is based on the ``current'' em unit (the size
 of the previous char in \luatex, and the font size set by the last
 |\selectfont| in \xetex).
+
+\subsection{Transforms}
+
+There are a couple of macros to define
+\textit{transforms}.\footnote{Similar in concept, but not the same, as
+those in Unicode.} 
 
 \Describe{\babelposthyphenation}{\marg{hyphenrules-name}%
           \marg{lua-pattern}\marg{replacement}}
@@ -3050,19 +3055,14 @@ future implementation may alternatively accept \textsf{lpeg}.
 \Describe{\babelprehyphenation}{\marg{locale-name}%
           \marg{lua-pattern}\marg{replacement}}
 
-\New{3.44-3-52} This command is not strictly about hyphenation, but
-it is included here because it is a clear counterpart of
-|\babelposthyphenation|. It is similar to the latter, but (as its name
-implies) applied before hyphenation. There are other differences: (1)
-the first argument is the locale instead the name of hyphenation
-patterns; (2) in the search patterns |=| has no special meaning, while
-\verb+|+ stands for an ordinary space; (3) in the replacement,
-discretionaries are not accepted.
+\New{3.44-3-52} It is similar to the latter, but (as its name implies)
+applied before hyphenation. There are other differences: (1) the first
+argument is the locale instead the name of hyphenation patterns; (2) in
+the search patterns |=| has no special meaning, while \verb+|+ stands
+for an ordinary space; (3) in the replacement, discretionaries are not
+accepted.
 
-It handles glyphs and spaces (but you can not insert spaces).
-
-Performance is still somewhat poor in some cases, but it is fast in the
-typical ones.
+It handles glyphs and spaces.
 
 This feature is activated with the first |\babelposthyphenation| or
 |\babelprehyphenation|.
@@ -4856,8 +4856,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.55.2315>>
-%<<date=2021/03/18>>
+%<<version=3.55.2319>>
+%<<date=2021/03/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10664,6 +10664,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@intraspace\@nil
   \let\bbl@KVP@intrapenalty\@nil
   \let\bbl@KVP@onchar\@nil
+  \let\bbl@KVP@transforms\@nil
   \let\bbl@KVP@alph\@nil
   \let\bbl@KVP@Alph\@nil
   \let\bbl@KVP@labels\@nil
@@ -10705,6 +10706,10 @@ help from Bernd Raichle, for which I am grateful.
   \fi
   \ifx\bbl@KVP@captions\@nil
     \let\bbl@KVP@captions\bbl@KVP@import
+  \fi
+  % ==
+  \ifx\bbl@KVP@transforms\@nil\else
+    \bbl@replace\bbl@KVP@transforms{ }{,}%
   \fi
   % Load ini
   \bbl@ifunset{date#2}%
@@ -11301,6 +11306,8 @@ help from Bernd Raichle, for which I am grateful.
        \bbl@cs{@kv@identification.warning#1}\\%
        Reported }}}
 %
+\let\bbl@release@transforms\@empty
+%
 \def\bbl@ini@exports#1{%
   % Identification always exported
   \bbl@iniwarning{}%
@@ -11326,6 +11333,8 @@ help from Bernd Raichle, for which I am grateful.
   \ifbbl@bcptoname
     \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
   \fi
+  % Finish here transforms, too
+  \bbl@release@transforms\relax  % \relax closes the last item.
   % Conditional
   \ifnum#1>\z@         % 0 = only info, 1, 2 = basic, (re)new
     \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
@@ -11681,6 +11690,39 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@replace@finish@iii\bbl@toreplace}
 \def\bbl@datecntr{\expandafter\bbl@xdatecntr\expandafter}
 \def\bbl@xdatecntr[#1|#2]{\localenumeral{#2}{#1}}
+%    \end{macrocode}
+%
+% \textbf{Transforms.}
+%
+%    \begin{macrocode}
+\let\bbl@release@transforms\@empty
+\@namedef{bbl@inikv@transforms.prehyphenation}{%
+  \bbl@transforms\babelprehyphenation}
+\@namedef{bbl@inikv@transforms.posthyphenation}{%
+  \bbl@transforms\babelposthyphenation}
+\def\bbl@transforms@aux#1#2#3,#4\relax{#1{#2}{#3}{#4}}
+\begingroup % TODO - to a lua file
+  \catcode`\%=12
+  \catcode`\&=14
+  \gdef\bbl@transforms#1#2#3{&%
+    \ifx\bbl@KVP@transforms\@nil\else
+      \directlua{
+         str = [==[#2]==]
+         str = str:gsub('%.%d+%.%d+$', '')
+         tex.print([[\def\string\babeltempa{]] .. str .. [[}]])
+      }&%
+      \bbl@xin@{,\babeltempa,}{,\bbl@KVP@transforms,}&%
+      \ifin@
+        \in@{.0$}{#2$}&%
+        \ifin@
+            \bbl@add\bbl@release@transforms{&%
+              \relax\bbl@transforms@aux#1{french}{#3}}&%
+          \else
+            \bbl@add\bbl@release@transforms{, {#3}}&%
+        \fi
+      \fi
+    \fi}
+\endgroup
 %    \end{macrocode}
 %
 % Language and Script values to be used when defining a font or
@@ -14097,6 +14139,18 @@ end
               end
               head, new = node.insert_before(head, item, d)
 
+            elseif crep and crep.spacefactor then
+              d = node.new(12, 13)      &% (glue, spaceskip)
+              local base_font = font.getfont(item_base.font)
+              node.setglue(d,
+                crep.spacefactor[1] * base_font.parameters['space'],
+                crep.spacefactor[2] * base_font.parameters['space_stretch'],
+                crep.spacefactor[3] * base_font.parameters['space_shrink'])
+              if mode == 0 then
+                placeholder = '|'
+              end
+              head, new = node.insert_before(head, item, d)
+
             elseif mode == 0 and crep and crep.space then
               &% ERROR
 
@@ -14115,11 +14169,11 @@ end
               node.remove(head, item)
               w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc+1)
             end
-          
+
             last_match = utf8.offset(w, sc+1)
-          
+
             ::next::
-            
+
           end  &% for each replacement
 
           if Babel.debug then
@@ -14136,7 +14190,7 @@ end
     end  &% for substring
     return head
   end
-  
+
   &% This table stores capture maps, numbered consecutively
   Babel.capture_maps = {}
 
@@ -14193,7 +14247,9 @@ end
   \begingroup
     \def\babeltempa{\bbl@add@list\babeltempb}&%
     \let\babeltempb\@empty
-    \bbl@foreach{#3}{&%
+    \def\bbl@tempa{#3}&% TODO. Ugly trick to preserve {}:
+    \bbl@replace\bbl@tempa{,}{ ,}&%
+    \expandafter\bbl@foreach\expandafter{\bbl@tempa}{&%
       \bbl@ifsamestring{##1}{remove}&%
         {\bbl@add@list\babeltempb{nil}}&%
         {\directlua{
@@ -14230,7 +14286,9 @@ end
   \begingroup
     \def\babeltempa{\bbl@add@list\babeltempb}&%
     \let\babeltempb\@empty
-    \bbl@foreach{#3}{&%
+    \def\bbl@tempa{#3}&% TODO. Ugly trick to preserve {}:
+    \bbl@replace\bbl@tempa{,}{ ,}&%
+    \expandafter\bbl@foreach\expandafter{\bbl@tempa}{&%
       \bbl@ifsamestring{##1}{remove}&%
         {\bbl@add@list\babeltempb{nil}}&%
         {\directlua{
@@ -14239,6 +14297,8 @@ end
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
            rep = rep:gsub( '(space)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
              'space = {' .. '%2, %3, %4' .. '}')
+           rep = rep:gsub( '(spacefactor)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
+             'spacefactor = {' .. '%2, %3, %4' .. '}')
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
     \directlua{
