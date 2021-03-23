@@ -6,7 +6,7 @@ Main Class: article
 Package: babel
     Options: english
 (../babel-french.tex
-Package babel Info: Importing data for french
+Package babel Info: Importing basic data for french
 (babel)             from babel-fr.ini. Reported on input line ....
 )
 > \box...=

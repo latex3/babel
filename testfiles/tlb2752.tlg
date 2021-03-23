@@ -59,8 +59,7 @@ Package: babel
 .\glue 40.0
 ! OK.
 l. ...\showbox0
-\textPi \textalpha \textrho \acctonos \textalpha \textrho \texttau \texteta \textmu \textalpha  \MakeUppercase {\textalpha \anw@true \anw@print \relax }.
-LaTeX Info: Redefining \anw@print on input line ....
+\textPi \textalpha \textrho \acctonos \textalpha \textrho \texttau \texteta \textmu \textalpha  {\greekscript \textAlpha \textnumeralsigngreek }.
 > \box...=
 \vbox(171.63116+0.0)x345.0
 .\glue 0.0 plus 1.0fil

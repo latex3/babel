@@ -36,7 +36,6 @@
   french,
   galician,
   german,
-  germanb,
   greek,
   polutonikogreek,
   hebrew,
@@ -112,7 +111,6 @@
   french,
   galician,
   german,
-  germanb,
   greek,
   polutonikogreek,
   hebrew,
@@ -182,7 +180,6 @@
 \selectlanguage{french}
 \selectlanguage{galician}
 \selectlanguage{german}
-\selectlanguage{germanb}
 \selectlanguage{greek}
 \selectlanguage{polutonikogreek}
 \selectlanguage{hebrew}
