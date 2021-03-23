@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/03/22 v3.55.2319 The Babel package]
+\ProvidesFile{babel.dtx}[2021/03/23 v3.55.2320 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4856,8 +4856,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.55.2319>>
-%<<date=2021/03/22>>
+%<<version=3.55.2320>>
+%<<date=2021/03/23>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11716,7 +11716,7 @@ help from Bernd Raichle, for which I am grateful.
         \in@{.0$}{#2$}&%
         \ifin@
             \bbl@add\bbl@release@transforms{&%
-              \relax\bbl@transforms@aux#1{french}{#3}}&%
+              \relax\bbl@transforms@aux#1{\languagename}{#3}}&%
           \else
             \bbl@add\bbl@release@transforms{, {#3}}&%
         \fi
@@ -14264,6 +14264,7 @@ end
     \directlua{
       local lbkr = Babel.linebreaking.replacements[1]
       local u = unicode.utf8
+      local id = \the\csname l@#1\endcsname
       &% Convert pattern:
       local patt = string.gsub([==[#2]==], '%s', '')
       if not u.find(patt, '()', nil, true) then
@@ -14272,12 +14273,15 @@ end
       patt = string.gsub(patt, '%(%)%^', '^()')
       patt = string.gsub(patt, '%$%(%)', '()$')
       patt = u.gsub(patt, '{(.)}', 
-                function (n)
-                  return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
-                end)
-      lbkr[\the\csname l@#1\endcsname] = lbkr[\the\csname l@#1\endcsname] or {}
-      table.insert(lbkr[\the\csname l@#1\endcsname],
-                   { pattern = patt, replace = { \babeltempb } })
+             function (n)
+               return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
+             end)
+      patt = u.gsub(patt, '{(%x%x%x%x+)}', 
+             function (n)
+               return u.gsub(u.char(tonumber(n, 16)), '(%p)', '%%%1')
+             end)
+      lbkr[id] = lbkr[id] or {}
+      table.insert(lbkr[id], { pattern = patt, replace = { \babeltempb } })
     }&%
   \endgroup}
 % TODO. Copypaste pattern. 
@@ -14304,6 +14308,7 @@ end
     \directlua{
       local lbkr = Babel.linebreaking.replacements[0]
       local u = unicode.utf8
+      local id = \the\csname bbl@id@@#1\endcsname
       &% Convert pattern:
       local patt = string.gsub([==[#2]==], '%s', '')
       if not u.find(patt, '()', nil, true) then
@@ -14312,12 +14317,15 @@ end
       &% patt = string.gsub(patt, '%(%)%^', '^()')
       &% patt = string.gsub(patt, '([^%%])%$%(%)', '%1()$')
       patt = u.gsub(patt, '{(.)}', 
-                function (n)
-                  return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
-                end)
-      lbkr[\the\csname bbl@id@@#1\endcsname] = lbkr[\the\csname  bbl@id@@#1\endcsname] or {}
-      table.insert(lbkr[\the\csname bbl@id@@#1\endcsname],
-                   { pattern = patt, replace = { \babeltempb } })
+             function (n)
+               return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
+             end)
+      patt = u.gsub(patt, '{(%x%x%x%x+)}', 
+             function (n)
+               return u.gsub(u.char(tonumber(n, 16)), '(%p)', '%%%1')
+             end)
+      lbkr[id] = lbkr[id] or {}
+      table.insert(lbkr[id], { pattern = patt, replace = { \babeltempb } })
     }&%
   \endgroup}
 \endgroup

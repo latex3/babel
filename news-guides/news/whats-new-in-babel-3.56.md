@@ -68,14 +68,31 @@ space.punctuation.1.3 = { insert, spacefactor=.8 .3 .8, data = 1 }
 space.punctuation.1.4 = {}
 ```
 
-`0` is the pattern. It must be activated with `transforms` in
-`\babelprovide`, eg:
+`0` is the pattern. The replacements are `1`, `2`, etc. It must be
+activated with `transforms` in `\babelprovide`, eg:
 
 ```tex
 \babelprovide[transforms = space.punctuation, import]{...}
 ```
+
+A single transform (with a single name) may consist in a collection of
+rules (a typical case would be a transliteration scheme). Every rule in
+the collection is numbered (the first `.1.` in the example). There can be even
+rules in the two sections for transforms (`transforms.prehyphenation`
+and `transforms.posthyphenation`; in such a case, restart with `1` in
+the second section).
+
 (*To be expanded.*)
 
+## Arbitrary characters in patterns
+
+The brace syntax has been extended to insert any character (for
+example, `%`). Just write the hex code with at least 4 ‘hex digits’.
+For example, `{d}{0025}` matches a digit followed by a `%`.
+
+Remember you can still enter characters with the old good `^^` syntax,
+which they are converted at the TeX level; this `{}` extension is
+handled by lua directly, so catcodes are not taken into account.
 
 ## Fixes
 
