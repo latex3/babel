@@ -1,4 +1,4 @@
-## Babel 3.55.2320
+## Babel 3.56
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,22 +46,16 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.56   2021-03-23??
-       * Two new keys in \babelprehyphenation.
-         - 'space', in em units.
-         - 'spacefactor', based on the current word separation.
-       * Multiple 'insert's allowed.
+3.56   2021-03-24
+       * Transforms (\babelprehyphenation, \babelposthyphenation)
+         - Key 'space', in em units.
+         - Key 'spacefactor', based on the current word separation.
+         - Multiple 'insert's allowed.
+         - Definable in 'ini' files.
+         - Arbitrary characters in pattern.
        * Fixes:
          - 'insert' and 'data' didn't always set/get the expected node.
          - Hyphen was not shown in Marathi (#123)
-         
-3.55   2021-03-03??
-       * Captions for Uyghur.
-       * Fixes:
-         - Wrong caption in Romanian for Index (#117).
-         - Missing lines in ngermanb.sty (#118).
-       * There is also some tentative code to improve pgfpicture with
-         RTL texts.
 ```
 
 ### Previous changes

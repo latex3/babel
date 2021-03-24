@@ -1,6 +1,17 @@
 # What's new in babel 3.56
 
-(Under development.)
+2012-03-24
+
+The concept of ‘transform’ (requires `luatex`) is introduced, which
+embraces `\babelprehyphenation` and `\babelposthyphenation` and it's
+meant as a way to process the text at the typesetting level in several
+language-dependent ways, like non-standard hyphenation, special line
+breaking rules, script to script conversion, spacing conventions and so
+on. They are conceptually similar to those in Unicode, but not the
+same, because in `babel` they are focused on the typographical level.
+
+Transforms have been available for more than a year, but in this
+version they can be defined in `ini`files, too.
 
 ## Inserting spaces (with `luatex`)
 
@@ -50,15 +61,12 @@ As you can see, now multiple insertions are allowed, which is often
 necessary when a space is added.
 
 In addition, the code has been refactored, to improve both stability
-with overlapping patterns and speed. (There are still some issues,
-however.)
+with overlapping patterns and speed. There are still some issues to be
+sorted out, like the behavior in verbatim mode.
 
 ## Transforms in `ini` files
 
-Based on the two macros above, there is a tentative and somewhat
-experimental code enabling the definition of ‘transforms’. They are
-conceptually similar to those in Unicode, but not the same, because in
-`babel` they are focused on the typographical level. 
+Based on the two macros above, `ini` files can define ‘transforms’.
 ```ini
 [transforms.prehyphenation]
 space.punctuation.1.0 = { «{a} }
@@ -79,10 +87,11 @@ A single transform (with a single name) may consist in a collection of
 rules (a typical case would be a transliteration scheme). Every rule in
 the collection is numbered (the first `.1.` in the example). There can be even
 rules in the two sections for transforms (`transforms.prehyphenation`
-and `transforms.posthyphenation`; in such a case, restart with `1` in
-the second section).
+and `transforms.posthyphenation`); in such a case, restart with `1` in
+the second section.
 
-(*To be expanded.*)
+In future releases, several `ini` files will be expanded to take advantage
+of this new feature.
 
 ## Arbitrary characters in patterns
 
@@ -91,8 +100,8 @@ example, `%`). Just write the hex code with at least 4 ‘hex digits’.
 For example, `{d}{0025}` matches a digit followed by a `%`.
 
 Remember you can still enter characters with the old good `^^` syntax,
-which they are converted at the TeX level; this `{}` extension is
-handled by lua directly, so catcodes are not taken into account.
+which is converted at the TeX level; this extension is handled by lua
+directly, so catcodes are not relevant.
 
 ## Fixes
 
@@ -100,5 +109,6 @@ handled by lua directly, so catcodes are not taken into account.
   inserting items were detected, either with a multi-letter `string` or
   with `insert`. In these cases, `data` was somewhat unpredictable,
   too.
+* Hyphen was not shown in Marathi (#123).
 
  
