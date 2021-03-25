@@ -1,6 +1,6 @@
 # What's new in babel 3.56
 
-2012-03-24
+2021-03-24
 
 The concept of ‘transform’ (requires `luatex`) is introduced, which
 embraces `\babelprehyphenation` and `\babelposthyphenation` and it's
