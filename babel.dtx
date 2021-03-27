@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/03/24 v3.56 The Babel package]
+\ProvidesFile{babel.dtx}[2021/03/27 v3.56.2324 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3099,6 +3099,40 @@ This feature is activated with the first |\babelposthyphenation| or
 \end{verbatim}
 \end{example}
 
+\begingroup
+\def\trans#1#2#3{%
+  \vspace{1mm}%
+  \parbox[t]{2.5cm}{\strut#1}%
+  \parbox[t]{4cm}{\strut\ttfamily#2}%
+  \parbox[t]{6cm}{\strut#3}\par}
+\bigskip\hrule\nobreak\medskip
+\strut Transforms 
+\medskip\hrule\nobreak
+
+\trans{Arabic}{transliteration.dad}{Applies the transliteration system
+devised by Yannis Haralambous for \textsf{dad}. Not yet complete, but
+sufficient for many texts.}
+
+\trans{Croatian}{digraphs.ligatures}{Ligatures \textit{DŽ}, \textit{Dž},
+\textit{dž}, \textit{LJ}, \textit{Lj}, \textit{lj}, \textit{NJ},
+\textit{Nj}, \textit{nj}. It assumes they exist. This is not the
+recommended way to make these transformations (the best way is with
+OTF features), but it can get you out of a hurry.}
+
+\trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
+upsilon if hyphenated just before. It works with the
+three variants.}
+
+\trans{Hungarian}{digraphs.hyphen}{Hyphenates the the groups
+\textit{ccs}, \textit{ddz}, \textit{ggy}, \textit{lly}, \textit{nny},
+\textit{ssz}, \textit{tty} and \textit{zzs} as \textit{cs-cs},
+\textit{dz-dz}, etc.}
+
+\trans{Spanish}{percent.space}{Inserts a small space before \%}
+
+\vspace{1mm}\hrule\nobreak
+\endgroup
+
 \subsection{Selection based on BCP 47 tags}
 \label{bcp47}
 
@@ -4862,8 +4896,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.56>>
-%<<date=2021/03/24>>
+%<<version=3.56.2324>>
+%<<date=2021/03/27>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10962,6 +10996,8 @@ help from Bernd Raichle, for which I am grateful.
          \let\atcatcode\relax
        \fi}%
   \fi
+  % == Release saved transforms ==
+  \bbl@release@transforms\relax % \relax closes the last item.
   % == main ==
   \ifx\bbl@KVP@main\@nil  % Restore only if not 'main'
     \let\languagename\bbl@savelangname
@@ -11223,6 +11259,7 @@ help from Bernd Raichle, for which I am grateful.
     \let\bbl@savestrings\@empty
     \let\bbl@savetoday\@empty
     \let\bbl@savedate\@empty
+    \let\bbl@release@transforms\@empty
     \def\bbl@elt##1##2##3{%
       \def\bbl@section{##1}%
       \in@{=date.}{=##1}% Find a better place
@@ -11339,8 +11376,6 @@ help from Bernd Raichle, for which I am grateful.
   \ifbbl@bcptoname
     \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
   \fi
-  % Finish here transforms, too
-  \bbl@release@transforms\relax  % \relax closes the last item.
   % Conditional
   \ifnum#1>\z@         % 0 = only info, 1, 2 = basic, (re)new
     \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
@@ -11721,10 +11756,10 @@ help from Bernd Raichle, for which I am grateful.
       \ifin@
         \in@{.0$}{#2$}&%
         \ifin@
-            \bbl@add\bbl@release@transforms{&%
+           \g@addto@macro\bbl@release@transforms{&%
               \relax\bbl@transforms@aux#1{\languagename}{#3}}&%
-          \else
-            \bbl@add\bbl@release@transforms{, {#3}}&%
+        \else
+           \g@addto@macro\bbl@release@transforms{, {#3}}&%
         \fi
       \fi
     \fi}
@@ -13841,17 +13876,15 @@ end
         local locale = node.get_attribute(item, Babel.attr_locale)
 
         if lang == locale or lang == nil then
-          if (item.char ~= 124) then &% ie, not | = space
-            lang = lang or locale
-            word_string = word_string .. unicode.utf8.char(item.char)
-            word_nodes[#word_nodes+1] = item
-          end
+          lang = lang or locale
+          word_string = word_string .. unicode.utf8.char(item.char)
+          word_nodes[#word_nodes+1] = item
         else
           break
         end
 
       elseif item.id == 12 and item.subtype == 13 then
-        word_string = word_string .. '|'
+        word_string = word_string .. ' '
         word_nodes[#word_nodes+1] = item
 
       &% Ignore leading unrecognized nodes, too.
@@ -13865,7 +13898,7 @@ end
 
     &% Here and above we remove some trailing chars but not the
     &% corresponding nodes. But they aren't accessed. 
-    if word_string:sub(-1) == '|' then
+    if word_string:sub(-1) == ' ' then
       word_string = word_string:sub(1,-2)
     end
     word_string = unicode.utf8.gsub(word_string, Babel.us_char .. '+$', '')
@@ -14141,7 +14174,7 @@ end
                               crep.space[2] * quad,
                               crep.space[3] * quad)
               if mode == 0 then
-                placeholder = '|'
+                placeholder = ' '
               end
               head, new = node.insert_before(head, item, d)
 
@@ -14153,7 +14186,7 @@ end
                 crep.spacefactor[2] * base_font.parameters['space_stretch'],
                 crep.spacefactor[3] * base_font.parameters['space_shrink'])
               if mode == 0 then
-                placeholder = '|'
+                placeholder = ' '
               end
               head, new = node.insert_before(head, item, d)
 
@@ -14215,6 +14248,15 @@ end
 
   &% Handle the {n|abc|ABC} syntax in captures
   function Babel.capture_func_map(capno, from, to)
+    local u = unicode.utf8
+    from = u.gsub(from, '{(%x%x%x%x+)}', 
+         function (n)
+           return u.char(tonumber(n, 16))
+         end)
+    to = u.gsub(to, '{(%x%x%x%x+)}', 
+         function (n)
+           return u.char(tonumber(n, 16))
+         end)
     local froms = {}
     for s in string.utfcharacters(from) do
       table.insert(froms, s)
@@ -14319,6 +14361,7 @@ end
       local id = \the\csname bbl@id@@#1\endcsname
       &% Convert pattern:
       local patt = string.gsub([==[#2]==], '%s', '')
+      local patt = string.gsub(patt, '|', ' ')
       if not u.find(patt, '()', nil, true) then
         patt = '()' .. patt .. '()'
       end     
@@ -14334,7 +14377,7 @@ end
              end)
       lbkr[id] = lbkr[id] or {}
       table.insert(lbkr[id], { pattern = patt, replace = { \babeltempb } })
-    }&%
+    }&%    
   \endgroup}
 \endgroup
 \def\bbl@activateposthyphen{%
