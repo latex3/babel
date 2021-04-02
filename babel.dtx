@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/03/29 v3.56.2326 The Babel package]
+\ProvidesFile{babel.dtx}[2021/04/02 v3.56.2330 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4897,8 +4897,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.56.2326>>
-%<<date=2021/03/29>>
+%<<version=3.56.2330>>
+%<<date=2021/04/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14247,7 +14247,15 @@ end
   &% The following functions belong to the next macro
   function Babel.capture_func(key, cap)
     local ret = "[[" .. cap:gsub('{([0-9])}', "]]..m[%1]..[[") .. "]]"
-    ret = ret:gsub('{([0-9])|([^|]+)|(.-)}', Babel.capture_func_map)
+    local cnt
+    local u = unicode.utf8
+    ret, cnt = ret:gsub('{([0-9])|([^|]+)|(.-)}', Babel.capture_func_map)
+    if cnt == 0 then
+      ret = u.gsub(ret, '{(%x%x%x%x+)}', 
+            function (n)
+              return u.char(tonumber(n, 16))
+            end)
+    end
     ret = ret:gsub("%[%[%]%]%.%.", '')
     ret = ret:gsub("%.%.%[%[%]%]", '')
     return key .. [[=function(m) return ]] .. ret .. [[ end]]
