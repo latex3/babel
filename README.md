@@ -1,4 +1,4 @@
-## Babel 3.56.2330
+## Babel 3.56.2332
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,7 +46,7 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.57   2021-04-15??
+3.57   2021-04-08??
        * Transforms:
          - Arabic:     transliteration.dad
          - Croatian:   digraphs.ligatures
@@ -54,7 +54,7 @@ respective authors.
          - Hindi:      transliteration.hk
          - Hungarian:  digraphs.hyphen
        * {xxxx} syntax also in string=.
-       * Experimental code for Uyghur hyphenation (lua).
+       * Preliminary code for Uyghur hyphenation (lua).
          
 3.56   2021-03-24
        * Transforms (\babelprehyphenation, \babelposthyphenation)

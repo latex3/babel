@@ -10,66 +10,62 @@
 \BabelBeforeIni{ug}{%
 }
 
+\newattribute\bblug@disc
+\bblug@disc=0
+
+\bbl@luahyphenate 
+
 \directlua{
 
-Babel.ug_conson = {
-[0x0628] = true, [0x067E] = true, [0x062A] = true, [0x062C] = true,
-[0x0686] = true, [0x062E] = true, [0x062F] = true, [0x0631] = true,
-[0x0632] = true, [0x0698] = true, [0x0633] = true, [0x0634] = true,
-[0x0641] = true, [0x063A] = true, [0x0642] = true, [0x0643] = true,
-[0x06AF] = true, [0x06AD] = true, [0x0644] = true, [0x0645] = true,
-[0x0646] = true, [0x0647] = true, [0x064A] = true, [0x06CB] = true
-}
+Babel.uyghur = Babel.uyghur or {}
 
-function Babel.ug_hyphenate(head) 
-  if not Babel.ug_toisol then return end
-  local d, pre, post
+function Babel.uyghur.posthyphen(head)
+  local UGDISC = luatexbase.registernumber'bblug@disc'
   for item in node.traverse(head) do
-    if item.id == 29 and item.prev and item.prev.id == 29
-       and item.next and item.next.id == 29 then
-      pre =  Babel.ug_toisol[item.char] or item.char
-      post = Babel.ug_toisol[item.next.char] or item.next.char
-      if Babel.ug_conson[pre] and not Babel.ug_conson[post] then
+    if item.id == 7 and item.subtype == 3 and
+        item.next and item.next.id == 29 and
+        item.next.lang == \the\l@uyghur\space then 
+      node.set_attribute(item.next, UGDISC, 1)
+      node.remove(head, item)
+    end
+  end
+end
+
+Babel.uyghur.hyphen_sep = .09   % in em units
+% Note it can be a string, with several characters:
+Babel.uyghur.hyphen = unicode.utf8.char(0x0640)
+
+Babel.linebreaking.add_after(Babel.uyghur.posthyphen)
+
+function Babel.uyghur.hyphenate(head) 
+  local d, k
+  local quad = 655360
+  local UGDISC = luatexbase.registernumber'bblug@disc'
+  for item in node.traverse(head) do
+    if item.id == 29 and item.lang == \the\l@uyghur\space then
+      local ugdisc = node.get_attribute(item, UGDISC)
+      if ugdisc > 0 then    
+        quad = font.getfont(item.font).size or quad
+        k = node.new(13, 1)  % (kern, userkern)
+        k.kern = Babel.uyghur.hyphen_sep * quad
         d = node.new(7, 3)   % (disc, regular)
-        d.pre     = Babel.str_to_nodes(
-                      function() return '-' end, 
+        d.pre = Babel.str_to_nodes(
+                      function() return Babel.uyghur.hyphen end, 
                       nil, item)
-        d.penalty = 0 % Must be tex.(ex)hyphenpenalty
-        head, new = node.insert_before(head, item, d)
+        d.pre = node.insert_before(d.pre, d.pre, k)
+        d.penalty = 50 % Must be tex.(ex)hyphenpenalty
+        head = node.insert_before(head, item, d)
       end
     end
   end
   return head
 end
-}
 
-\gdef\UyghurSetupHyph{%
-  \directlua{
-      Babel.ug_toisol   = {}
-      luatexbase.add_to_callback("pre_linebreak_filter",
-        Babel.ug_hyphenate, "Babel.ug_hyphenate")
-      luatexbase.add_to_callback("hpack_filter",
-        Babel.ug_hyphenate, "Babel.ug_hyphenate")
-  }% 
-  % It must be done for each font, and stored separately.
-  % Locale must be taken into account too.
-  \bbl@foreach{%
-      0628,067E,062A,062C,0686,062E,062F,0631,0632,%
-      0698,0633,0634,0641,063A,0642,0643,06AF,06AD,%
-      0644,0645,0646,0647,064A,06CB}{%
-    \setbox\z@\hbox{\char"##1=\char"##1^^^^200d=%
-      ^^^^200d\char"##1^^^^200d=^^^^200d\char"##1}%
-    \directlua{
-      local chars = {}
-      for item in node.traverse(tex.box[0].head) do
-        if item.id == node.id'glyph' and item.char > 128 and
-             not (item.char == 0x200D) then
-          table.insert(chars, item.char)
-        end
-      end
-      Babel.ug_toisol[chars[2]] = chars[1]
-      Babel.ug_toisol[chars[3]] = chars[1]
-      Babel.ug_toisol[chars[4]] = chars[1]
-    }}}
+luatexbase.add_to_callback("pre_linebreak_filter",
+  Babel.uyghur.hyphenate, "Babel.uyghur.hyphenate")
+luatexbase.add_to_callback("hpack_filter",
+  Babel.uyghur.hyphenate, "Babel.uyghur.hyphenate")
+  
+}
 
 \endinput
