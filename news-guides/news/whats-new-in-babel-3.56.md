@@ -24,13 +24,13 @@ from with `data`:
 \babelprehyphenation{french}{ «{a} }{
   {},
   { insert, penalty = 10000 }, 
-  { insert, space=.2 .05 0, data = 1 },
+  { insert, space= .2 .05 0, data = 1 },
   {}
 }
 \babelprehyphenation{french}{ «|{a} }{
   {},
   { insert, penalty = 10000 },
-  { space=.2 .05 0, data = 1 },
+  { space= .2 .05 0, data = 1 },
   {}
 }
 ```
@@ -40,7 +40,7 @@ then matches):
 ```tex
 \babelprehyphenation{french}{ «{a} }{
   {},
-  { insert, space=.2 .05 0, data = 1 },
+  { insert, space= .2 .05 0, data = 1 },
   {}
 }
 ```
@@ -52,7 +52,7 @@ word separation in the font.
 \babelprehyphenation{french}{ «{a} }{
   {}, 
   { insert, penalty = 10000 }, 
-  { insert, spacefactor=.8 .3 .8, data = 1 },
+  { insert, spacefactor= .8 .3 .8, data = 1 },
   {}
 }
 ```
@@ -100,8 +100,8 @@ example, `%`). Just write the hex code with at least 4 ‘hex digits’.
 For example, `{d}{0025}` matches a digit followed by a `%`.
 
 Remember you can still enter characters with the old good `^^` syntax,
-which is converted at the TeX level; this extension is handled by lua
-directly, so catcodes are not relevant.
+which is converted at the TeX level; this `{}` extension is handled by
+lua directly, so catcodes are not relevant.
 
 ## Fixes
 

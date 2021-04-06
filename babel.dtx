@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/04/04 v3.56.2332 The Babel package]
+\ProvidesFile{babel.dtx}[2021/04/06 v3.56.2334 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3018,7 +3018,54 @@ but not the same, as those in Unicode.}
 
 It currently embraces |\babelprehyphenation| and
 |\babelposthyphenation|, which have been available for several months.
-\New{3.56} In this version they can be defined in |ini| files, too.
+
+\New{3.57} Several \textsf{ini} files predefine some transforms. They
+are activated with the key |transforms| in |\babelprovide|, either if
+the locale is being defined with it or the languages has been previouly
+loaded as a class or package option, as the following example
+illustrates:
+\begin{verbatim}
+  \usepackage[magyar]{babel}
+  \babelprovide[_transforms = digraphs.hyphen_]{magyar}
+\end{verbatim}
+
+Here are the transforms currently predefined. (More to follow 
+in future releases.)
+
+\begingroup
+\def\trans#1#2#3{%
+  \vspace{1mm}%
+  \parbox[t]{2.4cm}{\strut#1}%
+  \parbox[t]{4.2cm}{\strut\ttfamily#2}%
+  \parbox[t]{6.6cm}{\strut#3}\par}
+\bigskip\hrule\nobreak\vspace{1mm}
+% \strut\hfil Transforms 
+% \medskip\hrule\nobreak
+
+\trans{Arabic}{transliteration.dad}{Applies the transliteration system
+devised by Yannis Haralambous for \textsf{dad} (simple and
+\TeX-friendly). Not yet complete, but sufficient for most texts.}
+
+\trans{Croatian}{digraphs.ligatures}{Ligatures \textit{DŽ}, \textit{Dž},
+\textit{dž}, \textit{LJ}, \textit{Lj}, \textit{lj}, \textit{NJ},
+\textit{Nj}, \textit{nj}. It assumes they exist. This is not the
+recommended way to make these transformations (the best way is with
+OTF features), but it can get you out of a hurry.}
+
+\trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
+upsilon if hyphenated just before. It works with the
+three variants.}
+
+\trans{Hindi}{transliteration.hk}{The Harvard-Kyoto system to romanize
+Devanagari.}
+
+\trans{Hungarian}{digraphs.hyphen}{Hyphenates the long digraphs
+\textit{ccs}, \textit{ddz}, \textit{ggy}, \textit{lly}, \textit{nny},
+\textit{ssz}, \textit{tty} and \textit{zzs} as \textit{cs-cs},
+\textit{dz-dz}, etc.}
+
+\vspace{2mm}\hrule\nobreak
+\endgroup
 
 \Describe{\babelposthyphenation}{\marg{hyphenrules-name}%
           \marg{lua-pattern}\marg{replacement}}
@@ -3062,10 +3109,11 @@ future implementation may alternatively accept \textsf{lpeg}.
           \marg{lua-pattern}\marg{replacement}}
 
 \New{3.44-3-52} It is similar to the latter, but (as its name implies)
-applied before hyphenation. There are other differences: (1) the first
-argument is the locale instead the name of hyphenation patterns; (2) in
-the search patterns |=| has no special meaning, while \verb+|+ stands
-for an ordinary space; (3) in the replacement, discretionaries are not
+applied before hyphenation, which is particularly useful in
+transliterations. There are other differences: (1) the first argument
+is the locale instead of the name of the hyphenation patterns; (2) in the
+search patterns |=| has no special meaning, while \verb+|+ stands for
+an ordinary space; (3) in the replacement, discretionaries are not
 accepted.
 
 It handles glyphs and spaces.
@@ -3092,47 +3140,12 @@ This feature is activated with the first |\babelposthyphenation| or
   end of a line:
 \begin{verbatim}
 \babelprehyphenation{english}{|a|}
-  {}, {},                     % Keep first space and a
-  {insert, penalty = 10000},  % Insert penalty
-  {}                          % Keep last space
+  {}, {},                       % Keep first space and a
+  { insert, penalty = 10000 },  % Insert penalty
+  {}                            % Keep last space
 }
 \end{verbatim}
 \end{example}
-
-\begingroup
-\def\trans#1#2#3{%
-  \vspace{1mm}%
-  \parbox[t]{2.5cm}{\strut#1}%
-  \parbox[t]{4cm}{\strut\ttfamily#2}%
-  \parbox[t]{6cm}{\strut#3}\par}
-\bigskip\hrule\nobreak\medskip
-\strut Transforms 
-\medskip\hrule\nobreak
-
-\trans{Arabic}{transliteration.dad}{Applies the transliteration system
-devised by Yannis Haralambous for \textsf{dad}. Not yet complete, but
-sufficient for many texts.}
-
-\trans{Croatian}{digraphs.ligatures}{Ligatures \textit{DŽ}, \textit{Dž},
-\textit{dž}, \textit{LJ}, \textit{Lj}, \textit{lj}, \textit{NJ},
-\textit{Nj}, \textit{nj}. It assumes they exist. This is not the
-recommended way to make these transformations (the best way is with
-OTF features), but it can get you out of a hurry.}
-
-\trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
-upsilon if hyphenated just before. It works with the
-three variants.}
-
-\trans{Hindi}{transliteration.hk}{The Harvard-Kyoto system to romanize
-Devanagari.}
-
-\trans{Hungarian}{digraphs.hyphen}{Hyphenates the groups
-\textit{ccs}, \textit{ddz}, \textit{ggy}, \textit{lly}, \textit{nny},
-\textit{ssz}, \textit{tty} and \textit{zzs} as \textit{cs-cs},
-\textit{dz-dz}, etc.}
-
-\vspace{1mm}\hrule\nobreak
-\endgroup
 
 \subsection{Selection based on BCP 47 tags}
 \label{bcp47}
@@ -4897,8 +4910,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.56.2332>>
-%<<date=2021/04/04>>
+%<<version=3.56.2334>>
+%<<date=2021/04/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13396,7 +13409,7 @@ help from Bernd Raichle, for which I am grateful.
   Babel.linebreaking = Babel.linebreaking or {}
   Babel.linebreaking.before = {}
   Babel.linebreaking.after = {}
-  Babel.locale = {} % Free to use, indexed with \localeid
+  Babel.locale = {} % Free to use, indexed by \localeid
   function Babel.linebreaking.add_before(func)
     tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
     table.insert(Babel.linebreaking.before, func)

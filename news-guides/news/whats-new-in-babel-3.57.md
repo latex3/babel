@@ -7,8 +7,9 @@
 *Some of them are still experimental or incomplete.*
 
 * **Arabic** `transliteration.dad` ▸ Applies the transliteration system
-devised by Yannis Haralambous for \textsf{dad}. Not yet complete, but
-sufficient for many texts.
+  devised by Yannis Haralambous for
+  [`dad`](http://mirrors.ctan.org/language/arabic/dad/dad-user-guide.pdf).
+  Not yet complete, but sufficient for many texts.
 
 * **Croatian** `digraphs.ligatures` ▸ Ligatures *DŽ*, *Dž*,
 *dž*, *LJ*, *Lj*, *lj*, *NJ*,
