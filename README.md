@@ -1,4 +1,4 @@
-## Babel 3.56.2334
+## Babel 3.57
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,27 +46,16 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.57   2021-04-08??
+3.57   2021-04-07
        * Predefined transforms (lua):
          - Arabic:     transliteration.dad
          - Croatian:   digraphs.ligatures
          - Greek:      diaeresis.hyphen
          - Hindi:      transliteration.hk
          - Hungarian:  digraphs.hyphen
-       * Transforms: \babel{xxxx} syntax also in string=.
+       * Transforms: {xxxx} syntax also in string=.
        * Preliminary code for Uyghur hyphenation (lua).
        * magyar as alternative to hungarian in \babelprovide.
-         
-3.56   2021-03-24
-       * Transforms (\babelprehyphenation, \babelposthyphenation)
-         - Key 'space', in em units.
-         - Key 'spacefactor', based on the current word separation.
-         - Multiple 'insert's allowed.
-         - Definable in 'ini' files.
-         - Arbitrary characters in pattern.
-       * Fixes:
-         - 'insert' and 'data' didn't always set/get the expected node.
-         - Hyphen was not shown in Marathi (#123)
 ```
 
 ### Previous changes

@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/04/06 v3.56.2334 The Babel package]
+\ProvidesFile{babel.dtx}[2021/04/07 v3.57 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3017,12 +3017,12 @@ spacing conventions and so on.\footnote{They are similar in concept,
 but not the same, as those in Unicode.}
 
 It currently embraces |\babelprehyphenation| and
-|\babelposthyphenation|, which have been available for several months.
+|\babelposthyphenation|.
 
 \New{3.57} Several \textsf{ini} files predefine some transforms. They
 are activated with the key |transforms| in |\babelprovide|, either if
-the locale is being defined with it or the languages has been previouly
-loaded as a class or package option, as the following example
+the locale is being defined with this macro or the languages has been
+previouly loaded as a class or package option, as the following example
 illustrates:
 \begin{verbatim}
   \usepackage[magyar]{babel}
@@ -4910,8 +4910,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.56.2334>>
-%<<date=2021/04/06>>
+%<<version=3.57>>
+%<<date=2021/04/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They

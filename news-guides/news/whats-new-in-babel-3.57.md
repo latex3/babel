@@ -1,30 +1,28 @@
 # What's new in babel 3.57
 
-(*Under development.*)
+2021-04-07
 
 ## Transforms added to `ini` files
 
-*Some of them are still experimental or incomplete.*
-
-* **Arabic** `transliteration.dad` ▸ Applies the transliteration system
+**Arabic**  ▸ `transliteration.dad` ▸ Applies the transliteration system
   devised by Yannis Haralambous for
   [`dad`](http://mirrors.ctan.org/language/arabic/dad/dad-user-guide.pdf).
   Not yet complete, but sufficient for many texts.
 
-* **Croatian** `digraphs.ligatures` ▸ Ligatures *DŽ*, *Dž*,
+**Croatian**  ▸ `digraphs.ligatures` ▸ Ligatures *DŽ*, *Dž*,
 *dž*, *LJ*, *Lj*, *lj*, *NJ*,
 *Nj*, *nj*. It assumes they exist. This is not the
 recommended way to make these transformations (the best way is with
 OTF features), but it can get you out of a hurry.
 
-* **Greek** `diaeresis.hyphen` ▸ Removes the diaeresis above iota and
+**Greek**  ▸ `diaeresis.hyphen` ▸ Removes the diaeresis above iota and
 upsilon if hyphenated just before. It works with the
 three variants.
 
-* **Hindi** `transliteration.hk` ▸ The Harvard-Kyoto system to romanize
+**Hindi**  ▸ `transliteration.hk` ▸ The Harvard-Kyoto system to romanize
 Devanagari.
 
-* **Hungarian** `digraphs.hyphen` ▸ Hyphenates the groups
+**Hungarian**  ▸ `digraphs.hyphen` ▸ Hyphenates the long digraphs
 *ccs*, *ddz*, *ggy*, *lly*, *nny*,
 *ssz*, *tty* and *zzs* as *cs-cs*,
 *dz-dz*, etc.
@@ -36,7 +34,7 @@ to be hyphenated correctly, preserving the joining forms. See
 https://www.w3.org/TR/css-text-3/#word-break-shaping . It assumes the
 basic forms (initial, medial, final). 
 
-Here is an example (text from copypasted from
+Here is an example (text copypasted from
 https://github.com/azmat21/Syllabification-for-Uyghur ).
 ```
 \documentclass{article}
@@ -84,5 +82,12 @@ https://github.com/azmat21/Syllabification-for-Uyghur ).
 ```
 
 ![Uyghur](../media/uyghur-hyphenation.png)
+
+## Other changes
+
+* Transforms: {xxxx} syntax also in `string =`, which is replace by the
+   character with the given hex code (at least 4 hex digits).
+
+* `magyar` as alternative name to `hungarian` in `\babelprovide`.
 
 
