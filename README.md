@@ -1,4 +1,4 @@
-## Babel 3.57
+## Babel 3.57.2338
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +46,14 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.58   2021-04-28??
+       * More predefined transforms (lua):
+         - doubleletter.hyphen: Norsk
+         - oneletter.nobreak: Czech, Slovak
+         - hyphen.repeat:     Czech, Polish, Portuguese, Slovak, Spanish
+       * Fixes:
+         - \shorthandoff*{^} was not revertible (#126).
+         
 3.57   2021-04-07
        * Predefined transforms (lua):
          - Arabic:     transliteration.dad

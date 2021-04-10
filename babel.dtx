@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/04/07 v3.57 The Babel package]
+\ProvidesFile{babel.dtx}[2021/04/10 v3.57.2338 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3034,11 +3034,13 @@ in future releases.)
 
 \begingroup
 \def\trans#1#2#3{%
-  \vspace{1mm}%
-  \parbox[t]{2.4cm}{\strut#1}%
-  \parbox[t]{4.2cm}{\strut\ttfamily#2}%
+  \vspace{1.5mm}%
+  \parbox[t]{2.2cm}{\raggedright\strut#1}%
+  \hspace{2mm}%
+  \parbox[t]{4.0cm}{\strut\ttfamily#2}%
+  \hspace{2mm}%
   \parbox[t]{6.6cm}{\strut#3}\par}
-\bigskip\hrule\nobreak\vspace{1mm}
+\bigskip\hrule\nobreak\vspace{.5mm}
 % \strut\hfil Transforms 
 % \medskip\hrule\nobreak
 
@@ -3052,6 +3054,13 @@ devised by Yannis Haralambous for \textsf{dad} (simple and
 recommended way to make these transformations (the best way is with
 OTF features), but it can get you out of a hurry.}
 
+\trans{Czech, Polish, Portuguese, Slovak,
+Spanish}{hyphen.repeat}{Explicit hyphens behave like
+|\string\babelhyphen|\allowbreak|\{repeat\}|.}
+
+\trans{Czech, Slovak}{oneletter.nobreak}{Converts a space after a
+non-syllabic preposition into a non-breaking space.}
+
 \trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
 upsilon if hyphenated just before. It works with the
 three variants.}
@@ -3063,6 +3072,11 @@ Devanagari.}
 \textit{ccs}, \textit{ddz}, \textit{ggy}, \textit{lly}, \textit{nny},
 \textit{ssz}, \textit{tty} and \textit{zzs} as \textit{cs-cs},
 \textit{dz-dz}, etc.}
+
+\trans{Norsk}{doubleletter.hyphen}{Hyphenates the doble-letter groups
+\textit{bb}, \textit{dd}, \textit{ff}, \textit{gg}, \textit{ll},
+\textit{mm}, \textit{nn}, \textit{pp}, \textit{rr}, \textit{ss},
+\textit{tt} as \textit{bb-b}, \textit{dd-d}, etc.}
 
 \vspace{2mm}\hrule\nobreak
 \endgroup
@@ -4910,8 +4924,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.57>>
-%<<date=2021/04/07>>
+%<<version=3.57.2338>>
+%<<date=2021/04/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9152,12 +9166,20 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@error
          {I cannot switch `\string#2' on or off--not a shorthand}%
          {This character is not a shorthand. Maybe you made\\%
-          a typing mistake? I will ignore your instruction}}%
-      {\ifcase#1%
+          a typing mistake? I will ignore your instruction.}}%
+      {\ifcase#1%   off, on, off*
          \catcode`#212\relax
        \or
          \catcode`#2\active
+         \bbl@ifunset{bbl@shdef@\string#2}%
+           {}%
+           {\bbl@withactive{\expandafter\let\expandafter}#2%
+              \csname bbl@shdef@\string#2\endcsname
+            \bbl@csarg\let{shdef@\string#2}\relax}%
        \or
+         \bbl@ifunset{bbl@shdef@\string#2}%
+           {\bbl@csarg\let{shdef@\string#2}#2}%
+           {}%
          \csname bbl@oricat@\string#2\endcsname
          \csname bbl@oridef@\string#2\endcsname
        \fi}%
