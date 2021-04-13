@@ -1,4 +1,4 @@
-## Babel 3.57.2338
+## Babel 3.57.2341
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -51,6 +51,7 @@ respective authors.
          - doubleletter.hyphen: Norsk
          - oneletter.nobreak: Czech, Slovak
          - hyphen.repeat:     Czech, Polish, Portuguese, Slovak, Spanish
+       * 'prehyphenation' transforms are disabled in verbatim.
        * Fixes:
          - \shorthandoff*{^} was not revertible (#126).
          

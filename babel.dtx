@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/04/10 v3.57.2338 The Babel package]
+\ProvidesFile{babel.dtx}[2021/04/13 v3.57.2341 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4924,8 +4924,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.57.2338>>
-%<<date=2021/04/10>>
+%<<version=3.57.2341>>
+%<<date=2021/04/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9178,7 +9178,7 @@ help from Bernd Raichle, for which I am grateful.
             \bbl@csarg\let{shdef@\string#2}\relax}%
        \or
          \bbl@ifunset{bbl@shdef@\string#2}%
-           {\bbl@csarg\let{shdef@\string#2}#2}%
+           {\bbl@withactive{\bbl@csarg\let{shdef@\string#2}}#2}%
            {}%
          \csname bbl@oricat@\string#2\endcsname
          \csname bbl@oridef@\string#2\endcsname
@@ -12111,6 +12111,14 @@ help from Bernd Raichle, for which I am grateful.
   \BabelEnsureInfo}
 \@namedef{bbl@ADJ@bcp47.toname@off}{%
   \bbl@bcptonamefalse}
+\@namedef{bbl@ADJ@prehyphenation.disable@nohyphenation}{%
+  \directlua{ Babel.ignore_pre_char = function(node)
+      return (node.lang == \the\csname l@nohyphenation\endcsname)
+    end }}
+\@namedef{bbl@ADJ@prehyphenation.disable@off}{%
+  \directlua{ Babel.ignore_pre_char = function(node)
+      return false
+    end }}
 % TODO: use babel name, override 
 %
 % As the final task, load the code for lua.
@@ -13889,7 +13897,11 @@ end
   end
 
   Babel.fetch_subtext = {}
-
+  
+  Babel.ignore_pre_char = function(node)
+    return (node.lang == \the\l@nohyphenation)
+  end
+  
   &% Merging both functions doesn't seen feasible, because there are too
   &% many differences.
   Babel.fetch_subtext[0] = function(head)
@@ -13913,7 +13925,11 @@ end
 
         if lang == locale or lang == nil then
           lang = lang or locale
-          word_string = word_string .. unicode.utf8.char(item.char)
+          if Babel.ignore_pre_char(item) then  
+            word_string = word_string .. Babel.us_char
+          else
+            word_string = word_string .. unicode.utf8.char(item.char)
+          end
           word_nodes[#word_nodes+1] = item
         else
           break
