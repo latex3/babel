@@ -21,6 +21,43 @@ are the formats used *de facto* in most cases.
 
 ## User’s level
 
+Here is a minimal working example with two languages:
+```tex
+\input dutch.sty
+\input danish.sty  % Last language, and therefore the main one
+\begindocument
+
+\chaptername ---\today
+
+\foreignlanguage{dutch}{\chaptername ---\today}
+
+\selectlanguage{dutch}
+
+\chaptername ---\today
+
+\bye
+```
+Which prints (the date will be different, of course):
+> Kapitel—14. april 2021<br>
+> Kapitel—14. april 2021<br>
+> Hoofdstuk—14 april 2021
+
+This is basically all what you can do with Plain TeX, although in some
+languages there will be additional features (for example, with
+`spanish` `\sen` is correctly recognized) and shorthands are usually
+recognized (it depends on how they have been defined). For example:
+```tex
+\input danish.sty
+\begindocument
+
+"< "> f"|i
+
+\bye
+```
+
+Everyting related to `\babelprovide` and the `ini` mechanism won't work,
+including `\babelfont`. Obviously, features activated as package
+options won't work either.
 
 ## Developer’s level
 
