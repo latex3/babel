@@ -59,6 +59,65 @@ Everyting related to `\babelprovide` and the `ini` mechanism won't work,
 including `\babelfont`. Obviously, features activated as package
 options won't work either.
 
+Hooks work when they make sense in Plain. For example:
+```tex
+\AddBabelHook[danish]{font}{beforeextras}{\it}
+```
+
 ## Developer’s level
+
+There must be a `sty` proxy file. See the existing ones.
+
+As `ldf` files may contain arbitrary TeX/LaTeX code, there is no
+safe rule that can be applied.
+
+Babel defines some LaTeX macros, but many of them are just dummy
+definitions just to avoid errors or simplified versions.
+
+(..... More to follow.)
+
+Here is a document which runs with no error messages in pdfTeX and
+ePlain, but with an error in `latin` in TeX (note all of them use
+the Latin script):
+```
+\input afrikaans.sty
+\input albanian.sty
+\input american.sty
+\input austrian.sty
+\input bahasa.sty
+\input bahasam.sty
+\input basque.sty
+\input breton.sty
+\input british.sty
+\input catalan.sty
+\input croatian.sty
+\input danish.sty
+\input dutch.sty
+\input esperanto.sty
+\input estonian.sty
+\input finnish.sty
+\input germanb.sty
+\input icelandic.sty
+\input interlingua.sty
+\input irish.sty
+\input latin.sty
+\input lsorbian.sty
+\input naustrian.sty
+\input norsk.sty
+\input polish.sty
+\input portuges.sty
+\input romanian.sty
+\input samin.sty
+\input scottish.sty
+\input serbian.sty
+\input slovene.sty
+\input swedish.sty
+\input turkish.sty
+\input UKenglish.sty
+\input USenglish.sty
+\input usorbian.sty
+\begindocument
+
+\bye
 
 
