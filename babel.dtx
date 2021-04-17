@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/04/13 v3.57.2341 The Babel package]
+\ProvidesFile{babel.dtx}[2021/04/17 v3.57.2345 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3078,6 +3078,10 @@ Devanagari.}
 \textit{mm}, \textit{nn}, \textit{pp}, \textit{rr}, \textit{ss},
 \textit{tt} as \textit{bb-b}, \textit{dd-d}, etc.}
 
+\trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
+files refers to the Cyrillic script, which is here the target.) The
+standard system devised by Ljudevit Gaj.}
+
 \vspace{2mm}\hrule\nobreak
 \endgroup
 
@@ -4924,8 +4928,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.57.2341>>
-%<<date=2021/04/13>>
+%<<version=3.57.2345>>
+%<<date=2021/04/17>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7119,7 +7123,7 @@ help from Bernd Raichle, for which I am grateful.
     \def\bbl@elt##1##2##3##4{%
       \ifnum\count@=##2\relax
         \bbl@info{\string#1 = using hyphenrules for ##1\\%
-                  (\string\language\the\count@)}%
+                  (\string\language\the\count@). Reported}%
         \def\bbl@elt####1####2####3####4{}%
       \fi}%
     \bbl@cs{languages}%
@@ -7611,14 +7615,18 @@ help from Bernd Raichle, for which I am grateful.
     \fi
   \fi
   \let\bbl@hymapsel\@cclv
-  % hyphenation - select patterns
-  \bbl@patterns{#1}%
-  % hyphenation - allow stretching with babelnohyphens
-  \ifnum\language=\l@babelnohyphens
+  % hyphenation - select rules
+  \bbl@xin@{/u}{/\bbl@cl{lnbrk}}%
+  \ifin@
+    % 'unhyphenated' = allow stretching
+    \language\l@babelnohyphens
     \babel@savevariable\emergencystretch
     \emergencystretch\maxdimen
     \babel@savevariable\hbadness
     \hbadness\@M
+  \else
+    % other = select patterns
+    \bbl@patterns{#1}%
   \fi
   % hyphenation - mins
   \babel@savevariable\lefthyphenmin
@@ -10734,6 +10742,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@script\@nil
   \let\bbl@KVP@language\@nil
   \let\bbl@KVP@hyphenrules\@nil
+  \let\bbl@KVP@linebreaking\@nil
   \let\bbl@KVP@mapfont\@nil
   \let\bbl@KVP@maparabic\@nil
   \let\bbl@KVP@mapdigits\@nil
@@ -11134,7 +11143,7 @@ help from Bernd Raichle, for which I am grateful.
 % Load the basic parameters (ids, typography, counters, and a few
 % more), while captions and dates are left out. But it may happen some
 % data has been loaded before automatically, so we first discard the
-% saved values.
+% saved values. (TODO. But preserving previous values would be useful.)
 %
 %    \begin{macrocode}
 \def\bbl@load@basic#1{%
@@ -12905,8 +12914,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@csarg\gdef{xeipn@\languagename}%
     {\XeTeXlinebreakpenalty #1\relax}}
 \def\bbl@provide@intraspace{%
-  \bbl@xin@{\bbl@cl{lnbrk}}{s}%
-  \ifin@\else\bbl@xin@{\bbl@cl{lnbrk}}{c}\fi
+  \bbl@xin@{/s}{/\bbl@cl{lnbrk}}%
+  \ifin@\else\bbl@xin@{/c}{/\bbl@cl{lnbrk}}\fi
   \ifin@
     \bbl@ifunset{bbl@intsp@\languagename}{}%
       {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
@@ -13611,7 +13620,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@provide@intraspace{%
   \bbl@ifunset{bbl@intsp@\languagename}{}%
     {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
-       \bbl@xin@{\bbl@cl{lnbrk}}{c}%
+       \bbl@xin@{/c}{/\bbl@cl{lnbrk}}%
        \ifin@           % cjk
          \bbl@cjkintraspace
          \directlua{
