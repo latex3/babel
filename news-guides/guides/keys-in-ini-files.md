@@ -89,6 +89,9 @@ calendar, such as in English for days of the week:
 **hyphenate.other.script** (Tentative syntax.) Same, based on the
   script.
   
+**linebreaking** The line breaking mode, with a letter: h(yphenated, by
+  default), c(jk), s(outheast Asian), u(nhyphenated).
+  
 ### `labels`
 
 Under development:

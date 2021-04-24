@@ -11,7 +11,7 @@ Currently, support for Plain is mostly in a maintenance mode, which
 means **many of the features added in the last few months (well, years)
 won't work**.
 
-It is worth noting Babel is *not* compatible with the original Plain,
+It is worth noting Babel is *not* compatible with the original Plain
 but rather with a format named `bplain` (admittedly, the manual is
 somewhat misleading in this regard). Apparently this format has never
 found its way into most of distributions. Version 3.9 added support for
@@ -27,13 +27,13 @@ Here is a minimal working example with two languages:
 \input danish.sty  % Last language, and therefore the main one
 \begindocument
 
-\chaptername ---\today
+\chaptername---\today
 
-\foreignlanguage{dutch}{\chaptername ---\today}
+\foreignlanguage{dutch}{\chaptername---\today}
 
 \selectlanguage{dutch}
 
-\chaptername ---\today
+\chaptername---\today
 
 \bye
 ```
@@ -41,6 +41,12 @@ Which prints (the date will be different, of course):
 > Kapitel—14. april 2021<br>
 > Kapitel—14. april 2021<br>
 > Hoofdstuk—14 april 2021
+
+The optional argument works, so:
+```tex
+\foreignlanguage[captions]{dutch}{\chaptername---\today}
+```
+will print ‘Hoofdstuk’.
 
 This is basically all what you can do with Plain TeX, although in some
 languages there will be additional features (for example, with
@@ -59,7 +65,8 @@ Everyting related to `\babelprovide` and the `ini` mechanism won't work,
 including `\babelfont`. Obviously, features activated as package
 options won't work either.
 
-Hooks work when they make sense in Plain. For example:
+Hooks work when they make sense, which is particularly useful in
+Plain’s DIY philosophy. For example:
 ```tex
 \AddBabelHook[danish]{font}{beforeextras}{\it}
 ```
@@ -76,9 +83,12 @@ definitions just to avoid errors or simplified versions.
 
 (..... More to follow.)
 
+## Languages
+
 Here is a document which runs with no error messages in pdfTeX and
-ePlain, but with an error in `latin` in TeX (note all of them use
-the Latin script):
+ePlain, but with an error in `latin` in TeX. Note two points: all of
+them use the Latin script, and there is only a set of hyphenation
+patterns (English):
 ```
 \input afrikaans.sty
 \input albanian.sty

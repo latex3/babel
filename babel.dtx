@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/04/17 v3.57.2345 The Babel package]
+\ProvidesFile{babel.dtx}[2021/04/24 v3.57.2352 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -80,6 +80,13 @@
 \usepackage{multicol}
 \usepackage{color,colortbl}
 \usepackage[linkcolor=blue,urlcolor=blue,colorlinks=true]{hyperref}
+\hypersetup{%
+  pdfsubject={LaTeX Multilingual documents and localization for pdfTeX, LuaTex and
+  XeTeX.},
+  pdfauthor={Johannes Braams, Javier Bezos},
+  pdftitle={Babel},
+  pdfkeywords={TeX, LaTeX, pdfTeX, LuaTeX, XeTeX, internationalization,
+  localization}}
 \newcommand\New[1]{%
   \colorbox[rgb]{.92, .86, .73}{New #1}\enspace\ignorespaces}
 \definecolor{thered}  {rgb}{0.65,0.04,0.07}
@@ -89,6 +96,7 @@
 \makeatletter
 \def\@begintheorem#1#2{%
   \list{}{}%
+  \small
   \global\advance\@listdepth\m@ne
   \item[{\sffamily\bfseries\color{messages}\hspace*{1.3em}%
         \MakeUppercase{#1}}]}%
@@ -238,9 +246,9 @@ Xe\largetex
 \begin{description}
 \item[\sffamily\color{messages}What is this document about?] This user
 guide focuses on internationalization and localization with \LaTeX{}
-and \pdftex, \xetex{} and \luatex{} with the \babel{} package. There are
-also some notes on its use with Plain \TeX. Part II describes the code,
-and usually it can be ignored.
+and \pdftex, \xetex{} and \luatex{} with the \babel{} package. There
+are also some notes on its use with e-Plain and pdf-Plain \TeX . Part II
+describes the code, and usually it can be ignored.
 
 \item[\sffamily\color{messages}What if I’m interested only in the
 latest changes?] Changes and new features with relation to version 3.8
@@ -631,7 +639,7 @@ modifiers are a more general mechanism.
 
 \subsection{Plain}
 
-In Plain, load languages styles with |\input| and then use
+In e-Plain and pdf-Plain, load languages styles with |\input| and then use
 |\begindocument| (the latter is defined by \babel):
 \begin{verbatim}
 \input estonian.sty
@@ -640,9 +648,10 @@ In Plain, load languages styles with |\input| and then use
 
 \begin{warning}
   Not all languages provide a |sty| file and some of them are not
-  compatible with Plain.\footnote{Even in the \babel{} kernel there
-  were some macros not compatible with plain. Hopefully these issues
-  have been fixed.}
+  compatible with those formats. Please, refer to
+  \href{https://github.com/latex3/babel/blob/%
+  master/news-guides/guides/using-babel-with-plain.md}{Using babel with
+  Plain} for further details.
 \end{warning}
 
 \subsection{Basic language selectors}
@@ -1298,7 +1307,7 @@ required for a locale.
 |ini| files are not meant only for \babel, and they has been devised as
 a resource for other packages. To easy interoperability between \TeX{}
 and other systems, they are identified with the BCP 47 codes as
-preferred by the Unicode Common Language Data Repository, which was
+preferred by the Unicode Common Locale Data Repository, which was
 used as source for most of the data provided by these files, too (the
 main exception being the |\...name| strings).
 
@@ -3058,8 +3067,8 @@ OTF features), but it can get you out of a hurry.}
 Spanish}{hyphen.repeat}{Explicit hyphens behave like
 |\string\babelhyphen|\allowbreak|\{repeat\}|.}
 
-\trans{Czech, Slovak}{oneletter.nobreak}{Converts a space after a
-non-syllabic preposition into a non-breaking space.}
+\trans{Czech, Polish, Slovak}{oneletter.nobreak}{Converts a space after
+a non-syllabic preposition or conjunction into a non-breaking space.}
 
 \trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
 upsilon if hyphenated just before. It works with the
@@ -3164,6 +3173,21 @@ This feature is activated with the first |\babelposthyphenation| or
 }
 \end{verbatim}
 \end{example}
+
+\begin{note}
+  With \luatex{} there is another approach to make text
+  transformations, with the function |fonts.handlers.otf.addfeature|,
+  which adds new features to an OTF font. These features can be made
+  language-dependent, and \babel{} by default recognizes this setting
+  if the font has been declared with |\babelfont|. The
+  \textit{transforms} mechanism supplements rather than replaces OTF
+  features.
+  
+  With \xetex{}, where \textit{transforms} are not available, there is
+  still another approach, with font mappings, mainly meant to perform
+  encoding conversions and transliterations. Mappings, however, are
+  linked to fonts, not to languages.
+\end{note}
 
 \subsection{Selection based on BCP 47 tags}
 \label{bcp47}
@@ -4928,8 +4952,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.57.2345>>
-%<<date=2021/04/17>>
+%<<version=3.57.2352>>
+%<<date=2021/04/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8899,10 +8923,13 @@ help from Bernd Raichle, for which I am grateful.
 %    or |\normal@char|\m{char} in the case of |\bbl@deactivate|.
 %
 %    \begin{macrocode}
+\chardef\bbl@activated\z@
 \def\bbl@activate#1{%
+  \chardef\bbl@activated\@ne
   \bbl@withactive{\expandafter\let\expandafter}#1%
     \csname bbl@active@\string#1\endcsname}
 \def\bbl@deactivate#1{%
+  \chardef\bbl@activated\tw@
   \bbl@withactive{\expandafter\let\expandafter}#1%
     \csname bbl@normal@\string#1\endcsname}
 %    \end{macrocode}
@@ -9184,6 +9211,11 @@ help from Bernd Raichle, for which I am grateful.
            {\bbl@withactive{\expandafter\let\expandafter}#2%
               \csname bbl@shdef@\string#2\endcsname
             \bbl@csarg\let{shdef@\string#2}\relax}%
+         \ifcase\bbl@activated\or
+           \bbl@activate{#2}%
+         \else
+           \bbl@deactivate{#2}%
+         \fi
        \or
          \bbl@ifunset{bbl@shdef@\string#2}%
            {\bbl@withactive{\bbl@csarg\let{shdef@\string#2}}#2}%

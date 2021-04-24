@@ -1,4 +1,4 @@
-## Babel 3.57.2345
+## Babel 3.57.2352
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -49,7 +49,7 @@ respective authors.
 3.58   2021-04-28??
        * More predefined transforms (lua):
          - doubleletter.hyphen: Norsk
-         - oneletter.nobreak: Czech, Slovak
+         - oneletter.nobreak: Czech, Polish, Slovak
          - hyphen.repeat:     Czech, Polish, Portuguese, Slovak, Spanish
        * 'prehyphenation' transforms are disabled in verbatim.
        * New linebreaking mode ‘unhyphenated’.
