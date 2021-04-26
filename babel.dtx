@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/04/24 v3.57.2352 The Babel package]
+\ProvidesFile{babel.dtx}[2021/04/26 v3.58 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1417,7 +1417,7 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
 \begingroup
 \setmonofont[Script=Lao,Scale=MatchLowercase]{DejaVu Sans Mono}
 \begin{verbatim}
-\babelprovide[import,hyphenrules=+]{lao}
+\babelprovide[import, hyphenrules=+]{lao}
 \babelpatterns[lao]{1ດ 1ມ 1ອ 1ງ 1ກ 1າ} % Random
 \end{verbatim}
 \endgroup
@@ -2499,6 +2499,9 @@ for example:
 In other engines it just suppresses hyphenation (because the pattern
 list is empty).
 
+\New{3.58} Another special value is |unhyphenated|, which activates a
+line breking mode that allows spaces to be stretched to arbitrary amounts.
+
 \Describe{main}{} This valueless option makes the language the main one
 (thus overriding that set when \babel\ is loaded). Only in newly defined
 languages.
@@ -3074,8 +3077,11 @@ a non-syllabic preposition or conjunction into a non-breaking space.}
 upsilon if hyphenated just before. It works with the
 three variants.}
 
-\trans{Hindi}{transliteration.hk}{The Harvard-Kyoto system to romanize
-Devanagari.}
+\trans{Hindi, Sanskrit}{transliteration.hk}{The Harvard-Kyoto system to
+romanize Devanagari.}
+
+\trans{}{punctuation.space}{Inserts a space before the following
+four characters: \textit{!?:;}\,.}
 
 \trans{Hungarian}{digraphs.hyphen}{Hyphenates the long digraphs
 \textit{ccs}, \textit{ddz}, \textit{ggy}, \textit{lly}, \textit{nny},
@@ -3177,11 +3183,11 @@ This feature is activated with the first |\babelposthyphenation| or
 \begin{note}
   With \luatex{} there is another approach to make text
   transformations, with the function |fonts.handlers.otf.addfeature|,
-  which adds new features to an OTF font. These features can be made
-  language-dependent, and \babel{} by default recognizes this setting
-  if the font has been declared with |\babelfont|. The
-  \textit{transforms} mechanism supplements rather than replaces OTF
-  features.
+  which adds new features to an OTF font (substitution and
+  positioning). These features can be made language-dependent, and
+  \babel{} by default recognizes this setting if the font has been
+  declared with |\babelfont|. The \textit{transforms} mechanism
+  supplements rather than replaces OTF features.
   
   With \xetex{}, where \textit{transforms} are not available, there is
   still another approach, with font mappings, mainly meant to perform
@@ -4952,8 +4958,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.57.2352>>
-%<<date=2021/04/24>>
+%<<version=3.58>>
+%<<date=2021/04/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7146,7 +7152,9 @@ help from Bernd Raichle, for which I am grateful.
     \count@#1\relax
     \def\bbl@elt##1##2##3##4{%
       \ifnum\count@=##2\relax
-        \bbl@info{\string#1 = using hyphenrules for ##1\\%
+        \edef\bbl@tempa{\expandafter\@gobbletwo\string#1}%
+        \bbl@info{Hyphen rules for '\expandafter\@gobble\bbl@tempa'
+                  set to \expandafter\string\csname l@##1\endcsname\\%
                   (\string\language\the\count@). Reported}%
         \def\bbl@elt####1####2####3####4{}%
       \fi}%
@@ -7640,10 +7648,15 @@ help from Bernd Raichle, for which I am grateful.
   \fi
   \let\bbl@hymapsel\@cclv
   % hyphenation - select rules
-  \bbl@xin@{/u}{/\bbl@cl{lnbrk}}%
+  \ifnum\csname l@\languagename\endcsname=\l@unhyphenated
+    \edef\bbl@tempa{u}%
+  \else
+    \edef\bbl@tempa{\bbl@cl{lnbrk}}%
+  \fi
+  \bbl@xin@{/u}{/\bbl@tempa}%
   \ifin@
     % 'unhyphenated' = allow stretching
-    \language\l@babelnohyphens
+    \language\l@unhyphenated
     \babel@savevariable\emergencystretch
     \emergencystretch\maxdimen
     \babel@savevariable\hbadness
@@ -10690,8 +10703,8 @@ help from Bernd Raichle, for which I am grateful.
   \chardef\l@english\z@
 \fi
 % The following is used to cancel rules in ini files (see Amharic).
-\ifx\l@babelnohyhens\@undefined
-  \newlanguage\l@babelnohyphens
+\ifx\l@unhyphenated\@undefined
+  \newlanguage\l@unhyphenated
 \fi
 %    \end{macrocode}
 %

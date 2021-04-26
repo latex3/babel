@@ -10,6 +10,8 @@
 \BabelBeforeIni{ug}{%
 }
 
+\ifcase\bbl@engine\or
+
 \newattribute\bblug@disc
 \bblug@disc=-1
 
@@ -71,5 +73,7 @@ luatexbase.add_to_callback("pre_linebreak_filter",
 luatexbase.add_to_callback("hpack_filter",
   ug.hyphenate, "Babel.locale.uyghur.hyphenate")
 }
+
+\fi
 
 \endinput

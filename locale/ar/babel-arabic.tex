@@ -9,4 +9,88 @@
 \fi
 \BabelBeforeIni{ar}{%
 }
+
+\ifcase\bbl@engine\or
+
+\directlua{
+
+Babel.ar_tolong = {}
+
+function Babel.ar_justify(head)
+  local substlist = Babel.ar_tolong
+  local GLYPH = node.id'glyph'
+  local substs, width, goal
+  local subst_done = true % false
+  math.randomseed(1)
+  for line in node.traverse_id(node.id'hlist', head) do
+    if (line.glue_sign == 1 and line.glue_order == 0) then % exclude last line!
+      substs = {} % we store all “expandable” letters of each line
+      for n in node.traverse_id(GLYPH, line.head) do
+        if (substlist[n.char]) then
+          table.insert(substs, n)
+        end
+      end
+      line.glue_set = 0   % deactivate normal glue expansion
+      width = node.dimensions(line.head)    % check the new width
+      goal = line.width
+      
+      while (width < goal and \string#substs > 0) do
+        x = math.random(\string#substs)     % choose randomly a glyph
+        oldchar = substs[x].char
+        substs[x].char = substlist[substs[x].char]
+        subst_done = true
+        width = node.dimensions(line.head)  % check if the line is too wide
+        % substitute back if the line would be too wide and break:
+        if width > goal then substs[x].char = oldchar break end 
+        % if further substitutions have to be done, remove the just
+        % substituted node from the list:
+        table.remove(substs,x)
+      end
+      % Must take into account marks and ins, see luatex manual.
+      % Have to be executed only if there are changes.
+      if subst_done then
+        line.head = node.hpack(line.head, goal, 'exactly')
+      end
+    end
+  end
+  return head
+end
+
+}
+
+\gdef\ArabicSetupJust{%
+  \directlua{
+    Babel.ar_tolong   = {}
+    luatexbase.add_to_callback('post_linebreak_filter',
+      Babel.ar_justify, 'Babel.ar_justify')
+  }% 
+  % It must be done for each font, and stored separately.
+  % Locale must be taken into account too. Brute force.
+  % No rules at all, yet. The ideal: look at jalt table.
+  % And perhaps other tables (falt?, cswh?). What about kaf?
+  \begingroup
+    \bbl@foreach{%   
+        0628,0629,062A,062B,062C,062D,062E,062F,0630,0631,0632,0633,%
+        0634,0635,0636,0637,0638,0639,063A,063B,063C,063D,063E,063F,%
+        0640,0641,0642,0643,0644,0645,0646,0647,0649}{%
+      \setbox\z@\hbox{%  Only final, for the moment
+        ^^^^200d\char"##1=%
+        \addfontfeature{RawFeature=+jalt}%
+        ^^^^200d\char"##1}%
+      \directlua{
+        local chars = {}
+        for item in node.traverse(tex.box[0].head) do
+          if item.id == node.id'glyph' and item.char > 128 and
+              not (item.char == 0x200D) then
+            table.insert(chars, item.char)
+          end
+        end
+        if not (chars[1] == chars[2]) then
+          Babel.ar_tolong[chars[1]] = chars[2]
+        end
+      }}%
+  \endgroup}
+  
+\fi
+
 \endinput

@@ -1,4 +1,4 @@
-## Babel 3.57.2352
+## Babel 3.58
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.57 are described in:
+Changes in version 3.58 are described in:
 
-https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.57.md
+https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.58.md
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,15 +46,19 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.58   2021-04-28??
+3.58   2021-04-26
        * More predefined transforms (lua):
          - doubleletter.hyphen: Norsk
-         - oneletter.nobreak: Czech, Polish, Slovak
-         - hyphen.repeat:     Czech, Polish, Portuguese, Slovak, Spanish
-       * 'prehyphenation' transforms are disabled in verbatim.
-       * New linebreaking mode ‘unhyphenated’.
-       * Fixes:
-         - \shorthandoff*{^} was not revertible (#126).
+         - oneletter.nobreak:  Czech, Polish, Slovak
+         - hyphen.repeat:      Czech, Polish, Portuguese, Slovak, Spanish
+         - punctuation.space:  Hindi, Sanskrit
+         - transliteration.hk: Sanskrit 
+         - transliteration.gajica: Serbian
+       * 'prehyphenation' transforms are now disabled in verbatim.
+       * New line breaking mode ‘unhyphenated’.
+       * Fix: \shorthandoff*{^} was not revertible (#126).
+       * Experimental code for Arabic justification (with elongated
+         forms: lua).
          
 3.57   2021-04-07
        * Predefined transforms (lua):
