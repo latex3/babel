@@ -1,4 +1,4 @@
-## Babel 3.58
+## Babel 3.58.2366
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.58 are described in:
+Changes in version 3.59 are described in:
 
-https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.58.md
+https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.59.md
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,6 +46,9 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.59   2021-05-??
+       * Kashida with user-definable rules (via transforms).
+       
 3.58   2021-04-26
        * More predefined transforms (lua):
          - doubleletter.hyphen: Norsk
@@ -59,17 +62,6 @@ respective authors.
        * Fix: \shorthandoff*{^} was not revertible (#126).
        * Experimental code for Arabic justification (with elongated
          forms: lua).
-         
-3.57   2021-04-07
-       * Predefined transforms (lua):
-         - Arabic:     transliteration.dad
-         - Croatian:   digraphs.ligatures
-         - Greek:      diaeresis.hyphen
-         - Hindi:      transliteration.hk
-         - Hungarian:  digraphs.hyphen
-       * Transforms: {xxxx} syntax also in string=.
-       * Preliminary code for Uyghur hyphenation (lua).
-       * magyar as alternative to hungarian in \babelprovide.
 ```
 
 ### Previous changes

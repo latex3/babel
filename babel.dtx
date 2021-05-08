@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/04/26 v3.58 The Babel package]
+\ProvidesFile{babel.dtx}[2021/05/08 v3.58.2366 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3188,7 +3188,7 @@ This feature is activated with the first |\babelposthyphenation| or
   \babel{} by default recognizes this setting if the font has been
   declared with |\babelfont|. The \textit{transforms} mechanism
   supplements rather than replaces OTF features.
-  
+
   With \xetex{}, where \textit{transforms} are not available, there is
   still another approach, with font mappings, mainly meant to perform
   encoding conversions and transliterations. Mappings, however, are
@@ -4958,8 +4958,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.58>>
-%<<date=2021/04/26>>
+%<<version=3.58.2366>>
+%<<date=2021/05/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7653,14 +7653,19 @@ help from Bernd Raichle, for which I am grateful.
   \else
     \edef\bbl@tempa{\bbl@cl{lnbrk}}%
   \fi
+  % linebreaking - handle u, e, k (v in the future)
   \bbl@xin@{/u}{/\bbl@tempa}%
+  \ifin@\else\bbl@xin@{/e}{/\bbl@tempa}\fi % elongated forms 
+  \ifin@\else\bbl@xin@{/k}{/\bbl@tempa}\fi % only kashida
+  \ifin@\else\bbl@xin@{/v}{/\bbl@tempa}\fi % variable font
   \ifin@
-    % 'unhyphenated' = allow stretching
+    % unhyphenated/kashida/elongated = allow stretching
     \language\l@unhyphenated
     \babel@savevariable\emergencystretch
     \emergencystretch\maxdimen
     \babel@savevariable\hbadness
     \hbadness\@M
+    \hfuzz=10pt
   \else
     % other = select patterns
     \bbl@patterns{#1}%
@@ -10968,6 +10973,10 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
   \fi
   \bbl@provide@intraspace
+  %
+  \bbl@xin@{/e}{/\bbl@cl{lnbrk}}
+  \ifin@\else\bbl@xin@{/k}{/\bbl@cl{lnbrk}}\fi
+  \ifin@\bbl@arabicjust\fi
   % == Line breaking: hyphenate.other.locale/.script==
   \ifx\bbl@lbkflag\@empty
     \bbl@ifunset{bbl@hyotl@\languagename}{}%
@@ -12126,6 +12135,10 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@adjust@lua{linebreak}{cjk_enabled=true}}
 \@namedef{bbl@ADJ@linebreak.cjk@off}{%
   \bbl@adjust@lua{linebreak}{cjk_enabled=false}}
+\@namedef{bbl@ADJ@justify.arabic@on}{%
+  \bbl@adjust@lua{linebreak}{arabic.justify_enabled=true}}
+\@namedef{bbl@ADJ@justify.arabic@off}{%
+  \bbl@adjust@lua{linebreak}{arabic.justify_enabled=false}}
 %
 \def\bbl@adjust@layout#1{%
   \ifvmode
@@ -13571,7 +13584,23 @@ help from Bernd Raichle, for which I am grateful.
       end
     end
   }^^
-  \bbl@luahyphenate}
+  \bbl@luahyphenate}  
+%    \end{macrocode}
+%    
+% \subsection{CJK line breaking}
+%
+% Minimal line breaking for CJK scripts, mainly intended for simple
+% documents and short texts as a secundary language. Only line
+% breaking, with a little stretching for justification, without any
+% attempt to adjust the spacing. It is based on (but does not strictly
+% follow) the Unicode algorithm.
+%
+% We first need a little table with the corresponding line breaking
+% properties. A few characters have an additional key for the width
+% (fullwidth \textit{vs.} halfwidth), not yet used. There is a separate
+% file, defined below.
+%
+%    \begin{macrocode}
 \catcode`\%=14
 \gdef\bbl@cjkintraspace{%
   \let\bbl@cjkintraspace\relax
@@ -13696,22 +13725,214 @@ help from Bernd Raichle, for which I am grateful.
      \fi}}
 %    \end{macrocode}
 %
-% \subsection{CJK line breaking}
+% \subsection{Arabic justification}
 %
-% Minimal line breaking for CJK scripts, mainly intended for simple
-% documents and short texts as a secundary language. Only line
-% breaking, with a little stretching for justification, without any
-% attempt to adjust the spacing. It is based on (but does not strictly
-% follow) the Unicode algorithm.
+%    \begin{macrocode}
+\ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200
+\def\bblar@chars{%
+  0628,0629,062A,062B,062C,062D,062E,062F,0630,0631,0632,0633,%
+  0634,0635,0636,0637,0638,0639,063A,063B,063C,063D,063E,063F,%
+  0640,0641,0642,0643,0644,0645,0646,0647,0649}
+\def\bblar@elongated{%
+  0626,0628,062A,062B,0633,0634,0635,0636,063B,%
+  063C,063D,063E,063F,0641,0642,0643,0644,0646,%
+  0649,064A}
+\begingroup
+  \catcode`_=11 \catcode`:=11
+  \gdef\bblar@nofswarn{\gdef\msg_warning:nnx##1##2##3{}}
+\endgroup
+\gdef\bbl@arabicjust{%
+  \let\bbl@arabicjust\relax
+  \newattribute\bblar@kashida
+  \bblar@kashida=\z@
+  \expandafter\bbl@add\csname selectfont \endcsname{{\bbl@parsejalt}}%
+  \directlua{
+    Babel.arabic.elong_map   = Babel.arabic.elong_map or {}
+    Babel.arabic.elong_map[\the\localeid]   = {}
+    luatexbase.add_to_callback('post_linebreak_filter',
+      Babel.arabic.justify, 'Babel.arabic.justify')
+  }}% 
+% Save both node lists to make replacement. TODO. Save also widths to
+% make computations
+\def\bblar@fetchjalt#1#2#3#4{%
+  \bbl@exp{\\\bbl@foreach{#1}}{%
+    \bbl@ifunset{bblar@JE@##1}%
+      {\setbox\z@\hbox{^^^^200d\char"##1#2}}%
+      {\setbox\z@\hbox{^^^^200d\char"\@nameuse{bblar@JE@##1}#2}}%
+    \directlua{%
+      local last = nil
+      for item in node.traverse(tex.box[0].head) do
+        if item.id == node.id'glyph' and item.char > 0x600 and
+            not (item.char == 0x200D) then
+          last = item
+        end
+      end
+      Babel.arabic.#3['##1#4'] = last.char
+    }}}
+% Brute force. No rules at all, yet. The ideal: look at jalt table. And
+% perhaps other tables (falt?, cswh?). What about kaf? And diacritic
+% positioning?
+\gdef\bbl@parsejalt{%
+  \ifx\addfontfeature\@undefined\else
+    \bbl@xin@{/e}{/\bbl@cl{lnbrk}}%
+    \ifin@
+      \directlua{%
+        if Babel.arabic.elong_map[\the\localeid][\fontid\font] == nil then
+          Babel.arabic.elong_map[\the\localeid][\fontid\font] = {}
+          tex.print([[\string\csname\space bbl@parsejalti\endcsname]])
+        end
+      }%
+    \fi
+  \fi}
+\gdef\bbl@parsejalti{%
+  \begingroup
+    \let\bbl@parsejalt\relax     % To avoid infinite loop
+    \edef\bbl@tempb{\fontid\font}%
+    \bblar@nofswarn
+    \bblar@fetchjalt\bblar@elongated{}{from}{}%
+    \bblar@fetchjalt\bblar@chars{^^^^064a}{from}{a}% Alef maksura
+    \bblar@fetchjalt\bblar@chars{^^^^0649}{from}{y}% Yeh
+    \addfontfeature{RawFeature=+jalt}%
+    % \@namedef{bblar@JE@0643}{06AA}% todo: catch medial kaf
+    \bblar@fetchjalt\bblar@elongated{}{dest}{}%
+    \bblar@fetchjalt\bblar@chars{^^^^064a}{dest}{a}%
+    \bblar@fetchjalt\bblar@chars{^^^^0649}{dest}{y}%
+      \directlua{%
+        for k, v in pairs(Babel.arabic.from) do
+          if Babel.arabic.dest[k] and
+              not (Babel.arabic.from[k] == Babel.arabic.dest[k]) then
+            Babel.arabic.elong_map[\the\localeid][\bbl@tempb]
+               [Babel.arabic.from[k]] = Babel.arabic.dest[k]
+          end
+        end
+      }%
+  \endgroup}
 %
-% We first need a little table with the corresponding line breaking
-% properties. A few characters have an additional key for the width
-% (fullwidth \textit{vs.} halfwidth), not yet used. There is a separate
-% file, defined below.
+\begingroup
+\catcode`#=11
+\catcode`~=11
+\directlua{
+
+Babel.arabic = Babel.arabic or {}
+Babel.arabic.from = {}
+Babel.arabic.dest = {}
+Babel.arabic.justify_factor = 0.95
+Babel.arabic.justify_enabled = true
+
+function Babel.arabic.justify(head)
+  if not Babel.arabic.justify_enabled then return head end
+  local d, new
+  local k_list, k_item, pos_inline
+  local width, width_new, full, k_curr, wt_pos, goal
+  local subst_done = false
+  local elong_map = Babel.arabic.elong_map
+  local last_line
+  local GLYPH = node.id'glyph'
+  local KASHIDA = luatexbase.registernumber'bblar@kashida'
+  local LOCALE = luatexbase.registernumber'bbl@attr@locale'
+
+  for line in node.traverse_id(node.id'hlist', head) do
+    % Exclude last line. todo. But-- it discards one-word lines, too!
+    if (line.glue_sign == 1 and line.glue_order == 0) then
+      elongs = {}     % Stores elongated candidates of each line
+      k_list = {}     % And all letters with kashida
+      pos_inline = 0  % Not yet used
+
+      for n in node.traverse_id(GLYPH, line.head) do
+        pos_inline = pos_inline + 1 % To find where it is. Not used.
+
+        % Elongated glyphs
+        if elong_map then
+          local locale = node.get_attribute(n, LOCALE)
+          if elong_map[locale] and elong_map[locale][n.font] and 
+              elong_map[locale][n.font][n.char] then
+            table.insert(elongs, {node = n, locale = locale} )
+            node.set_attribute(n.prev, KASHIDA, 0)
+          end
+        end
+
+        % Tatwil
+        if Babel.kashida_wts then
+          local k_wt = node.get_attribute(n, KASHIDA)
+          if k_wt > 0 then
+            table.insert(k_list, {node = n, weight = k_wt, pos = pos_inline})
+          end
+        end
+
+      end % of node.traverse_id
+
+      if #elongs == 0 and #k_list == 0 then goto next_line end
+
+      full = line.width
+      goal = full * Babel.arabic.justify_factor % A bit crude
+      width = node.dimensions(line.head)    % The 'natural' width
+
+      % == Elongated ==
+      % Original idea taken from 'chikenize'
+      while (#elongs > 0 and width < goal) do
+        subst_done = true
+        local x = #elongs
+        local curr = elongs[x].node
+        local oldchar = curr.char
+        curr.char = elong_map[elongs[x].locale][curr.font][curr.char]
+        width = node.dimensions(line.head)  % Check if the line is too wide
+        % Substitute back if the line would be too wide and break:
+        if width > goal then
+          curr.char = oldchar
+          break
+        end 
+        % If continue, pop the just substituted node from the list:
+        table.remove(elongs, x)
+      end
+
+      % == Tatwil ==
+      if #k_list == 0 then goto next_line end
+
+      width = node.dimensions(line.head)    % The 'natural' width
+      k_curr = #k_list
+      wt_pos = 1
+
+      while width < goal do
+        subst_done = true
+        k_item = k_list[k_curr].node
+        if k_list[k_curr].weight == Babel.kashida_wts[wt_pos] then       
+          d = node.copy(k_item)
+          d.char = 0x0640
+          line.head, new = node.insert_after(line.head, k_item, d)
+          width_new = node.dimensions(line.head)
+          if width > goal or width == width_new then
+            node.remove(line.head, new) % Better compute before
+            break
+          end
+          width = width_new
+        end
+        if k_curr == 1 then
+          k_curr = #k_list
+          wt_pos = (wt_pos >= table.getn(Babel.kashida_wts)) and 1 or wt_pos+1   
+        else
+          k_curr = k_curr - 1
+        end
+      end
+
+      ::next_line::
+
+      % Must take into account marks and ins, see luatex manual.
+      % Have to be executed only if there are changes. Investigate
+      % what's going on exactly.
+      if subst_done then
+        node.insert_before(head, line, node.hpack(line.head, full, 'exactly'))
+        node.remove(head, line)
+      end
+    end % if process line
+  end % for lines
+  return head
+end
+}
+\endgroup
+\fi\fi % Arabic just block
+%    \end{macrocode}
 %
-% \textit{Work in progress.} 
-%
-% Common stuff.
+% \subsection{Common stuff}
 %
 %    \begin{macrocode}
 \AddBabelHook{babel-fontspec}{afterextras}{\bbl@switchfont}
@@ -13951,11 +14172,11 @@ end
   end
 
   Babel.fetch_subtext = {}
-  
+
   Babel.ignore_pre_char = function(node)
     return (node.lang == \the\l@nohyphenation)
   end
-  
+
   &% Merging both functions doesn't seen feasible, because there are too
   &% many differences.
   Babel.fetch_subtext[0] = function(head)
@@ -14136,6 +14357,7 @@ end
         &% after the match, either as found by u.match (faster) or the
         &% computed position based on sc if w has changed.
         local last_match = 0
+        local step = 0
 
         &% For every match.
         while true do
@@ -14143,9 +14365,9 @@ end
             print('=====')
           end
           local new  &% used when inserting and removing nodes
-          local refetch = false
 
           local matches = { u.match(w, p, last_match) }
+          
           if #matches < 2 then break end
 
           &% Get and remove empty captures (with ()'s, which return a
@@ -14210,6 +14432,10 @@ end
             if crep and crep.data then
               item_base = data_nodes[crep.data]
             end
+            
+            if crep then
+              step = crep.step or 0
+            end
 
             if crep and next(crep) == nil then &% = {}
               last_match = save_last    &% Optimization
@@ -14220,7 +14446,14 @@ end
               table.remove(w_nodes, sc)
               w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
               sc = sc - 1  &% Nothing has been inserted.
-              last_match = utf8.offset(w, sc+1)
+              last_match = utf8.offset(w, sc+1+step)
+              goto next
+
+            elseif crep and crep.kashida then &% Experimental
+              node.set_attribute(item,
+                 luatexbase.registernumber'bblar@kashida', 
+                 crep.kashida)
+              last_match = utf8.offset(w, sc+1+step)
               goto next
 
             elseif crep and crep.string then
@@ -14256,7 +14489,7 @@ end
                 end  &% for
                 node.remove(head, item)
               end  &% if ''
-              last_match = utf8.offset(w, sc+1)
+              last_match = utf8.offset(w, sc+1+step)
               goto next
 
             elseif mode == 1 and crep and (crep.pre or crep.no or crep.post) then
@@ -14311,7 +14544,7 @@ end
 
             end  &% ie replacement cases
 
-            &% Shared by disc, space and penalty. 
+            &% Shared by disc, space and penalty.
             if sc == 1 then
               word_head = head
             end
@@ -14325,7 +14558,7 @@ end
               w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc+1)
             end
 
-            last_match = utf8.offset(w, sc+1)
+            last_match = utf8.offset(w, sc+1+step)
 
             ::next::
 
@@ -14394,6 +14627,26 @@ end
     end
     return "]]..Babel.capt_map(m[" .. capno .. "]," ..
            (mlen) .. ").." .. "[["
+  end
+  
+  &% Create/Extend reversed sorted list of kashida weights:
+  function Babel.capture_kashida(key, wt)
+    wt = tonumber(wt)
+    if Babel.kashida_wts then
+      for p, q in ipairs(Babel.kashida_wts) do
+        if wt  == q then
+          break
+        elseif wt > q then
+          table.insert(Babel.kashida_wts, p, wt)
+          break
+        elseif table.getn(Babel.kashida_wts) == p then
+          table.insert(Babel.kashida_wts, wt)
+        end
+      end
+    else
+      Babel.kashida_wts = { wt }
+    end
+    return 'kashida = ' .. wt
   end
 }
 %    \end{macrocode}
@@ -14473,10 +14726,11 @@ end
            rep = rep:gsub('^%s*(remove)%s*$', 'remove = true')
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
-           rep = rep:gsub( '(space)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
+           rep = rep:gsub('(space)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
              'space = {' .. '%2, %3, %4' .. '}')
-           rep = rep:gsub( '(spacefactor)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
+           rep = rep:gsub('(spacefactor)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
              'spacefactor = {' .. '%2, %3, %4' .. '}')
+           rep = rep:gsub('(kashida)%s*=%s*([^%s,]*)', Babel.capture_kashida)
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
     \directlua{
