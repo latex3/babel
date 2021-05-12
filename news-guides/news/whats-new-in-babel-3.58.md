@@ -9,10 +9,10 @@
 **Czech, Polish, Slovak** ▸  `oneletter.nobreak` ▸ Converts a space after a non-syllabic preposition or conjunction into a non-breaking space.
 
 **Hindi, Sanskrit** ▸ `punctuation.space` ▸ Inserts a space before the following
-four characters: \textit{!?:;}\,. Added `transliteration.hk` for
+four characters: `!?:;`. Added `transliteration.hk` for
 Sanskrit, too.
 
-**Norsk** ▸ `doubleletter.hyphen` ▸ Hyphenates the doble-letter groups `bb`, `dd`, `ff`, `gg`, `ll`, `mm`, `nn`, `pp`, `rr`, `ss`, `tt` as `bb-b`, `dd-d`, etc.
+**Norsk** ▸ `doubleletter.hyphen` ▸ Hyphenates the doble-letter groups `bb`, `dd`, `ff`, `gg`, `ll`, `mm`, `nn`, `pp`, `rr`, `ss`, `tt` as `bb-b`, `dd-d`, etc. 
 
 **Serbian** ▸ `transliteration.gajica` ▸ (Note `serbian` with `ini` files refers to the Cyrillic script, which is here the target.) The standard system devised by Ljudevit Gaj. 
 
@@ -52,7 +52,7 @@ because the patterns so called set the line breaking mode to
 So, currently there are two modes for scripts that separate words with
 spaces, and two modes for scripts with no word separator. Further modes
 could be added in the future, and there is work in progress for
-‘Justification alternates’ and tatwell in Arabic (see below).
+‘Justification alternates’ and tatwil in Arabic (see below).
 
 See also [here](whats-new-in-babel-3.57.md) for Uyghur hyphenation.
 
@@ -82,4 +82,4 @@ The last macro is temporary. It will be removed.
 
 ## Fixes
 
-## Other changes
+* `\shorthandoff*{^}` was not revertible (#126).

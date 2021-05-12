@@ -1,4 +1,4 @@
-## Babel 3.58.2366
+## Babel 3.58.2370
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,8 @@ respective authors.
 ```
 3.59   2021-05-??
        * Kashida with user-definable rules (via transforms).
+       * Fixes:
+         - \babel@texpdf inconsistently defined (#130)
        
 3.58   2021-04-26
        * More predefined transforms (lua):

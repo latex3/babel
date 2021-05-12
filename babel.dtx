@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/05/08 v3.58.2366 The Babel package]
+\ProvidesFile{babel.dtx}[2021/05/12 v3.58.2370 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3088,10 +3088,10 @@ four characters: \textit{!?:;}\,.}
 \textit{ssz}, \textit{tty} and \textit{zzs} as \textit{cs-cs},
 \textit{dz-dz}, etc.}
 
-\trans{Norsk}{doubleletter.hyphen}{Hyphenates the doble-letter groups
-\textit{bb}, \textit{dd}, \textit{ff}, \textit{gg}, \textit{ll},
-\textit{mm}, \textit{nn}, \textit{pp}, \textit{rr}, \textit{ss},
-\textit{tt} as \textit{bb-b}, \textit{dd-d}, etc.}
+\trans{Arabic, Persian}{kashida.plain}{Experimental. A very simple and
+basic transform for ‘plain’ Arabic fonts, which attempts to distribute
+the tatwil as evenly as possible (starting at the end of the line). See
+the news for version 3.59.}
 
 \trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
 files refers to the Cyrillic script, which is here the target.) The
@@ -4958,8 +4958,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.58.2366>>
-%<<date=2021/05/08>>
+%<<version=3.58.2370>>
+%<<date=2021/05/12>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7665,7 +7665,6 @@ help from Bernd Raichle, for which I am grateful.
     \emergencystretch\maxdimen
     \babel@savevariable\hbadness
     \hbadness\@M
-    \hfuzz=10pt
   \else
     % other = select patterns
     \bbl@patterns{#1}%
@@ -8990,7 +8989,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \def\babel@texpdf#1#2#3#4{%
   \ifx\texorpdfstring\@undefined
-    \textormath{#1}{#2}%
+    \textormath{#1}{#3}%
   \else
     \texorpdfstring{\textormath{#1}{#3}}{#2}%
     % \texorpdfstring{\textormath{#1}{#3}}{\textormath{#2}{#4}}%
@@ -10793,6 +10792,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@language\@nil
   \let\bbl@KVP@hyphenrules\@nil
   \let\bbl@KVP@linebreaking\@nil
+  \let\bbl@KVP@justification\@nil
   \let\bbl@KVP@mapfont\@nil
   \let\bbl@KVP@maparabic\@nil
   \let\bbl@KVP@mapdigits\@nil
@@ -10974,6 +10974,16 @@ help from Bernd Raichle, for which I am grateful.
   \fi
   \bbl@provide@intraspace
   %
+  \ifx\bbl@KVP@justification\@nil\else
+     \let\bbl@KVP@linebreaking\bbl@KVP@justification
+  \fi
+  \ifx\bbl@KVP@linebreaking\@nil\else
+    \bbl@xin@{,\bbl@KVP@linebreaking,}{,elongated,kashida,cjk,unhyphenated,}%
+    \ifin@
+      \bbl@csarg\xdef
+        {lnbrk@\languagename}{\expandafter\@car\bbl@KVP@linebreaking\@nil}%
+    \fi
+  \fi
   \bbl@xin@{/e}{/\bbl@cl{lnbrk}}
   \ifin@\else\bbl@xin@{/k}{/\bbl@cl{lnbrk}}\fi
   \ifin@\bbl@arabicjust\fi
@@ -13833,6 +13843,7 @@ function Babel.arabic.justify(head)
 
   for line in node.traverse_id(node.id'hlist', head) do
     % Exclude last line. todo. But-- it discards one-word lines, too!
+    % ? Look for glue = 12:15
     if (line.glue_sign == 1 and line.glue_order == 0) then
       elongs = {}     % Stores elongated candidates of each line
       k_list = {}     % And all letters with kashida
@@ -13854,7 +13865,7 @@ function Babel.arabic.justify(head)
         % Tatwil
         if Babel.kashida_wts then
           local k_wt = node.get_attribute(n, KASHIDA)
-          if k_wt > 0 then
+          if k_wt > 0 then % todo. parameter for multi inserts
             table.insert(k_list, {node = n, weight = k_wt, pos = pos_inline})
           end
         end

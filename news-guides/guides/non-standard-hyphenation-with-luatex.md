@@ -138,7 +138,7 @@ with digraphs and trigraphs):
   points, the first one takes precedence (in other words, the second
   one is penalised):
 ```tex
-\babelposthyphenation{ngerman}{[aeiouáéíóú]|[aeiouáéíóú][aeiouáéíóú]|}{
+\babelposthyphenation{spanish}{[aeiouáéíóú]|[aeiouáéíóú][aeiouáéíóú]|}{
   {}, {}, {}, {},
   { pre=-, penalty=1000, data=4 },
 }
