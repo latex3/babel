@@ -1,4 +1,4 @@
-## Babel 3.58.2370
+## Babel 3.59
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,24 +46,12 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.59   2021-05-??
-       * Kashida with user-definable rules (via transforms).
+3.59   2021-05-16
+       * Tentative kashida with user-definable rules (via transforms).
        * Fixes:
          - \babel@texpdf inconsistently defined (#130)
-       
-3.58   2021-04-26
-       * More predefined transforms (lua):
-         - doubleletter.hyphen: Norsk
-         - oneletter.nobreak:  Czech, Polish, Slovak
-         - hyphen.repeat:      Czech, Polish, Portuguese, Slovak, Spanish
-         - punctuation.space:  Hindi, Sanskrit
-         - transliteration.hk: Sanskrit 
-         - transliteration.gajica: Serbian
-       * 'prehyphenation' transforms are now disabled in verbatim.
-       * New line breaking mode ‘unhyphenated’.
-       * Fix: \shorthandoff*{^} was not revertible (#126).
-       * Experimental code for Arabic justification (with elongated
-         forms: lua).
+         - Partial fix for #131 (quotation with CJK).
+       * Removed doubleletter.hyphen (Norsk), which serves to nothing.
 ```
 
 ### Previous changes

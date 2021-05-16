@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/05/12 v3.58.2370 The Babel package]
+\ProvidesFile{babel.dtx}[2021/05/17 v3.59 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2579,6 +2579,18 @@ Sets the interword penalty for the writing system of this language.
 Currently used only in Southeast Asian scrips, like Thai. Ignored if 0
 (which is the default value). 
 
+\Describe{justification=}{\texttt{kashida} $\string|$
+\texttt{elongated} $\string|$ \texttt{unhyphenated}}
+\New{3.59} There are currently three options, mainly for the Arabic
+script. It sets the linebreaking and justification method, which can be
+based on the the \textsc{arabic tatweel} character or in the
+‘justification alternatives’ OpenType table (\texttt{jalt}). For an
+explanation see the \href{https://github.com/latex3/babel/blob/master/%
+news-guides/news/whats-new-in-babel-3.59.md}{\babel\ site}.
+
+\Describe{linebreaking=}{}
+\New{3.59} Just a synonymous for \texttt{justification}.
+
 \Describe{mapfont=}{\texttt{direction}}
 Assigns the font for the writing direction of this language (only with
 |bidi=basic|). Whenever possible, instead of this option use |onchar|,
@@ -3080,7 +3092,7 @@ three variants.}
 \trans{Hindi, Sanskrit}{transliteration.hk}{The Harvard-Kyoto system to
 romanize Devanagari.}
 
-\trans{}{punctuation.space}{Inserts a space before the following
+\trans{Hindi, Sanskrit}{punctuation.space}{Inserts a space before the following
 four characters: \textit{!?:;}\,.}
 
 \trans{Hungarian}{digraphs.hyphen}{Hyphenates the long digraphs
@@ -3106,9 +3118,9 @@ standard system devised by Ljudevit Gaj.}
 \New{3.37-3.39} \textit{With \luatex{}} it is now possible to define
 non-standard hyphenation rules, like |f-f| $\to$ |ff-f|, repeated
 hyphens, ranked ruled (or more precisely, ‘penalized’ hyphenation
-points), and so on. No rules are currently provided by default, but
-they can be defined as shown in the following example, where |{1}| is
-the first captured char (between |()| in the pattern):
+points), and so on. Only a few rules are currently provided (see
+below), but they can be defined as shown in the following example,
+where |{1}| is the first captured char (between |()| in the pattern):
 \begin{verbatim}
 \babelposthyphenation{german}{([fmtrp]) | {1}}
 {
@@ -3147,9 +3159,7 @@ transliterations. There are other differences: (1) the first argument
 is the locale instead of the name of the hyphenation patterns; (2) in the
 search patterns |=| has no special meaning, while \verb+|+ stands for
 an ordinary space; (3) in the replacement, discretionaries are not
-accepted.
-
-It handles glyphs and spaces.
+accepted. 
 
 This feature is activated with the first |\babelposthyphenation| or
 |\babelprehyphenation|.
@@ -3880,12 +3890,11 @@ empty, removes them. The last argument is the locale name:
 Currently this macro understands the following keys (and only for
 \textsf{luatex}), with values |on| or |off|: |bidi.text|,
 |bidi.mirroring|, |bidi.mapdigits|, |layout.lists|, |layout.tabular|,
-|linebreak.sea|, |linebreak.cjk|. For example, you can set
+|linebreak.sea|, |linebreak.cjk|, |justify.arabic|. For example, you can set
 |\babeladjust{bidi.text=off}| if you are using an alternative algorithm
-or with large sections not requiring it. With \textsf{luahbtex} you may
-need |bidi.mirroring=off|. Use with care, because these options do not
-deactivate other related options (like paragraph direction with
-|bidi.text|).
+or with large sections not requiring it. Use with care, because these
+options do not deactivate other related options (like paragraph
+direction with |bidi.text|).
 
 \subsection{Tips, workarounds, known issues and notes}
 
@@ -4958,8 +4967,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.58.2370>>
-%<<date=2021/05/12>>
+%<<version=3.59>>
+%<<date=2021/05/17>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10984,7 +10993,7 @@ help from Bernd Raichle, for which I am grateful.
         {lnbrk@\languagename}{\expandafter\@car\bbl@KVP@linebreaking\@nil}%
     \fi
   \fi
-  \bbl@xin@{/e}{/\bbl@cl{lnbrk}}
+  \bbl@xin@{/e}{/\bbl@cl{lnbrk}}%
   \ifin@\else\bbl@xin@{/k}{/\bbl@cl{lnbrk}}\fi
   \ifin@\bbl@arabicjust\fi
   % == Line breaking: hyphenate.other.locale/.script==
@@ -21827,8 +21836,10 @@ Babel = Babel or {}
 
 Babel.cjk_characters = {
   [0x0021]={c='ex'},
+  [0x0022]={c='qu'},          
   [0x0024]={c='pr'},
   [0x0025]={c='po'},
+  [0x0027]={c='qu'},          
   [0x0028]={c='op'},
   [0x0029]={c='cp'},
   [0x002B]={c='pr'},
@@ -21849,10 +21860,18 @@ Babel.cjk_characters = {
   [0x00A3]={c='pr'},
   [0x00A4]={c='pr'},
   [0x00A5]={c='pr'},
+  [0x00AB]={c='qu'},          
   [0x00B0]={c='po'},
   [0x00B1]={c='pr'},
+  [0x00BB]={c='qu'},          
+  [0x2018]={c='qu'},          
+  [0x2019]={c='qu'},          
   [0x201A]={c='op'},
+  [0x201B]={c='qu'},    
+  [0x201C]={c='qu'},    
+  [0x201D]={c='qu'},          
   [0x201E]={c='op'},
+  [0x201F]={c='qu'},          
   [0x2024]={c='in'},
   [0x2025]={c='in'},
   [0x2026]={c='in'},
@@ -21864,6 +21883,8 @@ Babel.cjk_characters = {
   [0x2035]={c='po'},
   [0x2036]={c='po'},
   [0x2037]={c='po'},
+  [0x2039]={c='qu'},          
+  [0x203A]={c='qu'},            
   [0x203C]={c='ns'},
   [0x203D]={c='ns'},
   [0x2044]={c='is'},
@@ -21922,7 +21943,23 @@ Babel.cjk_characters = {
   [0x29FD]={c='cl'},
   [0x2CF9]={c='ex'},
   [0x2CFE]={c='ex'},
+  [0x2E02]={c='qu'},          
+  [0x2E03]={c='qu'},          
+  [0x2E04]={c='qu'},          
+  [0x2E05]={c='qu'},          
+  [0x2E06]={c='qu'},    
+  [0x2E07]={c='qu'},    
+  [0x2E08]={c='qu'},    
+  [0x2E09]={c='qu'},          
+  [0x2E0A]={c='qu'},          
+  [0x2E0B]={c='qu'},          
+  [0x2E0C]={c='qu'},          
+  [0x2E0D]={c='qu'},          
   [0x2E18]={c='op'},
+  [0x2E1C]={c='qu'},          
+  [0x2E1D]={c='qu'},          
+  [0x2E20]={c='qu'},          
+  [0x2E21]={c='qu'}, 
   [0x2E22]={c='op'},
   [0x2E23]={c='cl'},
   [0x2E24]={c='op'},
@@ -22075,6 +22112,7 @@ Babel.cjk_breaks = {
   ['po'] = { ['op']=1, ['pr']=1, ['po']=1, ['in']=1, ['I']=1 },
   ['in'] = { ['op']=1, ['pr']=1, ['po']=1,           ['I']=1 },
   ['hy'] = { ['op']=1, ['pr']=1, ['po']=1, ['in']=1, ['I']=1 },
+  ['qu'] = { },
   --
   ['I']  = { ['op']=1, ['pr']=1, ['I']=1, ['O']=1 },
   ['O']  = {                     ['I']=1 }
