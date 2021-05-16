@@ -25,6 +25,7 @@ This is the home page for Babel, a multilingual environment for latex (and somet
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.59](news/whats-new-in-babel-3.59.md) | Tentative Arabic justification.
 | [3.58](news/whats-new-in-babel-3.58.md) | More transforms for Sanskrit, Polish, Czech, Serbian, etc.
 | [3.57](news/whats-new-in-babel-3.57.md) | Predefined transforms for Arabic, Greek, Hungarian, etc.
 | [3.56](news/whats-new-in-babel-3.56.md) | Transforms (in `ini` files) |
