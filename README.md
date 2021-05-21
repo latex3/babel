@@ -1,4 +1,4 @@
-## Babel 3.59
+## Babel 3.59.2379
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +46,9 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.60   2021-05-21
+       * Fixed lists with justification=kashida/elongated.
+       
 3.59   2021-05-16
        * Tentative kashida with user-definable rules (via transforms).
        * Fixes:

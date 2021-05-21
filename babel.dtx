@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/05/16 v3.59 The Babel package]
+\ProvidesFile{babel.dtx}[2021/05/21 v3.59.2379 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4967,8 +4967,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.59>>
-%<<date=2021/05/16>>
+%<<version=3.59.2379>>
+%<<date=2021/05/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13842,7 +13842,7 @@ function Babel.arabic.justify(head)
   if not Babel.arabic.justify_enabled then return head end
   local d, new
   local k_list, k_item, pos_inline
-  local width, width_new, full, k_curr, wt_pos, goal
+  local width, width_new, full, k_curr, wt_pos, goal, shift
   local subst_done = false
   local elong_map = Babel.arabic.elong_map
   local last_line
@@ -13883,8 +13883,9 @@ function Babel.arabic.justify(head)
 
       if #elongs == 0 and #k_list == 0 then goto next_line end
 
-      full = line.width
-      goal = full * Babel.arabic.justify_factor % A bit crude
+      full  = line.width
+      shift = line.shift
+      goal  = full * Babel.arabic.justify_factor % A bit crude
       width = node.dimensions(line.head)    % The 'natural' width
 
       % == Elongated ==
@@ -13940,7 +13941,9 @@ function Babel.arabic.justify(head)
       % Have to be executed only if there are changes. Investigate
       % what's going on exactly.
       if subst_done then
-        node.insert_before(head, line, node.hpack(line.head, full, 'exactly'))
+        d = node.hpack(line.head, full, 'exactly')
+        d.shift = shift
+        node.insert_before(head, line, d)
         node.remove(head, line)
       end
     end % if process line

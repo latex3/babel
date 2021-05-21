@@ -63,7 +63,7 @@ kashida is added to the last but one char.
   {a}
   () [ي ئ ه ش س ق ف غ ع ض ص ن م ل ك ظ ط خ ح ج ث ت ب ڢ] () 
   [ي ئ ه ق ن ك ث ت ب ا أ إ آ و ؤ ذ د ز ر ة]
-  [|،,.){]}] }
+  [|،,{.}){]}] }
 { kashida = 500 }
 \babelprehyphenation{arabic}{ () ل () [ ا أ إ آ] }{ kashida = 0 }
 ```
