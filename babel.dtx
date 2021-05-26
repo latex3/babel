@@ -31,7 +31,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/05/21 v3.59.2379 The Babel package]
+\ProvidesFile{babel.dtx}[2021/05/26 v3.59.2384 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4967,8 +4967,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.59.2379>>
-%<<date=2021/05/21>>
+%<<version=3.59.2384>>
+%<<date=2021/05/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6663,14 +6663,18 @@ help from Bernd Raichle, for which I am grateful.
   % Activated every math with the package option bidi=:
   \def\bbl@mathboxdir{%
     \ifcase\bbl@thetextdir\relax
-      \everyhbox{\textdir TLT\relax}%
+      \everyhbox{\bbl@mathboxdir@aux L}%
     \else
-      \everyhbox{\textdir TRT\relax}%
-    \fi}
-  \frozen@everymath\expandafter{%
-    \expandafter\bbl@mathboxdir\the\frozen@everymath}
-  \frozen@everydisplay\expandafter{%
-    \expandafter\bbl@mathboxdir\the\frozen@everydisplay}
+      \everyhbox{\bbl@mathboxdir@aux R}%
+     \fi}
+  \def\bbl@mathboxdir@aux#1{%
+    \@ifnextchar\egroup{}{\textdir T#1T\relax}}
+  \ifnum\bbl@bidimode>\z@
+    \frozen@everymath\expandafter{%
+      \expandafter\bbl@mathboxdir\the\frozen@everymath}
+    \frozen@everydisplay\expandafter{%
+      \expandafter\bbl@mathboxdir\the\frozen@everydisplay}
+  \fi
 \else % pdftex=0, xetex=2
   \newcount\bbl@dirlevel
   \chardef\bbl@thetextdir\z@
@@ -13840,6 +13844,13 @@ Babel.arabic.justify_enabled = true
 
 function Babel.arabic.justify(head)
   if not Babel.arabic.justify_enabled then return head end
+  for line in node.traverse_id(node.id'hlist', head) do
+    Babel.arabic.justify_hlist(head, line)
+  end
+  return head
+end
+
+function Babel.arabic.justify_hlist(head, line)
   local d, new
   local k_list, k_item, pos_inline
   local width, width_new, full, k_curr, wt_pos, goal, shift
@@ -13850,105 +13861,105 @@ function Babel.arabic.justify(head)
   local KASHIDA = luatexbase.registernumber'bblar@kashida'
   local LOCALE = luatexbase.registernumber'bbl@attr@locale'
 
-  for line in node.traverse_id(node.id'hlist', head) do
-    % Exclude last line. todo. But-- it discards one-word lines, too!
-    % ? Look for glue = 12:15
-    if (line.glue_sign == 1 and line.glue_order == 0) then
-      elongs = {}     % Stores elongated candidates of each line
-      k_list = {}     % And all letters with kashida
-      pos_inline = 0  % Not yet used
+  % Exclude last line. todo. But-- it discards one-word lines, too!
+  % ? Look for glue = 12:15
+  if (line.glue_sign == 1 and line.glue_order == 0) then
+    elongs = {}     % Stores elongated candidates of each line
+    k_list = {}     % And all letters with kashida
+    pos_inline = 0  % Not yet used
+    
+    % for n in node.traverse_id(node.id'hlist', line.head) do
+    %  Babel.arabic.justify_hlist(line.head, n)
+    % end
 
-      for n in node.traverse_id(GLYPH, line.head) do
-        pos_inline = pos_inline + 1 % To find where it is. Not used.
+    for n in node.traverse_id(GLYPH, line.head) do
+      pos_inline = pos_inline + 1 % To find where it is. Not used.
 
-        % Elongated glyphs
-        if elong_map then
-          local locale = node.get_attribute(n, LOCALE)
-          if elong_map[locale] and elong_map[locale][n.font] and 
-              elong_map[locale][n.font][n.char] then
-            table.insert(elongs, {node = n, locale = locale} )
-            node.set_attribute(n.prev, KASHIDA, 0)
-          end
+      % Elongated glyphs
+      if elong_map then
+        local locale = node.get_attribute(n, LOCALE)
+        if elong_map[locale] and elong_map[locale][n.font] and 
+            elong_map[locale][n.font][n.char] then
+          table.insert(elongs, {node = n, locale = locale} )
+          node.set_attribute(n.prev, KASHIDA, 0)
         end
+      end
 
-        % Tatwil
-        if Babel.kashida_wts then
-          local k_wt = node.get_attribute(n, KASHIDA)
-          if k_wt > 0 then % todo. parameter for multi inserts
-            table.insert(k_list, {node = n, weight = k_wt, pos = pos_inline})
-          end
+      % Tatwil
+      if Babel.kashida_wts then
+        local k_wt = node.get_attribute(n, KASHIDA)
+        if k_wt > 0 then % todo. parameter for multi inserts
+          table.insert(k_list, {node = n, weight = k_wt, pos = pos_inline})
         end
+      end
 
-      end % of node.traverse_id
+    end % of node.traverse_id
 
-      if #elongs == 0 and #k_list == 0 then goto next_line end
+    if #elongs == 0 and #k_list == 0 then goto next_line end
+    full  = line.width
+    shift = line.shift
+    goal  = full * Babel.arabic.justify_factor % A bit crude
+    width = node.dimensions(line.head)    % The 'natural' width
 
-      full  = line.width
-      shift = line.shift
-      goal  = full * Babel.arabic.justify_factor % A bit crude
-      width = node.dimensions(line.head)    % The 'natural' width
+    % == Elongated ==
+    % Original idea taken from 'chikenize'
+    while (#elongs > 0 and width < goal) do
+      subst_done = true
+      local x = #elongs
+      local curr = elongs[x].node
+      local oldchar = curr.char
+      curr.char = elong_map[elongs[x].locale][curr.font][curr.char]
+      width = node.dimensions(line.head)  % Check if the line is too wide
+      % Substitute back if the line would be too wide and break:
+      if width > goal then
+        curr.char = oldchar
+        break
+      end 
+      % If continue, pop the just substituted node from the list:
+      table.remove(elongs, x)
+    end
 
-      % == Elongated ==
-      % Original idea taken from 'chikenize'
-      while (#elongs > 0 and width < goal) do
-        subst_done = true
-        local x = #elongs
-        local curr = elongs[x].node
-        local oldchar = curr.char
-        curr.char = elong_map[elongs[x].locale][curr.font][curr.char]
-        width = node.dimensions(line.head)  % Check if the line is too wide
-        % Substitute back if the line would be too wide and break:
-        if width > goal then
-          curr.char = oldchar
+    % == Tatwil ==
+    if #k_list == 0 then goto next_line end
+
+    width = node.dimensions(line.head)    % The 'natural' width
+    k_curr = #k_list
+    wt_pos = 1
+
+    while width < goal do
+      subst_done = true
+      k_item = k_list[k_curr].node
+      if k_list[k_curr].weight == Babel.kashida_wts[wt_pos] then       
+        d = node.copy(k_item)
+        d.char = 0x0640
+        line.head, new = node.insert_after(line.head, k_item, d)
+        width_new = node.dimensions(line.head)
+        if width > goal or width == width_new then
+          node.remove(line.head, new) % Better compute before
           break
-        end 
-        % If continue, pop the just substituted node from the list:
-        table.remove(elongs, x)
-      end
-
-      % == Tatwil ==
-      if #k_list == 0 then goto next_line end
-
-      width = node.dimensions(line.head)    % The 'natural' width
-      k_curr = #k_list
-      wt_pos = 1
-
-      while width < goal do
-        subst_done = true
-        k_item = k_list[k_curr].node
-        if k_list[k_curr].weight == Babel.kashida_wts[wt_pos] then       
-          d = node.copy(k_item)
-          d.char = 0x0640
-          line.head, new = node.insert_after(line.head, k_item, d)
-          width_new = node.dimensions(line.head)
-          if width > goal or width == width_new then
-            node.remove(line.head, new) % Better compute before
-            break
-          end
-          width = width_new
         end
-        if k_curr == 1 then
-          k_curr = #k_list
-          wt_pos = (wt_pos >= table.getn(Babel.kashida_wts)) and 1 or wt_pos+1   
-        else
-          k_curr = k_curr - 1
-        end
+        width = width_new
       end
-
-      ::next_line::
-
-      % Must take into account marks and ins, see luatex manual.
-      % Have to be executed only if there are changes. Investigate
-      % what's going on exactly.
-      if subst_done then
-        d = node.hpack(line.head, full, 'exactly')
-        d.shift = shift
-        node.insert_before(head, line, d)
-        node.remove(head, line)
+      if k_curr == 1 then
+        k_curr = #k_list
+        wt_pos = (wt_pos >= table.getn(Babel.kashida_wts)) and 1 or wt_pos+1   
+      else
+        k_curr = k_curr - 1
       end
-    end % if process line
-  end % for lines
-  return head
+    end
+
+    ::next_line::
+
+    % Must take into account marks and ins, see luatex manual.
+    % Have to be executed only if there are changes. Investigate
+    % what's going on exactly.
+    if subst_done then
+      d = node.hpack(line.head, full, 'exactly')
+      d.shift = shift
+      node.insert_before(head, line, d)
+      node.remove(head, line)
+    end
+  end % if process line
 end
 }
 \endgroup
