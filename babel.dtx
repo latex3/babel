@@ -20,6 +20,7 @@
 %% This work has the LPPL maintenance status "maintained".
 %%
 %% The Current Maintainer of this work is Javier Bezos.
+
 %%
 %% The list of derived (unpacked) files belonging to the distribution
 %% and covered by LPPL is defined by the unpacking scripts (with
@@ -31,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/05/26 v3.59.2384 The Babel package]
+\ProvidesFile{babel.dtx}[2021/05/29 v3.59.2387 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4967,8 +4968,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.59.2384>>
-%<<date=2021/05/26>>
+%<<version=3.59.2387>>
+%<<date=2021/05/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6661,15 +6662,15 @@ help from Bernd Raichle, for which I am grateful.
   \def\bbl@dirparastext{\pardir\the\textdir\relax}%   %%%%
   % Sadly, we have to deal with boxes in math with basic.
   % Activated every math with the package option bidi=:
-  \def\bbl@mathboxdir{%
-    \ifcase\bbl@thetextdir\relax
-      \everyhbox{\bbl@mathboxdir@aux L}%
-    \else
-      \everyhbox{\bbl@mathboxdir@aux R}%
-     \fi}
-  \def\bbl@mathboxdir@aux#1{%
-    \@ifnextchar\egroup{}{\textdir T#1T\relax}}
   \ifnum\bbl@bidimode>\z@
+    \def\bbl@mathboxdir{%
+      \ifcase\bbl@thetextdir\relax
+        \everyhbox{\bbl@mathboxdir@aux L}%
+      \else
+        \everyhbox{\bbl@mathboxdir@aux R}%
+       \fi}
+    \def\bbl@mathboxdir@aux#1{%
+      \@ifnextchar\egroup{}{\textdir T#1T\relax}}
     \frozen@everymath\expandafter{%
       \expandafter\bbl@mathboxdir\the\frozen@everymath}
     \frozen@everydisplay\expandafter{%
@@ -6947,19 +6948,27 @@ help from Bernd Raichle, for which I am grateful.
 \let\bbl@tempb\@nnil
 \bbl@foreach\@classoptionslist{%
   \bbl@ifunset{ds@#1}%
-    {\IfFileExists{#1.ldf}{}%
-      {\IfFileExists{babel-#1.tex}{}{\@namedef{ds@#1}{}}}}%
-    {}%
-  \bbl@ifunset{ds@#1}%
-    {\def\bbl@tempb{#1}%
-     \DeclareOption{#1}{%
-       \ifnum\bbl@iniflag>\@ne
-         \bbl@ldfinit
-         \babelprovide[import]{#1}%
-         \bbl@afterldf{}%
-       \else
-         \bbl@load@language{#1}%
-       \fi}}%
+    {\IfFileExists{#1.ldf}%
+      {\def\bbl@tempb{#1}%
+       \DeclareOption{#1}{%
+         \ifnum\bbl@iniflag>\@ne
+           \bbl@ldfinit
+           \babelprovide[import]{#1}%
+           \bbl@afterldf{}%
+         \else
+           \bbl@load@language{#1}%
+         \fi}}%
+      {\IfFileExists{babel-#1.tex}% TODO. Copypaste pattern
+        {\def\bbl@tempb{#1}%
+         \DeclareOption{#1}{%
+           \ifnum\bbl@iniflag>\@ne
+             \bbl@ldfinit
+             \babelprovide[import]{#1}%
+             \bbl@afterldf{}%
+           \else
+             \bbl@load@language{#1}%
+           \fi}}%
+         {}}}%
     {}}
 %    \end{macrocode}
 %
@@ -13774,6 +13783,8 @@ help from Bernd Raichle, for which I am grateful.
     Babel.arabic.elong_map[\the\localeid]   = {}
     luatexbase.add_to_callback('post_linebreak_filter',
       Babel.arabic.justify, 'Babel.arabic.justify')
+    luatexbase.add_to_callback('hpack_filter',
+      Babel.arabic.justify_hbox, 'Babel.arabic.justify_hbox')
   }}% 
 % Save both node lists to make replacement. TODO. Save also widths to
 % make computations
@@ -13850,7 +13861,14 @@ function Babel.arabic.justify(head)
   return head
 end
 
-function Babel.arabic.justify_hlist(head, line)
+function Babel.arabic.justify_hbox(head, gc, size, pack)
+  if Babel.arabic.justify_enabled and pack == 'exactly' then
+    Babel.arabic.justify_hlist(head, nil, gc, size, pack)
+  end
+  return head
+end
+
+function Babel.arabic.justify_hlist(head, line, gc, size, pack)
   local d, new
   local k_list, k_item, pos_inline
   local width, width_new, full, k_curr, wt_pos, goal, shift
@@ -13860,6 +13878,15 @@ function Babel.arabic.justify_hlist(head, line)
   local GLYPH = node.id'glyph'
   local KASHIDA = luatexbase.registernumber'bblar@kashida'
   local LOCALE = luatexbase.registernumber'bbl@attr@locale'
+  
+  if line == nil then
+    line = {}
+    line.glue_sign = 1
+    line.glue_order = 0
+    line.head = head
+    line.shift = 0
+    line.width = size
+  end
 
   % Exclude last line. todo. But-- it discards one-word lines, too!
   % ? Look for glue = 12:15
@@ -13867,10 +13894,6 @@ function Babel.arabic.justify_hlist(head, line)
     elongs = {}     % Stores elongated candidates of each line
     k_list = {}     % And all letters with kashida
     pos_inline = 0  % Not yet used
-    
-    % for n in node.traverse_id(node.id'hlist', line.head) do
-    %  Babel.arabic.justify_hlist(line.head, n)
-    % end
 
     for n in node.traverse_id(GLYPH, line.head) do
       pos_inline = pos_inline + 1 % To find where it is. Not used.
@@ -13953,7 +13976,7 @@ function Babel.arabic.justify_hlist(head, line)
     % Must take into account marks and ins, see luatex manual.
     % Have to be executed only if there are changes. Investigate
     % what's going on exactly.
-    if subst_done then
+    if subst_done and not gc then
       d = node.hpack(line.head, full, 'exactly')
       d.shift = shift
       node.insert_before(head, line, d)
