@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/05/29 v3.59.2387 The Babel package]
+\ProvidesFile{babel.dtx}[2021/06/02 v3.60 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4968,8 +4968,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.59.2387>>
-%<<date=2021/05/29>>
+%<<version=3.60>>
+%<<date=2021/06/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5436,14 +5436,14 @@ help from Bernd Raichle, for which I am grateful.
     Reported}}
 \def\@nolanerr#1{%
   \bbl@error
-    {You haven't defined the language #1\space yet.\\%
+    {You haven't defined the language '#1' yet.\\%
      Perhaps you misspelled it or your installation\\%
      is not complete}%
     {Your command will be ignored, type <return> to proceed}}
 \def\@nopatterns#1{%
   \bbl@warning
     {No hyphenation patterns were preloaded for\\%
-     the language `#1' into the format.\\%
+     the language '#1' into the format.\\%
      Please, configure your TeX system to add them and\\%
      rebuild the format. Now I will use the patterns\\%
      preloaded for \bbl@nulllanguage\space instead}}
@@ -5608,10 +5608,10 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@csarg\edef{opt@#1}{#2}%
   \else
     \bbl@error
-     {Bad option `#1=#2'. Either you have misspelled the\\%
-      key or there is a previous setting of `#1'. Valid\\%
-      keys are, among others, `shorthands', `main', `bidi',\\%
-      `strings', `config', `headfoot', `safe', `math'.}%
+     {Bad option '#1=#2'. Either you have misspelled the\\%
+      key or there is a previous setting of '#1'. Valid\\%
+      keys are, among others, 'shorthands', 'main', 'bidi',\\%
+      'strings', 'config', 'headfoot', 'safe', 'math'.}%
      {See the manual for further details.}
   \fi}
 %    \end{macrocode}
@@ -6535,8 +6535,8 @@ help from Bernd Raichle, for which I am grateful.
 \else
   \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200
     \bbl@error
-      {The bidi method `basic' is available only in\\%
-       luatex. I'll continue with `bidi=default', so\\%
+      {The bidi method 'basic' is available only in\\%
+       luatex. I'll continue with 'bidi=default', so\\%
        expect wrong results}%
       {See the manual for further details.}%
     \let\bbl@beforeforeign\leavevmode
@@ -6837,7 +6837,7 @@ help from Bernd Raichle, for which I am grateful.
      \expandafter\let\expandafter\BabelModifiers
         \csname bbl@mod@\CurrentOption\endcsname}%
     {\bbl@error{%
-       Unknown option `\CurrentOption'. Either you misspelled it\\%
+       Unknown option '\CurrentOption'. Either you misspelled it\\%
        or the language definition file \CurrentOption.ldf was not found}{%
        Valid options are, among others: shorthands=, KeepShorthandsActive,\\%
        activeacute, activegrave, noconfigs, safe=, main=, math=\\%
@@ -6889,7 +6889,7 @@ help from Bernd Raichle, for which I am grateful.
              * Local config file \bbl@opt@config.cfg used^^J%
              *}}%
     {\bbl@error{%
-       Local config file `\bbl@opt@config.cfg' not found}{%
+       Local config file '\bbl@opt@config.cfg' not found}{%
        Perhaps you misspelled it.}}%
 \fi
 %    \end{macrocode}
@@ -7026,10 +7026,10 @@ help from Bernd Raichle, for which I am grateful.
   \expandafter\bbl@tempa\bbl@loaded,\@nnil
   \ifx\bbl@tempb\bbl@tempc\else
     \bbl@warning{%
-      Last declared language option is `\bbl@tempc',\\%
-      but the last processed one was `\bbl@tempb'.\\%
-      The main language cannot be set as both a global\\%
-      and a package option. Use `main=\bbl@tempc' as\\%
+      Last declared language option is '\bbl@tempc',\\%
+      but the last processed one was '\bbl@tempb'.\\%
+      The main language can't be set as both a global\\%
+      and a package option. Use 'main=\bbl@tempc' as\\%
       option. Reported}%
   \fi
 \else
@@ -7568,7 +7568,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@iflanguage\languagename{%
      \expandafter\ifx\csname date\languagename\endcsname\relax
       \bbl@error
-        {Unknown language `\languagename'. Either you have\\%
+        {Unknown language '\languagename'. Either you have\\%
          misspelled its name, it has not been installed,\\%
          or you requested it in a previous run. Fix its name,\\%
          install it or just rerun the file, respectively. In\\%
@@ -7845,7 +7845,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@iflanguage\languagename{%
     \expandafter\ifx\csname date\languagename\endcsname\relax
       \bbl@warning   % TODO - why a warning, not an error?
-        {Unknown language `#1'. Either you have\\%
+        {Unknown language '#1'. Either you have\\%
          misspelled its name, it has not been installed,\\%
          or you requested it in a previous run. Fix its name,\\%
          install it or just rerun the file, respectively. In\\%
@@ -8102,14 +8102,14 @@ help from Bernd Raichle, for which I am grateful.
     Reported}}
 \def\@nolanerr#1{%
   \bbl@error
-    {You haven't defined the language #1\space yet.\\%
+    {You haven't defined the language '#1' yet.\\%
      Perhaps you misspelled it or your installation\\%
      is not complete}%
     {Your command will be ignored, type <return> to proceed}}
 \def\@nopatterns#1{%
   \bbl@warning
     {No hyphenation patterns were preloaded for\\%
-     the language `#1' into the format.\\%
+     the language '#1' into the format.\\%
      Please, configure your TeX system to add them and\\%
      rebuild the format. Now I will use the patterns\\%
      preloaded for \bbl@nulllanguage\space instead}}
@@ -9195,7 +9195,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \def\@notshorthand#1{%
   \bbl@error{%
-    The character `\string #1' should be made a shorthand character;\\%
+    The character '\string #1' should be made a shorthand character;\\%
     add the command \string\useshorthands\string{#1\string} to
     the preamble.\\%
     I will ignore your instruction}%
@@ -9238,7 +9238,7 @@ help from Bernd Raichle, for which I am grateful.
   \ifx#2\@nnil\else
     \bbl@ifunset{bbl@active@\string#2}%
       {\bbl@error
-         {I cannot switch `\string#2' on or off--not a shorthand}%
+         {I can't switch '\string#2' on or off--not a shorthand}%
          {This character is not a shorthand. Maybe you made\\%
           a typing mistake? I will ignore your instruction.}}%
       {\ifcase#1%   off, on, off*
@@ -10967,8 +10967,8 @@ help from Bernd Raichle, for which I am grateful.
   % For bidi texts, to switch the font based on direction
   \ifx\bbl@KVP@mapfont\@nil\else
     \bbl@ifsamestring{\bbl@KVP@mapfont}{direction}{}%
-      {\bbl@error{Option `\bbl@KVP@mapfont' unknown for\\%
-                  mapfont. Use `direction'.%
+      {\bbl@error{Option '\bbl@KVP@mapfont' unknown for\\%
+                  mapfont. Use 'direction'.%
                  {See the manual for details.}}}%
     \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
     \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
@@ -13783,8 +13783,8 @@ help from Bernd Raichle, for which I am grateful.
     Babel.arabic.elong_map[\the\localeid]   = {}
     luatexbase.add_to_callback('post_linebreak_filter',
       Babel.arabic.justify, 'Babel.arabic.justify')
-    luatexbase.add_to_callback('hpack_filter',
-      Babel.arabic.justify_hbox, 'Babel.arabic.justify_hbox')
+%     luatexbase.add_to_callback('hpack_filter',
+%       Babel.arabic.justify_hbox, 'Babel.arabic.justify_hbox')
   }}% 
 % Save both node lists to make replacement. TODO. Save also widths to
 % make computations

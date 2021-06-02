@@ -1,4 +1,4 @@
-## Babel 3.59.2387
+## Babel 3.60
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.59 are described in:
+Changes in version 3.60 are described in:
 
-https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.59.md
+https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.60.md
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,20 +46,12 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.60   2021-05-21
-       * Improved justification=kashida/elongated: lists, hboxes,
-         vowelized texts.
-       * Fixes:
-         - Underfull \hbox with amsmath (#133)
-         - Error with global options (#134)
-         
-       
-3.59   2021-05-16
-       * Tentative kashida with user-definable rules (via transforms).
-       * Fixes:
-         - \babel@texpdf inconsistently defined (#130)
-         - Partial fix for #131 (quotation with CJK).
-       * Removed doubleletter.hyphen (Norsk), which serves to nothing.
+3.60   2021-06-02
+       * A major fix for a bug with the latest LaTeX releases: class
+         options were messed up.
+       * Improved justification=kashida/elongated: lists, vowelized texts.
+       * Fix: Underfull \hbox with amsmath (#133).
+       * Improved the ini file for Basque (captions).
 ```
 
 ### Previous changes
