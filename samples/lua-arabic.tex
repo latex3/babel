@@ -2,22 +2,23 @@
 \documentclass[a4paper]{book}
 
 % ===================
-
-\usepackage[english, arabic, provide=*,
+            
+\usepackage[english,
             bidi=basic, 
             headfoot=arabic,  % an alternative is layout=sectioning
-            layout=counters.tabular]{babel}
-            
-% == Alternative for kashida ==    
+            layout=counters.tabular]{babel}        
+\babelprovide[import, main,
+  justification = kashida,
+  transforms = kashida.plain
+  ]{arabic}
 
-% \usepackage[english,
+% == Alternative without kashida ==    
+
+% \usepackage[english, arabic, provide=*,
 %             bidi=basic, 
 %             headfoot=arabic,  % an alternative is layout=sectioning
-%             layout=counters.tabular]{babel}        
-% \babelprovide[import, main,
-%   justification = kashida,
-%   transforms = kashida.plain
-%   ]{arabic}
+%             layout=counters.tabular]{babel}
+
 
 % =====================
 

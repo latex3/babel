@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/06/02 v3.60 The Babel package]
+\ProvidesFile{babel.dtx}[2021/06/04 v3.60.2393 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4968,8 +4968,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.60>>
-%<<date=2021/06/02>>
+%<<version=3.60.2393>>
+%<<date=2021/06/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9104,8 +9104,8 @@ help from Bernd Raichle, for which I am grateful.
      #1%
      \bbl@activate{#2}}%
     {\bbl@error
-       {Cannot declare a shorthand turned off (\string#2)}
-       {Sorry, but you cannot use shorthands which have been\\%
+       {I can't declare a shorthand turned off (\string#2)}
+       {Sorry, but you can't use shorthands which have been\\%
         turned off in the package options}}}
 %    \end{macrocode}
 %
@@ -13783,8 +13783,8 @@ help from Bernd Raichle, for which I am grateful.
     Babel.arabic.elong_map[\the\localeid]   = {}
     luatexbase.add_to_callback('post_linebreak_filter',
       Babel.arabic.justify, 'Babel.arabic.justify')
-%     luatexbase.add_to_callback('hpack_filter',
-%       Babel.arabic.justify_hbox, 'Babel.arabic.justify_hbox')
+    luatexbase.add_to_callback('hpack_filter',
+      Babel.arabic.justify_hbox, 'Babel.arabic.justify_hbox')
   }}% 
 % Save both node lists to make replacement. TODO. Save also widths to
 % make computations
@@ -13862,8 +13862,14 @@ function Babel.arabic.justify(head)
 end
 
 function Babel.arabic.justify_hbox(head, gc, size, pack)
+  local has_inf = false
   if Babel.arabic.justify_enabled and pack == 'exactly' then
-    Babel.arabic.justify_hlist(head, nil, gc, size, pack)
+    for n in node.traverse_id(12, head) do
+      if n.stretch_order > 0 then has_inf = true end
+    end
+    if not has_inf then
+      Babel.arabic.justify_hlist(head, nil, gc, size, pack)
+    end
   end
   return head
 end
