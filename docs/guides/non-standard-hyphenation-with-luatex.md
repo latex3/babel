@@ -1,5 +1,6 @@
 # Non-standard hyphenation with `luatex`
 
+{% raw %}
 
 Here is a simple example of a declaration:
 ```tex
