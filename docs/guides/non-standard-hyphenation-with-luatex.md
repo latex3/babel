@@ -1,7 +1,5 @@
 # Non-standard hyphenation with `luatex`
 
-{% raw %}
-
 Here is a simple example of a declaration:
 ```tex
 \babelposthyphenation{ngerman}{ck}{
@@ -166,6 +164,7 @@ In cases like this, you may want to use maps as described above.
 }
 ```
 * To duplicate explicit hyphens:
+{% raw %}
 ```tex
 \babelposthyphenation{polish}{{a}={a}}{
   {},
@@ -173,6 +172,7 @@ In cases like this, you may want to use maps as described above.
   {}
 }
 ```
+{% endraw %}
 
 * To prevent a line break if there is a single letter followed by a
   hyphen and a word (eg, “e-mail”):
