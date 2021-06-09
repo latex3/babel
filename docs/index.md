@@ -1,5 +1,3 @@
-![Babel](media/babel-top.png)
-
 <p align='center'>
 <b>Localization and internationalization ◾ pdfTeX, LuaTeX and XeTeX</b>
 </p>
