@@ -650,6 +650,10 @@ form {
 	text-shadow: #111 0px 0px 10px
 }
 
+#project_title a {
+  color: white;
+}
+
 #project_tagline {
 	color: #fff;
 	font-size: 24px;
