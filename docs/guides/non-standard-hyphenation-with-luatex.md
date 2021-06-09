@@ -164,15 +164,13 @@ In cases like this, you may want to use maps as described above.
 }
 ```
 * To duplicate explicit hyphens:
-{% raw %}
 ```tex
-\babelposthyphenation{polish}{{a}={a}}{
+\babelposthyphenation{polish}&#123;&#123;a}={a}}{
   {},
   { no = -, pre = -, post = -, data = 1 },
   {}
 }
 ```
-{% endraw %}
 
 * To prevent a line break if there is a single letter followed by a
   hyphen and a word (eg, “e-mail”):
