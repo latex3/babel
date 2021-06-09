@@ -9,14 +9,15 @@ Let's say you need the string for the chapter name in Hebrew. You can write:
 \getlocaleproperty{\hechap}{hebrew}{captions/chapter}
 ```
 And `\hechap` is set to the corresponding value.
-
+{% raw %}
 `\LocaleForEach` loops the loaded `ini` files with `#1` as the locale name. Here is a somewhat low level example:
 ```tex
-\LocaleForEach{%%
+\LocaleForEach{%
   \getlocaleproperty\savetag{#1}{identification/tag.bcp47}%
   \expandafter\xdef\csname tagtolocale\savetag\endcsname{#1}%
 }
 ```
+{% endraw %}
 
 ## Coptic, Church Slavic, Syriac, Armenian, Sanskrit
 
