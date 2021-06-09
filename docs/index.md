@@ -51,3 +51,10 @@ This is the home page for Babel, a multilingual environment for latex (and somet
 | [3.37](news/whats-new-in-babel-3.37.html) | Non-standard hyphenation, like `f-f` → `ff-f` (lua). |
 | [3.36](news/whats-new-in-babel-3.36.html) | Polytonic Greek. Improvements in Chinese. |
 | [3.35](news/whats-new-in-babel-3.35.html) | Shorthands work in bibs and refs even with `safe=none`. |
+
+## More
+
+* [Keys in ini files](guides/keys-in-ini-files.html)
+* [List of locale templates](guides/list-of-locale-templates.html)
+* [Old and deprecated functions](guides/old-and-deprecated-functions.html)
+* [Using babel with plain](guides/using-babel-with-plain.html)
