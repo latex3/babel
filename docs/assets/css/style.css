@@ -635,7 +635,7 @@ form {
 	background: -webkit-linear-gradient(top, #373737, #212121);
 	background: -ms-linear-gradient(top, #373737, #212121);
 	background: -o-linear-gradient(top, #373737, #212121);
-	background: linear-gradient(to top, #373737, #212121)
+	background: linear-gradient(to top, #444, #666)
 }
 
 #header_wrap .inner {
