@@ -43,6 +43,7 @@ With `luatex` stick to the default renderer in Latin, Cyrillic and Greek scripts
 #### TeXLive
 
 Here are some basic fonts included in TeXLive. This section is not meant as a font reference, but as a quick guide for a language to work with a more or less standard font. I've found no fonts for Telugu or Kannada.
+
 | Font(s) | Languages / Scripts | Notes |
 | --- | --- | --- |
 | IPAexMincho, IPAexGothic | Japanese | |
