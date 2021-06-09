@@ -165,7 +165,7 @@ In cases like this, you may want to use maps as described above.
 ```
 * To duplicate explicit hyphens:
 ```tex
-\babelposthyphenation{polish}&#123;&#123;a}={a}}{
+\babelposthyphenation{polish}{{ '{{' }}a}={a}}{
   {},
   { no = -, pre = -, post = -, data = 1 },
   {}
