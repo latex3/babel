@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/06/04 v3.60.2393 The Babel package]
+\ProvidesFile{babel.dtx}[2021/06/10 v3.60.2399 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -255,8 +255,8 @@ describes the code, and usually it can be ignored.
 latest changes?] Changes and new features with relation to version 3.8
 are highlighted with \New{X.XX}\hspace{-.5em}, and there are some notes
 for the latest versions in
-\href{https://github.com/latex3/babel/tree/master/news-guides}{the
-\babel{} repository}. The most recent features can be still unstable.
+\href{https://latex3.github.io/babel/}{the
+\babel{} site}. The most recent features can be still unstable.
 
 \item[\sffamily\color{messages}Can I help?] Sure! If you are interested
 in the \TeX{} multilingual support, please join the
@@ -650,9 +650,8 @@ In e-Plain and pdf-Plain, load languages styles with |\input| and then use
 \begin{warning}
   Not all languages provide a |sty| file and some of them are not
   compatible with those formats. Please, refer to
-  \href{https://github.com/latex3/babel/blob/%
-  master/news-guides/guides/using-babel-with-plain.md}{Using babel with
-  Plain} for further details.
+  \href{https://latex3.github.io/babel/guides/using-babel-with-plain.html}%
+   {Using babel with Plain} for further details.
 \end{warning}
 
 \subsection{Basic language selectors}
@@ -2586,8 +2585,9 @@ Currently used only in Southeast Asian scrips, like Thai. Ignored if 0
 script. It sets the linebreaking and justification method, which can be
 based on the the \textsc{arabic tatweel} character or in the
 ‘justification alternatives’ OpenType table (\texttt{jalt}). For an
-explanation see the \href{https://github.com/latex3/babel/blob/master/%
-news-guides/news/whats-new-in-babel-3.59.md}{\babel\ site}.
+explanation see the
+\href{https://latex3.github.io/babel/news/whats-new-in-babel-3.59.html}%
+  {\babel\ site}.
 
 \Describe{linebreaking=}{}
 \New{3.59} Just a synonymous for \texttt{justification}.
@@ -3140,9 +3140,10 @@ This feature is activated with the first |\babelposthyphenation| or
 |\babelprehyphenation|.
 
 See the
-\href{https://github.com/latex3/babel/blob/master/news-guides/guides/non-standard-hyphenation-with-luatex.md}{\babel\
-site} for a more detailed description and some examples. It also
-describes a few additional replacement types (|string|, |penalty|).
+\href{https://latex3.github.io/babel/guides/%
+  non-standard-hyphenation-with-luatex.html}{\babel\ site} for a more
+detailed description and some examples. It also describes a few
+additional replacement types (|string|, |penalty|).
 
 Although the main purpose of this command is non-standard hyphenation,
 it may actually be used for other transformations (after hyphenation is
@@ -4226,7 +4227,7 @@ but if you want to do it, here are a few guidelines.
 
 The following page provides a starting point for \texttt{ldf} files:
 \texttt{http://www.texnia.com/incubator.html}. See also
-\texttt{https://github.com/latex3/babel/blob/master/news-guides/guides/list-of-locale-templates.md}.
+\texttt{https://latex3.github.io/babel/guides/list-of-locale-templates.html}.
 
 If you need further assistance and technical advice in the
 development of language styles, I am willing to help you.  And of
@@ -4968,8 +4969,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.60.2393>>
-%<<date=2021/06/04>>
+%<<version=3.60.2399>>
+%<<date=2021/06/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5569,7 +5570,7 @@ help from Bernd Raichle, for which I am grateful.
 \DeclareOption{noconfigs}{}
 \DeclareOption{showlanguages}{}
 \DeclareOption{silent}{}
-\DeclareOption{mono}{}
+% \DeclareOption{mono}{}
 \DeclareOption{shorthands=off}{\bbl@tempa shorthands=\bbl@tempa}
 \chardef\bbl@iniflag\z@
 \DeclareOption{provide=*}{\chardef\bbl@iniflag\@ne}    % main -> +1
@@ -6797,23 +6798,6 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}%
 %    \end{macro}
-%
-% Just to be compatible with \LaTeX$\:$2.09 we add a few more lines
-% of code. TODO. Necessary? Correct place? Used by some ldf file?
-%
-%    \begin{macrocode}
-\ifx\@unexpandable@protect\@undefined
-  \def\@unexpandable@protect{\noexpand\protect\noexpand}
-  \long\def\protected@write#1#2#3{%
-    \begingroup
-      \let\thepage\relax
-      #2%
-      \let\protect\@unexpandable@protect
-      \edef\reserved@a{\write#1{#3}}%
-      \reserved@a
-    \endgroup
-    \if@nobreak\ifvmode\nobreak\fi\fi}
-\fi
 %
 % \subsection{Language options}
 %

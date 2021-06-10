@@ -1,4 +1,4 @@
-## Babel 3.60.2393
+## Babel 3.60.2399
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -14,7 +14,7 @@ https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-
 
 Apart from the manual, you can find information on some aspects of babel at:
 
-https://github.com/latex3/babel/tree/master/news-guides
+https://latex3.github.io/babel/
 
 The best way to install and/or update it is with the help of package
 managers.
