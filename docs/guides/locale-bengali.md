@@ -4,7 +4,6 @@ For the Bengali or Bangla language, the `Harfbuzz` renderer in `luatex`
 is recommended. Here is a minimal example:
 ```tex
 \documentclass{article}
-\pagestyle{empty}
 
 \usepackage[bengali, provide=*]{babel}
 \babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}
