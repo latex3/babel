@@ -275,7 +275,7 @@
 }
 
 .highlight {
-	background-color: #f8f8f8
+	/* background-color: #f8f8f8 */
 }
 
 html,
@@ -415,7 +415,8 @@ h6 {
 
 h1 {
 	font-size: 36px;
-	font-weight: 700
+	font-weight: 700;
+ padding-top: 10px
 }
 
 h2 {
@@ -511,7 +512,7 @@ code {
 	color: #222;
 	background-color: #fff;
 	font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-	font-size: 14px;
+	font-size: 90%;
 	border-radius: 2px;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px
@@ -523,9 +524,19 @@ pre {
 	overflow: auto
 }
 
+h1 code {
+  font-size: 80%
+}
+h2 code {
+  font-size: 80%
+}
+h3 code {
+  font-size: 80%
+}
+
 code {
-	padding: 3px;
-	margin: 0 3px;
+	padding: 3px; 
+	/* margin: 0 3px; */
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
 }
 
@@ -594,7 +605,7 @@ th {
 }
 
 td {
-	padding: 10px;
+	padding: 5px;
 	border: 1px solid #373737
 }
 
@@ -609,7 +620,7 @@ form {
 
 .inner {
 	position: relative;
-	max-width: 640px;
+	max-width: 660px;
 	padding: 20px 10px;
 	margin: 0 auto
 }
@@ -702,7 +713,7 @@ form {
 }
 
 #main_content_wrap {
-	background: #f2f2f2;
+	background: #f9f9f9;
 	border-top: 1px solid #111;
 	border-bottom: 1px solid #111
 }
@@ -736,7 +747,8 @@ form {
 		font-size: 32px
 	}
 	h1 {
-		font-size: 28px
+		font-size: 28px;
+  padding-top: 10px
 	}
 	h2 {
 		font-size: 24px
@@ -774,7 +786,8 @@ form {
 		font-size: 28px
 	}
 	h1 {
-		font-size: 24px
+		font-size: 24px;
+  padding-top: 10px
 	}
 	h2 {
 		font-size: 21px
@@ -800,7 +813,7 @@ form {
 }
 
 nav.top {
-	margin: 130px 0;
+	margin: 140px 0;
 	background-color: #007070;
  position: absolute;
  top: 6mm;
