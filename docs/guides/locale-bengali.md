@@ -1,6 +1,6 @@
 ## Bengali
 
-For the Bengali or Bangla lanaguage, the `Harfbuzz` renderer in `luatex`
+For the Bengali or Bangla language, the `Harfbuzz` renderer in `luatex`
 is recommended. Here is a minimal example:
 ```tex
 \documentclass{article}
