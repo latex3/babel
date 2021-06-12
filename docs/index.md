@@ -4,8 +4,15 @@
 <strong>Localization and internationalization ◾ pdfTeX, LuaTeX and XeTeX</strong>
 </p>
 
-This is the home page for Babel, the multilingual environment for latex
-(and sometimes plain) with the three basic engines (pdfTeX, LuaTeX and XeTeX). Its aim is to provide a localization framework for different languages, scripts, and cultures based on the latest advances in Unicode and other technologies. 
+This is the home page for Babel, the multilingual environment for
+[LaTeX](https://www.latex-project.org/)
+(and sometimes Plain) with the three basic engines (pdfTeX, LuaTeX and
+XeTeX). Its aim is to provide a localization framework for different
+languages, scripts, and cultures based on the latest advances in
+[Unicode](https://home.unicode.org/) (including the
+[CLDR](http://cldr.unicode.org/)), the
+[W3C](https://www.w3.org/groups/wg/i18n-core/publications) (where
+applicable) and other technologies.
 
 -----------------------
 

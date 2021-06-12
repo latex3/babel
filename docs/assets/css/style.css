@@ -421,24 +421,24 @@ h1 {
 
 h2 {
 	padding-bottom: 10px;
-	font-size: 32px;
+	font-size: 26px;
 	background: url("../images/bg_hr.png") repeat-x bottom
 }
 
 h3 {
-	font-size: 24px
-}
-
-h4 {
 	font-size: 21px
 }
 
-h5 {
+h4 {
 	font-size: 18px
 }
 
-h6 {
+h5 {
 	font-size: 16px
+}
+
+h6 {
+	font-size: 14px
 }
 
 p {
