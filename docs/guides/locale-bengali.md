@@ -1,4 +1,4 @@
-## Bengali
+# Bengali
 
 For the Bengali or Bangla language, the `Harfbuzz` renderer in `luatex`
 is recommended. Here is a minimal example:
@@ -47,3 +47,6 @@ See the explanation in the babel manual about `\localecounter` and
 ### Useful links
 
 * [How to write Bengali in LaTeX?](https://tex.stackexchange.com/a/599846/5735)
+* [Change numbering style to Bengali in nested ordered list](Change
+  numbering style to Bengali in nested ordered list)
+* [Typesetting Bangla script with LuaLATEX](https://www.latex-project.org/publications/UFi-TUB-tb127fischer-bangla.pdf)

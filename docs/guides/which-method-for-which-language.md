@@ -31,9 +31,19 @@ The second method is:
 ```tex
 \usepackage[thai, provide=*]{babel}
 ```
-This will load data from an `ini` file. This is usually the correct method for languages written in **non-European scripts**, like Thai, Hindi, Sanskrit, Marathi, Malayalam, Lao, Khemer, Bengali, Gujarati, Telugu, Kannada, Sinhala, Tamil, Amharic, or Burmese. In short **simple CJK** texts, this is also the preferred method, but in more complex ones you should resort to some CKJ framework like luatexja, xeCJK, kotex, and the like.
+This will load data from an `ini` file. This is usually the correct
+method for languages written in **non-European scripts**, like Thai,
+Hindi, Sanskrit, Marathi, Malayalam, Lao, Khemer, Bengali, Gujarati,
+Telugu, Kannada, Sinhala, Tamil, Amharic, or Burmese. In short **simple
+CJK** texts, this is also the preferred method, but in more complex
+ones you should resort to some CKJ framework like
+[luatexja](https://ctan.org/pkg/luatexja),
+[xeCJK](https://ctan.org/pkg/xecjk), [CTeX](https://ctan.org/pkg/ctex),
+[kotex](https://ctan.javinator9889.com/language/korean/kotex-utf/doc/kotexdoc.pdf),
+and the like.
 
-Some languages may require additional options. Examples are Arabic, Hebrew and Syriac. With LuaTeX:
+Some languages may require additional options. Examples are Arabic,
+Hebrew and Syriac. So, with LuaTeX:
 ```tex
 \usepackage[arabic, bidi=basic, provide=*]{babel}
 ```
@@ -70,7 +80,7 @@ Here are some basic fonts included in TeXLive. This section is not meant as a fo
 | Noto | Greek, Cyrillic | A large family, but TeX Live includes only the fonts for these two scripts (and emojis).
 | Junicode | Runic | Also Medieval and Ancient Latin script.
 
-#### Additional fonts
+### Additional fonts
 
 There are also some fine fonts out there, but you must install them because they aren't bundled with TeXLive. This list, of course, is just a very small selection.
 

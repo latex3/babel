@@ -1,4 +1,4 @@
-## Arabic
+# Arabic
 
 Arabic is available for `pdftex`, `xetex`, and `luatex`, but the
 preferred engine is the latter, because of its unique features for
@@ -34,4 +34,5 @@ It uses the tentative algorithm for justification with kashida.
 
 * [Automatic enumerate list using eastern Arabic letters in beamer](https://tex.stackexchange.com/a/599846/5735)
 * [Itemize environment in Arabic](https://tex.stackexchange.com/a/528562/5735)
+* [Index not generated in an Arabic document](https://tex.stackexchange.com/a/506482/5735)
 
