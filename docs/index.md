@@ -16,6 +16,20 @@ applicable) and other technologies.
 
 -----------------------
 
+## Installation
+
+Babel is one of the core components of LaTeX and therefore must be
+available on any LaTeX system. However, support for specific languages
+may require a separate installation in some cases.
+
+Please, refer to the manual of the distribution you have installed,
+which in Windows and MacOS usually involves configuring it with a
+graphical user interface, and in Un*x systems with some command (for
+example, `sudo apt-get install texlive-lang-arabic` for Arabic in
+Ubuntu).
+
+-----------------------
+
 ## Featured 
 
 * [Which method for which language](guides/which-method-for-which-language.html)
@@ -26,7 +40,6 @@ applicable) and other technologies.
   Hints on how to tailor your language to your needs in some frequent cases.
 * [Useful links to tex.strackexchange](guides/useful-links-to-tex.stackexchange.html)
   Examples for many languages: Chinese, Arabic, Sanskrit, etc.
-
 
 ---------------------------
 

@@ -19,7 +19,7 @@ is recommended. Here is a minimal example:
 It works with `xetex`, too, with a similar output, but with this engine
 there is no need the set the renderer (it’s always Harfbuzz).
 
-### Counters
+## Counters
 
 Although Bengali numerals are best entered directly in its original
 form, you may still need some conversion because LaTeX uses internally
@@ -44,7 +44,7 @@ There is an additional counter:
 See the explanation in the babel manual about `\localecounter` and
 `localenumeral`.
 
-### Useful links
+## Useful links
 
 * [How to write Bengali in LaTeX?](https://tex.stackexchange.com/a/599846/5735)
 * [Change numbering style to Bengali in nested ordered list](Change
