@@ -22,6 +22,8 @@ the source code):
 \end{document}
 ```
 
+![](https://user-images.githubusercontent.com/1314536/97981471-a6943300-1dd2-11eb-8f13-3fb5c20dc355.png)
+
 There is a complete example (with tables, columns, a figure, a
 description, etc.) in the repository
 ([tex](https://github.com/latex3/babel/blob/main/samples/lua-arabic.tex), 
