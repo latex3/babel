@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/06/10 v3.60.2399 The Babel package]
+\ProvidesFile{babel.dtx}[2021/06/15 v3.60.2404 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3087,8 +3087,7 @@ Spanish}{hyphen.repeat}{Explicit hyphens behave like
 a non-syllabic preposition or conjunction into a non-breaking space.}
 
 \trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
-upsilon if hyphenated just before. It works with the
-three variants.}
+upsilon if hyphenated just before. It works with the three variants.}
 
 \trans{Hindi, Sanskrit}{transliteration.hk}{The Harvard-Kyoto system to
 romanize Devanagari.}
@@ -3100,6 +3099,10 @@ four characters: \textit{!?:;}\,.}
 \textit{ccs}, \textit{ddz}, \textit{ggy}, \textit{lly}, \textit{nny},
 \textit{ssz}, \textit{tty} and \textit{zzs} as \textit{cs-cs},
 \textit{dz-dz}, etc.}
+
+\trans{Indic scripts}{danda.nobreak}{Prevents a line break before a
+danda or double danda if there is a space. For Assamese, Bengali,
+Gujarati, Hindi, Kannada, Malayalam, Marathi, Oriya, Tamil, Telugu.}
 
 \trans{Arabic, Persian}{kashida.plain}{Experimental. A very simple and
 basic transform for ‘plain’ Arabic fonts, which attempts to distribute
@@ -4969,8 +4972,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.60.2399>>
-%<<date=2021/06/10>>
+%<<version=3.60.2404>>
+%<<date=2021/06/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5537,7 +5540,7 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\@empty#2%
     \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1}%
   \else
-    \in@{,provide,}{,#1,}%
+    \in@{,provide=}{,#1}%
     \ifin@
       \edef\bbl@tempc{%
         \ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1.\bbl@tempb#2}%
@@ -5598,6 +5601,7 @@ help from Bernd Raichle, for which I am grateful.
 \let\bbl@opt@main\@nnil
 \let\bbl@opt@headfoot\@nnil
 \let\bbl@opt@layout\@nnil
+\let\bbl@opt@provide\@nnil
 %    \end{macrocode}
 %
 % The following tool is defined temporarily to store the values of
@@ -5638,6 +5642,16 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \ProcessOptions*
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\ifx\bbl@opt@provide\@nnil\else % Tests. Ignore.
+  \chardef\bbl@iniflag\@ne
+  \bbl@replace\bbl@opt@provide{;}{,}
+  \bbl@add\bbl@opt@provide{,import}
+  \show\bbl@opt@provide
+\fi
+% 
 %    \end{macrocode}
 %
 % \subsection{Conditional loading of shorthands}
@@ -7020,7 +7034,11 @@ help from Bernd Raichle, for which I am grateful.
   \ifodd\bbl@iniflag  % case 1,3
     \bbl@ldfinit
     \let\CurrentOption\bbl@opt@main
-    \bbl@exp{\\\babelprovide[import,main]{\bbl@opt@main}}
+    \ifx\bbl@opt@provide\@nnil
+      \bbl@exp{\\\babelprovide[import,main]{\bbl@opt@main}}
+    \else
+      \bbl@exp{\\\babelprovide[\bbl@opt@provide,main]{\bbl@opt@main}}%
+    \fi
     \bbl@afterldf{}%
   \else % case 0,2
     \chardef\bbl@iniflag\z@  % Force ldf 
