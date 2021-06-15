@@ -32,7 +32,7 @@ Hindi numerals, passed as option to `\babelprovide`:
   usually the preferred method.
   
 To perform this conversión, use the following preamble:
-```
+```tex
 \usepackage[hindi, provide=*]{babel}
 \babelprovide[mapdigits]{hindi}  % or alternatively maparabic
 \babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}

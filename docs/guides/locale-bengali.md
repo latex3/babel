@@ -32,7 +32,7 @@ Bengali numerals, passed as option to `\babelprovide`:
   usually the preferred method.
   
 To perform this conversión, use the following preamble:
-```
+```tex
 \usepackage[bengali, provide=*]{babel}
 \babelprovide[mapdigits]{bengali}  % or alternatively maparabic
 \babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}

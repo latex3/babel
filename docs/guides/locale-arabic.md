@@ -72,4 +72,6 @@ Definition \foreignlanguage{arabic}{maboniY+}.
 * [Automatic enumerate list using eastern Arabic letters in beamer](https://tex.stackexchange.com/a/599846/5735)
 * [Itemize environment in Arabic](https://tex.stackexchange.com/a/528562/5735)
 * [Index not generated in an Arabic document](https://tex.stackexchange.com/a/506482/5735)
+* [Right alignment for section and subsection in the table of contents]{https://tex.stackexchange.com/a/587584/5735)
+
 
