@@ -1,4 +1,4 @@
-## Babel 3.60.2404
+## Babel 3.60.2416
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.60 are described in:
+Changes in version 3.61 are described in:
 
-https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.60.md
+https://latex3.github.io/babel/news/whats-new-in-babel-3.61.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,10 +46,12 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.61   2021-06-??
+3.61   2021-06-29??
        * Improved justification=kashida/elongated: hboxes (lua).
        * Transform danda.nobreak for several Indic scripts (lua).
-       
+       * Improved \babelprovide when used to reconfigure a language.
+       * Partial fix for #114.
+
 3.60   2021-06-02
        * A major fix for a bug with the latest LaTeX releases: class
          options were messed up.
@@ -61,4 +63,3 @@ respective authors.
 ### Previous changes
 
 See https://github.com/latex3/babel/blob/master/news-guides/README.md#whats-new
-
