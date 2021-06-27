@@ -12,8 +12,6 @@
 four characters: `!?:;`. Added `transliteration.hk` for
 Sanskrit, too.
 
-**Norsk** ▸ `doubleletter.hyphen` ▸ Hyphenates the doble-letter groups `bb`, `dd`, `ff`, `gg`, `ll`, `mm`, `nn`, `pp`, `rr`, `ss`, `tt` as `bb-b`, `dd-d`, etc. 
-
 **Serbian** ▸ `transliteration.gajica` ▸ (Note `serbian` with `ini` files refers to the Cyrillic script, which is here the target.) The standard system devised by Ljudevit Gaj. 
 
 ## Verbatim and `\babelprehyphenation`

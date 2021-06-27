@@ -47,6 +47,7 @@ Ubuntu).
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.61](news/whats-new-in-babel-3.61.html) | Transform `danda.nobreak`. Improved Arabic justification.
 | [3.60](news/whats-new-in-babel-3.60.html) | Mainly a maintenance release.
 | [3.59](news/whats-new-in-babel-3.59.html) | Tentative Arabic justification.
 | [3.58](news/whats-new-in-babel-3.58.html) | More transforms for Sanskrit, Polish, Czech, Serbian, etc.

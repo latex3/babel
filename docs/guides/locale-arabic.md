@@ -67,11 +67,30 @@ Definition \foreignlanguage{arabic}{maboniY+}.
 ```
 ![](../media/arabic-sample-dad.png)
 
+## `pdftex`
+
+Arabic support in `pdftex`is provided by the [external package
+`arabi`](https://ctan.org/pkg/arabi), which has been devised for
+documents written in Arabic.
+
+For a few words or sentences in a non-Arabic document, you may prefer
+to declare a language from scratch in the following way:
+```tex
+\usepackage[bidi=default, english]{babel}
+\usepackage[LAE, T1]{fontenc}
+\babelprovide{arabic}
+\addto\extrasarabic{\fontencoding{LAE}\selectfont}
+```
+Then `\foreignlanguage` and `\selectlanguage` can be used in the usual
+manner, but very likely you will need some manual intervention (for
+example, numerals). Sadly, with this procedure text cannot be
+copy-pasted (and `cmap` works only to some extent).
+ 
 ## Useful links
 
 * [Automatic enumerate list using eastern Arabic letters in beamer](https://tex.stackexchange.com/a/599846/5735)
 * [Itemize environment in Arabic](https://tex.stackexchange.com/a/528562/5735)
 * [Index not generated in an Arabic document](https://tex.stackexchange.com/a/506482/5735)
-* [Right alignment for section and subsection in the table of   contents](https://tex.stackexchange.com/a/587584/5735)
+* [Right alignment for section and subsection in the table of contents](https://tex.stackexchange.com/a/587584/5735)
 
 

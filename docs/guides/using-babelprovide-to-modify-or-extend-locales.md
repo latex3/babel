@@ -1,6 +1,10 @@
 # Using `\babelprovide` to modify or extend locales
 
-As explained in the manual, `\babelprovide` is an all-purpose command to both define a new language and modify an existing language. This article provides examples on how to modify a language loaded as a package option.
+As explained in the manual, `\babelprovide` is an all-purpose command
+to both define a new language and modify an existing language. This
+article provides examples on how to modify a language loaded as a
+package option. It assumes there isn't a previous `\babelprovide` or
+`provide=*` for that language.
 
 **All the examples assume:**
 ```tex
