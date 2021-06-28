@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/06/27 v3.60.2416 The Babel package]
+\ProvidesFile{babel.dtx}[2021/06/28 v3.61 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4973,8 +4973,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.60.2416>>
-%<<date=2021/06/27>>
+%<<version=3.61>>
+%<<date=2021/06/28>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8705,13 +8705,13 @@ help from Bernd Raichle, for which I am grateful.
 %   The very first thing to do is saving the original catcode and the
 %   original definition, even if not active, which is possible
 %   (undefined characters require a special treatement to avoid
-%   making them |\relax|).
+%   making them |\relax| and preserving some degree of protection).
 %
 %    \begin{macrocode}
 \def\@initiate@active@char#1#2#3{%
   \bbl@csarg\edef{oricat@#2}{\catcode`#2=\the\catcode`#2\relax}%
   \ifx#1\@undefined
-    \bbl@csarg\edef{oridef@#2}{\let\noexpand#1\noexpand\@undefined}%
+    \bbl@csarg\def{oridef@#2}{\def#1{\active@prefix#1\@undefined}}%
   \else
     \bbl@csarg\let{oridef@@#2}#1%
     \bbl@csarg\edef{oridef@#2}{%
@@ -11275,8 +11275,8 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \def\bbl@load@basic#1{%
-  \ifcase\bbl@howloaded\else
-    \ifcase0\csname bbl@llevel@\languagename\endcsname
+  \ifcase\bbl@howloaded\or\or
+    \ifcase\csname bbl@llevel@\languagename\endcsname
       \bbl@csarg\let{lname@\languagename}\relax
     \fi
   \fi

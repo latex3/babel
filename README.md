@@ -1,4 +1,4 @@
-## Babel 3.60.2416
+## Babel 3.61
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,20 +46,18 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.61   2021-06-29??
+3.61   2021-06-28
        * Improved justification=kashida/elongated: hboxes (lua).
-       * Transform danda.nobreak for several Indic scripts (lua).
+       * Transform danda.nobreak for several Indic scripts (lua):
+         Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam,
+         Marathi, Oriya, Tamil, Telugu.
        * Improved \babelprovide when used to reconfigure a language.
-       * Partial fix for #114.
-
-3.60   2021-06-02
-       * A major fix for a bug with the latest LaTeX releases: class
-         options were messed up.
-       * Improved justification=kashida/elongated: lists, vowelized texts.
-       * Fix: Underfull \hbox with amsmath (#133).
-       * Improved the ini file for Basque (captions).
+       * Fixes:
+         - Partial fix for #114 (bad breaks and spacing with
+           \selectlanguage).
+         - \shorthandoff*{^} caused error for \section command (#129).
 ```
 
 ### Previous changes
 
-See https://github.com/latex3/babel/blob/master/news-guides/README.md#whats-new
+See https://latex3.github.io/babel/
