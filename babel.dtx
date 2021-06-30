@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/06/28 v3.61 The Babel package]
+\ProvidesFile{babel.dtx}[2021/06/30 v3.61.2419 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -935,6 +935,12 @@ loaded.
 If you do not need shorthands, or prefer an alternative approach of
 your own, you may want to switch them off with the package option
 |shorthands=off|, as described below.
+
+\begin{warning}
+  It is worth emphasizing these macros are meant for temporary changes.
+  Whenever possible and if there are not conflicts with other packages,
+  shorthands must be always enabled (or disabled).
+\end{warning}
 
 \Describe{\useshorthands}{%
 \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
@@ -3951,7 +3957,8 @@ direction with |bidi.text|).
 \item \verb|\bibitem| is out of sync with \verb|\selectlanguage| in
   the \file{.aux} file. The reason is \verb|\bibitem| uses
   \verb|\immediate| (and others, in fact), while
-  \verb|\selectlanguage| doesn't. There is no known workaround.
+  \verb|\selectlanguage| doesn't. There is a similar issue with floats,
+  too. There is no known workaround.
 \item Babel does not take into account |\normalsfcodes| and
   (non-)French spacing is not always properly (un)set by
   languages. However, problems are unlikely to happen and therefore
@@ -4973,8 +4980,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.61>>
-%<<date=2021/06/28>>
+%<<version=3.61.2419>>
+%<<date=2021/06/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7417,7 +7424,15 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \def\bbl@push@language{%
   \ifx\languagename\@undefined\else
-    \xdef\bbl@language@stack{\languagename+\bbl@language@stack}%
+    \ifx\currentgrouplevel\@undefined
+      \xdef\bbl@language@stack{\languagename+\bbl@language@stack}%
+    \else
+      \ifnum\currentgrouplevel=\z@
+        \xdef\bbl@language@stack{\languagename+}%
+      \else
+        \xdef\bbl@language@stack{\languagename+\bbl@language@stack}%
+      \fi    
+    \fi
   \fi}
 %    \end{macrocode}
 %
@@ -8543,10 +8558,12 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \def\bbl@beforestart{%
+  \def\@nolanerr##1{%
+    \bbl@warning{Undefined language '##1' in aux.\\Reported}}%
   \bbl@usehooks{beforestart}{}%
   \global\let\bbl@beforestart\relax}
 \AtBeginDocument{%
-  \@nameuse{bbl@beforestart}%
+  {\@nameuse{bbl@beforestart}}%  Group!
   \if@filesw
     \providecommand\babel@aux[2]{}%
     \immediate\write\@mainaux{%
@@ -10920,11 +10937,11 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\bbl@KVP@captions\@nil
     \let\bbl@KVP@captions\bbl@KVP@import
   \fi
-  % ==
+  % == 
   \ifx\bbl@KVP@transforms\@nil\else
     \bbl@replace\bbl@KVP@transforms{ }{,}%
   \fi
-  % Load ini
+  % == Load ini ==
   \ifcase\bbl@howloaded
     \bbl@provide@new{#2}%
   \else
@@ -11255,12 +11272,12 @@ help from Bernd Raichle, for which I am grateful.
     \StartBabelCommands*{#1}{captions}%
       \bbl@read@ini{\bbl@KVP@captions}2%   % Here all letters cat = 11
     \EndBabelCommands
- \fi
- \ifx\bbl@KVP@import\@nil\else
-   \StartBabelCommands*{#1}{date}%
-     \bbl@savetoday
-     \bbl@savedate
-   \EndBabelCommands
+  \fi
+  \ifx\bbl@KVP@import\@nil\else
+    \StartBabelCommands*{#1}{date}%
+      \bbl@savetoday
+      \bbl@savedate
+    \EndBabelCommands
   \fi
   % == hyphenrules (also in new) ==
   \ifx\bbl@lbkflag\@empty

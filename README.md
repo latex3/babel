@@ -1,4 +1,4 @@
-## Babel 3.61
+## Babel 3.61.2419
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +46,9 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.62   2021-??-??
+       * No errors with undefined languages in aux file.
+       
 3.61   2021-06-28
        * Improved justification=kashida/elongated: hboxes (lua).
        * Transform danda.nobreak for several Indic scripts (lua):
