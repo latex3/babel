@@ -44,9 +44,15 @@ There is an additional counter:
 See the explanation in the babel manual about `\localecounter` and
 `localenumeral`.
 
+## Punctuation
+
+_Only luatex_. The transform `danda.nobreak` prevents a line break
+before a danda or double danda if there is a space.
+
+
 ## Useful links
 
-* [How to write Bengali in LaTeX?](https://tex.stackexchange.com/a/599846/5735)
-* [Change numbering style to Bengali in nested ordered list](Change
-  numbering style to Bengali in nested ordered list)
+* [How to write Bengali in LaTeX?](https://tex.stackexchange.com/a/561540/5735)
+* [Change numbering style to Bengali in nested ordered
+  list](https://tex.stackexchange.com/a/563725/5735)
 * [Typesetting Bangla script with LuaLATEX](https://www.latex-project.org/publications/UFi-TUB-tb127fischer-bangla.pdf)

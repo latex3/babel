@@ -49,6 +49,9 @@ See the explanation in the babel manual about `\localecounter` and
 _Only luatex_. The transform `punctuation.space` inserts a space before
 the following four characters: `!?:;`.
 
+The transform `danda.nobreak` prevents a line break before a danda or
+double danda if there is a space.
+
 ## Transliterations
 
 _Only luatex_. There is a transform (`transliteration.hk`) for the Harvard-Kyoto
