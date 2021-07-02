@@ -28,6 +28,11 @@ after loading Babel:
 \babelprovide[transforms = hyphen.repeat]{czech}
 ```
 
+## Line breaking
+
+_Only luatex_. The transform `oneletter.nobreak` converts a space after
+a non-syllabic preposition or conjunction into a non-breaking space.
+
 ## Useful Links
 
 * [babel-czech in CTAN](https://ctan.org/pkg/babel-czech)
