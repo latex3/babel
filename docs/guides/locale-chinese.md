@@ -53,4 +53,28 @@ For the meaning of these codes, see the [Unicode Standard Annex #14:
 Line Breaking
 Properties](https://www.unicode.org/reports/tr14/).
 
+## Counters
+
+With `luatex` there are two ways to map Arabic to
+Chinese numerals, passed as option to `\babelprovide`:
+* `maparabic` does it at the TeX level, by redefining `\arabic`. Note
+  form written to the auxiliary files is the converted one. It works
+  with `xetex`, too.
+* `mapdigits` does it at the engine level. This is
+  usually the preferred method.
+  
+To perform this conversión, use the following settings:
+```tex
+\usepackage[chinese, provide=*]{babel}
+\babelprovide[mapdigits]{chinese}  % or alternatively maparabic
+```
+
+In addition, the following counters are predefined:
+
+* `cjk-earthly-branch` ▸ 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem ` ▸ 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `fullwidth.lower.alpha` ▸ ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` ▸ Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+
+
 
