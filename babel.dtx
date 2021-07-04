@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/06/30 v3.61.2419 The Babel package]
+\ProvidesFile{babel.dtx}[2021/07/04 v3.61.2423 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -697,6 +697,14 @@ This command can be used as environment, too.
   code with an additional grouping level.
 \end{warning}
 
+\begin{warning}
+  |\selectlanguage| should not be used inside some boxed environments
+  (like floats or |minipage|) to switch the language if you need the
+  information written to the |aux| be correctly synchronized. This
+  rarely happens, but if it were the case, you must use |otherlanguage|
+  instead.
+\end{warning}
+
 \Describe{\foreignlanguage}{\oarg{option-list}\marg{language}\marg{text}}
 
 The command |\foreignlanguage| takes two arguments; the second argument
@@ -745,6 +753,8 @@ If you want a change which is really local, you must enclose this
 environment with an additional grouping, like braces |{}|.
 
 Spaces after the environment are ignored.
+
+
 
 \Describe{\begin\menv{otherlanguage*}}%
 {\oarg{option-list}\marg{language}\Eenv{otherlanguage*}}
@@ -4980,8 +4990,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.61.2419>>
-%<<date=2021/06/30>>
+%<<version=3.61.2423>>
+%<<date=2021/07/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11073,6 +11083,24 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
   \fi
   \bbl@provide@intraspace
+  % == Line breaking: CJK quotes ==
+  \ifcase\bbl@engine\or
+    \bbl@xin@{/c}{/\bbl@cl{lnbrk}}%
+    \ifin@
+      \bbl@ifunset{bbl@quote@\languagename}{}%
+        {\directlua{
+           Babel.locale_props[\the\localeid].cjk_quotes = {}
+           local cs = 'op'
+           for c in string.utfvalues(%
+               [[\csname bbl@quote@\languagename\endcsname]]) do
+             if Babel.cjk_characters[c].c == 'qu' then
+               Babel.locale_props[\the\localeid].cjk_quotes[c] = cs
+             end
+             cs = ( cs == 'op') and 'cl' or 'op'
+           end
+        }}%
+    \fi
+  \fi
   % == Line breaking: justification ==
   \ifx\bbl@KVP@justification\@nil\else
      \let\bbl@KVP@linebreaking\bbl@KVP@justification
@@ -11615,6 +11643,7 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@exportkey{intsp}{typography.intraspace}{}%
     \bbl@exportkey{frspc}{typography.frenchspacing}{u}%
     \bbl@exportkey{chrng}{characters.ranges}{}%
+    \bbl@exportkey{quote}{characters.delimiters.quotes}{}%
     \bbl@exportkey{dgnat}{numbers.digits.native}{}%
     \ifnum#1=\tw@           % only (re)new
       \bbl@exportkey{rqtex}{identification.require.babel}{}%
@@ -13754,6 +13783,10 @@ help from Bernd Raichle, for which I am grateful.
           local props = Babel.locale_props[LOCALE]
 
           local class = Babel.cjk_class[item.char].c
+          
+          if props.cjk_quotes and props.cjk_quotes[item.char] then
+            class = props.cjk_quotes[item.char]
+          end
 
           if class == 'cp' then class = 'cl' end % )] as CL
           if class == 'id' then class = 'I' end
