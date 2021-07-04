@@ -51,6 +51,6 @@ breaking class, with, for example:
    
 For the meaning of these codes, see the [Unicode Standard Annex #14:
 Line Breaking
-Properties](http://unicode.org/reports/tr14/tr14-14.html).
+Properties](https://www.unicode.org/reports/tr14/).
 
 
