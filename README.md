@@ -1,4 +1,4 @@
-## Babel 3.61.2423
+## Babel 3.61.2424
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -47,7 +47,7 @@ respective authors.
 ### Summary of Latest changes
 ```
 3.62   2021-??-??
-       * No errors with unknown languages in aux file.
+       * No more errors with unknown languages in aux file.
        * Fixes:
          - Locale dependent quotes with CJK (#131).
        

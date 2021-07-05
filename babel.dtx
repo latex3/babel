@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/07/04 v3.61.2423 The Babel package]
+\ProvidesFile{babel.dtx}[2021/07/05 v3.61.2424 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3136,12 +3136,12 @@ standard system devised by Ljudevit Gaj.}
 \Describe{\babelposthyphenation}{\marg{hyphenrules-name}%
           \marg{lua-pattern}\marg{replacement}}
 
-\New{3.37-3.39} \textit{With \luatex{}} it is now possible to define
+\New{3.37-3.39} \textit{With \luatex{}} it is possible to define
 non-standard hyphenation rules, like |f-f| $\to$ |ff-f|, repeated
 hyphens, ranked ruled (or more precisely, ‘penalized’ hyphenation
-points), and so on. Only a few rules are currently provided (see
-below), but they can be defined as shown in the following example,
-where |{1}| is the first captured char (between |()| in the pattern):
+points), and so on. A few rules are currently provided (see above), but
+they can be defined as shown in the following example, where |{1}| is
+the first captured char (between |()| in the pattern):
 \begin{verbatim}
 \babelposthyphenation{german}{([fmtrp]) | {1}}
 {
@@ -4990,8 +4990,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.61.2423>>
-%<<date=2021/07/04>>
+%<<version=3.61.2424>>
+%<<date=2021/07/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5682,9 +5682,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \ifx\bbl@opt@provide\@nnil\else % Tests. Ignore.
   \chardef\bbl@iniflag\@ne
-  \bbl@replace\bbl@opt@provide{;}{,}
-  \bbl@add\bbl@opt@provide{,import}
-  \show\bbl@opt@provide
 \fi
 % 
 %    \end{macrocode}
@@ -7070,9 +7067,16 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@ldfinit
     \let\CurrentOption\bbl@opt@main
     \ifx\bbl@opt@provide\@nnil
-      \bbl@exp{\\\babelprovide[import,main]{\bbl@opt@main}}
+      \bbl@exp{\\\babelprovide[import,main]{\bbl@opt@main}}%
     \else
-      \bbl@exp{\\\babelprovide[\bbl@opt@provide,main]{\bbl@opt@main}}%
+      \bbl@exp{\\\bbl@forkv{\@nameuse{@raw@opt@babel.sty}}}{%
+        \bbl@xin@{,provide,}{,#1,}%
+        \ifin@
+          \def\bbl@opt@provide{#2}%
+          \bbl@replace\bbl@opt@provide{;}{,}%
+        \fi}%
+      \bbl@exp{%
+        \\\babelprovide[\bbl@opt@provide,import,main]{\bbl@opt@main}}%
     \fi
     \bbl@afterldf{}%
   \else % case 0,2
@@ -7628,10 +7632,10 @@ help from Bernd Raichle, for which I am grateful.
       \let\bbl@select@type\z@
       \expandafter\bbl@switch\expandafter{\languagename}%
     \fi}}
-\def\babel@aux#1#2{% TODO. See how to avoid undefined nil's
+\def\babel@aux#1#2{%
   \select@language{#1}%
-  \bbl@foreach\BabelContentsFiles{%
-    \@writefile{##1}{\babel@toc{#1}{#2}}}}% %% TODO - ok in plain?
+  \bbl@foreach\BabelContentsFiles{% \relax: don't assume vertical mode
+    \@writefile{##1}{\babel@toc{#1}{#2}\relax}}}% TODO - plain?
 \def\babel@toc#1#2{%
   \select@language{#1}}
 %    \end{macrocode}
