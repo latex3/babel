@@ -1,4 +1,4 @@
-## Babel 3.61.2424
+## Babel 3.61.2426
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -50,6 +50,7 @@ respective authors.
        * No more errors with unknown languages in aux file.
        * Fixes:
          - Locale dependent quotes with CJK (#131).
+         - Babel and hyperref prevent changes to the \LaTeX logo (#138).
        
 3.61   2021-06-28
        * Improved justification=kashida/elongated: hboxes (lua).
