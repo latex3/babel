@@ -10,9 +10,7 @@ Sometimes you might need to disable some global `babel` features and the macro `
 
 A new ini file, thanks to Claudio Beccari.
 
-<p align="center">
-<img src="https://github.com/latex3/babel/blob/master/samples/images/polytonic-greek.jpg?raw=true" width="500">
-</p>
+![](../media/polytonic-greek.jpg)
 
 ## Improvements in Chinese
 

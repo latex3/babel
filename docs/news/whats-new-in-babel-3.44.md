@@ -28,9 +28,7 @@ when word separators are used, Ethiopic wraps after any character, except with t
 
 Now with `luatex`, Amharic by default follows the modern practice, but the traditional one can be activated just by selecting `hyphenrules=amharic` (in other words, the patterns for Amharic are _not_ set to those named `amharic` in `language.dat`). Internally, the mechanism is the same as that for South East Asian scripts, which means the line breaks can be fine-tuned with `\babelpatterns` and `\babelposthyphenation`.
 
-<p align="center">
-<img src="https://github.com/latex3/babel/blob/master/samples/images/babel-wiki-ahmaric.jpg?raw=true" width="400">
-</p>
+![](../media/babel-wiki-ahmaric.jpg)
 
 There is a good deal of alphabetic counters for Ethiopic languages in the CSS [Ready-made counter styles](https://www.w3.org/TR/predefined-counter-styles/), and they have been added: afar, agaw, ari, blin, dizi, gedeo, gumuz, hadiyya, harari, kaffa, kebena, kembata, konso, kunama, meen, oromo, saho, sidama, silti, tigre, wolaita, yemsa.
 
@@ -92,9 +90,7 @@ Verhnjaja Sinjachiha Nizhnij Novgorod
 ```
 we get the following output:
 
-<p align="center">
-<img src="https://github.com/latex3/babel/blob/master/samples/images/trans-russian.jpg?raw=true" width="400">
-</p>
+![](../media/trans-russian.jpg)
 
 ### Example 2: combining chars
 

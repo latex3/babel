@@ -76,5 +76,12 @@ In addition, the following counters are predefined:
 * `fullwidth.lower.alpha` ▸ ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
 * `fullwidth.upper.alpha` ▸ Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
 
+## Useful links
+
+* [Multiple xeCJK fonts](https://tex.stackexchange.com/questions/480132/multiple-xecjk-fonts#480155)
+* [How to write Korean and Chinese within an German document](https://tex.stackexchange.com/a/492214/5735)
+* [Mixing Chinese Characters with
+  English](https://tex.stackexchange.com/questions/499910/mixing-chinese-characters-with-english-main-language-in-2019-what-is-the-st#499992)
+
 
 

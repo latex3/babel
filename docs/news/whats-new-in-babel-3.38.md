@@ -36,9 +36,7 @@ From Wikipedia.
 
 \end{document}
 ```
-<p align="center">
-<img src="https://github.com/latex3/babel/blob/master/samples/images/auto-script-russian.jpg?raw=true" width="800">
-</p>
+![](../media/auto-script-russian.jpg)
 
 
 ## Public access to locale info in `ini` files
