@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/07/07 v3.61.2426 The Babel package]
+\ProvidesFile{babel.dtx}[2021/07/08 v3.61.2427 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4990,8 +4990,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.61.2426>>
-%<<date=2021/07/07>>
+%<<version=3.61.2427>>
+%<<date=2021/07/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6364,6 +6364,8 @@ help from Bernd Raichle, for which I am grateful.
   \let\@elt\relax
   \let\bbl@tempb\@empty
   \def\bbl@tempc{OT1}%
+  \bbl@foreach\BabelNonASCII{% LGR loaded in a non-standard way
+    \bbl@ifunset{T@#1}{}{\def\bbl@tempb{#1}}}%
   \bbl@foreach\bbl@tempa{%
     \bbl@xin@{#1}{\BabelNonASCII}%
     \ifin@
