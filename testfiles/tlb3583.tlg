@@ -11,7 +11,9 @@ Package: babel
 > \box...=
 \vbox(22.8313+3.33252)x390.0
 .\write1{\babel@aux{polutonikogreek}{}}
+.\penalty 10000
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\hbox(8.3313+3.33252)x390.0, glue set 292.42957fil
 ..\hbox(0.0+0.0)x17.62482
 ..\LGR/cmr/m/n/12 t
@@ -65,6 +67,7 @@ l. ...}
 .\penalty -300
 .\glue 18.07892 plus 5.1654 minus 1.03305
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\hbox(11.92508+3.35919)x390.0, glue set 302.05759fil
 ..\hbox(11.05104+0.0)x27.96527
 ...\glue 0.0

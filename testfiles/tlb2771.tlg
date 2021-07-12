@@ -34,7 +34,7 @@ Package: ifthen
 .\glue 0.0
 ! OK.
 <to be read again> 
-                   \par 
+                   \scan_stop: 
 l. ...
 > \box...=
 \hbox(6.24301+1.94444)x27.77783
@@ -65,7 +65,7 @@ l. ...
 .\glue 0.0
 ! OK.
 <to be read again> 
-                   \par 
+                   \scan_stop: 
 l. ...{}
 > \box...=
 \hbox(6.24301+1.94444)x27.77783

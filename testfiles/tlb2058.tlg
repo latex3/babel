@@ -10,6 +10,7 @@ Package: babel
 .\penalty -51
 .\glue 13.0 plus 6.0 minus 8.0
 .\glue(\parskip) 0.0
+.\glue(\parskip) 0.0
 .\hbox(8.33331+0.0)x390.0, glue set 114.94984fil
 ..\hbox(0.0+0.0)x0.0
 ...\glue 0.0
@@ -69,6 +70,7 @@ Package: babel
 ..etc.
 .\glue 0.0
 .\glue(\parskip) 0.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 6.16667
 .\hbox(8.33333+0.0)x390.0, glue set 117.48604fil
 ..\hbox(0.0+0.0)x0.0
@@ -123,6 +125,7 @@ Package: babel
 ..\OT1/cmr/m/n/12 l
 ..etc.
 .\glue 0.0
+.\glue(\parskip) 0.0
 .\glue(\parskip) 0.0
 .\glue(\baselineskip) 6.16667
 .\hbox(8.33333+0.0)x390.0, glue set 111.4087fil
@@ -179,6 +182,7 @@ Package: babel
 ..etc.
 .\glue 0.0
 .\glue(\parskip) 0.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 6.53569
 .\hbox(7.96431+2.33331)x390.0, glue set 104.83337fil
 ..\hbox(0.0+0.0)x0.0
@@ -223,6 +227,7 @@ Package: babel
 ..\penalty 10000
 ..etc.
 .\glue 0.0
+.\glue(\parskip) 0.0
 .\glue(\parskip) 0.0
 .\glue(\baselineskip) 3.83336
 .\hbox(8.33333+0.0)x390.0, glue set 116.01439fil

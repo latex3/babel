@@ -6,4 +6,4 @@ Main Class: article
 Package: babel
     Options: nil,safe=ref
 \ref = macro:->\protect \ref  
-\nocite = macro:#1->\@bsphack \ifx \@onlypreamble \document \@for \@citeb :=#1\do {\edef \@citeb {\expandafter \@firstofone \@citeb }\if@filesw \immediate \write \@auxout {\string \citation {\@citeb }}\fi \@ifundefined {b@\@citeb }{\G@refundefinedtrue \@latex@warning {Citation `\@citeb ' undefined}}{}}\else \@latex@error {Cannot be used in preamble}\@eha \fi \@esphack 
+\nocite = macro:#1->\@bsphack \ifx \@onlypreamble \document \@for \@citeb :=#1\do {\edef \@citeb {\expandafter \@firstofone \@citeb }\if@filesw \immediate \write \@auxout {\string \citation {\@citeb }}\fi \@ifundefined {b@\@citeb }{\G@refundefinedtrue \@latex@warning {Citation `\@citeb ' undefined}}{}}\else \AddToHook {begindocument/end}[kernel]{\nocite {#1}}\fi \@esphack 

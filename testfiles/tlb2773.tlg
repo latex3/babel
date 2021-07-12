@@ -15,6 +15,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .\penalty -300
 .\glue 15.0694 plus 4.30554 minus 0.86108
 .\glue(\parskip) 0.0
+.\glue(\parskip) 0.0
 .\hbox(9.99998+0.0)x345.0, glue set 219.06181fil
 ..\hbox(0.0+0.0)x0.0
 ...\glue 0.0
@@ -49,6 +50,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .\glue -9.90276 plus -0.86108
 .\glue 15.0694 plus 4.30554 minus 0.86108
 .\glue(\parskip) 0.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 8.00002
 .\hbox(9.99998+0.0)x345.0, glue set 214.94025fil
 ..\hbox(9.27998+0.0)x24.29997
@@ -77,6 +79,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ...\hbox(6.2+0.0)x7.40158
 ....\OML/cmm/m/it/14.4 a
 ..\mathoff
+..\kern 0.0
 ..\penalty 10000
 ..\glue(\parfillskip) 0.0 plus 1.0fil
 ..\glue(\rightskip) 0.0

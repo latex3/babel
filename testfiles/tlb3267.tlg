@@ -26,6 +26,7 @@ Kapihttal 1.
 .\glue 50.0
 .\glue 0.0
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 12.8301
 .\hbox(17.1699+4.8366)x390.0, glue set 129.45143fil
 ..\hbox(0.0+0.0)x0.0
@@ -47,6 +48,7 @@ Kapihttal 1.
 .\penalty 10000
 .\glue 20.0
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 7.9935
 .\hbox(17.1699+0.0)x390.0, glue set 172.10965fil
 ..\hbox(0.0+0.0)x0.0

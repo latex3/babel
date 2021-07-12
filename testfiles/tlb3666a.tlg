@@ -55,6 +55,6 @@ l. ...\testit{ :- aa:: aa}
 ..\glue(\rightskip) 0.0
 ! OK.
 <to be read again> 
-                   \par 
+                   \scan_stop: 
 l. ...
 (tlb3666a.aux)

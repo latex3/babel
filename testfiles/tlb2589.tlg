@@ -32,6 +32,7 @@ Package: babel
 ..\glue(\parfillskip) 0.0 plus 1.0fil
 ..\glue(\rightskip) 0.0
 .\glue(\parskip) 0.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 2.55786
 .\hbox(6.94275+2.49939)x345.0, glue set 255.71625fil
 ..\hbox(0.0+0.0)x0.0

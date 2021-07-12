@@ -23,6 +23,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .\penalty -51
 .\glue 20.00003
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 10.0
 .\hbox(12.0+0.54897)x345.0, glue set 126.13382fil
 ..\glue(\leftskip) 0.0 plus 1.0fil
@@ -59,6 +60,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ..\glue(\rightskip) 0.0 plus 1.0fil
 .\glue 15.00002
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 3.65108
 .\hbox(9.79996+4.20004)x345.0, glue set 149.20157fil
 ..\glue(\leftskip) 0.0 plus 1.0fil
@@ -85,11 +87,13 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ......\glue 6.0
 .....\glue(\tabskip) 0.0
 ...\mathoff
+..\kern 0.0
 ..\penalty 10000
 ..\glue(\parfillskip) 0.0
 ..\glue(\rightskip) 0.0 plus 1.0fil
 .\glue 10.00002
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\lineskip) 1.0
 .\hbox(8.33331+2.33331)x345.0, glue set 122.23663fil
 ..\glue(\leftskip) 0.0 plus 1.0fil
@@ -122,6 +126,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .\glue 10.0 plus 3.0 minus 5.0
 .\glue 15.00002
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 2.72224
 .\hbox(6.94444+0.0)x345.0, glue set 292.33324fil
 ..\hbox(0.0+0.0)x15.0

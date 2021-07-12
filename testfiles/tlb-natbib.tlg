@@ -35,6 +35,7 @@ Package: babel
 .\penalty -300
 .\glue 18.08334 plus 5.16667 minus 1.03331
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 7.00002
 .\hbox(11.99998+0.0)x390.0, glue set 299.03201fil
 ..\hbox(0.0+0.0)x0.0
@@ -60,6 +61,7 @@ Package: babel
 ..\glue(\rightskip) 0.0
 .\penalty 10000
 .\glue 11.88335 plus 1.03331
+.\glue(\parskip) 0.0
 .\glue(\parskip) 0.0
 .\glue(\baselineskip) 5.5
 .\hbox(9.0+3.0)x371.72241, glue set - 0.68372, shifted 18.27759

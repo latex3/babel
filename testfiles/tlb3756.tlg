@@ -11,8 +11,9 @@ Completed box being shipped out [1]
 .\vbox(618.0+0.0)x360.0, shifted 54.8775
 ..\vbox(8.0+0.0)x360.0, glue set 8.0fil
 ...\glue 0.0 plus 1.0fil
-...\hbox(0.0+0.0)x360.0, glue set 360.0fil
-....\glue 0.0 plus 1.0fil minus 1.0fil
+...\hbox(0.0+0.0)x360.0
+....\hbox(0.0+0.0)x360.0, glue set 360.0fil
+.....\glue 0.0 plus 1.0fil minus 1.0fil
 ..\glue 14.0
 ..\glue(\lineskip) 0.0
 ..\vbox(584.0+0.0)x360.0, glue set 457.59003fil
@@ -54,6 +55,7 @@ Completed box being shipped out [1]
 ....\kern 1.91666
 ....\OT1/cmr/bx/n/10 .
 ....\kern 1.91666
+....\kern 0.0
 ....\penalty 10000
 ....\glue(\parfillskip) 0.0
 ....\glue(\rightskip) 0.0 plus 1.0fil
@@ -64,6 +66,7 @@ Completed box being shipped out [1]
 ...\glue 2.09999 plus 2.09999
 ...\glue -2.09999 plus -2.09999
 ...\glue 20.0
+...\glue(\parskip) 0.0
 ...\glue(\parskip) 0.0
 ...\glue(\baselineskip) 4.53334
 ...\hbox(5.46666+0.0)x360.0, glue set 162.42197fil
@@ -89,6 +92,7 @@ Completed box being shipped out [1]
 ...\glue 2.09999 plus 2.09999
 ...\glue 22.0
 ...\mark{{\def \\{ \ignorespaces }\MakeUppercase {Albert}}{{\protect \@upprep \ETC.}
+...\glue(\parskip) 0.0
 ...\glue(\parskip) 0.0
 ...\glue(\baselineskip) 5.05556
 ...\hbox(6.94444+1.94444)x360.0, glue set 131.13853fil
@@ -169,15 +173,17 @@ Completed box being shipped out [1]
 ....\OT1/cmr/m/n/8 5
 ....\OT1/cmr/m/n/8 .
 ....\rule(6.99997+3.00003)x0.0
+....\kern 0.0
 ....\penalty 10000
 ....\glue(\parfillskip) 0.0 plus 1.0fil
 ....\glue(\rightskip) 0.0
 ...\glue -3.00003
 ..\glue(\baselineskip) 7.48889
-..\hbox(4.51111+0.0)x360.0, glue set 178.00694fil
-...\glue 0.0 plus 1.0fil
-...\OT1/cmr/m/n/7 1
-...\glue 0.0 plus 1.0fil
+..\hbox(4.51111+0.0)x360.0
+...\hbox(4.51111+0.0)x360.0, glue set 178.00694fil
+....\glue 0.0 plus 1.0fil
+....\OT1/cmr/m/n/7 1
+....\glue 0.0 plus 1.0fil
 [2
 ] [3
 ] (tlb3756.aux)

@@ -24,6 +24,7 @@ Package: babel
 .\glue 50.0
 .\glue 0.0
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 10.77353
 .\hbox(14.22647+0.0)x345.0, glue set 135.00883fil
 ..\hbox(0.0+0.0)x0.0
@@ -41,6 +42,7 @@ Package: babel
 .\penalty 10000
 .\glue 20.0
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 12.73822
 .\hbox(17.26178+0.0)x345.0, glue set 137.32286fil
 ..\hbox(0.0+0.0)x0.0
@@ -57,6 +59,7 @@ Package: babel
 .\penalty 10000
 .\glue 40.0
 .\glue(\parskip) 0.0 plus 1.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 5.16833
 .\hbox(6.83167+0.0)x345.0, glue set 325.00488fil
 ..\T2A/cmr/m/n/10 T
