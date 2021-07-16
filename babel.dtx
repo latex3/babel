@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/07/12 v3.61.2431 The Babel package]
+\ProvidesFile{babel.dtx}[2021/07/16 v3.61.2435 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4990,8 +4990,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.61.2431>>
-%<<date=2021/07/12>>
+%<<version=3.61.2435>>
+%<<date=2021/07/16>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6462,6 +6462,26 @@ help from Bernd Raichle, for which I am grateful.
 \else
   \DeclareTextFontCommand{\textlatin}{\latintext}
 \fi
+%    \end{macrocode}
+%
+% For several functionalities, we need to execute some code with
+% |\selectfont|. Currently, there is a hook for this purpose, but for
+% older versions the \LaTeX{} command is patched (the latter solution
+% will be eventually removed).
+%
+%    \begin{macrocode}
+\begingroup
+  \catcode`\_=11
+  \catcode`\.=10
+  \catcode`\ =11\relax%   Spaces as letters!
+..\ifx\__hook selectfont\@undefined%
+....\gdef\bbl@patchfont#1{%
+......\expandafter\bbl@add\csname.selectfont.\endcsname{#1}%
+......\expandafter\bbl@toglobal\csname.selectfont.\endcsname}%
+..\else%
+....\gdef\bbl@patchfont#1{\AddToHook{selectfont}{#1}}%
+..\fi%
+\endgroup
 %    \end{macrocode}
 %
 % \end{macro}
@@ -8199,6 +8219,9 @@ help from Bernd Raichle, for which I am grateful.
 \newcommand\EnableBabelHook[1]{\bbl@csarg\let{hk@#1}\@firstofone}
 \newcommand\DisableBabelHook[1]{\bbl@csarg\let{hk@#1}\@gobble}
 \def\bbl@usehooks#1#2{%
+  \ifx\UseHook\@undefined\else
+    \UseHook{babel/#1}%
+  \fi
   \def\bbl@elth##1{%
     \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#1@}#2}}%
   \bbl@cs{ev@#1@}%
@@ -8222,6 +8245,10 @@ help from Bernd Raichle, for which I am grateful.
   beforeextras=0,afterextras=0,stopcommands=0,stringprocess=0,%
   hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0,%
   beforestart=0,languagename=2}
+\ifx\NewHook\@undefined\else
+  \def\bbl@tempa#1=#2\@@{\NewHook{babel/#1}}
+  \bbl@foreach\bbl@evargs{\bbl@tempa#1\@@}
+\fi
 %    \end{macrocode}
 %
 % \begin{macro}{\babelensure}
@@ -10920,7 +10947,7 @@ help from Bernd Raichle, for which I am grateful.
         end}%
       \ifx\bbl@mapselect\@undefined  % TODO. almost the same as mapfont
         \AtBeginDocument{%
-          \expandafter\bbl@add\csname selectfont \endcsname{{\bbl@mapselect}}%
+          \bbl@patchfont{{\bbl@mapselect}}%
           {\selectfont}}%
         \def\bbl@mapselect{%
           \let\bbl@mapselect\relax
@@ -10948,7 +10975,7 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
     \ifx\bbl@mapselect\@undefined % TODO. See onchar. selectfont hook
       \AtBeginDocument{%
-        \expandafter\bbl@add\csname selectfont \endcsname{{\bbl@mapselect}}%
+        \bbl@patchfont{{\bbl@mapselect}}%
         {\selectfont}}%
       \def\bbl@mapselect{%
         \let\bbl@mapselect\relax
@@ -11933,10 +11960,8 @@ help from Bernd Raichle, for which I am grateful.
              \expandafter\@secondoftwo  % to execute right now
            \fi
            \AtBeginDocument{%
-             \expandafter\bbl@add
-             \csname selectfont \endcsname{\bbl@xenohyph}%
-             \expandafter\selectlanguage\expandafter{\languagename}%
-             \expandafter\bbl@toglobal\csname selectfont \endcsname}%
+             \bbl@patchfont{\bbl@xenohyph}%
+             \expandafter\selectlanguage\expandafter{\languagename}}%
         \fi}}%
   \fi
   \bbl@csarg\bbl@toglobal{lsys@#1}}
@@ -13051,10 +13076,7 @@ help from Bernd Raichle, for which I am grateful.
         \ifx\AtBeginDocument\@notprerr
           \expandafter\@secondoftwo  % to execute right now
         \fi
-        \AtBeginDocument{%
-          \expandafter\bbl@add
-          \csname selectfont \endcsname{\bbl@ispacesize}%
-          \expandafter\bbl@toglobal\csname selectfont \endcsname}%
+        \AtBeginDocument{\bbl@patchfont{\bbl@xenohyph}}%
       \fi}%
   \fi}
 \ifx\DisableBabelHook\@undefined\endinput\fi
@@ -13796,7 +13818,7 @@ help from Bernd Raichle, for which I am grateful.
   \newattribute\bblar@kashida
   \directlua{ Babel.attr_kashida = luatexbase.registernumber'bblar@kashida' }%
   \bblar@kashida=\z@
-  \expandafter\bbl@add\csname selectfont \endcsname{{\bbl@parsejalt}}%
+  \bbl@patchfont{{\bbl@parsejalt}}%
   \directlua{
     Babel.arabic.elong_map   = Babel.arabic.elong_map or {}
     Babel.arabic.elong_map[\the\localeid]   = {}
