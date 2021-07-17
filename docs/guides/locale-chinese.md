@@ -82,6 +82,7 @@ In addition, the following counters are predefined:
 * [How to write Korean and Chinese within an German document](https://tex.stackexchange.com/a/492214/5735)
 * [Mixing Chinese Characters with
   English](https://tex.stackexchange.com/questions/499910/mixing-chinese-characters-with-english-main-language-in-2019-what-is-the-st#499992)
+* [CJK languages in one document](https://tex.stackexchange.com/a/604412/5735)
 
 
 

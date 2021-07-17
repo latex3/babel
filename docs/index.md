@@ -47,6 +47,7 @@ Ubuntu).
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.62](news/whats-new-in-babel-3.62.html) | (Under developement.)
 | [3.61](news/whats-new-in-babel-3.61.html) | Transform `danda.nobreak`. Improved Arabic justification.
 | [3.60](news/whats-new-in-babel-3.60.html) | Mainly a maintenance release.
 | [3.59](news/whats-new-in-babel-3.59.html) | Tentative Arabic justification.
@@ -81,3 +82,8 @@ Ubuntu).
 * [List of locale templates](guides/list-of-locale-templates.html)
 * [Old and deprecated functions](guides/old-and-deprecated-functions.html)
 * [Using babel with plain](guides/using-babel-with-plain.html)
+
+## External links
+
+* [Getting Started with Internationalization
+  (W3C)](https://www.w3.org/International/getting-started/index.en)
