@@ -69,6 +69,7 @@ Package: babel
 .\glue -2.09999 plus -2.09999
 .\glue 8.39996 plus 12.0
 .\glue(\parskip) 0.0
+.\glue(\parskip) 0.0
 .\glue(\baselineskip) 1.56665
 .\hbox(6.83331+0.0)x360.0, glue set 109.94844fil
 ..\glue(\leftskip) 0.0 plus 1.0fil

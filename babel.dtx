@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/07/16 v3.61.2435 The Babel package]
+\ProvidesFile{babel.dtx}[2021/07/17 v3.61.2436 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4990,8 +4990,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.61.2435>>
-%<<date=2021/07/16>>
+%<<version=3.61.2436>>
+%<<date=2021/07/17>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5310,6 +5310,16 @@ help from Bernd Raichle, for which I am grateful.
   \else
     \expandafter\@firstofone
   \fi}
+%    \end{macrocode}
+%
+% An alternative to |\IfFormatAtLeastTF| for old versions. Temporary.
+%
+%    \begin{macrocode}  
+\ifx\IfFormatAtLeastTF\@undefined
+  \def\bbl@ifformatlater{\@ifl@t@r\fmtversion}
+\else
+  \let\bbl@ifformatlater\IfFormatAtLeastTF
+\fi
 %    \end{macrocode}
 %
 % The following adds some code to |\extras...| both before and after,
@@ -6310,10 +6320,10 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \begin{macro}{\substitutefontfamily}
 %
+% This command is deprecated. Use the tools provides by \LaTeX.
 % The command |\substitutefontfamily| creates an
 % \file{.fd} file on the fly. The first argument is an encoding
 % mnemonic, the second and third arguments are font family names.
-% This command is deprecated. Use the tools provides by \LaTeX.
 %
 %    \begin{macrocode}
 \def\substitutefontfamily#1#2#3{%
@@ -6464,24 +6474,17 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-% For several functionalities, we need to execute some code with
-% |\selectfont|. Currently, there is a hook for this purpose, but for
-% older versions the \LaTeX{} command is patched (the latter solution
-% will be eventually removed).
+% For several functions, we need to execute some code with
+% |\selectfont|. With \LaTeX\ 2021-06-01, there is a hook for this
+% purpose, but in older versions the \LaTeX{} command is patched (the
+% latter solution will be eventually removed).
 %
 %    \begin{macrocode}
-\begingroup
-  \catcode`\_=11
-  \catcode`\.=10
-  \catcode`\ =11\relax%   Spaces as letters!
-..\ifx\__hook selectfont\@undefined%
-....\gdef\bbl@patchfont#1{%
-......\expandafter\bbl@add\csname.selectfont.\endcsname{#1}%
-......\expandafter\bbl@toglobal\csname.selectfont.\endcsname}%
-..\else%
-....\gdef\bbl@patchfont#1{\AddToHook{selectfont}{#1}}%
-..\fi%
-\endgroup
+\bbl@ifformatlater{2021-06-01}%
+  {\def\bbl@patchfont#1{\AddToHook{selectfont}{#1}}}
+  {\def\bbl@patchfont#1{%
+     \expandafter\bbl@add\csname selectfont \endcsname{#1}%
+     \expandafter\bbl@toglobal\csname selectfont \endcsname}}
 %    \end{macrocode}
 %
 % \end{macro}
@@ -7133,7 +7136,7 @@ help from Bernd Raichle, for which I am grateful.
 %    exists. Otherwise raises and error.
 %
 %    The argument of |\bbl@fixname| has to be a macro name, as it may get
-%    ``fixed'' if casing (lc/uc) is wrong. It's intented to fix a
+%    ``fixed'' if casing (lc/uc) is wrong. It's an attempt to fix a
 %    long-standing bug when |\foreignlanguage| and the like appear in
 %    a |\MakeXXXcase|. However, a lowercase form is not imposed to
 %    improve backward compatibility (perhaps you defined a language
@@ -8219,13 +8222,12 @@ help from Bernd Raichle, for which I am grateful.
 \newcommand\EnableBabelHook[1]{\bbl@csarg\let{hk@#1}\@firstofone}
 \newcommand\DisableBabelHook[1]{\bbl@csarg\let{hk@#1}\@gobble}
 \def\bbl@usehooks#1#2{%
-  \ifx\UseHook\@undefined\else
-    \UseHook{babel/#1}%
-  \fi
+  \ifx\UseHook\@undefined\else\UseHook{babel/#1}\fi
   \def\bbl@elth##1{%
     \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#1@}#2}}%
   \bbl@cs{ev@#1@}%
   \ifx\languagename\@undefined\else % Test required for Plain (?)
+    \ifx\UseHook\@undefined\else\UseHook{babel/#1/\languagename}\fi
     \def\bbl@elth##1{%
       \bbl@cs{hk@##1}{\bbl@cl{ev@##1@#1}#2}}%
     \bbl@cl{ev@#1}%
@@ -12737,9 +12739,7 @@ help from Bernd Raichle, for which I am grateful.
 \newcommand\bbl@bblfont[2][]{% 1=features 2=fontname, @font=rm|sf|tt
   \bbl@ifunset{\bbl@tempb family}%
     {\bbl@providefam{\bbl@tempb}}%
-    {\bbl@exp{%
-      \\\bbl@sreplace\<\bbl@tempb family >%
-        {\@nameuse{\bbl@tempb default}}{\<\bbl@tempb default>}}}%
+    {}%
   % For the default font, just in case:
   \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
   \expandafter\bbl@ifblank\expandafter{\bbl@tempa}%
@@ -12753,7 +12753,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % If the family in the previous command does not exist, it must be
-% defined. Here is how:
+% defined. Here is how: 
 %
 %    \begin{macrocode}
 \def\bbl@providefam#1{%
@@ -12762,12 +12762,15 @@ help from Bernd Raichle, for which I am grateful.
     \\\bbl@add@list\\\bbl@font@fams{#1}%
     \\\DeclareRobustCommand\<#1family>{%
       \\\not@math@alphabet\<#1family>\relax
-      \\\fontfamily\<#1default>\\\selectfont}%
+      % \\\prepare@family@series@update{#1}\<#1default>% TODO. Fails
+      \\\fontfamily\<#1default>%
+      \<ifx>\\\UseHooks\\\@undefined\<else>\\\UseHook{#1family}\<fi>%
+      \\\selectfont}%
     \\\DeclareTextFontCommand{\<text#1>}{\<#1family>}}}
 %    \end{macrocode}
 %
 % The following macro is activated when the hook |babel-fontspec| is
-% enabled. But before we define a macro for a warning, which sets a
+% enabled. But before, we define a macro for a warning, which sets a
 % flag to avoid duplicate them.
 %
 %    \begin{macrocode}
