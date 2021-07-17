@@ -11,22 +11,25 @@ found (for example, if there was a typo in the document).
 
 ## LaTeX hooks
 
-There is partial support for the new LaTeX hooks. The hooks predefined
-by `babel` has the same names as those of `\AddBabelHook`, the main
-limitation being the parameters passed with the `babel` mechanism are
-not allowed. The generic unlocalized hooks are predefined, so that you
-can write:
+There is some partial support for the new LaTeX hooks. The hooks
+predefined by `babel` has the same names as those of `\AddBabelHook`,
+the main limitation being the parameters passed with the `babel`
+mechanism are not allowed. The generic unlocalized hooks are
+predefined, so that you can write:
 ```tex
 \AddToHook{babel/afterextras}{\frenchspacing}
 ```
-which is executed always after the extras for language being selected
-(and just before the non-localized hooks defined with `\AddBabelHook`.
+which is executed always after the extras for the language being
+selected (and just before the non-localized hooks defined with
+`\AddBabelHook`).
 
-In addition, locale-specific hooks are allowed (executed just before
-the localized `babel` hooks), but **not** predefined. You have to do it
-yourself. For example, to set `\frenchspacing` only in `bengali`:
+In addition, locale-specific hooks in the form
+`babel/hook-name/language-name` are *recognized* (executed just before
+the localized `babel` hooks), but they are *not predefined*. You have
+to do it yourself. For example, to set `\frenchspacing` only in
+`bengali`:
 ```tex
-\RequireHook{babel/afterextras/bengali} 
+\ProvideHook{babel/afterextras/bengali} 
 \AddToHook{babel/afterextras/bengali}{\frenchspacing}
 ```
 
@@ -36,7 +39,7 @@ advantage is you can reconfigure `babel` even before loading it.
 ## Fixes
 
 * Locale dependent quotes with CJK (#131).
-* Babel and hyperref prevent changes to the \LaTeX logo (#138).
+* Babel and hyperref prevent changes to the LaTeX logo (#138).
 
 ## Option `provide` extended
 
@@ -44,7 +47,7 @@ advantage is you can reconfigure `babel` even before loading it.
 
 Instead of a star, the package option `provide=`can be followed by a
 string to be passed to `\babelprovide` (rememer this option refers to
-the main language). There is a difference: to separate options use
+the main language). There is a difference – to separate options use
 semicolons instead of commas. You may need to wrap the string with
 braces. The option `import` is passed, too, even if not explicitly
 requested. A simple example is:
