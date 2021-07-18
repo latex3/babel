@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/07/17 v3.61.2436 The Babel package]
+\ProvidesFile{babel.dtx}[2021/07/18 v3.61.2437 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1280,7 +1280,6 @@ option (by its name in |language.dat|). There are two main uses:
 classes and packages, and as a last resort in case there are, for some
 reason, incompatible languages. It can be used if you just want to
 select the hyphenation patterns of a single language, too.
-% TODO: example
 
 \Describe\AfterBabelLanguage{\marg{option-name}\marg{code}}
 
@@ -1307,6 +1306,13 @@ be the same as the option name as set in |\usepackage|!).
 \usepackage[foo,bar]{babel}
 \end{verbatim}
 \end{example}
+
+\begin{note}
+  With a recent version of \LaTeX, an alternative method to execute
+  some code just after an |ldf| file is loaded is with |\AddToHook| and
+  the hook |file/after/<language>.ldf|. \Babel{} does not predeclare
+  it, and you have to do it yourself with |\NewHook| or |\ProvideHook|.
+\end{note}
 
 \begin{warning}
   Currently this option is not compatible with languages loaded on the
@@ -3706,15 +3712,24 @@ options are also used (eg, |\ProsodicMarksOn| in \textsf{latin}).
 events. Some hooks are predefined when \luatex{} and \xetex{} are
 used.
 
+\New{3.62} This is not the only way to inject code at those points. The
+events listed below can be used as a hook name in |\AddToHook| in the
+form |babel/|\marg{name}, but there is a limitation, because the
+parameters passed with the \babel{} mechanism are not allowed. The
+|\AddToHook| mechanism does \textit{not} replace the current one in
+`babel`. Its main advantage is you can reconfigure `babel` even before
+loading it. See the example below.
+
 \Describe{\AddBabelHook}{\oarg{lang}\marg{name}\marg{event}\marg{code}}
 
-The same name can be applied to several events. Hooks may be enabled
-and disabled for all defined events with |\EnableBabelHook|\marg{name},
-|\DisableBabelHook|\marg{name}. Names containing the string |babel| are
-reserved (they are used, for example, by |\useshortands*| to add a hook
-for the event |afterextras|). \New{3.33} They may be also applied to a
-specific language with the optional argument; language-specific
-settings are executed after global ones.
+The same name can be applied to several events. Hooks with a certain
+\marg{name} may be enabled and disabled for all defined events with
+|\EnableBabelHook|\marg{name}, |\DisableBabelHook|\marg{name}. Names
+containing the string |babel| are reserved (they are used, for example,
+by |\useshortands*| to add a hook for the event |afterextras|).
+\New{3.33} They may be also applied to a specific language with the
+optional argument; language-specific settings are executed after global
+ones.
 
 Current events are the following; in some of them you can use one to
 three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
@@ -3786,6 +3801,26 @@ ones, they only have a single hook and replace a default definition.
 \item[loadexceptions] (exceptions file) Loads the exceptions
   file. Used by \file{luababel.def}.
 \end{description}
+
+\begin{example}
+ The generic unlocalized hooks are predefined, so that you can write:
+\begin{verbatim}
+\AddToHook{babel/afterextras}{\frenchspacing} 
+\end{verbatim}
+which is executed always after the extras for the language being
+selected (and just before the non-localized hooks defined with
+|\AddBabelHook|).
+
+In addition, locale-specific hooks in the form
+|babel/|\marg{hook-name}|/|\marg{language-name} are \textit{recognized}
+(executed just before the localized \babel{} hooks), but they are \textit{not
+predefined}. You have to do it yourself. For example, to set
+|\frenchspacing| only in |bengali|:
+\begin{verbatim}
+\ProvideHook{babel/afterextras/bengali}
+\AddToHook{babel/afterextras/bengali}{\frenchspacing}
+\end{verbatim}
+\end{example}
 
 \Describe{\BabelContentsFiles}{}
 \New{3.9a} This macro contains a list of ``toc'' types
@@ -4990,8 +5025,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.61.2436>>
-%<<date=2021/07/17>>
+%<<version=3.61.2437>>
+%<<date=2021/07/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5397,7 +5432,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    Now we make sure all required files are loaded.  When the command
 %    |\AtBeginDocument| doesn't exist we assume that we are dealing
-%    with a plain-based format or \LaTeX2.09. In that case the file
+%    with a plain-based format. In that case the file
 %    \file{plain.def} is needed (which also defines
 %    |\AtBeginDocument|, and therefore it is not loaded twice). We
 %    need the first part when the format is created, and |\orig@dump|
@@ -5433,6 +5468,7 @@ help from Bernd Raichle, for which I am grateful.
    \ifx\directlua\@undefined\else
      \directlua{ Babel = Babel or {}
        Babel.debug = true }%
+     \input{babel-debug.tex}%
    \fi}
   {\providecommand\bbl@trace[1]{}%
    \let\bbl@debug\@gobble
@@ -7044,7 +7080,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % The file |babel.def| expects some definitions made in the \LaTeXe{}
-% style file. So, In \LaTeX2.09 and Plain{} we must provide at least
+% style file. So, in Plain{} we must provide at least
 % some predefined values as well some tools to set them (even if not
 % all options are available). There are no package options, and
 % therefore and alternative mechanism is provided. For the moment,
@@ -7078,16 +7114,6 @@ help from Bernd Raichle, for which I am grateful.
   \expandafter\newif\csname ifbbl@single\endcsname
   \chardef\bbl@bidimode\z@
 \fi
-%    \end{macrocode}
-%
-% Exit immediately with 2.09. An error is raised by the sty file, but
-% also try to minimize the number of errors.
-%
-%    \begin{macrocode}
-\ifx\bbl@trace\@undefined
-  \let\LdfInit\endinput
-  \def\ProvidesLanguage#1{\endinput}
-\endinput\fi % Same line!
 %    \end{macrocode}
 %
 % And continue.
@@ -7297,8 +7323,9 @@ help from Bernd Raichle, for which I am grateful.
 \ifx\@undefined\protect\let\protect\relax\fi
 %    \end{macrocode}
 %
-% The following definition is preserved for backwards compatibility. It
-% is related to a trick for 2.09.
+% The following definition is preserved for backwards compatibility
+% (eg, \textsf{arabi}, \textsf{koma}). It is related to a trick for
+% 2.09, now discarded.
 %
 %    \begin{macrocode}
 \let\xstring\string
@@ -8439,9 +8466,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\BabelModifiers\relax
   \let\bbl@screset\relax}%
 \def\ldf@finish#1{%
-  \ifx\loadlocalcfg\@undefined\else % For LaTeX 209
-    \loadlocalcfg{#1}%
-  \fi
+  \loadlocalcfg{#1}%
   \bbl@afterldf{#1}%
   \expandafter\main@language\expandafter{#1}%
   \catcode`\@=\atcatcode \let\atcatcode\relax
@@ -12289,22 +12314,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 % The following code is meant to be read by ini\TeX\ because it
 % should instruct \TeX\ to read hyphenation patterns. To this end the
-% \texttt{docstrip} option \texttt{patterns} can be used to include
+% \texttt{docstrip} option \texttt{patterns} is used to include
 % this code in the file \file{hyphen.cfg}. Code is written with lower
 % level macros.
-%
-% To make sure that \LaTeX$\:$2.09 executes the |\@begindocumenthook|
-% we would want to alter |\begin{document}|, but as this done too often
-% already, we add the new code at the front of |\@preamblecmds|. But we
-% can only do that after it has been defined, so we add this piece of
-% code to |\dump|.
-%
-% This new definition starts by adding an instruction to write a
-% message on the terminal and in the transcript file to inform the
-% user of the preloaded hyphenation patterns.
-%
-% Then everything is restored to the old situation and the format
-% is dumped.
 %
 %    \begin{macrocode}
 <@Make sure ProvidesFile is defined@>
@@ -12314,15 +12326,6 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@date{<@date@>}
 \ifx\AtBeginDocument\@undefined
   \def\@empty{}
-  \let\orig@dump\dump
-  \def\dump{%
-    \ifx\@ztryfc\@undefined
-    \else
-      \toks0=\expandafter{\@preamblecmds}%
-      \edef\@preamblecmds{\noexpand\@begindocumenthook\the\toks0}%
-      \def\@begindocumenthook{}%
-    \fi
-    \let\dump\orig@dump\let\orig@dump\@undefined\dump}
 \fi
 <@Define core switching macros@>
 %    \end{macrocode}
@@ -14868,31 +14871,6 @@ end
 
 function Babel.post_hyphenate_replace(head)
   Babel.hyphenate_replace(head, 1)
-end
-
-function Babel.debug_hyph(w, wn, sc, first, last, last_match)
-  local ss = ''
-  for pp = 1, 40 do
-    if wn[pp] then
-      if wn[pp].id == 29 then
-        ss = ss .. unicode.utf8.char(wn[pp].char)
-      else
-        ss = ss .. '{' .. wn[pp].id .. '}'
-      end
-    end
-  end
-  print('nod', ss)
-  print('lst_m',
-    string.rep(' ', unicode.utf8.len(
-       string.sub(w, 1, last_match))-1) .. '>')
-  print('str', w)
-  print('sc', string.rep(' ', sc-1) .. '^')
-  if first == last then
-    print('f=l', string.rep(' ', first-1) .. '!')
-  else
-    print('f/l', string.rep(' ', first-1) .. '[' ..
-      string.rep(' ', last-first-1) .. ']')
-  end
 end
 
 Babel.us_char = string.char(31)
@@ -22735,7 +22713,7 @@ Babel.cjk_breaks = {
 \fi
 %    \end{macrocode}
 %
-%    To prevent wasting two counters in \LaTeX$\:$2.09 (because
+%    To prevent wasting two counters in \LaTeX\ (because
 %    counters with the same name are allocated later by it) we reset
 %    the counter that holds the next free counter (|\count10|).
 %
