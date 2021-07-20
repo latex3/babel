@@ -1,6 +1,6 @@
 # What's new in babel 3.62
 
-2021-07-20??
+2021-07-19
 
 Most changes in this version are minor improvements in the code. 
 

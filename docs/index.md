@@ -47,7 +47,7 @@ Ubuntu).
 
 | Version | Most relevant changes
 | --- | --- |
-| [3.62](news/whats-new-in-babel-3.62.html) | (Under developement.)
+| [3.62](news/whats-new-in-babel-3.62.html) | Preliminary support for `\AddToHook`.
 | [3.61](news/whats-new-in-babel-3.61.html) | Transform `danda.nobreak`. Improved Arabic justification.
 | [3.60](news/whats-new-in-babel-3.60.html) | Mainly a maintenance release.
 | [3.59](news/whats-new-in-babel-3.59.html) | Tentative Arabic justification.
