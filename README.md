@@ -1,4 +1,4 @@
-## Babel 3.61.2437
+## Babel 3.62
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.61 are described in:
+Changes in version 3.62 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.61.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.62.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,24 +46,13 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.62   2021-??-??
+3.62   2021-07-19
        * No more errors with unknown languages in aux file.
        * Preliminary support for \AddToHook.
        * Tentative extension for provide=.
        * Fixes:
          - Locale dependent quotes with CJK (#131).
          - Babel and hyperref prevent changes to the \LaTeX logo (#138).
-       
-3.61   2021-06-28
-       * Improved justification=kashida/elongated: hboxes (lua).
-       * Transform danda.nobreak for several Indic scripts (lua):
-         Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam,
-         Marathi, Oriya, Tamil, Telugu.
-       * Improved \babelprovide when used to reconfigure a language.
-       * Fixes:
-         - Partial fix for #114 (bad breaks and spacing with
-           \selectlanguage).
-         - \shorthandoff*{^} caused error for \section command (#129).
 ```
 
 ### Previous changes

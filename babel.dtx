@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/07/18 v3.61.2437 The Babel package]
+\ProvidesFile{babel.dtx}[2021/07/19 v3.62 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -753,8 +753,6 @@ If you want a change which is really local, you must enclose this
 environment with an additional grouping, like braces |{}|.
 
 Spaces after the environment are ignored.
-
-
 
 \Describe{\begin\menv{otherlanguage*}}%
 {\oarg{option-list}\marg{language}\Eenv{otherlanguage*}}
@@ -3803,7 +3801,8 @@ ones, they only have a single hook and replace a default definition.
 \end{description}
 
 \begin{example}
- The generic unlocalized hooks are predefined, so that you can write:
+The generic unlocalized \LaTeX{} hooks are predefined, so that you can
+write:
 \begin{verbatim}
 \AddToHook{babel/afterextras}{\frenchspacing} 
 \end{verbatim}
@@ -5025,8 +5024,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.61.2437>>
-%<<date=2021/07/18>>
+%<<version=3.62>>
+%<<date=2021/07/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7566,7 +7565,7 @@ help from Bernd Raichle, for which I am grateful.
     \fi}}
 \def\babel@aux#1#2{%
   \select@language{#1}%
-  \bbl@foreach\BabelContentsFiles{% \relax: don't assume vertical mode
+  \bbl@foreach\BabelContentsFiles{% \relax -> don't assume vertical mode
     \@writefile{##1}{\babel@toc{#1}{#2}\relax}}}% TODO - plain?
 \def\babel@toc#1#2{%
   \select@language{#1}}
@@ -11000,7 +10999,7 @@ help from Bernd Raichle, for which I am grateful.
                  {See the manual for details.}}}%
     \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
     \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
-    \ifx\bbl@mapselect\@undefined % TODO. See onchar. selectfont hook
+    \ifx\bbl@mapselect\@undefined % TODO. See onchar.
       \AtBeginDocument{%
         \bbl@patchfont{{\bbl@mapselect}}%
         {\selectfont}}%
@@ -13699,7 +13698,7 @@ help from Bernd Raichle, for which I am grateful.
           local props = Babel.locale_props[LOCALE]
 
           local class = Babel.cjk_class[item.char].c
-          
+
           if props.cjk_quotes and props.cjk_quotes[item.char] then
             class = props.cjk_quotes[item.char]
           end
@@ -13931,7 +13930,7 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
   local GLYPH = node.id'glyph'
   local KASHIDA = Babel.attr_kashida
   local LOCALE = Babel.attr_locale
-  
+
   if line == nil then
     line = {}
     line.glue_sign = 1
@@ -14919,7 +14918,7 @@ function Babel.hyphenate_replace(head, mode)
         local new  -- used when inserting and removing nodes
 
         local matches = { u.match(w, p, last_match) }
-        
+
         if #matches < 2 then break end
 
         -- Get and remove empty captures (with ()'s, which return a
@@ -14984,7 +14983,7 @@ function Babel.hyphenate_replace(head, mode)
           if crep and crep.data then
             item_base = data_nodes[crep.data]
           end
-          
+
           if crep then
             step = crep.step or 0
           end
