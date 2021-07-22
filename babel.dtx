@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/07/19 v3.62 The Babel package]
+\ProvidesFile{babel.dtx}[2021/07/22 v3.63 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1305,12 +1305,12 @@ be the same as the option name as set in |\usepackage|!).
 \end{verbatim}
 \end{example}
 
-\begin{note}
-  With a recent version of \LaTeX, an alternative method to execute
-  some code just after an |ldf| file is loaded is with |\AddToHook| and
-  the hook |file/after/<language>.ldf|. \Babel{} does not predeclare
-  it, and you have to do it yourself with |\NewHook| or |\ProvideHook|.
-\end{note}
+% \begin{note}
+%   With a recent version of \LaTeX, an alternative method to execute
+%   some code just after an |ldf| file is loaded is with |\AddToHook| and
+%   the hook |file/after/<language>.ldf|. \Babel{} does not predeclare
+%   it, and you have to do it yourself with |\NewHook| or |\ProvideHook|.
+% \end{note}
 
 \begin{warning}
   Currently this option is not compatible with languages loaded on the
@@ -3710,13 +3710,13 @@ options are also used (eg, |\ProsodicMarksOn| in \textsf{latin}).
 events. Some hooks are predefined when \luatex{} and \xetex{} are
 used.
 
-\New{3.62} This is not the only way to inject code at those points. The
-events listed below can be used as a hook name in |\AddToHook| in the
-form |babel/|\marg{name}, but there is a limitation, because the
-parameters passed with the \babel{} mechanism are not allowed. The
-|\AddToHook| mechanism does \textit{not} replace the current one in
-`babel`. Its main advantage is you can reconfigure `babel` even before
-loading it. See the example below.
+% \New{3.62} This is not the only way to inject code at those points. The
+% events listed below can be used as a hook name in |\AddToHook| in the
+% form |babel/|\marg{name}, but there is a limitation, because the
+% parameters passed with the \babel{} mechanism are not allowed. The
+% |\AddToHook| mechanism does \textit{not} replace the current one in
+% `babel`. Its main advantage is you can reconfigure `babel` even before
+% loading it. See the example below.
 
 \Describe{\AddBabelHook}{\oarg{lang}\marg{name}\marg{event}\marg{code}}
 
@@ -3800,26 +3800,26 @@ ones, they only have a single hook and replace a default definition.
   file. Used by \file{luababel.def}.
 \end{description}
 
-\begin{example}
-The generic unlocalized \LaTeX{} hooks are predefined, so that you can
-write:
-\begin{verbatim}
-\AddToHook{babel/afterextras}{\frenchspacing} 
-\end{verbatim}
-which is executed always after the extras for the language being
-selected (and just before the non-localized hooks defined with
-|\AddBabelHook|).
+% \begin{example}
+% The generic unlocalized \LaTeX{} hooks are predefined, so that you can
+% write:
+% \begin{verbatim}
+% \AddToHook{babel/afterextras}{\frenchspacing} 
+% \end{verbatim}
+% which is executed always after the extras for the language being
+% selected (and just before the non-localized hooks defined with
+% |\AddBabelHook|).
 
-In addition, locale-specific hooks in the form
-|babel/|\marg{hook-name}|/|\marg{language-name} are \textit{recognized}
-(executed just before the localized \babel{} hooks), but they are \textit{not
-predefined}. You have to do it yourself. For example, to set
-|\frenchspacing| only in |bengali|:
-\begin{verbatim}
-\ProvideHook{babel/afterextras/bengali}
-\AddToHook{babel/afterextras/bengali}{\frenchspacing}
-\end{verbatim}
-\end{example}
+% In addition, locale-specific hooks in the form
+% |babel/|\marg{hook-name}|/|\marg{language-name} are \textit{recognized}
+% (executed just before the localized \babel{} hooks), but they are \textit{not
+% predefined}. You have to do it yourself. For example, to set
+% |\frenchspacing| only in |bengali|:
+% \begin{verbatim}
+% \ProvideHook{babel/afterextras/bengali}
+% \AddToHook{babel/afterextras/bengali}{\frenchspacing}
+% \end{verbatim}
+% \end{example}
 
 \Describe{\BabelContentsFiles}{}
 \New{3.9a} This macro contains a list of ``toc'' types
@@ -5024,8 +5024,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.62>>
-%<<date=2021/07/19>>
+%<<version=3.63>>
+%<<date=2021/07/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13081,7 +13081,7 @@ help from Bernd Raichle, for which I am grateful.
         \ifx\AtBeginDocument\@notprerr
           \expandafter\@secondoftwo  % to execute right now
         \fi
-        \AtBeginDocument{\bbl@patchfont{\bbl@xenohyph}}%
+        \AtBeginDocument{\bbl@patchfont{\bbl@ispacesize}}%
       \fi}%
   \fi}
 \ifx\DisableBabelHook\@undefined\endinput\fi

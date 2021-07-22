@@ -1,4 +1,4 @@
-## Babel 3.62
+## Babel 3.63
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.62 are described in:
+Changes in version 3.63 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.62.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.63.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,6 +46,9 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.63   2021-07-22
+       * Fixes a severe bug with CJK and XeTeX introduced in 3.62.
+       
 3.62   2021-07-19
        * No more errors with unknown languages in aux file.
        * Preliminary support for \AddToHook.
@@ -57,4 +60,4 @@ respective authors.
 
 ### Previous changes
 
-See https://latex3.github.io/babel/
+See https://latex3.github.io/babel/#whats-new
