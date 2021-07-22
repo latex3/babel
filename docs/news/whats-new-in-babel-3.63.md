@@ -3,4 +3,4 @@
 2021-07-22
 
 This release just fixes a severe bug with CJK and XeTeX introduced in
-3.63.
+3.62.
