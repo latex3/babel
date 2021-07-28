@@ -11,6 +11,8 @@ found (for example, if there was a typo in the document).
 
 ## LaTeX hooks
 
+**Note LaTeX hooks are still liable to change.**
+
 There is some partial support for the new LaTeX hooks. The hooks
 predefined by `babel` has the same names as those of `\AddBabelHook`,
 the main limitation being the parameters passed with the `babel`
