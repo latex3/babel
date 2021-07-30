@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/07/25 v3.63.2444 The Babel package]
+\ProvidesFile{babel.dtx}[2021/07/30 v3.63.2449 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5024,8 +5024,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.63.2444>>
-%<<date=2021/07/25>>
+%<<version=3.63.2449>>
+%<<date=2021/07/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5714,8 +5714,12 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@xin@{\string=}{\CurrentOption}%
   \ifin@
     \expandafter\bbl@tempa\CurrentOption\bbl@tempa
-  \else
-    \bbl@add@list\bbl@language@opts{\CurrentOption}%
+  \else  
+    \bbl@xin@{,\CurrentOption,}{,\bbl@language@opts,}%
+    \ifin@
+      \bbl@exp{\\\bbl@replace\\\bbl@language@opts{,\CurrentOption,}{}}%
+    \fi
+    \edef\bbl@language@opts{\bbl@language@opts,\CurrentOption,}
   \fi}
 %    \end{macrocode}
 %
@@ -5726,8 +5730,16 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\ifx\bbl@opt@provide\@nnil\else % Tests. Ignore.
+\ifx\bbl@opt@provide\@nnil
+  \let\bbl@opt@provide\@empty  % %%% MOVE above
+\else 
   \chardef\bbl@iniflag\@ne
+  \bbl@exp{\\\bbl@forkv{\@nameuse{@raw@opt@babel.sty}}}{%
+    \in@{,provide,}{,#1,}%
+    \ifin@
+      \def\bbl@opt@provide{#2}%
+      \bbl@replace\bbl@opt@provide{;}{,}%
+    \fi
 \fi
 % 
 %    \end{macrocode}
@@ -5813,10 +5825,13 @@ help from Bernd Raichle, for which I am grateful.
 \ifx\bbl@opt@safe\@undefined
   \def\bbl@opt@safe{BR}
 \fi
+%    \end{macrocode}
+%
+% Make sure the language set with `main` is the last one. 
+%
+%    \begin{macrocode}
 \ifx\bbl@opt@main\@nnil\else
-  \edef\bbl@language@opts{%
-    \ifx\bbl@language@opts\@empty\else\bbl@language@opts,\fi
-      \bbl@opt@main}
+  \edef\bbl@language@opts{\bbl@language@opts,\bbl@opt@main,}
 \fi
 %    \end{macrocode}
 %
@@ -6824,6 +6839,7 @@ help from Bernd Raichle, for which I am grateful.
   \IfFileExists{\CurrentOption.ldf}%
     {\bbl@load@language{\CurrentOption}}%
     {#1\bbl@load@language{#2}#3}}
+%
 \DeclareOption{hebrew}{%
   \input{rlbabel.def}%
   \bbl@load@language{hebrew}}
@@ -6865,47 +6881,67 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 %
 % Recognizing global options in packages not having a closed set of
-% them is not trivial, as for them to be processed they must be
-% defined explicitly. So, package options not yet taken into
-% account and stored in |bbl@language@opts| are assumed to be
-% languages (note this list also contains the language given with
-% |main|). If not declared above, the names of the option and the
-% file are the same.
+% them is not trivial, as for them to be processed they must be defined
+% explicitly. So, package options not yet taken into account and stored
+% in |bbl@language@opts| are assumed to be existing languages (note
+% this list also contains the language given with |main| as the last
+% element). If not declared above, the names of the option and the file
+% are the same. There are two steps -- first process option names and
+% collect the result, which then do the actual declarations.
+%
+% To allow multiple overlapping replacements, commas in
+% |\bbl@language@opts| are doubled.
 %
 %    \begin{macrocode}
-\let\bbl@tempc\relax
-\bbl@foreach\bbl@language@opts{%
-  \ifcase\bbl@iniflag  % Default
-    \bbl@ifunset{ds@#1}%
-      {\DeclareOption{#1}{\bbl@load@language{#1}}}%
-      {}%
-  \or    % provide=*
-    \@gobble % case 2 same as 1
-  \or    % provide+=*
-    \bbl@ifunset{ds@#1}%
-      {\IfFileExists{#1.ldf}{}%
-        {\IfFileExists{babel-#1.tex}{}{\@namedef{ds@#1}{}}}}%
-      {}%
-    \bbl@ifunset{ds@#1}%
-      {\def\bbl@tempc{#1}%
-       \DeclareOption{#1}{%
-         \ifnum\bbl@iniflag>\@ne
-           \bbl@ldfinit
-           \babelprovide[import]{#1}%
-           \bbl@afterldf{}%
-         \else
-           \bbl@load@language{#1}%
-         \fi}}%
-      {}%
-  \or    % provide*=*
-    \def\bbl@tempc{#1}%
-    \bbl@ifunset{ds@#1}%
-      {\DeclareOption{#1}{%
-         \bbl@ldfinit
-         \babelprovide[import]{#1}%
-         \bbl@afterldf{}}}%
-      {}%
+\let\bbl@elt\relax
+\let\bbl@tempe\@empty
+\bbl@foreach\@classoptionslist{%
+  \bbl@xin@{,#1,$}{\bbl@language@opts$}% Match last
+  \ifin@\else
+    \bbl@xin@{,#1,}{\bbl@language@opts}% Match non-last
+    \ifin@
+      \bbl@replace\bbl@language@opts{,#1,}{,,}%
+      \edef\bbl@tempe{\bbl@tempe\bbl@elt{0}{#1}}%
+    \else
+      \IfFileExists{#1.ldf}%
+        {\edef\bbl@tempe{\bbl@tempe\bbl@elt{1}{#1}}}%
+        {\ifnum\bbl@iniflag>\z@ % Optimization
+           \IfFileExists{babel-#1.tex}%
+             {\edef\bbl@tempe{\bbl@tempe\bbl@elt{2}{#1}}}%
+             {}%
+         \fi}%
+    \fi
   \fi}
+%
+\let\bbl@savemain\@empty
+\bbl@foreach\bbl@language@opts{%
+  \edef\bbl@tempe{\bbl@tempe\bbl@elt{0}{#1}}}
+\def\bbl@elt#1#2#3{%
+  \ifx#3\relax % if last
+    \bbl@ifunset{ds@#2}{}%
+      {\toks@\expandafter\expandafter\expandafter
+         {\csname ds@#2\endcsname}%
+       \bbl@exp{\def\\\bbl@savemain{\\\DeclareOption{#2}{\the\toks@}}}}%
+    \bbl@add\bbl@savemain{\bbl@elt{#1}{#2}}% Save main
+    \DeclareOption{#2}{}% 
+  \else
+    \ifnum\bbl@iniflag<\tw@ % other as ldf
+      \ifnum#1<\tw@ % Class: if ldf exists 1. Package: always 0
+        \bbl@ifunset{ds@#2}%
+         {\DeclareOption{#2}{\bbl@load@language{#2}}}%
+         {}%
+      \fi
+    \else % other as ini
+      \ifodd#1\relax\else % Class: if ini exists 2. Package: always 0
+        \DeclareOption{#2}{%
+          \bbl@ldfinit
+          \babelprovide[import]{#2}%
+          \bbl@afterldf{}}% <- 'main' implicit here
+       \fi
+    \fi
+  \fi
+  #3}
+\bbl@tempe\relax % \relax catches last
 %    \end{macrocode}
 %
 % Now, we make sure an option is explicitly declared for any language
@@ -6914,53 +6950,7 @@ help from Bernd Raichle, for which I am grateful.
 % accessing the file system just to see if the option could be a
 % language.
 %
-%    \begin{macrocode}
-\let\bbl@tempb\@nnil
-\bbl@foreach\@classoptionslist{%
-  \bbl@ifunset{ds@#1}%
-    {\IfFileExists{#1.ldf}%
-      {\def\bbl@tempb{#1}%
-       \DeclareOption{#1}{%
-         \ifnum\bbl@iniflag>\@ne
-           \bbl@ldfinit
-           \babelprovide[import]{#1}%
-           \bbl@afterldf{}%
-         \else
-           \bbl@load@language{#1}%
-         \fi}}%
-      {\IfFileExists{babel-#1.tex}% 
-        {\def\bbl@tempb{#1}%
-         \ifnum\bbl@iniflag>\z@
-           \DeclareOption{#1}{%
-             \ifnum\bbl@iniflag>\@ne
-               \bbl@ldfinit
-               \babelprovide[import]{#1}%
-               \bbl@afterldf{}%
-             \fi}%
-         \fi}%
-         {}}}%
-    {}}
-%    \end{macrocode}
-%
 %    If a main language has been set, store it for the third pass.
-%
-%    \begin{macrocode}
-\ifnum\bbl@iniflag=\z@\else
-  \ifx\bbl@opt@main\@nnil
-    \ifx\bbl@tempc\relax
-      \let\bbl@opt@main\bbl@tempb
-    \else
-      \let\bbl@opt@main\bbl@tempc
-    \fi
-  \fi
-\fi
-\ifx\bbl@opt@main\@nnil\else
-  \expandafter
-  \let\expandafter\bbl@loadmain\csname ds@\bbl@opt@main\endcsname
-  \expandafter\let\csname ds@\bbl@opt@main\endcsname\@empty
-\fi
-%    \end{macrocode}
-%
 % And we are done, because all options for this pass has been
 % declared. Those already processed in the first pass are just
 % ignored.
@@ -6986,7 +6976,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \bbl@trace{Option 'main'}
-\ifx\bbl@opt@main\@nnil
+\ifx\bbl@opt@main\@nnil   %% TODO. Revise
   \edef\bbl@tempa{\@classoptionslist,\bbl@language@opts}
   \let\bbl@tempc\@empty
   \bbl@for\bbl@tempb\bbl@tempa{%
@@ -7002,31 +6992,25 @@ help from Bernd Raichle, for which I am grateful.
       and a package option. Use 'main=\bbl@tempc' as\\%
       option. Reported}%
   \fi
-\else
-  \ifodd\bbl@iniflag  % case 1,3
-    \bbl@ldfinit
-    \let\CurrentOption\bbl@opt@main
-    \ifx\bbl@opt@provide\@nnil
-      \bbl@exp{\\\babelprovide[import,main]{\bbl@opt@main}}%
-    \else
-      \bbl@exp{\\\bbl@forkv{\@nameuse{@raw@opt@babel.sty}}}{%
-        \bbl@xin@{,provide,}{,#1,}%
-        \ifin@
-          \def\bbl@opt@provide{#2}%
-          \bbl@replace\bbl@opt@provide{;}{,}%
-        \fi}%
-      \bbl@exp{%
-        \\\babelprovide[\bbl@opt@provide,import,main]{\bbl@opt@main}}%
-    \fi
-    \bbl@afterldf{}%
-  \else % case 0,2
-    \chardef\bbl@iniflag\z@  % Force ldf 
-    \expandafter\let\csname ds@\bbl@opt@main\endcsname\bbl@loadmain
-    \ExecuteOptions{\bbl@opt@main}
-    \DeclareOption*{}%
-    \ProcessOptions*
-  \fi
 \fi
+\def\bbl@elt#1#2{% main
+  \ifodd\bbl@iniflag % as ini = 1,3
+    \ifodd#1\relax\else % Class: if ini exists 2. Package: always 0
+      \DeclareOption{#2}{%
+        \bbl@ldfinit
+        \babelprovide[\bbl@opt@provide,import]{#2}%
+        \bbl@afterldf{}}%
+     \fi
+  \else % as ldf = 0,2
+    \ifnum#1<\tw@ % Class: if ldf exists 1. Package: always 0
+      \bbl@ifunset{ds@#2}%
+        {\DeclareOption{#2}{\bbl@load@language{#2}}}%
+        {}%
+    \fi
+  \fi}
+\bbl@savemain
+\DeclareOption*{}
+\ProcessOptions*
 \def\AfterBabelLanguage{%
   \bbl@error
     {Too late for \string\AfterBabelLanguage}%
