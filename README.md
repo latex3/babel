@@ -1,4 +1,4 @@
-## Babel 3.63.2449
+## Babel 3.63.2456
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many

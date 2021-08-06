@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/07/30 v3.63.2449 The Babel package]
+\ProvidesFile{babel.dtx}[2021/08/06 v3.63.2456 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -788,9 +788,11 @@ group.
   |\text...| is heavily overloaded in \LaTeX{} and conflicts with
   existing macros may arise (|\textlatin|, |\textbar|, |\textit|,
   |\textcolor| and many others). The same applies to environments,
-  because |arabic| conflicts with |\arabic|. Except if there is a
-  reason for this ‘syntactical sugar’, the best option is to stick to
-  the default selectors or to define your own alternatives. 
+  because |arabic| conflicts with |\arabic|. Furthermore, and because of
+  this overloading, detecting the language of a chunk of text by
+  external tools can become impossible. Except if there is a reason for
+  this ‘syntactical sugar’, the best option is to stick to the default
+  selectors or to define your own alternatives.
 \end{warning}
 
 \begin{example}
@@ -5024,8 +5026,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.63.2449>>
-%<<date=2021/07/30>>
+%<<version=3.63.2456>>
+%<<date=2021/08/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5739,7 +5741,7 @@ help from Bernd Raichle, for which I am grateful.
     \ifin@
       \def\bbl@opt@provide{#2}%
       \bbl@replace\bbl@opt@provide{;}{,}%
-    \fi
+    \fi}
 \fi
 % 
 %    \end{macrocode}
@@ -6901,21 +6903,24 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@xin@{,#1,}{\bbl@language@opts}% Match non-last
     \ifin@
       \bbl@replace\bbl@language@opts{,#1,}{,,}%
-      \edef\bbl@tempe{\bbl@tempe\bbl@elt{0}{#1}}%
+      \edef\bbl@tempe{\bbl@tempe\bbl@elt{3}{#1}}%
     \else
-      \IfFileExists{#1.ldf}%
-        {\edef\bbl@tempe{\bbl@tempe\bbl@elt{1}{#1}}}%
-        {\ifnum\bbl@iniflag>\z@ % Optimization
-           \IfFileExists{babel-#1.tex}%
-             {\edef\bbl@tempe{\bbl@tempe\bbl@elt{2}{#1}}}%
-             {}%
-         \fi}%
+      \babel@savecnt\z@ % Use as temp
+      \ifnum\bbl@iniflag<\thr@@ % Optimization: 3 = always ini
+        \IfFileExists{#1.ldf}{\advance\babel@savecnt\@ne}{}%
+      \fi
+      \ifnum\bbl@iniflag>\z@ % Optimization: 0 = always ldf
+        \IfFileExists{babel-#1.tex}{\advance\babel@savecnt\tw@}{}%
+      \fi
+      \ifnum\babel@savecnt>\z@
+        \edef\bbl@tempe{\bbl@tempe\bbl@elt{\the\babel@savecnt}{#1}}%
+      \fi
     \fi
   \fi}
 %
 \let\bbl@savemain\@empty
 \bbl@foreach\bbl@language@opts{%
-  \edef\bbl@tempe{\bbl@tempe\bbl@elt{0}{#1}}}
+  \edef\bbl@tempe{\bbl@tempe\bbl@elt{3}{#1}}}
 \def\bbl@elt#1#2#3{%
   \ifx#3\relax % if last
     \bbl@ifunset{ds@#2}{}%
@@ -6926,13 +6931,13 @@ help from Bernd Raichle, for which I am grateful.
     \DeclareOption{#2}{}% 
   \else
     \ifnum\bbl@iniflag<\tw@ % other as ldf
-      \ifnum#1<\tw@ % Class: if ldf exists 1. Package: always 0
+      \ifodd#1\relax % Class: if ldf exists 1,3. Package: always 3
         \bbl@ifunset{ds@#2}%
          {\DeclareOption{#2}{\bbl@load@language{#2}}}%
          {}%
       \fi
-    \else % other as ini
-      \ifodd#1\relax\else % Class: if ini exists 2. Package: always 0
+    \else % other as ini  
+      \ifnum#1>\@ne %  % Class: if ini exists 2,3. Package: always 3
         \DeclareOption{#2}{%
           \bbl@ldfinit
           \babelprovide[import]{#2}%
@@ -6995,14 +7000,15 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 \def\bbl@elt#1#2{% main
   \ifodd\bbl@iniflag % as ini = 1,3
-    \ifodd#1\relax\else % Class: if ini exists 2. Package: always 0
-      \DeclareOption{#2}{%
-        \bbl@ldfinit
-        \babelprovide[\bbl@opt@provide,import]{#2}%
-        \bbl@afterldf{}}%
+    \ifnum#1>\@ne %  % Class: if ini exists 2,3. Package: always 3
+      \def\CurrentOption{#2}% Directly, because luatexbase
+      \bbl@ldfinit
+      \babelprovide[\bbl@opt@provide,main,import]{#2}%
+      \bbl@afterldf{}%
+      \DeclareOption{#2}{}% 
      \fi
   \else % as ldf = 0,2
-    \ifnum#1<\tw@ % Class: if ldf exists 1. Package: always 0
+    \ifodd#1\relax % Class: if ldf exists 1,3. Package: always 3
       \bbl@ifunset{ds@#2}%
         {\DeclareOption{#2}{\bbl@load@language{#2}}}%
         {}%
@@ -12875,7 +12881,7 @@ help from Bernd Raichle, for which I am grateful.
     \<keys_if_exist:nnF>{fontspec-opentype}{Language/\bbl@cl{lname}}%
       {\\\newfontlanguage{\bbl@cl{lname}}{\bbl@cl{lotf}}}%
     \\\renewfontfamily\\#4%
-      [\bbl@cs{lsys@\languagename},#2]}{#3}% ie \bbl@exp{..}{#3}
+      [\bbl@cl{lsys},#2]}{#3}% ie \bbl@exp{..}{#3}
   \begingroup
      #4%
      \xdef#1{\f@family}%     eg, \bbl@rmdflt@lang{FreeSerif(0)}
