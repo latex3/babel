@@ -1,6 +1,6 @@
 # Norwegian
 
-Norwegian(is available for `pdftex`, `xetex`, and `luatex`. An example
+Norwegian is available for `pdftex`, `xetex`, and `luatex`. An example
 for `pdftex` with the UTF-8 encoding is:
 ```tex
 \documentclass{book}
@@ -30,8 +30,8 @@ Nynorsk is also available. Just write instead:
 ## Hyphenation
 
 A number of words (a few hundred) require adding a letter when
-hyphenated. In `pdftex` and `xetex` they must be marked explicitly with
-a shorthand, like `volleyba"llandslag` (‘volleyball-landslag’).
+hyphenated. In `pdftex` and `xetex` they must be marked explicitly up
+with a shorthand, like `volleyba"llandslag` (‘volleyball-landslag’).
 
 With `luatex` no explicit markup is required, because they can be
 added to the exception list with:
