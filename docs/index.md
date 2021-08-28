@@ -24,9 +24,10 @@ may require a separate installation in some cases.
 
 Please, refer to the manual of the distribution you have installed,
 which in Windows and MacOS usually involves configuring it with a
-graphical user interface, and in Un*x systems with some command (for
-example, `sudo apt-get install texlive-lang-arabic` for Arabic in
-Ubuntu).
+graphical user interface, and in Un*x systems with some command, as for
+example `sudo apt-get install texlive-lang-arabic` for Arabic in
+Ubuntu. (Note some Linux distros install outdated versions. In such a
+case, it's advisable to install TeXLive.)
 
 -----------------------
 
@@ -47,6 +48,7 @@ Ubuntu).
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.63](news/whats-new-in-babel-3.63.html) | Fixes a severe bug with CJK and XeTeX.
 | [3.62](news/whats-new-in-babel-3.62.html) | Preliminary support for `\AddToHook`.
 | [3.61](news/whats-new-in-babel-3.61.html) | Transform `danda.nobreak`. Improved Arabic justification.
 | [3.60](news/whats-new-in-babel-3.60.html) | Mainly a maintenance release.

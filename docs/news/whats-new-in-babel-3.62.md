@@ -4,6 +4,8 @@
 
 Most changes in this version are minor improvements in the code. 
 
+⚠ This version introduced a severe bug in XeTeX with CJK, fixed in 3.63.
+
 ## Unknown languages in auxiliary files
 
 A warning is shown instead of raising an error if a language is not
