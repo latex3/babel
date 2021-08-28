@@ -31,19 +31,20 @@ Nynorsk is also available. Just write instead:
 
 A number of words (a few hundred) require adding a letter when
 hyphenated. In `pdftex` and `xetex` they must be marked explicitly up
-with a shorthand, like `volleyba"llandslag` (‘volleyball-landslag’).
+with a shorthand, like `volleyba"llandslag` (‘volleyballandslag’ →
+‘volleyball-landslag’).
 
 With `luatex` no explicit markup is required, because they can be
 added to the exception list with:
 ```tex
 \babelhyphenation[norsk]{vol-ley-ba{ll-}{l}{ll}ands-lag}
 ```
-Here, the group `{ll-}{l}{ll}` is equivalente to a `\discretionary`.
+Here, the group `{ll-}{l}{ll}` is equivalent to a `\discretionary`.
 Remember you must add every word (like, say, ‘volleyballandslaget’).
 
 Alternatively, you may define a transform, which is more flexible, but
 less efficient. For example:
-```
+```tex
 \babelposthyphenation{norsk}{ vol|ley|ba()l()lands|la }{
   { no = l, pre = ll- }
 }
@@ -57,7 +58,7 @@ different penalties, too, as explained in [Non-standard hyphenation
 with
 luatex](https://latex3.github.io/babel/guides/non-standard-hyphenation-with-luatex.html).
 
-Feel free to contribute list a words requiring this feature.
+Feel free to contribute a list a words requiring this feature.
 
 ## Useful Links
 
