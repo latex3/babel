@@ -1,4 +1,4 @@
-## Babel 3.63.2480
+## Babel 3.63.2485
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -47,6 +47,7 @@ respective authors.
 ### Summary of Latest changes
 ```
 3.64   2021-??
+       * Added a few counters to CJK.
        * Fixes:
          - babel errors on documentoption "chinese" (#141)
          
