@@ -33,7 +33,7 @@ the localized `babel` hooks), but they are *not predefined*. You have
 to do it yourself. For example, to set `\frenchspacing` only in
 `bengali`:
 ```tex
-\ProvideHook{babel/afterextras/bengali} 
+\ActivateGenericHook{babel/afterextras/bengali}
 \AddToHook{babel/afterextras/bengali}{\frenchspacing}
 ```
 
