@@ -18,4 +18,5 @@ not included in TeX distributions.
   babel](https://tex.stackexchange.com/questions/558939/tables-with-hebrew-text-using-babel)
 * [Hebrew name
   typesetting](https://tex.stackexchange.com/a/581010/5735)
+* [Help getting started with Hebrew in babel](https://tex.stackexchange.com/questions/138992/help-getting-started-with-hebrew-in-babel/611604#611604)
 

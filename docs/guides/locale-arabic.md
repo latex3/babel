@@ -93,5 +93,6 @@ copy-pasted (and `cmap` works only to some extent).
 * [Index not generated in an Arabic document](https://tex.stackexchange.com/a/506482/5735)
 * [Right alignment for section and subsection in the table of contents](https://tex.stackexchange.com/a/587584/5735)
 * [Understanding the starred version of \babelfont](https://tex.stackexchange.com/a/603925/5735)
+* [Emphasizing Arabic text characters](https://tex.stackexchange.com/questions/528341/emphasizing-arabic-text-characters)
 
 

@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.64](news/whats-new-in-babel-3.64.html) | (Under development.)
 | [3.63](news/whats-new-in-babel-3.63.html) | Fixes a severe bug with CJK and XeTeX.
 | [3.62](news/whats-new-in-babel-3.62.html) | Preliminary support for `\AddToHook`.
 | [3.61](news/whats-new-in-babel-3.61.html) | Transform `danda.nobreak`. Improved Arabic justification.
