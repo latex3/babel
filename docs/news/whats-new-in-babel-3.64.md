@@ -17,4 +17,3 @@ Some new counters has been added to Japanese.
   key with space separated names. Now only the latter system (a single
   key) is used.
  
-*
