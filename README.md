@@ -1,4 +1,4 @@
-## Babel 3.63.2510
+## Babel 3.63.2517
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.63 are described in:
+Changes in version 3.64 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.63.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.64.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,11 +46,13 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.64   2021-??
+3.64   2021-10-??
        * Added a few counters to CJK.
+       * Restored the previous behavior of \selectlanguage with
+         relation to \write (see #114).
        * Fixes:
-         - babel errors on documentoption "chinese" (#141)
-         - name.babel in ini files set inconsistently
+         - babel errors on document option 'chinese' (#141).
+         - name.babel in ini files set inconsistently.
          
 3.63   2021-07-22
        * Fixes a severe bug with CJK and XeTeX introduced in 3.62.
