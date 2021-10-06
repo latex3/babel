@@ -19,4 +19,5 @@ not included in TeX distributions.
 * [Hebrew name
   typesetting](https://tex.stackexchange.com/a/581010/5735)
 * [Help getting started with Hebrew in babel](https://tex.stackexchange.com/questions/138992/help-getting-started-with-hebrew-in-babel/611604#611604)
+* [Why aren’t dageshes aligned in Hebrew in LuaLaTex?](https://tex.stackexchange.com/questions/605202/why-arent-dageshes-aligned-in-hebrew-in-lualatex)
 

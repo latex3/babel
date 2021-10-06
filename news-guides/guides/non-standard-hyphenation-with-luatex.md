@@ -1,6 +1,5 @@
 # Non-standard hyphenation with `luatex`
 
-
 Here is a simple example of a declaration:
 ```tex
 \babelposthyphenation{ngerman}{ck}{
@@ -45,9 +44,11 @@ string. The nodes created are literal copies of the original, but with
 new characters.
 4. With `remove` the node is, well, removed (ie, it's like and empty
 `string=`).
-5. (Development) **Spaces** are declared with something like `space =.2
+5. **Spaces** are declared with something like `space =.2
 .1 0`. The values are in em units, and they are the natural width, the
-`plus`, and the `minus`. Here, you may need `data`, too.
+`plus`, and the `minus`. Here, you may need `data`, too. With
+`spacefactor` the unit is the font size of the current font (if the
+node is a glyph; you may need a `data=` pointing to a specific glyph).
 
 A few keys can be used in conjunction with `insert`, which must be the
 very first one in the replacement. 
@@ -66,8 +67,12 @@ to reduce the number of items in the replacement list:
 
 Dots, characters classes (with %) and char-sets (with `[]`, including
 complementing and ranges) are allowed, too. When using the dot, be
-aware it matches `|` and `=`, too. A matched `|` or `=` cannot be
-currently replaced by a string.
+aware it matches `|` and `=`, too. A matched `|` or `=` can be
+replaced with the hex value (at least 4 digits): `{007C}` and `{003D}`.
+`+`, `-`, `?` and `*` are allowed outside the `()`...`()` block, but
+not inside. So, `{a}|?()Á()` is a letter followed optionally by a
+discretionary, but only Á is actually transformed (in these cases, you
+may wanto to go back with the key `step`).
 
 Ordinary captures are allowed _inside_ the empty captures (they must
 resolve to exactly one character). In the pattern, **the syntax `{n}`**
