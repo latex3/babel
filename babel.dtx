@@ -2280,7 +2280,7 @@ to select fonts in addition to the three basic families.
   \textit{Package fontspec Warning: 'Language 'LANG' not available for
   font 'FONT' with script 'SCRIPT' 'Default' language used instead'}.
 
-  \textbf{This is \textit{not} and error.} This warning is shown by
+  \textbf{This is \textit{not} an error.} This warning is shown by
   \textsf{fontspec}, not by \babel. It can be irrelevant for English,
   but not for many other languages, including Urdu and Turkish. This is
   a useful and harmless warning, and if everything is fine with your
@@ -2292,7 +2292,7 @@ to select fonts in addition to the three basic families.
   standard families} \textit{Package babel Info: The following fonts
   are not babel standard families}.
 
-  \textbf{This is \textit{not} and error.} \babel{} assumes that if you
+  \textbf{This is \textit{not} an error.} \babel{} assumes that if you
   are using |\babelfont| for a family, very likely you want to define
   the rest of them. If you don't, you can find some inconsistencies
   between families. This checking is done at the beginning of the
@@ -4861,7 +4861,7 @@ corresponding place. A selective list follows:
 \item Active chars where not reset at the end of language options, and
   that lead to incompatibilities between languages.
 
-\item |\textormath| raised and error with a conditional.
+\item |\textormath| raised an error with a conditional.
 
 \item |\aliasshorthand| didn't work (or only in a few and very specific
   cases).
@@ -5904,7 +5904,7 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %    |\bbl@iflanguage| executes code only if the language |l@|
-%    exists. Otherwise raises and error.
+%    exists. Otherwise raises an error.
 %
 %    The argument of |\bbl@fixname| has to be a macro name, as it may get
 %    ``fixed'' if casing (lc/uc) is wrong. It's an attempt to fix a
