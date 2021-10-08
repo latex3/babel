@@ -11,7 +11,7 @@ Korean:
 * `circled.ideograph`: ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
 * `parenthesized.ideograph`: ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
 
-An for Japanese, these two counters and also:
+And for Japanese, these two counters and also:
 * `cjk-earthly-branch`: 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
 * `cjk-heavenly-stem`: 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
 
@@ -34,9 +34,15 @@ the following way:
 * `\babeladjust{ select.write = keep }`, which is again the default
   behavior. With it the `\write` and the skips are kept in the order
   they are written.
+* `\babeladjust{ select.write = omit }` may seem a too drastic solution,
+  because `\selectlanguage` doesn’t write anything, but more often
+  than not this command is applied to more or less shorts texts with no
+  sectioning or similar commands and therefore no language
+  synchronization is necessary.
 
 I think this issue must be considered a ‘known issue’, because it
-seems unfixable.
+seems unfixable (except, perhaps, by manipulating the vertical list
+with `luatex`).
 
 ## Fixes
 
@@ -49,7 +55,7 @@ seems unfixable.
   
 ## Other changes
 
-An internal change is now `babel.sty` and `babel.def` are separated
+An internal change is now `babel.sty` and `babel.def` are separate
 files for LaTeX and Plain-based formats. Until now, `babel.sty` loaded
 partially `babel.def`.
 
