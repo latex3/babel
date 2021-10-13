@@ -1,4 +1,4 @@
-## Babel 3.63.2518
+## Babel 3.64
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,13 +46,13 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.64   2021-10-??
+3.64   2021-10-13
        * Added a few counters to CJK.
        * Restored the previous behavior of \selectlanguage with
          relation to \write (see #114).
        * Fixes:
          - babel errors on document option 'chinese' (#141).
-         - name.babel in ini files set inconsistently.
+         - name.babel in ini files set inconsistently (#149).
        * Now babel.def and babel.sty are separate files (for
          Plain-based formats and LaTeX, respectively).
          
