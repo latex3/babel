@@ -13,7 +13,8 @@ found (for example, if there was a typo in the document).
 
 ## LaTeX hooks
 
-**Note LaTeX hooks are still liable to change.**
+⚠ This section has been modified with the release of version 3.64, after
+some changes in the LaTeX hooking mechanism.
 
 There is some partial support for the new LaTeX hooks. The hooks
 predefined by `babel` has the same names as those of `\AddBabelHook`,
@@ -21,20 +22,20 @@ the main limitation being the parameters passed with the `babel`
 mechanism are not allowed. The generic unlocalized hooks are
 predefined, so that you can write:
 ```tex
-\AddToHook{babel/afterextras}{\frenchspacing}
+\AddToHook{babel/*/afterextras}{\frenchspacing}
 ```
 which is executed always after the extras for the language being
 selected (and just before the non-localized hooks defined with
-`\AddBabelHook`).
+`\AddBabelHook`). Here the star means ‘all languages’.
 
 In addition, locale-specific hooks in the form
-`babel/hook-name/language-name` are *recognized* (executed just before
+`babel/language-name/hook-name` are *recognized* (executed just before
 the localized `babel` hooks), but they are *not predefined*. You have
 to do it yourself. For example, to set `\frenchspacing` only in
 `bengali`:
 ```tex
-\ActivateGenericHook{babel/afterextras/bengali}
-\AddToHook{babel/afterextras/bengali}{\frenchspacing}
+\ActivateGenericHook{babel/bengali/afterextras}
+\AddToHook{babel/bengali/afterextras}{\frenchspacing}
 ```
 
 This mechanism does *not* replace the current one in `babel`. Its main
