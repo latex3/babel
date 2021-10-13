@@ -1,7 +1,5 @@
 # What's new in babel 3.64
 
-*(Under development.)*
-
 2021-10-13
 
 ## Changes in the preliminary code for LaTeX hooks
