@@ -5,7 +5,7 @@
 ## Changes in the preliminary code for LaTeX hooks
 
 ⚠ Following some changes in the LaTeX mechanism itself, the interface in
-`babel` han been modified. See the news for version
+`babel` haa been modified. See the news for version
 [3.62](https://latex3.github.io/babel/news/whats-new-in-babel-3.62.html#latex-hooks).
 
 ## Changes in `ini` files
@@ -23,8 +23,8 @@ And for Japanese, these two counters and also:
 
 ### Norwegian
 
-The names and tags for Norwegian have been aligned with the CLDR
-39. Particularly, `no` is now the main language and it’s the locale
+The names and tags for Norwegian have been aligned with the CLDR 39.
+Particularly, `no` is now the main language and it’s the locale
 loaded with `norwegian`.
 
 ## Revert fix for `\selectlanguage`
@@ -63,7 +63,7 @@ with `luatex`).
 * In some `ini` files multiple `babel.name`’s were separated keys with a
   suffix (`A`, `B`, etc.), and in some other they were grouped in a single
   key with a space-separated list. Now only the latter system (a single
-  key) is used.
+  key) is used (#149).
   
 ## Other changes
 
@@ -71,9 +71,9 @@ An internal change is now `babel.sty` and `babel.def` are separate
 files for LaTeX and Plain-based formats, respectively. So far,
 `babel.sty` loaded partially `babel.def`.
 
-The options manager for languages (the way `babel` processes the
-language options declared in the package or the class) has been
-rewritten. In some cases the order languages are loaded may be
-different (except the main language, of course), but I don’t think
-there will be any real problems.
+(⚠ Undo in version 3.65.) The options manager for languages (the way
+`babel` processes the language options declared in the package or the
+class) has been rewritten. In some cases the order languages are loaded
+may be different (except the main language, of course), but I don’t
+think there will be any real problems.
  

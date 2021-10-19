@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.65](news/whats-new-in-babel-3.64.html) | Fixes a severe bug with `spanish`.
 | [3.64](news/whats-new-in-babel-3.64.html) | New counters in CJK. 
 | [3.63](news/whats-new-in-babel-3.63.html) | Fixes a severe bug with CJK and XeTeX.
 | [3.62](news/whats-new-in-babel-3.62.html) | Preliminary support for `\AddToHook`.
