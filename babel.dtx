@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/10/19 v3.65 The Babel package]
+\ProvidesFile{babel.dtx}[2021/10/22 v3.65.2533 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3062,7 +3062,8 @@ Transforms (only \luatex) provide a way to process the text on the
 typesetting level in several language-dependent ways, like non-standard
 hyphenation, special line breaking rules, script to script conversion,
 spacing conventions and so on.\footnote{They are similar in concept,
-but not the same, as those in Unicode.}
+but not the same, as those in Unicode. The main inspiration for this
+feature is the Omega transformation processes.}
 
 It currently embraces |\babelprehyphenation| and
 |\babelposthyphenation|.
@@ -5026,8 +5027,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.65>>
-%<<date=2021/10/19>>
+%<<version=3.65.2533>>
+%<<date=2021/10/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14552,7 +14553,7 @@ end
      {\ifx\tikz@atbegin@node\@undefined\else
         \ifx\AddToHook\@undefined\else % TODO. Still tentative.
           \AddToHook{env/pgfpicture/begin}{\bbl@pictsetdir\@ne}%
-          % \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\z@}%
+          \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\z@}%
           \bbl@add\pgfinterruptpicture{\bbl@pictresetdir}%
         \fi
         \let\bbl@OL@pgfpicture\pgfpicture
@@ -14565,6 +14566,10 @@ end
       \fi
       \ifx\AddToHook\@undefined\else
         \AddToHook{env/tcolorbox/begin}{\bbl@pictsetdir\@ne}%
+        \ifx\tcb@savebox\@undefined\else
+          \bbl@sreplace\tcb@savebox
+            {\ignorespaces}{\ignorespaces\bbl@pictresetdir}%
+        \fi
       \fi
       }}
   {}

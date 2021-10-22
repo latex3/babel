@@ -1,4 +1,4 @@
-## Babel 3.65
+## Babel 3.65.2533
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +46,10 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.66   2021-??
+       * Fixes:
+         - tcolorbox in vertical and horizontal mode (#146)
+         
 3.65   2021-10-19
        * Fixes a severe bug with 'spanish' introduced in 3.64 (#154).
        
