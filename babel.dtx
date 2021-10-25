@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/10/22 v3.65.2533 The Babel package]
+\ProvidesFile{babel.dtx}[2021/10/25 v3.65.2536 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3113,6 +3113,13 @@ a non-syllabic preposition or conjunction into a non-breaking space.}
 \trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
 upsilon if hyphenated just before. It works with the three variants.}
 
+\trans{Greek}{transliteration.omega}{The provided combinations are no
+exactly the same, but this transform follows the syntax of Omega:
+|=| for the circumflex, |v| for digamma, and so on. For better
+compatibility with Levy’s system, \texttt{\string~} (as ‘string’) is an
+alternative to |=|. |'| is tonos in Monotonic Greek, but oxia in
+Polytonic and Ancient Greek.}
+
 \trans{Hindi, Sanskrit}{transliteration.hk}{The Harvard-Kyoto system to
 romanize Devanagari.}
 
@@ -5027,8 +5034,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.65.2533>>
-%<<date=2021/10/22>>
+%<<version=3.65.2536>>
+%<<date=2021/10/25>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14550,28 +14557,31 @@ end
        \MakeRobust\put}%
    \fi
    \AtBeginDocument
-     {\ifx\tikz@atbegin@node\@undefined\else
-        \ifx\AddToHook\@undefined\else % TODO. Still tentative.
+     {\ifx\pgfpicture\@undefined\else % TODO. Allow deactivate?
+        \ifx\AddToHook\@undefined
+          \bbl@sreplace\pgfpicture{\pgfpicturetrue}%
+            {\bbl@pictsetdir\z@\pgfpicturetrue}%
+        \else
           \AddToHook{env/pgfpicture/begin}{\bbl@pictsetdir\@ne}%
-          \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\z@}%
-          \bbl@add\pgfinterruptpicture{\bbl@pictresetdir}%
         \fi
-        \let\bbl@OL@pgfpicture\pgfpicture
-        \bbl@sreplace\pgfpicture{\pgfpicturetrue}%
-          {\bbl@pictsetdir\z@\pgfpicturetrue}%
+        \bbl@add\pgfinterruptpicture{\bbl@pictresetdir}%
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\z@}%
+      \fi
+      \ifx\tikzpicture\@undefined\else     
+        \ifx\AddToHook\@undefined\else
+          \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\z@}%
+        \fi
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
-        \bbl@sreplace\tikz{\begingroup}%
-          {\begingroup\bbl@pictsetdir\tw@}%
+        \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
       \fi
       \ifx\AddToHook\@undefined\else
-        \AddToHook{env/tcolorbox/begin}{\bbl@pictsetdir\@ne}%
-        \ifx\tcb@savebox\@undefined\else
+        \ifx\tcolorbox\@undefined\else
+          \AddToHook{env/tcolorbox/begin}{\bbl@pictsetdir\@ne}%
           \bbl@sreplace\tcb@savebox
             {\ignorespaces}{\ignorespaces\bbl@pictresetdir}%
         \fi
       \fi
-      }}
+    }}
   {}
 %    \end{macrocode}
 %
