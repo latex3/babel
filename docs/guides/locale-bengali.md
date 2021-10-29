@@ -26,11 +26,11 @@ form, you may still need some conversion because LaTeX uses internally
 the Arabic ones. With `luatex` there are two ways to map Arabic to
 Bengali numerals, passed as option to `\babelprovide`:
 * `maparabic` does it at the TeX level, by redefining `\arabic`. Note
-  form written to the auxiliary files is the converted one. It works
-  with `xetex`, too.
+  the form written to the auxiliary files is the converted one (which
+  can be an issue in indexes). It works with `xetex`, too.
 * `mapdigits` does it at the engine level. This is
   usually the preferred method.
-  
+
 To perform this conversión, use the following preamble:
 ```tex
 \usepackage[bengali, provide=*]{babel}
@@ -49,10 +49,17 @@ See the explanation in the babel manual about `\localecounter` and
 _Only luatex_. The transform `danda.nobreak` prevents a line break
 before a danda or double danda if there is a space.
 
+In Unicode, danda and double danda are shared by several scripts, and
+`babel` doesn’t assign it by default to any of them. If you are using
+`onchar` to select the font you may want to assign them with:
+```tex
+\babelcharproperty{`।}{locale}{bengali}
+\babelcharproperty{`॥}{locale}{bengali}
+```
 
 ## Useful links
 
 * [How to write Bengali in LaTeX?](https://tex.stackexchange.com/a/561540/5735)
-* [Change numbering style to Bengali in nested ordered
-  list](https://tex.stackexchange.com/a/563725/5735)
+* [Change numbering style to Bengali in nested ordered list](https://tex.stackexchange.com/a/563725/5735)
+* [What is the best way to write Bangla in latex?](https://tex.stackexchange.com/questions/620543/what-is-the-best-way-to-write-bangla-in-latex/620546#620546)
 * [Typesetting Bangla script with LuaLATEX](https://www.latex-project.org/publications/UFi-TUB-tb127fischer-bangla.pdf)

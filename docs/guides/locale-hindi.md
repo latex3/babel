@@ -52,6 +52,14 @@ the following four characters: `!?:;`.
 The transform `danda.nobreak` prevents a line break before a danda or
 double danda if there is a space.
 
+In Unicode, danda and double danda are shared by several scripts, and
+`babel` doesn’t assign it by default to any of them. If you are using
+`onchar` to select the font you may want to assign them with:
+```tex
+\babelcharproperty{`।}{locale}{hindi}
+\babelcharproperty{`॥}{locale}{hindi}
+```
+
 ## Transliterations
 
 _Only luatex_. There is a transform (`transliteration.hk`) for the Harvard-Kyoto
