@@ -1,4 +1,4 @@
-## Babel 3.65.2536
+## Babel 3.65.2543
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -47,6 +47,9 @@ respective authors.
 ### Summary of Latest changes
 ```
 3.66   2021-??
+       * Transforms for Greek:
+         - transliteration.omega
+         - sigma.final
        * Fixes:
          - tcolorbox in vertical and horizontal mode (#146)
          

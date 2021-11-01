@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/10/25 v3.65.2536 The Babel package]
+\ProvidesFile{babel.dtx}[2021/11/01 v3.65.2543 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2309,6 +2309,16 @@ to select fonts in addition to the three basic families.
   be aware that this may lead to some problems.
 \end{troubleshooting}
 
+\begin{note}
+  |\babelfont| is a high level interface to \textsf{fontspec}, and
+  therefore in \xetex{} you can apply |Mapping|s. For example, there is
+  a set of 
+  \href{https://github.com/davidmjones/brahmic-maps}{transliterations
+  for Brahmic scripts} by Davis M. Jones. After installing
+  them in you distribution, just set the map as you would do with
+  \textsf{fontspec}.
+\end{note}
+
 \subsection{Modifying a language}
 
 Modifying the behavior of a language (say, the chapter
@@ -3113,8 +3123,8 @@ a non-syllabic preposition or conjunction into a non-breaking space.}
 \trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
 upsilon if hyphenated just before. It works with the three variants.}
 
-\trans{Greek}{transliteration.omega}{The provided combinations are no
-exactly the same, but this transform follows the syntax of Omega:
+\trans{Greek}{transliteration.omega}{Although he provided combinations
+are not exactly the same, this transform follows the syntax of Omega:
 |=| for the circumflex, |v| for digamma, and so on. For better
 compatibility with Levy’s system, \texttt{\string~} (as ‘string’) is an
 alternative to |=|. |'| is tonos in Monotonic Greek, but oxia in
@@ -5034,8 +5044,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.65.2536>>
-%<<date=2021/10/25>>
+%<<version=3.65.2543>>
+%<<date=2021/11/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9702,9 +9712,11 @@ help from Bernd Raichle, for which I am grateful.
           {\def\languagename{##1}%
            \let\bbl@ifrestoring\@firstoftwo % To avoid font warning
            \bbl@switchfont
-           \directlua{
-             Babel.locale_props[\the\csname bbl@id@@##1\endcsname]%
-                     ['/\bbl@prefontid'] = \fontid\font\space}}}%
+           \ifnum\fontid\font>\z@ % A hack, for the pgf nullfont hack
+             \directlua{
+               Babel.locale_props[\the\csname bbl@id@@##1\endcsname]%
+                       ['/\bbl@prefontid'] = \fontid\font\space}%
+           \fi}}%
       \fi
       \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
     \fi
@@ -14869,9 +14881,9 @@ function Babel.hyphenate_replace(head, mode)
         first = u.len(w:sub(1, first-1)) + 1
         last  = u.len(w:sub(1, last-1)) -- now last points to C
 
-        -- This loop stores in n small table the nodes
+        -- This loop stores in a small table the nodes
         -- corresponding to the pattern. Used by 'data' to provide a
-        -- predictable behavior with 'insert' (now w_nodes is modified on
+        -- predictable behavior with 'insert' (w_nodes is modified on
         -- the fly), and also access to 'remove'd nodes.
         local sc = first-1           -- Used below, too
         local data_nodes = {}
