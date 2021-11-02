@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/11/01 v3.65.2543 The Babel package]
+\ProvidesFile{babel.dtx}[2021/11/02 v3.65.2544 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5044,8 +5044,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.65.2543>>
-%<<date=2021/11/01>>
+%<<version=3.65.2544>>
+%<<date=2021/11/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14591,6 +14591,8 @@ end
           \AddToHook{env/tcolorbox/begin}{\bbl@pictsetdir\@ne}%
           \bbl@sreplace\tcb@savebox
             {\ignorespaces}{\ignorespaces\bbl@pictresetdir}%
+          \bbl@sreplace\tikzpicture@tcb@hooked{\noexpand\tikzpicture}%
+            {\textdir TLT\noexpand\tikzpicture}%
         \fi
       \fi
     }}
