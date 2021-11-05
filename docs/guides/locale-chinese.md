@@ -59,7 +59,7 @@ Properties](https://www.unicode.org/reports/tr14/).
 With `luatex` there are two ways to map Arabic to
 Chinese numerals, passed as option to `\babelprovide`:
 * `maparabic` does it at the TeX level, by redefining `\arabic`. Note
-  form written to the auxiliary files is the converted one. It works
+  the form written to the auxiliary files is the converted one. It works
   with `xetex`, too.
 * `mapdigits` does it at the engine level. This is
   usually the preferred method.

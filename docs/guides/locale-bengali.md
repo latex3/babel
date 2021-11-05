@@ -50,7 +50,7 @@ _Only luatex_. The transform `danda.nobreak` prevents a line break
 before a danda or double danda if there is a space.
 
 In Unicode, danda and double danda are shared by several scripts, and
-`babel` doesn’t assign it by default to any of them. If you are using
+`babel` doesn’t assign them by default to any of them. If you are using
 `onchar` to select the font you may want to assign them with:
 ```tex
 \babelcharproperty{`।}{locale}{bengali}

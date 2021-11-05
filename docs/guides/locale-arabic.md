@@ -37,7 +37,7 @@ form, but you may still need some conversion because LaTeX uses internally
 the Western Arabic ones. With `luatex` there are two ways to map the
 latter to the locale numerals, passed as option to `\babelprovide`:
 * `maparabic` does it at the TeX level, by redefining `\arabic`. Note
-  form written to the auxiliary files is the converted one. It works
+  the form written to the auxiliary files is the converted one. It works
   with `xetex`, too.
 * `mapdigits` does it at the engine level. This is
   usually the preferred method.
@@ -80,6 +80,7 @@ to declare a language from scratch in the following way:
 \usepackage[LAE, T1]{fontenc}
 \babelprovide{arabic}
 \addto\extrasarabic{\fontencoding{LAE}\selectfont}
+\addto\noextrasarabic{\fontencoding{T1}\selectfont}
 ```
 Then `\foreignlanguage` and `\selectlanguage` can be used in the usual
 manner, but very likely you will need some manual intervention (for
