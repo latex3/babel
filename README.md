@@ -1,4 +1,4 @@
-## Babel 3.65.2544
+## Babel 3.66
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.65 are described in:
+Changes in version 3.66 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.65.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.66.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,12 +46,12 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.66   2021-10-09??
+3.66   2021-11-08
        * Transforms for Greek:
          - transliteration.omega
          - sigma.final
-       * Fixes:
-         - Fixes for tcolorbox (#145, #146).
+       * Fixes for bidi texts:
+         - For tcolorbox (#145, #146).
          - Some improvements for tikz/pgf.
 ```
 

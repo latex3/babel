@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/11/02 v3.65.2544 The Babel package]
+\ProvidesFile{babel.dtx}[2021/11/08 v3.66 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -698,11 +698,25 @@ This command can be used as environment, too.
 \end{warning}
 
 \begin{warning}
-  |\selectlanguage| should not be used inside some boxed environments
-  (like floats or |minipage|) to switch the language if you need the
-  information written to the |aux| be correctly synchronized. This
-  rarely happens, but if it were the case, you must use |otherlanguage|
-  instead.
+  There are a couple of issues related to the way the language
+  information is written to the auxiliary files:
+\begin{itemize}
+  \item |\selectlanguage| should not be used inside some boxed environments
+    (like floats or |minipage|) to switch the language if you need the
+    information written to the |aux| be correctly synchronized. This
+    rarely happens, but if it were the case, you must use
+    |otherlanguage| instead.
+  \item In addition, this macro inserts a |\write| in vertical mode,
+  which may break the vertical spacing in some cases (for example,
+  between lists). \New{3.64} The behavior can be adjusted with
+  |\babeladjust{select.write=|\m{mode}|}|, where \m{mode} is |shift|
+  (which shifts the skips down and adds a |\penalty|); |keep| (the
+  default -- with it the |\write| and the skips are kept in the order
+  they are written), and |omit| (which may seem a too drastic solution,
+  because nothing is written, but more often than not this command is
+  applied to more or less shorts texts with no sectioning or similar
+  commands and therefore no language synchronization is necessary).
+\end{itemize}
 \end{warning}
 
 \Describe{\foreignlanguage}{\oarg{option-list}\marg{language}\marg{text}}
@@ -3130,6 +3144,11 @@ compatibility with Levy’s system, \texttt{\string~} (as ‘string’) is an
 alternative to |=|. |'| is tonos in Monotonic Greek, but oxia in
 Polytonic and Ancient Greek.}
 
+\trans{Greek}{sigma.final}{The transliteration system above does not
+convert the sigma at the end of a word (on purpose). This transforms
+does it. To prevent the conversion (an abbreviation, for example), write
+|"s|.}
+
 \trans{Hindi, Sanskrit}{transliteration.hk}{The Harvard-Kyoto system to
 romanize Devanagari.}
 
@@ -5044,8 +5063,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.65.2544>>
-%<<date=2021/11/02>>
+%<<version=3.66>>
+%<<date=2021/11/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14591,8 +14610,10 @@ end
           \AddToHook{env/tcolorbox/begin}{\bbl@pictsetdir\@ne}%
           \bbl@sreplace\tcb@savebox
             {\ignorespaces}{\ignorespaces\bbl@pictresetdir}%
-          \bbl@sreplace\tikzpicture@tcb@hooked{\noexpand\tikzpicture}%
-            {\textdir TLT\noexpand\tikzpicture}%
+          \ifx\tikzpicture@tcb@hooked\@undefined\else
+            \bbl@sreplace\tikzpicture@tcb@hooked{\noexpand\tikzpicture}%
+              {\textdir TLT\noexpand\tikzpicture}%
+          \fi
         \fi
       \fi
     }}
