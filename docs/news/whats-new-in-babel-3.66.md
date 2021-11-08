@@ -1,10 +1,8 @@
 # What's new in babel 3.66
 
-*(Under development)*
+2021-11-08
 
-## Transforms
-
-### Greek
+## Transforms for Greek
 
 `transliteration.omega`
 
@@ -27,5 +25,12 @@ following:
 The transliteration system above, unlike Levy’s, doesn’t convert the
 sigma at the end of a word (on purpose). This transforms does it. To
 prevent the conversion (an abbreviation, for example), write `"s`.
+
+## Fixes for bidi texts
+
+A few issues related to graphics in bidi texts has been fixed
+particularly [#145](https://github.com/latex3/babel/issues/145) and
+[#146](https://github.com/latex3/babel/issues/146), with the solutions
+proposed by Salim Bou.
 
 

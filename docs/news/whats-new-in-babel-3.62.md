@@ -14,7 +14,8 @@ found (for example, if there was a typo in the document).
 ## LaTeX hooks
 
 ⚠ This section has been modified with the release of version 3.64, after
-some changes in the LaTeX hooking mechanism.
+some changes in the LaTeX hooking mechanism. Note it may require
+latex-dev.
 
 There is some partial support for the new LaTeX hooks. The hooks
 predefined by `babel` has the same names as those of `\AddBabelHook`,
