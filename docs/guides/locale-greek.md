@@ -57,6 +57,12 @@ redefined with `\renewcommand`:
 * `\BabelGreekNumeralMarkerEnd`: 1 argument with the generated number >999; by default it is #1ʹ.
 * `\BabelGreekNumeralMarker`: 1 argument with the whole number; by default is #1, ie, do nothing, but you may add an overline.
 * `\BabelGreekNumeralMiriads`: 4 arguments, with the digits above 9999, ie, 1234 if the number is 12345678 (padded with zeroes if necessary); note by default `\greeknumeral` does not accept such large numbers, but you may redefine it to use, for example, the M representation.
+
+## Hyphenation
+
+_Only luatex_. The transform `diaeresis.hyphen` removes the diaeresis
+above iota and upsilon if hyphenated just before. It works with the
+three variants.
   
 ## Transliteration 
 
