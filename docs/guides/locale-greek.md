@@ -9,7 +9,7 @@ which may be a source of issues. It’s strongly recommended to use
 `xetex`  or `luatex`.
 
 
-# As `ldf`
+## As `ldf`
 
 It supports Monotonic and Polytonic Greek, but only one at a time.
 Ancient Greek is not supported. A minimal preamble with Monotonic and
@@ -19,7 +19,7 @@ Ancient Greek is not supported. A minimal preamble with Monotonic and
 \usepackage[greek]{babel}
 ```
 
-# As `ini`
+## As `ini`
 
 This method is available for `xetex` and `luatex` (it might work with
 `pdftex`, but it has not been extensively tested). It supports
@@ -48,15 +48,23 @@ There is a full example in Polytonic Greek in the repository
 
 ## Counters
 
-With the `ini` method a macro is defined, `\greeknumeral{number}`,
-which converts the number to Ionian (alphabetic) form, as represented
-by the original babel `greek` style, and with the same upper limit
-(999999). However, the code has been rewritten from scratch, and now it’s fully
-expandable. There are three macros to customize it, which are
-redefined with `\renewcommand`:
+With the `ini` method and if the locale has been explicitly requested,
+a macro is defined, `\greeknumeral{number}`, which converts the number
+to Ionian (alphabetic) form, as represented by the original babel
+`greek` style, and with the same upper limit (999999). However, the
+code has been rewritten from scratch, and now it’s fully expandable.
+There are three macros to customize it, which are redefined with
+`\renewcommand`:
 * `\BabelGreekNumeralMarkerEnd`: 1 argument with the generated number >999; by default it is #1ʹ.
 * `\BabelGreekNumeralMarker`: 1 argument with the whole number; by default is #1, ie, do nothing, but you may add an overline.
 * `\BabelGreekNumeralMiriads`: 4 arguments, with the digits above 9999, ie, 1234 if the number is 12345678 (padded with zeroes if necessary); note by default `\greeknumeral` does not accept such large numbers, but you may redefine it to use, for example, the M representation.
+
+In the `ini` file itself, which means they are available even if loaded
+on the fly, the following ‘locale’ counters are defined (see the
+explanation in the `babel` manual about `\localecounter` and
+`localenumeral`): `lower.modern`, `upper.modern`, `lower.ancient`,
+`upper.ancient` (in Ancient Greek, only the latter). They aren’t
+directly configurable and the upper limit is 9999.
 
 ## Hyphenation
 
