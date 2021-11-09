@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/11/08 v3.66 The Babel package]
+\ProvidesFile{babel.dtx}[2021/11/09 v3.66.2551 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5063,8 +5063,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.66>>
-%<<date=2021/11/08>>
+%<<version=3.66.2551>>
+%<<date=2021/11/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6234,6 +6234,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \expandafter\def\csname selectlanguage \endcsname#1{%
+  \ifx\bbl@selectorname\@empty
+    \def\bbl@selectorname{select}%
+  \fi
   \ifnum\bbl@hymapsel=\@cclv\let\bbl@hymapsel\tw@\fi
   \bbl@push@language
   \aftergroup\bbl@pop@language
@@ -6312,7 +6315,10 @@ help from Bernd Raichle, for which I am grateful.
 \newif\ifbbl@bcpallowed
 \bbl@bcpallowedfalse
 \def\select@language#1{% from set@, babel@aux
+  \ifx\bbl@selectorname\@empty
+    \def\bbl@selectorname{select}%
   % set hymap
+  \fi
   \ifnum\bbl@hymapsel=\@cclv\chardef\bbl@hymapsel4\relax\fi
   % set name
   \edef\languagename{#1}%
@@ -6453,7 +6459,8 @@ help from Bernd Raichle, for which I am grateful.
   \else
     \expandafter\expandafter\expandafter\set@hyphenmins
       \csname #1hyphenmins\endcsname\relax
-  \fi}
+  \fi
+  \let\bbl@selectorname\@empty}
 %    \end{macrocode}
 %
 % \begin{environment}{otherlanguage}
@@ -6468,6 +6475,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \long\def\otherlanguage#1{%
+  \def\bbl@selectorname{other}%
   \ifnum\bbl@hymapsel=\@cclv\let\bbl@hymapsel\thr@@\fi
   \csname selectlanguage \endcsname{#1}%
   \ignorespaces}
@@ -6493,6 +6501,7 @@ help from Bernd Raichle, for which I am grateful.
 \expandafter\def\csname otherlanguage*\endcsname{%
   \@ifnextchar[\bbl@otherlanguage@s{\bbl@otherlanguage@s[]}}
 \def\bbl@otherlanguage@s[#1]#2{%
+  \def\bbl@selectorname{other*}%
   \ifnum\bbl@hymapsel=\@cclv\chardef\bbl@hymapsel4\relax\fi
   \def\bbl@select@opts{#1}%
   \foreign@language{#2}}
@@ -6556,6 +6565,7 @@ help from Bernd Raichle, for which I am grateful.
   \@ifstar\bbl@foreign@s\bbl@foreign@x}
 \providecommand\bbl@foreign@x[3][]{%
   \begingroup
+    \def\bbl@selectorname{foreign}%
     \def\bbl@select@opts{#1}%
     \let\BabelText\@firstofone
     \bbl@beforeforeign
@@ -6566,6 +6576,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@foreign@s#1#2{% TODO - \shapemode, \@setpar, ?\@@par
   \begingroup
     {\par}%
+    \def\bbl@selectorname{foreign*}%
     \let\bbl@select@opts\@empty
     \let\BabelText\@firstofone
     \foreign@language{#1}%
@@ -6612,7 +6623,20 @@ help from Bernd Raichle, for which I am grateful.
     \expandafter\bbl@switch\expandafter{\languagename}}}
 %    \end{macrocode}
 %
-%  \end{macro}
+% \end{macro}
+%
+% The following macro executes conditionally some code based on the
+% selector being used.
+%
+%    \begin{macrocode}
+\def\IfBabelSelectorTF#1{%
+  \bbl@xin@{,\bbl@selectorname,}{,\zap@space#1 \@empty,}%
+  \ifin@
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi}
+%    \end{macrocode}
 %
 % \begin{macro}{\bbl@patterns}
 %
@@ -6781,7 +6805,6 @@ help from Bernd Raichle, for which I am grateful.
 \let\uselocale\setlocale
 \let\locale\setlocale
 \let\selectlocale\setlocale
-\let\localename\setlocale
 \let\textlocale\setlocale
 \let\textlanguage\setlocale
 \let\languagetext\setlocale
