@@ -6,7 +6,7 @@
 
 `transliteration.omega`
 
-Although the provided combinations are no exactly the same, this
+Although the provided combinations are not exactly the same, this
 transform follows the syntax of the system devised by Yannis
 Haralambous for Omega: `=` for circumflex, `v` for digamma, `=p`,
 `=q` and `=s` for ϡ, ϟ and ϛ, and so on. For better compatibility with
