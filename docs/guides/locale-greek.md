@@ -8,7 +8,6 @@ The support for `pdftex` is based on the non-standard `LGR` encoding,
 which may be a source of issues. It’s strongly recommended to use
 `xetex`  or `luatex`.
 
-
 ## As `ldf`
 
 It supports Monotonic and Polytonic Greek, but only one at a time.
@@ -18,6 +17,10 @@ Ancient Greek is not supported. A minimal preamble with Monotonic and
 \usepackage[LGR]{fontenc}
 \usepackage[greek]{babel}
 ```
+
+It is advisable, as in the example, to load explicitly the font
+encoding (the `greek` style does it if necessary, but in a non-standard
+way).
 
 ## As `ini`
 
@@ -44,7 +47,9 @@ The default names for the other variants are `polytonicgreek` and
 
 There is a full example in Polytonic Greek in the repository
 ([tex](https://github.com/latex3/babel/blob/main/samples/lua-polygreek.tex),
-[pdf](https://github.com/latex3/babel/blob/main/samples/lua-polygreek.pdf))
+[pdf](https://github.com/latex3/babel/blob/main/samples/lua-polygreek.pdf)):
+
+![](../media/polytonic-greek.jpg)
 
 ## Counters
 
@@ -63,15 +68,16 @@ In the `ini` file itself, which means they are available even if loaded
 on the fly, the following ‘locale’ counters are defined (see the
 explanation in the `babel` manual about `\localecounter` and
 `localenumeral`): `lower.modern`, `upper.modern`, `lower.ancient`,
-`upper.ancient` (in Ancient Greek, only the latter). They aren’t
-directly configurable and the upper limit is 9999.
+`upper.ancient` (in Ancient Greek, only the latter). There are some
+limitations, because they aren’t directly configurable and the upper
+limit is 9999.
 
 ## Hyphenation
 
 _Only luatex_. The transform `diaeresis.hyphen` removes the diaeresis
 above iota and upsilon if hyphenated just before. It works with the
 three variants.
-  
+
 ## Transliteration 
 
 _Only luatex_. The transform `transliteration.omega` applies the
@@ -85,7 +91,18 @@ Ancient Greek.
 
 This transliteration system does not convert the sigma at the end of a
 word (on purpose). The transform `sigma.final` does it. To prevent the
-conversion (an abbreviation, for example), write |"s|.}
+conversion (an abbreviation, for example), write |"s|.
+
+A way to make `~` a valid character for the circumflex is:
+```tex
+\defineshorthand[greek]{~}{\string~}
+```
+This declaration applies to the whole document, but if you prefer to
+preserve the default meaning in other languages, you can write:
+```tex
+\AddBabelHook[greek]{el-short}{afterextras}{\languageshorthands{greek}}
+\defineshorthand[greek]{~}{\string~}
+```
 
 ## Useful links
 
@@ -94,5 +111,3 @@ conversion (an abbreviation, for example), write |"s|.}
 * [Can one combine ancient and modern Greek with Babel?](https://tex.stackexchange.com/questions/294828/can-one-combine-ancient-and-modern-greek-with-babel/614278#614278)
 * [Use of Greek language without \textlatin{} \textgreek{} each word](https://tex.stackexchange.com/questions/579780/use-of-greek-language-without-textlatin-textgreek-each-word/579813#579813)
 * [Fontspec / Babel support to some .otf features](https://tex.stackexchange.com/questions/544773/fontspec-babel-support-to-some-otf-features)
-
-
