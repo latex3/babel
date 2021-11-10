@@ -95,7 +95,7 @@ conversion (an abbreviation, for example), write |"s|.
 
 A way to make `~` a valid character for the circumflex is:
 ```tex
-\defineshorthand[greek]{~}{\string~}
+\defineshorthand{~}{\string~}
 ```
 This declaration applies to the whole document, but if you prefer to
 preserve the default meaning in other languages, you can write:
