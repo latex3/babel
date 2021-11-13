@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/11/09 v3.66.2551 The Babel package]
+\ProvidesFile{babel.dtx}[2021/11/13 v3.66.2555 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5063,8 +5063,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.66.2551>>
-%<<date=2021/11/09>>
+%<<version=3.66.2555>>
+%<<date=2021/11/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14235,13 +14235,15 @@ end
 \catcode`\~=12
 \catcode`\%=12
 \catcode`\&=14
-\gdef\babelposthyphenation#1#2#3{&%
+\gdef\babelposthyphenation{&%
+  \@ifnextchar[\bbl@posthyphenation{\bbl@posthyphenation[]}}
+\gdef\bbl@posthyphenation[#1]#2#3#4{&%
   \bbl@activateposthyphen
   \begingroup
     \def\babeltempa{\bbl@add@list\babeltempb}&%
     \let\babeltempb\@empty
-    \def\bbl@tempa{#3}&% TODO. Ugly trick to preserve {}:
-    \bbl@replace\bbl@tempa{,}{ ,}&%
+    \def\bbl@tempa{#4}&%
+    \bbl@replace\bbl@tempa{,}{ ,}&% TODO. Ugly trick to preserve {}
     \expandafter\bbl@foreach\expandafter{\bbl@tempa}{&%
       \bbl@ifsamestring{##1}{remove}&%
         {\bbl@add@list\babeltempb{nil}}&%
@@ -14255,12 +14257,22 @@ end
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)          
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
+    \let\bbl@kv@attr\relax
+    \bbl@forkv{#1}&% TODO: For the moment, assume attribute=
+       {\edef\bbl@kv@attr{##2}&%
+        \edef\bbl@kv@attr{\expandafter\bbl@stripslash\bbl@kv@attr}}&%
     \directlua{
       local lbkr = Babel.linebreaking.replacements[1]
       local u = unicode.utf8
-      local id = \the\csname l@#1\endcsname
+      local id = \the\csname l@#2\endcsname
+      lbkr[id] = lbkr[id] or {}
+      \ifx\bbl@kv@attr\relax &% A bit hackish
+        lbkr[id].attr = -1
+      \else
+        lbkr[id].attr = luatexbase.registernumber'\bbl@kv@attr'
+      \fi
       &% Convert pattern:
-      local patt = string.gsub([==[#2]==], '%s', '')
+      local patt = string.gsub([==[#3]==], '%s', '')
       if not u.find(patt, '()', nil, true) then
         patt = '()' .. patt .. '()'
       end
@@ -14274,18 +14286,19 @@ end
              function (n)
                return u.gsub(u.char(tonumber(n, 16)), '(%p)', '%%%1')
              end)
-      lbkr[id] = lbkr[id] or {}
       table.insert(lbkr[id], { pattern = patt, replace = { \babeltempb } })
     }&%
   \endgroup}
 % TODO. Copypaste pattern. 
-\gdef\babelprehyphenation#1#2#3{&%
+\gdef\babelprehyphenation{&%
+  \@ifnextchar[\bbl@prehyphenation{\bbl@prehyphenation[]}}
+\gdef\bbl@prehyphenation[#1]#2#3#4{&%
   \bbl@activateprehyphen
   \begingroup
     \def\babeltempa{\bbl@add@list\babeltempb}&%
     \let\babeltempb\@empty
-    \def\bbl@tempa{#3}&% TODO. Ugly trick to preserve {}:
-    \bbl@replace\bbl@tempa{,}{ ,}&%
+    \def\bbl@tempa{#4}&%
+    \bbl@replace\bbl@tempa{,}{ ,}&% TODO. Ugly trick to preserve {}
     \expandafter\bbl@foreach\expandafter{\bbl@tempa}{&%
       \bbl@ifsamestring{##1}{remove}&%
         {\bbl@add@list\babeltempb{nil}}&%
@@ -14301,12 +14314,22 @@ end
            rep = rep:gsub('(kashida)%s*=%s*([^%s,]*)', Babel.capture_kashida)
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
+    \let\bbl@kv@attr\relax
+    \bbl@forkv{#1}&% TODO: For the moment, assume attribute=
+       {\edef\bbl@kv@attr{##2}&%
+        \edef\bbl@kv@attr{\expandafter\bbl@stripslash\bbl@kv@attr}}&%
     \directlua{
       local lbkr = Babel.linebreaking.replacements[0]
       local u = unicode.utf8
-      local id = \the\csname bbl@id@@#1\endcsname
+      local id = \the\csname bbl@id@@#2\endcsname
+      lbkr[id] = lbkr[id] or {}
+      \ifx\bbl@kv@attr\relax &% A bit hackish
+        lbkr[id].attr = -1
+      \else
+        lbkr[id].attr = luatexbase.registernumber'\bbl@kv@attr'
+      \fi
       &% Convert pattern:
-      local patt = string.gsub([==[#2]==], '%s', '')
+      local patt = string.gsub([==[#3]==], '%s', '')
       local patt = string.gsub(patt, '|', ' ')
       if not u.find(patt, '()', nil, true) then
         patt = '()' .. patt .. '()'
@@ -14321,9 +14344,8 @@ end
              function (n)
                return u.gsub(u.char(tonumber(n, 16)), '(%p)', '%%%1')
              end)
-      lbkr[id] = lbkr[id] or {}
       table.insert(lbkr[id], { pattern = patt, replace = { \babeltempb } })
-    }&%    
+    }&%
   \endgroup}
 \endgroup
 \def\bbl@activateposthyphen{%
@@ -14890,6 +14912,7 @@ function Babel.hyphenate_replace(head, mode)
     for k=1, #lbkr[lang] do
       local p = lbkr[lang][k].pattern
       local r = lbkr[lang][k].replace
+      local attr = lbkr[lang].attr or -1
 
       if Babel.debug then
         print('*****', p, mode)
@@ -14934,8 +14957,15 @@ function Babel.hyphenate_replace(head, mode)
         local sc = first-1           -- Used below, too
         local data_nodes = {}
 
+        local enabled = true
         for q = 1, last-first+1 do
           data_nodes[q] = w_nodes[sc+q]
+          if enabled
+             and attr > -1
+             and not node.has_attribute(data_nodes[q], attr)
+             then
+            enabled = false
+          end
         end
 
         -- This loop traverses the matched substring and takes the
@@ -14979,7 +15009,7 @@ function Babel.hyphenate_replace(head, mode)
             step = crep.step or 0
           end
 
-          if crep and next(crep) == nil then -- = {}
+          if (not enabled) or (crep and next(crep) == nil) then -- = {}
             last_match = save_last    -- Optimization
             goto next
 
