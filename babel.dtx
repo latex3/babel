@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/11/13 v3.66.2555 The Babel package]
+\ProvidesFile{babel.dtx}[2021/11/15 v3.66.2557 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5063,8 +5063,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.66.2555>>
-%<<date=2021/11/13>>
+%<<version=3.66.2557>>
+%<<date=2021/11/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14235,14 +14235,20 @@ end
 \catcode`\~=12
 \catcode`\%=12
 \catcode`\&=14
+\gdef\babelprehyphenation{&%
+  \@ifnextchar[{\bbl@settransform{0}}{\bbl@settransform{0}[]}}
 \gdef\babelposthyphenation{&%
-  \@ifnextchar[\bbl@posthyphenation{\bbl@posthyphenation[]}}
-\gdef\bbl@posthyphenation[#1]#2#3#4{&%
-  \bbl@activateposthyphen
+  \@ifnextchar[{\bbl@settransform{1}}{\bbl@settransform{1}[]}}
+\gdef\bbl@settransform#1[#2]#3#4#5{&%
+  \ifcase#1
+    \bbl@activateprehyphen
+  \else
+    \bbl@activateposthyphen
+  \fi
   \begingroup
     \def\babeltempa{\bbl@add@list\babeltempb}&%
     \let\babeltempb\@empty
-    \def\bbl@tempa{#4}&%
+    \def\bbl@tempa{#5}&%
     \bbl@replace\bbl@tempa{,}{ ,}&% TODO. Ugly trick to preserve {}
     \expandafter\bbl@foreach\expandafter{\bbl@tempa}{&%
       \bbl@ifsamestring{##1}{remove}&%
@@ -14251,100 +14257,66 @@ end
            local rep = [=[##1]=]             
            rep = rep:gsub('^%s*(remove)%s*$', 'remove = true')
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
-           rep = rep:gsub(    '(no)%s*=%s*([^%s,]*)', Babel.capture_func)
-           rep = rep:gsub(   '(pre)%s*=%s*([^%s,]*)', Babel.capture_func)
-           rep = rep:gsub(  '(post)%s*=%s*([^%s,]*)', Babel.capture_func)
-           rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)          
+           rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
+           if #1 == 0 then
+             rep = rep:gsub('(space)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
+               'space = {' .. '%2, %3, %4' .. '}')
+             rep = rep:gsub('(spacefactor)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
+               'spacefactor = {' .. '%2, %3, %4' .. '}')
+             rep = rep:gsub('(kashida)%s*=%s*([^%s,]*)', Babel.capture_kashida)
+           else  
+             rep = rep:gsub(    '(no)%s*=%s*([^%s,]*)', Babel.capture_func)
+             rep = rep:gsub(   '(pre)%s*=%s*([^%s,]*)', Babel.capture_func)
+             rep = rep:gsub(  '(post)%s*=%s*([^%s,]*)', Babel.capture_func)
+           end          
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
-    \let\bbl@kv@attr\relax
-    \bbl@forkv{#1}&% TODO: For the moment, assume attribute=
-       {\edef\bbl@kv@attr{##2}&%
-        \edef\bbl@kv@attr{\expandafter\bbl@stripslash\bbl@kv@attr}}&%
+    \let\bbl@kv@attribute\relax
+    \let\bbl@kv@label\relax
+    \bbl@forkv{#2}{\bbl@csarg\edef{kv@##1}{##2}}&%
+    \ifx\bbl@kv@attribute\relax\else
+      \edef\bbl@kv@attribute{\expandafter\bbl@stripslash\bbl@kv@attribute}&%
+    \fi
     \directlua{
-      local lbkr = Babel.linebreaking.replacements[1]
+      local lbkr = Babel.linebreaking.replacements[#1]
       local u = unicode.utf8
-      local id = \the\csname l@#2\endcsname
-      lbkr[id] = lbkr[id] or {}
-      \ifx\bbl@kv@attr\relax &% A bit hackish
-        lbkr[id].attr = -1
+      local id, attr, label
+      if #1 == 0 then
+        id = \the\csname bbl@id@@#3\endcsname\space
+      else
+        id = \the\csname l@#3\endcsname\space
+      end
+      \ifx\bbl@kv@attribute\relax
+        attr = -1
       \else
-        lbkr[id].attr = luatexbase.registernumber'\bbl@kv@attr'
+        attr = luatexbase.registernumber'\bbl@kv@attribute'
+      \fi
+      \ifx\bbl@kv@label\relax\else  &% Same refs:
+        label = [==[\bbl@kv@label]==]
       \fi
       &% Convert pattern:
-      local patt = string.gsub([==[#3]==], '%s', '')
+      local patt = string.gsub([==[#4]==], '%s', '')
+      if #1 == 0 then
+        patt = string.gsub(patt, '|', ' ')
+      end
       if not u.find(patt, '()', nil, true) then
         patt = '()' .. patt .. '()'
       end
-      patt = string.gsub(patt, '%(%)%^', '^()')
-      patt = string.gsub(patt, '%$%(%)', '()$')
-      patt = u.gsub(patt, '{(.)}', 
+      if #1 == 1 then
+        patt = string.gsub(patt, '%(%)%^', '^()')
+        patt = string.gsub(patt, '%$%(%)', '()$')
+      end
+      patt = u.gsub(patt, '{(.)}',
              function (n)
                return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
              end)
       patt = u.gsub(patt, '{(%x%x%x%x+)}', 
              function (n)
                return u.gsub(u.char(tonumber(n, 16)), '(%p)', '%%%1')
-             end)
-      table.insert(lbkr[id], { pattern = patt, replace = { \babeltempb } })
-    }&%
-  \endgroup}
-% TODO. Copypaste pattern. 
-\gdef\babelprehyphenation{&%
-  \@ifnextchar[\bbl@prehyphenation{\bbl@prehyphenation[]}}
-\gdef\bbl@prehyphenation[#1]#2#3#4{&%
-  \bbl@activateprehyphen
-  \begingroup
-    \def\babeltempa{\bbl@add@list\babeltempb}&%
-    \let\babeltempb\@empty
-    \def\bbl@tempa{#4}&%
-    \bbl@replace\bbl@tempa{,}{ ,}&% TODO. Ugly trick to preserve {}
-    \expandafter\bbl@foreach\expandafter{\bbl@tempa}{&%
-      \bbl@ifsamestring{##1}{remove}&%
-        {\bbl@add@list\babeltempb{nil}}&%
-        {\directlua{
-           local rep = [=[##1]=]
-           rep = rep:gsub('^%s*(remove)%s*$', 'remove = true')
-           rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
-           rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
-           rep = rep:gsub('(space)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
-             'space = {' .. '%2, %3, %4' .. '}')
-           rep = rep:gsub('(spacefactor)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
-             'spacefactor = {' .. '%2, %3, %4' .. '}')
-           rep = rep:gsub('(kashida)%s*=%s*([^%s,]*)', Babel.capture_kashida)
-           tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
-         }}}&%
-    \let\bbl@kv@attr\relax
-    \bbl@forkv{#1}&% TODO: For the moment, assume attribute=
-       {\edef\bbl@kv@attr{##2}&%
-        \edef\bbl@kv@attr{\expandafter\bbl@stripslash\bbl@kv@attr}}&%
-    \directlua{
-      local lbkr = Babel.linebreaking.replacements[0]
-      local u = unicode.utf8
-      local id = \the\csname bbl@id@@#2\endcsname
+             end)            
       lbkr[id] = lbkr[id] or {}
-      \ifx\bbl@kv@attr\relax &% A bit hackish
-        lbkr[id].attr = -1
-      \else
-        lbkr[id].attr = luatexbase.registernumber'\bbl@kv@attr'
-      \fi
-      &% Convert pattern:
-      local patt = string.gsub([==[#3]==], '%s', '')
-      local patt = string.gsub(patt, '|', ' ')
-      if not u.find(patt, '()', nil, true) then
-        patt = '()' .. patt .. '()'
-      end     
-      &% patt = string.gsub(patt, '%(%)%^', '^()')
-      &% patt = string.gsub(patt, '([^%%])%$%(%)', '%1()$')
-      patt = u.gsub(patt, '{(.)}', 
-             function (n)
-               return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
-             end)
-      patt = u.gsub(patt, '{(%x%x%x%x+)}', 
-             function (n)
-               return u.gsub(u.char(tonumber(n, 16)), '(%p)', '%%%1')
-             end)
-      table.insert(lbkr[id], { pattern = patt, replace = { \babeltempb } })
+      table.insert(lbkr[id],
+        { label=label, attr=attr, pattern=patt, replace={\babeltempb} })
     }&%
   \endgroup}
 \endgroup
@@ -14912,7 +14884,7 @@ function Babel.hyphenate_replace(head, mode)
     for k=1, #lbkr[lang] do
       local p = lbkr[lang][k].pattern
       local r = lbkr[lang][k].replace
-      local attr = lbkr[lang].attr or -1
+      local attr = lbkr[lang][k].attr or -1
 
       if Babel.debug then
         print('*****', p, mode)
@@ -14961,9 +14933,9 @@ function Babel.hyphenate_replace(head, mode)
         for q = 1, last-first+1 do
           data_nodes[q] = w_nodes[sc+q]
           if enabled
-             and attr > -1
-             and not node.has_attribute(data_nodes[q], attr)
-             then
+              and attr > -1
+              and not node.has_attribute(data_nodes[q], attr)
+            then
             enabled = false
           end
         end
