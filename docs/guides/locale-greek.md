@@ -5,8 +5,9 @@ needs you may prefer the `ldf` file, currently supported by Günter
 Milde, or the `ini` files.
 
 The support for `pdftex` is based on the non-standard `LGR` encoding,
-which may be a source of issues. It’s strongly recommended to use
-`xetex`  or `luatex`.
+which may be a source of issues (see for example
+[here](https://tex.stackexchange.com/questions/548584/ascii-text-set-in-greek-script-when-using-usepackagegreekbabel)).
+It’s strongly recommended to use `xetex`  or `luatex`.
 
 ## As `ldf`
 
@@ -111,3 +112,5 @@ preserve the default meaning in other languages, you can write:
 * [Can one combine ancient and modern Greek with Babel?](https://tex.stackexchange.com/questions/294828/can-one-combine-ancient-and-modern-greek-with-babel/614278#614278)
 * [Use of Greek language without \textlatin{} \textgreek{} each word](https://tex.stackexchange.com/questions/579780/use-of-greek-language-without-textlatin-textgreek-each-word/579813#579813)
 * [Fontspec / Babel support to some .otf features](https://tex.stackexchange.com/questions/544773/fontspec-babel-support-to-some-otf-features)
+* [Writing in Ancient Greek with babel](https://tex.stackexchange.com/questions/584397/writing-in-ancient-greek-with-babel)
+

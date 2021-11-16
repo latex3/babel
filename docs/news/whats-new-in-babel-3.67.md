@@ -26,24 +26,36 @@ an example of how to use this feature:
 
 \usepackage[english]{babel}
 
-\newattribute{\uppervowels}
+\newattribute{\spcexclam} % Unset by default
 
-\babelprehyphenation[attribute=\uppervowels]{english}
-  { ([aeiou]) }
-  { string = {1|aeiou|AEIOU} }
+\babelprehyphenation[attribute=\spcexclam]{english}{ {a}! }{
+  {},
+  { insert, penalty = 10000 },
+  { insert, space=.3 .05 0, data = 1 },
+  {}
+}
+
+\newcommand\withspc[1]{{\setattribute{\spcexclam}{1}#1}}
+\newcommand\withoutspc[1]{{\unsetattribute{\spcexclam}#1}}
 
 \begin{document}
 
-A short text. {\setattribute{\uppervowels}{1}Another short text.} A short text.
+Hello! \withspc{Hello!} Hol\withspc{a!} Hello\withspc{!} Hello!
+
+\setattribute{\spcexclam}{1}
+
+Hello! \withoutspc{Hello!} Hol\withoutspc{a!} Hello\withoutspc{!} Hello!
 
 \end{document}
 ```
-This will print ‘A short text. AnOthEr shOrt tExt. A short text.’
+It will print:
+> Hello! Hello ! Hello ! Hello! Hello!<br>
+> Hello ! Hello! Hello! Hello! Hello !
 
 The transform is applied when the corresponding attribute is set in all
-nodes to be transformed. The ‘context’ in the pattern, that is, the
-characters outside the group `()..()`, when used, are not taken into
-account.
+nodes to be transformed, which explains why there is no space in the
+4th ‘Hello’. The ‘context’ in the pattern, that is, the characters
+outside the group `()..()`, when used, are not taken into account.
 
 
 
