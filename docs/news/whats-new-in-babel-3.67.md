@@ -21,6 +21,7 @@ words.
 To define, set and unset the attribute, the LaTeX kernel provides the
 macros `\newattribute`, `\setattribute` and `\unsetattribute`. Here is
 an example of how to use this feature:
+{% raw  %}
 ```tex
 \documentclass{article}
 
@@ -48,6 +49,7 @@ Hello! \withoutspc{Hello!} Hol\withoutspc{a!} Hello\withoutspc{!} Hello!
 
 \end{document}
 ```
+{% endraw %}
 It will print:
 > Hello! Hello ! Hello ! Hello! Hello!<br>
 > Hello ! Hello! Hello! Hello! Hello !
