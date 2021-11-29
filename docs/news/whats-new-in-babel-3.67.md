@@ -71,17 +71,17 @@ nodes to be transformed, which explains why there is no space in the
 outside the group `()..()`, when used, are not taken into account.
 
 Transforms predefined in the `ini` locale files can be made
-attribute-dependent, too. When an attribute between parenthesis is
-inserted all subsequent transforms will be assigned to it (up to the list
-end or another attribute). For example, and provided an attribute
-called `\withsigmafinal` has been defined:
+attribute-dependent, too (in `\babelprovide`). When an attribute
+between parenthesis is inserted all subsequent transforms will be
+assigned to it (up to the list end or another attribute). For example,
+and provided an attribute called `\withsigmafinal` has been defined:
 ```tex
 transforms = transliteration.omega (\withsigmafinal) sigma.final
 ```
 This applies `transliteration.omega` always, but `sigma.final`only when
 `\withsigmafinal` is set. 
 
-## Transform form Latin
+## Transforms for Latin
 
 They are defined in all variants.
 
