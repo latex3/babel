@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/11/15 v3.66.2557 The Babel package]
+\ProvidesFile{babel.dtx}[2021/11/29 v3.67 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -685,6 +685,12 @@ This command can be used as environment, too.
   |\selectlanguage{german}|. Using a macro instead of a ``real'' name
   is deprecated. \New{3.43} However, if the macro name does not match
   any language, it will get expanded as expected.
+\end{note}
+
+\begin{note}
+  Bear in mind |\selectlanguage| can be automatically executed, in some
+  cases, in the auxiliary files, at heads and foots, and after the
+  environment |otherlanguage*|.
 \end{note}
 
 \begin{warning}
@@ -3101,6 +3107,16 @@ illustrates:
   \usepackage[magyar]{babel}
   \babelprovide[_transforms = digraphs.hyphen_]{magyar}
 \end{verbatim}
+\New{3.67} Transforms predefined in the |ini| locale files can be made
+attribute-dependent, too. When an attribute between parenthesis is
+inserted subsequent transforms will be assigned to it (up to the list
+end or another attribute). For example,
+and provided an attribute called |\withsigmafinal| has been declared:
+\begin{verbatim}
+transforms = transliteration.omega (\withsigmafinal) sigma.final
+\end{verbatim}
+This applies |transliteration.omega| always, but |sigma.final| only when
+|\withsigmafinal| is set.
 
 Here are the transforms currently predefined. (More to follow 
 in future releases.)
@@ -3164,19 +3180,29 @@ four characters: \textit{!?:;}\,.}
 danda or double danda if there is a space. For Assamese, Bengali,
 Gujarati, Hindi, Kannada, Malayalam, Marathi, Oriya, Tamil, Telugu.}
 
-\trans{Arabic, Persian}{kashida.plain}{Experimental. A very simple and
-basic transform for ‘plain’ Arabic fonts, which attempts to distribute
-the tatwil as evenly as possible (starting at the end of the line). See
-the news for version 3.59.}
+\trans{Latin}{digraphs.ligatures}{Replaces the groups \textit{ae},
+\textit{AE}, \textit{oe}, \textit{OE} with \textit{æ}, \textit{Æ},
+\textit{œ}, \textit{Œ}.}
+
+\trans{Latin}{letters.noj}{Replaces \textit{j}, \textit{J} with
+\textit{i}, \textit{I}.}
+
+\trans{Latin}{letters.uv}{Replaces \textit{v}, \textit{U} with
+\textit{u}, \textit{V}.}
 
 \trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
 files refers to the Cyrillic script, which is here the target.) The
 standard system devised by Ljudevit Gaj.}
 
+\trans{Arabic, Persian}{kashida.plain}{Experimental. A very simple and
+basic transform for ‘plain’ Arabic fonts, which attempts to distribute
+the tatwil as evenly as possible (starting at the end of the line). See
+the news for version 3.59.}
+
 \vspace{2mm}\hrule\nobreak
 \endgroup
 
-\Describe{\babelposthyphenation}{\marg{hyphenrules-name}%
+\Describe{\babelposthyphenation}{\oarg{options}\marg{hyphenrules-name}%
           \marg{lua-pattern}\marg{replacement}}
 
 \New{3.37-3.39} \textit{With \luatex{}} it is possible to define
@@ -3202,6 +3228,18 @@ to \textit{ύ}, so that the diaeresis is removed.
 This feature is activated with the first |\babelposthyphenation| or
 |\babelprehyphenation|.
 
+\New{3.67} With the optional argument you can associate a user defined
+transform to an attribute, so that it’s active only when it’s set
+(currently its attribute value is ignored). With this mechanism
+transforms can be set or unset even in the middle of paragraphs, and
+applied to single words. To define, set and unset the attribute, the
+LaTeX kernel provides the macros |\newattribute|, |\setattribute| and
+|\unsetattribute|. The following example shows how to use it, provided
+an attribute named |\latinnoj| has been declared:
+\begin{verbatim}
+  \babelprehyphenation[attribute=\latinnoj]{latin}{ J }{ string = I }
+\end{verbatim}
+
 See the
 \href{https://latex3.github.io/babel/guides/%
   non-standard-hyphenation-with-luatex.html}{\babel\ site} for a more
@@ -3215,7 +3253,7 @@ applied, so you must take discretionaries into account).
 You are limited to substitutions as done by \textsf{lua}, although a
 future implementation may alternatively accept \textsf{lpeg}.
 
-\Describe{\babelprehyphenation}{\marg{locale-name}%
+\Describe{\babelprehyphenation}{\oarg{options}\marg{locale-name}%
           \marg{lua-pattern}\marg{replacement}}
 
 \New{3.44-3-52} It is similar to the latter, but (as its name implies)
@@ -3225,6 +3263,8 @@ is the locale instead of the name of the hyphenation patterns; (2) in the
 search patterns |=| has no special meaning, while \verb+|+ stands for
 an ordinary space; (3) in the replacement, discretionaries are not
 accepted. 
+
+See the description above for the optional argument.
 
 This feature is activated with the first |\babelposthyphenation| or
 |\babelprehyphenation|.
@@ -4867,6 +4907,21 @@ This macro is not intended to fix wrong mappings done by Unicode
 (which are the default in both \xetex{} and \luatex{}) -- if an
 assignment is wrong, fix it directly.
 
+\subsection{Executing code based on the selector}
+
+\Describe{\IfBabelSelectorTF}{\marg{selectors}\marg{true}\marg{false}}
+
+\New{3.67} Sometimes a different setup is desired depending on the
+selector used. Values allowed in \m{selectors} are |select|, |other|,
+|foreign|, |other*| (and also |foreign*| for the tentative starred
+version), and it can consist of a comma-separated list. For example:
+\begin{verbatim}
+\IfBabelSelectorTF{other, other*}{A}{B}
+\end{verbatim}
+is true with these two environment selectors.
+
+Its natural place of use is in hooks or in |\extras|\m{language}.
+
 \section{Changes}
 
 \subsection{Changes in \babel\ version 3.9}
@@ -5063,8 +5118,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.66.2557>>
-%<<date=2021/11/15>>
+%<<version=3.67>>
+%<<date=2021/11/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6234,9 +6289,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \expandafter\def\csname selectlanguage \endcsname#1{%
-  \ifx\bbl@selectorname\@empty
-    \def\bbl@selectorname{select}%
-  \fi
   \ifnum\bbl@hymapsel=\@cclv\let\bbl@hymapsel\tw@\fi
   \bbl@push@language
   \aftergroup\bbl@pop@language
@@ -10703,14 +10755,15 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@transforms\babelprehyphenation}
 \@namedef{bbl@inikv@transforms.posthyphenation}{%
   \bbl@transforms\babelposthyphenation}
-\def\bbl@transforms@aux#1#2#3,#4\relax{#1{#2}{#3}{#4}}
+\def\bbl@transforms@aux#1#2#3#4,#5\relax{%
+  #1[#2]{#3}{#4}{#5}}
 \begingroup %  A hack. TODO. Don't require an specific order
   \catcode`\%=12
   \catcode`\&=14
   \gdef\bbl@transforms#1#2#3{&%
     \ifx\bbl@KVP@transforms\@nil\else
       \directlua{
-         str = [==[#2]==]
+         local str = [==[#2]==]
          str = str:gsub('%.%d+%.%d+$', '')
          tex.print([[\def\string\babeltempa{]] .. str .. [[}]])
       }&%
@@ -10718,10 +10771,23 @@ help from Bernd Raichle, for which I am grateful.
       \ifin@
         \in@{.0$}{#2$}&%
         \ifin@
-           \g@addto@macro\bbl@release@transforms{&%
-              \relax\bbl@transforms@aux#1{\languagename}{#3}}&%
+          \directlua{
+            local str = string.match([[\bbl@KVP@transforms]],
+                          '%(([^%(]-)%)[^%)]-\babeltempa')
+            if str == nil then
+              tex.print([[\def\string\babeltempb{}]])
+            else
+              tex.print([[\def\string\babeltempb{,attribute=]] .. str .. [[}]])
+            end
+          }
+          \toks@{#3}&%
+          \bbl@exp{&%
+            \\\g@addto@macro\\\bbl@release@transforms{&%
+              \relax  &% Closes previous \bbl@transforms@aux
+              \\\bbl@transforms@aux
+                \\#1{label=\babeltempa\babeltempb}{\languagename}{\the\toks@}}}&%
         \else
-           \g@addto@macro\bbl@release@transforms{, {#3}}&%
+          \g@addto@macro\bbl@release@transforms{, {#3}}&%
         \fi
       \fi
     \fi}

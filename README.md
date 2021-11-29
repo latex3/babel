@@ -1,6 +1,4 @@
-## Babel 3.66.2557
-
-*(Development.)*
+## Babel 3.67
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,10 +46,10 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.67   2021-11-?? (dev)
+3.67   2021-11-29
        * \IfBabelSelectorTF executes code conditionally based on the
          selector type (select, foreign, etc.).
-       * Transforms can be turned on and off based on node attributes.
+       * Transforms can be turned on and off based on Lua attributes.
 
 3.66   2021-11-08
        * Transforms for Greek:
