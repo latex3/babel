@@ -1,13 +1,24 @@
 # What's new in babel 3.67
 
-*Under development.*
+2021-11-29
 
 ## Executing code based on the selector
 
-`\IfBabelSelectorTF`. Values are `select`, `other`, `foreign`, `other*`
-(and also `foreign*` for the tentative starred version).
-Eg, `\IfBabelSelectorTF{other, other*}{..]{..}` is true with
-environments. Mainly for extras.
+Sometimes a different setup is desired depending on the selector used,
+and `\IfBabelSelectorTF{<selectors>}{<true>}{<false>}` is provided for
+this purpose. Values allowed in `<selectors>` are `select`, `other`,
+`foreign`, `other*` (and also `foreign*` for the tentative starred
+version), and it can consist of a comma-separated list. For example:
+```tex
+\IfBabelSelectorTF{other, other*}{A}{B}
+```
+is true with these two environment selectors.
+
+Its natural place of use is in hooks or in `\extras<language>`.
+
+Bear in mind `\selectlanguage` can be automatically executed, in some
+cases, in the auxiliary files, at heads and foots, and after the
+environment `otherlanguage*`.
 
 ## Turning on and off transforms
 
@@ -58,6 +69,29 @@ The transform is applied when the corresponding attribute is set in all
 nodes to be transformed, which explains why there is no space in the
 4th ‘Hello’. The ‘context’ in the pattern, that is, the characters
 outside the group `()..()`, when used, are not taken into account.
+
+Transforms predefined in the `ini` locale files can be made
+attribute-dependent, too. When an attribute between parenthesis is
+inserted all subsequent transforms will be assigned to it (up to the list
+end or another attribute). For example, and provided an attribute
+called `\withsigmafinal` has been defined:
+```tex
+transforms = transliteration.omega (\withsigmafinal) sigma.final
+```
+This applies `transliteration.omega` always, but `sigma.final`only when
+`\withsigmafinal` is set. 
+
+## Transform form Latin
+
+They are defined in all variants.
+
+`digraphs.ligatures` Replaces the groups *ae*, *AE*, *oe*, *OE* with
+*æ*, *Æ*, *œ*, *Œ*.
+
+`letters.noj` Replaces *j*, *J* with *i*, *I*.
+
+`letters.uv` Replaces *v*, *U* with *u*, *V*.
+
 
 
 
