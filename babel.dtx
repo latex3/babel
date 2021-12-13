@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/11/29 v3.67 The Babel package]
+\ProvidesFile{babel.dtx}[2021/12/13 v3.67.2585 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5118,8 +5118,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.67>>
-%<<date=2021/11/29>>
+%<<version=3.67.2585>>
+%<<date=2021/12/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5893,16 +5893,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \ifx\bbl@opt@safe\@undefined
   \def\bbl@opt@safe{BR}
-\fi
-%    \end{macrocode}
-%
-% Make sure the language set with `main` is the last one. 
-%
-%    \begin{macrocode}
-\ifx\bbl@opt@main\@nnil\else
-  \edef\bbl@language@opts{%
-    \ifx\bbl@language@opts\@empty\else\bbl@language@opts,\fi
-      \bbl@opt@main}
 \fi
 %    \end{macrocode}
 %
@@ -10213,8 +10203,8 @@ help from Bernd Raichle, for which I am grateful.
   \ifeof\bbl@readstream
     \bbl@error
       {There is no ini file for the requested language\\%
-       (#1). Perhaps you misspelled it or your installation\\%
-       is not complete.}%
+       (#1: \languagename). Perhaps you misspelled it or your\\%
+       installation is not complete.}%
       {Fix the name or reinstall babel.}%
   \else
     % == Store ini data in \bbl@inidata ==
@@ -12133,102 +12123,87 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-%
 % Recognizing global options in packages not having a closed set of
 % them is not trivial, as for them to be processed they must be
 % defined explicitly. So, package options not yet taken into
 % account and stored in |bbl@language@opts| are assumed to be
 % languages (note this list also contains the language given with
 % |main|). If not declared above, the names of the option and the
-% file are the same.
+% file are the same. We first pre-process the class and package options
+% to determine the main language, which is processed in the third
+% ‘main’ pass, \textit{except} if all files are ldf \textit{and} there
+% is no |main| key. In the latter case, the traditional way to set the
+% main language is kept — the last loaded is the main language
+% (|\bbl@opt@main| is |\@nnil|.
 %
 %    \begin{macrocode}
-\let\bbl@tempc\relax
-\bbl@foreach\bbl@language@opts{%
-  \ifcase\bbl@iniflag  % Default
-    \bbl@ifunset{ds@#1}%
-      {\DeclareOption{#1}{\bbl@load@language{#1}}}%
-      {}%
-  \or    % provide=*
-    \@gobble % case 2 same as 1
-  \or    % provide+=*
-    \bbl@ifunset{ds@#1}%
-      {\IfFileExists{#1.ldf}{}%
-        {\IfFileExists{babel-#1.tex}{}{\@namedef{ds@#1}{}}}}%
-      {}%
-    \bbl@ifunset{ds@#1}%
-      {\def\bbl@tempc{#1}%
-       \DeclareOption{#1}{%
-         \ifnum\bbl@iniflag>\@ne
-           \bbl@ldfinit
-           \babelprovide[import]{#1}%
-           \bbl@afterldf{}%
-         \else
-           \bbl@load@language{#1}%
-         \fi}}%
-      {}%
-  \or    % provide*=*
-    \def\bbl@tempc{#1}%
-    \bbl@ifunset{ds@#1}%
-      {\DeclareOption{#1}{%
-         \bbl@ldfinit
-         \babelprovide[import]{#1}%
-         \bbl@afterldf{}}}%
-      {}%
-  \fi}
-%    \end{macrocode}
-%
-% Now, we make sure an option is explicitly declared for any language
-% set as global option, by checking if an |ldf| exists. The previous
-% step was, in fact, somewhat redundant, but that way we minimize
-% accessing the file system just to see if the option could be a
-% language.
-%
-%    \begin{macrocode}
-\let\bbl@tempb\@nnil
-\let\bbl@clsoptlst\@classoptionslist
-\bbl@foreach\@classoptionslist{%
-  \bbl@ifunset{ds@#1}%
-    {\IfFileExists{#1.ldf}%
-      {\def\bbl@tempb{#1}%
-       \DeclareOption{#1}{%
-         \ifnum\bbl@iniflag>\@ne
-           \bbl@ldfinit
-           \babelprovide[import]{#1}%
-           \bbl@afterldf{}%
-         \else
-           \bbl@load@language{#1}%
-         \fi}}%
-      {\IfFileExists{babel-#1.tex}% 
-        {\def\bbl@tempb{#1}%
-         \ifnum\bbl@iniflag>\z@
-           \DeclareOption{#1}{%
-             \ifnum\bbl@iniflag>\@ne
-               \bbl@ldfinit
-               \babelprovide[import]{#1}%
-               \bbl@afterldf{}%
-             \fi}%
-         \fi}%
-         {}}}%
-    {}}
-%    \end{macrocode}
-%
-%    If a main language has been set, store it for the third pass.
-%
-%    \begin{macrocode}
-\ifnum\bbl@iniflag=\z@\else
-  \ifx\bbl@opt@main\@nnil
-    \ifx\bbl@tempc\relax
-      \let\bbl@opt@main\bbl@tempb
-    \else
-      \let\bbl@opt@main\bbl@tempc
-    \fi
+\ifx\bbl@opt@main\@nnil
+  \ifnum\bbl@iniflag>\z@  % if all ldf's: set implicitly, no main pass
+    \let\bbl@tempb\@empty
+    \edef\bbl@tempa{\@classoptionslist,\bbl@language@opts}%
+    \bbl@foreach\bbl@tempa{\edef\bbl@tempb{#1,\bbl@tempb}}%
+    \bbl@foreach\bbl@tempb{%    \bbl@tempb is a reversed list
+      \ifx\bbl@opt@main\@nnil % ie, if not yet assigned
+        \ifodd\bbl@iniflag % = *=
+          \IfFileExists{babel-#1.tex}{\def\bbl@opt@main{#1}}{}%
+        \else % n +=
+          \IfFileExists{#1.ldf}{\def\bbl@opt@main{#1}}{}%
+        \fi
+      \fi}%
   \fi
 \fi
+%    \end{macrocode}
+%
+% A few languages are still defined explicitly. They are stored in case
+% they are needed in the ‘main’ pass (the value can be |\relax|).
+%
+%    \begin{macrocode}
 \ifx\bbl@opt@main\@nnil\else
-  \expandafter
-  \let\expandafter\bbl@loadmain\csname ds@\bbl@opt@main\endcsname
-  \expandafter\let\csname ds@\bbl@opt@main\endcsname\@empty
+  \bbl@csarg\let{loadmain\expandafter}\csname ds@\bbl@opt@main\endcsname
+  \expandafter\let\csname ds@\bbl@opt@main\endcsname\relax
+\fi
+%    \end{macrocode}
+%
+% Now define the corresponding loaders. With package options,
+% assume the language exists. With class options, check if the
+% option is a language.
+% 
+%
+%    \begin{macrocode}
+\bbl@foreach\bbl@language@opts{%
+  \bbl@ifunset{ds@#1}%
+    {\ifnum\bbl@iniflag<\tw@    % 0 ø (other = ldf)
+       \DeclareOption{#1}{\bbl@load@language{#1}}%
+     \else                      % + * (other = ini)
+       \DeclareOption{#1}{%
+         \bbl@ldfinit
+         \babelprovide[import]{#1}%
+         \bbl@afterldf{}}%
+     \fi}%
+    {}}
+\bbl@foreach\@classoptionslist{%
+  \bbl@ifunset{ds@#1}%
+    {\ifnum\bbl@iniflag<\tw@    % 0 ø (other = ldf)
+       \IfFileExists{#1.ldf}%
+         {\DeclareOption{#1}{\bbl@load@language{#1}}}%
+         {}%
+     \else                      % + * (other = ini)
+       \IfFileExists{babel-#1.tex}% 
+         {\DeclareOption{#1}{%  
+            \bbl@ldfinit
+            \babelprovide[import]{#1}%
+            \bbl@afterldf{}}}%
+         {}%
+     \fi}%
+  {}}
+%    \end{macrocode}
+%
+% If a main language has been set, disable it here and delay it to the
+% ’main’ pass.
+%
+%    \begin{macrocode}
+\ifx\bbl@opt@main\@nnil\else
+  \DeclareOption{\bbl@opt@main}{}
 \fi
 %    \end{macrocode}
 %
@@ -12237,7 +12212,7 @@ help from Bernd Raichle, for which I am grateful.
 % ignored.
 %
 % The options have to be processed in the order in which the user
-% specified them (except, of course, global options, which \LaTeX{}
+% specified them (except, of course, class options, which \LaTeX{}
 % processes before):
 %
 %    \begin{macrocode}
@@ -12291,8 +12266,11 @@ help from Bernd Raichle, for which I am grateful.
     \fi
     \bbl@afterldf{}%
   \else % case 0,2
-    \chardef\bbl@iniflag\z@  % Force ldf 
-    \expandafter\let\csname ds@\bbl@opt@main\endcsname\bbl@loadmain
+    \ifx\bbl@loadmain\relax
+      \DeclareOption{\bbl@opt@main}{\bbl@load@language{\bbl@opt@main}}
+    \else
+      \DeclareOption{\bbl@opt@main}{\bbl@loadmain}
+    \fi
     \ExecuteOptions{\bbl@opt@main}
     \DeclareOption*{}%
     \ProcessOptions*

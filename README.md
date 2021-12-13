@@ -1,4 +1,6 @@
-## Babel 3.67
+## Babel 3.67.2585
+
+(*Development.*)
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +48,12 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.68   2021-12-?? (dev)
+       * Fixes:
+         - Assamese, Bengali, Gujarati set incorrectly prehyphenchar.
+         - The syntax provide=* didn’t work with Hebrew and a few other
+           languages.
+           
 3.67   2021-11-29
        * \IfBabelSelectorTF executes code conditionally based on the
          selector type (select, foreign, etc.).
