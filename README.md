@@ -1,4 +1,4 @@
-## Babel 3.67.2585
+## Babel 3.67.2590
 
 (*Development.*)
 
@@ -53,19 +53,13 @@ respective authors.
          - Assamese, Bengali, Gujarati set incorrectly prehyphenchar.
          - The syntax provide=* didn’t work with Hebrew and a few other
            languages.
+         - Wrong equation direction in first column in array and tabular
+           environment (#158).
            
 3.67   2021-11-29
        * \IfBabelSelectorTF executes code conditionally based on the
          selector type (select, foreign, etc.).
        * Transforms can be turned on and off based on Lua attributes.
-
-3.66   2021-11-08
-       * Transforms for Greek:
-         - transliteration.omega
-         - sigma.final
-       * Fixes for bidi texts:
-         - For tcolorbox (#145, #146).
-         - Some improvements for tikz/pgf.
 ```
 
 ### Previous changes
