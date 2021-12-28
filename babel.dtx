@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/12/18 v3.67.2590 The Babel package]
+\ProvidesFile{babel.dtx}[2021/12/28 v3.68 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5118,8 +5118,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.67.2590>>
-%<<date=2021/12/18>>
+%<<version=3.68>>
+%<<date=2021/12/28>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5196,10 +5196,11 @@ help from Bernd Raichle, for which I am grateful.
 %
 %   Now, just syntactical sugar, but it makes partial expansion of
 %   some code a lot more simple and readable. Here |\\| stands for
-%   |\noexpand| and |\<..>| for |\noexpand| applied to a built macro
-%   name (the latter does not define the macro if undefined to
-%   |\relax|, because it is created locally). The result may be
-%   followed by extra arguments, if necessary.
+%   |\noexpand|, |\<..>| for |\noexpand| applied to a built macro
+%   name (which does not define the macro if undefined to
+%   |\relax|, because it is created locally), and |\[..]| for one-level
+%   expansion (where |..| is the macro name without the backslash). The
+%   result may be followed by extra arguments, if necessary.
 %
 %    \begin{macrocode}
 \def\bbl@exp#1{%
@@ -14482,6 +14483,10 @@ end
   \frozen@everydisplay\expandafter{%
     \expandafter\bbl@mathboxdir\the\frozen@everydisplay}
 \fi
+\def\bbl@truellap{%s
+  \ifcase\bbl@attr@dir\expandafter\llap\else\expandafter\rlap\fi}
+\def\bbl@truerlap{%
+  \ifcase\bbl@attr@dir\expandafter\rlap\else\expandafter\llap\fi}
 %    \end{macrocode}
 %
 % \subsection{Layout}
@@ -14509,11 +14514,37 @@ end
 %
 %    \begin{macrocode}
 \bbl@trace{Redefinitions for bidi layout}
+\AtBeginDocument{% amsmath
+  \ifx\place@tag\@undefined\else
+    \bbl@sreplace\place@tag{\llap}{\bbl@truellap}%
+    \bbl@sreplace\place@tag@gather{\llap}{\bbl@truellap}%
+    \bbl@sreplace\place@tag{\rlap}{\bbl@truerlap}%
+    \bbl@sreplace\place@tag@gather{\rlap}{\bbl@truerlap}%
+  \fi}
+\ifx\AddToHook\@undefined\else
+  \AddToHook{env/equation/before}{\pardir TLT }{}
+\fi
 \ifx\@eqnnum\@undefined\else
   \ifx\bbl@attr@dir\@undefined\else
-    \edef\@eqnnum{{%
-      \unexpanded{\ifcase\bbl@attr@dir\else\bbl@textdir\@ne\fi}%
-      \unexpanded\expandafter{\@eqnnum}}}
+    \bbl@xin@{,leqno,}{,\@classoptionslist,}%
+    \ifin@
+      \bbl@sreplace\@eqnnum{\rlap}{\bbl@leqno@aux}
+      \def\bbl@leqno@aux#1{%
+        \bbl@truerlap{%
+          \ifcase\bbl@attr@dir
+            #1%
+          \else
+            \bbl@textdir\@ne
+            #1%
+            \hskip-\displaywidth
+          \fi}}
+    \else
+      \bbl@exp{%
+        \def\\\@eqnnum{{%
+          \<ifcase>\\\bbl@attr@dir\<else>\\\bbl@textdir\@ne\<fi>%
+          \\\bbl@ifsamestring{\\\@currenvir}{equation}%
+             {}{\\\bbl@truellap}{\[@eqnnum]}}}}
+    \fi
   \fi
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout

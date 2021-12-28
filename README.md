@@ -1,6 +1,4 @@
-## Babel 3.67.2590
-
-(*Development.*)
+## Babel 3.68
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.67 are described in:
+Changes in version 3.68 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.67.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.68.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,18 +46,14 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.68   2021-12-?? (dev)
+3.68   2021-12-28
        * Fixes:
          - Assamese, Bengali, Gujarati set incorrectly prehyphenchar.
          - The syntax provide=* didn’t work with Hebrew and a few other
            languages.
          - Wrong equation direction in first column in array and tabular
            environment (#158).
-           
-3.67   2021-11-29
-       * \IfBabelSelectorTF executes code conditionally based on the
-         selector type (select, foreign, etc.).
-       * Transforms can be turned on and off based on Lua attributes.
+         - Tentative fixes for labels in displayed math (#159).
 ```
 
 ### Previous changes
