@@ -5,7 +5,7 @@
 ## Changes in the preliminary code for LaTeX hooks
 
 ⚠ Following some changes in the LaTeX mechanism itself, the interface in
-`babel` haa been modified. See the news for version
+`babel` has been modified. See the news for version
 [3.62](https://latex3.github.io/babel/news/whats-new-in-babel-3.62.html#latex-hooks).
 
 ## Changes in `ini` files

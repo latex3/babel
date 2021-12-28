@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.68](news/whats-new-in-babel-3.68.html) | Fixes (Bengali, `tabular` and `amsmath`).
 | [3.67](news/whats-new-in-babel-3.67.html) | Transforms can be turned on ond off.
 | [3.66](news/whats-new-in-babel-3.66.html) | Transforms for Greek (`transliteration.omega`).
 | [3.65](news/whats-new-in-babel-3.65.html) | Fixes a severe bug with `spanish`.
