@@ -2,6 +2,9 @@
 
 2021-12-28
 
+⚠ There is a severe bug in this version affecting `amsmath` and
+`mathtools' (fixed in 3.69).
+
 ## (Tentative) fixes in math
 
 Thanks to Salim Bou, who put me on the right track, math labeling
