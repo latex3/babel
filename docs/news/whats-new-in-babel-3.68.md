@@ -3,7 +3,7 @@
 2021-12-28
 
 ⚠ There is a severe bug in this version affecting `amsmath` and
-`mathtools' (fixed in 3.69).
+`mathtools'. Please upgrade to 3.69, which fixes it.
 
 ## (Tentative) fixes in math
 
