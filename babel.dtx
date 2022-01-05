@@ -1,7 +1,7 @@
 % \iffalse
 % This document requires lualatex
 %%
-%% Copyright (C) 2012-2021 Javier Bezos and Johannes L. Braams.
+%% Copyright (C) 2012-2022 Javier Bezos and Johannes L. Braams.
 %% Copyright (C) 1989-2012 Johannes L. Braams and
 %%           any individual authors listed elsewhere in this file.
 %% All rights reserved.
@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2021/12/30 v3.69 The Babel package]
+\ProvidesFile{babel.dtx}[2022/01/05 v3.69.2608 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5119,8 +5119,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.69>>
-%<<date=2021/12/30>>
+%<<version=3.69.2608>>
+%<<date=2022/01/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14301,8 +14301,8 @@ end
            else  
              rep = rep:gsub(    '(no)%s*=%s*([^%s,]*)', Babel.capture_func)
              rep = rep:gsub(   '(pre)%s*=%s*([^%s,]*)', Babel.capture_func)
-             rep = rep:gsub(  '(post)%s*=%s*([^%s,]*)', Babel.capture_func)
-           end          
+             rep = rep:gsub(  '(post)%s*=%s*([^%s,]*)', Babel.capture_func)      
+           end
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
     \let\bbl@kv@attribute\relax
@@ -14516,17 +14516,48 @@ end
 %    \begin{macrocode}
 \bbl@trace{Redefinitions for bidi layout}
 \ifnum\bbl@bidimode>\z@
-  \AtBeginDocument{% amsmath
-    \ifx\place@tag\@undefined\else
-      \bbl@sreplace\place@tag{\llap}{\bbl@truellap}%
-      \bbl@sreplace\place@tag@gather{\llap}{\bbl@truellap}%
-      \bbl@sreplace\place@tag{\rlap}{\bbl@truerlap}%
-      \bbl@sreplace\place@tag@gather{\rlap}{\bbl@truerlap}%
+  \AtBeginDocument{%
+    \ifx\maketag@@@\@undefined\else
+    \let\@eqnnum\bbl@savedeqnnum
+    \bbl@sreplace\intertext@{\normalbaselines}%
+      {\normalbaselines
+       \bbl@ifunset{bbl@outertextdir}{}{\bbl@pardir\@ne\bbl@textdir\@ne}}
+    \def\bbl@ams@tagbox#1#2{% #1=\hbox|\bbl@ams@lap
+      \bbl@ifunset{bbl@outertextdir}%
+        {#1{#2}}%
+        {#1{\bbl@textdir\bbl@outertextdir#2}}}
+    \def\bbl@ams@eqtagbox#1{%
+      \bbl@ifunset{bbl@outertextdir}%
+        {\hbox to 0.01pt{%
+          \ifx\bbl@ams@lap\hbox
+            \expandafter\rlap\else\expandafter\llap\fi{#1}}}%
+        {\hbox to 0.01pt{%
+          \hskip\ifx\bbl@ams@lap\hbox-\fi\displaywidth
+          \bbl@ams@tagbox\bbl@ams@lap{#1}}}}
+    \def\bbl@ams@preset#1{%
+      \ifnum\bbl@thetextdir>\z@
+        \let\bbl@outertextdir\@ne
+        \bbl@textdir\z@
+        \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
+        \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@tagbox#1}%
+      \fi}
+    \@ifpackagewith{amsmath}{leqno}%
+      {\let\bbl@ams@lap\hbox}%
+      {\let\bbl@ams@lap\llap}%
+    % \AddToHook{env/aligned/begin}{\bbl@ams@preset\bbl@ams@lap}%
+    \AddToHook{env/multline/begin}{\bbl@ams@preset\hbox}%
+    \AddToHook{env/gather/begin}{\bbl@ams@preset\bbl@ams@lap}%
+    \AddToHook{env/align/begin}{\bbl@ams@preset\bbl@ams@lap}%
+    \AddToHook{env/align*/begin}{\bbl@ams@preset\bbl@ams@lap}%
+    \AddToHook{env/equation/begin}{%
+      \ifnum\bbl@thetextdir>\z@
+        \let\bbl@outertextdir\@ne
+        \bbl@textdir\z@
+        \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@eqtagbox}%
+      \fi}%
     \fi}
-  \ifx\AddToHook\@undefined\else
-    \AddToHook{env/equation/before}{\pardir TLT }{}
-  \fi
   \ifx\@eqnnum\@undefined\else
+    \let\bbl@savedeqnnum\@eqnnum
     \ifx\bbl@attr@dir\@undefined\else
       \bbl@xin@{,leqno,}{,\@classoptionslist,}%
       \ifin@
