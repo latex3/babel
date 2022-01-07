@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/01/05 v3.69.2608 The Babel package]
+\ProvidesFile{babel.dtx}[2022/01/07 v3.69.2610 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5119,8 +5119,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.69.2608>>
-%<<date=2022/01/05>>
+%<<version=3.69.2610>>
+%<<date=2022/01/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14516,6 +14516,7 @@ end
 %    \begin{macrocode}
 \bbl@trace{Redefinitions for bidi layout}
 \ifnum\bbl@bidimode>\z@
+% \iffalse
   \AtBeginDocument{%
     \ifx\maketag@@@\@undefined\else
     \let\@eqnnum\bbl@savedeqnnum
@@ -14535,7 +14536,9 @@ end
           \hskip\ifx\bbl@ams@lap\hbox-\fi\displaywidth
           \bbl@ams@tagbox\bbl@ams@lap{#1}}}}
     \def\bbl@ams@preset#1{%
+      \bbl@add\ignorespacesafterend{\hrule\@height\z@}%
       \ifnum\bbl@thetextdir>\z@
+        % \hrule\@height\z@
         \let\bbl@outertextdir\@ne
         \bbl@textdir\z@
         \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
@@ -14544,13 +14547,16 @@ end
     \@ifpackagewith{amsmath}{leqno}%
       {\let\bbl@ams@lap\hbox}%
       {\let\bbl@ams@lap\llap}%
-    % \AddToHook{env/aligned/begin}{\bbl@ams@preset\bbl@ams@lap}%
+    %%% \AddToHook{env/aligned/begin}{\bbl@ams@preset\bbl@ams@lap}%
     \AddToHook{env/multline/begin}{\bbl@ams@preset\hbox}%
     \AddToHook{env/gather/begin}{\bbl@ams@preset\bbl@ams@lap}%
     \AddToHook{env/align/begin}{\bbl@ams@preset\bbl@ams@lap}%
+    \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
     \AddToHook{env/align*/begin}{\bbl@ams@preset\bbl@ams@lap}%
     \AddToHook{env/equation/begin}{%
+      \bbl@add\ignorespacesafterend{\hrule\@height\z@}%
       \ifnum\bbl@thetextdir>\z@
+        \ifx\bbl@ams@lap\llap\hrule\@height\z@\fi
         \let\bbl@outertextdir\@ne
         \bbl@textdir\z@
         \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@eqtagbox}%
