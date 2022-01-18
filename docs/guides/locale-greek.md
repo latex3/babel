@@ -92,7 +92,7 @@ Ancient Greek.
 
 This transliteration system does not convert the sigma at the end of a
 word (on purpose). The transform `sigma.final` does it. To prevent the
-conversion (an abbreviation, for example), write |"s|.
+conversion (an abbreviation, for example), write `"s`.
 
 A way to make `~` a valid character for the circumflex is:
 ```tex

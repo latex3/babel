@@ -8,6 +8,8 @@ There is a complete example (with a table, a footnote, maths, etc.) in the repos
 ([tex](https://github.com/latex3/babel/blob/main/samples/lua-hebrew.tex), 
 [pdf](https://github.com/latex3/babel/blob/main/samples/lua-hebrew.pdf)).
 
+![](../media/lua-hebrew.jpg)
+
 For `pdftex` you may need to install separately the [`culmus`
 package](https://www.guyrutenberg.com/culmus-latex/), which is usually
 not included in TeX distributions.
