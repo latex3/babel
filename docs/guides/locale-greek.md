@@ -1,6 +1,6 @@
 # Greek
 
-Greek is available for `pdftex`, `xetex`, and `luatex`. Depending on you
+The Greek language is available for `pdftex`, `xetex`, and `luatex`. Depending on you
 needs you may prefer the `ldf` file, currently supported by Günter
 Milde, or the `ini` files.
 

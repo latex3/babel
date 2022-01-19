@@ -1,6 +1,6 @@
 # Chinese
 
-Chinese is available for `xetex` and `luatex`. With the latter, both
+The Chinese language is available for `xetex` and `luatex`. With the latter, both
 renderers (the default and Harfbuzz) are fine, but with huge fonts the
 latter is more reliable.
 

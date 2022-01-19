@@ -1,6 +1,6 @@
 # Hebrew
 
-Hebrew is available for `pdftex`, `xetex`, and `luatex`, but the
+The Hebrew language is available for `pdftex`, `xetex`, and `luatex`, but the
 preferred engine is the latter, because of its unique features for
 bidirectional texts, not requiring explicit mark up.
 

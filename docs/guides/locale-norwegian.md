@@ -1,6 +1,6 @@
 # Norwegian
 
-Norwegian is available for `pdftex`, `xetex`, and `luatex`. An example
+The Norwegian language is available for `pdftex`, `xetex`, and `luatex`. An example
 for `pdftex` with the UTF-8 encoding is:
 ```tex
 \documentclass{book}

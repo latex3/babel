@@ -16,21 +16,25 @@ in these situations.
 Remember transforms are not available in XeTeX or pdfTeX, which still
 require the shorthand. This is a LuaTeX-only feature.
 
-## Fixes for amsmath (luatex)
+## Fixes for amsmath with luatex (still tentative)
 
-[Work in progress. Skips below are sometimes too large with the version
-currently available. To be improved.]
+Please, note these fixes are basically dirty tricks to get the most
+typical cases to work, after a ‘hunting’ in search of possible issues
+in every environment, with right al left tags. The pending issues are
+related to luatex, to amsmath and (of course) to babel itself.
 
-There are new fixes which will make amsmath useable in the most typical
-cases, with labels at the right and at the left; `align` (but not
-`align*`), `multline(*)`, `aligned`, `gather` `subequation`, `equation`.
+The environments patched are `align(*)`, `multline(*)`, `aligned`,
+`gather(*)` `subequation`, `equation(*)`, `split`, cases`.
 
-The commands `\text` and `\intertext` has been patched to set the
+The commands `\text` and `\intertext` has been patched, too, to set the
 correct direction (but `\hbox` won’t work as expected).
 
 Fixing `equation` turned out to be much more involved as expected
-before the long-standing bugs in `\eqno` and `\leqno`. Not only the the
-label may be misplaced with the latter (sometimes), but the
-computations for the skip before the equation are reversed (the skip
-for `\eqno` is that for `\leqno` and vice versa). So, a dirty trick has
-been added to overcome this bug.
+because of long standing bugs in `\eqno` and `\leqno`. Not only the the
+label may be misplaced with the latter (sometimes, but it seems to work
+with `babel`), but the calculations for the skip before and after the
+equation, based on the length of the previous line, are reversed (the
+skip for `\eqno` is that for `\leqno` and vice versa).
+
+
+

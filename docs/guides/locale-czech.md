@@ -1,6 +1,6 @@
 # Czech
 
-Czech is available for `pdftex`, `xetex`, and `luatex`. To write a
+The Czech language is available for `pdftex`, `xetex`, and `luatex`. To write a
 document in this language just write in the preamble:
 ```tex
 \usepackage[czech, shorthands="]{babel}
