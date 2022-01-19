@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/01/07 v3.69.2610 The Babel package]
+\ProvidesFile{babel.dtx}[2022/01/19 v3.69.2622 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5119,8 +5119,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.69.2610>>
-%<<date=2022/01/07>>
+%<<version=3.69.2622>>
+%<<date=2022/01/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14516,76 +14516,85 @@ end
 %    \begin{macrocode}
 \bbl@trace{Redefinitions for bidi layout}
 \ifnum\bbl@bidimode>\z@
-% \iffalse
+  \let\bbl@eqnodir\relax
   \AtBeginDocument{%
-    \ifx\maketag@@@\@undefined\else
-    \let\@eqnnum\bbl@savedeqnnum
-    \bbl@sreplace\intertext@{\normalbaselines}%
-      {\normalbaselines
-       \bbl@ifunset{bbl@outertextdir}{}{\bbl@pardir\@ne\bbl@textdir\@ne}}
-    \def\bbl@ams@tagbox#1#2{% #1=\hbox|\bbl@ams@lap
-      \bbl@ifunset{bbl@outertextdir}%
-        {#1{#2}}%
-        {#1{\bbl@textdir\bbl@outertextdir#2}}}
-    \def\bbl@ams@eqtagbox#1{%
-      \bbl@ifunset{bbl@outertextdir}%
-        {\hbox to 0.01pt{%
-          \ifx\bbl@ams@lap\hbox
-            \expandafter\rlap\else\expandafter\llap\fi{#1}}}%
-        {\hbox to 0.01pt{%
-          \hskip\ifx\bbl@ams@lap\hbox-\fi\displaywidth
-          \bbl@ams@tagbox\bbl@ams@lap{#1}}}}
-    \def\bbl@ams@preset#1{%
-      \bbl@add\ignorespacesafterend{\hrule\@height\z@}%
-      \ifnum\bbl@thetextdir>\z@
-        % \hrule\@height\z@
-        \let\bbl@outertextdir\@ne
-        \bbl@textdir\z@
-        \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
-        \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@tagbox#1}%
-      \fi}
-    \@ifpackagewith{amsmath}{leqno}%
-      {\let\bbl@ams@lap\hbox}%
-      {\let\bbl@ams@lap\llap}%
-    %%% \AddToHook{env/aligned/begin}{\bbl@ams@preset\bbl@ams@lap}%
-    \AddToHook{env/multline/begin}{\bbl@ams@preset\hbox}%
-    \AddToHook{env/gather/begin}{\bbl@ams@preset\bbl@ams@lap}%
-    \AddToHook{env/align/begin}{\bbl@ams@preset\bbl@ams@lap}%
-    \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
-    \AddToHook{env/align*/begin}{\bbl@ams@preset\bbl@ams@lap}%
-    \AddToHook{env/equation/begin}{%
-      \bbl@add\ignorespacesafterend{\hrule\@height\z@}%
-      \ifnum\bbl@thetextdir>\z@
-        \ifx\bbl@ams@lap\llap\hrule\@height\z@\fi
-        \let\bbl@outertextdir\@ne
-        \bbl@textdir\z@
-        \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@eqtagbox}%
-      \fi}%
-    \fi}
-  \ifx\@eqnnum\@undefined\else
-    \let\bbl@savedeqnnum\@eqnnum
-    \ifx\bbl@attr@dir\@undefined\else
+    \ifx\maketag@@@\@undefined % Normal equation, eqnarray
+      \AddToHook{env/eqnarray/begin}{%
+        \ifnum\bbl@thetextdir>\z@
+          \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
+          \chardef\bbl@thetextdir\z@
+          \bbl@add\normalfont{\bbl@eqnodir}%
+        \fi}%
+      \AddToHook{env/equation/begin}{%
+        \ifnum\bbl@thetextdir>\z@
+          \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
+          \chardef\bbl@thetextdir\z@
+          \bbl@add\normalfont{\bbl@eqnodir}%
+          \pardir TLT % dir for \eqno is \pardir!
+        \fi}%
       \bbl@xin@{,leqno,}{,\@classoptionslist,}%
       \ifin@
-        \bbl@sreplace\@eqnnum{\rlap}{\bbl@leqno@aux}
-        \def\bbl@leqno@aux#1{%
-          \bbl@truerlap{%
-            \ifcase\bbl@attr@dir
-              #1%
-            \else
-              \bbl@textdir\@ne
-              #1%
-              \hskip-\displaywidth
-            \fi}}
-      \else
-        \bbl@exp{%
-          \def\\\@eqnnum{{%
-            \<ifcase>\\\bbl@attr@dir\<else>\\\bbl@textdir\@ne\<fi>%
-            \\\bbl@ifsamestring{\\\@currenvir}{equation}%
-               {}{\\\bbl@truellap}{\[@eqnnum]}}}}
+        \def\@eqnnum{%
+           \setbox\z@\hbox{\normalfont\normalcolor(\theequation)}%
+           \hbox to0.01pt{\hss\hbox to\displaywidth{\box\z@\hss}}}%
       \fi
-    \fi
-  \fi
+    \else % amstex
+      \bbl@sreplace\intertext@{\normalbaselines}%
+        {\normalbaselines
+         \ifx\bbl@eqnodir\relax\else\bbl@pardir\@ne\bbl@textdir\@ne\fi}
+      \def\bbl@ams@tagbox#1#2{#1{\bbl@eqnodir#2}}% #1=\hbox|ams@lap
+      \def\bbl@ams@eqtagbox#1{%
+        \setbox\z@\hbox{\bbl@eqnodir#1}%
+        \hbox to\wd\z@{%
+          \ifx\bbl@ams@lap\hbox
+            \hss\hbox to\displaywidth{\box\z@\hss}%
+          \else
+            \hbox to\displaywidth{\hss\box\z@}\hss
+          \fi}}
+      \def\bbl@ams@preset#1{%
+        \ifnum\bbl@thetextdir>\z@
+          \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
+          \chardef\bbl@thetextdir\z@
+          \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
+          \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@tagbox#1}%
+        \fi}
+      \@ifpackagewith{amsmath}{leqno}%
+        {\let\bbl@ams@lap\hbox}% = leqno
+        {\let\bbl@ams@lap\llap}% = default
+      % Not required?: split, alignat
+      \AddToHook{env/cases/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/multline/begin}{\bbl@ams@preset\hbox}%
+      \AddToHook{env/gather/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/gather*/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/align/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/align*/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      % Hackish, for proper alignment-don’t ask me why it works! :-)
+      \bbl@exp{%
+        \\\AddToHook{env/align*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
+      \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
+      \AddToHook{env/split/before}{%
+        \def\bbl@tempa{equation}%
+        \ifx\@currenvir\bbl@tempa
+          \def\bbl@ams@eqtagbox#1{%
+            \setbox\z@\hbox{\bbl@eqnodir#1}%
+            \hbox to\wd\z@{\box\z@}}%
+        \fi}
+      \AddToHook{env/equation/begin}{%
+        \bbl@add\ignorespacesafterend{\hrule\@height\z@}%
+        \ifnum\bbl@thetextdir>\z@
+          \ifx\bbl@ams@lap\llap\hrule\@height\z@\fi        
+          \def\bbl@eqnodir{\bbl@textdir\@ne}%
+          \bbl@textdir\z@
+          \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@eqtagbox}%
+        \fi}%
+      \AddToHook{env/equation*/begin}{%
+        \bbl@add\ignorespacesafterend{\hrule\@height\z@}%
+        \ifnum\bbl@thetextdir>\z@            
+          \def\bbl@eqnodir{\bbl@textdir\@ne}%
+          \bbl@textdir\z@
+          \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@eqtagbox}%
+        \fi}%
+      \fi}
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
 \ifnum\bbl@bidimode>\z@

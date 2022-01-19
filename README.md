@@ -1,4 +1,4 @@
-## Babel 3.69.2610
+## Babel 3.69.2622
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.69 are described in:
+Changes in version 3.70 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.69.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.70.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,7 +48,8 @@ respective authors.
 ```
 3.70   2022-01-?? (dev)
        * Finnish: transform 'prehyphen.nobreak'.
-       * Fixes for amsmath (in progress).
+       * Better fixes for amsmath, as well as for the default
+         'equation' and 'eqnarray' (but still not perfect).
 
 3.69   2021-12-30
        * Fixes a severe bug with amsmath and mathtools introduced in
