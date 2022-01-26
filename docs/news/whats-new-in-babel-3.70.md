@@ -1,6 +1,6 @@
 # What's new in babel 3.70
 
-*(Development.)*
+2022-01-26
 
 ## Finnish
 
@@ -20,11 +20,11 @@ require the shorthand. This is a LuaTeX-only feature.
 
 Please, note these fixes are basically dirty tricks to get the most
 typical cases to work, after a ‘hunting’ in search of possible issues
-in every environment, with right al left tags. The pending issues are
-related to luatex, to amsmath and (of course) to babel itself.
+in every environment, with right and left tags. The pending issues are
+related to `luatex`, to `amsmath` and (of course) to `babel` itself.
 
 The environments patched are `align(*)`, `multline(*)`, `aligned`,
-`gather(*)` `subequation`, `equation(*)`, `split`, cases`.
+`gather(*)` `subequation`, `equation(*)`, `split`, and `cases`.
 
 The commands `\text` and `\intertext` has been patched, too, to set the
 correct direction (but `\hbox` won’t work as expected).
@@ -35,6 +35,15 @@ label may be misplaced with the latter (sometimes, but it seems to work
 with `babel`), but the calculations for the skip before and after the
 equation, based on the length of the previous line, are reversed (the
 skip for `\eqno` is that for `\leqno` and vice versa).
+
+There also some fixes for the standard `equation` and `eqnarray`, but
+some issues in the spacing remains.
+
+## Other fixes
+
+Some fonts for graphics raised an error with `bidi=basic`.
+
+
 
 
 

@@ -1,8 +1,8 @@
 # Greek
 
-The Greek language is available for `pdftex`, `xetex`, and `luatex`. Depending on you
-needs you may prefer the `ldf` file, currently supported by Günter
-Milde, or the `ini` files.
+The Greek language is available for `pdftex`, `xetex`, and `luatex`.
+Depending on your needs you may prefer the `ldf` file, currently
+supported by Günter Milde, or the `ini` files.
 
 The support for `pdftex` is based on the non-standard `LGR` encoding,
 which may be a source of issues (see for example
