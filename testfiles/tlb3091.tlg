@@ -69,7 +69,6 @@ Package: babel
 ...\T2A/cmr/bx/n/10 1
 ...\kern -1.0
 ...\kern 1.0
-..\kern 0.0
 ..\penalty 10000
 ..\glue(\parfillskip) -15.49623
 ..\glue(\rightskip) 15.49623

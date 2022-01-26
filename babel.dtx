@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/01/19 v3.69.2622 The Babel package]
+\ProvidesFile{babel.dtx}[2022/01/26 v3.70 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3150,11 +3150,14 @@ Spanish}{hyphen.repeat}{Explicit hyphens behave like
 \trans{Czech, Polish, Slovak}{oneletter.nobreak}{Converts a space after
 a non-syllabic preposition or conjunction into a non-breaking space.}
 
+\trans{Finnish}{prehyphen.nobreak}{Line breaks just after hyphens
+prepended to words are prevented, like in “pakastekaapit ja -arkut”.}
+
 \trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
 upsilon if hyphenated just before. It works with the three variants.}
 
-\trans{Greek}{transliteration.omega}{Although he provided combinations
-are not exactly the same, this transform follows the syntax of Omega:
+\trans{Greek}{transliteration.omega}{Although the provided combinations
+are not the full set, this transform follows the syntax of Omega:
 |=| for the circumflex, |v| for digamma, and so on. For better
 compatibility with Levy’s system, \texttt{\string~} (as ‘string’) is an
 alternative to |=|. |'| is tonos in Monotonic Greek, but oxia in
@@ -5119,8 +5122,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.69.2622>>
-%<<date=2022/01/19>>
+%<<version=3.70>>
+%<<date=2022/01/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -22032,7 +22035,10 @@ function Babel.bidi(head, ispar, hdir)
         item = nodes[r][1]    -- MIRRORING
         if Babel.mirroring_enabled and item.id == GLYPH
              and temp == 'r' and characters[item.char] then
-          local font_mode = font.fonts[item.font].properties.mode
+          local font_mode = ''
+          if font.fonts[item.font].properties then
+            font_mode = font.fonts[item.font].properties.mode
+          end
           if font_mode ~= 'harf' and font_mode ~= 'plug' then
             item.char = characters[item.char].m or item.char
           end

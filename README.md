@@ -1,4 +1,4 @@
-## Babel 3.69.2622
+## Babel 3.70
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,23 +46,11 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.70   2022-01-?? (dev)
+3.70   2022-01-26
        * Finnish: transform 'prehyphen.nobreak'.
        * Better fixes for amsmath, as well as for the default
          'equation' and 'eqnarray' (but still not perfect).
-
-3.69   2021-12-30
-       * Fixes a severe bug with amsmath and mathtools introduced in
-         3.68 (#162).
-
-3.68   2021-12-28
-       * Fixes:
-         - Assamese, Bengali, Gujarati set incorrectly prehyphenchar.
-         - The syntax provide=* didn’t work with Hebrew and a few other
-           languages.
-         - Wrong equation direction in first column in array and tabular
-           environment (#158).
-         - Tentative fixes for labels in displayed math (#159).
+       * Fix an error with bidi=basic and some fonts for graphics.
 ```
 
 ### Previous changes
