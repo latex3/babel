@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/01/26 v3.70 The Babel package]
+\ProvidesFile{babel.dtx}[2022/02/03 v3.70.2637 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5122,8 +5122,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.70>>
-%<<date=2022/01/26>>
+%<<version=3.70.2637>>
+%<<date=2022/02/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14487,10 +14487,6 @@ end
   \frozen@everydisplay\expandafter{%
     \expandafter\bbl@mathboxdir\the\frozen@everydisplay}
 \fi
-\def\bbl@truellap{%s
-  \ifcase\bbl@attr@dir\expandafter\llap\else\expandafter\rlap\fi}
-\def\bbl@truerlap{%
-  \ifcase\bbl@attr@dir\expandafter\rlap\else\expandafter\llap\fi}
 %    \end{macrocode}
 %
 % \subsection{Layout}
@@ -14542,13 +14538,19 @@ end
            \hbox to0.01pt{\hss\hbox to\displaywidth{\box\z@\hss}}}%
       \fi
     \else % amstex
+      \edef\bbl@tempa{%
+        \catcode58=\the\catcode58\relax
+        \catcode95=\the\catcode95\relax}%  
+      \catcode58=11
+      \catcode95=11
       \bbl@sreplace\intertext@{\normalbaselines}%
         {\normalbaselines
-         \ifx\bbl@eqnodir\relax\else\bbl@pardir\@ne\bbl@textdir\@ne\fi}
+         \ifx\bbl@eqnodir\relax\else\bbl@pardir\@ne\bbl@textdir\@ne\fi}%
+      \bbl@tempa
       \def\bbl@ams@tagbox#1#2{#1{\bbl@eqnodir#2}}% #1=\hbox|ams@lap
       \def\bbl@ams@eqtagbox#1{%
         \setbox\z@\hbox{\bbl@eqnodir#1}%
-        \hbox to\wd\z@{%
+        \hbox to 0.01pt{%
           \ifx\bbl@ams@lap\hbox
             \hss\hbox to\displaywidth{\box\z@\hss}%
           \else

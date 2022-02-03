@@ -1,4 +1,6 @@
-## Babel 3.70
+## Babel 3.70.2637
+
+(Development.)
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +48,10 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.71   2022-02-?? (dev)
+       * Fix
+         - Bad interraction between bidi option and mathtools (#166).
+
 3.70   2022-01-26
        * Finnish: transform 'prehyphen.nobreak'.
        * Better fixes for amsmath, as well as for the default
