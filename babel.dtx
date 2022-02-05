@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/02/03 v3.70.2637 The Babel package]
+\ProvidesFile{babel.dtx}[2022/02/05 v3.70.2639 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5122,8 +5122,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.70.2637>>
-%<<date=2022/02/03>>
+%<<version=3.70.2639>>
+%<<date=2022/02/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12172,39 +12172,38 @@ help from Bernd Raichle, for which I am grateful.
 % the language exists. With class options, check if the option is a
 % language by checking if the correspondin file exists.
 % 
-%
 %    \begin{macrocode}
 \bbl@foreach\bbl@language@opts{%
   \def\bbl@tempa{#1}%
   \ifx\bbl@tempa\bbl@opt@main\else
-    \bbl@ifunset{ds@#1}%
-      {\ifnum\bbl@iniflag<\tw@    % 0 ø (other = ldf)
-         \DeclareOption{#1}{\bbl@load@language{#1}}%
-       \else                      % + * (other = ini)
-         \DeclareOption{#1}{%
-           \bbl@ldfinit
-           \babelprovide[import]{#1}%
-           \bbl@afterldf{}}%
-       \fi}%
-      {}%
+    \ifnum\bbl@iniflag<\tw@    % 0 ø (other = ldf)
+      \bbl@ifunset{ds@#1}%
+        {\DeclareOption{#1}{\bbl@load@language{#1}}}%
+        {}%
+    \else                      % + * (other = ini)
+      \DeclareOption{#1}{%
+        \bbl@ldfinit
+        \babelprovide[import]{#1}%
+        \bbl@afterldf{}}%
+    \fi
   \fi}
 \bbl@foreach\@classoptionslist{%
   \def\bbl@tempa{#1}%
   \ifx\bbl@tempa\bbl@opt@main\else
-    \bbl@ifunset{ds@#1}%
-      {\ifnum\bbl@iniflag<\tw@    % 0 ø (other = ldf)
-         \IfFileExists{#1.ldf}%
-           {\DeclareOption{#1}{\bbl@load@language{#1}}}%
-           {}%
-       \else                      % + * (other = ini)
-         \IfFileExists{babel-#1.tex}% 
-           {\DeclareOption{#1}{%  
-              \bbl@ldfinit
-              \babelprovide[import]{#1}%
-              \bbl@afterldf{}}}%
-           {}%
-       \fi}%
-    {}%
+    \ifnum\bbl@iniflag<\tw@    % 0 ø (other = ldf)
+      \bbl@ifunset{ds@#1}%
+        {\IfFileExists{#1.ldf}%
+          {\DeclareOption{#1}{\bbl@load@language{#1}}}%
+          {}}%
+        {}%
+     \else                      % + * (other = ini)
+       \IfFileExists{babel-#1.tex}% 
+         {\DeclareOption{#1}{%  
+            \bbl@ldfinit
+            \babelprovide[import]{#1}%
+            \bbl@afterldf{}}}%
+         {}%
+     \fi
   \fi}
 %    \end{macrocode}
 %
@@ -13484,6 +13483,30 @@ help from Bernd Raichle, for which I am grateful.
     end
     lang.patterns(lg, pats)
   end
+  function Babel.hlist_has_bidi(head)
+    local has_bidi = false
+    for item in node.traverse(head) do
+      if item.id == node.id'glyph' then
+        local itemchar = item.char
+        local chardata = Babel.characters[itemchar]
+        local dir = chardata and chardata.d or nil
+        if not dir then
+          for nn, et in ipairs(Babel.ranges) do
+            if itemchar < et[1] then
+              break
+            elseif itemchar <= et[2] then
+              dir = et[3]
+              break
+            end
+          end
+        end
+        if dir and (dir == 'al' or dir == 'r') then
+          has_bidi = true
+        end
+      end
+    end
+    return has_bidi
+  end
 }
 \endgroup
 \ifx\newattribute\@undefined\else
@@ -14474,6 +14497,7 @@ end
 \def\bbl@dirparastext{\pardir\the\textdir\relax}%   %%%%
 %
 \ifnum\bbl@bidimode>\z@
+  \def\bbl@insidemath{0}%
   \def\bbl@mathboxdir{%
     \ifcase\bbl@thetextdir\relax
       \everyhbox{\bbl@mathboxdir@aux L}%
@@ -14482,10 +14506,30 @@ end
      \fi}
   \def\bbl@mathboxdir@aux#1{%
     \@ifnextchar\egroup{}{\textdir T#1T\relax}}
+  \def\bbl@everymath{\def\bbl@insidemath{1}}
+  \def\bbl@everydisplay{%
+    \bbl@mathboxdir
+    \def\bbl@everymath{\bbl@mathboxdir}%
+    \def\bbl@insidemath{2}}
   \frozen@everymath\expandafter{%
-    \expandafter\bbl@mathboxdir\the\frozen@everymath}
+    \expandafter\bbl@everymath\the\frozen@everymath}
   \frozen@everydisplay\expandafter{%
-    \expandafter\bbl@mathboxdir\the\frozen@everydisplay}
+    \expandafter\bbl@everydisplay\the\frozen@everydisplay}
+  \AtBeginDocument{
+    \directlua{
+      function Babel.math_box_dir(head)
+        if not (token.get_macro('bbl@insidemath') == '0') then
+          if Babel.hlist_has_bidi(head) then
+            local d = node.new(node.id'dir')
+            d.dir = '+TRT'
+            node.insert_before(head, head, d)
+          end
+        end
+        return head
+      end
+      luatexbase.add_to_callback("hpack_filter", Babel.math_box_dir,
+        "Babel.math_box_dir", 0)
+  }}%
 \fi
 %    \end{macrocode}
 %
@@ -14534,8 +14578,8 @@ end
       \bbl@xin@{,leqno,}{,\@classoptionslist,}%
       \ifin@
         \def\@eqnnum{%
-           \setbox\z@\hbox{\normalfont\normalcolor(\theequation)}%
-           \hbox to0.01pt{\hss\hbox to\displaywidth{\box\z@\hss}}}%
+          \setbox\z@\hbox{\normalfont\normalcolor(\theequation)}%
+          \hbox to0.01pt{\hss\hbox to\displaywidth{\box\z@\hss}}}%
       \fi
     \else % amstex
       \edef\bbl@tempa{%
@@ -14605,6 +14649,7 @@ end
 \ifnum\bbl@bidimode>\z@
   \def\bbl@nextfake#1{%  non-local changes, use always inside a group!
     \bbl@exp{%
+      \def\\\bbl@insidemath{0}%
       \mathdir\the\bodydir  
       #1%              Once entered in math, set boxes to restore values
       \<ifmmode>%
@@ -14667,28 +14712,11 @@ end
      \directlua{
        Babel.get_picture_dir = true
        Babel.picture_has_bidi = 0
+       %
        function Babel.picture_dir (head)
          if not Babel.get_picture_dir then return head end
-         for item in node.traverse(head) do
-           if item.id == node.id'glyph' then
-             local itemchar = item.char
-             % TODO. Copypaste pattern from Babel.bidi (-r)
-             local chardata = Babel.characters[itemchar]
-             local dir = chardata and chardata.d or nil
-             if not dir then
-               for nn, et in ipairs(Babel.ranges) do
-                 if itemchar < et[1] then
-                   break
-                 elseif itemchar <= et[2] then
-                   dir = et[3]
-                   break
-                 end
-               end
-             end
-             if dir and (dir == 'al' or dir == 'r') then
-               Babel.picture_has_bidi = 1
-             end
-           end
+         if Babel.hlist_has_bidi(head) then 
+           Babel.picture_has_bidi = 1
          end
          return head
        end

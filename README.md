@@ -1,4 +1,4 @@
-## Babel 3.70.2637
+## Babel 3.70.2639
 
 (Development.)
 
@@ -49,8 +49,12 @@ respective authors.
 ### Summary of Latest changes
 ```
 3.71   2022-02-?? (dev)
-       * Fix
+       * Fixes:
          - Bad interraction between bidi option and mathtools (#166).
+         - 'provide+=' didn’t work with 'hebrew' as a secondary
+           language.
+         - Wrong equation direction in 'cases' and 'array' (#167).
+         
 
 3.70   2022-01-26
        * Finnish: transform 'prehyphen.nobreak'.
