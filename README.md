@@ -1,4 +1,4 @@
-## Babel 3.70.2639
+## Babel 3.70.2644
 
 (Development.)
 
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.70 are described in:
+Changes in version 3.71 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.70.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.71.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,13 +48,13 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.71   2022-02-?? (dev)
+3.71   2022-02-14?? (dev)
+       * IAST transliteration for Sanskrit (by Maximilian Mehner).
        * Fixes:
          - Bad interraction between bidi option and mathtools (#166).
          - 'provide+=' didn’t work with 'hebrew' as a secondary
            language.
          - Wrong equation direction in 'cases' and 'array' (#167).
-         
 
 3.70   2022-01-26
        * Finnish: transform 'prehyphen.nobreak'.
