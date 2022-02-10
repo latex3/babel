@@ -36,10 +36,10 @@ The transliteration rules also standardize whitespace according to the
 convention of Devanagari, in which — at least for Sanskrit — no
 closing consonants are written with a stop sign if a vowel or consonant
 follows in the sentence or verse line. So for example you would write
-"tat sad iti" in IAST as well as Harvard-Kyoto, but the correct
+‘tat sad iti’ in IAST as well as Harvard-Kyoto, but the correct
 Devanagari would be तत्सदिति all under one line giving the impression
-of a single word. Most transliteration tools would transliterate "tat
-sad iti" to तत् सद् इति, so require you to input "tatsaditi" to
+of a single word. Most transliteration tools would transliterate ‘tat
+sad iti’ to तत् सद् इति, so require you to input ‘tatsaditi’ to
 achieve the correct output, but this is in itself a faulty
 romanization.
 
@@ -47,10 +47,5 @@ Full stop (`.`) and slash (`/`) both get replaced by danda (`।`), two
 of either by double-danda (`॥`). Colon (`:`) gets replaced by dash
 (`–`) which is commonly used in Devanagari editions of dramas in this
 function.
-
-*(More to follow..
-
-
-
 
 
