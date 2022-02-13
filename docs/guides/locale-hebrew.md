@@ -4,6 +4,8 @@ The Hebrew language is available for `pdftex`, `xetex`, and `luatex`, but the
 preferred engine is the latter, because of its unique features for
 bidirectional texts, not requiring explicit mark up.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eWZhWOzrVTA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 There is a complete example (with a table, a footnote, maths, etc.) in the repository
 ([tex](https://github.com/latex3/babel/blob/main/samples/lua-hebrew.tex), 
 [pdf](https://github.com/latex3/babel/blob/main/samples/lua-hebrew.pdf)).
