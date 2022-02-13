@@ -1,6 +1,6 @@
-## Babel 3.70.2644
+## Babel 3.71
 
-(Development.)
+2022-02-13
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,19 +48,13 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.71   2022-02-14?? (dev)
+3.71   2022-02-13
        * IAST transliteration for Sanskrit (by Maximilian Mehner).
        * Fixes:
          - Bad interraction between bidi option and mathtools (#166).
          - 'provide+=' didn’t work with 'hebrew' as a secondary
            language.
          - Wrong equation direction in 'cases' and 'array' (#167).
-
-3.70   2022-01-26
-       * Finnish: transform 'prehyphen.nobreak'.
-       * Better fixes for amsmath, as well as for the default
-         'equation' and 'eqnarray' (but still not perfect).
-       * Fix an error with bidi=basic and some fonts for graphics.
 ```
 
 ### Previous changes

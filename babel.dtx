@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/02/10 v3.70.2644 The Babel package]
+\ProvidesFile{babel.dtx}[2022/02/13 v3.71 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -547,6 +547,7 @@ _\usepackage[vietnamese,danish]{babel}_
 \end{note}
 
 \subsection{Mostly monolingual documents}
+\label{mostlymono}
 
 \New{3.39} Very often, multilingual documents consist of a main
 language with small pieces of text in another languages (words, idioms,
@@ -1291,6 +1292,11 @@ can take the following values:
 \New{3.16} Selects which layout elements are adapted in bidi
 documents. See sec.~\ref{bidi}.
 
+\Describe{provide=}{\texttt{*}}
+\New{3.49} An alternative to |\babelprovide| for languages passed as
+options. See section~\ref{inifiles}, which describes also the variants
+|provide+=| and |provide*=|.
+
 \subsection{The \texttt{base} option}
 
 With this package option \babel{} just loads some basic macros (those
@@ -1327,12 +1333,12 @@ be the same as the option name as set in |\usepackage|!).
 \end{verbatim}
 \end{example}
 
-% \begin{note}
-%   With a recent version of \LaTeX, an alternative method to execute
-%   some code just after an |ldf| file is loaded is with |\AddToHook| and
-%   the hook |file/after/<language>.ldf|. \Babel{} does not predeclare
-%   it, and you have to do it yourself with |\NewHook| or |\ProvideHook|.
-% \end{note}
+\begin{note}
+  With a recent version of \LaTeX, an alternative method to execute
+  some code just after an |ldf| file is loaded is with |\AddToHook| and
+  the hook |file/<language>.ldf/after|. \Babel{} does not predeclare
+  it, and you have to do it yourself with |\ActivateGenericHook|.
+\end{note}
 
 \begin{warning}
   Currently this option is not compatible with languages loaded on the
@@ -1344,8 +1350,8 @@ be the same as the option name as set in |\usepackage|!).
 
 An alternative approach to define a language (or, more precisely, a
 \textit{locale}) is by means of an \texttt{ini} file. Currently
-\babel{} provides about 200 of these files containing the basic data
-required for a locale. 
+\babel{} provides about 250 of these files containing the basic data
+required for a locale, plus basic templates for 500 about locales.
 
 |ini| files are not meant only for \babel, and they has been devised as
 a resource for other packages. To easy interoperability between \TeX{}
@@ -1435,11 +1441,12 @@ Or also:
 \begin{description}
 \itemsep=-\parskip
 \item[Arabic] Monolingual documents mostly work in \luatex, but it must
-  be fine tuned, particularly graphical elements like |picture|. In \xetex{}
-  \babel{} resorts to the \textsf{bidi} package, which seems to work.
+  be fine tuned, particularly math and graphical elements like
+  |picture|. In \xetex{} \babel{} resorts to the \textsf{bidi} package,
+  which seems to work.
 \item[Hebrew] Niqqud marks seem to work in both engines, but depending 
   on the font cantillation marks might be misplaced (\xetex{} or
-  \luatex{} with Harfbuzz seems better, but still problematic).
+  \luatex{} with Harfbuzz seems better).
 \item[Devanagari] In \luatex{} and the the default renderer many fonts
 work, but some others do not, the main issue being the ‘ra’. You may
 need to set explicitly the script to either |deva| or |dev2|, eg:
@@ -1451,8 +1458,8 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
   also work with \xetex{}, although unlike with \luatex{} fine tuning
   the font behavior is not always possible.
 \item[Southeast scripts] Thai works in both \luatex{} and \xetex{}, but
-  line breaking differs (rules can be modified in \luatex; they are
-  hard-coded in \xetex). Lao seems to work, too, but there are no
+  line breaking differs (rules are hard-coded in \xetex, but they can
+  be modified in \luatex). Lao seems to work, too, but there are no
   patterns for the latter in \luatex{}. Khemer clusters are rendered
   wrongly with the default renderer. The comment about Indic scripts
   and \textsf{lualatex} also applies here. Some quick patterns can
@@ -1479,7 +1486,7 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
 \item[Latin, Greek, Cyrillic] Combining chars with the default
  \luatex{} font renderer might be wrong; on then other hand, with the
  Harfbuzz renderer diacritics are stacked correctly, but many
- hyphenations points are discarded (this bug seems related to kerning,
+ hyphenations points are discarded (this bug is related to kerning,
  so it depends on the font). With \xetex{} both combining characters
  and hyphenation work as expected (not quite, but in most cases it
  works; the problem here are font clusters).
@@ -2129,6 +2136,7 @@ zulu
 
 \textbf{Modifying and adding values to |ini| files}
 
+\nobreak 
 \New{3.39} There is a way to modify the values of |ini| files when they
 get loaded with |\babelprovide| and |import|. To set, say,
 |digits.native| in the |numbers| section, use something like
@@ -2573,6 +2581,9 @@ Remerber there is an alternative syntax for the latter:
 \begin{verbatim}
 \usepackage[italian, polytonicgreek, provide=*]{babel}
 \end{verbatim}
+Finally, also remember you might not need to load |italian| at all if
+there are only a few word in this language (see~\ref{mostlymono}).
+
 \end{example}
 
 \Describe{script=}{\meta{script-name}}
@@ -2630,7 +2641,10 @@ CJK.
 \Describe{intrapenalty=}{\meta{penalty}}
 Sets the interword penalty for the writing system of this language.
 Currently used only in Southeast Asian scrips, like Thai. Ignored if 0
-(which is the default value). 
+(which is the default value).
+
+\Describe{transforms=}{\meta{transform-list}}
+See section~\ref{transforms}.
 
 \Describe{justification=}{\texttt{kashida} $\string|$
 \texttt{elongated} $\string|$ \texttt{unhyphenated}}
@@ -2676,10 +2690,10 @@ well dates do not rely on |\arabic|.)
 
 For example:
 \begin{verbatim}
-\babelprovide[import]{telugu}  % Telugu better with XeTeX
+\babelprovide[import]{telugu}
   % Or also, if you want:
   % \babelprovide[import, maparabic]{telugu}
-\babelfont{rm}{Gautami}
+\babelfont{rm}{Gautami} % With luatex, better with Harfbuzz
 \begin{document}
 _\telugudigits{1234}_
 _\telugucounter{section}_
@@ -2827,7 +2841,7 @@ with the following command.
   {\marg{year}\m{month}\m{day}}}
 
 By default the calendar is the Gregorian, but an |ini| file may define
-strings for other calendars (currently |ar|, |ar-|*, |he|, |fa|, |hi|.)
+strings for other calendars (currently |ar|, |ar-|*, |he|, |fa|, |hi|).
 In the latter case, the three arguments are the year, the month, and
 the day in those in the corresponding calendar. They are \textit{not}
 the Gregorian data to be converted (which means, say, 13 is a valid
@@ -2853,7 +2867,7 @@ current language.
 
 If more than one language is used, it might be necessary to know which
 language is active at a specific time. This can be checked by a call
-to |\iflanguage|, but note here ``language'' is used in the \TeX
+to |\iflanguage|, but note here ``language'' is used in the \TeX{}
 sense, as a set of hyphenation patterns, and \textit{not} as its
 \textsf{babel} name. This macro takes three arguments.  The first
 argument is the name of a language; the second and third arguments are
@@ -2940,7 +2954,9 @@ identifier, which can be retrieved with |\localeid|.
 typically the LGC group, South East Asian, like Thai, and CJK, but
 support depends on the engine: \textsf{pdftex} only deals with the
 former, \xetex{} also with the second one (although in a limited way),
-while \luatex{} provides basic rules for the latter, too.
+while \luatex{} provides basic rules for the latter, too. With \luatex{}
+there are also tools for non-standard hyphenation rules, explained in
+the next section.
 
 \Describe{\babelhyphen}{%
   \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}\marg{type}}
@@ -3087,6 +3103,7 @@ of the previous char in \luatex, and the font size set by the last
 |\selectfont| in \xetex).
 
 \subsection{Transforms}
+\label{transforms}
 
 Transforms (only \luatex) provide a way to process the text on the
 typesetting level in several language-dependent ways, like non-standard
@@ -3193,6 +3210,9 @@ Gujarati, Hindi, Kannada, Malayalam, Marathi, Oriya, Tamil, Telugu.}
 \trans{Latin}{letters.uv}{Replaces \textit{v}, \textit{U} with
 \textit{u}, \textit{V}.}
 
+\trans{Sanskrit}{transliteration.iast}{The IAST system to
+romanize Devanagari.\footnote{Thanks to Maximilian Mehner}}
+
 \trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
 files refers to the Cyrillic script, which is here the target.) The
 standard system devised by Ljudevit Gaj.}
@@ -3280,7 +3300,7 @@ This feature is activated with the first |\babelposthyphenation| or
 \babelprovide[hyphenrules=+]{russian-latin}   % Create locale
 \babelprehyphenation{russian-latin}{([sz])h}  % Create rule
 {
-  string = {1|sz|šž},
+  string = _{1|sz|šž}_,
   remove
 }
 \end{verbatim}
@@ -4157,7 +4177,7 @@ for a small example (|xe-bidi|).
 See the code section for |\foreignlanguage*| (a new starred
 version of |\foreignlanguage|).
 
-For old an deprecated functions, see the wiki.
+For old an deprecated functions, see the \babel{} site.
 
 \medskip
 \textbf{Options for locales loaded on the fly}
@@ -4174,7 +4194,8 @@ extended numerals in Greek).
 \New{3.48} There is some work in progress for \babel{} to deal with
 labels, both with the relation to captions (chapters, part), and how
 counters are used to define them. It is still somewhat tentative
-because it is far from trivial -- see the wiki for further details.
+because it is far from trivial -- see the \babel{} site for further
+details.
 
 \section{Loading languages with \file{language.dat}}
 
@@ -4926,50 +4947,6 @@ is true with these two environment selectors.
 
 Its natural place of use is in hooks or in |\extras|\m{language}.
 
-\section{Changes}
-
-\subsection{Changes in \babel\ version 3.9}
-
-Most of the changes in version 3.9 were related to bugs, either to fix
-them (there were lots), or to provide some alternatives. Even new
-features like |\babelhyphen| are intended to solve a certain problem
-(in this case, the lacking of a uniform syntax and behavior for
-shorthands across languages). These changes, as well as the subsequent
-ones ($\ge$3.10), are described in this manual in the corresponding
-place. A selective list of the changes in 3.9 follows:
-\begin{itemize}
-\item |\select@language| did not set |\languagename|. This meant the
-  language in force when auxiliary files were loaded was the one used
-  in, for example, shorthands -- if the language was |german|, a
-  |\select@language{spanish}| had no effect.
-
-\item |\foreignlanguage| and |otherlanguage*| messed up
-  |\extras<language>|. Scripts, encodings and many other things were
-  not switched correctly.
-
-\item The |:ENC| mechanism for hyphenation patterns used the encoding
-  of the \textit{previous} language, not that of the language being
-  selected.
-
-\item |'| (with |activeacute|) had the original value when writing to an
-  auxiliary file, and things like an infinite loop can happen. It
-  worked incorrectly with |^| (if activated) and also if deactivated.
-
-\item Active chars where not reset at the end of language options, and
-  that lead to incompatibilities between languages.
-
-\item |\textormath| raised an error with a conditional.
-
-\item |\aliasshorthand| didn't work (or only in a few and very specific
-  cases).
-
-\item |\l@english| was defined incorrectly (using |\let| instead of
-  |\chardef|).
-
-\item |ldf| files not bundled with babel were not recognized when
-  called as global options.
-\end{itemize}
-
 \DocInput{babel.dtx}
 
 \section{Acknowledgements}
@@ -5123,8 +5100,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.70.2644>>
-%<<date=2022/02/10>>
+%<<version=3.71>>
+%<<date=2022/02/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14568,6 +14545,9 @@ end
 \def\BabelNoAMSMath{\let\bbl@noamsmath\relax}
 \ifnum\bbl@bidimode>\z@
   \let\bbl@eqnodir\relax
+%   \ifx\matheqdirmode\@undefined\else
+%     \matheqdirmode\@ne
+%   \fi
   \AtBeginDocument{%
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
       \AddToHook{env/eqnarray/begin}{%
