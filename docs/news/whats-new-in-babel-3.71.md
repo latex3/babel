@@ -1,13 +1,14 @@
 # What's new in babel 3.71
 
-*(Development.)*
+2022-02-13
 
 ⚠ Remember the `luatex` support for `amsmath` has not been finished.
 Expect some anomalous vertical skips in displays (partly due to a bug
-in luatex) and misplaced tags in some cases (sometimes with `aligned`
-and `gathered`).
+in luatex — a fix is on the way), even with the standard environments,
+and misplaced tags in some cases (for example, with `aligned` and
+`gathered`).
 
-## IAST transliteration for Devanagari
+## IAST transliteration for Sanskrit
 
 This feature has been contributed by Maximilian Mehner. See
 [radardenker/babel-iast](https://github.com/radardenker/babel-iast).
@@ -36,7 +37,7 @@ function.
 
 \usepackage[english]{babel}
 
-\babelprovide[import=sa, transforms = transliteration.iast]{iast}
+\babelprovide[import=sa, transforms=transliteration.iast]{iast}
 \babelfont[iast]{rm}[Renderer=Harfbuzz]{DevanagariMT}
 \setlength{\parindent}{0pt}
 
