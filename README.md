@@ -1,6 +1,6 @@
-## Babel 3.71
+## Babel 3.71.2651
 
-2022-02-13
+(Development.)
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,10 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.72   2022-02-?? (dev)
+       * Advances in amsmath
+       * Fix: captions in Thai.
+
 3.71   2022-02-13
        * IAST transliteration for Sanskrit (by Maximilian Mehner).
        * Fixes:
