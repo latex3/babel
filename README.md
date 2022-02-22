@@ -1,6 +1,6 @@
-## Babel 3.71.2651
+## Babel 3.71.2656
 
-(Development.)
+*(Development.)*
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.71 are described in:
+Changes in version 3.72 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.71.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.72.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -49,8 +49,10 @@ respective authors.
 ### Summary of Latest changes
 ```
 3.72   2022-02-?? (dev)
-       * Advances in amsmath
-       * Fix: captions in Thai.
+       * Advances in amsmath (lua).
+       * Fixes:
+         - Captions in Thai.
+         - Some settings sometimes ignored with 'onchar' (lua).
 
 3.71   2022-02-13
        * IAST transliteration for Sanskrit (by Maximilian Mehner).

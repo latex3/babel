@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/02/17 v3.71.2651 The Babel package]
+\ProvidesFile{babel.dtx}[2022/02/22 v3.71.2656 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2567,20 +2567,22 @@ line breking mode that allows spaces to be stretched to arbitrary amounts.
 (thus overriding that set when \babel\ is loaded). Only in newly defined
 languages.
 \begin{example}
-  Let's assume your document is mainly in Polytonic Greek, but with some
-  sections in Italian. Then, the first attempt should be:
+  Let's assume your document (\xetex{} or \luatex{}) is mainly in
+  Polytonic Greek with but with some sections in Italian. Then, the
+  first attempt should be:
 \begin{verbatim}
 \usepackage[italian, greek.polutonic]{babel}
 \end{verbatim}
-  But if, say, accents in Greek are not shown correctly, you can try: 
+  But if, say, accents in Greek are not shown correctly, you can try
+\begin{verbatim}
+\usepackage[italian, polytonicgreek, provide=*]{babel}
+\end{verbatim}
+Remerber there is an alternative syntax for the latter:
 \begin{verbatim}
 \usepackage[italian]{babel}
 \babelprovide[import, main]{polytonicgreek}
 \end{verbatim}
-Remerber there is an alternative syntax for the latter:
-\begin{verbatim}
-\usepackage[italian, polytonicgreek, provide=*]{babel}
-\end{verbatim}
+
 Finally, also remember you might not need to load |italian| at all if
 there are only a few word in this language (see~\ref{mostlymono}).
 
@@ -3813,13 +3815,14 @@ options are also used (eg, |\ProsodicMarksOn| in \textsf{latin}).
 events. Some hooks are predefined when \luatex{} and \xetex{} are
 used.
 
-% \New{3.62} This is not the only way to inject code at those points. The
-% events listed below can be used as a hook name in |\AddToHook| in the
-% form |babel/|\marg{name}, but there is a limitation, because the
-% parameters passed with the \babel{} mechanism are not allowed. The
-% |\AddToHook| mechanism does \textit{not} replace the current one in
-% `babel`. Its main advantage is you can reconfigure `babel` even before
-% loading it. See the example below.
+\New{3.64} This is not the only way to inject code at those points. The
+events listed below can be used as a hook name in |\AddToHook| in the
+form |babel/|\marg{language}\/\\marg{name} (with |*| it’s applied to
+all languages), but there is a limitation, because the parameters
+passed with the \babel{} mechanism are not allowed. The |\AddToHook|
+mechanism does \textit{not} replace the current one in `babel`. Its
+main advantage is you can reconfigure `babel` even before loading it.
+See the example below.
 
 \Describe{\AddBabelHook}{\oarg{lang}\marg{name}\marg{event}\marg{code}}
 
@@ -3903,26 +3906,26 @@ ones, they only have a single hook and replace a default definition.
   file. Used by \file{luababel.def}.
 \end{description}
 
-% \begin{example}
-% The generic unlocalized \LaTeX{} hooks are predefined, so that you can
-% write:
-% \begin{verbatim}
-% \AddToHook{babel/afterextras}{\frenchspacing} 
-% \end{verbatim}
-% which is executed always after the extras for the language being
-% selected (and just before the non-localized hooks defined with
-% |\AddBabelHook|).
+\begin{example}
+The generic unlocalized \LaTeX{} hooks are predefined, so that you can
+write:
+\begin{verbatim}
+\AddToHook{babel/*/afterextras}{\frenchspacing} 
+\end{verbatim}
+which is executed always after the extras for the language being
+selected (and just before the non-localized hooks defined with
+|\AddBabelHook|).
 
-% In addition, locale-specific hooks in the form
-% |babel/|\marg{hook-name}|/|\marg{language-name} are \textit{recognized}
-% (executed just before the localized \babel{} hooks), but they are \textit{not
-% predefined}. You have to do it yourself. For example, to set
-% |\frenchspacing| only in |bengali|:
-% \begin{verbatim}
-% \ProvideHook{babel/afterextras/bengali}
-% \AddToHook{babel/afterextras/bengali}{\frenchspacing}
-% \end{verbatim}
-% \end{example}
+In addition, locale-specific hooks in the form
+|babel/|\marg{language-name}|/|\marg{hook-name} are \textit{recognized}
+(executed just before the localized \babel{} hooks), but they are
+\textit{not predefined}. You have to do it yourself. For example, to
+set |\frenchspacing| only in |bengali|:
+\begin{verbatim}
+\ActivateGenericHook{babel/bengali/afterextras}
+\AddToHook{babel/bengali/afterextras}{\frenchspacing}
+\end{verbatim}
+\end{example}
 
 \Describe{\BabelContentsFiles}{}
 \New{3.9a} This macro contains a list of ``toc'' types
@@ -4096,7 +4099,7 @@ direction with |bidi.text|).
    mappings. Unfortunately, \cs{savinghyphcodes} is not a solution
    either, because lccodes for hyphenation are frozen in the format
    and cannot be changed.} So, if you write a chunk of French text
-   with |\foreinglanguage|, the apostrophes might not be taken into
+   with |\foreignlanguage|, the apostrophes might not be taken into
    account. This is a limitation of \TeX, not of
    \babel. Alternatively, you may use |\useshorthands| to activate |'|
    and |\defineshorthand|, or redefine |\textquoteright| (the latter
@@ -5100,8 +5103,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.71.2651>>
-%<<date=2022/02/17>>
+%<<version=3.71.2656>>
+%<<date=2022/02/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5364,7 +5367,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \end{macrocode}
 % \end{macro}
 %
-% Two further tools.  |\bbl@samestring| first expand its arguments and
+% Two further tools.  |\bbl@ifsamestring| first expand its arguments and
 % then compare their expansion (sanitized, so that the catcodes do not
 % matter). |\bbl@engine| takes the following values: 0 is pdf\TeX, 1
 % is \luatex, and 2 is \xetex. You may use the latter it in your
@@ -9735,6 +9738,8 @@ help from Bernd Raichle, for which I am grateful.
    % == onchar ==
   \ifx\bbl@KVP@onchar\@nil\else
     \bbl@luahyphenate
+    \bbl@exp{%
+      \\\AddToHook{env/document/before}{{\\\select@language{#2}{}}}}%
     \directlua{
       if Babel.locale_mapped == nil then
         Babel.locale_mapped = true
@@ -12133,6 +12138,10 @@ help from Bernd Raichle, for which I am grateful.
         \fi
       \fi}%
   \fi
+\else
+  \bbl@info{Main language set with 'main='. Except if you have\\%
+            problems, prefer the default mechanism for setting\\%
+            the main language. Reported}
 \fi
 %    \end{macrocode}
 %
@@ -14560,35 +14569,34 @@ end
       \fi
     \else % amstex
       \ifx\bbl@noamsmath\@undefined
-        \edef\bbl@tempa{%
-          \catcode58=\the\catcode58\relax
-          \catcode95=\the\catcode95\relax}%
-        \catcode58=11
-        \catcode95=11
-        \bbl@sreplace\intertext@{\normalbaselines}%
-          {\normalbaselines
-           \ifx\bbl@eqnodir\relax\else\bbl@pardir\@ne\bbl@eqnodir\fi}%
-        \bbl@tempa
-        \def\bbl@ams@tagbox#1#2{#1{\bbl@eqnodir#2}}% #1=\hbox|ams@lap
-        \def\bbl@ams@eqtagbox#1{%
-          \setbox\z@\hbox{\bbl@eqnodir#1}%
-          \hbox to 0.01pt{%
-            \ifx\bbl@ams@lap\hbox % leqno
-              \hss\hbox to\displaywidth{\box\z@\hss}%
-            \else % eqno
-              \hbox to\displaywidth{\hss\box\z@}\hss
-            \fi}}%
-        \def\bbl@ams@preset#1{%
-          \ifnum\bbl@thetextdir>\z@
-            \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
-            \chardef\bbl@thetextdir\z@ % necessary? doesn’t hurt
-            \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
-            \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@tagbox#1}%
-          \fi}
         \@ifpackagewith{amsmath}{leqno}%
           {\let\bbl@ams@lap\hbox}% = leqno
           {\let\bbl@ams@lap\llap}% = default
-        % 
+        \ExplSyntaxOn
+        \bbl@sreplace\intertext@{\normalbaselines}%
+          {\normalbaselines
+           \ifx\bbl@eqnodir\relax\else\bbl@pardir\@ne\bbl@eqnodir\fi}%
+        \ExplSyntaxOff
+        \def\bbl@ams@tagbox#1#2{#1{\bbl@eqnodir#2}}% #1=hbox|@lap|flip
+        \ifx\bbl@ams@lap\hbox % leqno
+          \def\bbl@ams@flip#1{%
+            \hbox to 0.01pt{\hss\hbox to\displaywidth{{#1}\hss}}}%
+        \else % eqno
+          \def\bbl@ams@flip#1{%
+            \hbox to 0.01pt{\hbox to\displaywidth{\hss{#1}}\hss}}%
+        \fi
+        \def\bbl@ams@preset#1{%
+          \ifnum\bbl@thetextdir>\z@
+            \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
+            \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
+            \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@tagbox#1}%
+          \fi}%
+        \AddToHook{env/equation/begin}{%
+          \ifnum\bbl@thetextdir>\z@
+            \ifx\bbl@ams@lap\llap\hrule\@height\z@\fi
+            \bbl@ams@preset\bbl@ams@flip
+          \fi}%
+        \AddToHook{env/equation*/begin}{\bbl@ams@preset\bbl@ams@flip}%
         \AddToHook{env/cases/begin}{\bbl@ams@preset\bbl@ams@lap}%
         \AddToHook{env/multline/begin}{\bbl@ams@preset\hbox}%
         \AddToHook{env/gather/begin}{\bbl@ams@preset\bbl@ams@lap}%
@@ -14596,34 +14604,21 @@ end
         \AddToHook{env/align/begin}{\bbl@ams@preset\bbl@ams@lap}%
         \AddToHook{env/align*/begin}{\bbl@ams@preset\bbl@ams@lap}%
         \AddToHook{env/eqnalign/begin}{\bbl@ams@preset\hbox}%
-        % Hackish, for proper alignment-don’t ask me why it works! :-)
-        \bbl@exp{%
-          \\\AddToHook{env/align*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
+        % Hackish, for proper alignment. Don’t ask me why it works!:
+        \AddToHook{env/align*/end}{\iftag@\else\tag*{}\fi}%
         \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
         \AddToHook{env/split/before}{%
           \ifnum\bbl@thetextdir>\z@
-            \def\bbl@tempa{equation}%
-            \ifx\@currenvir\bbl@tempa
-              \def\bbl@ams@eqtagbox#1{%
-                \ifx\bbl@ams@lap\hbox
-                  \hbox to0.01pt{\bbl@eqnodir\hss#1}% leqno
-                \else
-                  \hbox to0.01pt{\bbl@eqnodir#1\hss}% eqno
-                \fi}
-            \fi
-          \fi}
-        \AddToHook{env/equation/begin}{%
-          \ifnum\bbl@thetextdir>\z@
-            \ifx\bbl@ams@lap\llap\hrule\@height\z@\fi
-            \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
-            \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@eqtagbox}%
+            \bbl@ifsamestring\@currenvir{equation}%
+              {\ifx\bbl@ams@lap\hbox % leqno
+                 \def\bbl@ams@flip#1{%
+                   \hbox to 0.01pt{\hbox to\displaywidth{{#1}\hss}\hss}}%
+               \else
+                 \def\bbl@ams@flip#1{%
+                   \hbox to 0.01pt{\hss\hbox to\displaywidth{\hss{#1}}}}%
+               \fi}%
+             {}%
           \fi}%
-        \AddToHook{env/equation*/begin}{%
-          \ifnum\bbl@thetextdir>\z@
-            \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
-            \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@eqtagbox}%
-          \fi}%
-        \fi
       \fi}
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
