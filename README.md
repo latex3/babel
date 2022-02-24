@@ -1,6 +1,4 @@
-## Babel 3.71.2656
-
-*(Development.)*
+## Babel 3.72
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,19 +46,12 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.72   2022-02-?? (dev)
+3.72   2022-02-24
        * Advances in amsmath (lua).
        * Fixes:
          - Captions in Thai.
          - Some settings sometimes ignored with 'onchar' (lua).
-
-3.71   2022-02-13
-       * IAST transliteration for Sanskrit (by Maximilian Mehner).
-       * Fixes:
-         - Bad interraction between bidi option and mathtools (#166).
-         - 'provide+=' didn’t work with 'hebrew' as a secondary
-           language.
-         - Wrong equation direction in 'cases' and 'array' (#167).
+         - Extra colon in Polish 'cc' (#172)
 ```
 
 ### Previous changes

@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/02/22 v3.71.2656 The Babel package]
+\ProvidesFile{babel.dtx}[2022/02/24 v3.72 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3817,7 +3817,7 @@ used.
 
 \New{3.64} This is not the only way to inject code at those points. The
 events listed below can be used as a hook name in |\AddToHook| in the
-form |babel/|\marg{language}\/\\marg{name} (with |*| it’s applied to
+form |babel/|\m{language-name}|/|\m{event-name} (with |*| it’s applied to
 all languages), but there is a limitation, because the parameters
 passed with the \babel{} mechanism are not allowed. The |\AddToHook|
 mechanism does \textit{not} replace the current one in `babel`. Its
@@ -3917,7 +3917,7 @@ selected (and just before the non-localized hooks defined with
 |\AddBabelHook|).
 
 In addition, locale-specific hooks in the form
-|babel/|\marg{language-name}|/|\marg{hook-name} are \textit{recognized}
+|babel/|\m{language-name}|/|\m{event-name} are \textit{recognized}
 (executed just before the localized \babel{} hooks), but they are
 \textit{not predefined}. You have to do it yourself. For example, to
 set |\frenchspacing| only in |bengali|:
@@ -5103,8 +5103,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.71.2656>>
-%<<date=2022/02/22>>
+%<<version=3.72>>
+%<<date=2022/02/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
