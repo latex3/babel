@@ -48,7 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [3.72](news/whats-new-in-babel-3.72.html) | (Under development.)
+| [3.72](news/whats-new-in-babel-3.72.html) | Mainly fixes and minor improvements.
 | [3.71](news/whats-new-in-babel-3.71.html) | IAST transliteration for Sanskrit.
 | [3.70](news/whats-new-in-babel-3.70.html) | More (tentative) fixes for (ams)math (lua).
 | [3.69](news/whats-new-in-babel-3.69.html) | Fixes a bug with `amsmath` introduced in 3.68.

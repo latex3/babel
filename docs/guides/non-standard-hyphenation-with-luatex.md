@@ -200,3 +200,7 @@ before that to be processed, which is enclosed between `() ()`.
   remove
 }
 ```
+
+## Useful links
+
+* [Patterns](https://www.lua.org/pil/20.2.html), in the Lua site.
