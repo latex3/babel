@@ -1,4 +1,4 @@
-## Babel 3.72
+## Babel 3.73
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.72 are described in:
+Changes in version 3.73 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.72.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.73.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,6 +46,10 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.73   2022-02-26
+       * Fixes a severe bug introduced in 3.72 when amsmath is
+         loaded.
+
 3.72   2022-02-24
        * Advances in amsmath (lua).
        * Fixes:

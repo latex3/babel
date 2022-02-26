@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/02/24 v3.72 The Babel package]
+\ProvidesFile{babel.dtx}[2022/02/26 v3.73 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3025,7 +3025,8 @@ parenthesis).
 \New{3.9a} Sets hyphenation exceptions for the languages given
 or, without the optional argument, for \textit{all} languages (eg,
 proper nouns or common loan words, and of course monolingual
-documents). Language exceptions take precedence over global ones.
+documents). Multiple declarations work much like |\hyphenation| (last
+wins), but language exceptions take precedence over global ones.
 
 It can be used only in the preamble, and exceptions are set when the
 language is first selected, thus taking into account changes of
@@ -5103,8 +5104,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.72>>
-%<<date=2022/02/24>>
+%<<version=3.73>>
+%<<date=2022/02/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14605,7 +14606,8 @@ end
         \AddToHook{env/align*/begin}{\bbl@ams@preset\bbl@ams@lap}%
         \AddToHook{env/eqnalign/begin}{\bbl@ams@preset\hbox}%
         % Hackish, for proper alignment. Don’t ask me why it works!:
-        \AddToHook{env/align*/end}{\iftag@\else\tag*{}\fi}%
+        \bbl@exp{% Avoid a 'visible' conditional
+          \\\AddToHook{env/align*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
         \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
         \AddToHook{env/split/before}{%
           \ifnum\bbl@thetextdir>\z@
@@ -14619,7 +14621,8 @@ end
                \fi}%
              {}%
           \fi}%
-      \fi}
+      \fi
+    \fi}
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
 \ifnum\bbl@bidimode>\z@
