@@ -1,4 +1,6 @@
-## Babel 3.73
+## Babel 3.73.2663
+
+*(Development)*
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +48,10 @@ respective authors.
 
 ### Summary of Latest changes
 ```
+3.74   2022-?? (dev)
+       * Fixes:
+         - Error in transforms if | is active.
+         
 3.73   2022-02-26
        * Fixes a severe bug introduced in 3.72 when amsmath is
          loaded.
