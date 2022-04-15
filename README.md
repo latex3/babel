@@ -1,4 +1,4 @@
-## Babel 3.73.2663
+## Babel 3.73.2708
 
 *(Development)*
 
@@ -48,9 +48,11 @@ respective authors.
 
 ### Summary of Latest changes
 ```
-3.74   2022-?? (dev)
+3.74   2022-04-?? (dev)
        * Fixes:
          - Error in transforms if | is active.
+         - Minor fixes in Khemer, Turkmen
+       * RTL Math improved (with luatex).
          
 3.73   2022-02-26
        * Fixes a severe bug introduced in 3.72 when amsmath is

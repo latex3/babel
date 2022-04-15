@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/03/01 v3.73.2663 The Babel package]
+\ProvidesFile{babel.dtx}[2022/04/15 v3.73.2708 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2752,7 +2752,10 @@ which is not recommended).
   font.
 \end{note}
 
-\New{4.41} Many `ini` locale files has been extended with information
+\Describe{\localenumeral}{\marg{style}\marg{number}}
+\DescribeOther{\localecounterl}{\marg{style}\marg{counter}}
+
+\New{3.41} Many `ini` locale files has been extended with information
 about non-positional numerical systems, based on those predefined in
 CSS. They only work with \xetex{} and \luatex{} and are fully
 expendable (even inside an unprotected |\edef|). Currently, they are
@@ -2784,33 +2787,47 @@ The styles are:
 
 \item[Arabic] |abjad|, |maghrebi.abjad|
 
-\item[Belarusan, Bulgarian, Macedonian, Serbian] |lower|, |upper| 
+\item[Armenian] |lower.letter|, |upper.letter|
+
+\item[Belarusan, Bulgarian, Church Slavic, Macedonian, Serbian] |lower|, |upper| 
 
 \item[Bengali] |alphabetic|
 
-\item[Coptic] |epact|,|lower.letters|
+\item[Central Kurdish] |alphabetic|
 
-\item[Hebrew] |letters| (neither geresh nor gershayim yet)
+\item[Chinese] |cjk-earthly-branch|, |cjk-heavenly-stem|,
+|circled.ideograph|, |parenthesized.ideograph|,
+|fullwidth.lower.alpha|, |fullwidth.upper.alpha|
 
-\item[Hindi] |alphabetic|
+\item[Church Slavic (Glagolitic)] |letters|
 
-\item[Armenian] |lower.letter|, |upper.letter|
+\item[Coptic] |epact|, |lower.letters|
 
-\item[Japanese] |hiragana|, |hiragana.iroha|, |katakana|,
-|katakana.iroha|, |circled.katakana|, |informal|, |formal|,
-|cjk-earthly-branch|, |cjk-heavenly-stem|, f|ullwidth.lower.alpha|,
-|fullwidth.upper.alpha|
+\item[French] |date.day| (mainly for internal use).
 
 \item[Georgian] |letters|
 
 \item[Greek] |lower.modern|, |upper.modern|, |lower.ancient|,
 |upper.ancient| (all with keraia)
 
+\item[Hebrew] |letters| (neither geresh nor gershayim yet)
+
+\item[Hindi] |alphabetic|
+
+\item[Italian] |lower.legal|, |upper.legal|
+
+\item[Japanese] |hiragana|, |hiragana.iroha|, |katakana|,
+|katakana.iroha|, |circled.katakana|, |informal|, |formal|,
+|cjk-earthly-branch|, |cjk-heavenly-stem|, |circled.ideograph|,
+|parenthesized.ideograph|, |fullwidth.lower.alpha|,
+|fullwidth.upper.alpha|
+
 \item[Khmer] |consonant|
 
-\item[Korean] |consonant|, |syllabe|, |hanja.informal|,
-|hanja.formal|, |hangul.formal|, |cjk-earthly-branch|,
-|cjk-heavenly-stem|, |fullwidth.lower.alpha|, |fullwidth.upper.alpha|
+\item[Korean] |consonant|, |syllabe|, |hanja.informal|, |hanja.formal|,
+|hangul.formal|, |cjk-earthly-branch|, |cjk-heavenly-stem|,
+|circled.ideograph|, |parenthesized.ideograph|,
+|fullwidth.lower.alpha|, |fullwidth.upper.alpha|
 
 \item[Marathi] |alphabetic|
 
@@ -2825,9 +2842,6 @@ The styles are:
 \item[Thai] |alphabetic|
 
 \item[Ukrainian] |lower| , |lower.full|, |upper| , |upper.full|
-
-\item[Chinese] |cjk-earthly-branch|, |cjk-heavenly-stem|,
-|fullwidth.lower.alpha|, |fullwidth.upper.alpha|
 \end{description}
 
 \New{3.45} In addition, native digits (in languages defining them) may
@@ -2922,33 +2936,31 @@ If the key does not exist, the macro is set to |\relax| and an error is
 raised. \New{3.47} With the starred version no error is raised, so that
 you can take your own actions with undefined properties.
 
+\Describe{\localeid}{}
+Each language in the \babel{} sense has its own unique numeric
+identifier, which can be retrieved with |\localeid|.
+
+The |\localeid| is not the same as the |\language| identifier, which
+refers to a set of hyphenation patters (which, in turn, is just a
+component of the line breaking algorithm described in the next
+section). The data about preloaded patterns are store in an internal
+macro named |\bbl@languages| (see the code for further details), but
+note several locales may share a single |\language|, so they are
+separated concepts. In \luatex, the |\localeid| is saved in each node
+(when it makes sense) as an attribute, too.
+
+\Describe{\LocaleForEach}{\marg{code}}
 \Babel{} remembers which |ini| files have been loaded. There is a loop
 named |\LocaleForEach| to traverse the list, where |#1| is the name of
 the current item, so that |\LocaleForEach{\message{ **#1** }}| just
 shows the loaded |ini|’s. 
 
-\begin{note}
+\Describe{\BabelEnsureInfo}{}
 |ini| files are loaded with |\babelprovide| and also when languages are
-selected if there is a |\babelfont|. To ensure the |ini| files are
-loaded (and therefore the corresponding data) even if these two
-conditions are not met, write |\BabelEnsureInfo| in the preamble.
-\end{note}
-
-\Describe{\localeid}{}
-
-Each language in the \babel{} sense has its own unique numeric
-identifier, which can be retrieved with |\localeid|.
-
-\begin{note}
-  The |\localeid| is not the same as the |\language| identifier, which
-  refers to a set of hyphenation patters (which, in turn, is just a
-  component of the line breaking algorithm described in the next
-  section). The data about preloaded patterns are store in an internal
-  macro named |\bbl@languages| (see the code for further details), but
-  note several locales may share a single |\language|, so they are
-  separated concepts. In \luatex, the |\localeid| is saved in each node
-  (where it makes sense) as an attribute, too.
-\end{note}
+selected if there is a |\babelfont| or they have not been explicitly
+declared. To ensure the |ini| files are loaded (and therefore the
+corresponding data) even if these two conditions are not met, write
+|\BabelEnsureInfo| in the preamble.
 
 \subsection{Hyphenation and line breaking}
 
@@ -5104,8 +5116,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.73.2663>>
-%<<date=2022/03/01>>
+%<<version=3.73.2708>>
+%<<date=2022/04/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14544,31 +14556,50 @@ end
 \bbl@trace{Redefinitions for bidi layout}
 \def\BabelNoAMSMath{\let\bbl@noamsmath\relax}
 \ifnum\bbl@bidimode>\z@
+  \chardef\bbl@eqnpos\z@
+  \bbl@xin@{,leqno,}{,\@classoptionslist,}
+  \ifin@  \chardef\bbl@eqnpos\@ne  \fi
+  \bbl@xin@{,fleqn,}{,\@classoptionslist,}
+  \ifin@  \chardef\bbl@eqnpos\tw@  \fi
   \let\bbl@eqnodir\relax
-%   \ifx\matheqdirmode\@undefined\else
-%     \matheqdirmode\@ne
-%   \fi
+  \ifx\matheqdirmode\@undefined\else
+    \matheqdirmode\@ne
+  \fi
+  \def\bbl@eqdel{()}
+  \def\bbl@eqnum{%
+    {\normalfont\normalcolor
+     \expandafter\@firstoftwo\bbl@eqdel
+     \theequation
+     \expandafter\@secondoftwo\bbl@eqdel}}
   \AtBeginDocument{%
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
+      \AddToHook{env/equation/begin}{%
+        \ifnum\bbl@thetextdir>\z@
+          \let\@eqnnum\bbl@eqnum
+          \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
+          \chardef\bbl@thetextdir\z@
+          \bbl@add\normalfont{\bbl@eqnodir}%
+          \ifcase\bbl@eqnpos
+            \pardir TLT              % eqno
+          \or\or                     % leqno: do nothing
+            \pardir TLT \textdir TLT % fleqn
+          \fi
+        \fi}%
       \AddToHook{env/eqnarray/begin}{%
         \ifnum\bbl@thetextdir>\z@
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
           \bbl@add\normalfont{\bbl@eqnodir}%
-        \fi}%
-      \AddToHook{env/equation/begin}{%
-        \ifnum\bbl@thetextdir>\z@
-          \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
-          \chardef\bbl@thetextdir\z@
-          \bbl@add\normalfont{\bbl@eqnodir}%
-          \pardir TLT % dir for \eqno is \pardir!
-        \fi}%
-      \bbl@xin@{,leqno,}{,\@classoptionslist,}%
-      \ifin@
-        \def\@eqnnum{%
-          \setbox\z@\hbox{\normalfont\normalcolor(\theequation)}%
-          \hbox to0.01pt{\hss\hbox to\displaywidth{\box\z@\hss}}}%
-      \fi
+          \ifnum\bbl@eqnpos=\@ne
+            \def\@eqnnum{%
+             \setbox\z@\hbox{\bbl@eqnum}%
+             \hbox to0.01pt{\hss\hbox to\displaywidth{\box\z@\hss}}}%
+          \else
+             \let\@eqnnum\bbl@eqnum
+          \fi
+        \fi}
+      % Hack. YA luatex bug?:
+      \expandafter\bbl@sreplace\csname] \endcsname{$$}{\eqno\kern.001pt$$}%
     \else % amstex
       \ifx\bbl@noamsmath\@undefined
         \@ifpackagewith{amsmath}{leqno}%
