@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/04/15 v3.73.2708 The Babel package]
+\ProvidesFile{babel.dtx}[2022/04/20 v3.73.2713 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5116,8 +5116,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.73.2708>>
-%<<date=2022/04/15>>
+%<<version=3.73.2713>>
+%<<date=2022/04/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11587,7 +11587,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \subsubsection{\pkg{hhline}}
 %
-%
 % \begin{macro}{\hhline}
 %
 % Delaying the activation of the shorthand characters has introduced
@@ -14554,23 +14553,41 @@ end
 %
 %    \begin{macrocode}
 \bbl@trace{Redefinitions for bidi layout}
+%
+%<<*More package options>>
+\chardef\bbl@eqnpos\z@
+\DeclareOption{leqno}{\chardef\bbl@eqnpos\@ne}
+\DeclareOption{fleqn}{\chardef\bbl@eqnpos\tw@}
+%<</More package options>>
+%
 \def\BabelNoAMSMath{\let\bbl@noamsmath\relax}
 \ifnum\bbl@bidimode>\z@
-  \chardef\bbl@eqnpos\z@
-  \bbl@xin@{,leqno,}{,\@classoptionslist,}
-  \ifin@  \chardef\bbl@eqnpos\@ne  \fi
-  \bbl@xin@{,fleqn,}{,\@classoptionslist,}
-  \ifin@  \chardef\bbl@eqnpos\tw@  \fi
-  \let\bbl@eqnodir\relax
   \ifx\matheqdirmode\@undefined\else
     \matheqdirmode\@ne
   \fi
+  \let\bbl@eqnodir\relax
   \def\bbl@eqdel{()}
   \def\bbl@eqnum{%
     {\normalfont\normalcolor
      \expandafter\@firstoftwo\bbl@eqdel
      \theequation
      \expandafter\@secondoftwo\bbl@eqdel}}
+  \def\bbl@puteqno#1{\eqno\hbox{#1}}
+  \def\bbl@putleqno#1{\leqno\hbox{#1}}
+  \def\bbl@eqno@flip#1{%
+    \ifdim\predisplaysize=-\maxdimen
+      \eqno
+      \hb@xt@.01pt{\hb@xt@\displaywidth{\hss{#1}}\hss}%
+    \else
+      \leqno\hbox{#1}%
+    \fi}
+  \def\bbl@leqno@flip#1{%
+    \ifdim\predisplaysize=-\maxdimen
+      \leqno
+      \hb@xt@.01pt{\hss\hb@xt@\displaywidth{{#1}\hss}}%
+    \else
+      \eqno\hbox{#1}%
+    \fi}
   \AtBeginDocument{%
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
       \AddToHook{env/equation/begin}{%
@@ -14580,11 +14597,14 @@ end
           \chardef\bbl@thetextdir\z@
           \bbl@add\normalfont{\bbl@eqnodir}%
           \ifcase\bbl@eqnpos
-            \pardir TLT              % eqno
-          \or\or                     % leqno: do nothing
-            \pardir TLT \textdir TLT % fleqn
+            \let\bbl@puteqno\bbl@eqno@flip
+          \or
+            \let\bbl@puteqno\bbl@leqno@flip
           \fi
         \fi}%
+      \ifnum\bbl@eqnpos=\tw@\else
+        \def\endequation{\bbl@puteqno{\@eqnnum}$$\@ignoretrue}%
+      \fi
       \AddToHook{env/eqnarray/begin}{%
         \ifnum\bbl@thetextdir>\z@
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%

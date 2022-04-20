@@ -1,4 +1,4 @@
-## Babel 3.73.2708
+## Babel 3.73.2713
 
 *(Development)*
 
@@ -52,7 +52,7 @@ respective authors.
        * Fixes:
          - Error in transforms if | is active.
          - Minor fixes in Khemer, Turkmen
-       * RTL Math improved (with luatex).
+       * RTL math improved (with luatex).
          
 3.73   2022-02-26
        * Fixes a severe bug introduced in 3.72 when amsmath is
