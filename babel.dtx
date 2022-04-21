@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/04/20 v3.73.2713 The Babel package]
+\ProvidesFile{babel.dtx}[2022/04/21 v3.73.2714 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5116,8 +5116,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.73.2713>>
-%<<date=2022/04/20>>
+%<<version=3.73.2714>>
+%<<date=2022/04/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14622,9 +14622,11 @@ end
       \expandafter\bbl@sreplace\csname] \endcsname{$$}{\eqno\kern.001pt$$}%
     \else % amstex
       \ifx\bbl@noamsmath\@undefined
-        \@ifpackagewith{amsmath}{leqno}%
-          {\let\bbl@ams@lap\hbox}% = leqno
-          {\let\bbl@ams@lap\llap}% = default
+        \ifnum\bbl@eqnpos=\@ne
+          \let\bbl@ams@lap\hbox
+        \else
+          \let\bbl@ams@lap\llap
+        \fi
         \ExplSyntaxOn
         \bbl@sreplace\intertext@{\normalbaselines}%
           {\normalbaselines
@@ -14644,12 +14646,21 @@ end
             \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
             \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@tagbox#1}%
           \fi}%
-        \AddToHook{env/equation/begin}{%
-          \ifnum\bbl@thetextdir>\z@
-            \ifx\bbl@ams@lap\llap\hrule\@height\z@\fi
-            \bbl@ams@preset\bbl@ams@flip
-          \fi}%
-        \AddToHook{env/equation*/begin}{\bbl@ams@preset\bbl@ams@flip}%
+        \ifnum\bbl@eqnpos=\tw@\else
+          \def\bbl@ams@equation{%
+            \ifnum\bbl@thetextdir>\z@
+              \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
+              \chardef\bbl@thetextdir\z@
+              \bbl@add\normalfont{\bbl@eqnodir}%
+              \ifcase\bbl@eqnpos
+                \def\veqno##1##2{\bbl@eqno@flip{##1##2}}%
+              \or
+                \def\veqno##1##2{\bbl@leqno@flip{##1##2}}%
+              \fi
+            \fi}%
+          \AddToHook{env/equation/begin}{\bbl@ams@equation}%
+          \AddToHook{env/equation*/begin}{\bbl@ams@equation}%
+        \fi
         \AddToHook{env/cases/begin}{\bbl@ams@preset\bbl@ams@lap}%
         \AddToHook{env/multline/begin}{\bbl@ams@preset\hbox}%
         \AddToHook{env/gather/begin}{\bbl@ams@preset\bbl@ams@lap}%
