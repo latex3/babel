@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/04/21 v3.73.2714 The Babel package]
+\ProvidesFile{babel.dtx}[2022/04/23 v3.73.2716 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5116,8 +5116,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.73.2714>>
-%<<date=2022/04/21>>
+%<<version=3.73.2716>>
+%<<date=2022/04/23>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11168,6 +11168,8 @@ help from Bernd Raichle, for which I am grateful.
 \DeclareOption{safe=none}{\let\bbl@opt@safe\@empty}
 \DeclareOption{safe=bib}{\def\bbl@opt@safe{B}}
 \DeclareOption{safe=ref}{\def\bbl@opt@safe{R}}
+\DeclareOption{safe=refbib}{\def\bbl@opt@safe{BR}}
+\DeclareOption{safe=bibref}{\def\bbl@opt@safe{BR}}
 %<</More package options>>
 %    \end{macrocode}
 %
@@ -11180,7 +11182,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \bbl@trace{Cross referencing macros}
-\ifx\bbl@opt@safe\@empty\else
+\ifx\bbl@opt@safe\@empty\else % ie, if 'ref' and/or 'bib'
   \def\@newl@bel#1#2#3{%
    {\@safe@activestrue
     \bbl@ifunset{#1@#2}%
@@ -11247,10 +11249,24 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \bbl@xin@{R}\bbl@opt@safe
 \ifin@
-  \bbl@redefinerobust\ref#1{%
-    \@safe@activestrue\org@ref{#1}\@safe@activesfalse}
-  \bbl@redefinerobust\pageref#1{%
-    \@safe@activestrue\org@pageref{#1}\@safe@activesfalse}
+  \edef\bbl@tempc{\expandafter\string\csname ref code\endcsname}%
+  \bbl@xin@{\expandafter\strip@prefix\meaning\bbl@tempc}%
+    {\expandafter\strip@prefix\meaning\ref}%
+  \ifin@
+    \bbl@redefine\@kernel@ref#1{%
+      \@safe@activestrue\org@@kernel@ref{#1}\@safe@activesfalse}
+    \bbl@redefine\@kernel@pageref#1{%
+      \@safe@activestrue\org@@kernel@pageref{#1}\@safe@activesfalse}
+    \bbl@redefine\@kernel@sref#1{%
+      \@safe@activestrue\org@@kernel@sref{#1}\@safe@activesfalse}
+    \bbl@redefine\@kernel@spageref#1{%
+      \@safe@activestrue\org@@kernel@spageref{#1}\@safe@activesfalse}
+  \else
+    \bbl@redefinerobust\ref#1{%
+      \@safe@activestrue\org@ref{#1}\@safe@activesfalse}
+    \bbl@redefinerobust\pageref#1{%
+      \@safe@activestrue\org@pageref{#1}\@safe@activesfalse}
+  \fi
 \else
   \let\org@ref\ref
   \let\org@pageref\pageref
@@ -11514,28 +11530,30 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \bbl@trace{Preventing clashes with other packages}
-\bbl@xin@{R}\bbl@opt@safe
-\ifin@
-  \AtBeginDocument{%
-    \@ifpackageloaded{ifthen}{%
-      \bbl@redefine@long\ifthenelse#1#2#3{%
-        \let\bbl@temp@pref\pageref
-        \let\pageref\org@pageref
-        \let\bbl@temp@ref\ref
-        \let\ref\org@ref
-        \@safe@activestrue
-        \org@ifthenelse{#1}%
-          {\let\pageref\bbl@temp@pref
-           \let\ref\bbl@temp@ref
-           \@safe@activesfalse
-           #2}%
-          {\let\pageref\bbl@temp@pref
-           \let\ref\bbl@temp@ref
-           \@safe@activesfalse
-           #3}%
-        }%
-      }{}%
-    }
+\ifx\org@ref\@undefined\else
+  \bbl@xin@{R}\bbl@opt@safe
+  \ifin@
+    \AtBeginDocument{%
+      \@ifpackageloaded{ifthen}{%
+        \bbl@redefine@long\ifthenelse#1#2#3{%
+          \let\bbl@temp@pref\pageref
+          \let\pageref\org@pageref
+          \let\bbl@temp@ref\ref
+          \let\ref\org@ref
+          \@safe@activestrue
+          \org@ifthenelse{#1}%
+            {\let\pageref\bbl@temp@pref
+             \let\ref\bbl@temp@ref
+             \@safe@activesfalse
+             #2}%
+            {\let\pageref\bbl@temp@pref
+             \let\ref\bbl@temp@ref
+             \@safe@activesfalse
+             #3}%
+          }%
+        }{}%
+      }
+\fi
 %    \end{macrocode}
 %
 %  \end{macro}
