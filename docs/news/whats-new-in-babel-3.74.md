@@ -1,6 +1,17 @@
-# What's new in babel 3.73
+# What's new in babel 3.74
 
 *Development.*
+
+## Option `safe`
+
+⚠ This option will be set by default to `none` in a future release
+(even currently this value is “strongly” recommended). This option now
+accepts the combination of `bib` and `ref` as a way to force the
+current behavior.
+
+The internal macros related to this option (containing `@safe@actives`)
+will be preserved for compatibility, but very likely they will be
+deprecated.
 
 ## Fixes in math
 
