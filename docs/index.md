@@ -48,7 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [3.74](news/whats-new-in-babel-3.74.html) | (Under development.)
+| [3.74](news/whats-new-in-babel-3.74.html) | Mainly fixes and improvements in math.
 | [3.73](news/whats-new-in-babel-3.73.html) | A fix.
 | [3.72](news/whats-new-in-babel-3.72.html) | Mainly fixes and minor improvements.
 | [3.71](news/whats-new-in-babel-3.71.html) | IAST transliteration for Sanskrit.
