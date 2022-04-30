@@ -4,10 +4,10 @@
 
 ## Option `safe`
 
-⚠ This option will be set by default to `none` in a future release
-(even currently this value is “strongly” recommended). This option now
-accepts the combination of `bib` and `ref` as a way to force the
-current behavior.
+<span style="color:red;">⚠</span> This option will be set by default to
+`none` in a future release (even currently this value is “strongly”
+recommended). This option now accepts the combination of `bib` and
+`ref` as a way to force the current behavior.
 
 The internal macros related to this option (containing `@safe@actives`)
 will be preserved for compatibility, but very likely they will be
@@ -26,6 +26,6 @@ paragraph).
 
 ## More fixes
 
-* Minor bugs in Khmer, Turkmen and Marathi has been fixed.
+* Minor bugs in Khmer, Turkmen and Marathi have been fixed.
 * An error was raised with transform when `|` was active.
 
