@@ -1,4 +1,4 @@
-## Babel 3.74
+## Babel 3.75.2728
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +46,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.75   2022-05-?? (dev)
+       * Fixes: diagbox (#43)
+
 3.74   2022-04-30
        * Fixes:
          - Error in transforms if | is active.

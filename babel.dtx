@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/04/30 v3.74 The Babel package]
+\ProvidesFile{babel.dtx}[2022/05/05 v3.75.2728 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -184,11 +184,7 @@
    Poppelier, Piet van Oostrum and many others have been used.
    Bernd Raichle has provided many helpful suggestions.}}
 \author{Johannes Braams\\
-        Kersengaarde 33\\
-        2723 BP Zoetermeer\\
-        The Netherlands\\
-        \normalsize From version 3.9 on, Javier Bezos\\
-        \normalsize \texttt{www.texnia.com}}
+        Javier Bezos}
 
 \date{Typeset \today}
 \begin{titlepage}
@@ -213,12 +209,12 @@ Version \csname @gobble\expandafter\endcsname\fileversion\newline
 
 \LARGE
 \vspace{1.2cm}
-Johannes L. Braams\\[-.5ex]
-{\large Original author}
-
-\vspace{.3cm}
 Javier Bezos\\[-.5ex]
 {\large Current maintainer}
+
+\vspace{.3cm}
+Johannes L. Braams\\[-.5ex]
+{\large Original author}
 \end{minipage}
 &\cellcolor[rgb]{.92, .86, .73}
 \vspace{2cm}
@@ -5116,8 +5112,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.74>>
-%<<date=2022/04/30>>
+%<<version=3.75.2728>>
+%<<date=2022/05/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11791,11 +11787,7 @@ help from Bernd Raichle, for which I am grateful.
 % latter solution will be eventually removed).
 %
 %    \begin{macrocode}
-\bbl@ifformatlater{2021-06-01}%
-  {\def\bbl@patchfont#1{\AddToHook{selectfont}{#1}}}
-  {\def\bbl@patchfont#1{%
-     \expandafter\bbl@add\csname selectfont \endcsname{#1}%
-     \expandafter\bbl@toglobal\csname selectfont \endcsname}}
+\def\bbl@patchfont#1{\AddToHook{selectfont}{#1}}
 %    \end{macrocode}
 %
 % \end{macro}
@@ -14767,22 +14759,21 @@ end
        % \(text|par)dir required in pgf:
        \def\bbl@pictresetdir{\bodydir TRT\pardir TRT\textdir TRT\relax}%
      \fi}%
-   \ifx\AddToHook\@undefined\else
-     \AddToHook{env/picture/begin}{\bbl@pictsetdir\tw@}%
-     \directlua{
-       Babel.get_picture_dir = true
-       Babel.picture_has_bidi = 0
-       %
-       function Babel.picture_dir (head)
-         if not Babel.get_picture_dir then return head end
-         if Babel.hlist_has_bidi(head) then 
-           Babel.picture_has_bidi = 1
-         end
-         return head
+   \AddToHook{env/picture/begin}{\bbl@pictsetdir\tw@}%
+   \directlua{
+     Babel.get_picture_dir = true
+     Babel.picture_has_bidi = 0
+     %
+     function Babel.picture_dir (head)
+       if not Babel.get_picture_dir then return head end
+       if Babel.hlist_has_bidi(head) then 
+         Babel.picture_has_bidi = 1
        end
-       luatexbase.add_to_callback("hpack_filter", Babel.picture_dir,
-         "Babel.picture_dir")
-     }%
+       return head
+     end
+     luatexbase.add_to_callback("hpack_filter", Babel.picture_dir,
+       "Babel.picture_dir")
+   }%
    \AtBeginDocument{%
      \long\def\put(#1,#2)#3{%
        \@killglue 
@@ -14797,7 +14788,7 @@ end
          \setbox\z@\hb@xt@\z@{%
            \@defaultunitsset\@tempdimc{#1}\unitlength
            \kern\@tempdimc
-           #3\hss}%
+           #3\hss}% TODO: #3 executed twice (below). That’s bad.
          \edef\bbl@tempc{\directlua{tex.print(Babel.picture_has_bidi)}}%
        \fi
        % Do:
@@ -14807,35 +14798,26 @@ end
          \kern\@tempdimc
          {\ifnum\bbl@tempc>\z@\bbl@pictresetdir\fi#3}\hss}% 
        \ignorespaces}%
-       \MakeRobust\put}%
-   \fi
+     \MakeRobust\put}%
    \AtBeginDocument
-     {\ifx\pgfpicture\@undefined\else % TODO. Allow deactivate?
-        \ifx\AddToHook\@undefined
-          \bbl@sreplace\pgfpicture{\pgfpicturetrue}%
-            {\bbl@pictsetdir\z@\pgfpicturetrue}%
-        \else
-          \AddToHook{env/pgfpicture/begin}{\bbl@pictsetdir\@ne}%
-        \fi
+     {\AddToHook{cmd/diagbox@pict/before}{\let\bbl@pictsetdir\@gobble}%
+      \ifx\pgfpicture\@undefined\else % TODO. Allow deactivate?
+        \AddToHook{env/pgfpicture/begin}{\bbl@pictsetdir\@ne}%
         \bbl@add\pgfinterruptpicture{\bbl@pictresetdir}%
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\z@}%
       \fi
-      \ifx\tikzpicture\@undefined\else     
-        \ifx\AddToHook\@undefined\else
-          \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\z@}%
-        \fi
+      \ifx\tikzpicture\@undefined\else    
+        \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\z@}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
         \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
       \fi
-      \ifx\AddToHook\@undefined\else
-        \ifx\tcolorbox\@undefined\else
-          \AddToHook{env/tcolorbox/begin}{\bbl@pictsetdir\@ne}%
-          \bbl@sreplace\tcb@savebox
-            {\ignorespaces}{\ignorespaces\bbl@pictresetdir}%
-          \ifx\tikzpicture@tcb@hooked\@undefined\else
-            \bbl@sreplace\tikzpicture@tcb@hooked{\noexpand\tikzpicture}%
-              {\textdir TLT\noexpand\tikzpicture}%
-          \fi
+      \ifx\tcolorbox\@undefined\else
+        \AddToHook{env/tcolorbox/begin}{\bbl@pictsetdir\@ne}%
+        \bbl@sreplace\tcb@savebox
+          {\ignorespaces}{\ignorespaces\bbl@pictresetdir}%
+        \ifx\tikzpicture@tcb@hooked\@undefined\else
+          \bbl@sreplace\tikzpicture@tcb@hooked{\noexpand\tikzpicture}%
+            {\textdir TLT\noexpand\tikzpicture}%
         \fi
       \fi
     }}
