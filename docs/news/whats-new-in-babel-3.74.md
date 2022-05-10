@@ -27,5 +27,5 @@ paragraph).
 ## More fixes
 
 * Minor bugs in Khmer, Turkmen and Marathi have been fixed.
-* An error was raised with transform when `|` was active.
+* An error was raised with transforms when `|` was active.
 
