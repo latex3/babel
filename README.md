@@ -1,4 +1,4 @@
-## Babel 3.75.2728
+## Babel 3.75.2734
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.74 are described in:
+Changes in version 3.75 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.74.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.75.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,6 +48,8 @@ respective authors.
 ```
 3.75   2022-05-?? (dev)
        * Fixes: diagbox (#43)
+       * Caption names of 'chapter' and 'part' swapped in Chinese (#180).
+       * Captions after numbers in Lithuanian.
 
 3.74   2022-04-30
        * Fixes:
