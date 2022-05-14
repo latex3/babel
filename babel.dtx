@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/05/05 v3.75.2728 The Babel package]
+\ProvidesFile{babel.dtx}[2022/05/14 v3.75.2737 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5112,8 +5112,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.75.2728>>
-%<<date=2022/05/05>>
+%<<version=3.75.2737>>
+%<<date=2022/05/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9744,6 +9744,11 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\bbl@KVP@language\@nil\else
     \bbl@csarg\edef{lname@#2}{\bbl@KVP@language}%
   \fi
+  \ifcase\bbl@engine\or
+    \bbl@ifunset{bbl@chrng@\languagename}{}%
+      {\directlua{
+         Babel.set_chranges_b('\bbl@cl{sbcp}', '\bbl@cl{chrng}') }}%
+  \fi
    % == onchar ==
   \ifx\bbl@KVP@onchar\@nil\else
     \bbl@luahyphenate
@@ -10964,7 +10969,7 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@info@script.name}{esname}
 \@namedef{bbl@info@script.name.opentype}{sname}
 \@namedef{bbl@info@script.tag.bcp47}{sbcp} 
-\@namedef{bbl@info@script.tag.opentype}{sotf} 
+\@namedef{bbl@info@script.tag.opentype}{sotf}
 \let\bbl@ensureinfo\@gobble
 \newcommand\BabelEnsureInfo{%
   \ifx\InputIfFileExists\@undefined\else
@@ -10974,6 +10979,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@foreach\bbl@loaded{{%
     \def\languagename{##1}%
     \bbl@ensureinfo{##1}}}}
+\AtEndOfPackage{% Test for plain.
+  \ifx\@undefined\bbl@loaded\else\BabelEnsureInfo\fi}
 %    \end{macrocode}
 %
 % More general, but non-expandable, is |\getlocaleproperty|. To inspect
@@ -13515,6 +13522,15 @@ help from Bernd Raichle, for which I am grateful.
       end
     end
     return has_bidi
+  end
+  function Babel.set_chranges_b (script, chrng) 
+    if chrng == '' then return end
+    texio.write('Replacing ' .. script .. ' script ranges')
+    Babel.script_blocks[script] = {}
+    for s, e in string.gmatch(chrng..' ', '(.-)%.%.(.-)%s') do
+      table.insert(
+        Babel.script_blocks[script], {tonumber(s,16), tonumber(e,16)})
+    end
   end
 }
 \endgroup

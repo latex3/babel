@@ -1,4 +1,6 @@
-## Babel 3.75.2734
+## Babel 3.75.2737
+
+''(Development.)''
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -47,9 +49,15 @@ respective authors.
 ### Summary of latest changes
 ```
 3.75   2022-05-?? (dev)
-       * Fixes: diagbox (#43)
-       * Caption names of 'chapter' and 'part' swapped in Chinese (#180).
-       * Captions after numbers in Lithuanian.
+       * Fixes:
+         - Misplaced rule un diagbox (#43)
+         - Caption names of 'chapter' and 'part' swapped in Chinese (#180).
+         - Captions after numbers in Lithuanian.
+       * The key `character`/`ranges` in `ini` files now sets the
+         corresponding Unicode script ranges (used by `onchar`).
+       * `\BabelEnsureInfo` is active by default, to make sure the BCP47
+         codes are always available, as they may be required by the
+         LaTeX kernel.
 
 3.74   2022-04-30
        * Fixes:
