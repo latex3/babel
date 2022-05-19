@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/05/14 v3.75.2737 The Babel package]
+\ProvidesFile{babel.dtx}[2022/05/19 v3.75.2742 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2886,7 +2886,8 @@ argument is the name of a language; the second and third arguments are
 the actions to take if the result of the test is true or false
 respectively.
 
-\Describe{\localeinfo}{\marg{field}}
+\Describe{\localeinfo}{%
+ \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}{\marg{field}}}
 
 \New{3.38} If an |ini| file has been loaded for the current language,
 you may access the information stored in it. This macro is fully
@@ -2898,13 +2899,16 @@ expandable, and the available fields are:
 %%% activated because the bug in \languagename is far from trivial.
 \item[|tag.ini|] is the tag of the |ini| file (the way this
   file is identified in its name).
-\item[|tag.bcp47|] is the full BCP 47 tag (see the warning below).
+\item[|tag.bcp47|] is the full BCP 47 tag (see the warning below). This
+  is the value to be used for the ‘real' provided tag (\babel{} may
+  fill other fields if they are considered necessary).
 \item[|language.tag.bcp47|] is the BCP 47 language tag.
 \item[|tag.opentype|] is the tag used by OpenType (usually, but not
   always, the same as BCP 47).
 \item[|script.name|], as provided by the Unicode CLDR.
 \item[|script.tag.bcp47|] is the BCP 47 tag of the script
-  used by this locale.
+  used by this locale. This is a required field for the fonts to be
+  correctly set up, and therefore it should be defined always.
 \item[|script.tag.opentype|] is the tag used by OpenType (usually,
   but not always, the same as BCP 47).
 \end{description}
@@ -2914,6 +2918,18 @@ expandable, and the available fields are:
   tag. Formerly it returned just the language subtag, which was clearly
   counterintuitive.
 \end{warning}
+
+\New{3.75} Sometimes, it comes in handy to be able to use |\localeinfo|
+in an expandable way even if something went wrong (for example, the
+locale currently active is undefined). For these cases, |localeinfo*|
+just returns an empty string instead of raising an error. Bear in mind
+that \babel{}, following the CLDR, may leave the region unset, which
+means |\getlanguageproperty*|, described below, is the preferred
+command, so that the existence of a field can be checked before. This
+also means building a string with the language and the region with
+|\localeinfo*{language.tab.bcp47}|\allowbreak |-|\allowbreak
+|\localeinfo*{region.tab.bcp47}| is not usually a good idea (because of
+the hyphen).
 
 \Describe{\getlocaleproperty}{%
   \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
@@ -5112,8 +5128,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.75.2737>>
-%<<date=2022/05/14>>
+%<<version=3.75.2742>>
+%<<date=2022/05/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10252,6 +10268,10 @@ help from Bernd Raichle, for which I am grateful.
     \ifin@
       \bbl@ini@calendar{##1}%
     \fi
+    \in@{=identification/extension.}{=##1/##2}%
+    \ifin@
+      \bbl@ini@extension{##2}%
+    \fi
     \bbl@ifunset{bbl@inikv@##1}{}%
       {\csname bbl@inikv@##1\endcsname{##2}{##3}}}%
   \bbl@inidata}
@@ -10362,6 +10382,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 \let\bbl@release@transforms\@empty
 %
+\def\bbl@ini@extension#1{}
+\let\bbl@moreinfo\@empty
+%
 \def\bbl@ini@exports#1{%
   % Identification always exported
   \bbl@iniwarning{}%
@@ -10384,6 +10407,9 @@ help from Bernd Raichle, for which I am grateful.
     {\csname bbl@esname@\languagename\endcsname}}%
   \bbl@exportkey{sbcp}{identification.script.tag.bcp47}{}%
   \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}%
+  \bbl@exportkey{rbcp}{identification.region.tag.bcp47}{}%
+  \bbl@exportkey{vbcp}{identification.variant.tag.bcp47}{}%
+  \bbl@moreinfo
   % Also maps bcp47 -> languagename
   \ifbbl@bcptoname
     \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
@@ -10952,13 +10978,21 @@ help from Bernd Raichle, for which I am grateful.
 % following macro just exposes it with a user command.
 %
 %    \begin{macrocode}
+\def\bbl@localeinfo#1#2{%
+  \bbl@ifunset{bbl@info@#2}{#1}%
+    {\bbl@ifunset{bbl@\csname bbl@info@#2\endcsname @\languagename}{#1}%
+      {\bbl@cs{\csname bbl@info@#2\endcsname @\languagename}}}}
 \newcommand\localeinfo[1]{%
-  \bbl@ifunset{bbl@\csname bbl@info@#1\endcsname @\languagename}%
-    {\bbl@error{I've found no info for the current locale.\\%
-                The corresponding ini file has not been loaded\\%
-                Perhaps it doesn't exist}%
-               {See the manual for details.}}%
-    {\bbl@cs{\csname bbl@info@#1\endcsname @\languagename}}}
+  \ifx*#1\@empty   % TODO. A bit hackish to make it expandable.
+    \bbl@afterelse\bbl@localeinfo{}%
+  \else
+    \bbl@localeinfo
+      {\bbl@error{I've found no info for the current locale.\\%
+                  The corresponding ini file has not been loaded\\%
+                  Perhaps it doesn't exist}%
+                 {See the manual for details.}}%
+      {#1}%
+  \fi}
 % \@namedef{bbl@info@name.locale}{lcname}
 \@namedef{bbl@info@tag.ini}{lini}
 \@namedef{bbl@info@name.english}{elname}
@@ -10970,6 +11004,9 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@info@script.name.opentype}{sname}
 \@namedef{bbl@info@script.tag.bcp47}{sbcp} 
 \@namedef{bbl@info@script.tag.opentype}{sotf}
+\@namedef{bbl@info@region.tag.bcp47}{rbcp}
+\@namedef{bbl@info@variant.tag.bcp47}{vbcp}
+% extensions are dealt with in a special way
 \let\bbl@ensureinfo\@gobble
 \newcommand\BabelEnsureInfo{%
   \ifx\InputIfFileExists\@undefined\else
@@ -22561,6 +22598,39 @@ Babel.cjk_breaks = {
 %
 % \end{macro}
 % \end{macro}
+%
+% There is no locale file for this pseudo-language, so the
+% corresponding fields are defined here.
+%
+%    \begin{macrocode}
+\def\bbl@inidata@nil{%
+  \bbl@elt{identification}{tag.ini}{und}%
+  \bbl@elt{identification}{load.level}{0}%
+  \bbl@elt{identification}{charset}{utf8}%
+  \bbl@elt{identification}{version}{1.0}%
+  \bbl@elt{identification}{date}{2022-05-16}%
+  \bbl@elt{identification}{name.local}{nil}%
+  \bbl@elt{identification}{name.english}{nil}%
+  \bbl@elt{identification}{name.babel}{nil}%
+  \bbl@elt{identification}{tag.bcp47}{und}%
+  \bbl@elt{identification}{language.tag.bcp47}{und}%
+  \bbl@elt{identification}{tag.opentype}{dflt}%
+  \bbl@elt{identification}{script.name}{Latin}%
+  \bbl@elt{identification}{script.tag.bcp47}{Latn}%
+  \bbl@elt{identification}{script.tag.opentype}{DFLT}%
+  \bbl@elt{identification}{level}{1}%
+  \bbl@elt{identification}{encodings}{}%
+  \bbl@elt{identification}{derivate}{no}}
+\@namedef{bbl@tbcp@nil}{und}
+\@namedef{bbl@lbcp@nil}{und}
+\@namedef{bbl@lotf@nil}{dflt}
+\@namedef{bbl@elname@nil}{nil}
+\@namedef{bbl@lname@nil}{nil}
+\@namedef{bbl@esname@nil}{Latin}
+\@namedef{bbl@sname@nil}{Latin}
+\@namedef{bbl@sbcp@nil}{Latn}
+\@namedef{bbl@sotf@nil}{Latn}
+%    \end{macrocode}
 %
 %    The macro |\ldf@finish| takes care of looking for a
 %    configuration file, setting the main language to be switched on

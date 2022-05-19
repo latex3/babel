@@ -6,6 +6,10 @@ Main Class: article
     Options: a4paper,12pt
 Package: babel
     Options: french,english
+(../babel-french.tex
+Package babel Info: Importing font and identification data for french
+(babel)             from babel-fr.ini. Reported on input line ....
+)
 > \box...=
 \hbox(7.38097+0.0)x37.99127
 .\OT1/cmr/m/n/12 t

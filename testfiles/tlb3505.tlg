@@ -39,6 +39,10 @@ l. ......tonikogreek}{>en >arq~h| >~hn <o l'ogoc.}}
 .\T1/cmr/m/n/10 !
 ! OK.
 l. ...\testit{Ah!}
+(../babel-french.tex
+Package babel Info: Importing font and identification data for french
+(babel)             from babel-fr.ini. Reported on input line ....
+)
 > \box...=
 \hbox(6.8872+0.0)x17.49573
 .\T1/cmr/m/n/10 A
