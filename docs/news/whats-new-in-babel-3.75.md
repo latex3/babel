@@ -12,6 +12,10 @@ files, which were load loaded only in some cases, except with
 minimal overhead. This should work for most languages, but see the
 following section.
 
+Because of the way this feature works, problems are very unlikely, but
+there is switch as a package option to turn the new behavior off
+(`ensureinfo=off`).
+
 ## Language naming with `babel` and the Unicode CLDR
 
 In the coming few weeks (or months), `babel` will attempt to align the
