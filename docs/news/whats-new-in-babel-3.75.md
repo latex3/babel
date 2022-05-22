@@ -1,16 +1,17 @@
 # What's new in babel 3.75
 
-(Development)
+2022-05-22
 
 ## Ensuring locale info
 
 As the LaTeX kernel extends its capabilities related to localization
-(like upper and lower casing), BCP47 tags are becoming
-essential. The required information is stored in the `ini` locale
-files, which were load loaded only in some cases, except with
-`\EnsureBabelInfo`. Now it’s loaded always. This means there will be a
-minimal overhead. This should work for most languages, but see the
-following section.
+(like upper and lower casing), [BCP 47
+tags](https://en.wikipedia.org/wiki/IETF_language_tag) are becoming
+essential. The required data are stored in the `ini` locale files,
+which were load loaded only in some cases, except if explicitly
+requested with `\EnsureBabelInfo`. Now it’s loaded always. This means
+there will be a (minimal) overhead. This should work for most languages,
+but see the following section.
 
 Because of the way this feature works, problems are very unlikely, but
 there is switch as a package option to turn the new behavior off
@@ -30,6 +31,8 @@ to recognize correctly any CLDR-based name.
 The number of languages with conflicting names is actually very
 reduced: `(n)german`, `swissgerman` and `serbian` are among them. How
 to deal with these cases without breaking old documents is under study.
+
+See also [Locale naming](https://latex3.github.io/babel/guides/locale-naming.html).
 
 ## `\localeinfo*`
 
@@ -56,8 +59,8 @@ not usually a good idea (because of the hyphen).
 ## Script ranges
 
 The Unicode character ranges were hard-coded in the `babel` kernel, but
-now they can be set or modified in the `ini` with the key `ranges` in
-the `characters` section (as well as in `\babelprovide`). A few
+now they can be set or modified in the `ini` file with the key `ranges`
+in the `characters` section (as well as in `\babelprovide`). A few
 Southeast Asian languages defined this key for the line breaking
 algorithm, but this new feature can be useful with `onchar` and with
 locales declared from scratch.
