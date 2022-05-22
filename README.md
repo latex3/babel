@@ -1,6 +1,4 @@
-## Babel 3.75.2743
-
-''(Development.)''
+## Babel 3.75
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,26 +46,20 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.75   2022-05-?? (dev)
+3.75   2022-05-22
+       * `\BabelEnsureInfo` is active by default, to make sure the BCP 47
+         codes are always available, as they may be required by the
+         LaTeX kernel.
+       * `\localeinfo*` is like `\localeinfo` but expands to empty if
+         unknown (fully expandable).
+       * The key `character`/`ranges` in `ini` files now sets the
+         corresponding Unicode script ranges (as used by `onchar`).
        * Fixes:
          - Misplaced rule un diagbox (#43)
          - Caption names of 'chapter' and 'part' swapped in Chinese (#180).
          - Captions after numbers in Lithuanian.
          - `hyphenrules` in the `ini` files for `en-AU` and
-           `en-NZ` where set to english instead of `ukenglish`.
-       * The key `character`/`ranges` in `ini` files now sets the
-         corresponding Unicode script ranges (as used by `onchar`).
-       * `\BabelEnsureInfo` is active by default, to make sure the BCP47
-         codes are always available, as they may be required by the
-         LaTeX kernel.
-       * `\localeinfo*` is like `\localeinfo` but expands to nothing if
-         unknown (fully expandable).
-
-3.74   2022-04-30
-       * Fixes:
-         - Error in transforms if | is active.
-         - Minor fixes in Khemer, Turkmen, Marathi.
-       * RTL math improved (with luatex).
+           `en-NZ` where set to `english` instead of `ukenglish`.
 ```
 
 ### Previous changes

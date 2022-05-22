@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/05/20 v3.75.2743 The Babel package]
+\ProvidesFile{babel.dtx}[2022/05/22 v3.75 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2979,12 +2979,15 @@ named |\LocaleForEach| to traverse the list, where |#1| is the name of
 the current item, so that |\LocaleForEach{\message{ **#1** }}| just
 shows the loaded |ini|’s. 
 
-\Describe{\BabelEnsureInfo}{}
-|ini| files are loaded with |\babelprovide| and also when languages are
-selected if there is a |\babelfont| or they have not been explicitly
-declared. To ensure the |ini| files are loaded (and therefore the
-corresponding data) even if these two conditions are not met, write
-|\BabelEnsureInfo| in the preamble.
+\Describe{ensureinfo=off}{}
+\New{3.75} Previously, |ini| files are loaded only with |\babelprovide|
+and also when languages are selected if there is a |\babelfont| or they
+have not been explicitly declared. Now the |ini| files are loaded (and
+therefore the corresponding data) even if these two conditions are not
+met (in previous versions you had to enable it with |\BabelEnsureInfo|
+in the preamble). Because of the way this feature works, problems are
+very unlikely, but there is switch as a package option to turn the new
+behavior off (|ensureinfo=off|).
 
 \subsection{Hyphenation and line breaking}
 
@@ -5140,8 +5143,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.75.2743>>
-%<<date=2022/05/20>>
+%<<version=3.75>>
+%<<date=2022/05/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11033,20 +11036,20 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@info@script.tag.opentype}{sotf}
 \@namedef{bbl@info@region.tag.bcp47}{rbcp}
 \@namedef{bbl@info@variant.tag.bcp47}{vbcp}
-% extensions are dealt with in a special way
-\let\bbl@ensureinfo\@gobble
-% An internal \LaTeX{} macro:
+% Extensions are dealt with in a special way
+% Now, an internal \LaTeX{} macro:
 \providecommand\BCPdata[1]{\localeinfo*{#1.tag.bcp47}}
 %    \end{macrocode}
 %
-% Now |\BabelEnsureInfo| is executed always, but there is an option to
-% disable it.
+% With version 3.75 |\BabelEnsureInfo| is executed always, but there is
+% an option to disable it.
 % 
 %    \begin{macrocode} 
 %<<*More package options>>
 \DeclareOption{ensureinfo=off}{}
 %<</More package options>>
 %
+\let\bbl@ensureinfo\@gobble
 \newcommand\BabelEnsureInfo{%
   \ifx\InputIfFileExists\@undefined\else
     \def\bbl@ensureinfo##1{%
@@ -11063,7 +11066,7 @@ help from Bernd Raichle, for which I am grateful.
 % More general, but non-expandable, is |\getlocaleproperty|. To inspect
 % every possible loaded |ini|, we define |\LocaleForEach|, where
 % |\bbl@ini@loaded| is a comma-separated list of locales, built by
-% |\bbl@read@ini|. 
+% |\bbl@read@ini|.
 %
 %    \begin{macrocode}   
 \newcommand\getlocaleproperty{%
