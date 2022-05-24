@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/05/22 v3.75 The Babel package]
+\ProvidesFile{babel.dtx}[2022/05/24 v3.75.2747 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5143,8 +5143,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.75>>
-%<<date=2022/05/22>>
+%<<version=3.75.2747>>
+%<<date=2022/05/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10794,6 +10794,28 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@datecntr{\expandafter\bbl@xdatecntr\expandafter}
 \def\bbl@xdatecntr[#1|#2]{\localenumeral{#2}{#1}}
 %    \end{macrocode}
+%
+% \textbf{Calendars.} The code for specific calendars are placed in the
+% locales requiring it. Here we just define a few general macros,
+% particularly a funcion to get the julian day. It’s based on the
+% little library |calendar.js|, by John Walker, in the public domain.
+%
+%    \begin{macrocode}
+\ExplSyntaxOn
+\def\bbl@fpmod#1#2{(#1-#2*floor(#1/#2))}
+\def\bbl@cs@gregleap#1{%
+  (\bbl@fpmod{#1}{4} == 0) &&
+    (!((\bbl@fpmod{#1}{100} == 0) && (\bbl@fpmod{#1}{400} != 0)))}
+\def\bbl@ca@jd#1#2#3{% year, month, day
+  \fp_eval:n{ 1721424.5   + (365 * (#1 - 1)) +
+    floor((#1 - 1) / 4)   + (-floor((#1 - 1) / 100)) +
+    floor((#1 - 1) / 400) + floor((((367 * #2) - 362) / 12) +
+    ((#2 <= 2) ? 0 : (\bbl@cs@gregleap{#1} ? -1 : -2)) + #3) }}
+\newcommand\babelcalendar[2][\the\year-\the\month-\the\day]{%
+  \@nameuse{bbl@ca@#2}#1\@@}
+\ExplSyntaxOff
+%    \end{macrocode}
+%
 %
 % \textbf{Transforms.}
 %

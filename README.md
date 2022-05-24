@@ -1,4 +1,6 @@
-## Babel 3.75
+## Babel 3.75.2747
+
+*(Development)*
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.75 are described in:
+Changes in version 3.76 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.75.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.76.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,6 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.75   (dev)
+       * Start calendars.
+
 3.75   2022-05-22
        * `\BabelEnsureInfo` is active by default, to make sure the BCP 47
          codes are always available, as they may be required by the
