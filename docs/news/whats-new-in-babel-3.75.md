@@ -8,7 +8,7 @@ As the LaTeX kernel extends its capabilities related to localization
 (like upper and lower casing), [BCP 47
 tags](https://en.wikipedia.org/wiki/IETF_language_tag) are becoming
 essential. The required data are stored in the `ini` locale files,
-which were load loaded only in some cases, except if explicitly
+which were loaded only in some cases, except if explicitly
 requested with `\EnsureBabelInfo`. Now it’s loaded always. This means
 there will be a (minimal) overhead. This should work for most languages,
 but see the following section.
