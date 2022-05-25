@@ -1,6 +1,6 @@
 # What's new in babel 3.76
 
-''(Draft, under development.)''
+*(Draft, under development.)*
 
 ## Calendars
 
@@ -15,6 +15,17 @@ day had to be entered by hand, which is very inconvenient.
 Until now, `babel` provided just the Hebrew calendar with `hebcal.sty`,
 which shows how cumbersome can be the required computations with pure
 TeX. Now, thanks to the `l3fp` library, they are quite straighforward.
+
+Currently, the calendar `islamic-civil` has been added to `arabic` /
+`ar`. An example is (**Syntax liable to change.**):
+```
+\babelcalendar[2022-04-01]{islamic-civil}\iyear\imonth\iday
+\localedate[calendar=islamic]\iyear\imonth\iday
+```
+Without the optional argument the current date is used.
+
+Of course new tools will be added to configure the locales when they
+are loaded.
 
 
 
