@@ -1,4 +1,4 @@
-## Babel 3.75.2747
+## Babel 3.75.2749
 
 *(Development)*
 
@@ -49,7 +49,7 @@ respective authors.
 ### Summary of latest changes
 ```
 3.75   (dev)
-       * Start calendars.
+       * Start calendars: islamic-civil, islamic-umalqura
 
 3.75   2022-05-22
        * `\BabelEnsureInfo` is active by default, to make sure the BCP 47
