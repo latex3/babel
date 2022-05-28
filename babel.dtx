@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/05/27 v3.75.2750 The Babel package]
+\ProvidesFile{babel.dtx}[2022/05/28 v3.75.2751 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5143,8 +5143,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.75.2750>>
-%<<date=2022/05/27>>
+%<<version=3.75.2751>>
+%<<date=2022/05/28>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -22810,6 +22810,271 @@ Babel.cjk_breaks = {
   \edef#7{\fp_eval:n{ \bbl@tempd - \bbl@tempb + 1 }}}
 \ExplSyntaxOff
 %</ca-islamic>
+%    \end{macrocode}
+%
+% \section{Hebrew}
+%
+% This is basically the set of macros written by Michail Rozman in
+% 1991, with corrections and adaptions by Rama Porrat, Misha, Dan Haran
+% and Boris Lavva. This must be eventually replaced by computations
+% with \textsf{l3fp}.
+%
+%    \begin{macrocode}
+%<*ca-hebrew>
+\newcount\bbl@cntcommon
+\def\bbl@remainder#1#2#3{%
+  #3 = #1                   %  c = a
+  \divide #3 by #2          %  c = a/b
+  \multiply #3 by -#2       %  c = -b(a/b)
+  \advance #3 by #1 }%        %  c = a - b(a/b)
+\newif\ifbbl@divisible
+\def\bbl@checkifdivisible#1#2{%
+  {\countdef\tmp = 0 % \tmp == \count0 - temporary variable
+   \bbl@remainder{#1}{#2}{\tmp}%
+   \ifnum \tmp = 0
+       \global\bbl@divisibletrue 
+   \else
+       \global\bbl@divisiblefalse
+   \fi}}
+\newif\ifbbl@gregleap
+\def\bbl@ifgregleap#1{%
+  \bbl@checkifdivisible{#1}{4}%
+  \ifbbl@divisible
+      \bbl@checkifdivisible{#1}{100}%
+      \ifbbl@divisible
+          \bbl@checkifdivisible{#1}{400}%
+          \ifbbl@divisible
+              \bbl@gregleaptrue
+          \else
+              \bbl@gregleapfalse
+          \fi
+      \else
+          \bbl@gregleaptrue
+      \fi
+  \else
+      \bbl@gregleapfalse
+  \fi
+  \ifbbl@gregleap}
+\def\bbl@gregdayspriormonths#1#2#3{% no month number 0
+    {#3 = \ifcase #1 0 \or 0 \or 31 \or 59 \or 90 \or 120 \or 151 \or
+          181 \or 212 \or 243 \or 273 \or 304 \or 334 \fi
+     \bbl@ifgregleap{#2}%
+         \ifnum #1 > 2        % if month after February
+             \advance #3 by 1  % add leap day
+         \fi
+     \fi
+     \global\bbl@cntcommon = #3}%
+    #3 = \bbl@cntcommon}
+\def\bbl@gregdaysprioryears#1#2{%
+  {\countdef\tmpc = 4      % \tmpc==\count4
+   \countdef\tmpb = 2      % \tmpb==\count2
+   \tmpb = #1              %
+   \advance \tmpb by -1    %
+   \tmpc = \tmpb           % \tmpc = \tmpb = year-1
+   \multiply \tmpc by 365  % Days in prior years =
+   #2 = \tmpc              % = 365*(year-1) ...
+   \tmpc = \tmpb           %
+   \divide \tmpc by 4      % \tmpc = (year-1)/4
+   \advance #2 by \tmpc    % ... plus Julian leap days ...
+   \tmpc = \tmpb           %
+   \divide \tmpc by 100    % \tmpc = (year-1)/100
+   \advance #2 by -\tmpc   % ... minus century years ...
+   \tmpc = \tmpb           %
+   \divide \tmpc by 400    % \tmpc = (year-1)/400
+   \advance #2 by \tmpc    % ... plus 4-century years.
+   \global\bbl@cntcommon = #2}%
+  #2 = \bbl@cntcommon}
+\def\bbl@absfromgreg#1#2#3#4{%
+  {\countdef\tmpd = 0       % \tmpd==\count0
+   #4 = #1                  % days so far this month
+   \bbl@gregdayspriormonths{#2}{#3}{\tmpd}%
+   \advance #4 by \tmpd     % add days in prior months
+   \bbl@gregdaysprioryears{#3}{\tmpd}%
+   \advance #4 by \tmpd     % add days in prior years
+   \global\bbl@cntcommon = #4}%
+  #4 = \bbl@cntcommon}
+\newif\ifbbl@hebrleap
+\def\bbl@checkleaphebryear#1{%
+  {\countdef\tmpa = 0       % \tmpa==\count0
+   \countdef\tmpb = 1       % \tmpb==\count1
+   \tmpa = #1
+   \multiply \tmpa by 7
+   \advance \tmpa by 1
+   \bbl@remainder{\tmpa}{19}{\tmpb}%
+   \ifnum \tmpb < 7         % \tmpb = (7*year+1)%19
+       \global\bbl@hebrleaptrue
+   \else
+       \global\bbl@hebrleapfalse
+   \fi}}
+\def\bbl@hebrelapsedmonths#1#2{%
+  {\countdef\tmpa = 0        % \tmpa==\count0
+   \countdef\tmpb = 1        % \tmpb==\count1
+   \countdef\tmpc = 2        % \tmpc==\count2
+   \tmpa = #1                %
+   \advance \tmpa by -1      %
+   #2 = \tmpa                % #2 = \tmpa = year-1
+   \divide #2 by 19          % Number of complete Meton cycles
+   \multiply #2 by 235       % #2 = 235*((year-1)/19)
+   \bbl@remainder{\tmpa}{19}{\tmpb}% \tmpa = years%19-years this cycle
+   \tmpc = \tmpb             %
+   \multiply \tmpb by 12     %
+   \advance #2 by \tmpb      % add regular months this cycle
+   \multiply \tmpc by 7      %
+   \advance \tmpc by 1       %
+   \divide \tmpc by 19       % \tmpc = (1+7*((year-1)%19))/19 -
+   \advance #2 by \tmpc      %  add leap months
+   \global\bbl@cntcommon = #2}%
+  #2 = \bbl@cntcommon}
+\def\bbl@hebrelapseddays#1#2{%
+  {\countdef\tmpa = 0        % \tmpa==\count0
+   \countdef\tmpb = 1        % \tmpb==\count1
+   \countdef\tmpc = 2        % \tmpc==\count2
+   \bbl@hebrelapsedmonths{#1}{#2}%
+   \tmpa = #2                %
+   \multiply \tmpa by 13753  %
+   \advance \tmpa by 5604    % \tmpa=MonthsElapsed*13758 + 5604
+   \bbl@remainder{\tmpa}{25920}{\tmpc}% \tmpc == ConjunctionParts
+   \divide \tmpa by 25920 
+   \multiply #2 by 29 
+   \advance #2 by 1 
+   \advance #2 by \tmpa      %  #2 = 1 + MonthsElapsed*29 +
+   \bbl@remainder{#2}{7}{\tmpa}% %  \tmpa == DayOfWeek
+   \ifnum \tmpc < 19440 
+       \ifnum \tmpc < 9924 
+       \else                 % New moon at 9 h. 204 p. or later
+           \ifnum \tmpa = 2  % on Tuesday ...
+               \bbl@checkleaphebryear{#1}% of a common year
+               \ifbbl@hebrleap 
+               \else 
+                   \advance #2 by 1 
+               \fi 
+           \fi 
+       \fi 
+       \ifnum \tmpc < 16789 
+       \else                  % New moon at 15 h. 589 p. or later
+           \ifnum \tmpa = 1   % on Monday ...
+               \advance #1 by -1 
+               \bbl@checkleaphebryear{#1}% at the end of leap year
+               \ifbbl@hebrleap 
+                   \advance #2 by 1 
+               \fi 
+           \fi 
+       \fi 
+   \else 
+       \advance #2 by 1       %  new moon at or after midday
+   \fi 
+   \bbl@remainder{#2}{7}{\tmpa}%  %  \tmpa == DayOfWeek
+   \ifnum \tmpa = 0           %  if Sunday ...
+       \advance #2 by 1 
+   \else                      %
+       \ifnum \tmpa = 3       %  Wednesday ...
+           \advance #2 by 1 
+       \else 
+           \ifnum \tmpa = 5   %  or Friday
+                \advance #2 by 1 
+           \fi 
+       \fi 
+   \fi 
+   \global\bbl@cntcommon = #2}%
+  #2 = \bbl@cntcommon}
+\def\bbl@daysinhebryear#1#2{%
+  {\countdef\tmpe = 12    % \tmpe==\count12
+   \bbl@hebrelapseddays{#1}{\tmpe}%
+   \advance #1 by 1 
+   \bbl@hebrelapseddays{#1}{#2}%
+   \advance #2 by -\tmpe 
+   \global\bbl@cntcommon = #2}%
+  #2 = \bbl@cntcommon}
+\def\bbl@hebrdayspriormonths#1#2#3{%
+  {\countdef\tmpf= 14    % \tmpf==\count14
+   #3 = \ifcase #1       % Days in prior month of regular year
+          0 \or          % no month number 0
+          0 \or          % Tishri
+         30 \or          % Heshvan
+         59 \or          % Kislev
+         89 \or          % Tebeth
+        118 \or          % Shebat
+        148 \or          % Adar I
+        148 \or          % Adar II
+        177 \or          % Nisan
+        207 \or          % Iyar
+        236 \or          % Sivan
+        266 \or          % Tammuz
+        295 \or          % Av
+        325 \or          % Elul
+        400              % Dummy
+   \fi
+   \bbl@checkleaphebryear{#2}%
+   \ifbbl@hebrleap             % in leap year
+       \ifnum #1 > 6          % if month after Adar I
+           \advance #3 by 30  % add  30 days
+       \fi 
+   \fi 
+   \bbl@daysinhebryear{#2}{\tmpf}%
+   \ifnum #1 > 3 
+       \ifnum \tmpf = 353     %
+           \advance #3 by -1  %
+       \fi                    %  Short Kislev
+       \ifnum \tmpf = 383     %
+           \advance #3 by -1  %
+       \fi                    %
+   \fi 
+   \ifnum #1 > 2 
+       \ifnum \tmpf = 355     %
+           \advance #3 by 1   %
+       \fi                    %  Long Heshvan
+       \ifnum \tmpf = 385     %
+           \advance #3 by 1   %
+       \fi                    %
+   \fi 
+   \global\bbl@cntcommon = #3}%
+  #3 = \bbl@cntcommon}
+\def\bbl@absfromhebr#1#2#3#4{%
+  {#4 = #1 
+   \bbl@hebrdayspriormonths{#2}{#3}{#1}%
+   \advance #4 by #1          % Add days in prior months this year
+   \bbl@hebrelapseddays{#3}{#1}%
+   \advance #4 by #1          % Add days in prior years
+   \advance #4 by -1373429    % Subtract days before Gregorian
+   \global\bbl@cntcommon = #4}%     %   01.01.0001
+  #4 = \bbl@cntcommon}
+\def\bbl@hebrfromgreg#1#2#3#4#5#6{%
+  {\countdef\tmpx= 17         % \tmpx==\count17
+   \countdef\tmpy= 18         % \tmpy==\count18
+   \countdef\tmpz= 19         % \tmpz==\count19
+   #6 = #3                    %
+   \global\advance #6 by 3761 % approximation from above
+   \bbl@absfromgreg{#1}{#2}{#3}{#4}%
+   \tmpz = 1  \tmpy = 1 
+   \bbl@absfromhebr{\tmpz}{\tmpy}{#6}{\tmpx}%
+   \ifnum \tmpx > #4               %
+       \global\advance #6 by -1 % Hyear = Gyear + 3760
+       \bbl@absfromhebr{\tmpz}{\tmpy}{#6}{\tmpx}%
+   \fi                             %
+   \advance #4 by -\tmpx      % Days in this year
+   \advance #4 by 1           %
+   #5 = #4                    %
+   \divide #5 by 30           % Approximation for month from below
+   \loop                      % Search for month
+       \bbl@hebrdayspriormonths{#5}{#6}{\tmpx}%
+       \ifnum \tmpx < #4 
+           \advance #5 by 1 
+           \tmpy = \tmpx 
+   \repeat 
+   \global\advance #5 by -1 
+   \global\advance #4 by -\tmpy}}
+\newcount\bbl@hebrday \newcount\bbl@hebrmonth \newcount\bbl@hebryear
+\newcount\bbl@gregday \newcount\bbl@gregmonth \newcount\bbl@gregyear
+%
+\def\bbl@ca@hebrew#1-#2-#3\@@#4#5#6{%
+  \bbl@gregday=#3 \bbl@gregmonth=#2 \bbl@gregyear=#1
+  \bbl@hebrfromgreg
+    {\bbl@gregday}{\bbl@gregmonth}{\bbl@gregyear}%
+    {\bbl@hebrday}{\bbl@hebrmonth}{\bbl@hebryear}%
+  \edef#4{\the\bbl@hebryear}%
+  \edef#5{\the\bbl@hebrmonth}%
+  \edef#6{\the\bbl@hebrday}}
+%</ca-hebrew>
 %    \end{macrocode}
 %
 % \section{Support for Plain \TeX\ (\texttt{plain.def})}
