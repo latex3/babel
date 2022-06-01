@@ -1,4 +1,4 @@
-## Babel 3.75.2751
+## Babel 3.75.2755
 
 *(Development)*
 
@@ -48,9 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.75   (dev)
+3.76   (dev)
        * Calendar conversion with a new macro \babelcalendar: hebrew,
-         islamic-civil, islamic-umalqura.
+         islamic-civil, islamic-umalqura, persian.
 
 3.75   2022-05-22
        * `\BabelEnsureInfo` is active by default, to make sure the BCP 47

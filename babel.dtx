@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/05/28 v3.75.2751 The Babel package]
+\ProvidesFile{babel.dtx}[2022/06/01 v3.75.2755 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5143,8 +5143,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.75.2751>>
-%<<date=2022/05/28>>
+%<<version=3.75.2755>>
+%<<date=2022/06/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -23075,6 +23075,53 @@ Babel.cjk_breaks = {
   \edef#5{\the\bbl@hebrmonth}%
   \edef#6{\the\bbl@hebrday}}
 %</ca-hebrew>
+%    \end{macrocode}
+%
+% \section{Persian}
+%
+% There is an algorithm written in TeX by Jabri, Abolhassani, Pournader
+% and Esfahbod, created for the first versions of the FarsiTeX system
+% (no longer available), but the original license is GPL, so its use
+% with LPPL is problematic. The code here follows loosely that by John
+% Walker, which is free and accurate, but sadly very complex, so
+% the relevant data for the years 2013-2050 have been pre-calculated
+% and stored. Actually, all we need is the first day (either March 20 or
+% March 21).
+%
+%    \begin{macrocode}
+%<*ca-persian>
+\ExplSyntaxOn
+\def\bbl@fpmod#1#2{(#1-#2*floor(#1/#2))}
+\def\bbl@cs@gregleap#1{%
+  (\bbl@fpmod{#1}{4} == 0) &&
+    (!((\bbl@fpmod{#1}{100} == 0) && (\bbl@fpmod{#1}{400} != 0)))}  
+\def\bbl@ca@jd#1#2#3{% year, month, day
+  \fp_eval:n{ 1721424.5   + (365 * (#1 - 1)) +
+    floor((#1 - 1) / 4)   + (-floor((#1 - 1) / 100)) +
+    floor((#1 - 1) / 400) + floor((((367 * #2) - 362) / 12) +
+    ((#2 <= 2) ? 0 : (\bbl@cs@gregleap{#1} ? -1 : -2)) + #3) }}   
+\def\bbl@ca@firstjal@xx{2012,2016,2020,2024,2028,2029,% March 20
+  2032,2033,2036,2037,2040,2041,2044,2045,2048,2049}
+\def\bbl@ca@persian#1-#2-#3\@@#4#5#6{%
+  \edef\bbl@tempa{#1}%  20XX-03-\bbl@tempe = 1 farvardin:
+  \bbl@xin@{\bbl@tempa}{\bbl@ca@firstjal@xx}%
+  \ifin@\def\bbl@tempe{20}\else\def\bbl@tempe{21}\fi
+  \edef\bbl@tempc{\fp_eval:n{\bbl@ca@jd{\bbl@tempa}{#2}{#3}+.5}}% current
+  \edef\bbl@tempb{\fp_eval:n{\bbl@ca@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}% begin
+  \ifnum\bbl@tempc<\bbl@tempb
+    \edef\bbl@tempa{\fp_eval:n{\bbl@tempa-1}}% go back 1 year and redo
+    \bbl@xin@{\bbl@tempa}{\bbl@ca@firstjal@xx}%
+    \ifin@\def\bbl@tempe{20}\else\def\bbl@tempe{21}\fi
+    \edef\bbl@tempb{\fp_eval:n{\bbl@ca@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}%
+  \fi
+  \edef#4{\fp_eval:n{\bbl@tempa-621}}% set Jalali year
+  \edef#6{\fp_eval:n{\bbl@tempc-\bbl@tempb+1}}% days from 1 farvardin
+  \edef#5{\fp_eval:n{% set Jalali month
+    (#6 <= 186) ? ceil(#6 / 31) : ceil((#6 - 6) / 30)}}
+  \edef#6{\fp_eval:n{% set Jalali day
+    (#6 - ((#5 <= 7) ? ((#5 - 1) * 31) : (((#5 - 1) * 30) + 6)))}}}
+\ExplSyntaxOff
+%</ca-persian>
 %    \end{macrocode}
 %
 % \section{Support for Plain \TeX\ (\texttt{plain.def})}
