@@ -16,17 +16,37 @@ Until now, `babel` provided just the Hebrew calendar with `hebcal.sty`,
 which shows how cumbersome can be the required computations with pure
 TeX. Now, thanks to the `l3fp` library, they are quite straighforward.
 
-Currently, the calendar `hebrew` has been added to `hebrew`/`he`, as
-well as `islamic-civil` and `islamic-umalqura` to `arabic` / `ar`. An
-example is (**Syntax liable to change.**):
+There are coverters for 3 calendars:
+
+***Hebrew.*** Basically the set of macros written by Rozman in 1991,
+   with corrections and adaptions by Porrat, Misha, Haran and Lavva.
+   This must be eventually replaced by computations with \textsf{l3fp}.
+
+***Islamic.*** Two calendar are defined: `islamic-civil` (arithmetical) 
+     and `islamic-umalqura`. The code for the former has been taken
+     from `calendar.js` by John Walker (public domain) The Umm al-Qura
+     calendar, used mainly in Saudi Arabia, is based on
+     `islamdate_today.js` on `https://webspace.science.uu.nl/` (by Ray
+     Stott; free to use if credited). Since the main aim is to provide
+     a suitable `\today`, and maybe some close dates, data for
+     `islamic-umalqura` just covers Hijri ~1435/~1460 (Gregorian
+     ~2014/~2038).
+   
+***Persian.*** There is an algorithm written in TeX by Jabri,
+   Abolhassani, Pournader and Esfahbod, created for the first versions
+   of the FarsiTeX system (no longer available), but the original
+   license is GPL, so its use with LPPL is problematic. The code here
+   follows loosely that by John Walker (see above), which is free and
+   accurate, but sadly very complex, so the relevant data for the years
+   2013-2050 have been pre-calculated and stored. Actually, all we need
+   is the first day of the Jalali year (either March 20 or March 21).
+
+An example is (**Syntax liable to change.**):
 ```
 \babelcalendar[2022-04-01]{islamic-civil}\iyear\imonth\iday
 \localedate[calendar=islamic]\iyear\imonth\iday
 ```
 Without the optional argument the current date is used.
-
-The Umm al-Qura calendar is restricted to years close to the current
-one (approx. 1435-1460). 
 
 Of course new tools will be added to configure the locales when they
 are loaded.
