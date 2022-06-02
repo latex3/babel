@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/06/01 v3.75.2755 The Babel package]
+\ProvidesFile{babel.dtx}[2022/06/02 v3.75.2756 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2850,7 +2850,7 @@ date corresponding to the Gregorian calendar and other lunisolar systems
 with the following command.
 
 \Describe{\localedate}{\oarg{calendar=.., variant=..}%
-  {\marg{year}\m{month}\m{day}}}
+  {\marg{year}\marg{month}\marg{day}}}
 
 By default the calendar is the Gregorian, but an |ini| file may define
 strings for other calendars (currently |ar|, |ar-|*, |he|, |fa|, |hi|).
@@ -2862,6 +2862,20 @@ month number with |calendar=hebrew|).
 Even with a certain calendar there may be variants. In Kurmanji the
 default variant prints something like \textit{30. Çileya Pêşîn 2019},
 but with |variant=izafa| it prints \textit{31’ê Çileya Pêşînê 2019}.
+
+\Describe{\babelcalendar}{\oarg{date}%
+  \marg{calendar}\marg{year-macro}\m{month-macro}\m{day-macro}}
+  
+\New{3.76} Although calendars aren’t the primary concern of \babel, the
+package should be able to, at least, generate correctly the current
+date in the way users would expect in their own culture. Currently,
+|\localedate| can print dates in a few calendars (provided the
+\textsf{ini} locale file has been imported), but year, month and day
+had to be entered by hand, which is very inconvenient. With this macro,
+the current date is converted and stored in the three last arguments,
+which must be macros. The optional argument converts the given date, in
+the form ‘\m{year}-\m{month}-\m{day}’. Please, refer to the page on the
+news for 3.76 in the \babel{} site for further details.
 
 \subsection{Accessing language info}
 
@@ -5143,8 +5157,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.75.2755>>
-%<<date=2022/06/01>>
+%<<version=3.75.2756>>
+%<<date=2022/06/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9682,6 +9696,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@Alph\@nil
   \let\bbl@KVP@labels\@nil
   \bbl@csarg\let{KVP@labels*}\@nil
+  \let\bbl@calendars\@empty
   \global\let\bbl@inidata\@empty
   \global\let\bbl@extend@ini\@gobble
   \gdef\bbl@key@list{;}% 
@@ -10018,17 +10033,14 @@ help from Bernd Raichle, for which I am grateful.
          \let\atcatcode\relax
          \global\bbl@csarg\let{rqtex@\languagename}\relax
        \fi}%
-    \bbl@ifunset{bbl@rqcal@\languagename}{}%
-      {\edef\bbl@tempa{\bbl@cs{rqcal@\languagename}}%
-         \bbl@replace\bbl@tempa{ }{,}%
-         \bbl@foreach\bbl@tempa{%
-           \bbl@ifunset{bbl@ca@##1}{%
-             \chardef\atcatcode=\catcode`\@
-             \catcode`\@=11\relax
-             \InputIfFileExists{babel-ca-##1.tex}{}{}%
-             \catcode`\@=\atcatcode
-             \let\atcatcode\relax}%
-           {}}}%
+    \bbl@foreach\bbl@calendars{%
+      \bbl@ifunset{bbl@ca@##1}{%
+        \chardef\atcatcode=\catcode`\@
+        \catcode`\@=11\relax
+        \InputIfFileExists{babel-ca-##1.tex}{}{}%
+        \catcode`\@=\atcatcode
+        \let\atcatcode\relax}%
+      {}}%
   \fi
   % == frenchspacing ==
   \ifcase\bbl@howloaded\in@true\else\in@false\fi
@@ -10292,7 +10304,9 @@ help from Bernd Raichle, for which I am grateful.
     \def\bbl@section{##1}%
     \in@{=date.}{=##1}% Find a better place
     \ifin@
-      \bbl@ini@calendar{##1}%
+      \bbl@ifunset{bbl@inikv@##1}%
+        {\bbl@ini@calendar{##1}}%
+        {}%
     \fi
     \in@{=identification/extension.}{=##1/##2}%
     \ifin@
@@ -10336,7 +10350,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@endcommands}
 %    \end{macrocode}
 %
-% A somewhat hackish tool to handle calendar sections. To be improved.
+% A somewhat hackish tool to handle calendar sections. TODO. To be improved.
 %
 %    \begin{macrocode}
 \def\bbl@ini@calendar#1{%
@@ -10353,6 +10367,9 @@ help from Bernd Raichle, for which I am grateful.
  \fi
  \ifx\bbl@tempa\relax\else
    \bbl@replace\bbl@tempa{=}{}%
+   \ifx\bbl@tempa\@empty\else
+     \xdef\bbl@calendars{,\bbl@tempa}%
+   \fi
    \bbl@exp{%
      \def\<bbl@inikv@#1>####1####2{% 
        \\\bbl@inidate####1...\relax{####2}{\bbl@tempa}}}%
@@ -10471,7 +10488,6 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@exportkey{dgnat}{numbers.digits.native}{}%
     \ifnum#1=\tw@           % only (re)new
       \bbl@exportkey{rqtex}{identification.require.babel}{}%
-      \bbl@exportkey{rqcal}{identification.require.calendars}{}%
       \bbl@toglobal\bbl@savetoday
       \bbl@toglobal\bbl@savedate
       \bbl@savestrings
@@ -22750,9 +22766,8 @@ Babel.cjk_breaks = {
   \edef#7{\fp_eval:n{ \bbl@tempa - \bbl@cs@isltojd{#5}{#6}{1} + 1} }}
 %    \end{macrocode}
 %
-% The Umm al-Qura calendar, used mainly in Saudi Arabia. Based on
-% \texttt{islamdate\_today.js} on |https://webspace.science.uu.nl/|.
-% Copyright 1999-2002 by Ray Stott. Free to use if credited.
+% The Umm al-Qura calendar, used mainly in Saudi Arabia, is based
+% on \textsf{moment-hijri}, by Abdullah Alsigar (license MIT).
 %
 % Since the main aim is to provide a suitable |\today|, and maybe some
 % close dates, data just covers Hijri $\sim$1435/$\sim$1460 (Gregorian
