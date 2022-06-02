@@ -6,7 +6,7 @@
 
 Although calendars aren’t the primary concern of `babel`, the package
 should be able to, at least, generate correctly `\today` in the way
-users would expect in its own culture. Currently, [`\localedate` can
+users would expect in their own culture. Currently, [`\localedate` can
 print dates in a few
 calendars](https://latex3.github.io/babel/news/whats-new-in-babel-3.45.html)
 (provided the `ini` locale file has been imported), but year, month and
@@ -14,22 +14,24 @@ day had to be entered by hand, which is very inconvenient.
 
 Until now, `babel` provided just the Hebrew calendar with `hebcal.sty`,
 which shows how cumbersome can be the required computations with pure
-TeX. Now, thanks to the `l3fp` library, they are quite straighforward.
+TeX. Now, thanks to the `l3fp` library, they are quite straightforward.
 
-There are coverters for 3 calendars:
+There are converters for 3 calendars:
 
 ***Hebrew.*** Basically the set of TeX macros written by Rozman in 1991,
-   with corrections and adaptions by Porrat, Misha, Haran and Lavva.
+   with corrections and adaptations by Porrat, Misha, Haran and Lavva.
    This must be eventually replaced by computations with `l3fp`.
 
 ***Islamic.*** Two calendar are defined: `islamic-civil` (arithmetical) 
    and `islamic-umalqura`. The code for the former has been taken from
    `calendar.js` by John Walker (public domain). The Umm al-Qura
    calendar, used mainly in Saudi Arabia, is based on
-   [`islamdate_today.js`](https://webspace.science.uu.nl/~gent0113/islam/addfiles
-   (by R. H. van Gent). Since the main aim is to provide a suitable
+   [moment-hijri](https://github.com/xsoh/moment-hijri) (by Abdullah
+   Alsigar, license MIT). Since the main aim is to provide a suitable
    `\today`, and maybe some close dates, data for `islamic-umalqura`
-   just cover Hijri ~1435/~1460 (Gregorian ~2014/~2038).
+   just cover Hijri ~1435/~1460 (Gregorian ~2014/~2038). They can be
+   adjusted with `+`, `-` after the name (and `++`, `--` in the Civil
+   calendar), so that, for example, with `islamic-civil+` a day is added.
      
 ***Persian.*** There is an algorithm written in TeX by Jabri,
    Abolhassani, Pournader and Esfahbod, created for the first versions
