@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/06/02 v3.75.2756 The Babel package]
+\ProvidesFile{babel.dtx}[2022/06/06 v3.76 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5157,8 +5157,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.75.2756>>
-%<<date=2022/06/02>>
+%<<version=3.76>>
+%<<date=2022/06/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -22809,6 +22809,10 @@ Babel.cjk_breaks = {
 \@namedef{bbl@ca@islamic-umalqura}{\bbl@ca@islamcuqr@x{}}
 \@namedef{bbl@ca@islamic-umalqura-}{\bbl@ca@islamcuqr@x{-1}}
 \def\bbl@ca@islamcuqr@x#1#2-#3-#4\@@#5#6#7{%
+  \ifnum#2>2014 \ifnum#2<2038
+    \bbl@afterfi\expandafter\@gobble
+  \fi\fi
+    {\bbl@error{Year~out~of~range}{The~allowed~range~is~2014-2038}}%
   \edef\bbl@tempd{\fp_eval:n{ % (Julian) day
     \bbl@ca@jd{#2}{#3}{#4} + 0.5 - 2400000 #1}}%
   \count@\@ne
@@ -23119,6 +23123,10 @@ Babel.cjk_breaks = {
   2032,2033,2036,2037,2040,2041,2044,2045,2048,2049}
 \def\bbl@ca@persian#1-#2-#3\@@#4#5#6{%
   \edef\bbl@tempa{#1}%  20XX-03-\bbl@tempe = 1 farvardin:
+  \ifnum\bbl@tempa>2012 \ifnum\bbl@tempa<2051
+    \bbl@afterfi\expandafter\@gobble
+  \fi\fi
+    {\bbl@error{Year~out~of~range}{The~allowed~range~is~2013-2050}}%
   \bbl@xin@{\bbl@tempa}{\bbl@ca@firstjal@xx}%
   \ifin@\def\bbl@tempe{20}\else\def\bbl@tempe{21}\fi
   \edef\bbl@tempc{\fp_eval:n{\bbl@ca@jd{\bbl@tempa}{#2}{#3}+.5}}% current
