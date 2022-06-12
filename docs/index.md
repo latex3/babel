@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.77](news/whats-new-in-babel-3.77.html) | More on calendars: `\today`.
 | [3.76](news/whats-new-in-babel-3.76.html) | Calendar converters.
 | [3.75](news/whats-new-in-babel-3.75.html) | `\BabelEnsureInfo` enabled by default. `\localeinfo*`.
 | [3.74](news/whats-new-in-babel-3.74.html) | Mainly fixes and improvements in math.
