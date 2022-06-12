@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/06/06 v3.76 The Babel package]
+\ProvidesFile{babel.dtx}[2022/06/12 v3.76.2766 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2865,7 +2865,7 @@ but with |variant=izafa| it prints \textit{31’ê Çileya Pêşînê 2019}.
 
 \Describe{\babelcalendar}{\oarg{date}%
   \marg{calendar}\marg{year-macro}\m{month-macro}\m{day-macro}}
-  
+
 \New{3.76} Although calendars aren’t the primary concern of \babel, the
 package should be able to, at least, generate correctly the current
 date in the way users would expect in their own culture. Currently,
@@ -5157,8 +5157,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.76>>
-%<<date=2022/06/06>>
+%<<version=3.76.2766>>
+%<<date=2022/06/12>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9696,6 +9696,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@KVP@Alph\@nil
   \let\bbl@KVP@labels\@nil
   \bbl@csarg\let{KVP@labels*}\@nil
+  \let\bbl@KVP@calendar\@nil
   \let\bbl@calendars\@empty
   \global\let\bbl@inidata\@empty
   \global\let\bbl@extend@ini\@gobble
@@ -10019,6 +10020,10 @@ help from Bernd Raichle, for which I am grateful.
     \bbl@exp{%
       \\\bbl@add\<extras\languagename>{%
         \let\\\@Alph\<bbl@cntr@\bbl@KVP@Alph @\languagename>}}%
+  \fi
+  % == Calendars ==
+  \ifx\bbl@KVP@calendar\@nil\else
+    \bbl@csarg\let{calpr@\languagename}\bbl@KVP@calendar
   \fi
   % == require.babel in ini ==
   % To load or reaload the babel-*.tex, if require.babel in ini
@@ -10474,6 +10479,7 @@ help from Bernd Raichle, for which I am grateful.
   \fi
   % Conditional
   \ifnum#1>\z@         % 0 = only info, 1, 2 = basic, (re)new
+    \bbl@exportkey{calpr}{date.calendar.preferred}{}%
     \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
     \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
     \bbl@exportkey{lfthm}{typography.lefthyphenmin}{2}%
@@ -10509,6 +10515,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \let\bbl@inikv@identification\bbl@inikv
+\let\bbl@inikv@date\bbl@inikv
 \let\bbl@inikv@typography\bbl@inikv
 \let\bbl@inikv@characters\bbl@inikv
 \let\bbl@inikv@numbers\bbl@inikv
@@ -10721,21 +10728,46 @@ help from Bernd Raichle, for which I am grateful.
 \DeclareRobustCommand\localedate[1][]{\bbl@localedate{#1}}
 \def\bbl@localedate#1#2#3#4{%
   \begingroup
-    \ifx\@empty#1\@empty\else
-      \let\bbl@ld@calendar\@empty
-      \let\bbl@ld@variant\@empty
-      \edef\bbl@tempa{\zap@space#1 \@empty}%
-      \def\bbl@tempb##1=##2\@@{\@namedef{bbl@ld@##1}{##2}}%
-      \bbl@foreach\bbl@tempa{\bbl@tempb##1\@@}%
-      \edef\bbl@calendar{%
-        \bbl@ld@calendar
-        \ifx\bbl@ld@variant\@empty\else
-          .\bbl@ld@variant
-        \fi}%
-      \bbl@replace\bbl@calendar{gregorian}{}%
+    \edef\bbl@tempe{#1}%
+    \edef\bbl@they{#2}%
+    \edef\bbl@them{#3}%
+    \edef\bbl@thed{#4}%
+    \ifx\bbl@tempe\@empty
+      \bbl@ifunset{bbl@calpr@\languagename}{}%
+        {\edef\bbl@tempe{convert,calendar=\bbl@cl{calpr}}%
+         \@nameuse{regex\string_replace\string_once\string:nnN}%
+           {\ .*}{}\bbl@tempe}% TODO. Must be more efficient
+    \fi  
+    \bbl@replace\bbl@tempe{ }{}%
+    \bbl@replace\bbl@tempe{convert}{convert=}%
+    \let\bbl@ld@calendar\@empty
+    \let\bbl@ld@variant\@empty
+    \let\bbl@ld@convert\relax
+    \def\bbl@tempb##1=##2\@@{\@namedef{bbl@ld@##1}{##2}}%
+    \bbl@foreach\bbl@tempe{\bbl@tempb##1\@@}%
+    \ifx\bbl@ld@convert\relax\else
+      \let\bbl@ld@convert\bbl@ld@calendar
+      \bbl@replace\bbl@ld@convert{gregorian}{}%
+      \ifx\bbl@ld@convert\@empty\else
+        \let\bbl@ld@convert\bbl@ld@calendar % For conversion
+        \@nameuse{regex\string_replace\string_once\string:nnN}%
+          {\..*}{}\bbl@ld@convert
+        \ifx\bbl@ld@convert\@empty\else
+          \babelcalendar[\bbl@they-\bbl@them-\bbl@thed]%
+            {\bbl@ld@convert}\bbl@they\bbl@them\bbl@thed
+        \fi
+      \fi
     \fi
+    \bbl@replace\bbl@ld@calendar{gregorian}{}%
+    \@nameuse{bbl@precalendar}%
+    \edef\bbl@calendar{% Used in \month..., too
+      \bbl@ld@calendar
+      \ifx\bbl@ld@variant\@empty\else
+        .\bbl@ld@variant
+      \fi}%
     \bbl@cased
-      {\@nameuse{bbl@date@\languagename @\bbl@calendar}{#2}{#3}{#4}}%
+      {\@nameuse{bbl@date@\languagename @\bbl@calendar}%
+         \bbl@they\bbl@them\bbl@thed}%
   \endgroup}
 % eg: 1=months, 2=wide, 3=1, 4=dummy, 5=value, 6=calendar
 \def\bbl@inidate#1.#2.#3.#4\relax#5#6{% TODO - ignore with 'captions'
@@ -10752,21 +10784,18 @@ help from Bernd Raichle, for which I am grateful.
       {\lowercase{\def\bbl@tempb{#6}}%
        \bbl@trim@def\bbl@toreplace{#5}%
        \bbl@TG@@date
-       \bbl@ifunset{bbl@date@\languagename @}%
-         {\bbl@exp{% TODO. Move to a better place.
-            \gdef\<\languagename date>{\\\protect\<\languagename date >}%
-            \gdef\<\languagename date >####1####2####3{%
-              \\\bbl@usedategrouptrue
-              \<bbl@ensure@\languagename>{%
-                \\\localedate{####1}{####2}{####3}}}%
-            \\\bbl@add\\\bbl@savetoday{%
-              \\\SetString\\\today{%
-                \<\languagename date>%
-                   {\\\the\year}{\\\the\month}{\\\the\day}}}}}%
-         {}%      
-       \global\bbl@csarg\let{date@\languagename @}\bbl@toreplace
-       \ifx\bbl@tempb\@empty\else
-         \global\bbl@csarg\let{date@\languagename @\bbl@tempb}\bbl@toreplace
+       \global\bbl@csarg\let{date@\languagename @\bbl@tempb}\bbl@toreplace
+       \ifx\bbl@savetoday\@empty
+         \bbl@exp{% TODO. Move to a better place.
+           \gdef\<\languagename date>{\\\protect\<\languagename date >}%
+           \gdef\<\languagename date >####1####2####3{%
+             \\\bbl@usedategrouptrue
+             \<bbl@ensure@\languagename>{%
+               \\\localedate{####1}{####2}{####3}}}%
+           \def\\\bbl@savetoday{%
+             \\\SetString\\\today{%
+               \<\languagename date>%
+                  {\\\the\year}{\\\the\month}{\\\the\day}}}}%
        \fi}%
       {}}}
 %    \end{macrocode}
@@ -22828,6 +22857,11 @@ Babel.cjk_breaks = {
   \edef#6{\fp_eval:n{ \bbl@templ - (12 * \bbl@tempa) }}%
   \edef#7{\fp_eval:n{ \bbl@tempd - \bbl@tempb + 1 }}}
 \ExplSyntaxOff
+\bbl@add\bbl@precalendar{%
+  \bbl@replace\bbl@ld@calendar{-civil}{}%
+  \bbl@replace\bbl@ld@calendar{-umalqura}{}%
+  \bbl@replace\bbl@ld@calendar{+}{}%
+  \bbl@replace\bbl@ld@calendar{-}{}}
 %</ca-islamic>
 %    \end{macrocode}
 %
@@ -23145,6 +23179,19 @@ Babel.cjk_breaks = {
     (#6 - ((#5 <= 7) ? ((#5 - 1) * 31) : (((#5 - 1) * 30) + 6)))}}}
 \ExplSyntaxOff
 %</ca-persian>
+%    \end{macrocode}
+%
+% \section{Buddhist}
+%
+% That’s very simple.
+%
+%    \begin{macrocode}
+%<*ca-buddhist>
+\def\bbl@ca@buddhist#1-#2-#3\@@#4#5#6{%
+  \edef#4{\number\numexpr#1+543\relax}%
+  \edef#5{#2}%
+  \edef#6{#3}}
+%</ca-buddhist>
 %    \end{macrocode}
 %
 % \section{Support for Plain \TeX\ (\texttt{plain.def})}

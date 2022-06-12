@@ -1,4 +1,6 @@
-## Babel 3.76
+## Babel 3.76.2766
+
+*Development*.
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +48,13 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.77   2022-07-?? (dev)
+       * More con calendar conversions: \localedate, \today.
+       * New Arabic locale for Saudi Arabia, with the Umm al-Qura
+         calendar.
+       * Date now defaults to 'persian' in a few locales: Persian,
+         Northern Luri, Mazanderani, Pashto.
+       
 3.76   2022-06-06
        * Calendar conversion with a new macro \babelcalendar: hebrew,
          islamic-civil, islamic-umalqura, persian.
