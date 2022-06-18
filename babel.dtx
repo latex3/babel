@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/06/12 v3.76.2766 The Babel package]
+\ProvidesFile{babel.dtx}[2022/06/18 v3.76.2772 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2857,7 +2857,7 @@ strings for other calendars (currently |ar|, |ar-|*, |he|, |fa|, |hi|).
 In the latter case, the three arguments are the year, the month, and
 the day in those in the corresponding calendar. They are \textit{not}
 the Gregorian data to be converted (which means, say, 13 is a valid
-month number with |calendar=hebrew|).
+month number with |calendar=hebrew| and |calendar=coptic|).
 
 Even with a certain calendar there may be variants. In Kurmanji the
 default variant prints something like \textit{30. Çileya Pêşîn 2019},
@@ -5157,8 +5157,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.76.2766>>
-%<<date=2022/06/12>>
+%<<version=3.76.2772>>
+%<<date=2022/06/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10022,9 +10022,23 @@ help from Bernd Raichle, for which I am grateful.
         \let\\\@Alph\<bbl@cntr@\bbl@KVP@Alph @\languagename>}}%
   \fi
   % == Calendars ==
-  \ifx\bbl@KVP@calendar\@nil\else
-    \bbl@csarg\let{calpr@\languagename}\bbl@KVP@calendar
+  \ifx\bbl@KVP@calendar\@nil
+    \edef\bbl@KVP@calendar{\bbl@cl{calpr}}%
   \fi
+  \def\bbl@tempe##1 ##2\@@{% Get first calendar
+    \def\bbl@tempa{##1}}%
+    \bbl@exp{\\\bbl@tempe\bbl@KVP@calendar\space\\\@@}%
+  \def\bbl@tempe##1.##2.##3\@@{%
+    \def\bbl@tempc{##1}%
+    \def\bbl@tempb{##2}}%
+  \expandafter\bbl@tempe\bbl@tempa..\@@
+  \bbl@csarg\edef{calpr@\languagename}{%
+    \ifx\bbl@tempc\@empty\else
+      calendar=\bbl@tempc
+    \fi
+    \ifx\bbl@tempb\@empty\else
+      ,variant=\bbl@tempb
+    \fi}
   % == require.babel in ini ==
   % To load or reaload the babel-*.tex, if require.babel in ini
   \ifx\bbl@beforestart\relax\else  % But not in doc aux or body
@@ -10720,7 +10734,11 @@ help from Bernd Raichle, for which I am grateful.
 \fi
 %    \end{macrocode}
 %
-% \textbf{Date.} TODO. Document
+% \textbf{Date.} Arguments (year, month, day) are \textit{not}
+% protected, on purpose. In |\today|, arguments are always gregorian,
+% and therefore always converted with other calendars – |@today| works
+% as an internal tag to force conversion if necessary in this
+% particular case (it’s \textit{not} a user interface). TODO. Document
 %
 %    \begin{macrocode}
 % Arguments are _not_ protected.
@@ -10728,16 +10746,12 @@ help from Bernd Raichle, for which I am grateful.
 \DeclareRobustCommand\localedate[1][]{\bbl@localedate{#1}}
 \def\bbl@localedate#1#2#3#4{%
   \begingroup
-    \edef\bbl@tempe{#1}%
     \edef\bbl@they{#2}%
     \edef\bbl@them{#3}%
     \edef\bbl@thed{#4}%
-    \ifx\bbl@tempe\@empty
-      \bbl@ifunset{bbl@calpr@\languagename}{}%
-        {\edef\bbl@tempe{convert,calendar=\bbl@cl{calpr}}%
-         \@nameuse{regex\string_replace\string_once\string:nnN}%
-           {\ .*}{}\bbl@tempe}% TODO. Must be more efficient
-    \fi  
+    \edef\bbl@tempe{%
+      \bbl@ifunset{bbl@calpr@\languagename}{}{\bbl@cl{calpr}},%
+      #1}%
     \bbl@replace\bbl@tempe{ }{}%
     \bbl@replace\bbl@tempe{convert}{convert=}%
     \let\bbl@ld@calendar\@empty
@@ -10745,21 +10759,14 @@ help from Bernd Raichle, for which I am grateful.
     \let\bbl@ld@convert\relax
     \def\bbl@tempb##1=##2\@@{\@namedef{bbl@ld@##1}{##2}}%
     \bbl@foreach\bbl@tempe{\bbl@tempb##1\@@}%
-    \ifx\bbl@ld@convert\relax\else
-      \let\bbl@ld@convert\bbl@ld@calendar
-      \bbl@replace\bbl@ld@convert{gregorian}{}%
-      \ifx\bbl@ld@convert\@empty\else
-        \let\bbl@ld@convert\bbl@ld@calendar % For conversion
-        \@nameuse{regex\string_replace\string_once\string:nnN}%
-          {\..*}{}\bbl@ld@convert
-        \ifx\bbl@ld@convert\@empty\else
-          \babelcalendar[\bbl@they-\bbl@them-\bbl@thed]%
-            {\bbl@ld@convert}\bbl@they\bbl@them\bbl@thed
-        \fi
+    \bbl@replace\bbl@ld@calendar{gregorian}{}%
+    \ifx\bbl@ld@calendar\@empty\else
+      \ifx\bbl@ld@convert\relax\else
+        \babelcalendar[\bbl@they-\bbl@them-\bbl@thed]%
+          {\bbl@ld@calendar}\bbl@they\bbl@them\bbl@thed
       \fi
     \fi
-    \bbl@replace\bbl@ld@calendar{gregorian}{}%
-    \@nameuse{bbl@precalendar}%
+    \@nameuse{bbl@precalendar}% Remove, eg, +, -civil (-ca-islamic)
     \edef\bbl@calendar{% Used in \month..., too
       \bbl@ld@calendar
       \ifx\bbl@ld@variant\@empty\else
@@ -10787,14 +10794,15 @@ help from Bernd Raichle, for which I am grateful.
        \global\bbl@csarg\let{date@\languagename @\bbl@tempb}\bbl@toreplace
        \ifx\bbl@savetoday\@empty
          \bbl@exp{% TODO. Move to a better place.
-           \gdef\<\languagename date>{\\\protect\<\languagename date >}%
-           \gdef\<\languagename date >####1####2####3{%
-             \\\bbl@usedategrouptrue
-             \<bbl@ensure@\languagename>{%
-               \\\localedate{####1}{####2}{####3}}}%
+           \\\AfterBabelCommands{%
+             \def\<\languagename date>{\\\protect\<\languagename date >}%
+             \\\newcommand\<\languagename date >[4][]{%
+               \\\bbl@usedategrouptrue
+               \<bbl@ensure@\languagename>{%
+                 \\\localedate[####1]{####2}{####3}{####4}}}}%
            \def\\\bbl@savetoday{%
              \\\SetString\\\today{%
-               \<\languagename date>%
+               \<\languagename date>[convert]%
                   {\\\the\year}{\\\the\month}{\\\the\day}}}}%
        \fi}%
       {}}}
@@ -22750,24 +22758,28 @@ Babel.cjk_breaks = {
 % specific files, loaded when requested by an |ini| file in the
 % |identification| section with |require.calendars|. 
 %
-% \subsection{Islamic}
-% 
 % Start with function to compute the Julian day. It’s based on the
 % little library |calendar.js|, by John Walker, in the public domain.
+%    \begin{macrocode}
+%<<*Compute Julian day>>
+\def\bbl@fpmod#1#2{(#1-#2*floor(#1/#2))}
+\def\bbl@cs@gregleap#1{%
+  (\bbl@fpmod{#1}{4} == 0) &&
+    (!((\bbl@fpmod{#1}{100} == 0) && (\bbl@fpmod{#1}{400} != 0)))}
+\def\bbl@cs@jd#1#2#3{% year, month, day
+  \fp_eval:n{ 1721424.5   + (365 * (#1 - 1)) +
+    floor((#1 - 1) / 4)   + (-floor((#1 - 1) / 100)) +
+    floor((#1 - 1) / 400) + floor((((367 * #2) - 362) / 12) +
+    ((#2 <= 2) ? 0 : (\bbl@cs@gregleap{#1} ? -1 : -2)) + #3) }}
+%<</Compute Julian day>>
+%    \end{macrocode}
+% \subsection{Islamic}
 % The code for the Civil calendar is based on it, too.
 %
 %    \begin{macrocode}
 %<*ca-islamic>
 \ExplSyntaxOn
-\def\bbl@fpmod#1#2{(#1-#2*floor(#1/#2))}
-\def\bbl@cs@gregleap#1{%
-  (\bbl@fpmod{#1}{4} == 0) &&
-    (!((\bbl@fpmod{#1}{100} == 0) && (\bbl@fpmod{#1}{400} != 0)))}
-\def\bbl@ca@jd#1#2#3{% year, month, day
-  \fp_eval:n{ 1721424.5   + (365 * (#1 - 1)) +
-    floor((#1 - 1) / 4)   + (-floor((#1 - 1) / 100)) +
-    floor((#1 - 1) / 400) + floor((((367 * #2) - 362) / 12) +
-    ((#2 <= 2) ? 0 : (\bbl@cs@gregleap{#1} ? -1 : -2)) + #3) }} 
+<@Compute Julian day@>
 % == islamic (default)
 % Not yet implemented
 \def\bbl@ca@islamic#1-#2-#3\@@#4#5#6{}
@@ -22787,7 +22799,7 @@ Babel.cjk_breaks = {
 \@namedef{bbl@ca@islamic-civil--}{\bbl@ca@islamicvl@x{-2}}
 \def\bbl@ca@islamicvl@x#1#2-#3-#4\@@#5#6#7{%
   \edef\bbl@tempa{%
-    \fp_eval:n{ floor(\bbl@ca@jd{#2}{#3}{#4})+0.5 #1}}%
+    \fp_eval:n{ floor(\bbl@cs@jd{#2}{#3}{#4})+0.5 #1}}%
   \edef#5{%
     \fp_eval:n{ floor(((30*(\bbl@tempa-1948439.5)) + 10646)/10631) }}%
   \edef#6{\fp_eval:n{
@@ -22803,7 +22815,7 @@ Babel.cjk_breaks = {
 % $\sim$2014/$\sim$2038).
 %
 %    \begin{macrocode}
-\def\bbl@ca@umalqura@data{56660, 56690,56719,56749,56778,56808,%
+\def\bbl@cs@umalqura@data{56660, 56690,56719,56749,56778,56808,%
   56837,56867,56897,56926,56956,56985,57015,57044,57074,57103,%
   57133,57162,57192,57221,57251,57280,57310,57340,57369,57399,%
   57429,57458,57487,57517,57546,57576,57605,57634,57664,57694,%
@@ -22843,9 +22855,9 @@ Babel.cjk_breaks = {
   \fi\fi
     {\bbl@error{Year~out~of~range}{The~allowed~range~is~2014-2038}}%
   \edef\bbl@tempd{\fp_eval:n{ % (Julian) day
-    \bbl@ca@jd{#2}{#3}{#4} + 0.5 - 2400000 #1}}%
+    \bbl@cs@jd{#2}{#3}{#4} + 0.5 - 2400000 #1}}%
   \count@\@ne
-  \bbl@foreach\bbl@ca@umalqura@data{%
+  \bbl@foreach\bbl@cs@umalqura@data{%
     \advance\count@\@ne
     \ifnum##1>\bbl@tempd\else
       \edef\bbl@tempe{\the\count@}%
@@ -23144,16 +23156,8 @@ Babel.cjk_breaks = {
 %    \begin{macrocode}
 %<*ca-persian>
 \ExplSyntaxOn
-\def\bbl@fpmod#1#2{(#1-#2*floor(#1/#2))}
-\def\bbl@cs@gregleap#1{%
-  (\bbl@fpmod{#1}{4} == 0) &&
-    (!((\bbl@fpmod{#1}{100} == 0) && (\bbl@fpmod{#1}{400} != 0)))}  
-\def\bbl@ca@jd#1#2#3{% year, month, day
-  \fp_eval:n{ 1721424.5   + (365 * (#1 - 1)) +
-    floor((#1 - 1) / 4)   + (-floor((#1 - 1) / 100)) +
-    floor((#1 - 1) / 400) + floor((((367 * #2) - 362) / 12) +
-    ((#2 <= 2) ? 0 : (\bbl@cs@gregleap{#1} ? -1 : -2)) + #3) }}   
-\def\bbl@ca@firstjal@xx{2012,2016,2020,2024,2028,2029,% March 20
+<@Compute Julian day@>
+\def\bbl@cs@firstjal@xx{2012,2016,2020,2024,2028,2029,% March 20
   2032,2033,2036,2037,2040,2041,2044,2045,2048,2049}
 \def\bbl@ca@persian#1-#2-#3\@@#4#5#6{%
   \edef\bbl@tempa{#1}%  20XX-03-\bbl@tempe = 1 farvardin:
@@ -23161,15 +23165,15 @@ Babel.cjk_breaks = {
     \bbl@afterfi\expandafter\@gobble
   \fi\fi
     {\bbl@error{Year~out~of~range}{The~allowed~range~is~2013-2050}}%
-  \bbl@xin@{\bbl@tempa}{\bbl@ca@firstjal@xx}%
+  \bbl@xin@{\bbl@tempa}{\bbl@cs@firstjal@xx}%
   \ifin@\def\bbl@tempe{20}\else\def\bbl@tempe{21}\fi
-  \edef\bbl@tempc{\fp_eval:n{\bbl@ca@jd{\bbl@tempa}{#2}{#3}+.5}}% current
-  \edef\bbl@tempb{\fp_eval:n{\bbl@ca@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}% begin
+  \edef\bbl@tempc{\fp_eval:n{\bbl@cs@jd{\bbl@tempa}{#2}{#3}+.5}}% current
+  \edef\bbl@tempb{\fp_eval:n{\bbl@cs@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}% begin
   \ifnum\bbl@tempc<\bbl@tempb
     \edef\bbl@tempa{\fp_eval:n{\bbl@tempa-1}}% go back 1 year and redo
-    \bbl@xin@{\bbl@tempa}{\bbl@ca@firstjal@xx}%
+    \bbl@xin@{\bbl@tempa}{\bbl@cs@firstjal@xx}%
     \ifin@\def\bbl@tempe{20}\else\def\bbl@tempe{21}\fi
-    \edef\bbl@tempb{\fp_eval:n{\bbl@ca@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}%
+    \edef\bbl@tempb{\fp_eval:n{\bbl@cs@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}%
   \fi
   \edef#4{\fp_eval:n{\bbl@tempa-621}}% set Jalali year
   \edef#6{\fp_eval:n{\bbl@tempc-\bbl@tempb+1}}% days from 1 farvardin
@@ -23179,6 +23183,28 @@ Babel.cjk_breaks = {
     (#6 - ((#5 <= 7) ? ((#5 - 1) * 31) : (((#5 - 1) * 30) + 6)))}}}
 \ExplSyntaxOff
 %</ca-persian>
+%    \end{macrocode}
+%
+% \section{Coptic}
+%
+% Adapted from \texttt{jquery.calendars.package-1.1.4}, written by Keith
+% Wood, 2010. Dual license: GPL and MIT.
+%
+%    \begin{macrocode}
+%<*ca-coptic>
+\ExplSyntaxOn
+<@Compute Julian day@>
+\def\bbl@ca@coptic#1-#2-#3\@@#4#5#6{%
+  \edef\bbl@tempd{\fp_eval:n{floor(\bbl@cs@jd{#1}{#2}{#3}) + 0.5}}%
+  \edef\bbl@tempc{\fp_eval:n{\bbl@tempd - 1825029.5}}%
+  \edef#4{\fp_eval:n{%
+    floor((\bbl@tempc - floor((\bbl@tempc+366) / 1461)) / 365) + 1}}%
+  \edef\bbl@tempc{\fp_eval:n{%
+     \bbl@tempd - (#4-1) * 365 - floor(#4/4) - 1825029.5}}%
+  \edef#5{\fp_eval:n{floor(\bbl@tempc / 30) + 1}}%
+  \edef#6{\fp_eval:n{\bbl@tempc - (#5 - 1) * 30 + 1}}}
+\ExplSyntaxOff
+%</ca-coptic>
 %    \end{macrocode}
 %
 % \section{Buddhist}

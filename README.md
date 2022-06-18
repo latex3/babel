@@ -1,4 +1,4 @@
-## Babel 3.76.2766
+## Babel 3.76.2772
 
 *Development*.
 
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.76 are described in:
+Changes in version 3.77 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.76.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.77.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,12 +48,13 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.77   2022-07-?? (dev)
+3.77   2022-06-?? (dev)
        * More con calendar conversions: \localedate, \today.
        * New Arabic locale for Saudi Arabia, with the Umm al-Qura
          calendar.
        * Date now defaults to 'persian' in a few locales: Persian,
          Northern Luri, Mazanderani, Pashto.
+       * New calendars: coptic (ar-EG, cop), buddhist (th).
        
 3.76   2022-06-06
        * Calendar conversion with a new macro \babelcalendar: hebrew,
