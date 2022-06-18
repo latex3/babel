@@ -4,7 +4,7 @@
 
 ## More on calendars: `\localedate` and `\today`.
 
-Based on the CLDR and the ICU, now `ini` files contains some information
+Based on the CLDR and the ICU, now `ini` files contain some information
 on calendars. It’s used to set the default calendar in a few locales. 
 
 `\localedate` now accepts a valueless key named `convert`, which is
@@ -16,22 +16,22 @@ calendar set with `calendar=`. For example:
 ```
 This will print the date in the Islamic Civil calendar using the format
 for the `islamic` date in the `ini` file, as loaded by `\babelprovide`.
+Without `convert`, the arguments are the converted date.
 
 A new option in `\babelprovide` named calendar sets the defaults to be
 used in `\localedate`, which turn is used in by `\today`. So, if you
 want to apply the settings in the previous example to all dates, you
-may write somthing like:
+may write something like:
 ```tex
 \babelprovide[import, calendar=islamic-civil]{arabic}
 ```
 (Of course, different territory locales can be assigned different
-default calendars.)
+default calendars.) The arguments in `\localedate` are still those
+corresponding to the calendar, but you can set `convert` in the
+optional argument.
 
-[Note. Not sure how the default must apply to `\localedate`. It makes
-sense *not* converting if the data has been generated externally in a
-editing environment where LaTeX is just a component.]
-
-A special notation is used to enter the variant. For example:
+A special notation is used to enter the date variant in `\babelprovide`.
+For example:
 ```tex
 \babelprovide[import, calendar=gregorian.izafa]{northernkurdish}
 ```
@@ -42,7 +42,7 @@ is just preceded by a dot:
 \babelprovide[import, calendar=.izafa]{northernkurdish}
 ```
 
-Calendars are, actually, territory based. So the setting are those for
+Calendars are, actually, territory based. So the settings are those for
 the region in territory locales (with a region in the BCP 47 tag)
 or the ‘likely’ tag in language locales (without a region).
 
