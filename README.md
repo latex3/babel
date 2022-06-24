@@ -1,4 +1,4 @@
-## Babel 3.76.2772
+## Babel 3.76.2778
 
 *Development*.
 
@@ -55,6 +55,7 @@ respective authors.
        * Date now defaults to 'persian' in a few locales: Persian,
          Northern Luri, Mazanderani, Pashto.
        * New calendars: coptic (ar-EG, cop), buddhist (th).
+       * Attempt to deal with german and swissgerman.
        
 3.76   2022-06-06
        * Calendar conversion with a new macro \babelcalendar: hebrew,

@@ -9,17 +9,19 @@
 \fi
 \begingroup
   \makeatletter
-  \gdef\BabelAustrianIniTag{de-AT}%
   \ifx\bbl@inidata\@undefined
+    \gdef\BabelSwissHighIniTag{de-CH}%
     \def\bbl@elt#1#2#3#4{%
-      \ifnum\csname l@#1\endcsname=\l@austrian
+      \ifnum\csname l@#1\endcsname=\l@swissgerman
         \in@{1901}{#3}%
-        \ifin@\gdef\BabelAustrianIniTag{de-AT-1901}\fi
+        \ifin@\gdef\BabelSwissHighIniTag{de-CH-1901}\fi
         \def\bbl@elt##1##2##3#4{}%
       \fi}%
     \bbl@languages
+  \else
+    \gdef\BabelSwissHighIniTag{gsw}%
   \fi
 \endgroup
-\BabelBeforeIni{\BabelAustrianIniTag}{%
+\BabelBeforeIni{\BabelSwissHighIniTag}{%
 }
 \endinput
