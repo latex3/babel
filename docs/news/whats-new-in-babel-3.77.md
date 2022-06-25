@@ -42,9 +42,10 @@ is just preceded by a dot:
 \babelprovide[import, calendar=.izafa]{northernkurdish}
 ```
 
-Calendars are, actually, territory based. So the settings are those for
-the region in territory locales (with a region in the BCP 47 tag)
-or the ‘likely’ tag in language locales (without a region).
+Calendars in the CLDR are, actually, territory based (which is somewhat
+questionable in certain cases). So the settings are those for the
+region in territory locales (ie, with a region in the BCP 47 tag) or
+the ‘likely’ tag in language locales (without a region).
 
 Note the preferred calendar in the CLDR for the Arabic locales
 currently provided by `babel` is `gregorian`, except `ar-SA` (Saudi
@@ -58,8 +59,24 @@ default: Persian, Northern Luri, Mazanderani, Pashto.
 ## Locales
 
 * As explained above, a new locale for Arabic has been added, namely,
-  `arabic-saudiarabia` (or 'arabic-sa`). By default its calendar is Umm
+  `arabic-saudiarabia` (or `arabic-sa`). By default its calendar is Umm
   al-Qura.
+  
+## `Ini` files for German
+
+Currently the German `babel` styles in its `ldf` form have names which
+aren’t compatible with those standarized in the Unicode CLDR: on the
+one hand, the CLDR assigns the name ‘Swiss German’ to a different
+language (BCP 47 `gsw`), and on the other, the `ldf` variant for
+`german` isn’t even the option to be used for German (except if you
+want the pre-1996 orthography). A somewhat hackish fix han been devised
+to load the correct `ini` file (which contains relevant data to
+identify internally the locale), based on the hyphenation patterns
+assigned to the those names, as well as to `austrian`.
+
+With this fix, and when loaded with `\babelprovide` or on the fly,
+`de-CH` has the alternative name `swisshighgerman` and that
+`swissgerman` refers to `gsw`.
 
 ## Fixes
 
