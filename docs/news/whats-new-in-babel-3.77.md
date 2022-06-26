@@ -4,6 +4,9 @@
 
 ## More on calendars: `\localedate` and `\today`.
 
+There are two new calendars: `coptic` (for `arabic-egypt` and `coptic`)
+and `buddhist` (for `thai`),
+
 Based on the CLDR and the ICU, now `ini` files contain some information
 on calendars. It’s used to set the default calendar in a few locales. 
 
