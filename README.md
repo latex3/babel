@@ -1,6 +1,4 @@
-## Babel 3.76.2778
-
-*Development*.
+## Babel 3.77
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,22 +46,19 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.77   2022-06-?? (dev)
-       * More con calendar conversions: \localedate, \today.
+3.77   2022-06-26
+       * More on calendar conversions (\localedate, \today).
+       * New calendars: 'coptic' (ar-EG, cop), 'buddhist' (th).
        * New Arabic locale for Saudi Arabia, with the Umm al-Qura
          calendar.
        * Date now defaults to 'persian' in a few locales: Persian,
          Northern Luri, Mazanderani, Pashto.
-       * New calendars: coptic (ar-EG, cop), buddhist (th).
-       * Attempt to deal with german and swissgerman.
-       
-3.76   2022-06-06
-       * Calendar conversion with a new macro \babelcalendar: hebrew,
-         islamic-civil, islamic-umalqura, persian.
-       * Added 6 locales for Arabic: Egypt, Iraq, Jordan, Lebanon,
-         Palestinian Territories, Tunisia.
-       * More updates to CLDR 4.1: French, English, Moldavian and
-         Arabic.
+       * `bangla` is now the preferred name for `bengali`.
+       * Attempt to deal with 'german' and 'swissgerman', whose names
+         conflict with the CLDR ones.
+       * More minor updates to the CLDR 41: Afrikaans, Arabic, Assamese,
+         Asturian, Azerbaijani, Belarusian, Bulgarian, Bangla, Tibetan,
+         Breton, Bodo, Bosnian, Catalan, English.
 ```
 
 ### Previous changes

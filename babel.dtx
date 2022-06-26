@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/06/18 v3.76.2772 The Babel package]
+\ProvidesFile{babel.dtx}[2022/06/26 v3.77 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1521,8 +1521,15 @@ captions):
 \tag{am} Amharic\hascapu\hascapl
 \tag{ar} Arabic\hascapu\hascapl
 \tag{ar-DZ} Arabic\hascapu\hascapl
+\tag{ar-EG} Arabic\hascapu\hascapl
+\tag{ar-IQ} Arabic\hascapu\hascapl
+\tag{ar-JO} Arabic\hascapu\hascapl
+\tag{ar-LB} Arabic\hascapu\hascapl
 \tag{ar-MA} Arabic\hascapu\hascapl
+\tag{ar-PS} Arabic\hascapu\hascapl
+\tag{ar-SA} Arabic\hascapu\hascapl
 \tag{ar-SY} Arabic\hascapu\hascapl
+\tag{ar-TN} Arabic\hascapu\hascapl
 \tag{as} Assamese
 \tag{asa} Asu
 \tag{ast} Asturian\hascapu\hascapl
@@ -1555,7 +1562,7 @@ captions):
 \tag{da} Danish\hascapu\hascapl
 \tag{dav} Taita
 \tag{de-AT} German\hascapu\hascapl
-\tag{de-CH} German\hascapu\hascapl
+\tag{de-CH} Swiss High German\hascapu\hascapl
 \tag{de} German\hascapu\hascapl
 \tag{dje} Zarma
 \tag{dsb} Lower Sorbian\hascapu\hascapl
@@ -1614,7 +1621,7 @@ captions):
 \tag{ii} Sichuan Yi
 \tag{is} Icelandic\hascapu\hascapl
 \tag{it} Italian\hascapu\hascapl
-\tag{ja} Japanese
+\tag{ja} Japanese\hascapu
 \tag{jgo} Ngomba
 \tag{jmc} Machame
 \tag{ka} Georgian\hascapu\hascapl
@@ -1629,8 +1636,9 @@ captions):
 \tag{kl} Kalaallisut
 \tag{kln} Kalenjin
 \tag{km} Khmer
+\tag{kmr} Northern Kurdish\hascapu
 \tag{kn} Kannada\hascapu\hascapl
-\tag{ko} Korean
+\tag{ko} Korean\hascapu
 \tag{kok} Konkani
 \tag{ks} Kashmiri
 \tag{ksb} Shambala
@@ -1639,7 +1647,7 @@ captions):
 \tag{kw} Cornish
 \tag{ky} Kyrgyz
 \tag{lag} Langi
-\tag{lb} Luxembourgish
+\tag{lb} Luxembourgish\hascapu\hascapl
 \tag{lg} Ganda
 \tag{lkt} Lakota
 \tag{ln} Lingala
@@ -1675,6 +1683,7 @@ captions):
 \tag{nmg} Kwasio
 \tag{nn} Norwegian Nynorsk\hascapu\hascapl
 \tag{nnh} Ngiemboon
+\tag{no} Norwegian
 \tag{nus} Nuer
 \tag{nyn} Nyankole
 \tag{om} Oromo
@@ -1693,6 +1702,7 @@ captions):
 \tag{rm} Romansh\hascapu\hascapl
 \tag{rn} Rundi
 \tag{ro} Romanian\hascapu\hascapl
+\tag{ro-MD} Moldavian\hascapu\hascapl
 \tag{rof} Rombo
 \tag{ru} Russian\hascapu\hascapl
 \tag{rw} Kinyarwanda
@@ -1761,14 +1771,14 @@ captions):
 \tag{yo} Yoruba
 \tag{yue} Cantonese
 \tag{zgh} Standard Moroccan Tamazight
-\tag{zh-Hans-HK} Chinese
-\tag{zh-Hans-MO} Chinese
-\tag{zh-Hans-SG} Chinese
-\tag{zh-Hans} Chinese
-\tag{zh-Hant-HK} Chinese
-\tag{zh-Hant-MO} Chinese
-\tag{zh-Hant} Chinese
-\tag{zh} Chinese
+\tag{zh-Hans-HK} Chinese\hascapu
+\tag{zh-Hans-MO} Chinese\hascapu
+\tag{zh-Hans-SG} Chinese\hascapu
+\tag{zh-Hans} Chinese\hascapu
+\tag{zh-Hant-HK} Chinese\hascapu
+\tag{zh-Hant-MO} Chinese\hascapu
+\tag{zh-Hant} Chinese\hascapu
+\tag{zh} Chinese\hascapu
 \tag{zu} Zulu
 
 \end{multicols}
@@ -1821,7 +1831,7 @@ basque\\
 belarusian\\
 bemba\\
 bena\\
-bengali\\
+bangla\\
 bodo\\
 bosnian-cyrillic\\
 bosnian-cyrl\\
@@ -2787,7 +2797,7 @@ The styles are:
 
 \item[Belarusan, Bulgarian, Church Slavic, Macedonian, Serbian] |lower|, |upper| 
 
-\item[Bengali] |alphabetic|
+\item[Bangla] |alphabetic|
 
 \item[Central Kurdish] |alphabetic|
 
@@ -2849,7 +2859,7 @@ be printed with the numeral style |digits|.
 date corresponding to the Gregorian calendar and other lunisolar systems
 with the following command.
 
-\Describe{\localedate}{\oarg{calendar=.., variant=..}%
+\Describe{\localedate}{\oarg{calendar=.., variant=.., convert}%
   {\marg{year}\marg{month}\marg{day}}}
 
 By default the calendar is the Gregorian, but an |ini| file may define
@@ -2857,7 +2867,9 @@ strings for other calendars (currently |ar|, |ar-|*, |he|, |fa|, |hi|).
 In the latter case, the three arguments are the year, the month, and
 the day in those in the corresponding calendar. They are \textit{not}
 the Gregorian data to be converted (which means, say, 13 is a valid
-month number with |calendar=hebrew| and |calendar=coptic|).
+month number with |calendar=hebrew| and |calendar=coptic|). However,
+with the option |convert| it’s converted (using internally the
+following command).
 
 Even with a certain calendar there may be variants. In Kurmanji the
 default variant prints something like \textit{30. Çileya Pêşîn 2019},
@@ -2873,9 +2885,11 @@ date in the way users would expect in their own culture. Currently,
 \textsf{ini} locale file has been imported), but year, month and day
 had to be entered by hand, which is very inconvenient. With this macro,
 the current date is converted and stored in the three last arguments,
-which must be macros. The optional argument converts the given date, in
-the form ‘\m{year}-\m{month}-\m{day}’. Please, refer to the page on the
-news for 3.76 in the \babel{} site for further details.
+which must be macros: allowed calendars are |buddhist|, |coptic|,
+|hebrew|, |islamic-civil|, |islamic-umalqura|, |persian|. The optional
+argument converts the given date, in the form
+‘\m{year}-\m{month}-\m{day}’. Please, refer to the page on the news for
+3.76 in the \babel{} site for further details.
 
 \subsection{Accessing language info}
 
@@ -5157,8 +5171,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.76.2772>>
-%<<date=2022/06/18>>
+%<<version=3.77>>
+%<<date=2022/06/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10038,7 +10052,7 @@ help from Bernd Raichle, for which I am grateful.
     \fi
     \ifx\bbl@tempb\@empty\else
       ,variant=\bbl@tempb
-    \fi}
+    \fi}%
   % == require.babel in ini ==
   % To load or reaload the babel-*.tex, if require.babel in ini
   \ifx\bbl@beforestart\relax\else  % But not in doc aux or body
@@ -10736,9 +10750,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % \textbf{Date.} Arguments (year, month, day) are \textit{not}
 % protected, on purpose. In |\today|, arguments are always gregorian,
-% and therefore always converted with other calendars – |@today| works
-% as an internal tag to force conversion if necessary in this
-% particular case (it’s \textit{not} a user interface). TODO. Document
+% and therefore always converted with other calendars. TODO. Document
 %
 %    \begin{macrocode}
 % Arguments are _not_ protected.
@@ -13024,7 +13036,7 @@ help from Bernd Raichle, for which I am grateful.
             settings for all or some languages:\\%
             \bbl@tempa
             There is nothing intrinsically wrong with it, but\\%
-            'babel' will not set Script and Language, which could\\%
+            'babel' will no set Script and Language, which could\\%
              be relevant in some languages. If your document uses\\%
              these families, consider redefining them with \string\babelfont.\\%
             Reported}%
