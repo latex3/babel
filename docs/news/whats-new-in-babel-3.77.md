@@ -1,6 +1,6 @@
 # What's new in babel 3.77
 
-(*Draft. Under development.* **Syntax liable to change**.)
+2022-06-26
 
 ## More on calendars: `\localedate` and `\today`.
 
@@ -16,10 +16,13 @@ calendar set with `calendar=`. For example:
 ```
 This will print the date in the Islamic Civil calendar using the format
 for the `islamic` date in the `ini` file, as loaded by `\babelprovide`.
-Without `convert`, the arguments are the converted date.
+Without `convert`, the arguments must be the date already in the target
+calendar (which can be useful, for example, when the data has been
+generated externally in a editing environment where LaTeX is just a
+component).
 
-A new option in `\babelprovide` named calendar sets the defaults to be
-used in `\localedate`, which turn is used in by `\today`. So, if you
+A new option `calendar` in `\babelprovide` sets the defaults to be
+used in `\localedate`, which turn is used by `\today`. So, if you
 want to apply the settings in the previous example to all dates, you
 may write something like:
 ```tex
@@ -49,7 +52,7 @@ the ‘likely’ tag in language locales (without a region).
 
 Note the preferred calendar in the CLDR for the Arabic locales
 currently provided by `babel` is `gregorian`, except `ar-SA` (Saudi
-Arabia), named `arabic-saudi` or `arabic-sa`), which is new in version
+Arabia), which is new in version
 3.77.
 
 <span style="color:red;">⚠</span> Locales for IR (Iran) and AF
@@ -61,23 +64,35 @@ default: Persian, Northern Luri, Mazanderani, Pashto.
 * As explained above, a new locale for Arabic has been added, namely,
   `arabic-saudiarabia` (or `arabic-sa`). By default its calendar is Umm
   al-Qura.
-  
-## `Ini` files for German
+* `bangla` is now the preferred name for `bengali` (both language and
+  script).
+* More minor updates to the CLDR 41: Afrikaans, Arabic, Assamese,
+  Asturian, Azerbaijani, Belarusian, Bulgarian, Bangla, Tibetan,
+  Breton, Bodo, Bosnian, Catalan, English.
+
+See the following section for some changes in the German locales.
+
+## German and `ini` files
 
 Currently the German `babel` styles in its `ldf` form have names which
-aren’t compatible with those standarized in the Unicode CLDR: on the
-one hand, the CLDR assigns the name ‘Swiss German’ to a different
+aren’t compatible with those standardized in the Unicode CLDR: on the
+one hand, the CLDR assigns the name [‘Swiss
+German’](https://en.wikipedia.org/wiki/Swiss_German) to a different
 language (BCP 47 `gsw`), and on the other, the `ldf` variant for
 `german` isn’t even the option to be used for German (except if you
 want the pre-1996 orthography). A somewhat hackish fix han been devised
-to load the correct `ini` file (which contains relevant data to
-identify internally the locale), based on the hyphenation patterns
-assigned to the those names, as well as to `austrian`.
+to load the correct `ini` files (which contain relevant data to
+identify internally the locales), based on the hyphenation patterns
+assigned to the those names (as well as to `austrian`).
 
-With this fix, and when loaded with `\babelprovide` or on the fly,
-`de-CH` has the alternative name `swisshighgerman` and that
-`swissgerman` refers to `gsw`.
+<span style="color:red;">⚠</span> With this fix, and when loaded with
+`\babelprovide` or on the fly, `swissgerman` refers to `gsw`, not to
+the [Standard German as spoken in
+Switzerland](https://en.wikipedia.org/wiki/Swiss_Standard_German). Now
+`de-CH`, following the CLDR, has the alternative name `swisshighgerman`
+(besides `german-switzerland` and `german-ch`).
 
 ## Fixes
 
-* The format for the Thai calendar was incorrect. 
+The format for the Thai calendar was incorrect. It was essentially a
+hack, and now the new features for calendars are used instead.

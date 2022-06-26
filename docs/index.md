@@ -48,27 +48,27 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [3.77](news/whats-new-in-babel-3.77.html) | More on calendars: `\today`.
-| [3.76](news/whats-new-in-babel-3.76.html) | Calendar converters.
-| [3.75](news/whats-new-in-babel-3.75.html) | `\BabelEnsureInfo` enabled by default. `\localeinfo*`.
-| [3.74](news/whats-new-in-babel-3.74.html) | Mainly fixes and improvements in math.
-| [3.73](news/whats-new-in-babel-3.73.html) | A fix.
-| [3.72](news/whats-new-in-babel-3.72.html) | Mainly fixes and minor improvements.
-| [3.71](news/whats-new-in-babel-3.71.html) | IAST transliteration for Sanskrit.
-| [3.70](news/whats-new-in-babel-3.70.html) | More (tentative) fixes for (ams)math (lua).
-| [3.69](news/whats-new-in-babel-3.69.html) | Fixes a bug with `amsmath` introduced in 3.68.
-| [3.68](news/whats-new-in-babel-3.68.html) | Fixes (Bengali, `tabular` and `amsmath`).
-| [3.67](news/whats-new-in-babel-3.67.html) | Transforms can be turned on ond off.
-| [3.66](news/whats-new-in-babel-3.66.html) | Transforms for Greek (`transliteration.omega`).
-| [3.65](news/whats-new-in-babel-3.65.html) | Fixes a severe bug with `spanish`.
-| [3.64](news/whats-new-in-babel-3.64.html) | New counters in CJK. 
-| [3.63](news/whats-new-in-babel-3.63.html) | Fixes a severe bug with CJK and XeTeX.
-| [3.62](news/whats-new-in-babel-3.62.html) | Preliminary support for `\AddToHook`.
-| [3.61](news/whats-new-in-babel-3.61.html) | Transform `danda.nobreak`. Improved Arabic justification.
-| [3.60](news/whats-new-in-babel-3.60.html) | Mainly a maintenance release.
-| [3.59](news/whats-new-in-babel-3.59.html) | Tentative Arabic justification.
-| [3.58](news/whats-new-in-babel-3.58.html) | More transforms for Sanskrit, Polish, Czech, Serbian, etc.
-| [3.57](news/whats-new-in-babel-3.57.html) | Predefined transforms for Arabic, Greek, Hungarian, etc.
+| [3.77](news/whats-new-in-babel-3.77.html) | More on calendars: `\today`, `coptic`. New locale `ar-SA`. |
+| [3.76](news/whats-new-in-babel-3.76.html) | Calendar converters. |
+| [3.75](news/whats-new-in-babel-3.75.html) | `\BabelEnsureInfo` enabled by default. `\localeinfo*`. |
+| [3.74](news/whats-new-in-babel-3.74.html) | Mainly fixes and improvements in math. |
+| [3.73](news/whats-new-in-babel-3.73.html) | A fix. |
+| [3.72](news/whats-new-in-babel-3.72.html) | Mainly fixes and minor improvements. |
+| [3.71](news/whats-new-in-babel-3.71.html) | IAST transliteration for Sanskrit. |
+| [3.70](news/whats-new-in-babel-3.70.html) | More (tentative) fixes for (ams)math (lua). |
+| [3.69](news/whats-new-in-babel-3.69.html) | Fixes a bug with `amsmath` introduced in 3.68. |
+| [3.68](news/whats-new-in-babel-3.68.html) | Fixes (Bengali, `tabular` and `amsmath`). |
+| [3.67](news/whats-new-in-babel-3.67.html) | Transforms can be turned on ond off. |
+| [3.66](news/whats-new-in-babel-3.66.html) | Transforms for Greek (`transliteration.omega`). |
+| [3.65](news/whats-new-in-babel-3.65.html) | Fixes a severe bug with `spanish`. |
+| [3.64](news/whats-new-in-babel-3.64.html) | New counters in CJK.  |
+| [3.63](news/whats-new-in-babel-3.63.html) | Fixes a severe bug with CJK and XeTeX. |
+| [3.62](news/whats-new-in-babel-3.62.html) | Preliminary support for `\AddToHook`. |
+| [3.61](news/whats-new-in-babel-3.61.html) | Transform `danda.nobreak`. Improved Arabic justification. |
+| [3.60](news/whats-new-in-babel-3.60.html) | Mainly a maintenance release. |
+| [3.59](news/whats-new-in-babel-3.59.html) | Tentative Arabic justification. |
+| [3.58](news/whats-new-in-babel-3.58.html) | More transforms for Sanskrit, Polish, Czech, Serbian, etc. |
+| [3.57](news/whats-new-in-babel-3.57.html) | Predefined transforms for Arabic, Greek, Hungarian, etc. |
 | [3.56](news/whats-new-in-babel-3.56.html) | Transforms (in `ini` files) |
 | [3.55](news/whats-new-in-babel-3.55.html) | Mainly internal changes. Captions in Uyghur. |
 | [3.54](news/whats-new-in-babel-3.54.html) | Improved `picture`. |

@@ -1,11 +1,11 @@
-# Bengali
+# Bangla
 
-For the Bengali or Bangla language, the `Harfbuzz` renderer in `luatex`
+For the Bangla or Bengali language, the `Harfbuzz` renderer in `luatex`
 is recommended. Here is a minimal example:
 ```tex
 \documentclass{article}
 
-\usepackage[bengali, provide=*]{babel}
+\usepackage[bangla, provide=*]{babel}
 \babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}
 
 \begin{document}
@@ -21,10 +21,10 @@ there is no need the set the renderer (it’s always Harfbuzz).
 
 ## Counters
 
-Although Bengali numerals are best entered directly in its original
+Although Bangla numerals are best entered directly in its original
 form, you may still need some conversion because LaTeX uses internally
 the Arabic ones. With `luatex` there are two ways to map Arabic to
-Bengali numerals, passed as option to `\babelprovide`:
+Bangla numerals, passed as option to `\babelprovide`:
 * `maparabic` does it at the TeX level, by redefining `\arabic`. Note
   the form written to the auxiliary files is the converted one (which
   can be an issue in indexes). It works with `xetex`, too.
@@ -33,8 +33,8 @@ Bengali numerals, passed as option to `\babelprovide`:
 
 To perform this conversión, use the following preamble:
 ```tex
-\usepackage[bengali, provide=*]{babel}
-\babelprovide[mapdigits]{bengali}  % or alternatively maparabic
+\usepackage[bangla, provide=*]{babel}
+\babelprovide[mapdigits]{bangla}  % or alternatively maparabic
 \babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}
 ```
 
@@ -53,8 +53,8 @@ In Unicode, danda and double danda are shared by several scripts, and
 `babel` doesn’t assign them by default to any of them. If you are using
 `onchar` to select the font you may want to assign them with:
 ```tex
-\babelcharproperty{`।}{locale}{bengali}
-\babelcharproperty{`॥}{locale}{bengali}
+\babelcharproperty{`।}{locale}{bangla}
+\babelcharproperty{`॥}{locale}{bangla}
 ```
 
 ## Useful links
