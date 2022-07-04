@@ -1,4 +1,4 @@
-## Babel 3.77
+## Babel 3.77.2788
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +46,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.78   2022.??-?? (dev)
+       * Fixes
+       * More minor updates to the CLDR 41: Chechen, Cherokee, Central
+         Kurdish, Czech, Welsh, Danish, German, Lower Sorbian,
+         Dzongkha, Ewe, Greek, Esperanto, Spanish, Estonian, Persian,
+         Finnish, Filipino, Faroese, Western Frisian, Irish, Scottish
+         Gaelic.
+       
 3.77   2022-06-26
        * More on calendar conversions (\localedate, \today).
        * New calendars: 'coptic' (ar-EG, cop), 'buddhist' (th).

@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/06/26 v3.77 The Babel package]
+\ProvidesFile{babel.dtx}[2022/07/04 v3.77.2788 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5171,8 +5171,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.77>>
-%<<date=2022/06/26>>
+%<<version=3.77.2788>>
+%<<date=2022/07/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5947,6 +5947,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \ifx\bbl@opt@safe\@undefined
   \def\bbl@opt@safe{BR}
+  % \let\bbl@opt@safe\@empty % -- By September 
 \fi
 %    \end{macrocode}
 %
@@ -10940,7 +10941,7 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@exp{\\\bbl@ifblank{\bbl@cs{prehc@#1}}}%
         {}%
         {\ifx\bbl@xenohyph\@undefined
-           \let\bbl@xenohyph\bbl@xenohyph@d
+           \global\let\bbl@xenohyph\bbl@xenohyph@d
            \ifx\AtBeginDocument\@notprerr
              \expandafter\@secondoftwo  % to execute right now
            \fi
