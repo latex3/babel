@@ -15,6 +15,7 @@ have been removed. A short description follows, for reference:
 \babelFSfeatures{turkish}{Language=Turkish}
 ```
 And the code, just in case you need it for some reason:
+{% raw %}
 ```tex
 \newcommand\babelFSstore[2][]{%
   \bbl@ifblank{#1}%
@@ -56,6 +57,7 @@ And the code, just in case you need it for some reason:
     \babel@save\bbl@langfeatures
     \edef\bbl@langfeatures{#2,}}}
 ```
+{% endraw %}
 
 
 
