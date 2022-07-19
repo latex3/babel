@@ -1,4 +1,4 @@
-# What's new in babel 3.79
+# What's new in babel 3.78
 
 **Draft**
 
@@ -12,8 +12,11 @@ Western Frisian, Irish, Scottish Gaelic.
 Persian defines the Islamic calendar, too.
 
 Now Scottish Gaelic provides two date formats. Following the CLDR, the
-default is the ablative form. The nominative form can be selected with
+default is the dative form. The nominative form can be selected with
 `variant=nominative`.
 
 ## Fixes
+
+Undefined `\bbl@xenohyph` with XeTeX when Thai was loaded as a
+secondary language (#182).
 
