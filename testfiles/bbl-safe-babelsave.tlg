@@ -15,5 +15,5 @@ Package babel Info: Making ^ an active character on input line ....
 LaTeX Font Info:    Trying to load font information for T2A+cmr on input line ....
 \th = macro:->\T1-cmd \th \T1\th 
 \th = macro:->\T1-cmd \th \T1\th 
-\ref = macro:#1->\expandafter \@setref \csname r@#1\endcsname \@firstoftwo {#1}
+\ref = \protected macro:->\__cmd_start:nNNnnn {s}\ref  \ref code {\__cmd_grab_t:w *}{}{}
 \nocite = macro:#1->\@safe@activestrue \org@nocite {#1}\@safe@activesfalse 

@@ -1,4 +1,4 @@
-## Babel 3.77.2788
+## Babel 3.78
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.77 are described in:
+Changes in version 3.78 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.77.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.78.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,27 +46,13 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.78   2022.??-?? (dev)
-       * Fixes
+3.78   2022-07-20
+       * Fix: Undefined \bbl@xenohyph with Thai (#182).
        * More minor updates to the CLDR 41: Chechen, Cherokee, Central
          Kurdish, Czech, Welsh, Danish, German, Lower Sorbian,
          Dzongkha, Ewe, Greek, Esperanto, Spanish, Estonian, Persian,
          Finnish, Filipino, Faroese, Western Frisian, Irish, Scottish
          Gaelic.
-       
-3.77   2022-06-26
-       * More on calendar conversions (\localedate, \today).
-       * New calendars: 'coptic' (ar-EG, cop), 'buddhist' (th).
-       * New Arabic locale for Saudi Arabia, with the Umm al-Qura
-         calendar.
-       * Date now defaults to 'persian' in a few locales: Persian,
-         Northern Luri, Mazanderani, Pashto.
-       * `bangla` is now the preferred name for `bengali`.
-       * Attempt to deal with 'german' and 'swissgerman', whose names
-         conflict with the CLDR ones.
-       * More minor updates to the CLDR 41: Afrikaans, Arabic, Assamese,
-         Asturian, Azerbaijani, Belarusian, Bulgarian, Bangla, Tibetan,
-         Breton, Bodo, Bosnian, Catalan, English.
 ```
 
 ### Previous changes

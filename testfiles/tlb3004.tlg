@@ -22,6 +22,8 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .\vbox(0.0+0.0)x0.0
 .\penalty -10001
 .\write1{\@writefile{toc}{\protect \contentsline {chapter}{\protect \numberline \ETC.}
+.\marks1{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \protect \ETC.}
+.\marks2{\prg_do_nothing: }
 .\mark{{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \protect \ETC.}
 .\write1{\@writefile{lof}{\protect \addvspace {10\p@ }}}
 .\write1{\@writefile{lot}{\protect \addvspace {10\p@ }}}
@@ -119,11 +121,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ..\penalty 10000
 ..\glue(\parfillskip) 0.0 plus 1.0fil
 ..\glue(\rightskip) 0.0
+.\marks2{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \protect \ETC.}
+.\marks3{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \protect \ETC.}
 .\mark{{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \protect \ETC.}
-.\write1{\@writefile{toc}{\protect \contentsline {section}{\protect \numberline \ETC.}
-.\penalty 10000
-.\glue 9.90276 plus 0.86108
-.\glue(\parskip) 0.0 plus 1.0
 .etc.
 ! OK.
 l. ...}\showbox0

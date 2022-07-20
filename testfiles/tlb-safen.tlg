@@ -5,5 +5,5 @@ Format: LaTeX2e <2011/06/27>
 Main Class: article
 Package: babel
     Options: nil,safe=none
-\ref = macro:#1->\expandafter \@setref \csname r@#1\endcsname \@firstoftwo {#1}
+\ref = \protected macro:->\__cmd_start:nNNnnn {s}\ref  \ref code {\__cmd_grab_t:w *}{}{}
 \nocite = macro:#1->\@bsphack \ifx \@onlypreamble \document \@for \@citeb :=#1\do {\edef \@citeb {\expandafter \@firstofone \@citeb }\if@filesw \immediate \write \@auxout {\string \citation {\@citeb }}\fi \@ifundefined {b@\@citeb }{\G@refundefinedtrue \@latex@warning {Citation `\@citeb ' undefined}}{}}\else \AddToHook {begindocument/end}[kernel]{\nocite {#1}}\fi \@esphack 

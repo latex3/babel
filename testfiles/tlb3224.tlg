@@ -27,7 +27,7 @@ l. ...\testit{See \pageref{first:one}}
 .\hbox(0.0+0.0)x0.0
 ! OK.
 l. ......{\equal{a}{a}}{See \pageref{first:one}}{}}
-* Before nested \ifthenelse: macro:->\protect \pageref  
+* Before nested \ifthenelse: \protected macro:->\__cmd_start:nNNnnn {s}\pageref  \pageref code {\__cmd_grab_t:w *}{}{}
 > \box...=
 \hbox(6.83331+0.0)x22.7778
 .\OT1/cmr/m/n/10 S
@@ -44,6 +44,6 @@ l. ...
 \hbox(0.0+0.0)x0.0
 ! OK.
 l. ...}{}}
-* After nested \ifthenelse: macro:->\protect \pageref  
+* After nested \ifthenelse: \protected macro:->\__cmd_start:nNNnnn {s}\pageref  \pageref code {\__cmd_grab_t:w *}{}{}
 [1
 ] (tlb3224.aux)

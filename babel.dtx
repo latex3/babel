@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/07/04 v3.77.2788 The Babel package]
+\ProvidesFile{babel.dtx}[2022/07/20 v3.78 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3116,9 +3116,9 @@ font encodings are the same, like in Unicode based engines.
 \end{note}
 
 \begin{note}
-  To set hyphenation exceptions in the preamble before any language is
-  explicitly set with a selector, use |\babelhyphenation| instead of
-  |\hyphenation|. In the preamble the hyphenation rules are not always
+  Use |\babelhyphenation| instead of |\hyphenation| to set hyphenation
+  exceptions in the preamble before any language is explicitly set with
+  a selector. In the preamble the hyphenation rules are not always
   fully set up and an error can be raised.
 \end{note}
 
@@ -5171,8 +5171,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.77.2788>>
-%<<date=2022/07/04>>
+%<<version=3.78>>
+%<<date=2022/07/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13106,53 +13106,6 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \def\bbl@font@fams{rm,sf,tt}
-%    \end{macrocode}
-%
-% The old tentative way. Short and preverved for compatibility, but
-% deprecated. Note there is no direct alternative for
-% |\babelFSfeatures|. The reason in explained in the user guide, but
-% essentially -- that was not the way to go :-).
-%
-%    \begin{macrocode}
-\newcommand\babelFSstore[2][]{%
-  \bbl@ifblank{#1}%
-    {\bbl@csarg\def{sname@#2}{Latin}}%
-    {\bbl@csarg\def{sname@#2}{#1}}%
-  \bbl@provide@dirs{#2}%
-  \bbl@csarg\ifnum{wdir@#2}>\z@
-    \let\bbl@beforeforeign\leavevmode
-    \EnableBabelHook{babel-bidi}%
-  \fi
-  \bbl@foreach{#2}{%
-    \bbl@FSstore{##1}{rm}\rmdefault\bbl@save@rmdefault
-    \bbl@FSstore{##1}{sf}\sfdefault\bbl@save@sfdefault
-    \bbl@FSstore{##1}{tt}\ttdefault\bbl@save@ttdefault}}
-\def\bbl@FSstore#1#2#3#4{%
-  \bbl@csarg\edef{#2default#1}{#3}%
-  \expandafter\addto\csname extras#1\endcsname{%
-    \let#4#3%
-    \ifx#3\f@family
-      \edef#3{\csname bbl@#2default#1\endcsname}%
-      \fontfamily{#3}\selectfont
-    \else
-      \edef#3{\csname bbl@#2default#1\endcsname}%
-    \fi}%
-  \expandafter\addto\csname noextras#1\endcsname{%
-    \ifx#3\f@family
-      \fontfamily{#4}\selectfont
-    \fi
-    \let#3#4}}
-\let\bbl@langfeatures\@empty
-\def\babelFSfeatures{% make sure \fontspec is redefined once
-  \let\bbl@ori@fontspec\fontspec
-  \renewcommand\fontspec[1][]{%
-    \bbl@ori@fontspec[\bbl@langfeatures##1]}
-  \let\babelFSfeatures\bbl@FSfeatures
-  \babelFSfeatures}
-\def\bbl@FSfeatures#1#2{%
-  \expandafter\addto\csname extras#1\endcsname{%
-    \babel@save\bbl@langfeatures
-    \edef\bbl@langfeatures{#2,}}}
 %<</Font selection>>
 %    \end{macrocode}
 %

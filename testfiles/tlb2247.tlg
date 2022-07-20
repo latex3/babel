@@ -16,6 +16,8 @@ Package: babel
 .\vbox(0.0+0.0)x0.0
 .\penalty -10001
 .\write1{\@writefile{toc}{\protect \contentsline {chapter}{\protect \numberline \ETC.}
+.\marks1{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \protect \ETC.}
+.\marks2{\prg_do_nothing: }
 .\mark{{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \protect \ETC.}
 .\write1{\@writefile{lof}{\protect \addvspace {10\p@ }}}
 .\write1{\@writefile{lot}{\protect \addvspace {10\p@ }}}
