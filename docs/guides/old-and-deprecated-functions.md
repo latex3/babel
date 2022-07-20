@@ -14,7 +14,7 @@ have been removed. A short description follows, for reference:
 \setmainfont{Minion Pro}
 \babelFSfeatures{turkish}{Language=Turkish}
 ```
-And the code, just in case you need it for some reason:
+And the code, in case you need it for some reason:
 {% raw %}
 ```tex
 \newcommand\babelFSstore[2][]{%
@@ -58,6 +58,3 @@ And the code, just in case you need it for some reason:
     \edef\bbl@langfeatures{#2,}}}
 ```
 {% endraw %}
-
-
-

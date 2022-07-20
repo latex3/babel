@@ -1,6 +1,6 @@
 # What's new in babel 3.78
 
-**Draft**
+2022-07-20
 
 ## Changes in locale files
 

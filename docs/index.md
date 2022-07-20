@@ -48,7 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [3.78](news/whats-new-in-babel-3.78.html) | (dev) Some locales updated to the CLDR 41. |
+| [3.78](news/whats-new-in-babel-3.78.html) | Some locales updated to the CLDR 41. |
 | [3.77](news/whats-new-in-babel-3.77.html) | More on calendars: `\today`, `coptic`. New locale `ar-SA`. |
 | [3.76](news/whats-new-in-babel-3.76.html) | Calendar converters. |
 | [3.75](news/whats-new-in-babel-3.75.html) | `\BabelEnsureInfo` enabled by default. `\localeinfo*`. |
@@ -103,4 +103,5 @@ case, it's advisable to install TeXLive.)
 ## External links
 
 * [Getting Started with Internationalization
-  (W3C)](https://www.w3.org/International/getting-started/index.en)
+  (W3C)](https://www.w3.org/International/i18n-drafts/getting-started/index.html)
+* [r12a.io (W3C)](https://r12a.github.io/)
