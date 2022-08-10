@@ -14941,13 +14941,18 @@ end
         \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
       \fi
       \ifx\tcolorbox\@undefined\else
-        \AddToHook{env/tcolorbox/begin}{\bbl@pictsetdir\@ne}%
-        \bbl@sreplace\tcb@savebox
-          {\ignorespaces}{\ignorespaces\bbl@pictresetdir}%
-        \ifx\tikzpicture@tcb@hooked\@undefined\else
-          \bbl@sreplace\tikzpicture@tcb@hooked{\noexpand\tikzpicture}%
-            {\textdir TLT\noexpand\tikzpicture}%
-        \fi
+        \def\tcb@drawing@env@begin{%
+        \csname tcb@before@\tcb@split@state\endcsname%
+        \bbl@pictsetdir\tw@
+        \begin{\kvtcb@graphenv}%
+        \tcb@bbdraw%
+        \tcb@apply@graph@patches%
+        }%
+       \def\tcb@drawing@env@end{%
+       \end{\kvtcb@graphenv}%
+       \bbl@pictresetdir
+       \csname tcb@after@\tcb@split@state\endcsname%
+       }%
       \fi
     }}
   {}
