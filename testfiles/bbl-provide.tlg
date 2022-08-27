@@ -18,6 +18,7 @@ Package babel Warning: \prefacename not set for 'arhinish'. Please,
 (babel)                define it after the language has been loaded
 (babel)                (typically in the preamble) with:
 (babel)                \setlocalecaption{arhinish}{preface}{..}
+(babel)                Feel free to contribute on github.com/latex3/babel.
 (babel)                Reported on input line ....
 \prefacename \prefacename  = 147.15198pt, 6.94444pt, 1.94444pt
 \refname \chaptername  = 84.05573pt, 6.94444pt, 1.94444pt
@@ -25,5 +26,6 @@ Package babel Warning: \today not set for 'arhinish'. Please,
 (babel)                define it after the language has been loaded
 (babel)                (typically in the preamble) with:
 (babel)                \setlocalecaption{arhinish}{today}{..}
+(babel)                Feel free to contribute on github.com/latex3/babel.
 (babel)                Reported on input line ....
 \today  = 39.13171pt, 6.94444pt, 1.94444pt
