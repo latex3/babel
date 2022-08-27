@@ -28,3 +28,22 @@ for about 500 locales already available.
 A few locales with a region or a script have in the CLDR a more precise
 name. For example, `ro-MD` is “Moldavian”. They will be normalized in
 `babel` in the next few releases.
+
+When there are ‘short’ additional names (without hyphens), prefer
+‘plain’ demonyms (even if vernacular, like `canadien`) over composed
+names (eg, `british` better than `UKenglish`). This reflects the
+evolution of the `english` style, because the names `american` and
+`british` predates `USenglish` and `UKenglish`. Note the names
+`ukenglish` and `usenglish` (all lowercase) are *not* supported by
+`babel`, even if they work in some operating systems.
+
+The following names are deprecated: `brazil` (for `brazilian`),
+`bahasai` (for `indonesian`), `bahasam` (for `malay`), `frenchb` (for
+`french`) lsorbian (for `lowersorbian`), `newzealand`, `portuges` [*sic*]
+(for `portuguese`), usorbian (for `uppersorbian`), `vietnam` (for
+`vietnamese`), `russianb` (for `russian`). Therefore, they are not
+included in `name.babel`. Some anomalous names (related to `german` and
+`serbian`) should be fixed in the future, but how to deal with them is
+under study.
+
+
