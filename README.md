@@ -1,4 +1,4 @@
-## Babel 3.78.2842
+## Babel 3.79
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.78 are described in:
+Changes in version 3.79 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.78.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.79.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,13 +46,13 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.78   2022-07-20
-       * Fix: Undefined \bbl@xenohyph with Thai (#182).
-       * More minor updates to the CLDR 41: Chechen, Cherokee, Central
-         Kurdish, Czech, Welsh, Danish, German, Lower Sorbian,
-         Dzongkha, Ewe, Greek, Esperanto, Spanish, Estonian, Persian,
-         Finnish, Filipino, Faroese, Western Frisian, Irish, Scottish
-         Gaelic.
+3.79  2022-08-29
+      * Fixes:
+        - Issues of tcolorbox in RTL (graphics layout), thanks to Salim
+          Bou (@seloumi) (#186).
+        - \footnote with babel bidi=default raises an error in LuaLaTeX (#187).
+        - Extra blank spaces with Hebrew calendar.
+      * 'odia' is now the preferred name for 'oriya', following the CLDR.
 ```
 
 ### Previous changes

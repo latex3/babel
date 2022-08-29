@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/08/27 v3.78.2842 The Babel package]
+\ProvidesFile{babel.dtx}[2022/08/29 v3.79 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5175,8 +5175,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.78.2842>>
-%<<date=2022/08/27>>
+%<<version=3.79>>
+%<<date=2022/08/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5640,9 +5640,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@infowarn#1{%
   \begingroup
     \def\\{\MessageBreak}%
-    \GenericWarning
-      {(babel) \@spaces\@spaces\@spaces}%
-      {Package babel Info: #1}%
+    \PackageNote{babel}{#1}%
   \endgroup}
 \def\bbl@info#1{%
   \begingroup
@@ -14955,16 +14953,16 @@ end
       \fi
       \ifx\tcolorbox\@undefined\else
         \def\tcb@drawing@env@begin{%
-        \csname tcb@before@\tcb@split@state\endcsname%
+        \csname tcb@before@\tcb@split@state\endcsname
         \bbl@pictsetdir\tw@
         \begin{\kvtcb@graphenv}%
         \tcb@bbdraw%
-        \tcb@apply@graph@patches%
+        \tcb@apply@graph@patches
         }%
        \def\tcb@drawing@env@end{%
        \end{\kvtcb@graphenv}%
        \bbl@pictresetdir
-       \csname tcb@after@\tcb@split@state\endcsname%
+       \csname tcb@after@\tcb@split@state\endcsname
        }%
       \fi
     }}
