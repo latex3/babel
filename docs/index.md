@@ -48,7 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [3.79](news/whats-new-in-babel-3.79.html) | (dev) Mainly a maintenance release. |
+| [3.79](news/whats-new-in-babel-3.79.html) | Mainly a maintenance release. |
 | [3.78](news/whats-new-in-babel-3.78.html) | Some locales updated to the CLDR 41. |
 | [3.77](news/whats-new-in-babel-3.77.html) | More on calendars: `\today`, `coptic`. New locale `ar-SA`. |
 | [3.76](news/whats-new-in-babel-3.76.html) | Calendar converters. |
