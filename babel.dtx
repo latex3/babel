@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/08/29 v3.79 The Babel package]
+\ProvidesFile{babel.dtx}[2022/08/30 v3.79.2845 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5175,8 +5175,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.79>>
-%<<date=2022/08/29>>
+%<<version=3.79.2845>>
+%<<date=2022/08/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5944,12 +5944,13 @@ help from Bernd Raichle, for which I am grateful.
 %
 % For the option safe we use a different approach -- |\bbl@opt@safe|
 % says which macros are redefined (B for bibs and R for refs). By
-% default, both are set.
+% default, both are currently set, but in a future release it will be set to
+% |none|.
 %
 %    \begin{macrocode}
 \ifx\bbl@opt@safe\@undefined
   \def\bbl@opt@safe{BR}
-  % \let\bbl@opt@safe\@empty % -- By September 
+  % \let\bbl@opt@safe\@empty % Pending of \cite
 \fi
 %    \end{macrocode}
 %
@@ -23167,10 +23168,11 @@ Babel.cjk_breaks = {
 %</ca-persian>
 %    \end{macrocode}
 %
-% \section{Coptic}
+% \section{Coptic and Ethiopic}
 %
 % Adapted from \texttt{jquery.calendars.package-1.1.4}, written by Keith
-% Wood, 2010. Dual license: GPL and MIT.
+% Wood, 2010. Dual license: GPL and MIT. The only difference is the
+% epoch.
 %
 %    \begin{macrocode}
 %<*ca-coptic>
@@ -23187,6 +23189,20 @@ Babel.cjk_breaks = {
   \edef#6{\fp_eval:n{\bbl@tempc - (#5 - 1) * 30 + 1}}}
 \ExplSyntaxOff
 %</ca-coptic>
+%<*ca-ethiopic>
+\ExplSyntaxOn
+<@Compute Julian day@>
+\def\bbl@ca@ethiopic#1-#2-#3\@@#4#5#6{%
+  \edef\bbl@tempd{\fp_eval:n{floor(\bbl@cs@jd{#1}{#2}{#3}) + 0.5}}%
+  \edef\bbl@tempc{\fp_eval:n{\bbl@tempd - 1724220.5}}%
+  \edef#4{\fp_eval:n{%
+    floor((\bbl@tempc - floor((\bbl@tempc+366) / 1461)) / 365) + 1}}%
+  \edef\bbl@tempc{\fp_eval:n{%
+     \bbl@tempd - (#4-1) * 365 - floor(#4/4) - 1724220.5}}%
+  \edef#5{\fp_eval:n{floor(\bbl@tempc / 30) + 1}}%
+  \edef#6{\fp_eval:n{\bbl@tempc - (#5 - 1) * 30 + 1}}}
+\ExplSyntaxOff
+%</ca-ethiopic>
 %    \end{macrocode}
 %
 % \section{Buddhist}

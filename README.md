@@ -1,4 +1,4 @@
-## Babel 3.79
+## Babel 3.79.2845
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.79 are described in:
+Changes in version 3.80 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.79.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.80.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,6 +46,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.80  (dev)
+      * Ethiopic calendar.
+      * Hungarian date in the superessive case.
+
 3.79  2022-08-29
       * Fixes:
         - Issues of tcolorbox in RTL (graphics layout), thanks to Salim
