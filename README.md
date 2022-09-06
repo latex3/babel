@@ -1,4 +1,4 @@
-## Babel 3.79.2845
+## Babel 3.79.2852
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -49,6 +49,12 @@ respective authors.
 3.80  (dev)
       * Ethiopic calendar.
       * Hungarian date in the superessive case.
+      * Fixed numbers in Latin dates with pdftex.
+      * More updates to the CLDR 41: Galician, Swiss German, Gujarati,
+        Hausa, Hebrew, Hindi, Croatian, Upper Sorbian, Hungarian,
+        Armenian, Interlingua, Indonesian, Igbo, Sichuan Yi, Icelandic,
+        Italian, Japanese, Ngomba, Georgian, Kabyle, Kabuverdianu,
+        Kazakh, Kako, Kalaallisut, Khmer, Kannada, Korean.
 
 3.79  2022-08-29
       * Fixes:

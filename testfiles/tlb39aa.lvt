@@ -27,11 +27,14 @@
 \SetString\macroN{N}
 \EndBabelCommands
 
-\MakeUppercase{\gdef\noexpand\testuc{qa\aa}}
-\MakeLowercase{\gdef\noexpand\testlc{QA\OE}}
-
 \begin{document}
 \TIMO
+
+\protected\def\setuc{\gdef\testuc}
+\protected\def\setlc{\gdef\testlc}
+
+\MakeUppercase{\setuc{qa\aa}}
+\MakeLowercase{\setlc{QA\OE}}
 
 \Show\languagename
 \Show\moregerman

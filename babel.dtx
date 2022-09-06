@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/08/30 v3.79.2845 The Babel package]
+\ProvidesFile{babel.dtx}[2022/09/06 v3.79.2852 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -460,16 +460,16 @@ except if there is a real reason to do so:
 
 Examples of cases where |main| is useful are the following.
 
-\begin{note}
+\begin{example}
 Some classes load \babel{} with a hardcoded language option. Sometimes,
 the main language can be overridden with something like that before
 |\documentclass|:
 \begin{verbatim}
 \PassOptionsToPackage{main=english}{babel}
 \end{verbatim}
-\end{note}
+\end{example}
 
-\begin{warning}
+\begin{note}
   Languages may be set as global and as package option at the same
   time, but in such a case you should set explicitly the main language
   with the package option |main|:
@@ -477,7 +477,7 @@ the main language can be overridden with something like that before
 \documentclass[_italian_]{book}
 \usepackage[ngerman,_main=italian_]{babel}
 \end{verbatim}
-\end{warning}
+\end{note}
 
 \begin{warning}
   In the preamble the main language has \textit{not} been selected,
@@ -519,7 +519,7 @@ _\foreignlanguage{french}{français}_.
   With \xetex{} and \luatex, the following bilingual, single script
   document in UTF-8 encoding just prints a couple of ‘captions’ and
   |\today| in Danish and Vietnamese. No additional packages are
-  required.
+  required, because the default font supports both languages.
 \setengine{luatex/xetex}
 \begin{verbatim}
 \documentclass{article}
@@ -528,11 +528,11 @@ _\usepackage[vietnamese,danish]{babel}_
 
 \begin{document}
 
-\prefacename{} -- \alsoname{} -- \today
+\prefacename, \alsoname, \today.
 
 \selectlanguage{vietnamese}
 
-\prefacename{} -- \alsoname{} -- \today
+\prefacename, \alsoname, \today.
 
 \end{document}
 \end{verbatim}
@@ -583,7 +583,8 @@ _\foreignlanguage{spanish}{Español}_.
   Instead of its name, you may prefer to select the language with the
 corresponding BCP47 tag. This alternative, however, must be activated
 explicitly, because a two- or tree-letter word is a valid name for a
-language (eg, |yi|). See section \ref{bcp47} for further details.
+language (eg, |lu| can be the locale name with tag |khb| or the tag for
+|lubakatanga|). See section \ref{bcp47} for further details.
 \end{note}
 
 \subsection{Modifiers}
@@ -3009,7 +3010,7 @@ the current item, so that |\LocaleForEach{\message{ **#1** }}| just
 shows the loaded |ini|’s. 
 
 \Describe{ensureinfo=off}{}
-\New{3.75} Previously, |ini| files are loaded only with |\babelprovide|
+\New{3.75} Previously, |ini| files were loaded only with |\babelprovide|
 and also when languages are selected if there is a |\babelfont| or they
 have not been explicitly declared. Now the |ini| files are loaded (and
 therefore the corresponding data) even if these two conditions are not
@@ -5175,8 +5176,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.79.2845>>
-%<<date=2022/08/30>>
+%<<version=3.79.2852>>
+%<<date=2022/09/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8741,6 +8742,25 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@tolower\@empty}{\bbl@toupper\@empty}}%
     \gdef\bbl@tolower{\csname\languagename @bbl@lc\endcsname}%
     \gdef\bbl@toupper{\csname\languagename @bbl@uc\endcsname}}}
+% A temporary hack:
+\ifx\BabelCaseHack\@undefined
+\AtBeginDocument{%
+  \bbl@exp{%
+    \\\in@{\string\@uclclist}%
+          {\expandafter\meaning\csname MakeUppercase \endcsname}}%
+  \ifin@\else
+    \expandafter\let\expandafter\bbl@newuc\csname MakeUppercase \endcsname
+    \protected\@namedef{MakeUppercase }#1{{%
+      \def\reserved@a##1##2{\let##1##2\reserved@a}%
+      \expandafter\reserved@a\@uclclist\reserved@b{\reserved@b\@gobble}%
+      \protected@edef\reserved@a{\bbl@newuc{#1}}\reserved@a}}%
+    \expandafter\let\expandafter\bbl@newlc\csname MakeLowercase \endcsname
+    \protected\@namedef{MakeLowercase }#1{{%
+      \def\reserved@a##1##2{\let##2##1\reserved@a}%
+      \expandafter\reserved@a\@uclclist\reserved@b{\reserved@b\@gobble}%
+      \protected@edef\reserved@a{\bbl@newlc{#1}}\reserved@a}}%
+  \fi}   
+\fi  
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -10763,7 +10783,6 @@ help from Bernd Raichle, for which I am grateful.
 % and therefore always converted with other calendars. TODO. Document
 %
 %    \begin{macrocode}
-% Arguments are _not_ protected.
 \let\bbl@calendar\@empty
 \DeclareRobustCommand\localedate[1][]{\bbl@localedate{#1}}
 \def\bbl@localedate#1#2#3#4{%
@@ -10775,6 +10794,7 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@ifunset{bbl@calpr@\languagename}{}{\bbl@cl{calpr}},%
       #1}%
     \bbl@replace\bbl@tempe{ }{}%
+    \bbl@replace\bbl@tempe{CONVERT}{convert=}% Hackish
     \bbl@replace\bbl@tempe{convert}{convert=}%
     \let\bbl@ld@calendar\@empty
     \let\bbl@ld@variant\@empty
