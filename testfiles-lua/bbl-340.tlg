@@ -1,0 +1,223 @@
+This is a generated file for the LaTeX2e validation system.
+Don't change this file in any respect.
+\today  = 82.64001pt, 7.75pt, 2.24pt
+\greeknumeral {1} \greeknumeral {56} \greeknumeral {123987} = 66.87003pt, 7.35pt, 2.24pt
+\MakeUppercase {\greeknumeral {1} \greeknumeral {56} \greeknumeral {123987}} = 77.96004pt, 7.35pt, 2.23pt
+Overfull \hbox (16.5pt too wide) in paragraph at lines 40--41
+[]\TU/lmtt/m/n/10 \MakeUppercase {\greeknumeral {1} \greeknumeral {56} \greeknum
+eral
+\hbox(6.94+2.29)x345.0, direction TLT
+.\localpar
+..\localinterlinepenalty=0
+..\localbrokenpenalty=0
+..\localleftbox=null
+..\localrightbox=null
+.\hbox(0.0+0.0)x15.0, direction TLT
+.\TU/lmtt/m/n/10 \
+.\TU/lmtt/m/n/10 M
+.\TU/lmtt/m/n/10 a
+.\TU/lmtt/m/n/10 k
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 U
+.\TU/lmtt/m/n/10 p
+.\TU/lmtt/m/n/10 p
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 r
+.\TU/lmtt/m/n/10 c
+.\TU/lmtt/m/n/10 a
+.\TU/lmtt/m/n/10 s
+.\TU/lmtt/m/n/10 e
+.\glue(\spaceskip) 5.25
+.\TU/lmtt/m/n/10 {
+.\TU/lmtt/m/n/10 \
+.\TU/lmtt/m/n/10 g
+.\TU/lmtt/m/n/10 r
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 k
+.\TU/lmtt/m/n/10 n
+.\TU/lmtt/m/n/10 u
+.\TU/lmtt/m/n/10 m
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 r
+.\TU/lmtt/m/n/10 a
+.\TU/lmtt/m/n/10 l
+.\glue(\spaceskip) 5.25
+.\TU/lmtt/m/n/10 {
+.\TU/lmtt/m/n/10 1
+.\TU/lmtt/m/n/10 }
+.\glue(\spaceskip) 5.25
+.\TU/lmtt/m/n/10 \
+.\TU/lmtt/m/n/10 g
+.\TU/lmtt/m/n/10 r
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 k
+.\TU/lmtt/m/n/10 n
+.\TU/lmtt/m/n/10 u
+.\TU/lmtt/m/n/10 m
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 r
+.\TU/lmtt/m/n/10 a
+.\TU/lmtt/m/n/10 l
+.\glue(\spaceskip) 5.25
+.\TU/lmtt/m/n/10 {
+.\TU/lmtt/m/n/10 5
+.\TU/lmtt/m/n/10 6
+.\TU/lmtt/m/n/10 }
+.\glue(\spaceskip) 5.25
+.\TU/lmtt/m/n/10 \
+.\TU/lmtt/m/n/10 g
+.\TU/lmtt/m/n/10 r
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 k
+.\TU/lmtt/m/n/10 n
+.\TU/lmtt/m/n/10 u
+.\TU/lmtt/m/n/10 m
+.\TU/lmtt/m/n/10 e
+.\TU/lmtt/m/n/10 r
+.\TU/lmtt/m/n/10 a
+.\TU/lmtt/m/n/10 l
+.\glue(\rightskip) 0.0
+\today  = 103.82pt, 6.94pt, 0.22pt
+\MakeUppercase {lupus} = 32.51pt, 7.05pt, 0.22pt
+\MakeLowercase {LVPVS} = 23.4pt, 6.94pt, 1.94pt
+(../babel-italian.tex
+Package babel Info: Importing basic data for italian
+(babel)             from babel-it.ini. Reported on input line ....
+)
+(../loadhyph-it.tex UTF-8 Italian hyphenation patterns
+(../hyph-it.tex)
+(../hyph-quote-it.tex))
+! Undefined control sequence.
+l. ...Il risorgimento per l'unit^^e0 d'Italia.\TestPos
+                                                 {italian}\par
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+Overfull \hbox (20.39pt too wide) in paragraph at lines 53--53
+[]\TU/lmr/m/n/10 Il
+\hbox(6.94+0.0)x1.0, direction TLT
+.\localpar
+..\localinterlinepenalty=0
+..\localbrokenpenalty=0
+..\localleftbox=null
+..\localrightbox=null
+.\hbox(0.0+0.0)x15.0, direction TLT
+.\TU/lmr/m/n/10 I
+.\TU/lmr/m/n/10 l
+.\glue(\rightskip) 0.0
+Overfull \hbox (9.03pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 ri-
+\hbox(6.57+0.0)x1.0, direction TLT
+.\TU/lmr/m/n/10 r
+.\TU/lmr/m/n/10 i
+.\TU/lmr/m/n/10 -
+.\discretionary (penalty 50)
+.\glue(\rightskip) 0.0
+Overfull \hbox (15.19pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 sor-
+\hbox(4.48+0.11)x1.0, direction TLT
+.\TU/lmr/m/n/10 s
+.\TU/lmr/m/n/10 o
+.\TU/lmr/m/n/10 r
+.\TU/lmr/m/n/10 -
+.\discretionary (penalty 50)
+.\glue(\rightskip) 0.0
+Overfull \hbox (10.11pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 gi-
+\hbox(6.57+2.06)x1.0, direction TLT
+.\TU/lmr/m/n/10 g
+.\TU/lmr/m/n/10 i
+.\TU/lmr/m/n/10 -
+.\discretionary (penalty 50)
+.\glue(\rightskip) 0.0
+Overfull \hbox (20.66pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 men-
+\hbox(4.48+0.11)x1.0, direction TLT
+.\TU/lmr/m/n/10 m
+.\TU/lmr/m/n/10 e
+.\TU/lmr/m/n/10 n
+.\TU/lmr/m/n/10 -
+.\discretionary (penalty 50)
+.\glue(\rightskip) 0.0
+Overfull \hbox (7.89pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 to
+\hbox(6.15+0.11)x1.0, direction TLT
+.\TU/lmr/m/n/10 t
+.\TU/lmr/m/n/10 o
+.\glue(\rightskip) 0.0
+Overfull \hbox (13.2pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 per
+\hbox(4.48+1.94)x1.0, direction TLT
+.\TU/lmr/m/n/10 p
+.\kern0.28 (font)
+.\TU/lmr/m/n/10 e
+.\TU/lmr/m/n/10 r
+.\glue(\rightskip) 0.0
+Overfull \hbox (13.45pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 l’u-
+\hbox(6.94+0.11)x1.0, direction TLT
+.\TU/lmr/m/n/10 l
+.\TU/lmr/m/n/10 ’
+.\TU/lmr/m/n/10 u
+.\TU/lmr/m/n/10 -
+.\discretionary (penalty 50)
+.\glue(\rightskip) 0.0
+Overfull \hbox (10.67pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 ni-
+\hbox(6.57+0.0)x1.0, direction TLT
+.\TU/lmr/m/n/10 n
+.\TU/lmr/m/n/10 i
+.\TU/lmr/m/n/10 -
+.\discretionary (penalty 50)
+.\glue(\rightskip) 0.0
+Overfull \hbox (7.89pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 t^^e0
+\hbox(6.98+0.11)x1.0, direction TLT
+.\TU/lmr/m/n/10 t
+.\TU/lmr/m/n/10 ^^e0
+.\glue(\rightskip) 0.0
+Overfull \hbox (14.28pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 d’I-
+\hbox(6.94+0.11)x1.0, direction TLT
+.\TU/lmr/m/n/10 d
+.\TU/lmr/m/n/10 ’
+.\TU/lmr/m/n/10 I
+.\TU/lmr/m/n/10 -
+.\discretionary (penalty 50)
+.\glue(\rightskip) 0.0
+Overfull \hbox (11.22pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 ta-
+\hbox(6.15+0.11)x1.0, direction TLT
+.\TU/lmr/m/n/10 t
+.\TU/lmr/m/n/10 a
+.\TU/lmr/m/n/10 -
+.\discretionary (penalty 50)
+.\glue(\rightskip) 0.0
+Overfull \hbox (27.34pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 lia.ita-
+\hbox(6.94+0.11)x1.0, direction TLT
+.\TU/lmr/m/n/10 l
+.\TU/lmr/m/n/10 i
+.\TU/lmr/m/n/10 a
+.\TU/lmr/m/n/10 .
+.\TU/lmr/m/n/10 i
+.\TU/lmr/m/n/10 t
+.\TU/lmr/m/n/10 a
+.\TU/lmr/m/n/10 -
+.\discretionary (penalty 50)
+.\glue(\rightskip) 0.0
+Overfull \hbox (15.12pt too wide) in paragraph at lines 53--53
+\TU/lmr/m/n/10 lian 
+\hbox(6.94+0.11)x1.0, direction TLT
+.\TU/lmr/m/n/10 l
+.\TU/lmr/m/n/10 i
+.\TU/lmr/m/n/10 a
+.\TU/lmr/m/n/10 n
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0

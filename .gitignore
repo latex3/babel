@@ -4,3 +4,4 @@ build/*
 !*/testfiles/*.pdf
 /xbuild.lua
 /testfiles/log_tests.diff
+/*.py

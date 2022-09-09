@@ -32,6 +32,9 @@ checksuppfiles = {"test2e.tex"}
 -- Build TDS-style zips
 packtdszip = true
 
+-- Lua test files
+checkconfigs = {"build","config-lua"}
+
 -- Find and run the build system
 kpse.set_program_name ("kpsewhich")
 if not release_date then
