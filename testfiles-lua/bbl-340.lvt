@@ -8,6 +8,13 @@
     \setbox0\hbox{#1}%
     \message{^^J\expandafter\strip@prefix\meaning\Test@Temp
       \space\string= \the\wd0, \the\ht0, \the\dp0}}
+  \def\TestPos#1{%
+    \gdef\TestAuxMessage##1{\message{^^JTIMO^^J##1^^JOMIT^^J}}%
+    \savepos
+    \protected@write\@mainaux{}%
+      {\protect\TestAuxMessage{#1 \string= \noexpand\the\lastxpos,
+      \noexpand\the\lastypos}}}
+  \def\TestAuxMessage#1{}
 \makeatother
 
 \START
@@ -27,6 +34,9 @@
 \babelfont[ancientgreek]{rm}{FreeSerif}
 
 \begin{document}
+
+\hfuzz=\maxdimen
+
 \TIMO
 
 \selectlanguage{lao}
@@ -49,9 +59,10 @@
 
 \hsize1pt
 
+\OMIT
+
 \begin{otherlanguage*}{italian}
 Il risorgimento per l'unità d'Italia.\TestPos{italian}\par
 \end{otherlanguage*}
 
-\OMIT
 \end{document}

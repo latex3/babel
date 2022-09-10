@@ -1,0 +1,139 @@
+\input{localtest}
+\documentclass{article}
+\START
+\OMIT
+
+\makeatletter
+  \def\TestBox#1{%
+    \def\Test@Temp{#1}%
+    \noindent
+    \makebox{\texttt{\expandafter\strip@prefix\meaning\Test@Temp}}\\= {#1}%
+    \setbox0\hbox{#1}%
+    \message{^^J\expandafter\strip@prefix\meaning\Test@Temp
+      \space\string= \the\wd0, \the\ht0, \the\dp0}}
+\makeatother
+
+\usepackage[bidi=basic, northernkurdish, persian,
+   arabic, hebrew, serbian, thai, provide*=*]{babel}
+\babelprovide[import]{arabic-sa}
+\babelprovide[import]{arabic-eg}
+\babelprovide[import, calendar=coptic]{coptic}
+\babelprovide[calendar=gregorian]{thai}
+% \babelprovide[calendar=gregorian]{persian}
+% \babelprovide[calendar=.genitive]{serbian}
+
+\babelfont{rm}{FreeSerif}
+
+\begin{document}
+
+\hfuzz=\maxdimen
+
+\TIMO
+
+\year=2022
+\month=8
+\day=15
+
+\typeout{== thai ==}
+
+\TestBox{\localedate{1000}{2}{3}}
+
+\TestBox{\localedate[calendar=buddhist]{1000}{2}{3}}
+
+\TestBox{\localedate[calendar=buddhist, convert]{1000}{2}{3}}
+
+\babelcalendar[1000-2-3]{buddhist}\byear\bmonth\bday 
+
+\babelcalendar{buddhist}\byear\bmonth\bday
+
+\TestBox{\localedate[calendar=buddhist]\byear\bmonth\bday}
+
+\TestBox{\today}
+
+%---
+
+\selectlanguage{northernkurdish}
+
+\typeout{== northernkurdish ==}
+
+\TestBox{\localedate{\year}{\month}{\day}}
+
+\TestBox{\localedate[variant=izafa]{\year}{\month}{\day}}
+
+\TestBox{\localedate[calendar=.izafa]{\year}{\month}{\day}}
+
+\TestBox{\today}
+
+%---
+
+\selectlanguage{serbian}
+
+\typeout{== serbian ==}
+
+\TestBox{\localedate{\year}{\month}{\day}}
+
+\TestBox{\localedate[variant=genitive]{\year}{\month}{\day}}
+
+\TestBox{\today}
+
+%---
+
+\selectlanguage{coptic}
+
+\typeout{== coptic ==}
+
+\TestBox{\today}
+
+%---
+
+\selectlanguage{arabic}
+
+\typeout{== arabic ==}
+
+\babelcalendar{islamic-civil}\ayear\amonth\aday
+
+\TestBox{\localedate[calendar=islamic]{\ayear}{\amonth}{\aday}}
+
+\TestBox{\localedate[calendar=islamic-civil, convert]{\year}{\month}{\day}}
+
+\TestBox{\localedate{\year}{\month}{\day}}
+
+\TestBox{\today}
+
+%---
+
+\selectlanguage{persian}
+
+\typeout{== persian ==}
+
+\TestBox{\today}
+
+\TestBox{\localedate[convert]{\year}{\month}{\day}}
+
+%---
+
+\selectlanguage{arabic-sa}
+
+\typeout{== arabic-sa ==}
+
+\TestBox{\today}
+
+
+%---
+
+\selectlanguage{arabic-eg}
+
+\typeout{== arabic-eg ==}
+
+\TestBox{\localedate[calendar=coptic, convert]{\year}{\month}{\day}}
+
+%---
+
+\selectlanguage{hebrew}
+
+\typeout{== hebrew ==}
+
+\TestBox{\today}
+
+\OMIT
+\end{document}

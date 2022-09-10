@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/09/06 v3.79.2852 The Babel package]
+\ProvidesFile{babel.dtx}[2022/09/10 v3.79.2856 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5176,8 +5176,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.79.2852>>
-%<<date=2022/09/06>>
+%<<version=3.79.2856>>
+%<<date=2022/09/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9733,14 +9733,14 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@vforeach{captions,date,import,main,script,language,%
       hyphenrules,linebreaking,justification,mapfont,maparabic,%
       mapdigits,intraspace,intrapenalty,onchar,transforms,alph,%
-      Alph,labels,labels*,calendar}%
+      Alph,labels,labels*,calendar,date}%
     {\bbl@csarg\let{KVP@##1}\@nnil}%
   \global\let\bbl@release@transforms\@empty
   \let\bbl@calendars\@empty
   \global\let\bbl@inidata\@empty
   \global\let\bbl@extend@ini\@gobble
   \gdef\bbl@key@list{;}% 
-  \bbl@forkv{#1}{%  TODO - error handling
+  \bbl@forkv{#1}{%
     \in@{/}{##1}%
     \ifin@
       \global\let\bbl@extend@ini\bbl@extend@ini@aux
@@ -9759,6 +9759,9 @@ help from Bernd Raichle, for which I am grateful.
   \ifx\bbl@screset\@undefined
     \bbl@ldfinit
   \fi
+  % == date (as option) ==
+  % \ifx\bbl@KVP@date\@nnil\else
+  % \fi
   % ==
   \let\bbl@lbkflag\relax % \@empty = do setup linebreak
   \ifcase\bbl@howloaded
@@ -9783,6 +9786,7 @@ help from Bernd Raichle, for which I am grateful.
          \xdef\bbl@KVP@import{\bbl@initoload}%
        \fi}%
       {}%
+    \let\bbl@KVP@date\@empty
   \fi
   \ifx\bbl@KVP@captions\@nnil
     \let\bbl@KVP@captions\bbl@KVP@import
@@ -10149,7 +10153,7 @@ help from Bernd Raichle, for which I am grateful.
       \fi
     \fi
   \StartBabelCommands*{#1}{date}%
-    \ifx\bbl@KVP@import\@nnil
+    \ifx\bbl@KVP@date\@nnil
       \bbl@exp{%
         \\\SetString\\\today{\\\bbl@nocaption{today}{#1today}}}%
     \else
@@ -10175,7 +10179,7 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@read@ini{\bbl@KVP@captions}2%   % Here all letters cat = 11
     \EndBabelCommands
   \fi
-  \ifx\bbl@KVP@import\@nnil\else
+  \ifx\bbl@KVP@date\@nnil\else
     \StartBabelCommands*{#1}{date}%
       \bbl@savetoday
       \bbl@savedate
@@ -10431,7 +10435,7 @@ help from Bernd Raichle, for which I am grateful.
  \ifx\bbl@tempa\relax\else
    \bbl@replace\bbl@tempa{=}{}%
    \ifx\bbl@tempa\@empty\else
-     \xdef\bbl@calendars{,\bbl@tempa}%
+     \xdef\bbl@calendars{\bbl@calendars,\bbl@tempa}%
    \fi
    \bbl@exp{%
      \def\<bbl@inikv@#1>####1####2{% 

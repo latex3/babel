@@ -1,0 +1,31 @@
+== thai ==
+\localedate {1000}{2}{3} = 85.91997pt, 7.54001pt, 2.98pt
+\localedate [calendar=buddhist]{1000}{2}{3} = 66.94998pt, 7.54001pt, 2.98pt
+\localedate [calendar=buddhist, convert]{1000}{2}{3} = 66.94998pt, 7.54001pt, 2.98pt
+\localedate [calendar=buddhist]\byear \bmonth \bday  = 64.72pt, 7.8pt, 0.14pt
+\today  = 83.68999pt, 7.8pt, 0.14pt
+== northernkurdish ==
+\localedate {\year }{\month }{\day } = 61.67001pt, 6.88pt, 0.14pt
+\localedate [variant=izafa]{\year }{\month }{\day } = 69.70001pt, 6.88pt, 0.14pt
+\localedate [calendar=.izafa]{\year }{\month }{\day } = 69.70001pt, 6.88pt, 0.14pt 
+\today  = 61.67001pt, 6.88pt, 0.14pt
+== serbian ==
+\localedate {\year }{\month }{\day } = 66.08002pt, 6.88pt, 2.18pt
+\localedate [variant=genitive]{\year }{\month }{\day } = 70.43002pt, 6.88pt, 2.18pt 
+\today  = 66.08002pt, 6.88pt, 2.18pt
+== coptic ==
+\today  = 59.95001pt, 6.76pt, 2.2pt
+== arabic ==
+\localedate [calendar=islamic]{\ayear }{\amonth }{\aday } = 55.85002pt, 6.76pt, 3.0pt
+\localedate [calendar=islamic-civil, convert]{\year }{\month }{\day } = 55.85002pt, 6.76pt, 3.0pt
+\localedate {\year }{\month }{\day } = 62.98pt, 8.9pt, 2.41pt
+\today  = 62.98pt, 8.9pt, 2.41pt
+== persian ==
+\today  = 52.29pt, 7.01pt, 2.47pt
+\localedate [convert]{\year }{\month }{\day } = 52.29pt, 7.01pt, 2.47pt
+== arabic-sa ==
+\today  = 55.85002pt, 6.76pt, 3.0pt
+== arabic-eg ==
+\localedate [calendar=coptic, convert]{\year }{\month }{\day } = 52.75002pt, 6.76pt, 2.47pt
+== hebrew ==
+\today  = 66.97998pt, 6.88pt, 0.14pt
