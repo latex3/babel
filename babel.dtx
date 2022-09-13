@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/09/10 v3.79.2856 The Babel package]
+\ProvidesFile{babel.dtx}[2022/09/13 v3.80 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3207,8 +3207,8 @@ transforms = transliteration.omega (\withsigmafinal) sigma.final
 This applies |transliteration.omega| always, but |sigma.final| only when
 |\withsigmafinal| is set.
 
-Here are the transforms currently predefined. (More to follow 
-in future releases.)
+Here are the transforms currently predefined. (Some may still require
+some fine-tuning. More to follow in future releases.)
 
 \begingroup
 \def\trans#1#2#3{%
@@ -5176,8 +5176,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.79.2856>>
-%<<date=2022/09/10>>
+%<<version=3.80>>
+%<<date=2022/09/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9173,7 +9173,7 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@toglobal\bbl@captionslist
     \fi
   \fi}
-% \def\bbl@setcaption@s#1#2#3{}  % TODO. Not yet implemented
+% \def\bbl@setcaption@s#1#2#3{} % TODO. Not yet implemented (w/o 'name')
 %    \end{macrocode}
 %
 % \subsection{Macros common to a number of languages}

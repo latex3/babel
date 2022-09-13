@@ -1,4 +1,4 @@
-## Babel 3.79.2856
+## Babel 3.80
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -49,20 +49,16 @@ respective authors.
 3.80  (dev)
       * Ethiopic calendar.
       * Hungarian date in the superessive case.
-      * Fixed numbers in Latin dates with pdftex.
+      * Fixes in dates:
+        - Latin: Arabic numbers with pdftex instead of roman.
+        - Thai: Buddhist and Gregorian were reversed.
       * More updates to the CLDR 41: Galician, Swiss German, Gujarati,
         Hausa, Hebrew, Hindi, Croatian, Upper Sorbian, Hungarian,
         Armenian, Interlingua, Indonesian, Igbo, Sichuan Yi, Icelandic,
         Italian, Japanese, Ngomba, Georgian, Kabyle, Kabuverdianu,
-        Kazakh, Kako, Kalaallisut, Khmer, Kannada, Korean.
-
-3.79  2022-08-29
-      * Fixes:
-        - Issues of tcolorbox in RTL (graphics layout), thanks to Salim
-          Bou (@seloumi) (#186).
-        - \footnote with babel bidi=default raises an error in LuaLaTeX (#187).
-        - Extra blank spaces with Hebrew calendar.
-      * 'odia' is now the preferred name for 'oriya', following the CLDR.
+        Kazakh, Kako, Kalaallisut, Khmer, Kannada, Korean, Konkani,
+        Kashmiri, Colognian, Cornish, Kyrgyz, Lakota, Lao, Northern
+        Luri, Lithuanian, Macedonian, Malayalam, Mongolian.
 ```
 
 ### Previous changes
