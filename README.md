@@ -46,12 +46,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.80  (dev)
+3.80  2022-09-16
       * Ethiopic calendar.
       * Hungarian date in the superessive case.
+      * Captions for Hausa by Abubakar Yusuf (@fatherofcamels)
       * Fixes in dates:
-        - Latin: Arabic numbers with pdftex instead of roman.
+        - Latin: In `pdftex`, numerals were printed in arabic form.
         - Thai: Buddhist and Gregorian were reversed.
+        - Persian: The Persian calendar was not loaded.
       * More updates to the CLDR 41: Galician, Swiss German, Gujarati,
         Hausa, Hebrew, Hindi, Croatian, Upper Sorbian, Hungarian,
         Armenian, Interlingua, Indonesian, Igbo, Sichuan Yi, Icelandic,

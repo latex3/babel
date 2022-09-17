@@ -1,9 +1,9 @@
 == thai ==
-\localedate {1000}{2}{3} = 85.91997pt, 7.54001pt, 2.98pt
-\localedate [calendar=buddhist]{1000}{2}{3} = 66.94998pt, 7.54001pt, 2.98pt
-\localedate [calendar=buddhist, convert]{1000}{2}{3} = 66.94998pt, 7.54001pt, 2.98pt
-\localedate [calendar=buddhist]\byear \bmonth \bday  = 64.72pt, 7.8pt, 0.14pt
-\today  = 83.68999pt, 7.8pt, 0.14pt
+\localedate {1000}{2}{3} = 66.94998pt, 7.54001pt, 2.98pt
+\localedate [calendar=buddhist]{1000}{2}{3} = 85.91997pt, 7.54001pt, 2.98pt
+\localedate [calendar=buddhist, convert]{1000}{2}{3} = 85.91997pt, 7.54001pt, 2.98pt
+\localedate [calendar=buddhist]\byear \bmonth \bday  = 83.68999pt, 7.8pt, 0.14pt 
+\today  = 64.72pt, 7.8pt, 0.14pt
 == northernkurdish ==
 \localedate {\year }{\month }{\day } = 61.67001pt, 6.88pt, 0.14pt
 \localedate [variant=izafa]{\year }{\month }{\day } = 69.70001pt, 6.88pt, 0.14pt
