@@ -1,25 +1,22 @@
 
 # What's new in babel 3.81
 
-Draft
+*Draft.*
 
 ## Tibetan line breaking and justification (`luatex`)
 
 **Preliminary and tentative**
 
 This feature currently requires loading the language explicitly with
-`\babelprovide, as well as activating it with the macro
+`\babelprovide`, as well as activating it with the macro
 `\EnableTibetanHJ` in the preamble. Don’t use it for production.
 
 The rules currently applied are the following (liable to change):
 
 * Spaces are set to 1 em plus .1 em (but see below).
-
 * Line breaking is allowed at spaces, except if between two shads.
-
 * Line breaking is allowed after a tsek, except if followed by a shad.
   (This rule must be fine tuned.)
-
 * Justification is done with filling tseks.
 
 There are no rules for *rin chen spungs shad* yet. It’s worth noting the
@@ -53,18 +50,20 @@ with a Windows font:
 རིགས་མཐུན་ཡོངས་ལ་བཀྲ་ཤིས་བདེ་ལེགས་ཞུ།
 ཞེས་བོད་ཀྱི་ཆ་འཕྲིན་ལག་རྩལ་པ་བསོད་ནམས་གངས་རྒྱན་ནས།
 
-\end{document}། 
+\end{document}
 ```
 ![Tibetan](../media/tibetan-hj.jpg)
 
 The algorithm devised fot the Tibetan justification is based on that
-for Arabic, which is useable in many cases buy not complete. Please,
-feel free to contribute, because any help will be most welcome.
+for Arabic (remember the latter is useable in many cases but not
+complete). Please, feel free to contribute, because any help will be
+most welcome.
 
-To ease testing, there is an optional argument to `\EnableTibetanHJ` so
-that \EnableTibetanHJ[.7 .05 0.01] sets the space to .7 em plus .05 em
+To ease testings, there is an optional argument to `\EnableTibetanHJ` so
+that `\EnableTibetanHJ[.7 .05 0.01]` sets the space to .7 em plus .05 em
 minus 0.01 em.
 
 ## Locales
 
-* More updates to the CLDR 41: ...
+* More updates to the CLDR 41: Burmese, Dutch, Kwasio, Malay, Marathi,
+  Mazanderani, Nepali, Norwegian, Norwegian Nynorsk.
