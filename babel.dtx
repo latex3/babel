@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/09/23 v3.80.2869 The Babel package]
+\ProvidesFile{babel.dtx}[2022/09/25 v3.80.2871 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5176,8 +5176,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.80.2869>>
-%<<date=2022/09/23>>
+%<<version=3.80.2871>>
+%<<date=2022/09/25>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12058,9 +12058,7 @@ help from Bernd Raichle, for which I am grateful.
     \ifx\RTLfootnotetext\@undefined
       \AtEndOfPackage{%
         \EnableBabelHook{babel-bidi}%
-        \ifx\fontspec\@undefined
-          \bbl@loadfontspec % bidi needs fontspec
-        \fi
+        \bbl@loadfontspec % bidi needs fontspec
         \usepackage#1{bidi}}%
     \fi}
   \ifnum\bbl@bidimode>200
@@ -12940,24 +12938,14 @@ help from Bernd Raichle, for which I am grateful.
 %<<*Font selection>>
 \bbl@trace{Font handling with fontspec}
 \ifx\ExplSyntaxOn\@undefined\else
-  \ExplSyntaxOn
-  \catcode`\ =10
+  \def\bbl@fs@warn#1#2{% \bbl@tempfs is the original macro
+    \in@{,#1,}{,no-script,language-not-exist,}%
+    \ifin@\else\bbl@tempfs{#1}{#2}\fi}
   \def\bbl@loadfontspec{%
-    \usepackage{fontspec}%  TODO. Apply patch always
-    \expandafter
-    \def\csname msg~text~>~fontspec/language-not-exist\endcsname##1##2##3##4{%
-      Font '\l_fontspec_fontname_tl' is using the\\%
-      default features for language '##1'.\\%
-      That's usually fine, because many languages\\%
-      require no specific features, but if the output is\\%
-      not as expected, consider selecting another font.}
-    \expandafter
-    \def\csname msg~text~>~fontspec/no-script\endcsname##1##2##3##4{%
-      Font '\l_fontspec_fontname_tl' is using the\\%
-      default features for script '##2'.\\%
-      That's not always wrong, but if the output is\\%
-      not as expected, consider selecting another font.}}
-  \ExplSyntaxOff
+    \let\bbl@loadfontspec\relax 
+    \ifx\fontspec\@undefined
+      \usepackage{fontspec}%
+    \fi}%
 \fi
 \@onlypreamble\babelfont
 \newcommand\babelfont[2][]{%  1=langs/scripts 2=fam
@@ -12969,9 +12957,7 @@ help from Bernd Raichle, for which I am grateful.
     \fi}%
   \edef\bbl@tempa{#1}%
   \def\bbl@tempb{#2}%  Used by \bbl@bblfont
-  \ifx\fontspec\@undefined
-    \bbl@loadfontspec
-  \fi
+  \bbl@loadfontspec
   \EnableBabelHook{babel-fontspec}% Just calls \bbl@switchfont
   \bbl@bblfont}
 \newcommand\bbl@bblfont[2][]{% 1=features 2=fontname, @font=rm|sf|tt
@@ -13126,8 +13112,11 @@ help from Bernd Raichle, for which I am grateful.
       {\\\newfontscript{\bbl@cl{sname}}{\bbl@cl{sotf}}}%
     \<keys_if_exist:nnF>{fontspec-opentype}{Language/\bbl@cl{lname}}%
       {\\\newfontlanguage{\bbl@cl{lname}}{\bbl@cl{lotf}}}%
+    \let\\\bbl@tempfs\<__fontspec_warning:nx>%
+    \let\<__fontspec_warning:nx>\\\bbl@fs@warn
     \\\renewfontfamily\\#4%
       [\bbl@cl{lsys},#2]}{#3}% ie \bbl@exp{..}{#3}
+  \bbl@exp{\let\<__fontspec_warning:nx>\\\bbl@tempfs}%
   \begingroup
      #4%
      \xdef#1{\f@family}%     eg, \bbl@rmdflt@lang{FreeSerif(0)}
@@ -14486,10 +14475,11 @@ end
   \@ifnextchar[{\bbl@settransform{0}}{\bbl@settransform{0}[]}}
 \gdef\babelposthyphenation{&%
   \@ifnextchar[{\bbl@settransform{1}}{\bbl@settransform{1}[]}}
+\gdef\bbl@postlinebreak{\bbl@settransform{2}[]} &% WIP
 \gdef\bbl@settransform#1[#2]#3#4#5{&%
   \ifcase#1
     \bbl@activateprehyphen
-  \else
+  \or
     \bbl@activateposthyphen
   \fi
   \begingroup
@@ -14505,7 +14495,7 @@ end
            rep = rep:gsub('^%s*(remove)%s*$', 'remove = true')
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
-           if #1 == 0 then
+           if #1 == 0 or #1 == 2 then
              rep = rep:gsub('(space)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
                'space = {' .. '%2, %3, %4' .. '}')
              rep = rep:gsub('(spacefactor)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
@@ -14518,6 +14508,16 @@ end
            end
            tex.print([[\string\babeltempa{{]] .. rep .. [[}}]])
          }}}&%
+    \bbl@foreach\babeltempb{&%
+      \bbl@forkv{{##1}}{&%
+        \in@{,####1,}{,nil,step,data,remove,insert,string,no,pre,&%
+            no,post,penalty,kashida,space,spacefactor,}&%
+        \ifin@\else
+          \bbl@error
+           {Bad option '####1' in a transform.\\&%
+            I’ll ignore it but expect more errors}&%
+           {See the manual for further info.}&%
+        \fi}}&% 
     \let\bbl@kv@attribute\relax
     \let\bbl@kv@label\relax
     \bbl@forkv{#2}{\bbl@csarg\edef{kv@##1}{##2}}&%
@@ -14528,7 +14528,7 @@ end
       local lbkr = Babel.linebreaking.replacements[#1]
       local u = unicode.utf8
       local id, attr, label
-      if #1 == 0 then
+      if #1 == 0 or #1 == 2 then
         id = \the\csname bbl@id@@#3\endcsname\space
       else
         id = \the\csname l@#3\endcsname\space
@@ -14543,7 +14543,7 @@ end
       \fi
       &% Convert pattern:
       local patt = string.gsub([==[#4]==], '%s', '')
-      if #1 == 0 then
+      if #1 == 0 or #1 == 2 then
         patt = string.gsub(patt, '|', ' ')
       end
       if not u.find(patt, '()', nil, true) then
@@ -15078,8 +15078,9 @@ end
 %    \begin{macrocode}
 %<*transforms>
 Babel.linebreaking.replacements = {}
-Babel.linebreaking.replacements[0] = {}  -- pre
+Babel.linebreaking.replacements[0] = {}  -- pre 
 Babel.linebreaking.replacements[1] = {}  -- post
+Babel.linebreaking.replacements[2] = {}  -- post-line WIP
 
 -- Discretionaries contain strings as nodes
 function Babel.str_to_nodes(fn, matches, base)
@@ -15231,6 +15232,7 @@ Babel.us_char = string.char(31)
 function Babel.hyphenate_replace(head, mode)
   local u = unicode.utf8
   local lbkr = Babel.linebreaking.replacements[mode]
+  if mode == 2 then mode = 0 end -- WIP
 
   local word_head = head
 

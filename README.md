@@ -1,4 +1,4 @@
-## Babel 3.80.2869
+## Babel 3.80.2871
 
 **Development**
 
@@ -50,6 +50,8 @@ respective authors.
 ```
 3.81  dev
       * Tibetan line breaking and justification.
+      * No 'fontspec' warnings about inexistent languages and
+        scripts.
 
 3.80  2022-09-16
       * Ethiopic calendar.

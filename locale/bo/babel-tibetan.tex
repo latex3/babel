@@ -17,8 +17,8 @@
     { {}, {space=#1, data=1 } }%
   \babelprehyphenation{tibetan}{ ^^^^0f0d | ^^^^0f0d }%
     { {}, {insert, penalty=10000}, {}, {} }%
-  \babelprehyphenation{tibetan}{ ^^^^0f0b [^ ^^^^0f0d] }%
-    { {}, {insert, space=0 .0001 0, data=1}, {} }%
+  \babelprehyphenation{tibetan}{ ^^^^0f0b () ([^ ^^^^0f0d]) () }%
+    { {insert, space=0 .0001 0, data=1}, {string = {1}} }%
   \directlua{
     Babel.tibetan = Babel.tibetan or {}
     %
