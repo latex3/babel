@@ -67,3 +67,13 @@ minus 0.01 em.
 
 * More updates to the CLDR 41: Burmese, Dutch, Kwasio, Malay, Marathi,
   Mazanderani, Nepali, Norwegian, Norwegian Nynorsk.
+  
+## `fontspec` warning
+
+After some attempts to deal with the `fontspec` warnings about
+inexistent languages and scripts, now they are concealed when fonts are
+defined with `\babelfont` (but not otherwise). In most cases they are
+useless and even misleading, because many fonts don’t set the
+language system, many people know nothing about this OpenType feature,
+and some even think those warnings refer to the availability of the
+language in `babel`.
