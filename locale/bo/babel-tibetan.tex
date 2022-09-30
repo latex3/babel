@@ -13,17 +13,22 @@
 \ifcase\bbl@engine\or
 
 \newcommand\EnableTibetanHJ[1][1 .1 0]{%
-  \babelprehyphenation{tibetan}{ [{a}{p}] | }%
+  \bbl@warning{%
+    Tibetan line breaking and justification are tentative.\\%
+    They might not work as expected and their behavior\\%
+    could change in the future. Feel free to contribute.\\%
+    Reported}%
+  \babelprehyphenation{tibetan}{[{a}{p}]|}%
     { {}, {space=#1, data=1 } }%
-  \babelprehyphenation{tibetan}{ ^^^^0f0d | ^^^^0f0d }%
+  \babelprehyphenation{tibetan}{[^^^^0f0d^^^^0f0e]|[^^^^0f0d^^^^0f0e]}%
     { {}, {insert, penalty=10000}, {}, {} }%
-  \babelprehyphenation{tibetan}{ ^^^^0f0b () ([^ ^^^^0f0d]) () }%
+  \babelprehyphenation{tibetan}{^^^^0f0b()([^ ^^^^0f0d^^^^0f0e])()}%
     { {insert, space=0 .0001 0, data=1}, {string = {1}} }%
   \directlua{
     Babel.tibetan = Babel.tibetan or {}
     %
     Babel.tibetan.justify_enabled = true
-    Babel.tibetan.justify_factor = 1 % 0.98
+    Babel.tibetan.justify_factor = 1
     %
     function Babel.tibetan.justify(head)
       if not Babel.tibetan.justify_enabled then return head end

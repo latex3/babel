@@ -1,4 +1,4 @@
-## Babel 3.80.2871
+## Babel 3.80.2876
 
 **Development**
 
@@ -49,7 +49,8 @@ respective authors.
 ### Summary of latest changes
 ```
 3.81  dev
-      * Tibetan line breaking and justification.
+      * Tibetan line breaking and justification (lines padded with
+        trailing tshegs).
       * No 'fontspec' warnings about inexistent languages and
         scripts.
 

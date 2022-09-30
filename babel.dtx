@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/09/25 v3.80.2871 The Babel package]
+\ProvidesFile{babel.dtx}[2022/09/30 v3.80.2876 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -943,11 +943,9 @@ list of characters as their arguments.
 The command |\shorthandoff| sets the |\catcode| for each of the
 characters in its argument to other (12); the command |\shorthandon|
 sets the |\catcode| to active (13). Both commands only work on `known'
-shorthand characters.
-
-% TODO - Is the following true ????
-% If a character is not known to be a shorthand character its category
-% code will be left unchanged.
+shorthand characters, and an error will be raised otherwise. You can
+check if a character is a shorthand with |\ifbabelshorthand| (see
+below).
 
 \New{3.9a} However, |\shorthandoff| does not behave as
 you would expect with characters like |~| or |^|, because they
@@ -2310,18 +2308,6 @@ to select fonts in addition to the three basic families.
   \babel{} and should be set with |fontspec| if necessary.
 \end{warning}
 
-\begin{troubleshooting}
-  \trouble{Package fontspec Warning: 'Language 'LANG' not available for
-  font 'FONT' with script 'SCRIPT' 'Default' language used instead'}
-  \textit{Package fontspec Warning: 'Language 'LANG' not available for
-  font 'FONT' with script 'SCRIPT' 'Default' language used instead'}.
-
-  \textbf{This is \textit{not} an error.} This warning is shown by
-  \textsf{fontspec}, not by \babel. It can be irrelevant for English,
-  but not for many other languages, including Urdu and Turkish. This is
-  a useful and harmless warning, and if everything is fine with your
-  document the best thing you can do is just to ignore it altogether.
-\end{troubleshooting}
 
 \begin{troubleshooting}
   \trouble{Package babel Info: The following fonts are not babel
@@ -5176,8 +5162,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.80.2871>>
-%<<date=2022/09/25>>
+%<<version=3.80.2876>>
+%<<date=2022/09/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5304,7 +5290,8 @@ help from Bernd Raichle, for which I am grateful.
 %   To check if a macro is defined, we create a new macro, which does
 %   the same as |\@ifundefined|. However, in an $\epsilon$-tex engine,
 %   it is based on |\ifcsname|, which is more efficient, and does not
-%   waste memory.
+%   waste memory. Defined inside a group, to avoid \cs{ifcsname} being
+%   implicitly set to |\relax| by the |\csname| test.
 %
 %    \begin{macrocode}
 \begingroup
@@ -5314,7 +5301,7 @@ help from Bernd Raichle, for which I am grateful.
     \else
       \expandafter\@secondoftwo
     \fi}
-  \bbl@ifunset{ifcsname}% TODO. A better test?
+  \bbl@ifunset{ifcsname}%
     {}%
     {\gdef\bbl@ifunset#1{%
        \ifcsname#1\endcsname
@@ -6135,7 +6122,6 @@ help from Bernd Raichle, for which I am grateful.
                request the languages explicitly}%
               {See the manual for further details.}%
   \fi
-% TODO. Option to search if loaded, with \LocaleForEach
   \let\bbl@auxname\languagename % Still necessary. TODO
   \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
     {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}}% 
@@ -6427,19 +6413,8 @@ help from Bernd Raichle, for which I am grateful.
   % TODO. name@map must be here?
   \bbl@provide@locale
   \bbl@iflanguage\languagename{%
-     \expandafter\ifx\csname date\languagename\endcsname\relax
-      \bbl@error
-        {Unknown language '\languagename'. Either you have\\%
-         misspelled its name, it has not been installed,\\%
-         or you requested it in a previous run. Fix its name,\\%
-         install it or just rerun the file, respectively. In\\%
-         some cases, you may need to remove the aux file}%
-        {You may proceed, but expect wrong results}%
-    \else
-      % set type
-      \let\bbl@select@type\z@
-      \expandafter\bbl@switch\expandafter{\languagename}%
-    \fi}}
+    \let\bbl@select@type\z@
+    \expandafter\bbl@switch\expandafter{\languagename}}}
 \def\babel@aux#1#2{%
   \select@language{#1}%
   \bbl@foreach\BabelContentsFiles{% \relax -> don't assume vertical mode
@@ -6709,17 +6684,6 @@ help from Bernd Raichle, for which I am grateful.
   % TODO. name@map here?
   \bbl@provide@locale
   \bbl@iflanguage\languagename{%
-    \expandafter\ifx\csname date\languagename\endcsname\relax
-      \bbl@warning   % TODO - why a warning, not an error?
-        {Unknown language '#1'. Either you have\\%
-         misspelled its name, it has not been installed,\\%
-         or you requested it in a previous run. Fix its name,\\%
-         install it or just rerun the file, respectively. In\\%
-         some cases, you may need to remove the aux file.\\%
-         I'll proceed, but expect wrong results.\\%
-         Reported}%
-    \fi
-    % set type
     \let\bbl@select@type\@ne
     \expandafter\bbl@switch\expandafter{\languagename}}}
 %    \end{macrocode}
@@ -6944,7 +6908,7 @@ help from Bernd Raichle, for which I am grateful.
   \@nameuse{#2}%
   \edef\bbl@tempa{#1}%
   \bbl@sreplace\bbl@tempa{name}{}%
-  \bbl@warning{% TODO.
+  \bbl@warning{%
     \@backslashchar#1 not set for '\languagename'. Please,\\%
     define it after the language has been loaded\\%
     (typically in the preamble) with:\\% 
@@ -7039,8 +7003,7 @@ help from Bernd Raichle, for which I am grateful.
 % The macro |\initiate@active@char| below takes all the necessary
 % actions to make its argument a shorthand character. The real work
 % is performed once for each character. But first we define a little
-% tool. TODO. Always used with additional expansions. Move them here?
-% Move the macro to basic?
+% tool.
 %
 %    \begin{macrocode}
 \def\bbl@withactive#1#2{%
@@ -7175,7 +7138,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \bbl@trace{Defining babelensure}
-\newcommand\babelensure[2][]{%  TODO - revise test files
+\newcommand\babelensure[2][]{%
   \AddBabelHook{babel-ensure}{afterextras}{%
     \ifcase\bbl@select@type
       \bbl@cl{e}%
@@ -8695,21 +8658,12 @@ help from Bernd Raichle, for which I am grateful.
 %
 %  \paragraph{Tools}
 %
-% But first, a couple of tools. The first one makes global a local
-% variable. This is not the best solution, but it works.
+% But first, a tool. It makes global a local variable. This is not the
+% best solution, but it works.
 %
 %    \begin{macrocode}
 \bbl@trace{Multiencoding strings}
 \def\bbl@toglobal#1{\global\let#1#1}
-\def\bbl@recatcode#1{% TODO. Used only once?
-  \@tempcnta="7F
-  \def\bbl@tempa{%
-    \ifnum\@tempcnta>"FF\else
-      \catcode\@tempcnta=#1\relax
-      \advance\@tempcnta\@ne
-      \expandafter\bbl@tempa
-    \fi}%
-  \bbl@tempa}
 %    \end{macrocode}
 %
 % The second one. We need to patch |\@uclclist|, but it is done once
@@ -8789,7 +8743,14 @@ help from Bernd Raichle, for which I am grateful.
 \@onlypreamble\StartBabelCommands
 \def\StartBabelCommands{%
   \begingroup
-  \bbl@recatcode{11}%
+  \@tempcnta="7F
+  \def\bbl@tempa{%
+    \ifnum\@tempcnta>"FF\else
+      \catcode\@tempcnta=11
+      \advance\@tempcnta\@ne
+      \expandafter\bbl@tempa
+    \fi}%
+  \bbl@tempa
   <@Macros local to BabelCommands@>
   \def\bbl@provstring##1##2{%
     \providecommand##1{##2}%
@@ -9119,7 +9080,7 @@ help from Bernd Raichle, for which I am grateful.
 % separates these two steps.
 %
 %    \begin{macrocode}
-\newcommand\setlocalecaption{%  TODO. Catch typos. What about ensure?
+\newcommand\setlocalecaption{%  TODO. Catch typos.
   \@ifstar\bbl@setcaption@s\bbl@setcaption@x}
 \def\bbl@setcaption@x#1#2#3{%  language caption-name string
   \bbl@trim@def\bbl@tempa{#2}%
