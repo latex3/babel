@@ -7,21 +7,39 @@
 
 **Preliminary and tentative**
 
+Please, feel free to contribute – feedback is most welcome.
+
 This feature currently requires loading the language explicitly with
-`\babelprovide`, as well as activating it with the macro
-`\EnableTibetanHJ` in the preamble. Don’t use it for production.
+`\babelprovide`. Don’t use it for production.
 
-The rules currently applied are the following (liable to change):
+The rules currently applied are the following (to be completed and
+liable to change):
 
-* Spaces are set to 1 em plus .1 em (but see below).
+* Spaces are set to .5 em, ie, an en-space (but see below).
 * Line breaking is allowed at spaces, except if between two shads.
-* Line breaking is allowed after a tsek, except if followed by a shad.
-  (This rule must be fine tuned.)
-* Justification is done with filling tseks.
+* Line breaking is allowed after a tsheg (sometimes written tsek),
+  except if followed by a shad (this rule must be fine tuned).
+* Line breaking is allowed between a shad a consonant (to be fine
+  tuned, too).
+* Justification is done with lines padded with tshegs, if
+  `justification=padding` is set.
 
-There are no rules for *rin chen spungs shad* yet. It’s worth noting the
-number of trailing tseks can be dramatically reduced with
-`microtype`, but this isn’t necessarily the desired behavior.
+Among others, there are no rules for *rin chen spungs shad* yet.
+
+It’s worth noting the number of trailing tshegs can be dramatically
+reduced with `microtype`, but this isn’t necessarily the desired
+behavior.
+
+There are a couple of Lua low-level parameter to adjust spacing (a higher
+level will be provided in a future, besides some additional
+parameters). The first one is the space in em units after a shad, an
+the second one is the space after a tsheg. In both cases, it’s the
+normal, plus and minus values. The values must be set with `\directlua`
+(or some wrapper) in the preamble.
+```
+Babel.tibetan.shad = {.5, 0, 0}
+Babel.tibetan.tsheg = {0, .0001, 0}
+```  
 
 Here is a sample document (text picked randomly from the Wikipedia)
 with a Windows font:
@@ -29,10 +47,8 @@ with a Windows font:
 \documentclass[twocolumn]{article}
 
 \usepackage{babel}
-\babelprovide[import, main, justification=unhyphenated]{tibetan}
+\babelprovide[import, main, justification=padding]{tibetan}
 \babelfont{rm}{Microsoft Himalaya}
-
-\EnableTibetanHJ
 
 \begin{document}
 
@@ -54,26 +70,65 @@ with a Windows font:
 ```
 ![Tibetan](../media/tibetan-hj.jpg)
 
-The algorithm devised fot the Tibetan justification is based on that
-for Arabic (remember the latter is useable in many cases but not
-complete). Please, feel free to contribute, because any help will be
-most welcome.
+The algorithm devised for the Tibetan justification is based on that
+for Arabic (remember the latter is usable in many cases but not
+complete). 
 
-To ease testings, there is an optional argument to `\EnableTibetanHJ` so
-that `\EnableTibetanHJ[.7 .05 0.01]` sets the space to .7 em plus .05 em
-minus 0.01 em.
+There isn’t a single convention for Tibetan justification. Sometimes,
+tshegs at the end of lines are omitted and inter-character spacing
+adjusted. Some parameters will be provided to adjust the formatting.
+
+**Resources**
+
+* [Tibetan
+  Line Breaking, Unicode Line Breaking Algorithm](https://www.unicode.org/reports/tr14/#TibetanLinebreaking)
+* [Digital
+Tibetan](https://digitaltibetan.github.io/DigitalTibetan/main.html)
+* [Requirements for Tibetan Text Layout and
+  Typography](https://www.w3.org/TR/tlreq/)
+* [Tibetan (r12a)](https://r12a.github.io/scripts/tibetan/bo.html)
+
+## New option `letters` for `onchar`
+
+With this options, mapping is restricted to letters (in the TeX sense,
+that is, with catcode 11), and other characters are excluded, including
+digits. The main purpose of this option is to exclude from the Latin
+script a good deal of characters which are best assigned to the main
+font, like commas, colons, and so on. This rule based on catcodes is
+simple and efficient. More complex rules should be handled with TeX
+macros (for example, a `\enquote` can be defined for quoted English
+text) or with transforms, but the latter must be extended before,
+because currently it cannot deal with fonts.
+
+A typical usage would be something like:
+```tex
+\usepackage[sinhala, provide=*]{babel}
+\babelfont{rm}{FreeSerif}
+
+\babelprovide[onchar=ids fonts letters]{english}
+\babelfont[english]{rm}{Latin Modern Roman}
+```
+
+Bear in mind no universal rules can be settled and depends largely on
+the document and the ‘semantic’ context. Consider the following
+sentence:: “Οὐχὶ, ταὐτὰ, and παρίσταταί are the first words in this
+text.” In this case the punctuation must be in the English font, and
+the fact the first comma is placed between two Greek letters is
+irrelevant. Although several criteria are possible, like the first
+letter in the paragraph, the surrounding letters, and so on, manual
+switching will be still necessary very often.
 
 ## Locales
 
 * More updates to the CLDR 41: Burmese, Dutch, Kwasio, Malay, Marathi,
   Mazanderani, Nepali, Norwegian, Norwegian Nynorsk.
-  
-## `fontspec` warning
+
+## `fontspec` warnings
 
 After some attempts to deal with the `fontspec` warnings about
-inexistent languages and scripts, now they are concealed when fonts are
+unavailable languages and scripts, now they are concealed when fonts are
 defined with `\babelfont` (but not otherwise). In most cases they are
-useless and even misleading, because many fonts don’t set the
-language system, many people know nothing about this OpenType feature,
-and some even think those warnings refer to the availability of the
-language in `babel`.
+useless and even misleading, because many fonts don’t set the language
+system, many people know nothing about this OpenType feature, and some
+even think those warnings refer to the availability of the language in
+`babel`.

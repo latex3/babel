@@ -48,7 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [3.81](news/whats-new-in-babel-3.81.html) | *Development.* Tibetan justification. |
+| [3.81](news/whats-new-in-babel-3.81.html) | Tentative Tibetan justification. Option `letters` for `onchar`|
 | [3.80](news/whats-new-in-babel-3.80.html) | Captions for Hausa. Ethiopic calendar. |
 | [3.79](news/whats-new-in-babel-3.79.html) | Mainly a maintenance release. |
 | [3.78](news/whats-new-in-babel-3.78.html) | Some locales updated to the CLDR 41. |
