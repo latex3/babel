@@ -1,7 +1,7 @@
 
 # What's new in babel 3.81
 
-*Draft.*
+2022-10-04
 
 ## Tibetan line breaking and justification (`luatex`)
 
@@ -19,7 +19,7 @@ liable to change):
 * Line breaking is allowed at spaces, except if between two shads.
 * Line breaking is allowed after a tsheg (sometimes written tsek),
   except if followed by a shad (this rule must be fine tuned).
-* Line breaking is allowed between a shad a consonant (to be fine
+* Line breaking is allowed between a shad and a consonant (to be fine
   tuned, too).
 * Justification is done with lines padded with tshegs, if
   `justification=padding` is set.
