@@ -1,4 +1,4 @@
-## Babel 3.80.2876
+## Babel 3.81
 
 **Development**
 
@@ -48,27 +48,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.81  dev
+3.81  2022-10-04
       * Tibetan line breaking and justification (lines padded with
         trailing tshegs).
-      * No 'fontspec' warnings about inexistent languages and
-        scripts.
-
-3.80  2022-09-16
-      * Ethiopic calendar.
-      * Hungarian date in the superessive case.
-      * Captions for Hausa by Abubakar Yusuf (@fatherofcamels)
-      * Fixes in dates:
-        - Latin: In `pdftex`, numerals were printed in arabic form.
-        - Thai: Buddhist and Gregorian were reversed.
-        - Persian: The Persian calendar was not loaded.
-      * More updates to the CLDR 41: Galician, Swiss German, Gujarati,
-        Hausa, Hebrew, Hindi, Croatian, Upper Sorbian, Hungarian,
-        Armenian, Interlingua, Indonesian, Igbo, Sichuan Yi, Icelandic,
-        Italian, Japanese, Ngomba, Georgian, Kabyle, Kabuverdianu,
-        Kazakh, Kako, Kalaallisut, Khmer, Kannada, Korean, Konkani,
-        Kashmiri, Colognian, Cornish, Kyrgyz, Lakota, Lao, Northern
-        Luri, Lithuanian, Macedonian, Malayalam, Mongolian.
+      * New option 'letters' for 'onchar'.
+      * Conceal 'fontspec' warnings about unknown languages and
+        scripts with \babelfont.
+      * More updates to the CLDR 41: Burmese, Dutch, Kwasio, Malay,
+        Marathi, Mazanderani, Nepali, Norwegian, Norwegian Nynorsk.
 ```
 
 ### Previous changes

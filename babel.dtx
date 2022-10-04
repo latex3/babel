@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/09/30 v3.80.2876 The Babel package]
+\ProvidesFile{babel.dtx}[2022/10/04 v3.81 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2308,7 +2308,6 @@ to select fonts in addition to the three basic families.
   \babel{} and should be set with |fontspec| if necessary.
 \end{warning}
 
-
 \begin{troubleshooting}
   \trouble{Package babel Info: The following fonts are not babel
   standard families} \textit{Package babel Info: The following fonts
@@ -2609,7 +2608,8 @@ the script, no matter which language is active. Although somewhat
 inconsistent, this makes setting a language up easier in most typical
 cases.
 
-\Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}}
+\Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}
+  $\string|$ \texttt{letters}}
 \New{3.38} This option is much like an ‘event’ called when a character
 belonging to the script of this locale is found (as its name implies,
 it acts on characters, not on spaces). There are currently two
@@ -2619,6 +2619,10 @@ this locale; with |fonts|, the fonts are changed to those of this
 locale (as set with |\babelfont|). This option is not compatible with
 |mapfont|. Characters can be added or modified with
 |\babelcharproperty|.
+
+\New{3.81} Option |letters| restricts the ‘actions’ to letters, in the
+\TeX{} sense (i.~e., with catcode 11). Digits and punctuation are then
+considered part of current locale (as set by a selector).
 
 \begin{note}
   An alternative approach with \luatex{} and Harfbuzz is the font
@@ -2643,13 +2647,19 @@ Currently used only in Southeast Asian scrips, like Thai. Ignored if 0
 See section~\ref{transforms}.
 
 \Describe{justification=}{\texttt{kashida} $\string|$
-\texttt{elongated} $\string|$ \texttt{unhyphenated}}
+\texttt{elongated} $\string|$ \texttt{unhyphenated}
+$\string|$ \texttt{padding}}
 \New{3.59} There are currently three options, mainly for the Arabic
 script. It sets the linebreaking and justification method, which can be
 based on the the \textsc{arabic tatweel} character or in the
 ‘justification alternatives’ OpenType table (\texttt{jalt}). For an
 explanation see the
 \href{https://latex3.github.io/babel/news/whats-new-in-babel-3.59.html}%
+  {\babel\ site}.
+
+\New{3.81} The option |padding| has been devised primarily for Tibetan.
+It’s still somewhat experimental. Again, there is an explanation in the
+\href{https://latex3.github.io/babel/news/whats-new-in-babel-3.81.html}%
   {\babel\ site}.
 
 \Describe{linebreaking=}{}
@@ -4093,6 +4103,10 @@ For example:
 \babelcharproperty{`)}{linebreak}{cl} % or id, op, cl, ns, ex, in, hy
 \end{verbatim}
 
+Please, refer to the Unicode standard (Annex \#9 and Annex \#14) for
+the meaning of the available codes. For example, |en| is ‘European
+number’ and |id| is ‘ideographic’.
+
 \New{3.39} Another property is |locale|, which adds characters to the
 list used by |onchar| in |\babelprovide|, or, if the last argument is
 empty, removes them. The last argument is the locale name:
@@ -5162,8 +5176,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.80.2876>>
-%<<date=2022/09/30>>
+%<<version=3.81>>
+%<<date=2022/10/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6468,7 +6482,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@id@assign
   % switch captions, date
   % No text is supposed to be added here, so we remove any
-  % spurious spaces.  
+  % spurious spaces.
   \bbl@bsphack
     \ifcase\bbl@select@type
       \csname captions#1\endcsname\relax
@@ -6515,9 +6529,10 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@xin@{/u}{/\bbl@tempa}%
   \ifin@\else\bbl@xin@{/e}{/\bbl@tempa}\fi % elongated forms 
   \ifin@\else\bbl@xin@{/k}{/\bbl@tempa}\fi % only kashida
+  \ifin@\else\bbl@xin@{/p}{/\bbl@tempa}\fi % padding (eg, Tibetan)
   \ifin@\else\bbl@xin@{/v}{/\bbl@tempa}\fi % variable font
   \ifin@
-    % unhyphenated/kashida/elongated = allow stretching
+    % unhyphenated/kashida/elongated/padding = allow stretching
     \language\l@unhyphenated
     \babel@savevariable\emergencystretch
     \emergencystretch\maxdimen
@@ -9816,7 +9831,15 @@ help from Bernd Raichle, for which I am grateful.
         Babel.linebreaking.add_before(Babel.locale_map)
         Babel.loc_to_scr = {}
         Babel.chr_to_loc = Babel.chr_to_loc or {}
-      end}%
+      end
+      Babel.locale_props[\the\localeid].letters = false
+    }%
+    \bbl@xin@{ letters }{ \bbl@KVP@onchar\space}%
+    \ifin@
+      \directlua{
+        Babel.locale_props[\the\localeid].letters = true
+      }%
+    \fi
     \bbl@xin@{ ids }{ \bbl@KVP@onchar\space}%
     \ifin@
       \ifx\bbl@starthyphens\@undefined % Needed if no explicit selection
@@ -9919,7 +9942,8 @@ help from Bernd Raichle, for which I am grateful.
      \let\bbl@KVP@linebreaking\bbl@KVP@justification
   \fi
   \ifx\bbl@KVP@linebreaking\@nnil\else
-    \bbl@xin@{,\bbl@KVP@linebreaking,}{,elongated,kashida,cjk,unhyphenated,}%
+    \bbl@xin@{,\bbl@KVP@linebreaking,}%
+      {,elongated,kashida,cjk,padding,unhyphenated,}%
     \ifin@
       \bbl@csarg\xdef
         {lnbrk@\languagename}{\expandafter\@car\bbl@KVP@linebreaking\@nil}%
@@ -9928,6 +9952,8 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@xin@{/e}{/\bbl@cl{lnbrk}}%
   \ifin@\else\bbl@xin@{/k}{/\bbl@cl{lnbrk}}\fi
   \ifin@\bbl@arabicjust\fi
+  \bbl@xin@{/p}{/\bbl@cl{lnbrk}}%
+  \ifin@\AtBeginDocument{\bbl@tibetanjust}\fi
   % == Line breaking: hyphenate.other.(locale|script) ==
   \ifx\bbl@lbkflag\@empty
     \bbl@ifunset{bbl@hyotl@\languagename}{}%
@@ -12899,9 +12925,12 @@ help from Bernd Raichle, for which I am grateful.
 %<<*Font selection>>
 \bbl@trace{Font handling with fontspec}
 \ifx\ExplSyntaxOn\@undefined\else
-  \def\bbl@fs@warn#1#2{% \bbl@tempfs is the original macro
+  \def\bbl@fs@warn@nx#1#2{% \bbl@tempfs is the original macro
     \in@{,#1,}{,no-script,language-not-exist,}%
-    \ifin@\else\bbl@tempfs{#1}{#2}\fi}
+    \ifin@\else\bbl@tempfs@nx{#1}{#2}\fi}
+  \def\bbl@fs@warn@nxx#1#2#3{%
+    \in@{,#1,}{,no-script,language-not-exist,}%
+    \ifin@\else\bbl@tempfs@nxx{#1}{#2}{#3}\fi}
   \def\bbl@loadfontspec{%
     \let\bbl@loadfontspec\relax 
     \ifx\fontspec\@undefined
@@ -13073,11 +13102,15 @@ help from Bernd Raichle, for which I am grateful.
       {\\\newfontscript{\bbl@cl{sname}}{\bbl@cl{sotf}}}%
     \<keys_if_exist:nnF>{fontspec-opentype}{Language/\bbl@cl{lname}}%
       {\\\newfontlanguage{\bbl@cl{lname}}{\bbl@cl{lotf}}}%
-    \let\\\bbl@tempfs\<__fontspec_warning:nx>%
-    \let\<__fontspec_warning:nx>\\\bbl@fs@warn
+    \let\\\bbl@tempfs@nx\<__fontspec_warning:nx>%
+    \let\<__fontspec_warning:nx>\\\bbl@fs@warn@nx
+    \let\\\bbl@tempfs@nxx\<__fontspec_warning:nxx>%
+    \let\<__fontspec_warning:nxx>\\\bbl@fs@warn@nxx
     \\\renewfontfamily\\#4%
       [\bbl@cl{lsys},#2]}{#3}% ie \bbl@exp{..}{#3}
-  \bbl@exp{\let\<__fontspec_warning:nx>\\\bbl@tempfs}%
+  \bbl@exp{%
+    \let\<__fontspec_warning:nx>\\\bbl@tempfs@nx
+    \let\<__fontspec_warning:nxx>\\\bbl@tempfs@nxx}%
   \begingroup
      #4%
      \xdef#1{\f@family}%     eg, \bbl@rmdflt@lang{FreeSerif(0)}
@@ -14328,6 +14361,11 @@ function Babel.locale_map(head)
           (item.char >= 0x1DC0 and item.char <= 0x1DFF) then
         toloc = toloc_save
       end
+      if toloc and Babel.locale_props[toloc] and
+          Babel.locale_props[toloc].letters and
+          tex.getcatcode(item.char) \string~= 11 then
+        toloc = nil
+      end
       if toloc and toloc > -1 then
         if Babel.locale_props[toloc].lg then
           item.lang = Babel.locale_props[toloc].lg
@@ -14338,7 +14376,7 @@ function Babel.locale_map(head)
         end
         toloc_save = toloc
       end
-    elseif not inmath and item.id == 7 then
+    elseif not inmath and item.id == 7 then % Apply recursively
       item.replace = item.replace and Babel.locale_map(item.replace)
       item.pre     = item.pre and Babel.locale_map(item.pre)
       item.post    = item.post and Babel.locale_map(item.post)  
