@@ -1,6 +1,6 @@
 ## Babel 3.81.2883
 
-**Development**
+2022-10-04
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
