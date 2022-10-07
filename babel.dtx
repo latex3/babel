@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/10/04 v3.81 The Babel package]
+\ProvidesFile{babel.dtx}[2022/10/07 v3.81.2883 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5176,8 +5176,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.81>>
-%<<date=2022/10/04>>
+%<<version=3.81.2883>>
+%<<date=2022/10/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5202,6 +5202,10 @@ help from Bernd Raichle, for which I am grateful.
     {\def#1{#2}}%
     {\expandafter\def\expandafter#1\expandafter{#1#2}}}
 \def\bbl@xin@{\@expandtwoargs\in@}
+\def\bbl@carg#1#2{\expandafter#1\csname#2\endcsname}%
+\def\bbl@ncarg#1#2#3{\expandafter#1\expandafter#2\csname#3\endcsname}%
+\def\bbl@ccarg#1#2#3{%
+  \expandafter#1\csname#2\expandafter\endcsname\csname#3\endcsname}%
 \def\bbl@csarg#1#2{\expandafter#1\csname bbl@#2\endcsname}%
 \def\bbl@cs#1{\csname bbl@#1\endcsname}
 \def\bbl@cl#1{\csname bbl@#1@\languagename\endcsname}
@@ -10104,8 +10108,19 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@pre@fs}%
       {\bbl@post@fs}%
   \fi
-  % == Release saved transforms ==
-  \bbl@release@transforms\relax % \relax closes the last item.
+  % == transforms ==
+  \ifx\bbl@KVP@transforms\@nnil\else
+    \def\bbl@elt##1##2##3{%
+      \in@{$transforms.}{$##1}%
+      \ifin@
+        \def\bbl@tempa{##1}%
+        \bbl@replace\bbl@tempa{transforms.}{}%
+        \expandafter
+        \bbl@transforms\csname babel\bbl@tempa\endcsname{##2}{##3}%
+      \fi}%
+    \csname bbl@inidata@\languagename\endcsname
+    \bbl@release@transforms\relax % \relax closes the last item.
+  \fi
   % == main ==
   \ifx\bbl@KVP@main\@nnil  % Restore only if not 'main'
     \let\languagename\bbl@savelangname
@@ -10911,44 +10926,40 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \let\bbl@release@transforms\@empty
-\@namedef{bbl@inikv@transforms.prehyphenation}{%
-  \bbl@transforms\babelprehyphenation}
-\@namedef{bbl@inikv@transforms.posthyphenation}{%
-  \bbl@transforms\babelposthyphenation}
+\bbl@csarg\let{inikv@transforms.prehyphenation}\bbl@inikv
+\bbl@csarg\let{bbl@inikv@transforms.posthyphenation}\bbl@inikv
 \def\bbl@transforms@aux#1#2#3#4,#5\relax{%
   #1[#2]{#3}{#4}{#5}}
 \begingroup %  A hack. TODO. Don't require an specific order
   \catcode`\%=12
   \catcode`\&=14
   \gdef\bbl@transforms#1#2#3{&%
-    \ifx\bbl@KVP@transforms\@nnil\else
-      \directlua{
-         local str = [==[#2]==]
-         str = str:gsub('%.%d+%.%d+$', '')
-         tex.print([[\def\string\babeltempa{]] .. str .. [[}]])
-      }&%
-      \bbl@xin@{,\babeltempa,}{,\bbl@KVP@transforms,}&%
+    \directlua{
+       local str = [==[#2]==]
+       str = str:gsub('%.%d+%.%d+$', '')
+       tex.print([[\def\string\babeltempa{]] .. str .. [[}]])
+    }&%
+    \bbl@xin@{,\babeltempa,}{,\bbl@KVP@transforms,}&%
+    \ifin@
+      \in@{.0$}{#2$}&%
       \ifin@
-        \in@{.0$}{#2$}&%
-        \ifin@
-          \directlua{
-            local str = string.match([[\bbl@KVP@transforms]],
-                          '%(([^%(]-)%)[^%)]-\babeltempa')
-            if str == nil then
-              tex.print([[\def\string\babeltempb{}]])
-            else
-              tex.print([[\def\string\babeltempb{,attribute=]] .. str .. [[}]])
-            end
-          }
-          \toks@{#3}&%
-          \bbl@exp{&%
-            \\\g@addto@macro\\\bbl@release@transforms{&%
-              \relax  &% Closes previous \bbl@transforms@aux
-              \\\bbl@transforms@aux
-                \\#1{label=\babeltempa\babeltempb}{\languagename}{\the\toks@}}}&%
-        \else
-          \g@addto@macro\bbl@release@transforms{, {#3}}&%
-        \fi
+        \directlua{% (\attribute) syntax
+          local str = string.match([[\bbl@KVP@transforms]],
+                        '%(([^%(]-)%)[^%)]-\babeltempa')
+          if str == nil then
+            tex.print([[\def\string\babeltempb{}]])
+          else
+            tex.print([[\def\string\babeltempb{,attribute=]] .. str .. [[}]])
+          end
+        }
+        \toks@{#3}&%
+        \bbl@exp{&%
+          \\\g@addto@macro\\\bbl@release@transforms{&%
+            \relax  &% Closes previous \bbl@transforms@aux
+            \\\bbl@transforms@aux
+              \\#1{label=\babeltempa\babeltempb}{\languagename}{\the\toks@}}}&%
+      \else
+        \g@addto@macro\bbl@release@transforms{, {#3}}&%
       \fi
     \fi}
 \endgroup

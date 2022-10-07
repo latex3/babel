@@ -1,4 +1,4 @@
-## Babel 3.81
+## Babel 3.81.2883
 
 **Development**
 
@@ -48,6 +48,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.82  (dev)
+      * Predefined transforms can be activated after the first
+        \babelprovide.
+
 3.81  2022-10-04
       * Tibetan line breaking and justification (lines padded with
         trailing tshegs).
