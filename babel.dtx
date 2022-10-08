@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/10/07 v3.81.2883 The Babel package]
+\ProvidesFile{babel.dtx}[2022/10/08 v3.81.2884 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5176,8 +5176,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.81.2883>>
-%<<date=2022/10/07>>
+%<<version=3.81.2884>>
+%<<date=2022/10/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7058,7 +7058,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@redefine@long#1{%
   \edef\bbl@tempa{\bbl@stripslash#1}%
   \expandafter\let\csname org@\bbl@tempa\endcsname#1%
-  \expandafter\long\expandafter\def\csname\bbl@tempa\endcsname}
+  \long\expandafter\def\csname\bbl@tempa\endcsname}
 \@onlypreamble\bbl@redefine@long
 %    \end{macrocode}
 %
@@ -7635,7 +7635,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@csarg\edef{normal@#2}{%
     \noexpand\active@prefix\noexpand#1%
     \expandafter\noexpand\csname normal@char#2\endcsname}%
-  \expandafter\let\expandafter#1\csname bbl@normal@#2\endcsname
+  \bbl@ncarg\let#1{bbl@normal@#2}%
 %    \end{macrocode}
 %
 %    The next level of the code checks whether a user has defined a
@@ -8022,10 +8022,8 @@ help from Bernd Raichle, for which I am grateful.
          \@notshorthand{#2}%
        \else
          \initiate@active@char{#2}%
-         \expandafter\let\csname active@char\string#2\expandafter\endcsname
-           \csname active@char\string#1\endcsname
-         \expandafter\let\csname normal@char\string#2\expandafter\endcsname
-           \csname normal@char\string#1\endcsname
+         \bbl@ccarg\let{active@char\string#2}{active@char\string#1}%
+         \bbl@ccarg\let{normal@char\string#2}{normal@char\string#1}%
          \bbl@activate{#2}%
        \fi
      \fi}%
@@ -8718,20 +8716,44 @@ help from Bernd Raichle, for which I am grateful.
 % A temporary hack:
 \ifx\BabelCaseHack\@undefined
 \AtBeginDocument{%
-  \bbl@exp{%
-    \\\in@{\string\@uclclist}%
-          {\expandafter\meaning\csname MakeUppercase \endcsname}}%
+  \bbl@xin@{\string\@uclclist}%
+           {\bbl@carg\meaning{MakeUppercase }}%
   \ifin@\else
-    \expandafter\let\expandafter\bbl@newuc\csname MakeUppercase \endcsname
+    \chardef\bbl@ulflag\z@
+    \bbl@ncarg\let\bbl@newuc{MakeUppercase }%
     \protected\@namedef{MakeUppercase }#1{{%
-      \def\reserved@a##1##2{\let##1##2\reserved@a}%
-      \expandafter\reserved@a\@uclclist\reserved@b{\reserved@b\@gobble}%
-      \protected@edef\reserved@a{\bbl@newuc{#1}}\reserved@a}}%
-    \expandafter\let\expandafter\bbl@newlc\csname MakeLowercase \endcsname
+      \chardef\bbl@ulflag\@ne
+      \ifx\bbl@uclc\@undefined
+        \bbl@newuc{#1}%
+      \else
+        \bbl@ifunset{\languagename @bbl@uclc}%
+          {\bbl@newuc{#1}}%
+          {\def\reserved@a##1##2{\let##1##2\reserved@a}%
+           \bbl@uclc\reserved@a\reserved@b{\reserved@b\@gobble}%
+           \protected@edef\reserved@a{\bbl@newuc{#1}}% Pre-expand
+           \reserved@a}%
+      \fi}}%
+    \bbl@ncarg\let\bbl@newlc{MakeLowercase }%
     \protected\@namedef{MakeLowercase }#1{{%
-      \def\reserved@a##1##2{\let##2##1\reserved@a}%
-      \expandafter\reserved@a\@uclclist\reserved@b{\reserved@b\@gobble}%
-      \protected@edef\reserved@a{\bbl@newlc{#1}}\reserved@a}}%
+      \chardef\bbl@ulflag\tw@
+      \ifx\bbl@uclc\@undefined
+        \bbl@newlc{#1}%
+      \else
+        \bbl@ifunset{\languagename @bbl@uclc}%
+          {\bbl@newlc{#1}}%
+          {\def\reserved@a##1##2{\let##2##1\reserved@a}%
+           \bbl@uclc\reserved@a\reserved@b{\reserved@b\@gobble}%
+           \protected@edef\reserved@a{\bbl@newlc{#1}}% Pre-expand
+           \reserved@a}%
+      \fi}}%
+  \def\bbl@cased{%
+    \ifcase\bbl@ulflag
+      \expandafter\@firstofone
+    \or
+      \expandafter\MakeUppercase
+    \or
+      \expandafter\MakeLowercase
+    \fi}%
   \fi}   
 \fi  
 %    \end{macrocode}
@@ -9016,12 +9038,9 @@ help from Bernd Raichle, for which I am grateful.
   \newcommand\SetCase[3][]{%
     \bbl@patchuclc
     \bbl@forlang\bbl@tempa{%
-      \expandafter\bbl@encstring
-        \csname\bbl@tempa @bbl@uclc\endcsname{\bbl@tempa##1}%
-      \expandafter\bbl@encstring
-        \csname\bbl@tempa @bbl@uc\endcsname{##2}%
-      \expandafter\bbl@encstring
-        \csname\bbl@tempa @bbl@lc\endcsname{##3}}}%
+      \bbl@carg\bbl@encstring{\bbl@tempa @bbl@uclc}{\bbl@tempa##1}%
+      \bbl@carg\bbl@encstring{\bbl@tempa @bbl@uc}{##2}%
+      \bbl@carg\bbl@encstring{\bbl@tempa @bbl@lc}{##3}}}%
 %<</Macros local to BabelCommands>>
 %    \end{macrocode}
 %
@@ -9524,7 +9543,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \def\umlauthigh{%
   \def\bbl@umlauta##1{\leavevmode\bgroup%
-      \expandafter\accent\csname\f@encoding dqpos\endcsname
+      \accent\csname\f@encoding dqpos\endcsname
       ##1\bbl@allowhyphens\egroup}%
   \let\bbl@umlaute\bbl@umlauta}
 \def\umlautlow{%
@@ -9570,10 +9589,10 @@ help from Bernd Raichle, for which I am grateful.
   \leavevmode\bgroup
     \U@D 1ex%
     {\setbox\z@\hbox{%
-      \expandafter\char\csname\f@encoding dqpos\endcsname}%
+      \char\csname\f@encoding dqpos\endcsname}%
       \dimen@ -.45ex\advance\dimen@\ht\z@
       \ifdim 1ex<\dimen@ \fontdimen5\font\dimen@ \fi}%
-    \expandafter\accent\csname\f@encoding dqpos\endcsname
+    \accent\csname\f@encoding dqpos\endcsname
     \fontdimen5\font\U@D #1%
   \egroup}
 %    \end{macrocode}
@@ -10109,17 +10128,18 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@post@fs}%
   \fi
   % == transforms ==
-  \ifx\bbl@KVP@transforms\@nnil\else
-    \def\bbl@elt##1##2##3{%
-      \in@{$transforms.}{$##1}%
-      \ifin@
-        \def\bbl@tempa{##1}%
-        \bbl@replace\bbl@tempa{transforms.}{}%
-        \expandafter
-        \bbl@transforms\csname babel\bbl@tempa\endcsname{##2}{##3}%
-      \fi}%
-    \csname bbl@inidata@\languagename\endcsname
-    \bbl@release@transforms\relax % \relax closes the last item.
+  \ifodd\bbl@engine
+    \ifx\bbl@KVP@transforms\@nnil\else
+      \def\bbl@elt##1##2##3{%
+        \in@{$transforms.}{$##1}%
+        \ifin@
+          \def\bbl@tempa{##1}%
+          \bbl@replace\bbl@tempa{transforms.}{}%
+          \bbl@carg\bbl@transforms{babel\bbl@tempa}{##2}{##3}%
+        \fi}%
+      \csname bbl@inidata@\languagename\endcsname
+      \bbl@release@transforms\relax % \relax closes the last item.
+    \fi
   \fi
   % == main ==
   \ifx\bbl@KVP@main\@nnil  % Restore only if not 'main'
@@ -10943,7 +10963,7 @@ help from Bernd Raichle, for which I am grateful.
     \ifin@
       \in@{.0$}{#2$}&%
       \ifin@
-        \directlua{% (\attribute) syntax
+        \directlua{&% (\attribute) syntax
           local str = string.match([[\bbl@KVP@transforms]],
                         '%(([^%(]-)%)[^%)]-\babeltempa')
           if str == nil then
@@ -12380,7 +12400,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \ifx\bbl@opt@main\@nnil\else
-  \bbl@csarg\let{loadmain\expandafter}\csname ds@\bbl@opt@main\endcsname
+  \bbl@ncarg\let\bbl@loadmain{ds@\bbl@opt@main}%
   \expandafter\let\csname ds@\bbl@opt@main\endcsname\relax
 \fi
 %    \end{macrocode}
