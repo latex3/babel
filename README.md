@@ -1,4 +1,4 @@
-## Babel 3.81.2884
+## Babel 3.81.2888
 
 **Development**
 
@@ -51,6 +51,8 @@ respective authors.
 3.82  (dev)
       * Predefined transforms can be activated after the first
         \babelprovide.
+      * Fixes for \MakeXXXcase: a (hopefully) better hack for #189 (see
+        also #193).
 
 3.81  2022-10-04
       * Tibetan line breaking and justification (lines padded with

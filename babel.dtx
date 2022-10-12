@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/10/08 v3.81.2884 The Babel package]
+\ProvidesFile{babel.dtx}[2022/10/12 v3.81.2888 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5176,8 +5176,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.81.2884>>
-%<<date=2022/10/08>>
+%<<version=3.81.2888>>
+%<<date=2022/10/12>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8755,7 +8755,7 @@ help from Bernd Raichle, for which I am grateful.
       \expandafter\MakeLowercase
     \fi}%
   \fi}   
-\fi  
+\fi
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -9976,7 +9976,7 @@ help from Bernd Raichle, for which I am grateful.
   \ifin@\else\bbl@xin@{/k}{/\bbl@cl{lnbrk}}\fi
   \ifin@\bbl@arabicjust\fi
   \bbl@xin@{/p}{/\bbl@cl{lnbrk}}%
-  \ifin@\AtBeginDocument{\bbl@tibetanjust}\fi
+  \ifin@\AtBeginDocument{\@nameuse{bbl@tibetanjust}}\fi
   % == Line breaking: hyphenate.other.(locale|script) ==
   \ifx\bbl@lbkflag\@empty
     \bbl@ifunset{bbl@hyotl@\languagename}{}%
@@ -13277,7 +13277,7 @@ help from Bernd Raichle, for which I am grateful.
           \<bbl@xeipn@\languagename>}%
         \\\bbl@toglobal\<extras\languagename>%
         \\\bbl@add\<noextras\languagename>{%
-          \XeTeXlinebreaklocale "en"}%
+          \XeTeXlinebreaklocale ""}%
         \\\bbl@toglobal\<noextras\languagename>}%
       \ifx\bbl@ispacesize\@undefined
         \gdef\bbl@ispacesize{\bbl@cl{xeisp}}%
