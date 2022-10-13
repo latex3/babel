@@ -1,5 +1,33 @@
 # Old, deprecated, and removed functions
 
+## Removed from the manual
+
+Some functions where introduced years ago because they made sense
+at their time. However, LaTeX has evolved and currently they are of
+limited interest, and therefore their description has been moved here,
+for not to clutter the manual.
+
+`strings` • Package option with a value. Selects the encoding of
+strings in languages supporting this feature. Predefined labels are
+`generic` (for traditional TeX, LICR and ASCII strings), `unicode` (for
+engines like `xetex` and `luatex`) and `encoded` (for special cases
+requiring mixed encodings). Other allowed values are font encoding
+codes (`T1`, `T2A`, `LGR`, `L7X`...), but only in languages supporting
+them. Be aware with `encoded` captions are protected, but they work in
+`\MakeUppercase` and the like (this feature misuses some internal LaTeX
+tools, so use it only as a last resort).
+
+`mapfont=direction` • Option in `\babelprovide`. Assigns the font for
+the writing direction of this language (only with `bidi=basic`).
+Instead of this option use `onchar`, based on the script. More
+precisely, what `mapfont=direction` means is, ‘when a character has the
+same direction as the script for the “provided” language, then change
+its font to that set for this language’. There are 3 directions,
+following the bidi Unicode algorithm, namely, Arabic-like, Hebrew-like
+and left to right. So, there should be at most 3 directives of this
+kind. The only value is `direction`, and this option won’t be developed
+any further.
+
 ## Fonts
 
 A couple of tentative macros were provided by `babel` <3.9g with a
