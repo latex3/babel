@@ -7,7 +7,7 @@ Main Class: article
 Package: babel
     Options: strings=generic,main=french
 \languagename = macro:->french
-\testuc = macro:->QA\r A
+\testuc = macro:->QA\AA 
 \testlc = macro:->qa\oe 
 \testuc = macro:->XA\OE 
 \testlc = macro:->xa\r a

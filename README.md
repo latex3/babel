@@ -1,4 +1,4 @@
-## Babel 3.81.2888
+## Babel 3.81.2898
 
 **Development**
 
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.81 are described in:
+Changes in version 3.82 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.81.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.82.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -50,18 +50,15 @@ respective authors.
 ```
 3.82  (dev)
       * Predefined transforms can be activated after the first
-        \babelprovide.
-      * Fixes for \MakeXXXcase: a (hopefully) better hack for #189 (see
-        also #193).
-
-3.81  2022-10-04
-      * Tibetan line breaking and justification (lines padded with
-        trailing tshegs).
-      * New option 'letters' for 'onchar'.
-      * Conceal 'fontspec' warnings about unknown languages and
-        scripts with \babelfont.
-      * More updates to the CLDR 41: Burmese, Dutch, Kwasio, Malay,
-        Marathi, Mazanderani, Nepali, Norwegian, Norwegian Nynorsk.
+        \babelprovide (lua).
+      * Tibetan for XeTeX.
+      * More updates to the CLDR 41: Albanian, Kinyarwanda, Maltese,
+        Odia, Ossetic, Pashto, Polish, Portuguese, Punjabi, Romanian,
+        Romansh, Russian, Sakha, Sinhala, Slovak, Slovenian, Somali.
+      * Fixes:
+        - \MakeXXXcase: a (hopefully) better hack for #189 (see
+          also #193).
+        - Thai (with xetex): #182 wasn’t quite fixed.
 ```
 
 ### Previous changes
