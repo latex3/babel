@@ -24,6 +24,7 @@ be available, because of the limitations of this engine.
 * `babel` restored in part the old `\MakeUppercase` and
   `\MakeLowercase`, which meant macros like `\label` raised again an
   error. A new patch minimizes this side effect.
+* Fix for #182 (error with Thai and XeTeX) was not complete.
   
 ## More updates to the CLDR 41
 
