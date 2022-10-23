@@ -1,8 +1,8 @@
 # What's new in babel 3.82
 
-*Draft*
+2022-10-23
 
-## Predefined tranforms with \babelprovide
+## Predefined transforms with `\babelprovide`
 
 Now transforms can be activated with a second `\babelprovide` (or after
 a `provide=*`), so that the following code is valid:
@@ -10,12 +10,12 @@ a `provide=*`), so that the following code is valid:
 \usepackage[kannada, provide=*]
 \babelprovide[transforms = danda.nobreak]{kannada}
 ```
-Formerly, the transform was ignored except if requested in the very
+Formerly, the key `transforms` was ignored except if requested in the very
 first call.
 
 ## Tibetan (xetex)
 
-Some adjustements has been added to the ini file for Tibetan for it to
+Some adjustments has been added to the `ini` file for Tibetan for it to
 work with XeTeX. However, features like text padding with tshegs won’t
 be available, because of the limitations of this engine.
 
