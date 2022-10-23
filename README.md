@@ -1,6 +1,4 @@
-## Babel 3.81.2898
-
-**Development**
+## Babel 3.82
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,7 +46,7 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.82  (dev)
+3.82  2022-10-23
       * Predefined transforms can be activated after the first
         \babelprovide (lua).
       * Tibetan for XeTeX.
