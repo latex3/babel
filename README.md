@@ -1,4 +1,4 @@
-## Babel 3.82
+## Babel 3.82.2931
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +46,11 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.82  (dev)
+      * Fixes:
+        - Wrong date format for Australian in babel-en-AU.ini (#195)
+        - Option handling is broken with braces (#198)
+      
 3.82  2022-10-23
       * Predefined transforms can be activated after the first
         \babelprovide (lua).

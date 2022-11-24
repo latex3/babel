@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/10/23 v3.82 The Babel package]
+\ProvidesFile{babel.dtx}[2022/11/24 v3.82.2931 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5153,8 +5153,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.82>>
-%<<date=2022/10/23>>
+%<<version=3.82.2931>>
+%<<date=2022/11/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8690,49 +8690,26 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@tolower\@empty}{\bbl@toupper\@empty}}%
     \gdef\bbl@tolower{\csname\languagename @bbl@lc\endcsname}%
     \gdef\bbl@toupper{\csname\languagename @bbl@uc\endcsname}}}
-% A temporary hack:
-\ifx\BabelCaseHack\@undefined
-\AtBeginDocument{%
-  \bbl@xin@{\string\@uclclist}%
-           {\bbl@carg\meaning{MakeUppercase }}%
-  \ifin@\else
-    \chardef\bbl@ulflag\z@
-    \bbl@ncarg\let\bbl@newuc{MakeUppercase }%
-    \protected\@namedef{MakeUppercase }#1{{%
-      \chardef\bbl@ulflag\@ne
-      \ifx\bbl@uclc\@undefined
-        \bbl@newuc{#1}%
-      \else
-        \bbl@ifunset{\languagename @bbl@uclc}%
-          {\bbl@newuc{#1}}%
-          {\def\reserved@a##1##2{\let##1##2\reserved@a}%
-           \bbl@uclc\reserved@a\reserved@b{\reserved@b\@gobble}%
-           \protected@edef\reserved@a{\bbl@newuc{#1}}% Pre-expand
-           \reserved@a}%
-      \fi}}%
-    \bbl@ncarg\let\bbl@newlc{MakeLowercase }%
-    \protected\@namedef{MakeLowercase }#1{{%
-      \chardef\bbl@ulflag\tw@
-      \ifx\bbl@uclc\@undefined
-        \bbl@newlc{#1}%
-      \else
-        \bbl@ifunset{\languagename @bbl@uclc}%
-          {\bbl@newlc{#1}}%
-          {\def\reserved@a##1##2{\let##2##1\reserved@a}%
-           \bbl@uclc\reserved@a\reserved@b{\reserved@b\@gobble}%
-           \protected@edef\reserved@a{\bbl@newlc{#1}}% Pre-expand
-           \reserved@a}%
-      \fi}}%
-  \def\bbl@cased{%
-    \ifcase\bbl@ulflag
-      \expandafter\@firstofone
-    \or
-      \expandafter\MakeUppercase
-    \or
-      \expandafter\MakeLowercase
-    \fi}%
-  \fi}   
-\fi
+% A temporary hack, for testing purposes:
+\def\BabelRestoreCase{%
+  \DeclareRobustCommand{\MakeUppercase}[1]{{%
+    \def\reserved@a####1####2{\let####1####2\reserved@a}%
+    \def\i{I}\def\j{J}%
+    \expandafter\reserved@a\@uclclist\reserved@b{\reserved@b\@gobble}%
+    \let\UTF@two@octets@noexpand\@empty
+    \let\UTF@three@octets@noexpand\@empty
+    \let\UTF@four@octets@noexpand\@empty
+    \protected@edef\reserved@a{\uppercase{##1}}%
+    \reserved@a
+  }}%
+  \DeclareRobustCommand{\MakeLowercase}[1]{{%
+    \def\reserved@a####1####2{\let####2####1\reserved@a}%
+    \expandafter\reserved@a\@uclclist\reserved@b{\reserved@b\@gobble}%
+    \let\UTF@two@octets@noexpand\@empty
+    \let\UTF@three@octets@noexpand\@empty
+    \let\UTF@four@octets@noexpand\@empty
+    \protected@edef\reserved@a{\lowercase{##1}}%
+    \reserved@a}}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -12451,8 +12428,12 @@ help from Bernd Raichle, for which I am grateful.
 \ifx\bbl@opt@main\@nnil
   \edef\bbl@tempa{\@classoptionslist,\bbl@language@opts}
   \let\bbl@tempc\@empty
+  \edef\bbl@templ{,\bbl@loaded,}
+  \edef\bbl@templ{\expandafter\strip@prefix\meaning\bbl@templ}
   \bbl@for\bbl@tempb\bbl@tempa{%
-    \bbl@xin@{,\bbl@tempb,}{,\bbl@loaded,}%
+    \edef\bbl@tempd{,\bbl@tempb,}%
+    \edef\bbl@tempd{\expandafter\strip@prefix\meaning\bbl@tempd}%
+    \bbl@xin@{\bbl@tempd}{\bbl@templ}%
     \ifin@\edef\bbl@tempc{\bbl@tempb}\fi}
   \def\bbl@tempa#1,#2\@nnil{\def\bbl@tempb{#1}}
   \expandafter\bbl@tempa\bbl@loaded,\@nnil
