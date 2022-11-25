@@ -1,4 +1,4 @@
-## Babel 3.82.2931
+## Babel 3.82.2932
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -50,6 +50,7 @@ respective authors.
       * Fixes:
         - Wrong date format for Australian in babel-en-AU.ini (#195)
         - Option handling is broken with braces (#198)
+        - Stray punctuation with tikz lead to lua error (#197)
       
 3.82  2022-10-23
       * Predefined transforms can be activated after the first
