@@ -27,8 +27,8 @@ Package: babel
 ..\penalty 10000
 ..\glue(\parfillskip) 0.0 plus 1.0fil
 ..\glue(\rightskip) 0.0
-.\marks2{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \MakeUppercase  \ETC.}
-.\marks3{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \MakeUppercase  \ETC.}
+.\marks2{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \MakeUppercase    \ETC.}
+.\marks3{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \MakeUppercase    \ETC.}
 .\mark{{}{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \ETC.}
 .\write1{\@writefile{toc}{\protect \contentsline {section}{\protect \numberline \ETC.}
 .\penalty 10000

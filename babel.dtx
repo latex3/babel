@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/11/25 v3.82.2932 The Babel package]
+\ProvidesFile{babel.dtx}[2022/11/30 v3.83 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1502,23 +1502,22 @@ captions):
 \def\hascapl{\textsuperscript{l}}
 
 \begin{multicols}{2}
-
 \tag{af} Afrikaans\hascapu\hascapl
 \tag{agq} Aghem
 \tag{ak} Akan
 \tag{am} Amharic\hascapu\hascapl
-\tag{ar} Arabic\hascapu\hascapl
-\tag{ar-DZ} Arabic\hascapu\hascapl
-\tag{ar-EG} Arabic\hascapu\hascapl
-\tag{ar-IQ} Arabic\hascapu\hascapl
-\tag{ar-JO} Arabic\hascapu\hascapl
-\tag{ar-LB} Arabic\hascapu\hascapl
-\tag{ar-MA} Arabic\hascapu\hascapl
-\tag{ar-PS} Arabic\hascapu\hascapl
-\tag{ar-SA} Arabic\hascapu\hascapl
-\tag{ar-SY} Arabic\hascapu\hascapl
-\tag{ar-TN} Arabic\hascapu\hascapl
-\tag{as} Assamese
+\tag{ar-DZ} Arabic\hascapu
+\tag{ar-EG} Arabic\hascapu
+\tag{ar-IQ} Arabic\hascapu
+\tag{ar-JO} Arabic\hascapu
+\tag{ar-LB} Arabic\hascapu
+\tag{ar-MA} Arabic\hascapu
+\tag{ar-PS} Arabic\hascapu
+\tag{ar-SA} Arabic\hascapu
+\tag{ar-SY} Arabic\hascapu
+\tag{ar-TN} Arabic\hascapu
+\tag{ar} Arabic\hascapu
+\tag{as} Assamese\hascapu
 \tag{asa} Asu
 \tag{ast} Asturian\hascapu\hascapl
 \tag{az-Cyrl} Azerbaijani
@@ -1530,8 +1529,9 @@ captions):
 \tag{bez} Bena
 \tag{bg} Bulgarian\hascapu\hascapl
 \tag{bm} Bambara
-\tag{bn} Bangla\hascapu\hascapl
+\tag{bn} Bangla\hascapu
 \tag{bo} Tibetan\hascapu
+\tag{br} Breton\hascapu\hascapl
 \tag{brx} Bodo
 \tag{bs-Cyrl} Bosnian
 \tag{bs-Latn} Bosnian\hascapu\hascapl
@@ -1540,16 +1540,24 @@ captions):
 \tag{ce} Chechen
 \tag{cgg} Chiga
 \tag{chr} Cherokee
-\tag{ckb} Central Kurdish
+\tag{ckb-Arab} Central Kurdish\hascapu
+\tag{ckb-Latn} Central Kurdish\hascapu
+\tag{ckb} Central Kurdish\hascapu
 \tag{cop} Coptic
 \tag{cs} Czech\hascapu\hascapl
-\tag{cu} Church Slavic
-\tag{cu-Cyrs} Church Slavic
+\tag{cu-Cyrs} Church Slavic\hascapu
 \tag{cu-Glag} Church Slavic
+\tag{cu} Church Slavic\hascapu
 \tag{cy} Welsh\hascapu\hascapl
 \tag{da} Danish\hascapu\hascapl
 \tag{dav} Taita
-\tag{de-AT} German\hascapu\hascapl
+\tag{de-1901} German\hascapu\hascapl
+\tag{de-1996} German\hascapu\hascapl
+\tag{de-AT-1901} Austrian German\hascapu\hascapl
+\tag{de-AT-1996} Austrian German\hascapu\hascapl
+\tag{de-AT} Austrian German\hascapu\hascapl
+\tag{de-CH-1901} Swiss High German\hascapu\hascapl
+\tag{de-CH-1996} Swiss High German\hascapu\hascapl
 \tag{de-CH} Swiss High German\hascapu\hascapl
 \tag{de} German\hascapu\hascapl
 \tag{dje} Zarma
@@ -1559,30 +1567,30 @@ captions):
 \tag{dz} Dzongkha
 \tag{ebu} Embu
 \tag{ee} Ewe
-\tag{el} Greek\hascapu\hascapl
 \tag{el-polyton} Polytonic Greek\hascapu\hascapl
-\tag{en-AU} English\hascapu\hascapl
-\tag{en-CA} English\hascapu\hascapl
-\tag{en-GB} English\hascapu\hascapl
+\tag{el} Greek\hascapu\hascapl
+\tag{en-AU} Australian English\hascapu\hascapl
+\tag{en-CA} Canadian English\hascapu\hascapl
+\tag{en-GB} British English\hascapu\hascapl
 \tag{en-NZ} English\hascapu\hascapl
-\tag{en-US} English\hascapu\hascapl
+\tag{en-US} American English\hascapu\hascapl
 \tag{en} English\hascapu\hascapl
 \tag{eo} Esperanto\hascapu\hascapl
-\tag{es-MX} Spanish\hascapu\hascapl
+\tag{es-MX} Mexican Spanish\hascapu\hascapl
 \tag{es} Spanish\hascapu\hascapl
 \tag{et} Estonian\hascapu\hascapl
-\tag{eu} Basque\hascapu\hascapl
+\tag{eu} Basque\hascapu\hascapl\hascapl
 \tag{ewo} Ewondo
-\tag{fa} Persian\hascapu\hascapl
+\tag{fa} Persian\hascapu
 \tag{ff} Fulah
 \tag{fi} Finnish\hascapu\hascapl
 \tag{fil} Filipino
 \tag{fo} Faroese
-\tag{fr} French\hascapu\hascapl
 \tag{fr-BE} French\hascapu\hascapl
-\tag{fr-CA} French\hascapu\hascapl
-\tag{fr-CH} French\hascapu\hascapl
+\tag{fr-CA} Canadian French\hascapu\hascapl
+\tag{fr-CH} Swiss French\hascapu\hascapl
 \tag{fr-LU} French\hascapu\hascapl
+\tag{fr} French\hascapu\hascapl
 \tag{fur} Friulian\hascapu\hascapl
 \tag{fy} Western Frisian
 \tag{ga} Irish\hascapu\hascapl
@@ -1594,15 +1602,15 @@ captions):
 \tag{guz} Gusii
 \tag{gv} Manx
 \tag{ha-GH} Hausa
-\tag{ha-NE} Hausa\hascapl
-\tag{ha} Hausa
+\tag{ha-NE} Hausa
+\tag{ha} Hausa\hascapu\hascapl
 \tag{haw} Hawaiian
 \tag{he} Hebrew\hascapu\hascapl
 \tag{hi} Hindi\hascapu
 \tag{hr} Croatian\hascapu\hascapl
 \tag{hsb} Upper Sorbian\hascapu\hascapl
-\tag{hu} Hungarian\hascapu\hascapl
-\tag{hy} Armenian\hascapu
+\tag{hu} Hungarian\hascapu\hascapl\hascapl\hascapl
+\tag{hy} Armenian\hascapu\hascapl
 \tag{ia} Interlingua\hascapu\hascapl
 \tag{id} Indonesian\hascapu\hascapl
 \tag{ig} Igbo
@@ -1612,20 +1620,24 @@ captions):
 \tag{ja} Japanese\hascapu
 \tag{jgo} Ngomba
 \tag{jmc} Machame
-\tag{ka} Georgian\hascapu\hascapl
+\tag{ka} Georgian\hascapu
 \tag{kab} Kabyle
 \tag{kam} Kamba
 \tag{kde} Makonde
 \tag{kea} Kabuverdianu
+\tag{kgp} Kaingang
 \tag{khq} Koyra Chiini
 \tag{ki} Kikuyu
 \tag{kk} Kazakh
 \tag{kkj} Kako
 \tag{kl} Kalaallisut
 \tag{kln} Kalenjin
-\tag{km} Khmer
-\tag{kmr} Northern Kurdish\hascapu
-\tag{kn} Kannada\hascapu\hascapl
+\tag{km} Khmer\hascapu
+\tag{kmr-Arab} Northern Kurdish\hascapu
+\tag{kmr-Latn} Northern Kurdish\hascapu\hascapl
+\tag{kmr} Northern Kurdish\hascapu\hascapl
+\tag{kn} Kannada\hascapu
+\tag{ko-Hani} Korean\hascapu
 \tag{ko} Korean\hascapu
 \tag{kok} Konkani
 \tag{ks} Kashmiri
@@ -1634,14 +1646,18 @@ captions):
 \tag{ksh} Colognian
 \tag{kw} Cornish
 \tag{ky} Kyrgyz
+\tag{la-x-classic} Classic Latin\hascapu\hascapl
+\tag{la-x-ecclesia} Ecclesiastic Latin\hascapu\hascapl
+\tag{la-x-medieval} Medieval Latin\hascapu\hascapl
+\tag{la} Latin\hascapu\hascapl
 \tag{lag} Langi
 \tag{lb} Luxembourgish\hascapu\hascapl
 \tag{lg} Ganda
 \tag{lkt} Lakota
 \tag{ln} Lingala
-\tag{lo} Lao\hascapu\hascapl
+\tag{lo} Lao\hascapu
 \tag{lrc} Northern Luri
-\tag{lt} Lithuanian\hascapu\hascapl
+\tag{lt} Lithuanian\hascapu\hascapl\hascapl\hascapl
 \tag{lu} Luba-Katanga
 \tag{luo} Luo
 \tag{luy} Luyia
@@ -1653,11 +1669,11 @@ captions):
 \tag{mgh} Makhuwa-Meetto
 \tag{mgo} Metaʼ
 \tag{mk} Macedonian\hascapu\hascapl
-\tag{ml} Malayalam\hascapu\hascapl
+\tag{ml} Malayalam\hascapu
 \tag{mn} Mongolian
-\tag{mr} Marathi\hascapu\hascapl
-\tag{ms-BN} Malay\hascapl
-\tag{ms-SG} Malay\hascapl
+\tag{mr} Marathi\hascapu
+\tag{ms-BN} Malay
+\tag{ms-SG} Malay
 \tag{ms} Malay\hascapu\hascapl
 \tag{mt} Maltese
 \tag{mua} Mundang
@@ -1671,26 +1687,27 @@ captions):
 \tag{nmg} Kwasio
 \tag{nn} Norwegian Nynorsk\hascapu\hascapl
 \tag{nnh} Ngiemboon
-\tag{no} Norwegian
+\tag{no} Norwegian\hascapu\hascapl
 \tag{nus} Nuer
 \tag{nyn} Nyankole
+\tag{oc} Occitan\hascapu\hascapl
 \tag{om} Oromo
 \tag{or} Odia
 \tag{os} Ossetic
 \tag{pa-Arab} Punjabi
-\tag{pa-Guru} Punjabi
-\tag{pa} Punjabi
+\tag{pa-Guru} Punjabi\hascapu
+\tag{pa} Punjabi\hascapu
 \tag{pl} Polish\hascapu\hascapl
 \tag{pms} Piedmontese\hascapu\hascapl
 \tag{ps} Pashto
-\tag{pt-BR} Portuguese\hascapu\hascapl
-\tag{pt-PT} Portuguese\hascapu\hascapl
+\tag{pt-BR} Brazilian Portuguese\hascapu\hascapl
+\tag{pt-PT} European Portuguese\hascapu\hascapl
 \tag{pt} Portuguese\hascapu\hascapl
 \tag{qu} Quechua
 \tag{rm} Romansh\hascapu\hascapl
 \tag{rn} Rundi
-\tag{ro} Romanian\hascapu\hascapl
 \tag{ro-MD} Moldavian\hascapu\hascapl
+\tag{ro} Romanian\hascapu\hascapl
 \tag{rof} Rombo
 \tag{ru} Russian\hascapu\hascapl
 \tag{rw} Kinyarwanda
@@ -1705,6 +1722,7 @@ captions):
 \tag{sah} Sakha
 \tag{saq} Samburu
 \tag{sbp} Sangu
+\tag{sc} Sardinian
 \tag{se} Northern Sami\hascapu\hascapl
 \tag{seh} Sena
 \tag{ses} Koyraboro Senni
@@ -1712,7 +1730,7 @@ captions):
 \tag{shi-Latn} Tachelhit
 \tag{shi-Tfng} Tachelhit
 \tag{shi} Tachelhit
-\tag{si} Sinhala
+\tag{si} Sinhala\hascapu
 \tag{sk} Slovak\hascapu\hascapl
 \tag{sl} Slovenian\hascapu\hascapl
 \tag{smn} Inari Sami
@@ -1730,8 +1748,9 @@ captions):
 \tag{sr} Serbian\hascapu\hascapl
 \tag{sv} Swedish\hascapu\hascapl
 \tag{sw} Swahili
+\tag{syr} Syriac
 \tag{ta} Tamil\hascapu
-\tag{te} Telugu\hascapu\hascapl
+\tag{te} Telugu\hascapu
 \tag{teo} Teso
 \tag{th} Thai\hascapu\hascapl
 \tag{ti} Tigrinya
@@ -1740,9 +1759,9 @@ captions):
 \tag{tr} Turkish\hascapu\hascapl
 \tag{twq} Tasawaq
 \tag{tzm} Central Atlas Tamazight
-\tag{ug} Uyghur
+\tag{ug} Uyghur\hascapu
 \tag{uk} Ukrainian\hascapu\hascapl
-\tag{ur} Urdu\hascapu\hascapl
+\tag{ur} Urdu\hascapu
 \tag{uz-Arab} Uzbek
 \tag{uz-Cyrl} Uzbek
 \tag{uz-Latn} Uzbek
@@ -1757,14 +1776,15 @@ captions):
 \tag{yav} Yangben
 \tag{yi} Yiddish
 \tag{yo} Yoruba
+\tag{yrl} Nheengatu
 \tag{yue} Cantonese
 \tag{zgh} Standard Moroccan Tamazight
-\tag{zh-Hans-HK} Chinese\hascapu
-\tag{zh-Hans-MO} Chinese\hascapu
-\tag{zh-Hans-SG} Chinese\hascapu
+\tag{zh-Hans-HK} Chinese
+\tag{zh-Hans-MO} Chinese
+\tag{zh-Hans-SG} Chinese
 \tag{zh-Hans} Chinese\hascapu
-\tag{zh-Hant-HK} Chinese\hascapu
-\tag{zh-Hant-MO} Chinese\hascapu
+\tag{zh-Hant-HK} Chinese
+\tag{zh-Hant-MO} Chinese
 \tag{zh-Hant} Chinese\hascapu
 \tag{zh} Chinese\hascapu
 \tag{zu} Zulu
@@ -1787,7 +1807,7 @@ by |\babelprovide| with a valueless |import|.
 \let\\\par
 
 \begin{multicols}{2}
-
+﻿afrikaans\\
 aghem\\
 akan\\
 albanian\\
@@ -2120,8 +2140,6 @@ yiddish\\
 yoruba\\
 zarma\\
 zulu
-﻿afrikaans\\
-
 \end{multicols}
 \endgroup
 \hrule
@@ -2609,13 +2627,30 @@ locale (as set with |\babelfont|). Characters can be added or modified with
 
 \New{3.81} Option |letters| restricts the ‘actions’ to letters, in the
 \TeX{} sense (i.~e., with catcode 11). Digits and punctuation are then
-considered part of current locale (as set by a selector).
+considered part of current locale (as set by a selector). This option
+is useful when the main script in non-Latin and there is a secondary
+one whose script is Latin.
 
 \begin{note}
   An alternative approach with \luatex{} and Harfbuzz is the font
   option |RawFeature={multiscript=auto}|. It does not switch the
   \babel{} language and therefore the line breaking rules, but in many
   cases it can be enough.
+\end{note}
+
+\begin{note}
+    \newcommand\artxt[1]{{%
+      \fontspec[Script=Arabic]{FreeSerif}\textdir TRT #1}}
+  There is no general rule to set the font for a punctuation mark,
+  because it is a semantic decision and not a typographical one.
+  Consider the following sentence: “\artxt{یک}, \artxt{دو}, and
+  \artxt{سه} are Persian numbers”. In this case the punctuation font
+  must be the English one, even if the commas are surrounded by
+  non-Latin letters. Quotation marks, parenthesis, etc., are even more
+  complex. Several criteria are possible, like the main language (the
+  default in \babel), the first letter in the paragraph, or the
+  surrounding letters, among others, but even so manual switching can
+  be still necessary.
 \end{note}
 
 \Describe{intraspace=}{\meta{base} \meta{shrink} \meta{stretch}}
@@ -5153,8 +5188,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.82.2932>>
-%<<date=2022/11/25>>
+%<<version=3.83>>
+%<<date=2022/11/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10635,8 +10670,11 @@ help from Bernd Raichle, for which I am grateful.
   \fi 
   \bbl@xin@{,\bbl@tempa,}{,figure,table,}%
   \ifin@
-    \toks@\expandafter{\bbl@toreplace}%
-    \bbl@exp{\gdef\<fnum@\bbl@tempa>{\the\toks@}}%
+    \global\bbl@csarg\let{\bbl@tempa fmt@#2}\bbl@toreplace
+    \bbl@exp{\gdef\<fnum@\bbl@tempa>{%
+      \\\bbl@ifunset{bbl@\bbl@tempa fmt@\\\languagename}%
+        {\[fnum@\bbl@tempa]}%
+        {\\\@nameuse{bbl@\bbl@tempa fmt@\\\languagename}}}}%
   \fi}
 \def\bbl@ini@captions@aux#1#2{%
   \bbl@trim@def\bbl@tempa{#1}%
@@ -14798,6 +14836,9 @@ end
       \expandafter\bbl@sreplace\csname] \endcsname{$$}{\eqno\kern.001pt$$}%
     \else % amstex
       \ifx\bbl@noamsmath\@undefined
+        \bbl@exp{% Hack to hide maybe undefined conditionals:
+          \chardef\bbl@eqnpos=0%
+            \<iftagsleft@>1\<else>\<if@fleqn>2\<fi>\<fi>\relax}%
         \ifnum\bbl@eqnpos=\@ne
           \let\bbl@ams@lap\hbox
         \else
@@ -14941,6 +14982,9 @@ end
        "Babel.picture_dir")
    }%
    \AtBeginDocument{%
+     \def\LS@rot{%
+       \setbox\@outputbox\vbox{%
+         \hbox dir TLT{\rotatebox{90}{\box\@outputbox}}}}%
      \long\def\put(#1,#2)#3{%
        \@killglue 
        % Try:

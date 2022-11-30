@@ -1,4 +1,4 @@
-## Babel 3.82.2932
+## Babel 3.83
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -8,9 +8,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.82 are described in:
+Changes in version 3.83 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.82.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.83.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -46,23 +46,17 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.82  (dev)
+3.83  2022-11-30
+      * Improved Punjabi, thanks to Arvinder Singh (@punjab).
+      * Compatibility with 'lscape', thanks to Salim Bou (@seloumi).
+      * New locale files: Kaingang, Nheengatu, Sardinian.
+      * Better handling of `leqno` with `amsmath`.
       * Fixes:
         - Wrong date format for Australian in babel-en-AU.ini (#195)
-        - Option handling is broken with braces (#198)
+        - Option handling was broken with braces (#198)
         - Stray punctuation with tikz lead to lua error (#197)
-      
-3.82  2022-10-23
-      * Predefined transforms can be activated after the first
-        \babelprovide (lua).
-      * Tibetan for XeTeX.
-      * More updates to the CLDR 41: Albanian, Kinyarwanda, Maltese,
-        Odia, Ossetic, Pashto, Polish, Portuguese, Punjabi, Romanian,
-        Romansh, Russian, Sakha, Sinhala, Slovak, Slovenian, Somali.
-      * Fixes:
-        - \MakeXXXcase: a (hopefully) better hack for #189 (see
-          also #193).
-        - Thai (with xetex): #182 wasn’t quite fixed.
+        - Hungarian as a secondary language reordered some captions
+          (#203).
 ```
 
 ### Previous changes
