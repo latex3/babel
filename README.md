@@ -1,4 +1,4 @@
-## Babel 3.83
+## Babel 3.83.2938
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +46,8 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.84  (dev)
+
 3.83  2022-11-30
       * Improved Punjabi, thanks to Arvinder Singh (@punjab).
       * Compatibility with 'lscape', thanks to Salim Bou (@seloumi).

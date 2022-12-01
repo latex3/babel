@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/11/30 v3.83 The Babel package]
+\ProvidesFile{babel.dtx}[2022/12/01 v3.83.2938 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2559,8 +2559,8 @@ for example:
 In other engines it just suppresses hyphenation (because the pattern
 list is empty).
 
-\New{3.58} Another special value is |unhyphenated|, which activates a
-line breking mode that allows spaces to be stretched to arbitrary amounts.
+\New{3.58} Another special value is |unhyphenated|, which is an
+alternative to |justification=unhyphenated|.
 
 \Describe{main}{} This valueless option makes the language the main one
 (thus overriding that set when \babel\ is loaded). Only in newly defined
@@ -2668,14 +2668,27 @@ Currently used only in Southeast Asian scrips, like Thai. Ignored if 0
 \Describe{transforms=}{\meta{transform-list}}
 See section~\ref{transforms}.
 
-\Describe{justification=}{\texttt{kashida} $\string|$
-\texttt{elongated} $\string|$ \texttt{unhyphenated}
-$\string|$ \texttt{padding}}
-\New{3.59} There are currently three options, mainly for the Arabic
-script. It sets the linebreaking and justification method, which can be
-based on the the \textsc{arabic tatweel} character or in the
-‘justification alternatives’ OpenType table (\texttt{jalt}). For an
-explanation see the
+\Describe{justification=}{\texttt{unhyphenated} $\string|$
+\texttt{kashida} $\string|$ \texttt{elongated} $\string|$
+\texttt{padding}}
+\New{3.59} There are currently 4 options. Note they are language
+dependent, so that they will not be applied to other languages.
+
+The first one (|unhyphenated|) activates a line breaking mode that
+allows spaces to be stretched to arbitrary amounts. Although for
+European standards the result may look odd, in some writing systems,
+like Malayalam and other Indic scripts, this has been the customary
+(although not always the desired) practice. Because of that, no locale
+sets currently this mode by default (Amharic is an exception). Unlike
+|\sloppy|, the |\hfuzz| and the |\vfuzz| are not changed, because this
+line breaking mode is not really ‘sloppy’ (in other words, overfull
+boxes are reported as usual).
+
+The second and the third are for the Arabic script. It sets the
+linebreaking and justification method, which can be based on the the
+\textsc{arabic tatweel} character or in the ‘justification
+alternatives’ OpenType table (\texttt{jalt}). For an explanation see
+the
 \href{https://latex3.github.io/babel/news/whats-new-in-babel-3.59.html}%
   {\babel\ site}.
 
@@ -3732,8 +3745,7 @@ required by all engines.
   rendered in that order with |bidi=basic| (as a decimal number), in
   |\arabic{c1}.\arabic{c2}| the visual order is \textit{c2.c1}. Of
   course, you may always adjust the order by changing the language, if
-  necessary.\footnote{Next on the roadmap are counters and numeral
-  systems in general. Expect some minor readjustments.}
+  necessary.
 
 \item[lists] required in \xetex{} and \pdftex{}, but only in
 bidirectional (with both R and L paragraphs) documents in \luatex{}.
@@ -5188,8 +5200,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.83>>
-%<<date=2022/11/30>>
+%<<version=3.83.2938>>
+%<<date=2022/12/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10248,6 +10260,11 @@ help from Bernd Raichle, for which I am grateful.
           {}%
           {\bbl@exp{\let\bbl@tempa\<l@##1>}}%
       \fi}%
+    \ifx\bbl@tempa\relax 
+      \bbl@warning{%
+        Requested 'hyphenrules=' for '\languagename' not found.\\%
+        Using the default value. Reported}%
+    \fi
   \fi
   \ifx\bbl@tempa\relax %         if no opt or no language in opt found
     \ifx\bbl@KVP@import\@nnil
@@ -12516,8 +12533,8 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \ifx\bbl@main@language\@undefined
   \bbl@info{%
-    You haven't specified a language. I'll use 'nil'\\%
-    as the main language. Reported}
+    You haven't specified a language as a class or package\\%
+    option. I'll load 'nil'. Reported}
     \bbl@load@language{nil}
 \fi
 %</package>
@@ -15045,6 +15062,16 @@ end
 %      there are some additional readjustments for |bidi=default|.
 %
 %    \begin{macrocode}
+\IfBabelLayout{counters*}%
+  {\bbl@add\bbl@opt@layout{.counters.}%
+   \AddToHook{shipout/before}{%
+     \let\bbl@tempa\babelsublr
+     \let\babelsublr\@firstofone
+     \let\bbl@save@thepage\thepage
+     \protected@edef\thepage{\thepage}%
+     \let\babelsublr\bbl@tempa}%
+   \AddToHook{shipout/after}{%
+     \let\thepage\bbl@save@thepage}}{}
 \IfBabelLayout{counters}%
   {\let\bbl@OL@@textsuperscript\@textsuperscript
    \bbl@sreplace\@textsuperscript{\m@th}{\m@th\mathdir\pagedir}%
