@@ -15054,7 +15054,60 @@ end
        \csname tcb@after@\tcb@split@state\endcsname
        }%
       \fi
-    }}
+    }
+    \AtBeginDocument{%
+    % patches for graphics commands
+   \long\def\Grot@box@std#1#2{%
+    \bbl@pictsetdir\@ne%
+    \Grot@setangle{#1}%
+    \setbox\z@\hbox{\bbl@pictresetdir{#2}}%
+    \Grot@x\z@
+    \Grot@y\z@
+    \Grot@box
+    \bbl@pictresetdir
+   }
+   \def\Gin@ii[#1]#2{%
+     \def\@tempa{[}\def\@tempb{#2}%
+    \ifx\@tempa\@tempb
+      \def\@tempa{\Gin@iii[#1][}%
+      \expandafter\@tempa
+    \else
+     \begingroup
+       \bbl@pictsetdir\@ne%
+       \@tempswafalse
+       \toks@{\Ginclude@graphics{#2}}%
+       \setkeys{Gin}{#1}%
+       \Gin@esetsize
+       \the\toks@
+     \endgroup
+     \fi}    
+  \def\Gin@iii[#1,#2][#3,#4]#5{%
+     \begingroup
+     \bbl@pictsetdir\@ne%
+     \Gin@bboxtrue
+     \Gin@defaultbp\Gin@llx{#1}%
+     \Gin@defaultbp\Gin@lly{#2}%
+     \Gin@defaultbp\Gin@urx{#3}%
+     \Gin@defaultbp\Gin@ury{#4}%
+     \Ginclude@graphics{#5}%
+     \endgroup}    
+ % patches for rotating commands 
+ \def\@xrotfloat#1[#2]{%
+    \@float{#1}[#2]%
+    \bbl@pictsetdir\z@
+    \begin{lrbox}\rot@float@box
+    \begin{minipage}\textheight
+    \bbl@pictresetdir
+    }
+ \def\@rotxdblfloat#1[#2]{%  for  double column floats
+  \@float{#1}[#2]%
+  \hsize\textwidth\linewidth\textwidth
+  \bbl@pictsetdir\z@
+  \begin{lrbox}\rot@float@box
+  \begin{minipage}\textheight
+  \bbl@pictresetdir
+}
+}}
   {}
 %    \end{macrocode}
 %
