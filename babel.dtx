@@ -15091,22 +15091,11 @@ end
      \Gin@defaultbp\Gin@ury{#4}%
      \Ginclude@graphics{#5}%
      \endgroup}    
- % patches for rotating commands 
- \def\@xrotfloat#1[#2]{%
-    \@float{#1}[#2]%
-    \bbl@pictsetdir\z@
-    \begin{lrbox}\rot@float@box
-    \begin{minipage}\textheight
-    \bbl@pictresetdir
-    }
- \def\@rotxdblfloat#1[#2]{%  for  double column floats
-  \@float{#1}[#2]%
-  \hsize\textwidth\linewidth\textwidth
-  \bbl@pictsetdir\z@
-  \begin{lrbox}\rot@float@box
-  \begin{minipage}\textheight
-  \bbl@pictresetdir
-}
+ % patches for rotating commands \@xrotfloat and \@rotxdblfloat
+ \AddToHook{cmd/@xrotfloat/before}{\bbl@pictsetdir\z@}
+ \AddToHook{cmd/@xrotfloat/after}{\bbl@pictresetdir}
+ \AddToHook{cmd/@rotxdblfloat/before}{\bbl@pictsetdir\z@} 
+ \AddToHook{cmd/@rotxdblfloat/after}{\bbl@pictresetdir} 
 }}
   {}
 %    \end{macrocode}
