@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/12/03 v3.83.2940 The Babel package]
+\ProvidesFile{babel.dtx}[2022/12/08 v3.83.2945 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -837,12 +837,6 @@ text
   Something like \verb|\babeltags{finnish = finnish}| is legitimate --
   it defines |\textfinnish| and |\finnish| (and, of course,
   |\begin{finnish}|).
-\end{note}
-
-\begin{note}
-  Actually, there may be another advantage in the ‘short’ syntax
-  |\text|\m{tag}, namely, it is not affected by |\MakeUppercase| (while
-  |\foreignlanguage| is).
 \end{note}
 
 \Describe{\babelensure}{|[include=|\m{commands}|,exclude=|\m{commands}%
@@ -2987,7 +2981,7 @@ in an expandable way even if something went wrong (for example, the
 locale currently active is undefined). For these cases, |localeinfo*|
 just returns an empty string instead of raising an error. Bear in mind
 that \babel{}, following the CLDR, may leave the region unset, which
-means |\getlanguageproperty*|, described below, is the preferred
+means |\getlocaleproperty*|, described below, is the preferred
 command, so that the existence of a field can be checked before. This
 also means building a string with the language and the region with
 |\localeinfo*{language.tab.bcp47}|\allowbreak |-|\allowbreak
@@ -3500,7 +3494,7 @@ corresponding language tags as selector names with:
 (You can deactivate it with |off|.) So, if |dutch| is one of the
 package (or class) options, you can write |\selectlanguage{nl}|. Note
 the language name does not change (in this example is still |dutch|),
-but you can get it with |\localeinfo| or |\getlanguageproperty|. It
+but you can get it with |\localeinfo| or |\getlocaleproperty|. It
 must be turned on explicitly for similar reasons to those explained
 above.
 
@@ -5200,8 +5194,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.83.2940>>
-%<<date=2022/12/03>>
+%<<version=3.83.2945>>
+%<<date=2022/12/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10098,6 +10092,9 @@ help from Bernd Raichle, for which I am grateful.
     \ifx\bbl@tempb\@empty\else
       ,variant=\bbl@tempb
     \fi}%
+  % == engine specific extensions ==
+  % Defined in XXXbabel.def
+  \bbl@provide@extra{#2}%
   % == require.babel in ini ==
   % To load or reaload the babel-*.tex, if require.babel in ini
   \ifx\bbl@beforestart\relax\else  % But not in doc aux or body
@@ -10129,19 +10126,7 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@post@fs}%
   \fi
   % == transforms ==
-  \ifodd\bbl@engine
-    \ifx\bbl@KVP@transforms\@nnil\else
-      \def\bbl@elt##1##2##3{%
-        \in@{$transforms.}{$##1}%
-        \ifin@
-          \def\bbl@tempa{##1}%
-          \bbl@replace\bbl@tempa{transforms.}{}%
-          \bbl@carg\bbl@transforms{babel\bbl@tempa}{##2}{##3}%
-        \fi}%
-      \csname bbl@inidata@\languagename\endcsname
-      \bbl@release@transforms\relax % \relax closes the last item.
-    \fi
-  \fi
+  % > luababel.def
   % == main ==
   \ifx\bbl@KVP@main\@nnil  % Restore only if not 'main'
     \let\languagename\bbl@savelangname
@@ -11714,9 +11699,9 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
      \ifx\@mkboth\markboth
-       \def\bbl@tempc{\let\@mkboth\markboth}
+       \def\bbl@tempc{\let\@mkboth\markboth}%
      \else
-       \def\bbl@tempc{}
+       \def\bbl@tempc{}%
      \fi
      \bbl@ifunset{markboth }\bbl@redefine\bbl@redefinerobust
      \markboth#1#2{%
@@ -11729,7 +11714,7 @@ help from Bernd Raichle, for which I am grateful.
        \bbl@ifblank{#2}%
          {\@temptokena{}}%
          {\@temptokena\expandafter{\bbl@tempb{#2}}}%
-       \bbl@exp{\\\org@markboth{\the\toks@}{\the\@temptokena}}}
+       \bbl@exp{\\\org@markboth{\the\toks@}{\the\@temptokena}}}%
        \bbl@tempc
      \fi}  % end ifbbl@single, end \IfBabelLayout
 %    \end{macrocode}
@@ -13308,13 +13293,11 @@ help from Bernd Raichle, for which I am grateful.
 \AddBabelHook{babel-fontspec}{beforestart}{\bbl@ckeckstdfonts}
 \DisableBabelHook{babel-fontspec}
 <@Font selection@>
-\input txtbabel.def
+\def\bbl@provide@extra#1{}
 %</xetex>
 %    \end{macrocode}
 %
 % \subsection{Layout}
-%
-% \textit{In progress.}
 %
 % Note elements like headlines and margins can be modified easily with
 % packages like \textsf{fancyhdr}, \textsf{typearea} or
@@ -13329,12 +13312,12 @@ help from Bernd Raichle, for which I am grateful.
 % which is the bidi model in both \pdftex{} and \xetex{}.
 %
 %    \begin{macrocode}
-%<*texxet>
+%<*xetex|texxet>
 \providecommand\bbl@provide@intraspace{}
 \bbl@trace{Redefinitions for bidi layout}
 \def\bbl@sspre@caption{%
   \bbl@exp{\everyhbox{\\\bbl@textdir\bbl@cs{wdir@\bbl@main@language}}}}
-\ifx\bbl@opt@layout\@nnil\endinput\fi  % No layout
+\ifx\bbl@opt@layout\@nnil\else % if layout=.. 
 \def\bbl@startskip{\ifcase\bbl@thepardir\leftskip\else\rightskip\fi}
 \def\bbl@endskip{\ifcase\bbl@thepardir\rightskip\else\leftskip\fi}
 \ifx\bbl@beforeforeign\leavevmode % A poor test for bidi=
@@ -13411,6 +13394,49 @@ help from Bernd Raichle, for which I am grateful.
    \def\@roman#1{\babelsublr{\ensureascii{\bbl@asciiroman#1}}}%
    \let\bbl@asciiRoman=\@Roman
    \def\@Roman#1{\babelsublr{\ensureascii{\bbl@asciiRoman#1}}}}{}
+\fi % end if layout
+%</xetex|texxet>
+%    \end{macrocode}
+%
+% \subsection{8-bit TeX}
+%
+% Which start just above, because some code is shared with \xetex. Now,
+% 8-bit specific stuff.
+%
+%    \begin{macrocode}
+%<*texxet>
+\def\bbl@provide@extra#1{%
+  % == auto-select encoding == WIP. TODO: Consider main T2A -> T1
+  \bbl@ifunset{bbl@encoding@#1}%
+    {\def\@elt##1{,##1,}%
+     \edef\bbl@tempe{\expandafter\@gobbletwo\@fontenc@load@list}%
+     \count@\z@
+     \bbl@foreach\bbl@tempe{%
+       \def\bbl@tempd{##1}%  Save last declared
+       \advance\count@\@ne}%
+     \ifnum\count@>\@ne
+       \getlocaleproperty*\bbl@tempa{#1}{identification/encodings}%
+       \ifx\bbl@tempa\relax \let\bbl@tempa\@empty \fi
+       \bbl@replace\bbl@tempa{ }{,}%
+       \global\bbl@csarg\let{encoding@#1}\@empty
+       \bbl@xin@{,\bbl@tempd,}{,\bbl@tempa,}%
+       \ifin@\else % if main encoding included in ini, do nothing
+         \let\bbl@tempb\relax
+         \bbl@foreach\bbl@tempa{%
+           \ifx\bbl@tempb\relax
+             \bbl@xin@{,##1,}{,\bbl@tempe,}%
+             \ifin@\def\bbl@tempb{##1}\fi
+           \fi}%
+         \ifx\bbl@tempb\relax\else
+           \bbl@exp{\global\<bbl@add>\<extras#1>{\<bbl@encoding@#1>}%
+           \gdef\<bbl@encoding@#1>{%
+             \\\babel@save\\\f@encoding
+             \\\fontencoding{\bbl@tempb}%
+             \\\selectfont}}%
+         \fi
+       \fi
+     \fi}%
+ {}}
 %</texxet>
 %    \end{macrocode}
 %
@@ -14845,10 +14871,10 @@ end
           \bbl@add\normalfont{\bbl@eqnodir}%
           \ifnum\bbl@eqnpos=\@ne
             \def\@eqnnum{%
-             \setbox\z@\hbox{\bbl@eqnum}%
-             \hbox to0.01pt{\hss\hbox to\displaywidth{\box\z@\hss}}}%
+              \setbox\z@\hbox{\bbl@eqnum}%
+              \hbox to0.01pt{\hss\hbox to\displaywidth{\box\z@\hss}}}%
           \else
-             \let\@eqnnum\bbl@eqnum
+            \let\@eqnnum\bbl@eqnum
           \fi
         \fi}
       % Hack. YA luatex bug?:
@@ -14923,7 +14949,21 @@ end
       \fi
     \fi}
 \fi
+\def\bbl@provide@extra#1{%
+  % == transforms ==
+  \ifx\bbl@KVP@transforms\@nnil\else
+    \def\bbl@elt##1##2##3{%
+      \in@{$transforms.}{$##1}%
+      \ifin@
+        \def\bbl@tempa{##1}%
+        \bbl@replace\bbl@tempa{transforms.}{}%
+        \bbl@carg\bbl@transforms{babel\bbl@tempa}{##2}{##3}%
+      \fi}%
+    \csname bbl@inidata@\languagename\endcsname
+    \bbl@release@transforms\relax % \relax closes the last item.
+  \fi}
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
+%
 \ifnum\bbl@bidimode>\z@
   \def\bbl@nextfake#1{%  non-local changes, use always inside a group!
     \bbl@exp{%
