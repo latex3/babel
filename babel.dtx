@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/12/08 v3.83.2945 The Babel package]
+\ProvidesFile{babel.dtx}[2022/12/13 v3.83.2950 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5194,8 +5194,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.83.2945>>
-%<<date=2022/12/08>>
+%<<version=3.83.2950>>
+%<<date=2022/12/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6489,6 +6489,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 \newif\ifbbl@usedategroup
+\let\bbl@savedextras\@empty
 \def\bbl@switch#1{%  from select@, foreign@
   % make sure there is info for the language if so requested
   \bbl@ensureinfo{#1}%
@@ -6521,6 +6522,7 @@ help from Bernd Raichle, for which I am grateful.
     \fi
   \bbl@esphack
   % switch extras
+  \csname bbl@preextras@#1\endcsname
   \bbl@usehooks{beforeextras}{}%
   \csname extras#1\endcsname\relax
   \bbl@usehooks{afterextras}{}%
@@ -6528,6 +6530,7 @@ help from Bernd Raichle, for which I am grateful.
   %  > babel-sh-<short>
   %  > babel-bidi
   %  > babel-fontspec
+  \let\bbl@savedextras\@empty
   % hyphenation - case mapping
   \ifcase\bbl@opt@hyphenmap\or
     \def\BabelLower##1##2{\lccode##1=##2\relax}%
@@ -8446,15 +8449,23 @@ help from Bernd Raichle, for which I am grateful.
 % are appended to |\originalTeX| and the counter is incremented. The
 % macro |\babel@savevariable|\meta{variable} saves the value of the
 % variable. \meta{variable} can be anything allowed after the |\the|
-% primitive.
+% primitive. To avoid messing saved definitions up, they are saved only
+% the very first time.
 %
 %    \begin{macrocode}
 \def\babel@save#1{%
-  \expandafter\let\csname babel@\number\babel@savecnt\endcsname#1\relax
-  \toks@\expandafter{\originalTeX\let#1=}%
-  \bbl@exp{%
-    \def\\\originalTeX{\the\toks@\<babel@\number\babel@savecnt>\relax}}%
-  \advance\babel@savecnt\@ne}
+  \def\bbl@tempa{{,#1,}}% Clumsy, for Plain
+  \expandafter\bbl@add\expandafter\bbl@tempa\expandafter{%
+    \expandafter{\expandafter,\bbl@savedextras,}}%
+  \expandafter\in@\bbl@tempa
+  \ifin@\else
+    \bbl@add\bbl@savedextras{,#1,}%
+    \bbl@carg\let{babel@\number\babel@savecnt}#1\relax
+    \toks@\expandafter{\originalTeX\let#1=}%
+    \bbl@exp{%
+      \def\\\originalTeX{\the\toks@\<babel@\number\babel@savecnt>\relax}}%
+    \advance\babel@savecnt\@ne
+  \fi}
 \def\babel@savevariable#1{%
   \toks@\expandafter{\originalTeX #1=}%
   \bbl@exp{\def\\\originalTeX{\the\toks@\the#1\relax}}}
@@ -10016,62 +10027,18 @@ help from Bernd Raichle, for which I am grateful.
       \fi}%
   \fi
   % == Counters: mapdigits ==
-  % Native digits (lua level).
-  \ifodd\bbl@engine
-    \ifx\bbl@KVP@mapdigits\@nnil\else
-      \bbl@ifunset{bbl@dgnat@\languagename}{}%
-        {\RequirePackage{luatexbase}%
-         \bbl@activate@preotf
-         \directlua{
-           Babel = Babel or {}  %%% -> presets in luababel
-           Babel.digits_mapped = true
-           Babel.digits = Babel.digits or {}
-           Babel.digits[\the\localeid] =
-             table.pack(string.utfvalue('\bbl@cl{dgnat}'))
-           if not Babel.numbers then
-             function Babel.numbers(head)
-               local LOCALE = Babel.attr_locale
-               local GLYPH = node.id'glyph'
-               local inmath = false
-               for item in node.traverse(head) do
-                 if not inmath and item.id == GLYPH then
-                   local temp = node.get_attribute(item, LOCALE)
-                   if Babel.digits[temp] then
-                     local chr = item.char
-                     if chr > 47 and chr < 58 then
-                       item.char = Babel.digits[temp][chr-47]
-                     end
-                   end
-                 elseif item.id == node.id'math' then
-                   inmath = (item.subtype == 0)
-                 end
-               end
-               return head
-             end
-           end
-        }}%
-    \fi
-  \fi
+  % > luababel.def
   % == Counters: alph, Alph ==
-  % What if extras<lang> contains a \babel@save\@alph? It won't be
-  % restored correctly when exiting the language, so we ignore 
-  % this change with the \bbl@alph@saved trick.
   \ifx\bbl@KVP@alph\@nnil\else
-    \bbl@extras@wrap{\\\bbl@alph@saved}%
-      {\let\bbl@alph@saved\@alph}%
-      {\let\@alph\bbl@alph@saved
-       \babel@save\@alph}%
     \bbl@exp{%
-      \\\bbl@add\<extras\languagename>{%
+      \\\bbl@add\<bbl@preextras@\languagename>{%
+        \\\babel@save\\\@alph
         \let\\\@alph\<bbl@cntr@\bbl@KVP@alph @\languagename>}}%
   \fi
   \ifx\bbl@KVP@Alph\@nnil\else
-    \bbl@extras@wrap{\\\bbl@Alph@saved}%
-      {\let\bbl@Alph@saved\@Alph}%
-      {\let\@Alph\bbl@Alph@saved
-       \babel@save\@Alph}%
     \bbl@exp{%
-      \\\bbl@add\<extras\languagename>{%
+      \\\bbl@add\<bbl@preextras@\languagename>{%
+        \\\babel@save\\\@Alph
         \let\\\@Alph\<bbl@cntr@\bbl@KVP@Alph @\languagename>}}%
   \fi
   % == Calendars ==
@@ -13428,9 +13395,11 @@ help from Bernd Raichle, for which I am grateful.
              \ifin@\def\bbl@tempb{##1}\fi
            \fi}%
          \ifx\bbl@tempb\relax\else
-           \bbl@exp{\global\<bbl@add>\<extras#1>{\<bbl@encoding@#1>}%
+           \bbl@exp{%
+             \global\<bbl@add>\<bbl@preextras@#1>{\<bbl@encoding@#1>}%
            \gdef\<bbl@encoding@#1>{%
              \\\babel@save\\\f@encoding
+             \\\bbl@add\\\originalTeX{\\\selectfont}%
              \\\fontencoding{\bbl@tempb}%
              \\\selectfont}}%
          \fi
@@ -14950,6 +14919,41 @@ end
     \fi}
 \fi
 \def\bbl@provide@extra#1{%
+  % == Counters: mapdigits ==
+  % Native digits
+  \ifx\bbl@KVP@mapdigits\@nnil\else
+    \bbl@ifunset{bbl@dgnat@\languagename}{}%
+      {\RequirePackage{luatexbase}%
+       \bbl@activate@preotf
+       \directlua{
+         Babel = Babel or {}  %%% -> presets in luababel
+         Babel.digits_mapped = true
+         Babel.digits = Babel.digits or {}
+         Babel.digits[\the\localeid] =
+           table.pack(string.utfvalue('\bbl@cl{dgnat}'))
+         if not Babel.numbers then
+           function Babel.numbers(head)
+             local LOCALE = Babel.attr_locale
+             local GLYPH = node.id'glyph'
+             local inmath = false
+             for item in node.traverse(head) do
+               if not inmath and item.id == GLYPH then
+                 local temp = node.get_attribute(item, LOCALE)
+                 if Babel.digits[temp] then
+                   local chr = item.char
+                   if chr > 47 and chr < 58 then
+                     item.char = Babel.digits[temp][chr-47]
+                   end
+                 end
+               elseif item.id == node.id'math' then
+                 inmath = (item.subtype == 0)
+               end
+             end
+             return head
+           end
+         end
+      }}%
+  \fi
   % == transforms ==
   \ifx\bbl@KVP@transforms\@nnil\else
     \def\bbl@elt##1##2##3{%
@@ -22111,9 +22115,15 @@ local function insert_implicit(head, state, outer)
     dir = ((outer == 'r') and 'TLT' or 'TRT') -- ie, reverse
     local d = node.new(DIR)
     d.dir = '+' .. dir
+    if state.sim.prev and state.sim.prev.id == 8 then
+      state.sim = state.sim.prev
+    end
     node.insert_before(head, state.sim, d)
     local d = node.new(DIR)
     d.dir = '-' .. dir
+    if state.eim.next and state.eim.next.id == 8 then
+      state.eim = state.eim.next
+    end
     node.insert_after(head, state.eim, d)
   end
   new_state.sim, new_state.eim = nil, nil
@@ -22126,10 +22136,16 @@ local function insert_numeric(head, state)
   if state.san and state.ean and state.san ~= state.ean then
     local d = node.new(DIR)
     d.dir = '+TLT'
+    if state.san.prev and state.san.prev.id == 8 then
+      state.san = state.san.prev
+    end
     _, new = node.insert_before(head, state.san, d)
     if state.san == state.sim then state.sim = new end
     local d = node.new(DIR)
     d.dir = '-TLT'
+    if state.ean.next and state.ean.next.id == 8 then
+      state.ean = state.ean.next
+    end
     _, new = node.insert_after(head, state.ean, d)
     if state.ean == state.eim then state.eim = new end
   end
