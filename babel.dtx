@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/12/13 v3.83.2950 The Babel package]
+\ProvidesFile{babel.dtx}[2022/12/16 v3.83.2953 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5194,8 +5194,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.83.2950>>
-%<<date=2022/12/13>>
+%<<version=3.83.2953>>
+%<<date=2022/12/16>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5741,10 +5741,16 @@ help from Bernd Raichle, for which I am grateful.
   \input babel.def
   \let\bbl@onlyswitch\@undefined
   \ifx\directlua\@undefined
-    \DeclareOption*{\bbl@patterns{\CurrentOption}}%
+    \DeclareOption*{%
+      \bbl@ifunset{l@\CurrentOption}%
+        {\bbl@warning{Ignoring \CurrentOption\space with 'base'\\}}%
+        {\bbl@patterns{\CurrentOption}}}%
   \else
     \input luababel.def
-    \DeclareOption*{\bbl@patterns@lua{\CurrentOption}}%
+    \DeclareOption*{%
+      \bbl@ifunset{l@\CurrentOption}%
+        {\bbl@warning{Ignoring \CurrentOption\space with 'base'\\}}%
+        {\bbl@patterns@lua{\CurrentOption}}}%
   \fi
   \DeclareOption{base}{}%
   \DeclareOption{showlanguages}{}%
@@ -22115,15 +22121,9 @@ local function insert_implicit(head, state, outer)
     dir = ((outer == 'r') and 'TLT' or 'TRT') -- ie, reverse
     local d = node.new(DIR)
     d.dir = '+' .. dir
-    if state.sim.prev and state.sim.prev.id == 8 then
-      state.sim = state.sim.prev
-    end
     node.insert_before(head, state.sim, d)
     local d = node.new(DIR)
     d.dir = '-' .. dir
-    if state.eim.next and state.eim.next.id == 8 then
-      state.eim = state.eim.next
-    end
     node.insert_after(head, state.eim, d)
   end
   new_state.sim, new_state.eim = nil, nil
@@ -22136,16 +22136,10 @@ local function insert_numeric(head, state)
   if state.san and state.ean and state.san ~= state.ean then
     local d = node.new(DIR)
     d.dir = '+TLT'
-    if state.san.prev and state.san.prev.id == 8 then
-      state.san = state.san.prev
-    end
     _, new = node.insert_before(head, state.san, d)
     if state.san == state.sim then state.sim = new end
     local d = node.new(DIR)
     d.dir = '-TLT'
-    if state.ean.next and state.ean.next.id == 8 then
-      state.ean = state.ean.next
-    end
     _, new = node.insert_after(head, state.ean, d)
     if state.ean == state.eim then state.eim = new end
   end
@@ -22173,6 +22167,8 @@ function Babel.bidi(head, ispar, hdir)
 
   local has_en = false
   local first_et = nil
+  
+  local has_hyperlink = false
 
   local ATDIR = Babel.attr_dir
 
@@ -22285,7 +22281,10 @@ function Babel.bidi(head, ispar, hdir)
       d = nil
 
     elseif item.id == node.id'math' then
-      inmath = (item.subtype == 0)
+      inmath = (item.subtype == 0)   
+      
+    elseif item.id == 8 and item.subtype == 19 then
+      has_hyperlink = true
 
     else
       d = nil
@@ -22484,8 +22483,38 @@ function Babel.bidi(head, ispar, hdir)
     end
 
   end
+  
+  head = node.prev(head) or head
+  
+  -------------- FIX HYPERLINKS ----------------
+  
+  if has_hyperlink then
+    local flag, linking = 0, 0
+    for item in node.traverse(head) do
+      if item.id == DIR then
+        if item.dir == '+TRT' or item.dir == '+TLT' then
+          flag = flag + 1
+        elseif item.dir == '-TRT' or item.dir == '-TLT' then
+          flag = flag - 1
+        end
+      elseif item.id == 8 and item.subtype == 19 then
+        linking = flag
+      elseif item.id == 8 and item.subtype == 20 then
+        if linking > 0 then
+          if item.prev.id == DIR and
+              (item.prev.dir == '-TRT' or item.prev.dir == '-TLT') then
+            d = node.new(DIR)
+            d.dir = item.prev.dir
+            node.remove(head, item.prev)
+            node.insert_after(head, item, d)
+          end
+        end
+        linking = 0
+      end
+    end
+  end
 
-  return node.prev(head) or head
+  return head
 end
 %</basic>
 %    \end{macrocode}
