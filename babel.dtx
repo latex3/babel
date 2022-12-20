@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/12/16 v3.83.2953 The Babel package]
+\ProvidesFile{babel.dtx}[2022/12/20 v3.83.2957 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4421,8 +4421,8 @@ Some recommendations:
   also use the new tools for encoded strings, described below.
 \item Avoid adding things to |\noextras|\m{lang} except for umlauthigh
   and friends, |\bbl@deactivate|, |\bbl@(non)frenchspacing|, and
-  language-specific macros. Use always, if possible, |\bbl@save| and
-  |\bbl@savevariable| (except if you still want to have access to the
+  language-specific macros. Use always, if possible, |\babel@save| and
+  |\babel@savevariable| (except if you still want to have access to the
   previous value). Do not reset a macro or a setting to a hardcoded
   value. Never. Instead save its value in |\extras|\m{lang}.
 \item Do not switch scripts. If you want to make sure a set of glyphs
@@ -5194,8 +5194,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.83.2953>>
-%<<date=2022/12/16>>
+%<<version=3.83.2957>>
+%<<date=2022/12/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5524,16 +5524,6 @@ help from Bernd Raichle, for which I am grateful.
   \else
     \expandafter\@firstofone
   \fi}
-%    \end{macrocode}
-%
-% An alternative to |\IfFormatAtLeastTF| for old versions. Temporary.
-%
-%    \begin{macrocode}  
-\ifx\IfFormatAtLeastTF\@undefined
-  \def\bbl@ifformatlater{\@ifl@t@r\fmtversion}
-\else
-  \let\bbl@ifformatlater\IfFormatAtLeastTF
-\fi
 %    \end{macrocode}
 %
 % The following adds some code to |\extras...| both before and after,
@@ -11320,6 +11310,8 @@ help from Bernd Raichle, for which I am grateful.
     \expandafter\babel@aux\expandafter{\bbl@main@language}{}}%
   \let\bbl@restorelastskip\relax
   \def\bbl@savelastskip##1\bbl@restorelastskip{}}
+\@namedef{bbl@ADJ@encoding.select@off}{%
+  \let\bbl@encoding@select@off\@empty}
 %    \end{macrocode}
 %
 % As the final task, load the code for lua. TODO: use babel name, override 
@@ -13360,6 +13352,16 @@ help from Bernd Raichle, for which I am grateful.
 %      think there must be a better way.
 %
 %    \begin{macrocode}
+\IfBabelLayout{counters*}%
+  {\bbl@add\bbl@opt@layout{.counters.}%
+   \AddToHook{shipout/before}{%
+     \let\bbl@tempa\babelsublr
+     \let\babelsublr\@firstofone
+     \let\bbl@save@thepage\thepage
+     \protected@edef\thepage{\thepage}%
+     \let\babelsublr\bbl@tempa}%
+   \AddToHook{shipout/after}{%
+     \let\thepage\bbl@save@thepage}}{}
 \IfBabelLayout{counters}%
   {\let\bbl@latinarabic=\@arabic
    \def\@arabic#1{\babelsublr{\bbl@latinarabic#1}}%
@@ -13379,39 +13381,41 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 %<*texxet>
 \def\bbl@provide@extra#1{%
-  % == auto-select encoding == WIP. TODO: Consider main T2A -> T1
-  \bbl@ifunset{bbl@encoding@#1}%
-    {\def\@elt##1{,##1,}%
-     \edef\bbl@tempe{\expandafter\@gobbletwo\@fontenc@load@list}%
-     \count@\z@
-     \bbl@foreach\bbl@tempe{%
-       \def\bbl@tempd{##1}%  Save last declared
-       \advance\count@\@ne}%
-     \ifnum\count@>\@ne
-       \getlocaleproperty*\bbl@tempa{#1}{identification/encodings}%
-       \ifx\bbl@tempa\relax \let\bbl@tempa\@empty \fi
-       \bbl@replace\bbl@tempa{ }{,}%
-       \global\bbl@csarg\let{encoding@#1}\@empty
-       \bbl@xin@{,\bbl@tempd,}{,\bbl@tempa,}%
-       \ifin@\else % if main encoding included in ini, do nothing
-         \let\bbl@tempb\relax
-         \bbl@foreach\bbl@tempa{%
-           \ifx\bbl@tempb\relax
-             \bbl@xin@{,##1,}{,\bbl@tempe,}%
-             \ifin@\def\bbl@tempb{##1}\fi
-           \fi}%
-         \ifx\bbl@tempb\relax\else
-           \bbl@exp{%
-             \global\<bbl@add>\<bbl@preextras@#1>{\<bbl@encoding@#1>}%
-           \gdef\<bbl@encoding@#1>{%
-             \\\babel@save\\\f@encoding
-             \\\bbl@add\\\originalTeX{\\\selectfont}%
-             \\\fontencoding{\bbl@tempb}%
-             \\\selectfont}}%
+  % == auto-select encoding ==
+  \ifx\bbl@encoding@select@off\@empty\else
+    \bbl@ifunset{bbl@encoding@#1}%
+      {\def\@elt##1{,##1,}%
+       \edef\bbl@tempe{\expandafter\@gobbletwo\@fontenc@load@list}%
+       \count@\z@
+       \bbl@foreach\bbl@tempe{%
+         \def\bbl@tempd{##1}%  Save last declared
+         \advance\count@\@ne}%
+       \ifnum\count@>\@ne
+         \getlocaleproperty*\bbl@tempa{#1}{identification/encodings}%
+         \ifx\bbl@tempa\relax \let\bbl@tempa\@empty \fi
+         \bbl@replace\bbl@tempa{ }{,}%
+         \global\bbl@csarg\let{encoding@#1}\@empty
+         \bbl@xin@{,\bbl@tempd,}{,\bbl@tempa,}%
+         \ifin@\else % if main encoding included in ini, do nothing
+           \let\bbl@tempb\relax
+           \bbl@foreach\bbl@tempa{%
+             \ifx\bbl@tempb\relax
+               \bbl@xin@{,##1,}{,\bbl@tempe,}%
+               \ifin@\def\bbl@tempb{##1}\fi
+             \fi}%
+           \ifx\bbl@tempb\relax\else
+             \bbl@exp{%
+               \global\<bbl@add>\<bbl@preextras@#1>{\<bbl@encoding@#1>}%
+             \gdef\<bbl@encoding@#1>{%
+               \\\babel@save\\\f@encoding
+               \\\bbl@add\\\originalTeX{\\\selectfont}%
+               \\\fontencoding{\bbl@tempb}%
+               \\\selectfont}}%
+           \fi
          \fi
-       \fi
-     \fi}%
- {}}
+       \fi}%
+      {}%
+  \fi}
 %</texxet>
 %    \end{macrocode}
 %
@@ -13724,6 +13728,14 @@ help from Bernd Raichle, for which I am grateful.
         Babel.script_blocks[script], {tonumber(s,16), tonumber(e,16)})
     end
   end
+  function Babel.discard_sublr(str)
+    if str:find( [[\string\indexentry]] ) and
+         str:find( [[\string\babelsublr]] ) then
+     str = str:gsub( [[\string\babelsublr%s*(%b{})]],
+                     function(m) return m:sub(2,-2) end )
+   end
+   return str 
+end
 }
 \endgroup
 \ifx\newattribute\@undefined\else
@@ -15116,14 +15128,10 @@ end
 %    \begin{macrocode}
 \IfBabelLayout{counters*}%
   {\bbl@add\bbl@opt@layout{.counters.}%
-   \AddToHook{shipout/before}{%
-     \let\bbl@tempa\babelsublr
-     \let\babelsublr\@firstofone
-     \let\bbl@save@thepage\thepage
-     \protected@edef\thepage{\thepage}%
-     \let\babelsublr\bbl@tempa}%
-   \AddToHook{shipout/after}{%
-     \let\thepage\bbl@save@thepage}}{}
+   \directlua{
+     luatexbase.add_to_callback("process_output_buffer",
+       Babel.discard_sublr , "Babel.discard_sublr") }%
+  }{}
 \IfBabelLayout{counters}%
   {\let\bbl@OL@@textsuperscript\@textsuperscript
    \bbl@sreplace\@textsuperscript{\m@th}{\m@th\mathdir\pagedir}%
