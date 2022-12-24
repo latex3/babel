@@ -15098,7 +15098,7 @@ end
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\z@}%
       \fi
       \ifx\tikzpicture\@undefined\else    
-        \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\z@}%
+        \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\tw@}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
         \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
       \fi
