@@ -1,6 +1,6 @@
 # What's new in babel 3.84
 
-**Draft**
+2022-12-26
 
 <span style="color:red;">⚠</span> There are some issues with the
 new `\MakeUppercase` and `\MakeLowercase`. For further details, see:
@@ -17,6 +17,10 @@ with RTL scripts you still need `bidi=default`), and it’s, in some
 sense, the equivalent in this engine of the automatic setting of
 language and script in `xetex` and `luatex`.
 
+Not all scripts have an associated encoding, so this feature works
+only with Latin, Cyrillic, Greek, Arabic, Hebrew, Cherokee, Armenian,
+and Georgian, provided a suitable font is found. 
+
 The rules for the assigned encoding are the following:
 * If the valid encodings as set in the `ini` file contain the main font
   encoding, use this one.
@@ -24,7 +28,7 @@ The rules for the assigned encoding are the following:
   declared with `fontspec`.
   
 You can customize its behaviour in several ways:
-* Disable it altogether with `\babeladjust{ encoding.select = off }`.
+* Disable it altogether with `\babeladjust{ select.encoding = off }`.
 * Modify the encoding list in the `ini` file with
   `identification/encodings =` in `\babelprovide` with a space
   separated list, by order of preference (of course, this is not
