@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/12/20 v3.83.2957 The Babel package]
+\ProvidesFile{babel.dtx}[2022/12/26 v3.84 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -586,6 +586,13 @@ explicitly, because a two- or tree-letter word is a valid name for a
 language (eg, |lu| can be the locale name with tag |khb| or the tag for
 |lubakatanga|). See section \ref{bcp47} for further details.
 \end{note}
+
+\New{3.84} With \pdftex, when a language is loaded on the fly
+(actually, with |\babelprovide|) selectors now set the font encoding
+based on the list provided when loading |fontenc|. Not all scripts have
+an associated encoding, so this feature works only with Latin,
+Cyrillic, Greek, Arabic, Hebrew, Cherokee, Armenian, and Georgian,
+provided a suitable font is found.
 
 \subsection{Modifiers}
 
@@ -2902,8 +2909,18 @@ date in the way users would expect in their own culture. Currently,
 \textsf{ini} locale file has been imported), but year, month and day
 had to be entered by hand, which is very inconvenient. With this macro,
 the current date is converted and stored in the three last arguments,
-which must be macros: allowed calendars are |buddhist|, |coptic|,
-|hebrew|, |islamic-civil|, |islamic-umalqura|, |persian|. The optional
+which must be macros.
+Allowed calendars are
+\begin{multicols}{4}
+  |buddhist|\\
+  |coptic|\\
+  |ethiopic|\\
+  |hebrew|\\
+  |islamic-civil|\\
+  |islamic-umalqura|\\
+  |persian|
+\end{multicols}
+The optional
 argument converts the given date, in the form
 ‘\m{year}-\m{month}-\m{day}’. Please, refer to the page on the news for
 3.76 in the \babel{} site for further details.
@@ -3285,7 +3302,7 @@ four characters: \textit{!?:;}\,.}
 
 \trans{Indic scripts}{danda.nobreak}{Prevents a line break before a
 danda or double danda if there is a space. For Assamese, Bengali,
-Gujarati, Hindi, Kannada, Malayalam, Marathi, Oriya, Tamil, Telugu.}
+Gujarati, Hindi, Kannada, Malayalam, Marathi, Odia, Tamil, Telugu.}
 
 \trans{Latin}{digraphs.ligatures}{Replaces the groups \textit{ae},
 \textit{AE}, \textit{oe}, \textit{OE} with \textit{æ}, \textit{Æ},
@@ -3741,6 +3758,10 @@ required by all engines.
   course, you may always adjust the order by changing the language, if
   necessary.
 
+  \New{3.84} Since |\thepage| is (indirectly) redefined, |makeindex|
+  will reject many entries as invalid. With |counters*| \babel{}
+  attempts to remove the conflicting macros.
+
 \item[lists] required in \xetex{} and \pdftex{}, but only in
 bidirectional (with both R and L paragraphs) documents in \luatex{}.
 
@@ -4137,14 +4158,37 @@ empty, removes them. The last argument is the locale name:
 \Describe{\babeladjust}{\marg{key-value-list}}
 
 \New{3.36} Sometimes you might need to disable some \babel{} features.
-Currently this macro understands the following keys (and only for
-\textsf{luatex}), with values |on| or |off|: |bidi.text|,
-|bidi.mirroring|, |bidi.mapdigits|, |layout.lists|, |layout.tabular|,
-|linebreak.sea|, |linebreak.cjk|, |justify.arabic|. For example, you can set
-|\babeladjust{bidi.text=off}| if you are using an alternative algorithm
-or with large sections not requiring it. Use with care, because these
-options do not deactivate other related options (like paragraph
-direction with |bidi.text|).
+Currently this macro understands the following keys [to be documented],
+with values |on| or |off|:
+\begin{multicols}{3}
+\ttfamily
+bidi.mirroring\\
+bidi.text\\
+% bidi.mapdigits\\
+linebreak.sea\\
+linebreak.cjk\\
+justify.arabic\\
+layout.tabular\\
+layout.lists\\
+autoload.bcp47\\
+bcp47.toname
+\end{multicols}
+
+Other keys [to be documented] are:
+\begin{multicols}{3}
+\ttfamily
+autoload.options\\
+autoload.bcp47.prefix\\
+autoload.bcp47.options\\
+prehyphenation.disable\\
+select.write\\
+select.encoding\\
+\end{multicols}
+
+For example, you can set |\babeladjust{bidi.text=off}| if you are using
+an alternative algorithm or with large sections not requiring it. Use
+with care, because these options do not deactivate other related
+options (like paragraph direction with |bidi.text|).
 
 \subsection{Tips, workarounds, known issues and notes}
 
@@ -5194,8 +5238,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.83.2957>>
-%<<date=2022/12/20>>
+%<<version=3.84>>
+%<<date=2022/12/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5731,16 +5775,10 @@ help from Bernd Raichle, for which I am grateful.
   \input babel.def
   \let\bbl@onlyswitch\@undefined
   \ifx\directlua\@undefined
-    \DeclareOption*{%
-      \bbl@ifunset{l@\CurrentOption}%
-        {\bbl@warning{Ignoring \CurrentOption\space with 'base'\\}}%
-        {\bbl@patterns{\CurrentOption}}}%
+    \DeclareOption*{\bbl@patterns{\CurrentOption}}%
   \else
     \input luababel.def
-    \DeclareOption*{%
-      \bbl@ifunset{l@\CurrentOption}%
-        {\bbl@warning{Ignoring \CurrentOption\space with 'base'\\}}%
-        {\bbl@patterns@lua{\CurrentOption}}}%
+    \DeclareOption*{\bbl@patterns@lua{\CurrentOption}}%
   \fi
   \DeclareOption{base}{}%
   \DeclareOption{showlanguages}{}%
@@ -11259,8 +11297,6 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@adjust@layout{\let\list\bbl@NL@list}}
 \@namedef{bbl@ADJ@layout.lists@off}{%
   \bbl@adjust@layout{\let\list\bbl@OL@list}}
-\@namedef{bbl@ADJ@hyphenation.extra@on}{%
-  \bbl@activateposthyphen}
 %
 \@namedef{bbl@ADJ@autoload.bcp47@on}{%
   \bbl@bcpallowedtrue}
@@ -11310,7 +11346,7 @@ help from Bernd Raichle, for which I am grateful.
     \expandafter\babel@aux\expandafter{\bbl@main@language}{}}%
   \let\bbl@restorelastskip\relax
   \def\bbl@savelastskip##1\bbl@restorelastskip{}}
-\@namedef{bbl@ADJ@encoding.select@off}{%
+\@namedef{bbl@ADJ@select.encoding@off}{%
   \let\bbl@encoding@select@off\@empty}
 %    \end{macrocode}
 %
@@ -22175,7 +22211,7 @@ function Babel.bidi(head, ispar, hdir)
 
   local has_en = false
   local first_et = nil
-  
+
   local has_hyperlink = false
 
   local ATDIR = Babel.attr_dir
@@ -22290,7 +22326,7 @@ function Babel.bidi(head, ispar, hdir)
 
     elseif item.id == node.id'math' then
       inmath = (item.subtype == 0)   
-      
+
     elseif item.id == 8 and item.subtype == 19 then
       has_hyperlink = true
 
@@ -22491,11 +22527,11 @@ function Babel.bidi(head, ispar, hdir)
     end
 
   end
-  
+
   head = node.prev(head) or head
-  
+
   -------------- FIX HYPERLINKS ----------------
-  
+
   if has_hyperlink then
     local flag, linking = 0, 0
     for item in node.traverse(head) do
