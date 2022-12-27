@@ -57,9 +57,10 @@ English \foreignlanguage{greek}{Ελληνικά} English.
 ## New option `layout=counters*` 
 
 The option `layout=counters` redefines some counters for they to be
-printed in the correct order. Sadly, the added macros are written to
-the `idx` files, which break `makeindex`. The option `counters*` attempts
-to remove the conflicting macros in the following way:
+printed in the correct order in RTL text. Sadly, the added macros are
+written to the `idx` files, which break `makeindex`. The value
+`counters*` (with a star) attempts to remove the conflicting macros in
+the following way:
 * `pdftex` and `xetex` pre-expand `\thepage` just before it’s written by
   the output routine, so that the expanded string doesn’t include them.
   This means the modified `\thepage` is written to the `aux` file, too.
@@ -68,7 +69,7 @@ to remove the conflicting macros in the following way:
 
 ## Fixes
 
-* With 'select.write = omit' the main language wasn’t selected
+* With `select.write = omit` the main language wasn’t selected
   in the aux file.
 * Incorrect link box in end of line if it is preceded by a non-Arabic
   character (#207). Note that, very often, directions in labels and the

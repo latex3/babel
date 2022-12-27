@@ -42,6 +42,28 @@ latter to the locale numerals, passed as option to `\babelprovide`:
 * `mapdigits` does it at the engine level. This is
   usually the preferred method.
   
+## Calendars
+
+Two calendar are defined: `islamic-civil` (arithmetical) and
+`islamic-umalqura`. Since the main aim is to provide a suitable
+`\today`, and maybe some close dates, data for `islamic-umalqura` just
+cover Hijri ~1435/~1460 (Gregorian ~2014/~2038). They can be adjusted
+with `+`, `-` after the name (and `++`, `--` in the Civil calendar), so
+that, for example, with `islamic-civil+` a day is added.
+
+The default calendar, which applies to `\today`, can be set in the
+following way:
+```tex
+\babelprovide[import, calendar=islamic-civil]{arabic}
+```
+If the default calendar is Gregorian, you can convert and print it as follows:
+```tex
+\localedate[calendar=islamic-civil, convert]{\year}{\month}{\day}
+```
+
+Following the CLDR, the default calendar is `gregorian` in all regions
+except in Saudi Arabia, where it’s `islamic-umalqura`.
+
 ## Transliteration 
 
 The transform `transliteration.dad` applies the transliteration system
@@ -73,19 +95,25 @@ Arabic support in `pdftex`is provided by the [external package
 `arabi`](https://ctan.org/pkg/arabi), which has been devised for
 documents written in Arabic.
 
-For a few words or sentences in a non-Arabic document, you may prefer
-to declare a language from scratch in the following way:
+For a few words or sentences (unvowelized) in a non-Arabic document,
+you may prefer to set the language on the fly as shown in the following
+example (≥3.84):
 ```tex
-\usepackage[bidi=default, english]{babel}
+\documentclass{article}
+
+\usepackage[bidi=default, ngerman]{babel}
 \usepackage[LAE, T1]{fontenc}
-\babelprovide{arabic}
-\addto\extrasarabic{\fontencoding{LAE}\selectfont}
-\addto\noextrasarabic{\fontencoding{T1}\selectfont}
+
+\begin{document}
+
+Eine Präposition (\foreignlanguage{arabic}{حرف}) ist per Definition
+\foreignlanguage{arabic}{مبني}.
+
+\end{document}
 ```
-Then `\foreignlanguage` and `\selectlanguage` can be used in the usual
-manner, but very likely you will need some manual intervention (for
-example, numerals). Sadly, with this procedure text cannot be
-copy-pasted (and `cmap` works only to some extent).
+Very likely you will need some manual intervention (for example,
+numerals). Sadly, with this procedure text cannot be copy-pasted (and
+`cmap` works only to some extent).
  
 ## Useful links
 
