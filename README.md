@@ -1,4 +1,6 @@
-## Babel 3.84
+## Babel 3.84.2967
+
+(dev)
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -46,6 +48,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.85  (dev)
+      * Spaces allowed as separators in layout =.
+      * A high-level interface to enable and disable transforms.
+      
 3.84  2022-12-26
       * Automatic selection of encodings with \babelprovide and pdftex.
       * Fixes:

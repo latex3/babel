@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/12/26 v3.84 The Babel package]
+\ProvidesFile{babel.dtx}[2022/12/30 v3.84.2967 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -431,6 +431,14 @@ This is not currently done by \babel{} and you must set it by hand.
   |\begin{document}|, mainly because of shorthands, it is advisable to
   keep them in the preamble. Currently there is no real need to use
   shorthands in those macros.
+\end{note}
+
+\begin{note}
+  \Babel{} does not make any readjustments by default in font size,
+  vertical positioning or line height by default. This is on purpose
+  because the optimal solution depends on the document layout and the
+  font, and very likely the most appropriate one is a combination of
+  these settings.
 \end{note}
 
 \subsection{Multilingual documents}
@@ -5238,8 +5246,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.84>>
-%<<date=2022/12/26>>
+%<<version=3.84.2967>>
+%<<date=2022/12/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6021,6 +6029,12 @@ help from Bernd Raichle, for which I am grateful.
 \ifx\bbl@opt@layout\@nnil
   \newcommand\IfBabelLayout[3]{#3}%
 \else
+  \bbl@exp{\\\bbl@forkv{\@nameuse{@raw@opt@babel.sty}}}{%
+    \in@{,layout,}{,#1,}%
+    \ifin@
+      \def\bbl@opt@layout{#2}%
+      \bbl@replace\bbl@opt@layout{ }{.}%
+    \fi}
   \newcommand\IfBabelLayout[1]{%
     \@expandtwoargs\in@{.#1.}{.\bbl@opt@layout.}%
     \ifin@
@@ -12112,8 +12126,8 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@alscripts{,Arabic,Syriac,Thaana,}
 \def\bbl@rscripts{% TODO. Base on codes ??
   ,Imperial Aramaic,Avestan,Cypriot,Hatran,Hebrew,%
-  Old Hungarian,Old Hungarian,Lydian,Mandaean,Manichaean,%
-  Manichaean,Meroitic Cursive,Meroitic,Old North Arabian,%
+  Old Hungarian,Lydian,Mandaean,Manichaean,%
+  Meroitic Cursive,Meroitic,Old North Arabian,%
   Nabataean,N'Ko,Orkhon,Palmyrene,Inscriptional Pahlavi,%
   Psalter Pahlavi,Phoenician,Inscriptional Parthian,Samaritan,%
   Old South Arabian,}%
@@ -14615,8 +14629,17 @@ end
         \fi}}&% 
     \let\bbl@kv@attribute\relax
     \let\bbl@kv@label\relax
+    \let\bbl@kv@font\relax
     \bbl@forkv{#2}{\bbl@csarg\edef{kv@##1}{##2}}&%
-    \ifx\bbl@kv@attribute\relax\else
+    \ifx\bbl@kv@attribute\relax
+      \ifx\bbl@kv@label\relax\else
+        \bbl@ifunset{bbl@ATR@\bbl@kv@label @#3}&%
+          {\bbl@csarg\newattribute{ATR@\bbl@kv@label @#3}}&%
+          {}&%
+        \edef\bbl@kv@attribute{bbl@ATR@\bbl@kv@label @#3}&%
+        \global\bbl@carg\setattribute{\bbl@kv@attribute}\@ne
+      \fi
+    \else
       \edef\bbl@kv@attribute{\expandafter\bbl@stripslash\bbl@kv@attribute}&%
     \fi
     \directlua{
@@ -14662,6 +14685,10 @@ end
     }&%
   \endgroup}
 \endgroup
+\DeclareRobustCommand\enablelocaletransform[2][\languagename]{%
+  \bbl@csarg\setattribute{ATR@#2@#1}\@ne}
+\DeclareRobustCommand\disablelocaletransform[2][\languagename]{%
+  \bbl@csarg\unsetattribute{ATR@#2@#1}}
 \def\bbl@activateposthyphen{%
   \let\bbl@activateposthyphen\relax
   \directlua{
