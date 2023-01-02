@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/12/30 v3.84.2967 The Babel package]
+\ProvidesFile{babel.dtx}[2023/01/02 v3.84.2970 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5246,8 +5246,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.84.2967>>
-%<<date=2022/12/30>>
+%<<version=3.84.2970>>
+%<<date=2023/01/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10966,27 +10966,44 @@ help from Bernd Raichle, for which I am grateful.
     \directlua{
        local str = [==[#2]==]
        str = str:gsub('%.%d+%.%d+$', '')
-       tex.print([[\def\string\babeltempa{]] .. str .. [[}]])
+       token.set_macro('babeltempa', str)
     }&%
+    \def\babeltempc{}&%
     \bbl@xin@{,\babeltempa,}{,\bbl@KVP@transforms,}&%
+    \ifin@\else
+      \bbl@xin@{:\babeltempa,}{,\bbl@KVP@transforms,}&%
+    \fi
     \ifin@
+      \bbl@foreach\bbl@KVP@transforms{&%
+        \bbl@xin@{:\babeltempa,}{,##1,}&%
+        \ifin@  &% font:font:transform syntax
+          \directlua{
+            local t = {}
+            for m in string.gmatch('##1'..':', '(.-):') do
+              table.insert(t, m)
+            end
+            table.remove(t)
+            token.set_macro('babeltempc', ',fonts=' .. table.concat(t, ' '))
+          }&%
+        \fi}&%
       \in@{.0$}{#2$}&%
       \ifin@
         \directlua{&% (\attribute) syntax
           local str = string.match([[\bbl@KVP@transforms]],
                         '%(([^%(]-)%)[^%)]-\babeltempa')
           if str == nil then
-            tex.print([[\def\string\babeltempb{}]])
+            token.set_macro('babeltempb', '')
           else
-            tex.print([[\def\string\babeltempb{,attribute=]] .. str .. [[}]])
+            token.set_macro('babeltempb', ',attribute=' .. str)
           end
-        }
+        }&%
         \toks@{#3}&%
         \bbl@exp{&%
           \\\g@addto@macro\\\bbl@release@transforms{&%
             \relax  &% Closes previous \bbl@transforms@aux
             \\\bbl@transforms@aux
-              \\#1{label=\babeltempa\babeltempb}{\languagename}{\the\toks@}}}&%
+              \\#1{label=\babeltempa\babeltempb\babeltempc}&%
+                 {\languagename}{\the\toks@}}}&%
       \else
         \g@addto@macro\bbl@release@transforms{, {#3}}&%
       \fi
@@ -12025,8 +12042,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % For several functions, we need to execute some code with
 % |\selectfont|. With \LaTeX\ 2021-06-01, there is a hook for this
-% purpose, but in older versions the \LaTeX{} command is patched (the
-% latter solution will be eventually removed).
+% purpose.
 %
 %    \begin{macrocode}
 \def\bbl@patchfont#1{\AddToHook{selectfont}{#1}}
@@ -12965,8 +12981,8 @@ help from Bernd Raichle, for which I am grateful.
 % At the time of this writing, \textsf{fontspec} shows a warning about
 % there are languages not available, which some people think refers to
 % \babel{}, even if there is nothing wrong. Here is hack to patch
-% \textsf{fontspec} to avoid the misleading message, which is replaced
-% ba a more explanatory one.
+% \textsf{fontspec} to avoid the misleading (and mostly unuseful)
+% message.
 %
 %    \begin{macrocode}
 %<<*Font selection>>
@@ -14629,15 +14645,30 @@ end
         \fi}}&% 
     \let\bbl@kv@attribute\relax
     \let\bbl@kv@label\relax
-    \let\bbl@kv@font\relax
+    \let\bbl@kv@fonts\relax
     \bbl@forkv{#2}{\bbl@csarg\edef{kv@##1}{##2}}&%
     \ifx\bbl@kv@attribute\relax
-      \ifx\bbl@kv@label\relax\else
-        \bbl@ifunset{bbl@ATR@\bbl@kv@label @#3}&%
-          {\bbl@csarg\newattribute{ATR@\bbl@kv@label @#3}}&%
-          {}&%
+      \ifx\bbl@kv@label\relax\else  
         \edef\bbl@kv@attribute{bbl@ATR@\bbl@kv@label @#3}&%
+        \bbl@ifunset{\bbl@kv@attribute}&%
+          {\global\bbl@carg\newattribute{\bbl@kv@attribute}}&%
+          {}&%
         \global\bbl@carg\setattribute{\bbl@kv@attribute}\@ne
+        \ifx\bbl@kv@fonts\relax
+          \bbl@exp{&%
+            \global\\\bbl@add\\\bbl@dotransfont{&%
+              \\\bbl@elt{#3}{}{\bbl@kv@label}}}&%
+        \else
+          \bbl@settransfont
+          \bbl@replace\bbl@kv@fonts{ }{,}&%
+          \bbl@exp{&% TODO. Now redundant entries are created
+            \global\\\bbl@add\\\bbl@untransfont{&%
+              \\\disablelocaletransform{\bbl@kv@label}}}&%
+          \bbl@foreach\bbl@kv@fonts{&%
+            \bbl@exp{&%
+              \global\\\bbl@add\\\bbl@dotransfont{&%
+                \\\bbl@elt{#3}{##1}{\bbl@kv@label}}}}&%
+        \fi
       \fi
     \else
       \edef\bbl@kv@attribute{\expandafter\bbl@stripslash\bbl@kv@attribute}&%
@@ -14685,10 +14716,36 @@ end
     }&%
   \endgroup}
 \endgroup
+\let\bbl@dotransfont\@empty
+\def\bbl@settransfont{%
+  \global\let\bbl@settransfont\relax % Execute only once
+  \global\let\bbl@untransfont\@empty
+  \gdef\bbl@transfont{%
+    \bbl@untransfont
+    \def\bbl@elt####1####2####3{%
+      \bbl@ifsamestring{####1}{\languagename}%
+        {\bbl@ifsamestring{####2}\bbl@transfam
+          {\enablelocaletransform{####3}}%
+          {}%
+        \bbl@ifsamestring{####2}{}%
+          {\enablelocaletransform{####3}}%
+          {}%
+        \bbl@ifsamestring{####2}{\bbl@transfam/\f@series/\f@shape}%
+          {\enablelocaletransform{####3}}%
+          {}}%
+        {}}%
+    \bbl@dotransfont}%
+  \AddToHook{selectfont}{\bbl@transfont}% Hooks are global.
+  \gdef\bbl@transfam{-unknown-}%
+  \bbl@foreach\bbl@font@fams{%
+    \AddToHook{##1family}{\def\bbl@transfam{##1}}%
+    \bbl@ifsamestring{\@nameuse{##1default}}\familydefault
+      {\xdef\bbl@transfam{##1}}%
+      {}}}
 \DeclareRobustCommand\enablelocaletransform[2][\languagename]{%
-  \bbl@csarg\setattribute{ATR@#2@#1}\@ne}
+  \bbl@ifunset{bbl@ATR@#2@#1}{}{\bbl@csarg\setattribute{ATR@#2@#1}\@ne}}
 \DeclareRobustCommand\disablelocaletransform[2][\languagename]{%
-  \bbl@csarg\unsetattribute{ATR@#2@#1}}
+  \bbl@ifunset{bbl@ATR@#2@#1}{}{\bbl@csarg\unsetattribute{ATR@#2@#1}}}
 \def\bbl@activateposthyphen{%
   \let\bbl@activateposthyphen\relax
   \directlua{
