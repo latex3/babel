@@ -1,4 +1,4 @@
-## Babel 3.84.2970
+## Babel 3.84.2976
 
 (dev)
 
@@ -52,6 +52,8 @@ respective authors.
       * Spaces allowed as separators in layout=.
       * A high-level interface to enable and disable transforms (lua).
       * Font-dependent transforms (lua).
+      * Fixes:
+        - \babelprehyphenation was not applied with 'onchar'.
       
 3.84  2022-12-26
       * Automatic selection of encodings with \babelprovide and pdftex.

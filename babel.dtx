@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/01/02 v3.84.2970 The Babel package]
+\ProvidesFile{babel.dtx}[2023/01/08 v3.84.2976 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5246,8 +5246,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.84.2970>>
-%<<date=2023/01/02>>
+%<<version=3.84.2976>>
+%<<date=2023/01/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8790,26 +8790,6 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@tolower\@empty}{\bbl@toupper\@empty}}%
     \gdef\bbl@tolower{\csname\languagename @bbl@lc\endcsname}%
     \gdef\bbl@toupper{\csname\languagename @bbl@uc\endcsname}}}
-% A temporary hack, for testing purposes:
-\def\BabelRestoreCase{%
-  \DeclareRobustCommand{\MakeUppercase}[1]{{%
-    \def\reserved@a####1####2{\let####1####2\reserved@a}%
-    \def\i{I}\def\j{J}%
-    \expandafter\reserved@a\@uclclist\reserved@b{\reserved@b\@gobble}%
-    \let\UTF@two@octets@noexpand\@empty
-    \let\UTF@three@octets@noexpand\@empty
-    \let\UTF@four@octets@noexpand\@empty
-    \protected@edef\reserved@a{\uppercase{##1}}%
-    \reserved@a
-  }}%
-  \DeclareRobustCommand{\MakeLowercase}[1]{{%
-    \def\reserved@a####1####2{\let####2####1\reserved@a}%
-    \expandafter\reserved@a\@uclclist\reserved@b{\reserved@b\@gobble}%
-    \let\UTF@two@octets@noexpand\@empty
-    \let\UTF@three@octets@noexpand\@empty
-    \let\UTF@four@octets@noexpand\@empty
-    \protected@edef\reserved@a{\lowercase{##1}}%
-    \reserved@a}}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -9905,7 +9885,7 @@ help from Bernd Raichle, for which I am grateful.
     \directlua{
       if Babel.locale_mapped == nil then
         Babel.locale_mapped = true
-        Babel.linebreaking.add_before(Babel.locale_map)
+        Babel.linebreaking.add_before(Babel.locale_map, 1)
         Babel.loc_to_scr = {}
         Babel.chr_to_loc = Babel.chr_to_loc or {}
       end
@@ -13081,7 +13061,7 @@ help from Bernd Raichle, for which I am grateful.
             \global\let\<bbl@##1dflt@\languagename>%
                        \<bbl@##1dflt@*\bbl@tempa>}}}%
       {}}%                               1=T - language, already defined
-  \def\bbl@tempa{\bbl@nostdfont{}}%
+  \def\bbl@tempa{\bbl@nostdfont{}}%  TODO. Don't use \bbl@tempa
   \bbl@foreach\bbl@font@fams{%     don't gather with prev for
     \bbl@ifunset{bbl@##1dflt@\languagename}%
       {\bbl@cs{famrst@##1}%
@@ -13914,9 +13894,13 @@ end
   Babel.linebreaking.before = {}
   Babel.linebreaking.after = {}
   Babel.locale = {} % Free to use, indexed by \localeid
-  function Babel.linebreaking.add_before(func)
+  function Babel.linebreaking.add_before(func, pos)
     tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
-    table.insert(Babel.linebreaking.before, func)
+    if pos == nil then
+      table.insert(Babel.linebreaking.before, func)
+    else
+      table.insert(Babel.linebreaking.before, pos, func)
+    end
   end
   function Babel.linebreaking.add_after(func)
     tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
@@ -14645,30 +14629,34 @@ end
         \fi}}&% 
     \let\bbl@kv@attribute\relax
     \let\bbl@kv@label\relax
-    \let\bbl@kv@fonts\relax
+    \let\bbl@kv@fonts\@empty
     \bbl@forkv{#2}{\bbl@csarg\edef{kv@##1}{##2}}&%
+    \ifx\bbl@kv@fonts\@empty\else\bbl@settransfont\fi
     \ifx\bbl@kv@attribute\relax
       \ifx\bbl@kv@label\relax\else  
-        \edef\bbl@kv@attribute{bbl@ATR@\bbl@kv@label @#3}&%
+        \bbl@exp{\\\bbl@trim@def\\\bbl@kv@fonts{\bbl@kv@fonts}}&%
+        \bbl@replace\bbl@kv@fonts{ }{,}&%
+        \edef\bbl@kv@attribute{bbl@ATR@\bbl@kv@label @#3@\bbl@kv@fonts}&%
+        \count@\z@
+        \def\bbl@elt##1##2##3{&%
+          \bbl@ifsamestring{#3,\bbl@kv@label}{##1,##2}&%
+            {\bbl@ifsamestring{\bbl@kv@fonts}{##3}&%
+               {\count@\@ne}&%
+               {\bbl@error
+                 {Transforms cannot be re-assigned to different\\&%
+                  fonts. The conflict is in '\bbl@kv@label'.\\&%
+                  Apply the same fonts or use a different label}&%
+                 {See the manual for further details.}}}&%
+            {}}&%
+        \bbl@transfont@list
+        \ifnum\count@=\z@
+          \bbl@exp{\global\\\bbl@add\\\bbl@transfont@list
+            {\\\bbl@elt{#3}{\bbl@kv@label}{\bbl@kv@fonts}}}&%
+        \fi
         \bbl@ifunset{\bbl@kv@attribute}&%
           {\global\bbl@carg\newattribute{\bbl@kv@attribute}}&%
           {}&%
         \global\bbl@carg\setattribute{\bbl@kv@attribute}\@ne
-        \ifx\bbl@kv@fonts\relax
-          \bbl@exp{&%
-            \global\\\bbl@add\\\bbl@dotransfont{&%
-              \\\bbl@elt{#3}{}{\bbl@kv@label}}}&%
-        \else
-          \bbl@settransfont
-          \bbl@replace\bbl@kv@fonts{ }{,}&%
-          \bbl@exp{&% TODO. Now redundant entries are created
-            \global\\\bbl@add\\\bbl@untransfont{&%
-              \\\disablelocaletransform{\bbl@kv@label}}}&%
-          \bbl@foreach\bbl@kv@fonts{&%
-            \bbl@exp{&%
-              \global\\\bbl@add\\\bbl@dotransfont{&%
-                \\\bbl@elt{#3}{##1}{\bbl@kv@label}}}}&%
-        \fi
       \fi
     \else
       \edef\bbl@kv@attribute{\expandafter\bbl@stripslash\bbl@kv@attribute}&%
@@ -14716,25 +14704,28 @@ end
     }&%
   \endgroup}
 \endgroup
-\let\bbl@dotransfont\@empty
+\let\bbl@transfont@list\@empty
 \def\bbl@settransfont{%
   \global\let\bbl@settransfont\relax % Execute only once
-  \global\let\bbl@untransfont\@empty
   \gdef\bbl@transfont{%
-    \bbl@untransfont
     \def\bbl@elt####1####2####3{%
-      \bbl@ifsamestring{####1}{\languagename}%
-        {\bbl@ifsamestring{####2}\bbl@transfam
-          {\enablelocaletransform{####3}}%
-          {}%
-        \bbl@ifsamestring{####2}{}%
-          {\enablelocaletransform{####3}}%
-          {}%
-        \bbl@ifsamestring{####2}{\bbl@transfam/\f@series/\f@shape}%
-          {\enablelocaletransform{####3}}%
-          {}}%
-        {}}%
-    \bbl@dotransfont}%
+      \bbl@ifblank{####3}%
+         {\count@\tw@}% Do nothing if no fonts
+         {\count@\z@
+          \bbl@vforeach{####3}{%
+            \def\bbl@tempd{########1}%
+            \edef\bbl@tempe{\bbl@transfam/\f@series/\f@shape}%
+            \ifx\bbl@tempd\bbl@tempe
+              \count@\@ne
+            \else\ifx\bbl@tempd\bbl@transfam
+              \count@\@ne
+            \fi\fi}%
+         \ifcase\count@
+           \bbl@csarg\unsetattribute{ATR@####2@####1@####3}%
+         \or
+           \bbl@csarg\setattribute{ATR@####2@####1@####3}\@ne
+         \fi}}%
+      \bbl@transfont@list}%
   \AddToHook{selectfont}{\bbl@transfont}% Hooks are global.
   \gdef\bbl@transfam{-unknown-}%
   \bbl@foreach\bbl@font@fams{%
@@ -14742,10 +14733,20 @@ end
     \bbl@ifsamestring{\@nameuse{##1default}}\familydefault
       {\xdef\bbl@transfam{##1}}%
       {}}}
-\DeclareRobustCommand\enablelocaletransform[2][\languagename]{%
-  \bbl@ifunset{bbl@ATR@#2@#1}{}{\bbl@csarg\setattribute{ATR@#2@#1}\@ne}}
-\DeclareRobustCommand\disablelocaletransform[2][\languagename]{%
-  \bbl@ifunset{bbl@ATR@#2@#1}{}{\bbl@csarg\unsetattribute{ATR@#2@#1}}}
+\DeclareRobustCommand\enablelocaletransform[1]{%
+  \bbl@ifunset{bbl@ATR@#1@\languagename @}%
+    {\bbl@error
+       {'#1' for '\languagename' cannot be enabled.\\%
+        Maybe there is a typo or it’s a font-dependent transform}%
+       {See the manual for further details.}}% 
+    {\bbl@csarg\setattribute{ATR@#1@\languagename @}\@ne}}
+\DeclareRobustCommand\disablelocaletransform[1]{%
+  \bbl@ifunset{bbl@ATR@#1@\languagename @}%
+    {\bbl@error
+       {'#1' for '\languagename' cannot be disabled.\\%
+        Maybe there is a typo or it’s a font-dependent transform}%
+       {See the manual for further details.}}% 
+    {\bbl@csarg\unsetattribute{ATR@#1@\languagename @}}}
 \def\bbl@activateposthyphen{%
   \let\bbl@activateposthyphen\relax
   \directlua{
