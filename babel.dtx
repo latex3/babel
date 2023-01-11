@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/01/08 v3.84.2976 The Babel package]
+\ProvidesFile{babel.dtx}[2023/01/11 v3.84.2979 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5246,8 +5246,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.84.2976>>
-%<<date=2023/01/08>>
+%<<version=3.84.2979>>
+%<<date=2023/01/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9796,7 +9796,7 @@ help from Bernd Raichle, for which I am grateful.
   % \ifx\bbl@KVP@date\@nnil\else
   % \fi
   % ==
-  \let\bbl@lbkflag\relax % \@empty = do setup linebreak
+  \let\bbl@lbkflag\relax % \@empty = do setup linebreak, only in 3 cases:
   \ifcase\bbl@howloaded
     \let\bbl@lbkflag\@empty % new
   \else
@@ -9821,6 +9821,7 @@ help from Bernd Raichle, for which I am grateful.
       {}%
     \let\bbl@KVP@date\@empty
   \fi
+  \let\bbl@KVP@captions@@\bbl@KVP@captions % TODO. A dirty hack
   \ifx\bbl@KVP@captions\@nnil
     \let\bbl@KVP@captions\bbl@KVP@import
   \fi
@@ -10224,48 +10225,49 @@ help from Bernd Raichle, for which I am grateful.
     {}}
 %    \end{macrocode}
 %
-% The |hyphenrules| option is handled with an auxiliary macro.
+% The |hyphenrules| option is handled with an auxiliary macro. This
+% macro is called in three cases: when a language is first declared
+% with |\babelprovide|, with |hyphenrules| and with |import|.
 %
 %    \begin{macrocode}
 \def\bbl@provide@hyphens#1{%
-  \let\bbl@tempa\relax
+  \@tempcnta\m@ne  % a flag
   \ifx\bbl@KVP@hyphenrules\@nnil\else
     \bbl@replace\bbl@KVP@hyphenrules{ }{,}%
     \bbl@foreach\bbl@KVP@hyphenrules{%
-      \ifx\bbl@tempa\relax    %  if not yet found
-        \bbl@ifsamestring{##1}{+}%
-          {{\bbl@exp{\\\addlanguage\<l@##1>}}}%
+      \ifnum\@tempcnta=\m@ne   % if not yet found
+        \bbl@ifsamestring{##1}{+}%  
+          {\bbl@carg\addlanguage{l@##1}}%
           {}%
-        \bbl@ifunset{l@##1}%
+        \bbl@ifunset{l@##1}% After a possible +
           {}%
-          {\bbl@exp{\let\bbl@tempa\<l@##1>}}%
+          {\@tempcnta\@nameuse{l@##1}}%
       \fi}%
-    \ifx\bbl@tempa\relax 
+    \ifnum\@tempcnta=\m@ne
       \bbl@warning{%
         Requested 'hyphenrules=' for '\languagename' not found.\\%
         Using the default value. Reported}%
     \fi
   \fi
-  \ifx\bbl@tempa\relax %         if no opt or no language in opt found
-    \ifx\bbl@KVP@import\@nnil
-      \ifx\bbl@initoload\relax\else
-        \bbl@exp{%               and hyphenrules is not empty
-          \\\bbl@ifblank{\bbl@cs{hyphr@#1}}%
-            {}%
-            {\let\\\bbl@tempa\<l@\bbl@cl{hyphr}>}}%
-      \fi 
-    \else % if importing
-      \bbl@exp{%                    and hyphenrules is not empty
-        \\\bbl@ifblank{\bbl@cs{hyphr@#1}}%
-          {}%
-          {\let\\\bbl@tempa\<l@\bbl@cl{hyphr}>}}%
+  \ifnum\@tempcnta=\m@ne          % if no opt or no language in opt found
+    \ifx\bbl@KVP@captions@@\@nnil % TODO. Hackish. See above.
+      \bbl@ifunset{bbl@hyphr@#1}{}% use value in ini, if exists
+        {\bbl@exp{\\\bbl@ifblank{\bbl@cs{hyphr@#1}}}%
+           {}%
+           {\bbl@ifunset{l@\bbl@cl{hyphr}}%
+             {}%                   if hyphenrules found:
+             {\@tempcnta\@nameuse{l@\bbl@cl{hyphr}}}}}%
     \fi
   \fi
-  \bbl@ifunset{bbl@tempa}%       ie, relax or undefined
-    {\bbl@ifunset{l@#1}%         no hyphenrules found - fallback
-       {\bbl@exp{\\\adddialect\<l@#1>\language}}%
-       {}}%                      so, l@<lang> is ok - nothing to do
-    {\bbl@exp{\\\adddialect\<l@#1>\bbl@tempa}}}% found in opt list or ini
+  \bbl@ifunset{l@#1}%
+    {\ifnum\@tempcnta=\m@ne
+       \bbl@carg\adddialect{l@#1}\language
+     \else
+       \bbl@carg\adddialect{l@#1}\@tempcnta
+     \fi}%
+    {\ifnum\@tempcnta=\m@ne\else
+       \global\bbl@carg\chardef{l@#1}\@tempcnta
+     \fi}}
 %    \end{macrocode}
 %
 % The reader of |babel-...tex| files. We reset temporarily some
