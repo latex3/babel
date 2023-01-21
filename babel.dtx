@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/01/11 v3.84.2979 The Babel package]
+\ProvidesFile{babel.dtx}[2023/01/21 v3.84.2989 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5246,8 +5246,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.84.2979>>
-%<<date=2023/01/11>>
+%<<version=3.84.2989>>
+%<<date=2023/01/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7844,11 +7844,15 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\if@safe@actives}
-%    In some circumstances it is necessary to be able to change the
-%    expansion of an active character on the fly. For this purpose the
-%    switch |@safe@actives| is available. The setting of this switch
-%    should be checked in the first level expansion of
-%    |\active@char|\m{char}.
+%  In some circumstances it is necessary to be able to set the catcode
+%  of a shorthand to ‘other’ on the fly (for example, if things like
+%  |\char"AA| are expected). For this purpose the switch
+%  |@safe@actives| is available. The setting of this switch should be
+%  checked in the first level expansion of |\active@char|\m{char}. When
+%  this expansion mode is active, something like
+%  |"|$\sb{13}$|"|$\sb{13}$ becomes |"|$\sb{12}$|"|$\sb{12}$ (in other
+%  words, they are |\string|’ed). This contrasts with
+%  |\protected@edef|, where catcodes are left unchanged.
 %
 %    \begin{macrocode}
 \newif\if@safe@actives
@@ -7858,10 +7862,10 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\bbl@restore@actives}
-%    When the output routine kicks in while the
-%    active characters were made ``safe'' this must be undone in
-%    the headers to prevent unexpected typeset results. For this
-%    situation we define a command to make them ``unsafe'' again.
+% When the output routine kicks in while the active characters were
+% made ``safe'' this must be undone in the headers to prevent
+% unexpected typeset results. For this situation we define a command to
+% make them ``unsafe'' again.
 %
 %    \begin{macrocode}
 \def\bbl@restore@actives{\if@safe@actives\@safe@activesfalse\fi}
@@ -7872,10 +7876,10 @@ help from Bernd Raichle, for which I am grateful.
 %  \begin{macro}{\bbl@activate}
 %  \begin{macro}{\bbl@deactivate}
 %
-%    Both macros take one argument, like |\initiate@active@char|. The
-%    macro is used to change the definition of an active character to
-%    expand to |\active@char|\m{char} in the case of |\bbl@activate|,
-%    or |\normal@char|\m{char} in the case of |\bbl@deactivate|.
+% Both macros take one argument, like |\initiate@active@char|. The
+% macro is used to change the definition of an active character to
+% expand to |\active@char|\m{char} in the case of |\bbl@activate|,
+% or |\normal@char|\m{char} in the case of |\bbl@deactivate|.
 %
 %    \begin{macrocode}
 \chardef\bbl@activated\z@
@@ -7905,16 +7909,16 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %  \end{macro}
 %
-%  \begin{macro}{\declare@shorthand}
-%    The command |\declare@shorthand| is used to declare a shorthand
-%    on a certain level. It takes three arguments:
-%    \begin{enumerate}
-%    \item a name for the collection of shorthands, i.e. `system', or
-%      `dutch';
-%    \item the character (sequence) that makes up the shorthand,
-%      i.e. |~| or |"a|;
-%    \item the code to be executed when the shorthand is encountered.
-%    \end{enumerate}
+% \begin{macro}{\declare@shorthand}
+% The command |\declare@shorthand| is used to declare a shorthand
+% on a certain level. It takes three arguments:
+% \begin{enumerate}
+% \item a name for the collection of shorthands, i.e. `system', or
+%   `dutch';
+% \item the character (sequence) that makes up the shorthand,
+%   i.e. |~| or |"a|;
+% \item the code to be executed when the shorthand is encountered.
+% \end{enumerate}
 %
 % The auxiliary macro |\babel@texpdf| improves the interoperativity with
 % \textsf{hyperref} and takes 4 arguments: (1) The \TeX{} code in text
@@ -8196,6 +8200,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@putsh@i#1#2\@nnil{%
   \csname\language@group @sh@\string#1@%
     \ifx\@empty#2\else\string#2@\fi\endcsname}
+%
 \ifx\bbl@opt@shorthands\@nnil\else
   \let\bbl@s@initiate@active@char\initiate@active@char
   \def\initiate@active@char#1{%
@@ -14869,23 +14874,39 @@ end
 %
 \ifnum\bbl@bidimode>\z@
   \def\bbl@insidemath{0}%
-  \def\bbl@everymath{\def\bbl@insidemath{1}}
-  \def\bbl@everydisplay{\def\bbl@insidemath{2}}
+  \def\bbl@mathboxdir{%
+    \ifcase\bbl@thetextdir\relax
+      \everyhbox{\bbl@mathboxdir@aux L}%
+    \else
+      \everyhbox{\bbl@mathboxdir@aux R}%
+     \fi}
+  \def\bbl@mathboxdir@aux#1{%
+    \@ifnextchar\egroup{}{\textdir T#1T\relax}}
+  \def\bbl@everymath{%
+    \bbl@mathboxdir
+    \def\bbl@insidemath{1}}
+  \def\bbl@everydisplay{%
+    \bbl@mathboxdir
+    \def\bbl@everymath{\bbl@mathboxdir}%
+    \def\bbl@insidemath{2}}
   \frozen@everymath\expandafter{%
     \expandafter\bbl@everymath\the\frozen@everymath}
   \frozen@everydisplay\expandafter{%
     \expandafter\bbl@everydisplay\the\frozen@everydisplay}
   \AtBeginDocument{
     \directlua{
+      Babel.use_math_box_dir = true
       function Babel.math_box_dir(head)
-        if not (token.get_macro('bbl@insidemath') == '0') then
-          if Babel.hlist_has_bidi(head) then
-            local d = node.new(node.id'dir')
-            d.dir = '+TRT'
-            node.insert_before(head, node.has_glyph(head), d)
-            for item in node.traverse(head) do
-              node.set_attribute(item,
-                Babel.attr_dir, token.get_macro('bbl@thedir'))
+        if Babel.use_math_box_dir then
+          if not (token.get_macro('bbl@insidemath') == '0') then
+            if Babel.hlist_has_bidi(head) then
+              local d = node.new(node.id'dir')
+              d.dir = '+TRT'
+              node.insert_before(head, node.has_glyph(head), d)
+              for item in node.traverse(head) do
+                node.set_attribute(item,
+                  Babel.attr_dir, token.get_macro('bbl@thedir'))
+              end
             end
           end
         end
@@ -14961,6 +14982,7 @@ end
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
       \AddToHook{env/equation/begin}{%
         \ifnum\bbl@thetextdir>\z@
+          \let\bbl@mathboxdir\relax
           \let\@eqnnum\bbl@eqnum
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
@@ -14976,6 +14998,7 @@ end
       \fi
       \AddToHook{env/eqnarray/begin}{%
         \ifnum\bbl@thetextdir>\z@
+          \let\bbl@mathboxdir\relax
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
           \bbl@add\normalfont{\bbl@eqnodir}%
@@ -15013,6 +15036,7 @@ end
             \hbox to 0.01pt{\hbox to\displaywidth{\hss{#1}}\hss}}%
         \fi
         \def\bbl@ams@preset#1{%
+          \let\bbl@mathboxdir\relax
           \ifnum\bbl@thetextdir>\z@
             \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
             \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
@@ -15020,6 +15044,7 @@ end
           \fi}%
         \ifnum\bbl@eqnpos=\tw@\else
           \def\bbl@ams@equation{%
+            \let\bbl@mathboxdir\relax
             \ifnum\bbl@thetextdir>\z@
               \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
               \chardef\bbl@thetextdir\z@
@@ -15045,6 +15070,7 @@ end
           \\\AddToHook{env/align*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
         \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
         \AddToHook{env/split/before}{%
+          \let\bbl@mathboxdir\relax
           \ifnum\bbl@thetextdir>\z@
             \bbl@ifsamestring\@currenvir{equation}%
               {\ifx\bbl@ams@lap\hbox % leqno
@@ -22404,6 +22430,7 @@ function Babel.bidi(head, ispar, hdir)
 
     elseif item.id == DIR then
       d = nil
+      -- new_d = true
       if head ~= item then new_d = true end
 
     elseif item.id == node.id'glue' and item.subtype == 13 then

@@ -1,4 +1,4 @@
-## Babel 3.84.2979
+## Babel 3.84.2989
 
 (dev)
 
@@ -54,7 +54,9 @@ respective authors.
       * Font-dependent transforms (lua).
       * Fixes:
         - \babelprehyphenation was not applied with 'onchar'.
-        - In some rare cases the hyphenrules were not correctly set.
+        - In some rare cases the hyphenrules weren’t correctly set.
+        - Partial fix for bidi in tabular (broken after an attempt to
+          fix amsmath).
       
 3.84  2022-12-26
       * Automatic selection of encodings with \babelprovide and pdftex.
