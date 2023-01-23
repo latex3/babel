@@ -1,7 +1,7 @@
 % \iffalse
 % This document requires lualatex
 %%
-%% Copyright (C) 2012-2022 Javier Bezos and Johannes L. Braams.
+%% Copyright (C) 2012-2023 Javier Bezos and Johannes L. Braams.
 %% Copyright (C) 1989-2012 Johannes L. Braams and
 %%           any individual authors listed elsewhere in this file.
 %% All rights reserved.
@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/01/21 v3.84.2989 The Babel package]
+\ProvidesFile{babel.dtx}[2022/01/23 v3.85 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3363,6 +3363,34 @@ to \textit{ύ}, so that the diaeresis is removed.
 This feature is activated with the first |\babelposthyphenation| or
 |\babelprehyphenation|.
 
+\New{3.85} Another option is |label|, which takes a value similar to
+those in |\babelprovide| key |transforms| (in fact, the latter just
+applies this option). This label can be used to turn on and off
+transforms with a higher level interface, by means of
+|\enablelocaletransform| and |\disablelocaletransform| (see below).
+
+\New{3.85} When used in conjunction with |label|, this key makes a
+transform font dependent. As an example, the rules for Arabic kashida
+can differ depending on the font design. The value consists in a list
+of space-separated font tags:
+\begin{verbatim}
+\babelprehyphenation[label=transform.name, fonts=rm sf]{..}{..}
+\end{verbatim}
+Tags can adopt two forms: a family, such as |rm| or |tt|, or the set
+family/series/shape. If a font matches one of these conditions, the
+transform is enabled. The second tag in |rm rm/n/it| is redundant.
+There are no wildcards; so, for italics you may want to write something
+like |sf/m/it sf/b/it|.
+
+Transforms set for specific fonts (at least once in any language) are
+always reset with a font selector.
+
+In |\babelprovide|, transform labels can be tagged before its name,
+with a list separated with colons, like:
+\begin{verbatim}
+transforms = _rm:sf:_transform.name
+\end{verbatim}
+
 \New{3.67} With the optional argument you can associate a user defined
 transform to an attribute, so that it’s active only when it’s set
 (currently its attribute value is ignored). With this mechanism
@@ -3372,7 +3400,7 @@ LaTeX kernel provides the macros |\newattribute|, |\setattribute| and
 |\unsetattribute|. The following example shows how to use it, provided
 an attribute named |\latinnoj| has been declared:
 \begin{verbatim}
-  \babelprehyphenation[attribute=\latinnoj]{latin}{ J }{ string = I }
+\babelprehyphenation[attribute=\latinnoj]{latin}{ J }{ string = I }
 \end{verbatim}
 
 See the
@@ -3444,6 +3472,12 @@ This feature is activated with the first |\babelposthyphenation| or
   encoding conversions and transliterations. Mappings, however, are
   linked to fonts, not to languages.
 \end{note}
+
+\Describe{\enablelocaletransform}{\marg{label}}
+\DescribeOther{\disablelocaletransform}{\marg{label}}
+
+\New{3.85} Enables and disables the transform with the given label in
+the current language.
 
 \subsection{Selection based on BCP 47 tags}
 \label{bcp47}
@@ -3719,8 +3753,8 @@ Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
 \newcommand\refrange[2]{\babelsublr{\texthe{\ref{#1}}-\texthe{\ref{#2}}}}
 \end{verbatim}
 
-  In the future a more complete method, reading recursively boxed text, may
-  be added.
+  In the future a more complete method, reading recursively boxed text,
+  may be added.
 \end{note}
 
 \Describe{layout=}{\texttt{sectioning} $\string|$
@@ -3737,9 +3771,10 @@ Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
 adapted in bidi documents, including some text elements (except with
 options loading the |bidi| package, which provides its own mechanism to
 control these elements). You may use several options with a
-dot-separated list (eg, |layout=counters.contents.sectioning|). This
-list will be expanded in future releases. Note not all options are
-required by all engines.
+space-separated list, like |layout=counters contents sectioning| (in
+\New{3.85} spaces are to be preferred over dots, which was the former
+syntax). This list will be expanded in future releases. Note not all
+options are required by all engines.
 
 \begin{description}
 \renewcommand\makelabel[1]{%
@@ -3820,7 +3855,7 @@ the same for \textsf{pgf/tikz}. Somewhat experimental. \New{3.32}.
   Typically, in an Arabic document you would need:
 \begin{verbatim}
 \usepackage[bidi=basic,
-            layout=counters.tabular]{babel}
+            layout=counters tabular]{babel}
 \end{verbatim}
 \end{example}
 
@@ -4755,6 +4790,11 @@ curly braces.  The macros |\bbl@add@special|\meta{char} and
 |\bbl@remove@special|\meta{char} add and remove the character
 \meta{char} to these two sets.
 
+\DescribeMacro{\@safe@activestrue}
+\DescribeMacro{\@safe@activesfalse}
+Enables and disables the “safe” mode. It is a tool for package and class
+authors. See the description below.
+
 \subsection{Support for saving macro definitions}
 
 Language definition files may want to \emph{re}define macros that
@@ -5246,8 +5286,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.84.2989>>
-%<<date=2023/01/21>>
+%<<version=3.85>>
+%<<date=2022/01/23>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7844,15 +7884,17 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\if@safe@actives}
-%  In some circumstances it is necessary to be able to set the catcode
-%  of a shorthand to ‘other’ on the fly (for example, if things like
-%  |\char"AA| are expected). For this purpose the switch
-%  |@safe@actives| is available. The setting of this switch should be
-%  checked in the first level expansion of |\active@char|\m{char}. When
-%  this expansion mode is active, something like
-%  |"|$\sb{13}$|"|$\sb{13}$ becomes |"|$\sb{12}$|"|$\sb{12}$ (in other
-%  words, they are |\string|’ed). This contrasts with
-%  |\protected@edef|, where catcodes are left unchanged.
+%  In some circumstances it is necessary to be able to reset the
+%  shorthand to its ‘normal’ value (usually the character with catcode
+%  ‘other’) on the fly. For this purpose the switch |@safe@actives| is
+%  available. The setting of this switch should be checked in the first
+%  level expansion of |\active@char|\m{char}. When this expansion mode
+%  is active (with |\@safe@activestrue|), something like
+%  |"|$\sb{13}$|"|$\sb{13}$ becomes |"|$\sb{12}$|"|$\sb{12}$ in an
+%  |\edef| (in other words, shorthands are |\string|’ed). This
+%  contrasts with |\protected@edef|, where catcodes are always left
+%  unchanged. Once converted, they can be used safely even after this
+%  expansion mode is deactivated (with |\@safe@activefalse|).
 %
 %    \begin{macrocode}
 \newif\if@safe@actives
@@ -14863,6 +14905,7 @@ end
 \def\bbl@textdir#1{%
   \bbl@setluadir{text}\textdir{#1}%
   \chardef\bbl@thetextdir#1\relax
+  % par/text 0..8 = l/l l/r l/al r/l r/r r/al al/l al/r al/al
   \edef\bbl@thedir{\the\numexpr\bbl@thepardir*3+#1}%
   \setattribute\bbl@attr@dir{\numexpr\bbl@thepardir*3+#1}}
 \def\bbl@pardir#1{%
@@ -14882,13 +14925,10 @@ end
      \fi}
   \def\bbl@mathboxdir@aux#1{%
     \@ifnextchar\egroup{}{\textdir T#1T\relax}}
-  \def\bbl@everymath{%
-    \bbl@mathboxdir
-    \def\bbl@insidemath{1}}
+  \def\bbl@everymath{\bbl@mathboxdir}
   \def\bbl@everydisplay{%
     \bbl@mathboxdir
-    \def\bbl@everymath{\bbl@mathboxdir}%
-    \def\bbl@insidemath{2}}
+    \def\bbl@everymath{\bbl@mathboxdir}}
   \frozen@everymath\expandafter{%
     \expandafter\bbl@everymath\the\frozen@everymath}
   \frozen@everydisplay\expandafter{%
@@ -14982,7 +15022,7 @@ end
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
       \AddToHook{env/equation/begin}{%
         \ifnum\bbl@thetextdir>\z@
-          \let\bbl@mathboxdir\relax
+          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
           \let\@eqnnum\bbl@eqnum
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
@@ -14998,7 +15038,8 @@ end
       \fi
       \AddToHook{env/eqnarray/begin}{%
         \ifnum\bbl@thetextdir>\z@
-          \let\bbl@mathboxdir\relax
+          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}
+          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
           \bbl@add\normalfont{\bbl@eqnodir}%
@@ -15036,7 +15077,7 @@ end
             \hbox to 0.01pt{\hbox to\displaywidth{\hss{#1}}\hss}}%
         \fi
         \def\bbl@ams@preset#1{%
-          \let\bbl@mathboxdir\relax
+          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
           \ifnum\bbl@thetextdir>\z@
             \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
             \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
@@ -15044,7 +15085,7 @@ end
           \fi}%
         \ifnum\bbl@eqnpos=\tw@\else
           \def\bbl@ams@equation{%
-            \let\bbl@mathboxdir\relax
+            \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
             \ifnum\bbl@thetextdir>\z@
               \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
               \chardef\bbl@thetextdir\z@
@@ -15070,7 +15111,7 @@ end
           \\\AddToHook{env/align*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
         \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
         \AddToHook{env/split/before}{%
-          \let\bbl@mathboxdir\relax
+          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
           \ifnum\bbl@thetextdir>\z@
             \bbl@ifsamestring\@currenvir{equation}%
               {\ifx\bbl@ams@lap\hbox % leqno

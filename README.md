@@ -1,6 +1,6 @@
-## Babel 3.84.2989
+## Babel 3.85
 
-(dev)
+2023-01-23
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,24 +48,15 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.85  (dev)
-      * Spaces allowed as separators in layout=.
+3.85  2023-01-23
       * A high-level interface to enable and disable transforms (lua).
       * Font-dependent transforms (lua).
+      * Spaces allowed as separators in layout=.
       * Fixes:
         - \babelprehyphenation was not applied with 'onchar'.
         - In some rare cases the hyphenrules weren’t correctly set.
         - Partial fix for bidi in tabular (broken after an attempt to
           fix amsmath).
-      
-3.84  2022-12-26
-      * Automatic selection of encodings with \babelprovide and pdftex.
-      * Fixes:
-        - With 'select.write = omit' the main language wasn’t selected
-          in the aux file.
-        - Incorrect link box in end of line if it is preceded by a
-          non-Arabic character (#207)
-        - New option counters* the pre-expand \thepage. See #26.
 ```
 
 ### Previous changes
