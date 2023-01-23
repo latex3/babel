@@ -1,6 +1,6 @@
 # What's new in babel 3.85
 
-**Draft. Work in progress**
+2023-01-23
 
 ## Separators in `layout`
 
@@ -41,8 +41,6 @@ They are applied to the current locale.
 
 ## Font-dependent transforms
 
-**Work in progress**
-
 Sometimes, a transform doesn’t work well in all fonts. For example, the
 rules for Arabic kashida can differ depending on the font design.
 Besides a label, a list of fonts can be provided with a new key
@@ -58,9 +56,8 @@ There are no wildcards; so, for italics you may want to write something
 like `sf/m/it sf/b/it`.
 
 Transforms set for specific fonts (at least once in any language) are
-always reset with a font selector. Font settings take precedence over
-`\enablelocaletransform` and `\disablelocaletransform`, so that a
-`\selectfont` can re-enable or re-disable the transform.
+always reset with a font selector. Currently they cannot be enabled or
+disabled with the macros described in the previous section.
 
 In `\babelprovide`, transform labels can be tagged before its name,
 with a list separated with colonsm like:
@@ -69,4 +66,13 @@ transforms = rm:sf:transform.name
 ```
 
 ## Fixes
+
+The main fix is related to `tabular`. When attempting to fix `amsmath`,
+bidi text was broken if `layout=tabular` was not set. Its behavior
+has been improved, but some issues remain (for example, position
+of vertical rules with `|`).
+
+Other fixes are:
+* `\babelprehyphenation` was not applied with `onchar`.
+* In some rare cases the hyphenrules weren’t correctly set.
 

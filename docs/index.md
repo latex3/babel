@@ -48,7 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [3.85](news/whats-new-in-babel-3.85.html) | (dev) Font-dependent transforms. |
+| [3.85](news/whats-new-in-babel-3.85.html) | Font-dependent transforms. |
 | [3.84](news/whats-new-in-babel-3.84.html) | Auto-selection of encodings in `pdftex`. |
 | [3.83](news/whats-new-in-babel-3.83.html) | Improved Punjabi. `lscape`. |
 | [3.82](news/whats-new-in-babel-3.82.html) | Tibetan with XeTeX. Improved `\babelprovide` (with transforms).|
