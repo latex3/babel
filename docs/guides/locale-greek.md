@@ -11,17 +11,16 @@ It’s strongly recommended to use `xetex`  or `luatex`.
 
 ## As `ldf`
 
-It supports Monotonic and Polytonic Greek, but only one at a time.
-Ancient Greek is not supported. A minimal preamble with Monotonic and
-`pdftex` is:
+It supports Monotonic, Polytonic and Ancient Greek, but only one at a
+time. A minimal preamble with Monotonic Greek and `pdftex` is:
 ```tex
 \usepackage[LGR]{fontenc}
 \usepackage[greek]{babel}
 ```
 
-It is advisable, as in the example, to load explicitly the font
+With `pdftex` it is advisable, as in the example, to load explicitly the font
 encoding (the `greek` style does it if necessary, but in a non-standard
-way).
+way). With `xetex` and `luatex`, `fontspec` must not be loaded.
 
 ## As `ini`
 
