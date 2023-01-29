@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2022/01/23 v3.85 The Babel package]
+\ProvidesFile{babel.dtx}[2023/01/29 v3.85.2997 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5286,8 +5286,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.85>>
-%<<date=2022/01/23>>
+%<<version=3.85.2997>>
+%<<date=2023/01/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12203,7 +12203,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@setdirs#1{% TODO - math
   \ifcase\bbl@select@type % TODO - strictly, not the right test
     \bbl@bodydir{#1}%
-    \bbl@pardir{#1}%
+    \bbl@pardir{#1}% <- Must precede \bbl@textdir
   \fi
   \bbl@textdir{#1}}
 % TODO. Only if \bbl@bidimode > 0?:
@@ -14859,11 +14859,11 @@ end
 %
 % The basic setup. The output is modified at a very low level to set
 % the |\bodydir| to the |\pagedir|. Sadly, we have to deal with boxes
-% in math with basic, so the |\bbl@mathboxdir| hack is activated every
-% math with the package option bidi=.
+% in math with |basic|, so hacks must be activated always with the
+% package option |bidi=|.
 %
 %    \begin{macrocode}
-\ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200
+\ifnum\bbl@bidimode>\@ne % Excludes default=1
   \let\bbl@beforeforeign\leavevmode
   \AtEndOfPackage{\EnableBabelHook{babel-bidi}}
   \RequirePackage{luatexbase}
@@ -14875,13 +14875,10 @@ end
     \or
       require('babel-bidi-basic-r.lua')
     \fi}
-  % TODO - to locale_props, not as separate attribute
   \newattribute\bbl@attr@dir
   \directlua{ Babel.attr_dir = luatexbase.registernumber'bbl@attr@dir' }
-  % TODO. I don't like it, hackish:
   \bbl@exp{\output{\bodydir\pagedir\the\output}}
-  \AtEndOfPackage{\EnableBabelHook{babel-bidi}}
-\fi\fi
+\fi
 \chardef\bbl@thetextdir\z@
 \chardef\bbl@thepardir\z@
 \def\bbl@getluadir#1{%
@@ -14901,59 +14898,71 @@ end
       #2 TRT\relax
     \fi
   \fi}
+% ..00PPTT, with masks 0xC (par dir) and 0x3 (text dir)
 \def\bbl@thedir{0}
 \def\bbl@textdir#1{%
   \bbl@setluadir{text}\textdir{#1}%
   \chardef\bbl@thetextdir#1\relax
-  % par/text 0..8 = l/l l/r l/al r/l r/r r/al al/l al/r al/al
-  \edef\bbl@thedir{\the\numexpr\bbl@thepardir*3+#1}%
-  \setattribute\bbl@attr@dir{\numexpr\bbl@thepardir*3+#1}}
-\def\bbl@pardir#1{%
+  \edef\bbl@thedir{\the\numexpr\bbl@thepardir*4+#1}%
+  \setattribute\bbl@attr@dir{\numexpr\bbl@thepardir*4+#1}}
+\def\bbl@pardir#1{%  Used twice
   \bbl@setluadir{par}\pardir{#1}%
   \chardef\bbl@thepardir#1\relax}
-\def\bbl@bodydir{\bbl@setluadir{body}\bodydir}
-\def\bbl@pagedir{\bbl@setluadir{page}\pagedir}
-\def\bbl@dirparastext{\pardir\the\textdir\relax}%   %%%%
+\def\bbl@bodydir{\bbl@setluadir{body}\bodydir}%   Used once
+\def\bbl@pagedir{\bbl@setluadir{page}\pagedir}%   Unused
+\def\bbl@dirparastext{\pardir\the\textdir\relax}% Used once
+%    \end{macrocode}
 %
-\ifnum\bbl@bidimode>\z@
+% In some cases, direction in |\hbox|es are set at the `lua` level,
+% namely, in math mode and in |\halign|. The latter is particularly
+% difficult to deal with in a general way if the direction of columns
+% is diferent to the text one, because they both are governed by
+% |\textdir|. Since \babel{} stores the direction in a macro and at each
+% node, we can recover and apply it. (Note an explicit direction at the
+% beginning of |\halign| applies only to the first column.)
+% |Babel.hlist_dir| is executed before the bidi algorithm, so that
+% the inserted ‘dir’ nodes look much like an explicit |\textdir|.
+% 
+%    \begin{macrocode}
+\ifnum\bbl@bidimode>\z@ % Includes default=1
+  \let\bbl@parabefore\relax
+  \AddToHook{para/before}{\bbl@parabefore}%
+  \global\let\bbl@thenextmath\relax
   \def\bbl@insidemath{0}%
-  \def\bbl@mathboxdir{%
-    \ifcase\bbl@thetextdir\relax
-      \everyhbox{\bbl@mathboxdir@aux L}%
-    \else
-      \everyhbox{\bbl@mathboxdir@aux R}%
-     \fi}
-  \def\bbl@mathboxdir@aux#1{%
-    \@ifnextchar\egroup{}{\textdir T#1T\relax}}
-  \def\bbl@everymath{\bbl@mathboxdir}
-  \def\bbl@everydisplay{%
-    \bbl@mathboxdir
-    \def\bbl@everymath{\bbl@mathboxdir}}
+  \def\bbl@everymath{%
+    \def\bbl@insidemath{1}%
+    \bbl@thenextmath}
+  \def\bbl@everydisplay{\def\bbl@insidemath{2}}
   \frozen@everymath\expandafter{%
     \expandafter\bbl@everymath\the\frozen@everymath}
   \frozen@everydisplay\expandafter{%
     \expandafter\bbl@everydisplay\the\frozen@everydisplay}
   \AtBeginDocument{
     \directlua{
-      Babel.use_math_box_dir = true
-      function Babel.math_box_dir(head)
-        if Babel.use_math_box_dir then
-          if not (token.get_macro('bbl@insidemath') == '0') then
-            if Babel.hlist_has_bidi(head) then
+      function Babel.hlist_dir(head)
+        local hlistmode = token.get_macro('bbl@insidemath')
+        if hlistmode == '0' then
+          return head
+        elseif hlistmode == '1' or hlistmode == '2' then % 1=math, 2=display
+          if Babel.hlist_has_bidi(head) then
+            local d = node.new(node.id'dir')
+            d.dir = '+TRT'
+            head = node.insert_before(head, head, d)
+          end
+        else % \halign with lr columns. Ignore tabskip boxes.
+          if head and not (head.id==12 and head.subtype==12) then
+            if node.get_attribute(head, Babel.attr_dir) & 0x3
+                \string~= 0 then % ie, 1 2 4 5 7 8
               local d = node.new(node.id'dir')
               d.dir = '+TRT'
-              node.insert_before(head, node.has_glyph(head), d)
-              for item in node.traverse(head) do
-                node.set_attribute(item,
-                  Babel.attr_dir, token.get_macro('bbl@thedir'))
-              end
+              head = node.insert_before(head, head, d)
             end
           end
         end
         return head
       end
-      luatexbase.add_to_callback("hpack_filter", Babel.math_box_dir,
-        "Babel.math_box_dir", 0)
+      luatexbase.add_to_callback("hpack_filter", Babel.hlist_dir,
+        "Babel.hlist_dir", 0)
   }}%
 \fi
 %    \end{macrocode}
@@ -15022,7 +15031,6 @@ end
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
       \AddToHook{env/equation/begin}{%
         \ifnum\bbl@thetextdir>\z@
-          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
           \let\@eqnnum\bbl@eqnum
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
@@ -15038,8 +15046,6 @@ end
       \fi
       \AddToHook{env/eqnarray/begin}{%
         \ifnum\bbl@thetextdir>\z@
-          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}
-          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
           \bbl@add\normalfont{\bbl@eqnodir}%
@@ -15174,8 +15180,55 @@ end
     \csname bbl@inidata@\languagename\endcsname
     \bbl@release@transforms\relax % \relax closes the last item.
   \fi}
-\ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
+%    \end{macrocode}
 %
+% The following comes before the test for the existence of |layout|,
+% because the default behavior is modified, too. Note |notabular|
+% (below) modifies |\bbl@nextfake@lr|.
+%
+%    \begin{macrocode}
+\IfBabelLayout{tabular}
+  {\let\bbl@OL@@tabular\@tabular
+   \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+   \let\bbl@NL@@tabular\@tabular
+   \AtBeginDocument{%
+     \ifx\bbl@NL@@tabular\@tabular\else
+       \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+       \let\bbl@NL@@tabular\@tabular
+     \fi}}
+  {}
+\ifx\bbl@OL@@tabular\@undefined % Default
+  \ifx\@tabular\@undefined\else
+    \def\bbl@nextfake@lr#1{%
+      #1% 
+      \ifnum\bbl@thetextdir>\z@
+        \edef\bbl@insidemath{3}% 
+        \def\bbl@parabefore{\bodydir TRT \pardir TRT \textdir TRT}%
+      \else
+        \edef\bbl@insidemath{0}%
+        \let\bbl@parabefore\relax
+      \fi}%
+    \let\bbl@OL@@tabular\@tabular
+    \bbl@replace\@tabular{$}{\bbl@nextfake@lr$}%
+    \let\bbl@NL@@tabular\@tabular
+    \AtBeginDocument{%
+      \ifx\bbl@NL@@tabular\@tabular\else
+        \bbl@replace\@tabular{$}{\bbl@nextfake@lr$}%
+        \let\bbl@NL@@tabular\@tabular
+      \fi}
+  \fi
+\fi
+\ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
+%    \end{macrocode}
+%
+% \textsc{Omega} provided a companion to |\mathdir| (|\nextfakemath|)
+% for those cases where we did not want it to be applied, so that the
+% writing direction of the main text was left unchanged. |\bbl@nextfake|
+% is an attempt to emulate it, because \luatex{} has removed it. Also,
+% |\parshape| does not honour |\parshape| by default, so we need to
+% redefine |\@hangfrom|.
+%    
+%    \begin{macrocode}
 \ifnum\bbl@bidimode>\z@
   \def\bbl@nextfake#1{%  non-local changes, use always inside a group!
     \bbl@exp{%
@@ -15204,16 +15257,13 @@ end
     \fi
     \noindent\box\@tempboxa}
 \fi
-\IfBabelLayout{tabular}
-  {\let\bbl@OL@@tabular\@tabular
-   \bbl@replace\@tabular{$}{\bbl@nextfake$}%
-   \let\bbl@NL@@tabular\@tabular
-   \AtBeginDocument{%
-     \ifx\bbl@NL@@tabular\@tabular\else
-       \bbl@replace\@tabular{$}{\bbl@nextfake$}%
-       \let\bbl@NL@@tabular\@tabular
+\IfBabelLayout{notabular}
+  {\def\bbl@nextfake@lr#1{%
+     #1% 
+     \ifnum\bbl@thetextdir>\z@
+       \edef\bbl@insidemath{0}%
      \fi}}
-   {}
+  {}
 \IfBabelLayout{lists}
   {\let\bbl@OL@list\list
    \bbl@sreplace\list{\parshape}{\bbl@listparshape}%
@@ -22113,7 +22163,7 @@ function Babel.bidi(head, ispar)
         attr_dir = 0
         for at in node.traverse(item.attr) do
           if at.number == Babel.attr_dir then
-            attr_dir = at.value % 3
+            attr_dir = at.value & 0x3
           end
         end
         if attr_dir == 1 then
@@ -22373,7 +22423,7 @@ function Babel.bidi(head, ispar, hdir)
   local save_outer
   local temp = node.get_attribute(head, ATDIR)
   if temp then
-    temp = temp % 3
+    temp = temp & 0x3
     save_outer = (temp == 0 and 'l') or
                  (temp == 1 and 'r') or
                  (temp == 2 and 'al')
@@ -22443,7 +22493,7 @@ function Babel.bidi(head, ispar, hdir)
           attr_d = 0
         else
           attr_d = node.get_attribute(item, ATDIR)
-          attr_d = attr_d % 3
+          attr_d = attr_d & 0x3
         end
         if attr_d == 1 then
           outer_first = 'r'
@@ -22471,7 +22521,7 @@ function Babel.bidi(head, ispar, hdir)
 
     elseif item.id == DIR then
       d = nil
-      -- new_d = true
+
       if head ~= item then new_d = true end
 
     elseif item.id == node.id'glue' and item.subtype == 13 then

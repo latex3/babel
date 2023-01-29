@@ -1,6 +1,6 @@
-## Babel 3.85
+## Babel 3.85.2997
 
-2023-01-23
+(Draft)
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.86  (dev)
+      * Revised `tabular` with ‘mixed’ directions. New option
+        `layout=notabular`.
+
 3.85  2023-01-23
       * A high-level interface to enable and disable transforms (lua).
       * Font-dependent transforms (lua).
