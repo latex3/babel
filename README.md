@@ -1,4 +1,4 @@
-## Babel 3.85.2998
+## Babel 3.85.03581
 
 (Draft)
 
@@ -48,6 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.86  (dev)
+      * Improved tabular in bidi texts (lua).
+
 3.85  2023-01-23
       * A high-level interface to enable and disable transforms (lua).
       * Font-dependent transforms (lua).
