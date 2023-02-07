@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/02/04 v3.85.03581 The Babel package]
+\ProvidesFile{babel.dtx}[2023/02/07 v3.85.03869 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5286,8 +5286,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.85.03581>>
-%<<date=2023/02/04>>
+%<<version=3.85.03869>>
+%<<date=2023/02/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14911,7 +14911,13 @@ end
 \def\bbl@bodydir{\bbl@setluadir{body}\bodydir}%   Used once
 \def\bbl@pagedir{\bbl@setluadir{page}\pagedir}%   Unused
 \def\bbl@dirparastext{\pardir\the\textdir\relax}% Used once
+%    \end{macrocode}
 %
+% RTL text inside math needs special attention. It affects not only to
+% actual math stuff, but also to `tabular`, which is based on a fake
+% math.
+%
+%    \begin{macrocode}
 \ifnum\bbl@bidimode>\z@
   \def\bbl@insidemath{0}%
   \def\bbl@everymath{\def\bbl@insidemath{1}}
@@ -15163,6 +15169,42 @@ end
     \csname bbl@inidata@\languagename\endcsname
     \bbl@release@transforms\relax % \relax closes the last item.
   \fi}
+% Start tabular here: WIP
+\def\babelrestoredirs{%
+  \ifcase\bbl@thetextdir
+    \ifnum\textdirection=\z@\else\textdir TLT\fi
+  \else
+    \ifnum\textdirection=\@ne\else\textdir TRT\fi
+  \fi
+  \ifcase\bbl@thepardir
+    \ifnum\pardirection=\z@\else\pardir TLT\bodydir TLT\fi
+  \else
+    \ifnum\pardirection=\@ne\else\pardir TRT\bodydir TRT\fi
+  \fi}
+\IfBabelLayout{tabular}%
+  {\chardef\bbl@tabular@mode\tw@}% All RTL
+  {\IfBabelLayout{notabular}%
+    {\chardef\bbl@tabular@mode\z@}%
+    {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
+\ifnum\bbl@tabular@mode=\@ne
+  \let\bbl@parabefore\relax
+  \ifx\AddToHook\@undefined\else
+    \AddToHook{para/before}{\bbl@parabefore}%
+  \fi
+  \global\let\bbl@thenextmath\relax
+  \ifx\@tabular\@undefined\else
+    \bbl@replace\@tabular{$}{$%
+      \def\bbl@insidemath{0}%
+      \def\bbl@parabefore{\babelrestoredirs}%
+      \everyhbox{\def\bbl@insidemath{0}}%
+      \everyvbox{\def\bbl@insidemath{0}}}%
+    \bbl@ifunset{@tabclassz}{}{%
+      \bbl@sreplace\@tabclassz
+        {\ifcase\@chnum}{\bgroup\babelrestoredirs\ifcase\@chnum}%
+      \bbl@sreplace\@tabclassz
+        {\@sharp\unskip\fi}{\@sharp\unskip\fi\egroup}}
+    \fi
+  \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
 %    \end{macrocode}
 %
