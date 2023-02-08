@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/02/08 v3.85.03970 The Babel package]
+\ProvidesFile{babel.dtx}[2023/02/08 v3.85.03975 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4207,6 +4207,7 @@ with values |on| or |off|:
 \ttfamily
 bidi.mirroring\\
 bidi.text\\
+bidi.math\\
 % bidi.mapdigits\\
 linebreak.sea\\
 linebreak.cjk\\
@@ -5286,7 +5287,7 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.85.03970>>
+%<<version=3.85.03975>>
 %<<date=2023/02/08>>
 %    \end{macrocode}
 %
@@ -6100,6 +6101,7 @@ help from Bernd Raichle, for which I am grateful.
 \endinput\fi % Same line!
 <@Make sure ProvidesFile is defined@>
 \ProvidesFile{babel.def}[<@date@> <@version@> Babel common definitions]
+\let\bbl@isplain\relax
 \ifx\AtBeginDocument\@undefined  % TODO. change test.
   <@Emulate LaTeX@>
 \fi
@@ -11322,6 +11324,10 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@adjust@lua{bidi}{bidi_enabled=true}}
 \@namedef{bbl@ADJ@bidi.text@off}{%
   \bbl@adjust@lua{bidi}{bidi_enabled=false}}
+\@namedef{bbl@ADJ@bidi.math@on}{%
+  \let\bbl@noamsmath\@empty}
+\@namedef{bbl@ADJ@bidi.math@off}{%
+  \let\bbl@noamsmath\relax}
 \@namedef{bbl@ADJ@bidi.mapdigits@on}{%
   \bbl@adjust@lua{bidi}{digits_mapped=true}}
 \@namedef{bbl@ADJ@bidi.mapdigits@off}{%
@@ -14931,18 +14937,12 @@ end
       function Babel.math_box_dir(head)
         if not (token.get_macro('bbl@insidemath') == '0') then
           if Babel.hlist_has_bidi(head) then
-            if (node.get_attribute(head, Babel.attr_dir)&0x3) == 0 then 
-              local d = node.new(node.id'dir')
-              d.dir = '+TLT'
-              node.insert_before(head, node.has_glyph(head), d)
-            else
-              local d = node.new(node.id'dir')
-              d.dir = '+TRT'
-              node.insert_before(head, node.has_glyph(head), d)
-              for item in node.traverse(head) do
-                node.set_attribute(item,
-                  Babel.attr_dir, token.get_macro('bbl@thedir'))
-              end
+            local d = node.new(node.id'dir')
+            d.dir = '+TRT'
+            node.insert_before(head, node.has_glyph(head), d)
+            for item in node.traverse(head) do
+              node.set_attribute(item,
+                Babel.attr_dir, token.get_macro('bbl@thedir'))
             end
           end
         end
@@ -14986,10 +14986,9 @@ end
 \DeclareOption{fleqn}{\chardef\bbl@eqnpos\tw@}
 %<</More package options>>
 %
-\def\BabelNoAMSMath{\let\bbl@noamsmath\relax}
 \ifnum\bbl@bidimode>\z@
   \ifx\matheqdirmode\@undefined\else
-    \matheqdirmode\@ne
+    \matheqdirmode\@ne % A lua tex primitive
   \fi
   \let\bbl@eqnodir\relax
   \def\bbl@eqdel{()}
@@ -15015,6 +15014,7 @@ end
       \eqno\hbox{#1}%
     \fi}
   \AtBeginDocument{%
+    \ifx\bbl@noamsmath\relax\else
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
       \AddToHook{env/equation/begin}{%
         \ifnum\bbl@thetextdir>\z@
@@ -15049,77 +15049,75 @@ end
       % Hack. YA luatex bug?:
       \expandafter\bbl@sreplace\csname] \endcsname{$$}{\eqno\kern.001pt$$}%
     \else % amstex
-      \ifx\bbl@noamsmath\@undefined
-        \bbl@exp{% Hack to hide maybe undefined conditionals:
-          \chardef\bbl@eqnpos=0%
-            \<iftagsleft@>1\<else>\<if@fleqn>2\<fi>\<fi>\relax}%
-        \ifnum\bbl@eqnpos=\@ne
-          \let\bbl@ams@lap\hbox
-        \else
-          \let\bbl@ams@lap\llap
-        \fi
-        \ExplSyntaxOn
-        \bbl@sreplace\intertext@{\normalbaselines}%
-          {\normalbaselines
-           \ifx\bbl@eqnodir\relax\else\bbl@pardir\@ne\bbl@eqnodir\fi}%
-        \ExplSyntaxOff
-        \def\bbl@ams@tagbox#1#2{#1{\bbl@eqnodir#2}}% #1=hbox|@lap|flip
-        \ifx\bbl@ams@lap\hbox % leqno
-          \def\bbl@ams@flip#1{%
-            \hbox to 0.01pt{\hss\hbox to\displaywidth{{#1}\hss}}}%
-        \else % eqno
-          \def\bbl@ams@flip#1{%
-            \hbox to 0.01pt{\hbox to\displaywidth{\hss{#1}}\hss}}%
-        \fi
-        \def\bbl@ams@preset#1{%
+      \bbl@exp{% Hack to hide maybe undefined conditionals:
+        \chardef\bbl@eqnpos=0%
+          \<iftagsleft@>1\<else>\<if@fleqn>2\<fi>\<fi>\relax}%
+      \ifnum\bbl@eqnpos=\@ne
+        \let\bbl@ams@lap\hbox
+      \else
+        \let\bbl@ams@lap\llap
+      \fi
+      \ExplSyntaxOn
+      \bbl@sreplace\intertext@{\normalbaselines}%
+        {\normalbaselines
+         \ifx\bbl@eqnodir\relax\else\bbl@pardir\@ne\bbl@eqnodir\fi}%
+      \ExplSyntaxOff
+      \def\bbl@ams@tagbox#1#2{#1{\bbl@eqnodir#2}}% #1=hbox|@lap|flip
+      \ifx\bbl@ams@lap\hbox % leqno
+        \def\bbl@ams@flip#1{%
+          \hbox to 0.01pt{\hss\hbox to\displaywidth{{#1}\hss}}}%
+      \else % eqno
+        \def\bbl@ams@flip#1{%
+          \hbox to 0.01pt{\hbox to\displaywidth{\hss{#1}}\hss}}%
+      \fi
+      \def\bbl@ams@preset#1{%
+        \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
+        \ifnum\bbl@thetextdir>\z@
+          \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
+          \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
+          \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@tagbox#1}%
+        \fi}%
+      \ifnum\bbl@eqnpos=\tw@\else
+        \def\bbl@ams@equation{%
           \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
           \ifnum\bbl@thetextdir>\z@
             \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
-            \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
-            \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@tagbox#1}%
+            \chardef\bbl@thetextdir\z@
+            \bbl@add\normalfont{\bbl@eqnodir}%
+            \ifcase\bbl@eqnpos
+              \def\veqno##1##2{\bbl@eqno@flip{##1##2}}%
+            \or
+              \def\veqno##1##2{\bbl@leqno@flip{##1##2}}%
+            \fi
           \fi}%
-        \ifnum\bbl@eqnpos=\tw@\else
-          \def\bbl@ams@equation{%
-            \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
-            \ifnum\bbl@thetextdir>\z@
-              \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
-              \chardef\bbl@thetextdir\z@
-              \bbl@add\normalfont{\bbl@eqnodir}%
-              \ifcase\bbl@eqnpos
-                \def\veqno##1##2{\bbl@eqno@flip{##1##2}}%
-              \or
-                \def\veqno##1##2{\bbl@leqno@flip{##1##2}}%
-              \fi
-            \fi}%
-          \AddToHook{env/equation/begin}{\bbl@ams@equation}%
-          \AddToHook{env/equation*/begin}{\bbl@ams@equation}%
-        \fi
-        \AddToHook{env/cases/begin}{\bbl@ams@preset\bbl@ams@lap}%
-        \AddToHook{env/multline/begin}{\bbl@ams@preset\hbox}%
-        \AddToHook{env/gather/begin}{\bbl@ams@preset\bbl@ams@lap}%
-        \AddToHook{env/gather*/begin}{\bbl@ams@preset\bbl@ams@lap}%
-        \AddToHook{env/align/begin}{\bbl@ams@preset\bbl@ams@lap}%
-        \AddToHook{env/align*/begin}{\bbl@ams@preset\bbl@ams@lap}%
-        \AddToHook{env/eqnalign/begin}{\bbl@ams@preset\hbox}%
-        % Hackish, for proper alignment. Don’t ask me why it works!:
-        \bbl@exp{% Avoid a 'visible' conditional
-          \\\AddToHook{env/align*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
-        \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
-        \AddToHook{env/split/before}{%
-          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
-          \ifnum\bbl@thetextdir>\z@
-            \bbl@ifsamestring\@currenvir{equation}%
-              {\ifx\bbl@ams@lap\hbox % leqno
-                 \def\bbl@ams@flip#1{%
-                   \hbox to 0.01pt{\hbox to\displaywidth{{#1}\hss}\hss}}%
-               \else
-                 \def\bbl@ams@flip#1{%
-                   \hbox to 0.01pt{\hss\hbox to\displaywidth{\hss{#1}}}}%
-               \fi}%
-             {}%
-          \fi}%
+        \AddToHook{env/equation/begin}{\bbl@ams@equation}%
+        \AddToHook{env/equation*/begin}{\bbl@ams@equation}%
       \fi
-    \fi}
+      \AddToHook{env/cases/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/multline/begin}{\bbl@ams@preset\hbox}%
+      \AddToHook{env/gather/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/gather*/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/align/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/align*/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/eqnalign/begin}{\bbl@ams@preset\hbox}%
+      % Hackish, for proper alignment. Don’t ask me why it works!:
+      \bbl@exp{% Avoid a 'visible' conditional
+        \\\AddToHook{env/align*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
+      \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
+      \AddToHook{env/split/before}{%
+        \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
+        \ifnum\bbl@thetextdir>\z@
+          \bbl@ifsamestring\@currenvir{equation}%
+            {\ifx\bbl@ams@lap\hbox % leqno
+               \def\bbl@ams@flip#1{%
+                 \hbox to 0.01pt{\hbox to\displaywidth{{#1}\hss}\hss}}%
+             \else
+               \def\bbl@ams@flip#1{%
+                 \hbox to 0.01pt{\hss\hbox to\displaywidth{\hss{#1}}}}%
+             \fi}%
+           {}%
+        \fi}%
+    \fi\fi}
 \fi
 \def\bbl@provide@extra#1{%
   % == Counters: mapdigits ==
@@ -15181,6 +15179,7 @@ end
   \else
     \ifnum\pardirection=\@ne\else\pardir TRT\bodydir TRT\fi
   \fi}
+\ifx\bbl@isplain\relax\endinput\fi % if plain
 \IfBabelLayout{tabular}%
   {\chardef\bbl@tabular@mode\tw@}% All RTL
   {\IfBabelLayout{notabular}%
@@ -15191,24 +15190,26 @@ end
   \ifx\AddToHook\@undefined\else
     \AddToHook{para/before}{\bbl@parabefore}%
   \fi
-  \global\let\bbl@thenextmath\relax
   \ifx\@tabular\@undefined\else
     \bbl@replace\@tabular{$}{$%
       \def\bbl@insidemath{0}%
       \def\bbl@parabefore{\babelrestoredirs}}%
     \bbl@ifunset{@tabclassz}{}{%
-      \bbl@sreplace\@tabclassz
-        {\ifcase\@chnum}{\babelrestoredirs\ifcase\@chnum}}%
+      \bbl@exp{% Hide conditionals
+        \\\bbl@sreplace\\\@tabclassz
+          {\<ifcase>\\\@chnum}{\\\babelrestoredirs\<ifcase>\\\@chnum}}}%
   \fi
   \AtBeginDocument{%
     \@ifpackageloaded{colortbl}%
       {\bbl@sreplace\@classz
         {\hbox\bgroup\bgroup}{\hbox\bgroup\bgroup\babelrestoredirs}}%
       {\@ifpackageloaded{array}%
-         {\bbl@sreplace\@classz
-           {\ifcase\@chnum}{\bgroup\babelrestoredirs\ifcase\@chnum}%
-          \bbl@sreplace\@classz
-           {\do@row@strut\fi}{\do@row@strut\fi\egroup}}%
+         {\bbl@exp{% Hide conditionals
+            \\\bbl@sreplace\\\@classz
+              {\<ifcase>\\\@chnum}%
+              {\bgroup\\\babelrestoredirs\<ifcase>\\\@chnum}%
+            \\\bbl@sreplace\\\@classz
+              {\\\do@row@strut\<fi>}{\\\do@row@strut\<fi>\egroup}}}%
          {}}}
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
