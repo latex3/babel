@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/02/08 v3.85.03975 The Babel package]
+\ProvidesFile{babel.dtx}[2023/02/09 v3.85.04072 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5287,8 +5287,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.85.03975>>
-%<<date=2023/02/08>>
+%<<version=3.85.04072>>
+%<<date=2023/02/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6101,7 +6101,6 @@ help from Bernd Raichle, for which I am grateful.
 \endinput\fi % Same line!
 <@Make sure ProvidesFile is defined@>
 \ProvidesFile{babel.def}[<@date@> <@version@> Babel common definitions]
-\let\bbl@isplain\relax
 \ifx\AtBeginDocument\@undefined  % TODO. change test.
   <@Emulate LaTeX@>
 \fi
@@ -15168,7 +15167,7 @@ end
     \bbl@release@transforms\relax % \relax closes the last item.
   \fi}
 % Start tabular here: WIP
-\def\babelrestoredirs{%
+\def\localerestoredirs{%
   \ifcase\bbl@thetextdir
     \ifnum\textdirection=\z@\else\textdir TLT\fi
   \else
@@ -15179,7 +15178,7 @@ end
   \else
     \ifnum\pardirection=\@ne\else\pardir TRT\bodydir TRT\fi
   \fi}
-\ifx\bbl@isplain\relax\endinput\fi % if plain
+\ifx\AddToHook\@undefined\endinput\fi % if plain
 \IfBabelLayout{tabular}%
   {\chardef\bbl@tabular@mode\tw@}% All RTL
   {\IfBabelLayout{notabular}%
@@ -15187,27 +15186,23 @@ end
     {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
 \ifnum\bbl@tabular@mode=\@ne
   \let\bbl@parabefore\relax
-  \ifx\AddToHook\@undefined\else
-    \AddToHook{para/before}{\bbl@parabefore}%
-  \fi
-  \ifx\@tabular\@undefined\else
+  \AddToHook{para/before}{\bbl@parabefore}%
+  \AtBeginDocument{%
     \bbl@replace\@tabular{$}{$%
       \def\bbl@insidemath{0}%
-      \def\bbl@parabefore{\babelrestoredirs}}%
+      \def\bbl@parabefore{\localerestoredirs}}%
     \bbl@ifunset{@tabclassz}{}{%
       \bbl@exp{% Hide conditionals
         \\\bbl@sreplace\\\@tabclassz
-          {\<ifcase>\\\@chnum}{\\\babelrestoredirs\<ifcase>\\\@chnum}}}%
-  \fi
-  \AtBeginDocument{%
+          {\<ifcase>\\\@chnum}{\\\localerestoredirs\<ifcase>\\\@chnum}}}%
     \@ifpackageloaded{colortbl}%
       {\bbl@sreplace\@classz
-        {\hbox\bgroup\bgroup}{\hbox\bgroup\bgroup\babelrestoredirs}}%
+        {\hbox\bgroup\bgroup}{\hbox\bgroup\bgroup\localerestoredirs}}%
       {\@ifpackageloaded{array}%
          {\bbl@exp{% Hide conditionals
             \\\bbl@sreplace\\\@classz
               {\<ifcase>\\\@chnum}%
-              {\bgroup\\\babelrestoredirs\<ifcase>\\\@chnum}%
+              {\bgroup\\\localerestoredirs\<ifcase>\\\@chnum}%
             \\\bbl@sreplace\\\@classz
               {\\\do@row@strut\<fi>}{\\\do@row@strut\<fi>\egroup}}}%
          {}}}

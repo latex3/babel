@@ -1,4 +1,4 @@
-## Babel 3.85.03975
+## Babel 3.85.04072
 
 (Draft)
 
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.85 are described in:
+Changes in version 3.86 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.85.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.86.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
