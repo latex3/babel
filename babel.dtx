@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/02/09 v3.85.04072 The Babel package]
+\ProvidesFile{babel.dtx}[2023/02/13 v3.86 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3884,6 +3884,14 @@ up explictly; for example:
 RTL A \foreignlanguage{english}{ltr text \thechapter{} and still ltr} RTL B
 \end{verbatim}
 
+\Describe{localerestoredirs}{}
+
+\New{3.86} \textit{LuaTeX}. This command resets the internal text,
+paragraph and body directions to those of the current locale (if
+different). Sometimes changing directly these values can be useful for
+some hacks, and this command helps in restoring the directions to the
+correct ones. It can be used in |>| arguments of \textsf{array}, too.
+
 \Describe{\BabelPatchSection}{\marg{section-name}}
 
 Mainly for bidi text, but it can be useful in other cases.
@@ -4207,13 +4215,13 @@ with values |on| or |off|:
 \ttfamily
 bidi.mirroring\\
 bidi.text\\
-bidi.math\\
+bidi.math\\%*
 % bidi.mapdigits\\
-linebreak.sea\\
-linebreak.cjk\\
-justify.arabic\\
-layout.tabular\\
-layout.lists\\
+linebreak.sea\\%*
+linebreak.cjk\\%*
+justify.arabic\\%*
+layout.tabular\\%*
+layout.lists\\%*
 autoload.bcp47\\
 bcp47.toname
 \end{multicols}
@@ -4221,12 +4229,12 @@ bcp47.toname
 Other keys [to be documented] are:
 \begin{multicols}{3}
 \ttfamily
-autoload.options\\
+autoload.options\\%*
 autoload.bcp47.prefix\\
 autoload.bcp47.options\\
-prehyphenation.disable\\
+prehyphenation.disable\\%*
 select.write\\
-select.encoding\\
+select.encoding\\%*
 \end{multicols}
 
 For example, you can set |\babeladjust{bidi.text=off}| if you are using
@@ -5287,8 +5295,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.85.04072>>
-%<<date=2023/02/09>>
+%<<version=3.86>>
+%<<date=2023/02/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11355,9 +11363,17 @@ help from Bernd Raichle, for which I am grateful.
       in vertical mode.}%
      {Maybe things change in the future, but this is what it is.}}}
 \@namedef{bbl@ADJ@layout.tabular@on}{%
-  \bbl@adjust@layout{\let\@tabular\bbl@NL@@tabular}}
+  \ifnum\bbl@tabular@mode=\tw@
+    \bbl@adjust@layout{\let\@tabular\bbl@NL@@tabular}%
+  \else
+    \chardef\bbl@tabular@mode\@ne
+  \fi}
 \@namedef{bbl@ADJ@layout.tabular@off}{%
-  \bbl@adjust@layout{\let\@tabular\bbl@OL@@tabular}}
+  \ifnum\bbl@tabular@mode=\tw@
+    \bbl@adjust@layout{\let\@tabular\bbl@OL@@tabular}%
+  \else
+    \chardef\bbl@tabular@mode\z@
+  \fi}
 \@namedef{bbl@ADJ@layout.lists@on}{%
   \bbl@adjust@layout{\let\list\bbl@NL@list}}
 \@namedef{bbl@ADJ@layout.lists@off}{%
@@ -14987,7 +15003,7 @@ end
 %
 \ifnum\bbl@bidimode>\z@
   \ifx\matheqdirmode\@undefined\else
-    \matheqdirmode\@ne % A lua tex primitive
+    \matheqdirmode\@ne % A luatex primitive
   \fi
   \let\bbl@eqnodir\relax
   \def\bbl@eqdel{()}
@@ -15166,7 +15182,7 @@ end
     \csname bbl@inidata@\languagename\endcsname
     \bbl@release@transforms\relax % \relax closes the last item.
   \fi}
-% Start tabular here: WIP
+% Start tabular here:
 \def\localerestoredirs{%
   \ifcase\bbl@thetextdir
     \ifnum\textdirection=\z@\else\textdir TLT\fi
@@ -15178,44 +15194,49 @@ end
   \else
     \ifnum\pardirection=\@ne\else\pardir TRT\bodydir TRT\fi
   \fi}
-\ifx\AddToHook\@undefined\endinput\fi % if plain
 \IfBabelLayout{tabular}%
   {\chardef\bbl@tabular@mode\tw@}% All RTL
   {\IfBabelLayout{notabular}%
     {\chardef\bbl@tabular@mode\z@}%
     {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
-\ifnum\bbl@tabular@mode=\@ne
-  \let\bbl@parabefore\relax
-  \AddToHook{para/before}{\bbl@parabefore}%
-  \AtBeginDocument{%
-    \bbl@replace\@tabular{$}{$%
-      \def\bbl@insidemath{0}%
-      \def\bbl@parabefore{\localerestoredirs}}%
-    \bbl@ifunset{@tabclassz}{}{%
-      \bbl@exp{% Hide conditionals
-        \\\bbl@sreplace\\\@tabclassz
-          {\<ifcase>\\\@chnum}{\\\localerestoredirs\<ifcase>\\\@chnum}}}%
-    \@ifpackageloaded{colortbl}%
-      {\bbl@sreplace\@classz
-        {\hbox\bgroup\bgroup}{\hbox\bgroup\bgroup\localerestoredirs}}%
-      {\@ifpackageloaded{array}%
-         {\bbl@exp{% Hide conditionals
-            \\\bbl@sreplace\\\@classz
+\ifnum\bbl@bidimode>\@ne
+  \ifnum\bbl@tabular@mode=\@ne
+    \let\bbl@parabefore\relax
+    \AddToHook{para/before}{\bbl@parabefore}
+    \AtBeginDocument{%
+      \bbl@replace\@tabular{$}{$%
+        \def\bbl@insidemath{0}%
+        \def\bbl@parabefore{\localerestoredirs}}%
+      \ifnum\bbl@tabular@mode=\@ne
+        \bbl@ifunset{@tabclassz}{}{%
+          \bbl@exp{% Hide conditionals
+            \\\bbl@sreplace\\\@tabclassz
               {\<ifcase>\\\@chnum}%
-              {\bgroup\\\localerestoredirs\<ifcase>\\\@chnum}%
-            \\\bbl@sreplace\\\@classz
-              {\\\do@row@strut\<fi>}{\\\do@row@strut\<fi>\egroup}}}%
-         {}}}
+              {\\\localerestoredirs\<ifcase>\\\@chnum}}}%
+        \@ifpackageloaded{colortbl}%
+          {\bbl@sreplace\@classz
+            {\hbox\bgroup\bgroup}{\hbox\bgroup\bgroup\localerestoredirs}}%
+          {\@ifpackageloaded{array}%
+             {\bbl@exp{% Hide conditionals
+                \\\bbl@sreplace\\\@classz
+                  {\<ifcase>\\\@chnum}%
+                  {\bgroup\\\localerestoredirs\<ifcase>\\\@chnum}%
+                \\\bbl@sreplace\\\@classz
+                  {\\\do@row@strut\<fi>}{\\\do@row@strut\<fi>\egroup}}}%
+             {}}%
+    \fi}
+  \fi
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
 %    \end{macrocode}
 %
 % \textsc{Omega} provided a companion to |\mathdir| (|\nextfakemath|)
 % for those cases where we did not want it to be applied, so that the
-% writing direction of the main text was left unchanged. |\bbl@nextfake|
-% is an attempt to emulate it, because \luatex{} has removed it. Also,
-% |\parshape| does not honour |\parshape| by default, so we need to
-% redefine |\@hangfrom|.
+% writing direction of the main text was left unchanged.
+% |\bbl@nextfake| is an attempt to emulate it, because \luatex{} has
+% removed it without an alternative. Also, |\hangindent| does not
+% honour direction changes by default, so we need to redefine
+% |\@hangfrom|.
 %    
 %    \begin{macrocode}
 \ifnum\bbl@bidimode>\z@

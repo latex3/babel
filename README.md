@@ -1,6 +1,6 @@
-## Babel 3.85.04072
+## Babel 3.86
 
-(Draft)
+2023-02-13
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,18 +48,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.86  (dev)
-      * Improved tabular in bidi texts (lua).
-
-3.85  2023-01-23
-      * A high-level interface to enable and disable transforms (lua).
-      * Font-dependent transforms (lua).
-      * Spaces allowed as separators in layout=.
-      * Fixes:
-        - \babelprehyphenation was not applied with 'onchar'.
-        - In some rare cases the hyphenrules weren’t correctly set.
-        - Partial fix for bidi in tabular (broken after an attempt to
-          fix amsmath).
+3.86  2023-02-13
+      * New macro \localerestoredirs (lua).
+      * Improved tabular in bidi texts (lua). See #221.
+      * Fixed \glossaryname in the 'ini' file for 'lithuanian'
+        (thanks to Andrius Pukšta, @yjhn).
+      * Added diacritics to the rules for 'kashida.plain' in 'persian'.
+      * \babeladjust{ bidi.math = off } disables changes in math with
+        bidi (lua).
 ```
 
 ### Previous changes
