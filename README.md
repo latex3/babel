@@ -1,4 +1,4 @@
-## Babel 3.86.07071
+## Babel 3.86.07774
 
 2023-02-13
 
@@ -48,6 +48,12 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.87  (dev)
+      * Fixes:
+        - Typo in 'syllable' counter name.
+        - Language leakage with xetex, on-the-fly loading in a few
+          locales.
+
 3.86  2023-02-13
       * New macro \localerestoredirs (lua).
       * Improved tabular in bidi texts (lua). See #221.
