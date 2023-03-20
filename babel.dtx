@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/03/19 v3.86.07831 The Babel package]
+\ProvidesFile{babel.dtx}[2023/03/20 v3.86.07974 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5295,8 +5295,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.86.07831>>
-%<<date=2023/03/19>>
+%<<version=3.86.07974>>
+%<<date=2023/03/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7106,6 +7106,7 @@ help from Bernd Raichle, for which I am grateful.
         \input language.def
       \endgroup
     \fi
+    \closein1
   \fi
   \chardef\l@english\z@
 \fi
@@ -10436,7 +10437,7 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@foreach\bbl@required@inis{%
         \openin\bbl@readstream=##1.ini
         \bbl@loop@ini}%
-      \fi
+    \fi
     % == Process stored data ==
     \bbl@csarg\xdef{lini@\languagename}{#1}%
     \bbl@read@ini@aux
@@ -10446,7 +10447,8 @@ help from Bernd Raichle, for which I am grateful.
     \global\let\bbl@inidata\@empty
     \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
     \bbl@toglobal\bbl@ini@loaded
-  \fi}
+  \fi
+  \closein\bbl@readstream}
 \def\bbl@read@ini@aux{%
   \let\bbl@savestrings\@empty
   \let\bbl@savetoday\@empty
@@ -13683,6 +13685,7 @@ help from Bernd Raichle, for which I am grateful.
         \fi
     \repeat
   \fi
+  \closein\bbl@readstream
 \endgroup
 \bbl@trace{Macros for reading patterns files}
 \def\bbl@get@enc#1:#2:#3\@@@{\def\bbl@hyph@enc{#2}}
@@ -15356,8 +15359,8 @@ end
         \bbl@add\pgfinterruptpicture{\bbl@pictresetdir}%
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\z@}%
       \fi
-      \ifx\tikzpicture\@undefined\else    
-        \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\z@}%
+      \ifx\tikzpicture\@undefined\else
+        \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\tw@}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
         \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
       \fi

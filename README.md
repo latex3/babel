@@ -1,4 +1,4 @@
-## Babel 3.86.07831
+## Babel 3.86.07974
 
 2023-02-13
 
@@ -53,6 +53,8 @@ respective authors.
         - Typo in 'syllable' counter name.
         - Language leakage with xetex, on-the-fly loading in a few
           locales.
+        - #211.
+      * 'hyphenrules=' is applied with the current locale.
 
 3.86  2023-02-13
       * New macro \localerestoredirs (lua).
