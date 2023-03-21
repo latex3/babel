@@ -1,4 +1,4 @@
-## Babel 3.86.07974
+## Babel 3.86.08068
 
 2023-02-13
 
@@ -54,6 +54,7 @@ respective authors.
         - Language leakage with xetex, on-the-fly loading in a few
           locales.
         - #211.
+        - #228.
       * 'hyphenrules=' is applied with the current locale.
 
 3.86  2023-02-13

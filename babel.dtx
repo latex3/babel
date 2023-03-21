@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/03/20 v3.86.07974 The Babel package]
+\ProvidesFile{babel.dtx}[2023/03/21 v3.86.08068 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5295,8 +5295,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.86.07974>>
-%<<date=2023/03/20>>
+%<<version=3.86.08068>>
+%<<date=2023/03/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15235,6 +15235,11 @@ end
              {}}%
     \fi}
   \fi
+  \AtBeginDocument{%
+    \@ifpackageloaded{multicol}%
+      {\toks@\expandafter{\multi@column@out}%
+       \edef\multi@column@out{\bodydir\pagedir\the\toks@}}%
+      {}}
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
 %    \end{macrocode}
