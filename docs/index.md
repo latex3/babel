@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.87](news/whats-new-in-babel-3.87.html) | (Development.) Mainly fixes and minor improvements. |
 | [3.86](news/whats-new-in-babel-3.86.html) | `tabular` improved. |
 | [3.85](news/whats-new-in-babel-3.85.html) | Font-dependent transforms. |
 | [3.84](news/whats-new-in-babel-3.84.html) | Auto-selection of encodings in `pdftex`. |

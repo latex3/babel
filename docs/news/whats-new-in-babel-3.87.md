@@ -4,30 +4,27 @@
 
 ## `hyphenrules`
 
-Now changes made in `\babelprovide` with `hyphenrules=` are immediately
+Now changes made with `hyphenrules=` in `\babelprovide` are immediately
 applied if the modified locale is the current one. Formerly, they where
-just set (not applied), but the new behavior seems the expected one.
-Although it’s a backaward incompetible changes yje the current locale is the same 
+just set (not applied), but the new behavior seems to be the expected
+one. It’s a backwards incompatible change, but I don’t think this will
+pose too many problems.
 
 ## Fixes
 
+* Text misplaced with tikz. Fixed thanks to Salim Bou (#211).
 
-Language leakage with xetex, on-the-fly loading in a few
-          locales. 
-
-Text misplaced with tikz. #211
-
-When a unhyphenated language (with `prehyphenchar` set to 0) was loaded
+* When a unhyphenated language (with `prehyphenchar` set to 0) was loaded
 on the fly, there was a language leakage, so that `\foreinglanguage{..}{..}`
 didn’t restore the surrounding language.
 
-With the `multicol` package and RTL text, the page body was sometimes
+* With the `multicol` package and RTL text, the page body was sometimes
 shifted off the page (#228).
 
-Typo in 'syllable' counter name in Korean (it read mistakenly
+* Typo in the `syllable` counter name in Korean (it read mistakenly
 `syllabe`).
 
-There is a minor change in the way transforms deal with added
+* There is a minor change in the way transforms deal with added
 discretionaries (technically, they are now of subtype `regular` instead
 of `discretionary`). The new value makes more sense and the result
 should be the same im most cases, except in some edge cases, where the

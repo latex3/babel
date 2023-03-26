@@ -1,15 +1,28 @@
 # Non-standard hyphenation with `luatex`
 
+Hyphenation in LaTeX is accomplished by means of the so-called
+discretionaries. You can find a brief description
+[here](http://latexref.xyz/Line-breaking.html).
 
-Here is a simple example of a declaration:
+This article describes an extension which can serve to several
+purposes, particularly dealing with non-standard hyphenation rules,
+including changes in letters and weighted hypenation points.
+(Note `luatex` currently provides built-in ways the deal with some
+frequent cases, too. Please, refer to its manual for further
+information.)
+
+Here is a simple example of a declaration, which tell LaTeX to change
+the group ‘ck’ to ‘kk’ if the hyphenation point falls inside this group
+(it’s not meant as a full rule for German, just a starting
+point).
 ```tex
-\babelposthyphenation{ngerman}{ck}{
+\babelposthyphenation{german}{ck}{
   { no = c, pre = k- },
   {}
 }
 ```
 It consists of:
-* the language the transformation is applied to (here `ngerman`);
+* the language the transformation is applied to (here `german`);
 * a pattern with the string to be handled (here `ck`);
 * a replacement with a list containing exactly the same number of
   elements as the pattern (except if there are inserted elements, as
@@ -23,9 +36,9 @@ nil's if shorter.)
 
 ## Rules
 
-‘Automatic’ hyphenation points, as inserted by the hyphenation
+‘Regular’ hyphenation points, as inserted automatically by the hyphenation
 algorithm, are entered in the pattern as vertical bars (`|`). Explicit
-hyphens are entered as `=`. Spaces are allowed for clarity, but they
+hyphens are entered as `=`. Spaces are allowed for clarity, and they
 are discarded.
 
 The items in the replacement list are of four kinds:
@@ -42,7 +55,7 @@ captured) they will the taken from.
 3. The key `string` replaces the character with the string. If empty,
 the char node is removed; to insert chars, just use a multi-character
 string. The nodes created are literal copies of the original, but with
-new characters.
+the new characters.
 4. With `remove` the node is, well, removed (ie, it's like and empty
 `string=`).
 5. **Spaces** are declared with something like `space =.2
