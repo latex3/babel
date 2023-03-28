@@ -1,6 +1,6 @@
 # What's new in babel 3.87
 
-**Draft**
+2023-03-28
 
 ## `hyphenrules`
 

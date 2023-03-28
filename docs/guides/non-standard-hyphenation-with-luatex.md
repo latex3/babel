@@ -12,9 +12,9 @@ frequent cases, too. Please, refer to its manual for further
 information.)
 
 Here is a simple example of a declaration, which tell LaTeX to change
-the group ‘ck’ to ‘kk’ if the hyphenation point falls inside this group
-(it’s not meant as a full rule for German, just a starting
-point).
+the group ‘ck’ to ‘kk’ with an optional hyphenation point inside this
+group (it’s not meant as a full o realistic rule for German, but just a
+starting point).
 ```tex
 \babelposthyphenation{german}{ck}{
   { no = c, pre = k- },
@@ -110,11 +110,12 @@ a convenience the {} syntax can be used to enter **character classes**
 in the pattern, too (ie, `{d}` becomes `%d`, but note `{1}` is not
 internally the same as `%1`).
 
-And here is a complete example:
+And here is a complete example (again, no attempt is done to follow the
+full rules):
 ```tex
 \documentclass{article}
 
-\usepackage[ngerman]{babel}
+\usepackage[german]{babel}
 
 \babelposthyphenation{ngerman}{([fmtrp]) | {1}}{
   { no = {1}, pre = {1}{1}- },
@@ -165,7 +166,7 @@ with digraphs and trigraphs):
 * In Greek, a diaeresis disappears if the vowel group is broken (see
   Németh, _TUGboat_ 87):
 ```tex
-\babelposthyphenation{ngerman}{greek}{α|ΐο}{
+\babelposthyphenation{greek}{α|ΐο}{
   {},
   remove,
   { no= ΐ , pre= - , post= ί },
@@ -195,7 +196,7 @@ In cases like this, you may want to use maps as described above.
 * To prevent a line break if there is a single letter followed by a
   hyphen and a word (eg, “e-mail”):
 ```tex
-\babelposthyphenation{ngerman}{ ^{A}*(){a}=() }{
+\babelposthyphenation{english}{ ^{A}*(){a}=() }{
   {},
   { pre=-, no=-, penalty=10000 }
 }
@@ -206,7 +207,8 @@ before that to be processed, which is enclosed between `() ()`.
 
 * Here is an example showing how to group two similar rules. The
   pattern means ‘either < or > repeated’. Then, the first replacement
-  selects the character based on the captured one.
+  selects the character based on the captured one. The result is |<<|
+  and |>>| get replaced by |“| and |”|, respectively:
 ```tex
 \babelprehyphenation{english}{ ([<>]){1} }{
   string = {1|<>|“”},
