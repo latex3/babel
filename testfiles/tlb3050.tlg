@@ -34,11 +34,13 @@ Package: babel
 .\OT1/cmr/m/n/10.95 o
 .\OT1/cmr/m/n/10.95 t
 .\OT1/cmr/m/n/10.95 t
+.\kern 0.0
 .\glue 3.65 plus 1.825 minus 1.21666
 .\LGR/cmr/m/n/10.95 ^^81 (ligature <a)
 .\LGR/cmr/m/n/10.95 l
 .\LGR/cmr/m/n/10.95 f
 .\LGR/cmr/m/n/10.95 a
+.\kern 0.0
 ! OK.
 l. ......h\"{u}tte hott \textgreek{<alfa}}\showbox0
 (tlb3050.aux)

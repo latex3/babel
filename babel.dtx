@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/03/21 v3.86.08068 The Babel package]
+\ProvidesFile{babel.dtx}[2023/03/28 v3.87 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5295,8 +5295,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.86.08068>>
-%<<date=2023/03/21>>
+%<<version=3.87>>
+%<<date=2023/03/28>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7106,7 +7106,6 @@ help from Bernd Raichle, for which I am grateful.
         \input language.def
       \endgroup
     \fi
-    \closein1
   \fi
   \chardef\l@english\z@
 \fi
@@ -15795,7 +15794,7 @@ function Babel.hyphenate_replace(head, mode)
             goto next
 
           elseif mode == 1 and crep and (crep.pre or crep.no or crep.post) then
-            d = node.new(7, 0)   -- (disc, discretionary)
+            d = node.new(7, 3)   -- (disc, regular)
             d.pre     = Babel.str_to_nodes(crep.pre, matches, item_base)
             d.post    = Babel.str_to_nodes(crep.post, matches, item_base)
             d.replace = Babel.str_to_nodes(crep.no, matches, item_base)

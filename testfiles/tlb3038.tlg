@@ -13,8 +13,10 @@ Author: [e-mail hidden]
 .\OT1/cmr/m/n/10.95 p
 .\OT1/cmr/m/n/10.95 h
 .\OT1/cmr/m/n/10.95 a
+.\kern 0.0
 .\glue 3.65 plus 1.825 minus 1.21666
 .\LGR/cmr/bx/n/10.95 a
+.\kern 0.0
 ! OK.
 l. ......x0=\hbox{Alpha \textgreek{\bf a}}\showbox0
 (tlb3038.aux)

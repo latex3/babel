@@ -1,6 +1,6 @@
-## Babel 3.86.08068
+## Babel 3.87
 
-2023-02-13
+2023-03-28
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.86 are described in:
+Changes in version 3.87 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.86.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.87.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,23 +48,18 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.87  (dev)
+3.87  2023-03-28
       * Fixes:
-        - Typo in 'syllable' counter name.
-        - Language leakage with xetex, on-the-fly loading in a few
+        - Typo in 'syllable' counter name in Korean (#225).
+        - Language leakage with xetex and on-the-fly loading in a few
           locales.
-        - #211.
-        - #228.
+        - Misplaced text with tikz. Fixed thanks to Salim Bou (#211).
+        - Misplaced text body with 'multicol' and RTL (#228).
       * 'hyphenrules=' is applied with the current locale.
-
-3.86  2023-02-13
-      * New macro \localerestoredirs (lua).
-      * Improved tabular in bidi texts (lua). See #221.
-      * Fixed \glossaryname in the 'ini' file for 'lithuanian'
-        (thanks to Andrius Pukšta, @yjhn).
-      * Added diacritics to the rules for 'kashida.plain' in 'persian'.
-      * \babeladjust{ bidi.math = off } disables changes in math with
-        bidi (lua).
+      * Updates to the CLDR: Swedish, Swahili, Tamil, Telugu, Thai,
+        Tigrinya, Turkmen, Tongan, Turkish, Tasawaq, Central Atlas
+        Tamazight, Uyghur, Ukrainian, Urdu, Vietnamese, Yiddish,
+        Yoruba, Cantonese.
 ```
 
 ### Previous changes
