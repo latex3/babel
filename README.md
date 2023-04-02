@@ -1,4 +1,4 @@
-## Babel 3.87
+## Babel 3.87.09276
 
 2023-03-28
 
@@ -48,6 +48,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.88  (dev)
+      * 37 new locale files: Abkhazian, Afar, Atsam, Baluchi, Bhojpuri,
+       Blin, Corsican, Erzya, Ga, Geez, Guarani, Haryanvi, Inuktitut,
+       Jju, Ligurian, Muscogee, Northern Sotho, Nyanja, N’Ko,
+       Papiamento, Prussian, Rajasthani, Saho, Sicilian, Silesian,
+       South Ndebele, Southern Sotho, Swati, Taroko, Tigre, Tok Pisin,
+       Tsonga, Tswana, Tyap, Venda, Volapük, Wolaytta.
+
 3.87  2023-03-28
       * Fixes:
         - Typo in 'syllable' counter name in Korean (#225).

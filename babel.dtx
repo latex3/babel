@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/03/28 v3.87 The Babel package]
+\ProvidesFile{babel.dtx}[2023/04/02 v3.87.09276 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5295,8 +5295,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.87>>
-%<<date=2023/03/28>>
+%<<version=3.87.09276>>
+%<<date=2023/04/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10307,7 +10307,8 @@ help from Bernd Raichle, for which I am grateful.
       \fi}%
     \ifnum\@tempcnta=\m@ne
       \bbl@warning{%
-        Requested 'hyphenrules=' for '\languagename' not found.\\%
+        Requested 'hyphenrules' for '\languagename' not found:\\%
+        \bbl@KVP@hyphenrules.\\%
         Using the default value. Reported}%
     \fi
   \fi
@@ -10583,7 +10584,7 @@ help from Bernd Raichle, for which I am grateful.
 % create correctly the correspondig info.
 %
 %    \begin{macrocode}
-\def\bbl@ini@extension#1{%
+\def\bbl@ini@extension#1{%  TODO. Remove?
   \def\bbl@tempa{#1}%
   \bbl@replace\bbl@tempa{extension.}{}%
   \bbl@replace\bbl@tempa{.tag.bcp47}{}%
@@ -10619,7 +10620,10 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}%
   \bbl@exportkey{rbcp}{identification.region.tag.bcp47}{}%
   \bbl@exportkey{vbcp}{identification.variant.tag.bcp47}{}%
-  \bbl@moreinfo
+  \bbl@exportkey{ext/t}{identification.extension.t.tag.bcp47}{}%
+  \bbl@exportkey{ext/u}{identification.extension.u.tag.bcp47}{}%
+  \bbl@exportkey{ext/x}{identification.extension.x.tag.bcp47}{}%
+  \bbl@moreinfo  %  TODO. Remove?
   % Also maps bcp47 -> languagename
   \ifbbl@bcptoname
     \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
@@ -11251,9 +11255,27 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@info@script.tag.opentype}{sotf}
 \@namedef{bbl@info@region.tag.bcp47}{rbcp}
 \@namedef{bbl@info@variant.tag.bcp47}{vbcp}
-% Extensions are dealt with in a special way
-% Now, an internal \LaTeX{} macro:
-\providecommand\BCPdata[1]{\localeinfo*{#1.tag.bcp47}}
+\@namedef{bbl@info@extension.t.tag.bcp47}{ext/t}
+\@namedef{bbl@info@extension.u.tag.bcp47}{ext/u}
+\@namedef{bbl@info@extension.x.tag.bcp47}{ext/x}
+%    \end{macrocode}
+%
+% \LaTeX{} needs to know the BCP 47 codes for some features. For that,
+% it expects |\BCPdata| to be defined. While |language|, |region|,
+% |script|, and |variant| are recognized, |extension.|\m{s} for
+% singletons may change.
+%
+%    \begin{macrocode}
+\providecommand\BCPdata{}
+\ifx\renewcommand\@undefined\else % For plain. TODO. It’s a quick fix
+  \renewcommand\BCPdata[1]{%
+    \bbl@ifunset{bbl@info@#1.tag.bcp47}%
+      {\bbl@error{Unknown field '#1' in \string\BCPdata.\\%
+                  Perhaps you misspelled it.}%
+                 {See the manual for details.}}%
+      {\bbl@ifunset{bbl@\csname bbl@info@#1.tag.bcp47\endcsname @\languagename}{}%
+        {\bbl@cs{\csname bbl@info@#1.tag.bcp47\endcsname @\languagename}}}}
+\fi
 %    \end{macrocode}
 %
 % With version 3.75 |\BabelEnsureInfo| is executed always, but there is
