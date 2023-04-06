@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/04/02 v3.87.09276 The Babel package]
+\ProvidesFile{babel.dtx}[2023/04/06 v3.87.09667 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5295,8 +5295,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.87.09276>>
-%<<date=2023/04/02>>
+%<<version=3.87.09667>>
+%<<date=2023/04/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7222,16 +7222,17 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@csarg\newcommand{ev@#2@#3@#1}[\bbl@tempb]}
 \newcommand\EnableBabelHook[1]{\bbl@csarg\let{hk@#1}\@firstofone}
 \newcommand\DisableBabelHook[1]{\bbl@csarg\let{hk@#1}\@gobble}
-\def\bbl@usehooks#1#2{%
-  \ifx\UseHook\@undefined\else\UseHook{babel/*/#1}\fi
+\def\bbl@usehooks{\bbl@usehooks@lang\languagename}
+\def\bbl@usehooks@lang#1#2#3{%
+  \ifx\UseHook\@undefined\else\UseHook{babel/*/#2}\fi
   \def\bbl@elth##1{%
-    \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#1@}#2}}%
-  \bbl@cs{ev@#1@}%
+    \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#2@}#3}}%
+  \bbl@cs{ev@#2@}%
   \ifx\languagename\@undefined\else % Test required for Plain (?)
-    \ifx\UseHook\@undefined\else\UseHook{babel/\languagename/#1}\fi
+    \ifx\UseHook\@undefined\else\UseHook{babel/#1/#2}\fi
     \def\bbl@elth##1{%
-      \bbl@cs{hk@##1}{\bbl@cl{ev@##1@#1}#2}}%
-    \bbl@cl{ev@#1}%
+      \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#2@#1}#3}}%
+    \bbl@cs{ev@#2@#1}%
   \fi}
 %    \end{macrocode}
 %
@@ -7247,7 +7248,7 @@ help from Bernd Raichle, for which I am grateful.
   adddialect=2,patterns=2,defaultcommands=0,encodedcommands=2,write=0,%
   beforeextras=0,afterextras=0,stopcommands=0,stringprocess=0,%
   hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0,%
-  beforestart=0,languagename=2}
+  beforestart=0,languagename=2,begindocument=1}
 \ifx\NewHook\@undefined\else
   \def\bbl@tempa#1=#2\@@{\NewHook{babel/#1}}
   \bbl@foreach\bbl@evargs{\bbl@tempa#1\@@}
@@ -7499,8 +7500,10 @@ help from Bernd Raichle, for which I am grateful.
     \renewcommand\selectlanguage[1]{}%
     \renewcommand\foreignlanguage[2]{#2}%
     \global\let\babel@aux\@gobbletwo  % Also as flag
-  \fi
-  \ifcase\bbl@engine\or\pagedir\bodydir\fi} % TODO - a better place
+  \fi}
+\ifcase\bbl@engine\or
+  \AtBeginDocument{\pagedir\bodydir} % TODO - a better place
+\fi
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -8498,8 +8501,7 @@ help from Bernd Raichle, for which I am grateful.
 \def\bbl@clear@ttribs{%
   \ifx\bbl@attributes\@undefined\else
     \bbl@loopx\bbl@tempa{\bbl@attributes}{%
-      \expandafter\bbl@clear@ttrib\bbl@tempa.
-      }%
+      \expandafter\bbl@clear@ttrib\bbl@tempa.}%
     \let\bbl@attributes\@undefined
   \fi}
 \def\bbl@clear@ttrib#1-#2.{%
@@ -10435,7 +10437,7 @@ help from Bernd Raichle, for which I am grateful.
     \ifx\bbl@required@inis\@empty\else
       \bbl@replace\bbl@required@inis{ }{,}%
       \bbl@foreach\bbl@required@inis{%
-        \openin\bbl@readstream=##1.ini
+        \openin\bbl@readstream=babel-##1.ini
         \bbl@loop@ini}%
     \fi
     % == Process stored data ==
@@ -10460,10 +10462,6 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@ifunset{bbl@inikv@##1}%
         {\bbl@ini@calendar{##1}}%
         {}%
-    \fi
-    \in@{=identification/extension.}{=##1/##2}%
-    \ifin@
-      \bbl@ini@extension{##2}%
     \fi
     \bbl@ifunset{bbl@inikv@##1}{}%
       {\csname bbl@inikv@##1\endcsname{##2}{##3}}}%
@@ -10568,6 +10566,11 @@ help from Bernd Raichle, for which I am grateful.
 % is called always (via |\bbl@inisec|), while |\bbl@after@ini| must be
 % called explicitly after |\bbl@read@ini| if necessary.
 %
+% Although BCP 47 doesn’t treat ‘-x-’ as an extension, the CLDR and
+% many other sources do (as a \textit{private use extension}). For
+% consistency with other single-letter subtags or ‘singletons’, here
+% is considered an extension, too.
+% 
 %    \begin{macrocode}
 \def\bbl@iniwarning#1{%
   \bbl@ifunset{bbl@@kv@identification.warning#1}{}%
@@ -10577,25 +10580,6 @@ help from Bernd Raichle, for which I am grateful.
        Reported }}}
 %
 \let\bbl@release@transforms\@empty
-%    \end{macrocode}
-%
-% BCP 47 extensions are separated by a single letter (eg,
-% |latin-x-medieval|. The following macro handles this special case to
-% create correctly the correspondig info.
-%
-%    \begin{macrocode}
-\def\bbl@ini@extension#1{%  TODO. Remove?
-  \def\bbl@tempa{#1}%
-  \bbl@replace\bbl@tempa{extension.}{}%
-  \bbl@replace\bbl@tempa{.tag.bcp47}{}%
-  \bbl@ifunset{bbl@info@#1}%
-    {\bbl@csarg\xdef{info@#1}{ext/\bbl@tempa}%
-     \bbl@exp{%   
-       \\\g@addto@macro\\\bbl@moreinfo{%
-         \\\bbl@exportkey{ext/\bbl@tempa}{identification.#1}{}}}}%
-    {}}
-\let\bbl@moreinfo\@empty
-%
 \def\bbl@ini@exports#1{%
   % Identification always exported
   \bbl@iniwarning{}%
@@ -10620,10 +10604,9 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}%
   \bbl@exportkey{rbcp}{identification.region.tag.bcp47}{}%
   \bbl@exportkey{vbcp}{identification.variant.tag.bcp47}{}%
-  \bbl@exportkey{ext/t}{identification.extension.t.tag.bcp47}{}%
-  \bbl@exportkey{ext/u}{identification.extension.u.tag.bcp47}{}%
-  \bbl@exportkey{ext/x}{identification.extension.x.tag.bcp47}{}%
-  \bbl@moreinfo  %  TODO. Remove?
+  \bbl@exportkey{extt}{identification.extension.t.tag.bcp47}{}%
+  \bbl@exportkey{extu}{identification.extension.u.tag.bcp47}{}%
+  \bbl@exportkey{extx}{identification.extension.x.tag.bcp47}{}%
   % Also maps bcp47 -> languagename
   \ifbbl@bcptoname
     \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
@@ -11255,9 +11238,9 @@ help from Bernd Raichle, for which I am grateful.
 \@namedef{bbl@info@script.tag.opentype}{sotf}
 \@namedef{bbl@info@region.tag.bcp47}{rbcp}
 \@namedef{bbl@info@variant.tag.bcp47}{vbcp}
-\@namedef{bbl@info@extension.t.tag.bcp47}{ext/t}
-\@namedef{bbl@info@extension.u.tag.bcp47}{ext/u}
-\@namedef{bbl@info@extension.x.tag.bcp47}{ext/x}
+\@namedef{bbl@info@extension.t.tag.bcp47}{extt}
+\@namedef{bbl@info@extension.u.tag.bcp47}{extu}
+\@namedef{bbl@info@extension.x.tag.bcp47}{extx}
 %    \end{macrocode}
 %
 % \LaTeX{} needs to know the BCP 47 codes for some features. For that,
@@ -12408,7 +12391,9 @@ help from Bernd Raichle, for which I am grateful.
      \expandafter\let\expandafter\bbl@afterlang
         \csname\CurrentOption.ldf-h@@k\endcsname
      \expandafter\let\expandafter\BabelModifiers
-        \csname bbl@mod@\CurrentOption\endcsname}%
+        \csname bbl@mod@\CurrentOption\endcsname
+     \bbl@exp{\\\AtBeginDocument{%
+       \\\bbl@usehooks@lang{\CurrentOption}{begindocument}{{\CurrentOption}}}}}%
     {\bbl@error{%
        Unknown option '\CurrentOption'. Either you misspelled it\\%
        or the language definition file \CurrentOption.ldf was not found}{%
@@ -12498,7 +12483,8 @@ help from Bernd Raichle, for which I am grateful.
 \else
   \bbl@info{Main language set with 'main='. Except if you have\\%
             problems, prefer the default mechanism for setting\\%
-            the main language. Reported}
+            the main language, ie, as the last declared.\\%
+            Reported}
 \fi
 %    \end{macrocode}
 %
@@ -12617,6 +12603,8 @@ help from Bernd Raichle, for which I am grateful.
   \DeclareOption*{}
   \ProcessOptions*
 \fi
+\bbl@exp{% TODO. Find a ‘language name’ for the end
+  \\\AtBeginDocument{\\\bbl@usehooks@lang{/}{begindocument}{{}}}}%
 \def\AfterBabelLanguage{%
   \bbl@error
     {Too late for \string\AfterBabelLanguage}%

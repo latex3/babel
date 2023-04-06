@@ -1,6 +1,6 @@
-## Babel 3.87.09276
+## Babel 3.87.09667
 
-2023-03-28
+(dev)
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.87 are described in:
+Changes in version 3.88 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.87.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.88.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -50,11 +50,12 @@ respective authors.
 ```
 3.88  (dev)
       * 37 new locale files: Abkhazian, Afar, Atsam, Baluchi, Bhojpuri,
-       Blin, Corsican, Erzya, Ga, Geez, Guarani, Haryanvi, Inuktitut,
-       Jju, Ligurian, Muscogee, Northern Sotho, Nyanja, N’Ko,
-       Papiamento, Prussian, Rajasthani, Saho, Sicilian, Silesian,
-       South Ndebele, Southern Sotho, Swati, Taroko, Tigre, Tok Pisin,
-       Tsonga, Tswana, Tyap, Venda, Volapük, Wolaytta.
+        Blin, Corsican, Erzya, Ga, Geez, Guarani, Haryanvi, Inuktitut,
+        Jju, Ligurian, Muscogee, Northern Sotho, Nyanja, N’Ko,
+        Papiamento, Prussian, Rajasthani, Saho, Sicilian, Silesian,
+        South Ndebele, Southern Sotho, Swati, Taroko, Tigre, Tok Pisin,
+        Tsonga, Tswana, Tyap, Venda, Volapük, Wolaytta.
+      * New hook 'begindocument'.
 
 3.87  2023-03-28
       * Fixes:
