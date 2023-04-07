@@ -42,11 +42,12 @@ nil's if shorter.)
 
 ## Replacement list
 
-The items in the replacement list are of kinds:
+The items in the replacement list are the following:
 
 1. An empty group `{}` leaves the corresponding item **untouched**. For
-example, in the rule above the ‘k’ in the pattern (the second element) just provide the
-context, because in the replacement list the second item is `{}`.
+example, in the rule above the ‘k’ in the pattern (the second element)
+provide the context, because in the replacement list the second item is
+`{}` and therefore the character is just kept.
 2. A list like `{ no = c, pre = k-, post = }` replaces the letter by
 the corresponding **discretionary**. Only one of the keys is necessary,
 and the rest defaults to empty. By default the penalty is
@@ -80,19 +81,12 @@ very first one in the replacement. With it the item is not replaced,
 but inserted. The following rule inserts a penalty in the middle of the
 group ‘ff’:
 ```tex
-\babelposthyphenation{nil}{ ff }
+\babelposthyphenation{english}{ ff }
   { {},
     {insert, penalty = 10},
     {}
   }
 ```
-
-`babel` traverses the strings to be processed with the help of a
-pointer. Another key available in the replacements is `step = <num>`,
-which moves this pointer forward (if positive) or backwards (if
-negative). By default it's, of course, `0`, which leaves the pointer
-just after the last replacement. It can be set in any non-empty
-replacement (eg, `{ string = a, step = -1 }`).
 
 In the replacement list, there is an extended syntax which allows to
 **map the captured characters**. For example, `{2|ΐΰῒῢ|ίύὶὺ}` means: if
@@ -108,6 +102,13 @@ with digraphs and trigraphs):
              |АБВГДЕЁЗИЙКЛМНОПРСТУФХЭЫЬабвгдеёзийклмнопрстуфхэыь}
 }
 ```
+`babel` traverses the strings to be processed with the help of a
+pointer. Another key available in the replacements is `step = <num>`,
+which moves this pointer forward (if positive) or backwards (if
+negative). By default it's, of course, `0`, which leaves the pointer
+just after the last replacement. It can be set in any non-empty
+replacement (eg, `{ string = a, step = -1 }`).
+
 
 ## Patterns
 
@@ -115,8 +116,22 @@ with digraphs and trigraphs):
 hyphenation algorithm, are entered in the pattern as vertical bars
 (`|`), as the short examples below show. Explicit hyphens are entered
 as `=`. Spaces are allowed for clarity, and they are discarded. If you
-are not sure where the hyphenation points fall, use '\showhyphens`.
+are not sure where the hyphenation points fall, use `\showhyphens`.
 (Also, remember `|` in `\babelprehyphenation` is a space.)
+
+The pattern is matched with lua empty captures, which are automatically
+added before and after the string. You may set explicitly different
+empty captures, to reduce the number of items in the replacement list:
+```tex
+\babelprehyphenation{english}{very()long()pattern}{
+  string = L,
+  string = OOO,
+  string = N,
+  string = G
+}
+```
+With this rule, the string ‘verylongpattern’ is replaced with
+‘veryLOOONGpattern’.
 
 Lua patterns with dots, characters classes (with `%`, but see below for
 an alternative TeX-friendly syntax) and char-sets (with `[]`, including
@@ -149,23 +164,13 @@ this
 language](https://latex3.github.io/babel/guides/locale-norwegian.html#hyphenation).
 
 Since the percent sign has a quite different meaning in lua and tex, as
-a convenience the {} syntax can be used to enter **character classes**
+a convenience the `{}` syntax can be used to enter **character classes**
 in the pattern, too (ie, `{d}` becomes `%d`, but note `{1}` is not
 internally the same as `%1`).
 
-The pattern is matched with lua empty captures, which are automatically
-added before and after the string. You may set different empty captures,
-to reduce the number of items in the replacement list:
-```tex
-\babelprehyphenation{english}{very()long()pattern}{
-  string = L,
-  string = OOO,
-  string = N,
-  string = G
-}
-```
-With this rule, the string ‘verylongpattern’ is replaced with
-‘veryLOOONGpattern’.
+Another extension with `{}` is the possibility to enter a character by
+its hex code (at least 4 digits). So, `{007C}` and `{003D}` are the
+characters ‘|’ and ‘=’, in case you need they literal meaning.
 
 ## Short examples
 
