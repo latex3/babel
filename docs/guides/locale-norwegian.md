@@ -41,9 +41,11 @@ added to the exception list with:
 ```
 Here, the group `{ll-}{l}{ll}` is equivalent to a `\discretionary`.
 Remember you must add every word (like, say, ‘volleyballandslaget’).
+These discretionaries can be weighted, too, as the `luatex` manual
+explains (with `\exceptionpenalty`).
 
-Alternatively, you may define a transform, which is more flexible, but
-less efficient. For example:
+Alternatively, with `babel` you may define a transform, which is more
+flexible, but less efficient. For example:
 ```tex
 \babelposthyphenation{norsk}{ vol|ley|ba()l()lands|la }{
   { no = l, pre = ll- }
@@ -53,9 +55,8 @@ This rule matches the sequence of characters and hyphenation points in
 the second argument, which explains why the ending ‘g’ has not been
 included —without it, ‘volleyballandslaget’ is also matched.
 
-Furthermore, with transforms hyphenation points can by weighted with
-different penalties, too, as explained in [Non-standard hyphenation
-with
+Transforms hyphenation points can by weighted with arbitrary penalties,
+as explained in [Non-standard hyphenation with
 luatex](https://latex3.github.io/babel/guides/non-standard-hyphenation-with-luatex.html).
 
 Feel free to contribute a list a words requiring this feature.
