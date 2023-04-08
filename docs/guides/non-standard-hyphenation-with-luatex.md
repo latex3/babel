@@ -19,7 +19,7 @@ with the differences explained in the manual.
 Here is a simple example of a declaration, which tells LaTeX to change
 the group ‘ck’ to ‘kk’ with an optional hyphenation point inside this
 group (it’s not meant as a full o realistic rule for German, but just a
-starting point).
+starting point; a more complete rule is shown below).
 ```tex
 \babelposthyphenation{german}{ck}{
   { no = c, pre = k- },
@@ -73,9 +73,6 @@ characters.
 node is a glyph; you may need a `data=` pointing to a specific glyph).
 6. **Penalties** are declared with `penalty`.
 
-A further key is `kashida`, for Arabic justification. See [What's new in
-babel 3.59](whats-new-in-babel-3.59.md). 
-
 Some keys can be used in conjunction with `insert`, which must be the
 very first one in the replacement. With it the item is not replaced,
 but inserted. The following rule inserts a penalty in the middle of the
@@ -109,6 +106,8 @@ negative). By default it's, of course, `0`, which leaves the pointer
 just after the last replacement. It can be set in any non-empty
 replacement (eg, `{ string = a, step = -1 }`).
 
+A further key is `kashida`, for Arabic justification. See [What's new in
+babel 3.59](whats-new-in-babel-3.59.md). 
 
 ## Patterns
 
@@ -148,19 +147,30 @@ is a backreference matching the _n_-th capture inside the empty
 captures. This syntax can be used in the replacement strings, with the
 corresponding capture:
 ```tex
+\babelposthyphenation{german}
+  { [AEIOUÄÖÜaeiouäöü] ([cC]) ([kK]) [AEIOUÄÖÜaeiouäöü] }{
+    {},                        % Keep first vowel
+    { no = {1}, pre = {2}- },  % c or C → discretionary
+    {},                        % Keep k or K             
+    {}                         % Keep second vowel
+}
 \babelposthyphenation{german}{([fmtrp]) | {1}}{
-  { no = {1}, pre = {1}{1}- },
+  { no = {1}, pre = {1}{1}- }, 
   remove,
   {}
 }
-\babelposthyphenation{german}{ ([cC]) ([kK]) }{
-  { no = {1}, pre = {2}- },
-  {}
-}
 ```
-No attempt has been done in this example to follow the full German
-rules. For a more realistic example, in Norwegian, see [the guide for
-this
+With the first example, `\showhyphens{Trockenerzeugnis}` will
+display something like:
+```
+Underfull \hbox (badness 10000) in paragraph at lines 15--15
+[] \TU/lmr/m/n/10 Trok-ken-erzeug-nis
+```
+Note `\showhyphens` actually hyphenates the word, and therefore the
+rule is applied. Remember also `german` isn’t current German, but the
+`1901` variant. No attempt has been done in the second example to
+follow the full German rules. For a more realistic example of double
+consonants, in Norwegian, see [the guide for this
 language](https://latex3.github.io/babel/guides/locale-norwegian.html#hyphenation).
 
 Since the percent sign has a quite different meaning in lua and tex, as
@@ -169,8 +179,8 @@ in the pattern, too (ie, `{d}` becomes `%d`, but note `{1}` is not
 internally the same as `%1`).
 
 Another extension with `{}` is the possibility to enter a character by
-its hex code (at least 4 digits). So, `{007C}` and `{003D}` are the
-characters ‘|’ and ‘=’, in case you need they literal meaning.
+its ***hex code*** (at least 4 digits). So, `{007C}` and `{003D}` are the
+characters ‘|’ and ‘=’, in case you need their literal meaning.
 
 ## Short examples
 
