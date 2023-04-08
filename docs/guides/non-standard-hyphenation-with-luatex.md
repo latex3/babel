@@ -6,7 +6,7 @@ discretionaries. You can find a brief description
 
 This article describes an extension which can serve to several
 purposes, particularly dealing with non-standard hyphenation rules,
-including changes in letters and weighted hypenation points.
+including changes in letters and weighted hyphenation points.
 (Note `luatex` currently provides built-in ways the deal with some
 frequent cases, too. Please, refer to its manual for further
 information.)
@@ -18,8 +18,8 @@ with the differences explained in the manual.
 
 Here is a simple example of a declaration, which tells LaTeX to change
 the group ‘ck’ to ‘kk’ with an optional hyphenation point inside this
-group (it’s not meant as a full o realistic rule for German, but just a
-starting point; a more complete rule is shown below).
+group (it’s not meant as a full or realistic rule for German, but just a
+starting point; a more detailed rule is shown below).
 ```tex
 \babelposthyphenation{german}{ck}{
   { no = c, pre = k- },
@@ -38,7 +38,7 @@ The language here refers to a set of hyphenation rules, ie, to
 `\language`. So, the first letter in the pattern is replaced with the
 first item in the list, the second letter with the second item and so
 on. (This is not strictly true, because the replace list is filled with
-nil's if shorter.)
+nil’s if shorter.)
 
 ## Replacement list
 
@@ -46,7 +46,7 @@ The items in the replacement list are the following:
 
 1. An empty group `{}` leaves the corresponding item **untouched**. For
 example, in the rule above the ‘k’ in the pattern (the second element)
-provide the context, because in the replacement list the second item is
+provides the context, because in the replacement list the second item is
 `{}` and therefore the character is just kept.
 2. A list like `{ no = c, pre = k-, post = }` replaces the letter by
 the corresponding **discretionary**. Only one of the keys is necessary,
@@ -66,11 +66,11 @@ use a multi-character string. The nodes created are literal copies of
 the original (the same font, language, and so on), but with the new
 characters.
 4. With `remove` the node is, well, removed. A synonymous is `string=`.
-5. **Spaces** are declared with something like `space =.2
-.1 0`. The values are in em units, and they are the natural width, the
-`plus`, and the `minus`. Here, you may need `data`, too. With
-`spacefactor` the unit is the font size of the current font (if the
-node is a glyph; you may need a `data=` pointing to a specific glyph).
+5. **Spaces** are declared with something like `space =.2 .1 0`. The
+values are in em units, and they are the natural width, the `plus`, and
+the `minus`. Here, you may need `data`, too. With `spacefactor` the
+unit is the font size of the current font (if the node is a glyph; you
+may need a `data=` pointing to a specific glyph).
 6. **Penalties** are declared with `penalty`.
 
 Some keys can be used in conjunction with `insert`, which must be the
@@ -80,17 +80,18 @@ group ‘ff’:
 ```tex
 \babelposthyphenation{english}{ ff }
   { {},
-    {insert, penalty = 10},
+    { insert, penalty = 10 },
     {}
   }
 ```
 
 In the replacement list, there is an extended syntax which allows to
-**map the captured characters**. For example, `{2|ΐΰῒῢ|ίύὶὺ}` means: if
-the second captured char is ΐ replace it with ί, ύ with ύ, and so on.
-This feature is particularly useful when a letter changes if there is a
-hyphen, and also when transliterating. Here is a partial example of the
-latter (the full example is [here](https://latex3.github.io/babel/news/whats-new-in-babel-3.44.html),
+**map the captured characters** (see below). For example, `{2|ΐΰῒῢ|ίύὶὺ}`
+means: if the second captured char is ΐ replace it with ί, ύ with ύ,
+and so on. This feature is particularly useful when a letter changes if
+there is a hyphen, and also when transliterating. Here is a partial
+example of the latter (the full example is
+[here](https://latex3.github.io/babel/news/whats-new-in-babel-3.44.html),
 with digraphs and trigraphs):
 ```tex
 \babelprehyphenation{transrussian}
@@ -102,7 +103,7 @@ with digraphs and trigraphs):
 `babel` traverses the strings to be processed with the help of a
 pointer. Another key available in the replacements is `step = <num>`,
 which moves this pointer forward (if positive) or backwards (if
-negative). By default it's, of course, `0`, which leaves the pointer
+negative). By default it’s, of course, `0`, which leaves the pointer
 just after the last replacement. It can be set in any non-empty
 replacement (eg, `{ string = a, step = -1 }`).
 
@@ -141,11 +142,11 @@ letter followed optionally by a discretionary, but only Á is actually
 transformed (in these cases, you may want to go back with the key
 `step`).
 
-Ordinary captures are allowed _inside_ the empty captures (they must
-resolve to exactly one character). In the pattern, **the syntax `{n}`**
-is a backreference matching the _n_-th capture inside the empty
-captures. This syntax can be used in the replacement strings, with the
-corresponding capture:
+**Captures** with `()` are allowed, too. Ordinary captures are allowed
+_inside_ the empty captures (they must resolve to exactly one
+character). In the pattern, **the syntax `{n}`** is a backreference
+matching the _n_-th capture inside the empty captures. This syntax can
+be used in the replacement strings, with the corresponding capture:
 ```tex
 \babelposthyphenation{german}
   { [AEIOUÄÖÜaeiouäöü] ([cC]) ([kK]) [AEIOUÄÖÜaeiouäöü] }{
@@ -154,23 +155,34 @@ corresponding capture:
     {},                        % Keep k or K             
     {}                         % Keep second vowel
 }
+```
+There are two captures, namely, `[cC]` (which means either ‘c’ or
+‘C’) and `[kK]`, used in the second replacement as `{1}` and `{2}`.
+With this rule, ` \showhyphens{Trockenerzeugnis Druckeinstellung}` will
+display something like:
+```
+Underfull \hbox (badness 10000) in paragraph at lines 15--15
+[] \TU/lmr/m/n/10 Trok-ken-erzeug-nis  Druck-ein-stel-lung
+```
+Note `\showhyphens` actually hyphenates the first word, and therefore
+the rule is applied. On the other hand, discretionaries are taken into
+account, which means the rule isn’t applied to *Druckeinstellung*
+because the second vowel doesn’t immediately follow the ‘k’ (there is
+a soft hyphen in between). Very often what we need is a combination of
+hyphenation patterns with post-hyphenation rules. (Remember also
+`german` isn’t current German, but the `1901` variant.)
+
+Another example is:
+```
 \babelposthyphenation{german}{([fmtrp]) | {1}}{
   { no = {1}, pre = {1}{1}- }, 
   remove,
   {}
 }
 ```
-With the first example, `\showhyphens{Trockenerzeugnis}` will
-display something like:
-```
-Underfull \hbox (badness 10000) in paragraph at lines 15--15
-[] \TU/lmr/m/n/10 Trok-ken-erzeug-nis
-```
-Note `\showhyphens` actually hyphenates the word, and therefore the
-rule is applied. Remember also `german` isn’t current German, but the
-`1901` variant. No attempt has been done in the second example to
-follow the full German rules. For a more realistic example of double
-consonants, in Norwegian, see [the guide for this
+No attempt has been done here to follow the full German rules. For a
+more realistic example of double consonants, in Norwegian, see [the
+guide for this
 language](https://latex3.github.io/babel/guides/locale-norwegian.html#hyphenation).
 
 Since the percent sign has a quite different meaning in lua and tex, as
@@ -244,6 +256,17 @@ before that to be processed, which is enclosed between `() ()`.
   string = {1|<>|“”},
   remove
 }
+```
+
+* If you want to insert a space between a letter or digit and ‘!’, ‘?’,
+  ‘:’ or ‘;’:
+```tex
+\babelprehyphenation{english}{ [A-Za-z0-9] [!?:;] }
+  { {},         % Keep the letter/digit
+    { insert, penalty = 10000 },                 % Insert a penalty...
+    { insert, spacefactor= .8 .3 .8, data = 1 }, % ... and a space
+    {}          % Keep the punctuation 
+  }
 ```
 
 ## Useful links
