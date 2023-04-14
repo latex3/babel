@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/04/06 v3.87.09667 The Babel package]
+\ProvidesFile{babel.dtx}[2023/04/14 v3.87.10474 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2579,7 +2579,7 @@ languages.
   Polytonic Greek with but with some sections in Italian. Then, the
   first attempt should be:
 \begin{verbatim}
-\usepackage[italian, greek.polutonico]{babel}
+\usepackage[italian, greek.polutoniko]{babel}
 \end{verbatim}
   But if, say, accents in Greek are not shown correctly, you can try
 \begin{verbatim}
@@ -5295,8 +5295,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.87.09667>>
-%<<date=2023/04/06>>
+%<<version=3.87.10474>>
+%<<date=2023/04/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9824,7 +9824,7 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@vforeach{captions,date,import,main,script,language,%
       hyphenrules,linebreaking,justification,mapfont,maparabic,%
       mapdigits,intraspace,intrapenalty,onchar,transforms,alph,%
-      Alph,labels,labels*,calendar,date}%
+      Alph,labels,labels*,calendar,date,casing}%
     {\bbl@csarg\let{KVP@##1}\@nnil}%
   \global\let\bbl@release@transforms\@empty
   \let\bbl@calendars\@empty
@@ -9832,8 +9832,8 @@ help from Bernd Raichle, for which I am grateful.
   \global\let\bbl@extend@ini\@gobble
   \gdef\bbl@key@list{;}% 
   \bbl@forkv{#1}{%
-    \in@{/}{##1}%
-    \ifin@
+    \in@{/}{##1}% With /, (se)sets a value in the ini
+    \ifin@ 
       \global\let\bbl@extend@ini\bbl@extend@ini@aux
       \bbl@renewinikey##1\@@{##2}%
     \else
@@ -10128,6 +10128,10 @@ help from Bernd Raichle, for which I am grateful.
         \\\babel@save\\\@Alph
         \let\\\@Alph\<bbl@cntr@\bbl@KVP@Alph @\languagename>}}%
   \fi
+  % == Casing ==
+  \bbl@exp{\def\<bbl@casing@\languagename>%
+    {\<bbl@lbcp@\languagename>%
+     \ifx\bbl@KVP@casing\@nnil\else-x-\bbl@KVP@casing\fi}}%
   % == Calendars ==
   \ifx\bbl@KVP@calendar\@nnil
     \edef\bbl@KVP@calendar{\bbl@cl{calpr}}%
@@ -10596,6 +10600,8 @@ help from Bernd Raichle, for which I am grateful.
     {\csname bbl@elname@\languagename\endcsname}}%
   \bbl@exportkey{tbcp}{identification.tag.bcp47}{}%
   \bbl@exportkey{lbcp}{identification.language.tag.bcp47}{}%
+  % Somewhat hackish. TODO
+  \bbl@exportkey{casing}{identification.language.tag.bcp47}{}%
   \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
   \bbl@exportkey{esname}{identification.script.name}{}%
   \bbl@exp{\\\bbl@exportkey{sname}{identification.script.name.opentype}%
@@ -11259,6 +11265,8 @@ help from Bernd Raichle, for which I am grateful.
       {\bbl@ifunset{bbl@\csname bbl@info@#1.tag.bcp47\endcsname @\languagename}{}%
         {\bbl@cs{\csname bbl@info@#1.tag.bcp47\endcsname @\languagename}}}}
 \fi
+% Still somewhat hackish:
+\@namedef{bbl@info@casing.tag.bcp47}{casing}
 %    \end{macrocode}
 %
 % With version 3.75 |\BabelEnsureInfo| is executed always, but there is
@@ -11276,6 +11284,7 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@ifunset{bbl@lname@##1}{\bbl@load@info{##1}}{}}%
   \fi
   \bbl@foreach\bbl@loaded{{%
+    \let\bbl@ensuring\@empty
     \def\languagename{##1}%
     \bbl@ensureinfo{##1}}}}
 \@ifpackagewith{babel}{ensureinfo=off}{}%
@@ -23186,6 +23195,7 @@ Babel.cjk_breaks = {
   \bbl@elt{identification}{derivate}{no}}
 \@namedef{bbl@tbcp@nil}{und}
 \@namedef{bbl@lbcp@nil}{und}
+\@namedef{bbl@casing@nil}{und} % TODO
 \@namedef{bbl@lotf@nil}{dflt}
 \@namedef{bbl@elname@nil}{nil}
 \@namedef{bbl@lname@nil}{nil}

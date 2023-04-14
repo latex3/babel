@@ -15,10 +15,10 @@ Package: babel
 .\write-{}
 .\vbox(0.0+0.0)x0.0
 .\penalty -10001
-.\write1{\@writefile{toc}{\protect \contentsline {chapter}{\protect \numberline \ETC.}
-.\marks1{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    \ETC.}
+.\write1{\@writefile{toc}{\protect \contentsline {chapter}{\protect \numberline {1}Privet}{\thepage }{}\protected@file@percent }}
+.\marks1{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{{\protect \cyrillictext  \CYRG \cyrl \cyra \cyrv \cyra }\ 1. \ Privet}}}
 .\marks2{\prg_do_nothing: }
-.\mark{{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    \ETC.}
+.\mark{{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{{\protect \cyrillictext  \CYRG \cyrl \cyra \cyrv \cyra }\ 1. \ Privet}}}{}}
 .\write1{\@writefile{lof}{\protect \addvspace {10\p@ }}}
 .\write1{\@writefile{lot}{\protect \addvspace {10\p@ }}}
 .\rule(0.0+0.0)x*

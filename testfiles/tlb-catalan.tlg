@@ -27,10 +27,10 @@ Package: babel
 ..\penalty 10000
 ..\glue(\parfillskip) 0.0 plus 1.0fil
 ..\glue(\rightskip) 0.0
-.\marks2{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \MakeUppercase    \ETC.}
-.\marks3{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \MakeUppercase    \ETC.}
-.\mark{{}{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \ETC.}
-.\write1{\@writefile{toc}{\protect \contentsline {section}{\protect \numberline \ETC.}
+.\marks2{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \MakeUppercase    []{0.1. \ ``Hola''}}}
+.\marks3{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \MakeUppercase    []{0.1. \ ``Hola''}}}
+.\mark{{}{\protect \foreignlanguage {catalan}{\protect \bbl@restore@actives \MakeUppercase    []{0.1. \ ``Hola''}}}}
+.\write1{\@writefile{toc}{\protect \contentsline {section}{\protect \numberline {0.1}``Hola''}{\thepage }{}\protected@file@percent }}
 .\penalty 10000
 .\glue 9.90276 plus 0.86108
 ! OK.
