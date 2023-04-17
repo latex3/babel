@@ -13,7 +13,7 @@ information.)
 
 The basic syntax is explained in the `babel` manual. This article
 complements it with an explanation of the second and third arguments of
-`\babelposthyphenation`, which also apply to `\babelprehyphenation`
+`\babelposthyphenation`, which also applies to `\babelprehyphenation`
 with the differences explained in the manual.
 
 Here is a simple example of a declaration, which tells LaTeX to change
@@ -158,7 +158,7 @@ be used in the replacement strings, with the corresponding capture:
 ```
 There are two captures, namely, `[cC]` (which means either ‘c’ or
 ‘C’) and `[kK]`, used in the second replacement as `{1}` and `{2}`.
-With this rule, ` \showhyphens{Trockenerzeugnis Druckeinstellung}` will
+With this rule, `\showhyphens{Trockenerzeugnis Druckeinstellung}` will
 display something like:
 ```
 Underfull \hbox (badness 10000) in paragraph at lines 15--15
