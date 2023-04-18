@@ -1,10 +1,10 @@
 # What's new in babel 3.88
 
-(dev) Draft
+2023-04-18
 
 ## New locale files
 
-There are 37 new locale files, based on the [forthcoming] CLDR 43. They are, grouped by script:
+There are 37 new locale files, based on the just released CLDR 43. They are, grouped by script:
 * **Arabic.** Baluchi.
 * **Cyrillic.** Abkhazian, Erzya.
 * **Devanagari**. Haryanvi, Bhojpuri, Rajasthani.
@@ -13,10 +13,24 @@ There are 37 new locale files, based on the [forthcoming] CLDR 43. They are, gro
 * **N’ko.** N’Ko.
 * **Unified Canadian Aboriginal Syllabics.** Inuktitut.
 
-## Casing
+In addition, some month names in Greek has been fixed (thanks to Günter
+Milde).
+
+## New hook
+
+With a new hook, code can be injected before the declarations by a
+language within `\AtBeginDocument`. The optional argument with the
+language in this particular case is not the ‘current’ one, because at
+this point is always the main language, but the language that wrote the
+code. There is also a special value in this argument, because `/` means
+‘return to the core `babel` definitions’ (in other words, what follows
+hasn’t been written by any language).
+
+## Preview: casing
 
 This features relies in a future change in the LaTeX kernel, so it’s
-not currently available. It’s related to the new casing mechanism.
+not currently available and, of course, experimental. It’s related to
+the new casing mechanism.
 
 There is a new option in `\babelprovide` to set the default casing
 rules in a few languages. They are (from `interface3.pdf`):
@@ -32,13 +46,3 @@ For example:
 \usepackage[greek]{babel}
 \babelprovide[casing=iota]{greek}
 ```
-
-## New hook
-
-With a new hook we can inject some code before the declarations by a
-language within `\AtBeginDocument`. The optional argument with the
-language in this particular case is not the ‘current’ one, because at
-this point is always the main language, but the language that wrote the
-code. There is also a special value in this argument, because `/` means
-‘return to the core `babel` definitions’ (in other words, what follows
-hasn’t be written by any language.
