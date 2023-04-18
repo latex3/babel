@@ -1,6 +1,6 @@
-## Babel 3.87.10474
+## Babel 3.88
 
-(dev)
+2023-04-18
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,27 +48,18 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.88  (dev)
+3.88  2023-04-18
       * 37 new locale files: Abkhazian, Afar, Atsam, Baluchi, Bhojpuri,
         Blin, Corsican, Erzya, Ga, Geez, Guarani, Haryanvi, Inuktitut,
         Jju, Ligurian, Muscogee, Northern Sotho, Nyanja, N’Ko,
         Papiamento, Prussian, Rajasthani, Saho, Sicilian, Silesian,
         South Ndebele, Southern Sotho, Swati, Taroko, Tigre, Tok Pisin,
         Tsonga, Tswana, Tyap, Venda, Volapük, Wolaytta.
+      * Fixed a few month names in Greek locales (thanks to Günter Milde).
       * New hook 'begindocument'.
-
-3.87  2023-03-28
-      * Fixes:
-        - Typo in 'syllable' counter name in Korean (#225).
-        - Language leakage with xetex and on-the-fly loading in a few
-          locales.
-        - Misplaced text with tikz. Fixed thanks to Salim Bou (#211).
-        - Misplaced text body with 'multicol' and RTL (#228).
-      * 'hyphenrules=' is applied with the current locale.
-      * Updates to the CLDR: Swedish, Swahili, Tamil, Telugu, Thai,
-        Tigrinya, Turkmen, Tongan, Turkish, Tasawaq, Central Atlas
-        Tamazight, Uyghur, Ukrainian, Urdu, Vietnamese, Yiddish,
-        Yoruba, Cantonese.
+      * Feature preview: option 'casing' in '\babelprovide' (requires a
+        future change in the LaTeX kernel).
+      * Some minor changes.
 ```
 
 ### Previous changes

@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/04/14 v3.87.10474 The Babel package]
+\ProvidesFile{babel.dtx}[2023/04/18 v3.88 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2991,7 +2991,7 @@ expandable, and the available fields are:
   extension whose singleton is \m{s} (currently the recognized
   singletons are |x|, |t| and |u|). The internal syntax can be somewhat
   complex, and this feature is still somewhat tentative. An example is
-  \textsf{classiclatin} which sets |extension.x.tag.bcp47| to classic.
+  \textsf{classiclatin} which sets |extension.x.tag.bcp47| to |classic|.
   \New{3.75}
 \end{description}
 
@@ -4036,6 +4036,11 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
 \item[afterreset] \New{3.9i} Executed when selecting a language just after
   |\originalTeX| is run and reset to its base value, before executing
   |\captions|\m{language} and |\date|\m{language}.
+\item[begindocument] \New{3.88} Executed before the code written by
+  |ldf| files with |\AtBeginDocument|. The optional argument with the
+  language in this particular case is the language that wrote the code.
+  The special value |/| means ‘return to the core \babel{} definitions’
+  (in other words, what follows hasn’t been written by any language).
 % STILL UNDER STUDY:
 % \item[beforestart] \New{3.34} Executed either at the beginning of the
 %   |aux| file (when read at the start of the document), or else at begin
@@ -5295,8 +5300,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.87.10474>>
-%<<date=2023/04/14>>
+%<<version=3.88>>
+%<<date=2023/04/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9832,7 +9837,7 @@ help from Bernd Raichle, for which I am grateful.
   \global\let\bbl@extend@ini\@gobble
   \gdef\bbl@key@list{;}% 
   \bbl@forkv{#1}{%
-    \in@{/}{##1}% With /, (se)sets a value in the ini
+    \in@{/}{##1}% With /, (re)sets a value in the ini
     \ifin@ 
       \global\let\bbl@extend@ini\bbl@extend@ini@aux
       \bbl@renewinikey##1\@@{##2}%
@@ -11284,7 +11289,7 @@ help from Bernd Raichle, for which I am grateful.
       \bbl@ifunset{bbl@lname@##1}{\bbl@load@info{##1}}{}}%
   \fi
   \bbl@foreach\bbl@loaded{{%
-    \let\bbl@ensuring\@empty
+    \let\bbl@ensuring\@empty % Flag used in a couple of babel-*.tex files
     \def\languagename{##1}%
     \bbl@ensureinfo{##1}}}}
 \@ifpackagewith{babel}{ensureinfo=off}{}%
@@ -12612,7 +12617,7 @@ help from Bernd Raichle, for which I am grateful.
   \DeclareOption*{}
   \ProcessOptions*
 \fi
-\bbl@exp{% TODO. Find a ‘language name’ for the end
+\bbl@exp{% 
   \\\AtBeginDocument{\\\bbl@usehooks@lang{/}{begindocument}{{}}}}%
 \def\AfterBabelLanguage{%
   \bbl@error
