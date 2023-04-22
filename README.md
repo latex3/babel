@@ -1,4 +1,4 @@
-## Babel 3.88
+## Babel 3.88.11231
 
 2023-04-18
 
@@ -48,6 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.89  (dev)
+      *
+      
 3.88  2023-04-18
       * 37 new locale files: Abkhazian, Afar, Atsam, Baluchi, Bhojpuri,
         Blin, Corsican, Erzya, Ga, Geez, Guarani, Haryanvi, Inuktitut,
