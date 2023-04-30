@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/04/22 v3.88.11231 The Babel package]
+\ProvidesFile{babel.dtx}[2023/04/30 v3.88.12052 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1233,9 +1233,9 @@ this file is loaded.
 loaded when the format was created: number (remember dialects can
 share it), name, hyphenation file and exceptions file.
 
-\Describe{nocase}{} \New{3.9l} Language settings for uppercase and
-lowercase mapping (as set by |\SetCase|) are ignored. Use only if there
-are incompatibilities with other packages.
+% \Describe{nocase}{} \New{3.9l} Language settings for uppercase and
+% lowercase mapping (as set by |\SetCase|) are ignored. Use only if there
+% are incompatibilities with other packages.
 
 \Describe{silent}{} \New{3.9l} No warnings and no \textit{infos} are
 written to the log file.\footnote{You can use alternatively the
@@ -1359,7 +1359,7 @@ LICR). They will be evolving with the time to add more features
 following section shows how to make use of them by means of
 |\babelprovide|. In other words, |\babelprovide| is mainly meant
 for auxiliary tasks, and as alternative when the |ldf|, for some
-reason, does work as expected.
+reason, does not work as expected.
 
 \begin{example}
   Although Georgian has its own \texttt{ldf} file, here is how to
@@ -4888,15 +4888,8 @@ used to properly switch French spacing on and off.
 \label{s:strings}
 
 \New{3.9a} Babel 3.9 provides a way of defining strings in several
-encodings, intended mainly for \luatex{} and \xetex. This is the only new
-feature requiring changes in language files if you want to make use of
-it.
-
-Furthermore, it must be activated explicitly, with the package option
-|strings|. If there is no |strings|, these blocks are ignored, except
-|\SetCase|s (and except if forced as described below). In other words,
-the old way of defining/switching strings still works and it's used by
-default.
+encodings, intended mainly for \luatex{} and \xetex, although the old
+way of defining/switching strings still works and it's used by default.
 
 It consist is a series of blocks started with
 |\StartBabelCommands|. The last block is closed with
@@ -4905,9 +4898,11 @@ declarations apply until the next |\StartBabelCommands| or
 |\EndBabelCommands|). An |ldf| may contain several series of this
 kind.
 
-Thanks to this new feature, string values and string language
-switching are not mixed any more. No need of |\addto|. If the language
-is |french|, just redefine |\frenchchaptername|.
+Thanks to this new feature, string values and string language switching
+are not mixed any more. Furthermore, strings do no need to be wrapped
+with formatting commands (eg, to select the writing direction)
+because \babel{} takes care of it automatically. (See also
+|\setlocalecaption|.)
 
 \Describe\StartBabelCommands
   {\marg{language-list}\marg{category}\oarg{selector}}
@@ -4921,11 +4916,11 @@ defined (if undefined, |\StartBabelCommands| sets it to
 but this is discouraged -- a explicit name (or names) is much better
 and clearer.
 
-A ``selector'' is a name to be used as value in package option
-|strings|, optionally followed by extra info about the encodings to be
-used. The name |unicode| must be used for \xetex{} and \luatex{} (the
-key |strings| has also other two special values: |generic| and
-|encoded|).
+A ``selector'' selects a group of definition are to be used, optionally
+followed by extra info about the encodings to be used. The name
+|unicode| must be used for \xetex{} and \luatex{}. Without a selector,
+the LICR representation (ie, with macros like |\~{n}| instead of |ñ|)
+is assumed.
 
 If a string is set several times (because several blocks are read),
 the first one takes precedence (ie, it works much like
@@ -4943,25 +4938,18 @@ can be given after |fontenc=| (separated with spaces, if two or more) --
 recommended, but not mandatory, although blocks without this key are
 not taken into account if you have requested |strings=encoded|.
 
-Blocks without a selector are read always if the key |strings| has
-been used.  They provide fallback values, and therefore must be the
-last blocks; they should be provided always if possible and all
-strings should be defined somehow inside it; they can be the only
-blocks (mainly LGC scripts using the LICR). Blocks without a selector
-can be activated explicitly with |strings=generic| (no block is taken
-into account except those). With |strings=encoded|, strings in those
-blocks are set as default (internally, |?|). With |strings=encoded|
-strings are protected, but they are correctly expanded in
-|\MakeUppercase| and the like. If there is no key |strings|, string
-definitions are ignored, but |\SetCase|s are still honored (in a
-|encoded| way).
+Blocks without a selector are read always. They provide fallback
+values, and therefore they must be the last ones; they should be
+provided always if possible and all strings should be defined somehow
+inside it; they can be the only blocks (mainly LGC scripts using the
+LICR).
 
 The \m{category} is either |captions|, |date| or |extras|. You must
 stick to these three categories, even if no error is raised when using
 other name.\footnote{In future releases further categories may be
 added.\nb{like `monetary', `time', `address', `name', `case' or
 `numeric'}} It may be empty, too, but in such a case using
-|\SetString| is an error (but not |\SetCase|).
+|\SetString| is an error.
 
 \begin{verbatim}
 \StartBabelCommands{language}{captions}
@@ -5020,6 +5008,11 @@ strings are added). However, when used in the preamble or in a
 package, new settings are added to the previous ones, if the language
 exists (in the \babel{} sense, ie, if |\date|\m{language} exists).
 
+\begin{note}
+  The package option |strings| introduced in version 3.9 (around 2013)
+  when Unicode engines were still minoritary, is now deprecated.
+\end{note}
+
 \Describe\StartBabelCommands{%
   \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
   \marg{language-list}\marg{category}\oarg{selector}}
@@ -5060,51 +5053,18 @@ to define |\abmoniname|, |\abmoniiname|, etc. (and similarly with
 |#1| is replaced by the roman numeral.
 
 \Describe\SetCase{\oarg{map-list}\marg{toupper-code}\marg{tolower-code}}
-Sets globally code to be executed at |\MakeUppercase| and
-|\MakeLowercase|. The code would typically be things like |\let\BB\bb|
-and |\uccode| or |\lccode| (although for the reasons explained above,
-changes in lc/uc codes may not work). A \meta{map-list} is a series of
-macros using the internal format of |\@uclclist| (eg,
-|\bb\BB\cc\CC|). The mandatory arguments take precedence over the
-optional one. This command, unlike |\SetString|, is executed always
-(even without |strings|), and it is intended for minor readjustments
-only.
 
-For example, as |T1| is the default case mapping in \LaTeX, we can
-set for Turkish:
-\begin{verbatim}
-\StartBabelCommands{turkish}{}[ot1enc, fontenc=OT1]
-\SetCase
-  {\uccode"10=`I\relax}
-  {\lccode`I="10\relax}
-
-\StartBabelCommands{turkish}{}[unicode, fontenc=TU EU1 EU2, charset=utf8]
-\SetCase
-  {\uccode`i=`İ\relax
-   \uccode`ı=`I\relax}
-  {\lccode`İ=`i\relax
-   \lccode`I=`ı\relax}
-
-\StartBabelCommands{turkish}{}
-\SetCase
-  {\uccode`i="9D\relax
-   \uccode"19=`I\relax}
-  {\lccode"9D=`i\relax
-   \lccode`I="19\relax}
-
-\EndBabelCommands
-\end{verbatim}
-(Note the mapping for |OT1| is not complete.)
+\begin{warning}
+This feature doesn’t work any longer after some changes in the \LaTeX{}
+kernel. It’s now deprecated and an alternative is on the way.
+\end{warning}
 
 \Describe{\SetHyphenMap}{\marg{to-lower-macros}}
-\New{3.9g} Case mapping serves in \TeX{} for two unrelated purposes: case
-transforms (upper/lower) and hyphenation. |\SetCase| handles the
-former, while hyphenation is handled by |\SetHyphenMap| and controlled
-with the package option |hyphenmap|. So, even if internally they are based
-on the same \TeX{} primitive (|\lccode|), \babel{} sets them separately.
+\New{3.9g} Case mapping serves in \TeX{} for two unrelated purposes:
+case transforms (upper/lower) and hyphenation. Hyphenation is handled
+by |\SetHyphenMap| and controlled with the package option |hyphenmap|.
 
-There are three helper macros to
-be used inside |\SetHyphenMap|:
+There are three helper macros to be used inside |\SetHyphenMap|:
 \begin{itemize}
 \item |\BabelLower|\marg{uccode}\marg{lccode} is
   similar to |\lccode| but it's ignored if the char has been set and
@@ -5300,8 +5260,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.88.11231>>
-%<<date=2023/04/22>>
+%<<version=3.88.12052>>
+%<<date=2023/04/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8841,7 +8801,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 \@ifpackagewith{babel}{nocase}%
   {\let\bbl@patchuclc\relax}%
-  {\def\bbl@patchuclc{%
+  {\def\bbl@patchuclc{% TODO. Delete. Doesn’t work any more.
     \global\let\bbl@patchuclc\relax
     \g@addto@macro\@uclclist{\reserved@b{\reserved@b\bbl@uclc}}%
     \gdef\bbl@uclc##1{%
@@ -9128,7 +9088,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 % The command |\SetCase| provides a way to change the behavior of
 % |\MakeUppercase| and |\MakeLowercase|. |\bbl@tempa| is set by the
-% patched |\@uclclist| to the parsing command.
+% patched |\@uclclist| to the parsing command. \textit{Deprecated.}
 %
 %    \begin{macrocode}
 %<<*Macros local to BabelCommands>>
@@ -9198,7 +9158,7 @@ help from Bernd Raichle, for which I am grateful.
 %<</More package options>>
 %    \end{macrocode}
 %
-%    Initial setup to provide a default behavior if |hypenmap|
+%    Initial setup to provide a default behavior if |hyphenmap|
 %    is not set.
 %
 %    \begin{macrocode}
@@ -9835,6 +9795,7 @@ help from Bernd Raichle, for which I am grateful.
   \let\bbl@calendars\@empty
   \global\let\bbl@inidata\@empty
   \global\let\bbl@extend@ini\@gobble
+  \global\let\bbl@included@inis\@empty
   \gdef\bbl@key@list{;}% 
   \bbl@forkv{#1}{%
     \in@{/}{##1}% With /, (re)sets a value in the ini
@@ -9900,6 +9861,14 @@ help from Bernd Raichle, for which I am grateful.
       {}%  With \bbl@load@basic below
       {\bbl@provide@renew{#2}}%
   \fi
+  % == include == TODO
+  % \ifx\bbl@included@inis\@empty\else
+  %   \bbl@replace\bbl@included@inis{ }{,}%
+  %   \bbl@foreach\bbl@included@inis{%
+  %     \openin\bbl@readstream=babel-##1.ini
+  %     \bbl@extend@ini{#2}}%
+  %   \closein\bbl@readstream
+  % \fi
   % Post tasks
   % ----------
   % == subsequent calls after the first provide for a locale ==
@@ -10376,9 +10345,9 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@trim\toks@{#2}%
   \bbl@xin@{;\bbl@section/\bbl@tempa;}{\bbl@key@list}%
   \ifin@\else
-    \bbl@xin@{,identification/include.}%
+    \bbl@xin@{,identification/include.}% 
              {,\bbl@section/\bbl@tempa}%
-    \ifin@\edef\bbl@required@inis{\the\toks@}\fi
+    \ifin@\xdef\bbl@included@inis{\the\toks@}\fi
     \bbl@exp{%
       \\\g@addto@macro\\\bbl@inidata{%
         \\\bbl@elt{\bbl@section}{\bbl@tempa}{\the\toks@}}}%
@@ -10439,16 +10408,9 @@ help from Bernd Raichle, for which I am grateful.
       \let\bbl@inistore\bbl@inistore@min    % Remember it's local
     \fi
     \def\bbl@section{identification}%
-    \let\bbl@required@inis\@empty
     \bbl@exp{\\\bbl@inistore tag.ini=#1\\\@@}%
     \bbl@inistore load.level=#2\@@
     \bbl@loop@ini
-    \ifx\bbl@required@inis\@empty\else
-      \bbl@replace\bbl@required@inis{ }{,}%
-      \bbl@foreach\bbl@required@inis{%
-        \openin\bbl@readstream=babel-##1.ini
-        \bbl@loop@ini}%
-    \fi
     % == Process stored data ==
     \bbl@csarg\xdef{lini@\languagename}{#1}%
     \bbl@read@ini@aux
@@ -15109,7 +15071,7 @@ end
       \else
         \let\bbl@ams@lap\llap
       \fi
-      \ExplSyntaxOn
+      \ExplSyntaxOn % Required by \bbl@sreplace with \intertext@
       \bbl@sreplace\intertext@{\normalbaselines}%
         {\normalbaselines
          \ifx\bbl@eqnodir\relax\else\bbl@pardir\@ne\bbl@eqnodir\fi}%

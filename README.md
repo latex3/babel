@@ -1,4 +1,4 @@
-## Babel 3.88.11231
+## Babel 3.88.12052
 
 2023-04-18
 
@@ -49,7 +49,7 @@ respective authors.
 ### Summary of latest changes
 ```
 3.89  (dev)
-      *
+      * Deprecating \SetCase and 'strings' package option.
       
 3.88  2023-04-18
       * 37 new locale files: Abkhazian, Afar, Atsam, Baluchi, Bhojpuri,
