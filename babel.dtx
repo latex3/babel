@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/04/30 v3.88.12052 The Babel package]
+\ProvidesFile{babel.dtx}[2023/05/01 v3.88.12140 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -97,7 +97,7 @@
 \makeatletter
 \def\@begintheorem#1#2{%
   \list{}{}%
-  \small
+  % \small
   \global\advance\@listdepth\m@ne
   \item[{\sffamily\bfseries\color{messages}\hspace*{1.3em}%
         \MakeUppercase{#1}}]}%
@@ -204,7 +204,15 @@
 \cellcolor[rgb]{.95,.95,.95}
 \vspace{2cm}\hspace{1.5cm}
 \begin{minipage}{5cm}
+\Huge
+\ifx\babelcode\undefined
+User guide
+\else
+Code
+\fi
+
 \Large
+\vspace{1.2cm}
 Version \csname @gobble\expandafter\endcsname\fileversion\newline
 \filedate
 
@@ -239,7 +247,7 @@ Xe\largetex
 \listoftroubles
 \clearpage
 
-\part{User guide}
+\ifx\babelcode\undefined
 
 \begin{description}
 \item[\sffamily\color{messages}What is this document about?] This user
@@ -287,6 +295,9 @@ necessary in some languages), is described below; go to \ref{inifiles}.
   there are many
   \href{https://github.com/latex3/babel/tree/master/samples}{sample
   files}.
+  
+\item[\sffamily\color{messages}Where is the code?]
+ Run |lualatex --jobname=babel-code \let\babelcode\relax\input{babel.dtx}|.
 \end{description}
 
 \section{The user interface}\label{U-I}
@@ -409,11 +420,10 @@ Package babel Warning: No hyphenation patterns were preloaded for
 (babel)                preloaded for \language=0 instead on input line 57.
 \end{verbatim}
   The document will be typeset, but very likely the text will not be
-  correctly hyphenated. Some languages may be raising this warning
-  wrongly (because they are not hyphenated); it is a bug to be fixed
-  -- just ignore it. See the manual of your distribution (Mac\TeX,
-  Mik\TeX, \TeX Live, etc.) for further info about how to configure
-  it.
+  correctly hyphenated. Some languages in some system may be raising
+  this warning wrongly (because they are not hyphenated) -- just ignore
+  it. See the manual of your distribution (Mac\TeX, Mik\TeX, \TeX Live,
+  etc.) for further info about how to configure it.
 \end{troubleshooting}
 
 \begin{note}
@@ -560,7 +570,7 @@ short sentences). Typically, all you need is to set the line breaking
 rules and, perhaps, the font. In such a case, \babel{} now does not
 require declaring these secondary languages explicitly, because the
 basic settings are loaded on the fly when the language is selected (and
-also when provided in the optional argument of |\babelfont|, if used.)
+also when provided in the optional argument of |\babelfont|, if used).
 
 This is particularly useful, too, when there are short texts of this
 kind coming from an external source whose contents are not known on
@@ -589,18 +599,19 @@ _\foreignlanguage{spanish}{Español}_.
 
 \begin{note}
   Instead of its name, you may prefer to select the language with the
-corresponding BCP47 tag. This alternative, however, must be activated
-explicitly, because a two- or tree-letter word is a valid name for a
-language (eg, |lu| can be the locale name with tag |khb| or the tag for
-|lubakatanga|). See section \ref{bcp47} for further details.
+  corresponding BCP47 tag. This alternative, however, must be activated
+  explicitly, because a two- or tree-letter word is a valid name for a
+  language (eg, |lu| can be the locale name with tag |khb| or the tag
+  for |lubakatanga|). See section \ref{bcp47} for further details.
 \end{note}
 
 \New{3.84} With \pdftex, when a language is loaded on the fly
-(actually, with |\babelprovide|) selectors now set the font encoding
-based on the list provided when loading |fontenc|. Not all scripts have
-an associated encoding, so this feature works only with Latin,
-Cyrillic, Greek, Arabic, Hebrew, Cherokee, Armenian, and Georgian,
-provided a suitable font is found.
+(actually, with |\babelprovide|, because this is the macro used
+internally to load it) selectors now set the font encoding based on the
+list provided when loading |fontenc|. Not all scripts have an
+associated encoding, so this feature works only with Latin, Cyrillic,
+Greek, Arabic, Hebrew, Cherokee, Armenian, and Georgian, provided a
+suitable font is found.
 
 \subsection{Modifiers}
 
@@ -617,8 +628,7 @@ needs.}
 \end{verbatim}
 
 Attributes (described below) are considered modifiers, ie, you can
-set an attribute by including it in the list of modifiers. However,
-modifiers are a more general mechanism.
+set an attribute by including it in the list of modifiers.
 
 \subsection{Troubleshooting}
 
@@ -1123,36 +1133,40 @@ preserved for backward compatibility.}
 
 \New{3.23} Tests if a character has been made a shorthand.
 
-\Describe{\aliasshorthand}{\marg{original}\marg{alias}}
+\Describe{\aliasshorthand}{\marg{original}\marg{alias}\qquad\textit{Deprecated}}
 
-The command |\aliasshorthand| can be used to let another character
-perform the same functions as the default shorthand character. If one
-prefers for example to use the character |/| over |"| in typing Polish
-texts, this can be achieved by entering |\aliasshorthand{"}{/}|. For
-the reasons in the warning below, usage of this macro is not
-recommended.
+The command |\aliasshorthand| was provided to let another character
+perform the same functions as the default shorthand character. However,
+it’s behavior was not always the expected one (the original character
+was remembered somehow), and it’s now deprecated.
 
-\begin{note}
-  The substitute character must \textit{not} have been declared before
-  as shorthand (in such a case, |\aliashorthands| is ignored).
-\end{note}
-
-\begin{example}
-  The following example shows how to replace a shorthand by another
-\begin{verbatim}
-\aliasshorthand{~}{^}
-\AtBeginDocument{\shorthandoff*{~}}
-\end{verbatim}
-\end{example}
-
-\begin{warning}
-  Shorthands remember somehow the original character, and the fallback
-  value is that of the latter. So, in this example, if no shorthand if
-  found, |^| expands to a non-breaking space, because this is the
-  value of |~| (internally, |^| still calls |\active@char~| or
-  |\normal@char~|). Furthermore, if you change the |system| value of
-  |^| with |\defineshorthand| nothing happens.
-\end{warning}
+% If one
+% prefers for example to use the character |/| over |"| in typing Polish
+% texts, this can be achieved by entering |\aliasshorthand{"}{/}|. For
+% the reasons in the warning below, usage of this macro is not
+% recommended.
+% 
+% \begin{note}
+%   The substitute character must \textit{not} have been declared before
+%   as shorthand (in such a case, |\aliashorthands| is ignored).
+% \end{note}
+% 
+% \begin{example}
+%   The following example shows how to replace a shorthand by another
+% \begin{verbatim}
+% \aliasshorthand{~}{^}
+% \AtBeginDocument{\shorthandoff*{~}}
+% \end{verbatim}
+% \end{example}
+% 
+% \begin{warning}
+%   Shorthands remember somehow the original character, and the fallback
+%   value is that of the latter. So, in this example, if no shorthand is
+%   found, |^| expands to a non-breaking space, because this is the
+%   value of |~| (internally, |^| still calls |\active@char~| or
+%   |\normal@char~|). Furthermore, if you change the |system| value of
+%   |^| with |\defineshorthand| nothing happens.
+% \end{warning}
 
 \subsection{Package options}
 
@@ -3168,8 +3182,8 @@ font encodings are the same, like in Unicode based engines.
 
 The environment \Lenv{hyphenrules} can be used to select \emph{only} the
 hyphenation rules to be used (it can be used as command, too). This can
-for instance be used to select `nohyphenation', provided that in
-\file{language.dat} the `language' \textsf{nohyphenation} is defined by
+for instance be used to select ‘nohyphenation’, provided that in
+\file{language.dat} the ‘language’ \textsf{nohyphenation} is defined by
 loading \file{zerohyph.tex}. It deactivates language shorthands, too
 (but not user shorthands).
 
@@ -3177,7 +3191,7 @@ Except for these simple uses, |hyphenrules| is deprecated and
 |otherlanguage*| (the starred version) is preferred, because the former
 does not take into account possible changes in encodings of characters
 like, say, |'| done by some languages (eg, \textsf{italian},
-\textsf{french}, \textsf{ukraineb}).
+\textsf{french}, \textsf{ukrainian}).
 
 \Describe{\babelpatterns}{\texttt{[}\langlist\texttt{]}%
     \marg{patterns}}
@@ -3233,8 +3247,8 @@ the locale is being defined with this macro or the languages has been
 previouly loaded as a class or package option, as the following example
 illustrates:
 \begin{verbatim}
-  \usepackage[magyar]{babel}
-  \babelprovide[_transforms = digraphs.hyphen_]{magyar}
+  \usepackage[hungarian]{babel}
+  \babelprovide[_transforms = digraphs.hyphen_]{hungarian}
 \end{verbatim}
 \New{3.67} Transforms predefined in the |ini| locale files can be made
 attribute-dependent, too. When an attribute between parenthesis is
@@ -4099,7 +4113,9 @@ to you to make sure no toc type is duplicated).
 In the following table most of the languages supported by \babel{} with
 and |.ldf| file are listed, together with the names of the option which
 you can load \babel\ with for each language. Note this list is open and
-the current options may be different. It does not include |ini| files.
+the current options may be different. It does not include |ini| files
+(see below). Except in a few cases (eg, |ngerman|, |serbianc|,
+|canadien|) names are those of the Unicode CLDR.
 
 \begin{description}
 \itemsep=-\parskip
@@ -4114,33 +4130,31 @@ the current options may be different. It does not include |ini| files.
 \item[Czech] czech
 \item[Danish] danish
 \item[Dutch] dutch
-\item[English] english, USenglish, american, UKenglish,
-     british, canadian, australian, newzealand
+\item[English] english, american (\textit{preferred to} USenglish), british (\textit{preferred to} 
+  UKenglish), canadian, australian, newzealand
 \item[Esperanto] esperanto
 \item[Estonian] estonian
 \item[Finnish] finnish
-\item[French] french, francais, canadien, acadian
+\item[French] french, canadien, acadian
 \item[Galician] galician
-\item[German] austrian, german, germanb, ngerman, naustrian
+\item[German] ngerman, naustrian, german, austrian
 \item[Greek] greek, polutonikogreek
 \item[Hebrew] hebrew
 \item[Icelandic] icelandic
-\item[Indonesian] indonesian (bahasa, indon, bahasai)
+\item[Indonesian] indonesian
 \item[Interlingua] interlingua
 \item[Irish Gaelic] irish
 \item[Italian] italian
 \item[Latin] latin
 \item[Lower Sorbian] lowersorbian
-\item[Malay] malay, melayu (bahasam)
-\item[North Sami] samin
+\item[Malay] malay (\textit{preferred to} melayu)
+\item[Northern Sami] northernsami
 \item[Norwegian] norsk, nynorsk
 \item[Polish] polish
-\item[Portuguese] portuguese, brazilian (portuges, brazil)\footnote{The
-two last name comes from the times when they had to be shortened to 8
-characters}
+\item[Portuguese] portuguese, brazilian
 \item[Romanian] romanian
 \item[Russian] russian
-\item[Scottish Gaelic] scottish
+\item[Scottish Gaelic] scottishgaelic (\textit{preferred to} scottish)
 \item[Spanish]  spanish
 \item[Slovakian] slovak
 \item[Slovenian]  slovene
@@ -4156,6 +4170,19 @@ There are more languages not listed above, including \textsf{hindi,
 thai, thaicjk, latvian, turkmen, magyar, mongolian, romansh,
 lithuanian, spanglish, vietnamese, japanese, pinyin, arabic, farsi,
 ibygreek, bgreek, serbianc, frenchle, ethiop} and \textsf{friulan}.
+
+There are also some deprecated names (a few has been even removed):
+\textsf{frenchb} or \textsf{francais} (\textsf{french}),
+\textsf{germanb} (\textsf{german}), \textsf{bahasa}, \textsf{indon} or
+\textsf{bahasai} (\textsf{indonesian}), \textsf{lsorbian}
+(\textsf{lowersorbian}), \textsf{bahasam} (\textsf{malay}),
+\textsf{portuges} (\textsf{portuguese}), \textsf{brazil}
+(\textsf{brazilian}), \textsf{russianb} (\textsf{russian}),
+\textsf{usorbian} (\textsf{uppersorbian}), \textsf{vietnam}
+(\textsf{vietnamese}), \textsf{northernsami} (\textsf{samin}),
+\textsf{ukraineb} (\textsf{ukrainian}).
+Deprecated names come in many cases from the times when they had to be
+shortened to 8 characters.
 
 Most of them work out of the box, but some may require extra fonts,
 encoding files, a preprocessor or even a complete framework (like
@@ -4946,7 +4973,7 @@ LICR).
 
 The \m{category} is either |captions|, |date| or |extras|. You must
 stick to these three categories, even if no error is raised when using
-other name.\footnote{In future releases further categories may be
+other names.\footnote{In future releases further categories may be
 added.\nb{like `monetary', `time', `address', `name', `case' or
 `numeric'}} It may be empty, too, but in such a case using
 |\SetString| is an error.
@@ -4962,14 +4989,14 @@ added.\nb{like `monetary', `time', `address', `name', `case' or
 \EndBabelCommands
 \end{verbatim}
 
-A real example is:
+A real example can be:
 \begin{verbatim}
 \StartBabelCommands{austrian}{date}
-  [unicode, fontenc=TU EU1 EU2, charset=utf8]
+  [unicode, fontenc=TU, charset=utf8]
   \SetString\monthiname{Jänner}
 
 \StartBabelCommands{german,austrian}{date}
-  [unicode, fontenc=TU EU1 EU2, charset=utf8]
+  [unicode, fontenc=TU, charset=utf8]
   \SetString\monthiiiname{März}
 
 \StartBabelCommands{austrian}{date}
@@ -5010,20 +5037,26 @@ exists (in the \babel{} sense, ie, if |\date|\m{language} exists).
 
 \begin{note}
   The package option |strings| introduced in version 3.9 (around 2013)
-  when Unicode engines were still minoritary, is now deprecated.
+  when Unicode engines were still of marginal use, is now deprecated.
+\end{note}
+
+\begin{note}
+  Captions and other strings defined in |ini| files (in other words,
+  when a locale is loaded with |\babelprovide|) are internally set
+  with the help of these macros.
 \end{note}
 
 \Describe\StartBabelCommands{%
   \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
   \marg{language-list}\marg{category}\oarg{selector}}
 The starred version just forces |strings| to take a value -- if not set
-as package option, then the default for the engine is used. This is
-not done by default to prevent backward incompatibilities, but if you
-are creating a new language this version is better. It's up to
-the maintainers of the current languages to decide if using it is
-appropriate.\footnote{This replaces in 3.9g a short-lived
-\texttt{\string\UseStrings} which has been removed because it did
-not work.}
+as package option (which is now deprecated), then the default for the
+engine is used. This is not done by default to prevent backward
+incompatibilities, but if you are creating a new language this version
+is better. It's up to the maintainers of the current languages to
+decide if using it is appropriate.\footnote{This replaces in 3.9g a
+short-lived \texttt{\string\UseStrings} which has been removed because
+it did not work.}
 
 \Describe{\EndBabelCommands}{}
 Marks the end of the series of blocks.
@@ -5052,7 +5085,7 @@ to define |\abmoniname|, |\abmoniiname|, etc. (and similarly with
 \end{verbatim}
 |#1| is replaced by the roman numeral.
 
-\Describe\SetCase{\oarg{map-list}\marg{toupper-code}\marg{tolower-code}}
+\Describe\SetCase{\oarg{map-list}\marg{toupper-code}\marg{tolower-code}\qquad\textit{Deprecated}}
 
 \begin{warning}
 This feature doesn’t work any longer after some changes in the \LaTeX{}
@@ -5060,9 +5093,8 @@ kernel. It’s now deprecated and an alternative is on the way.
 \end{warning}
 
 \Describe{\SetHyphenMap}{\marg{to-lower-macros}}
-\New{3.9g} Case mapping serves in \TeX{} for two unrelated purposes:
-case transforms (upper/lower) and hyphenation. Hyphenation is handled
-by |\SetHyphenMap| and controlled with the package option |hyphenmap|.
+\New{3.9g} Case mapping for hyphenation is handled with |\SetHyphenMap|
+and controlled with the package option |hyphenmap|.
 
 There are three helper macros to be used inside |\SetHyphenMap|:
 \begin{itemize}
@@ -5085,9 +5117,11 @@ by both \luatex{} and \xetex{}):
 \SetHyphenMap{\BabelLowerMM{"100}{"11F}{2}{"101}}
 \end{verbatim}
 
-This macro is not intended to fix wrong mappings done by Unicode
-(which are the default in both \xetex{} and \luatex{}) -- if an
-assignment is wrong, fix it directly.
+\begin{note}
+  This macro is not intended to fix wrong mappings done by Unicode
+  (which are the default in both \xetex{} and \luatex{}) -- if an
+  assignment is wrong, fix it directly.
+\end{note}
 
 \subsection{Executing code based on the selector}
 
@@ -5100,22 +5134,30 @@ version), and it can consist of a comma-separated list. For example:
 \begin{verbatim}
 \IfBabelSelectorTF{other, other*}{A}{B}
 \end{verbatim}
-is true with these two environment selectors.
+is true with any of these two environment selectors.
 
 Its natural place of use is in hooks or in |\extras|\m{language}.
 
+\else
+
 \DocInput{babel.dtx}
+
+\fi
+
 
 \section{Acknowledgements}
 
 I would like to thank all who volunteered as $\beta$-testers for their
 time. Michel Goossens supplied contributions for most of the other
-languages.  Nico Poppelier helped polish the text of the documentation
-and supplied parts of the macros for the Dutch language.  Paul Wackers
-and Werenfried Spit helped find and repair bugs.
+languages. Nico Poppelier helped polish the text of the documentation
+and supplied parts of the macros for the Dutch language. Paul Wackers
+and Werenfried Spit helped find and repair bugs. During the further
+development of the babel system I received much help from Bernd
+Raichle, for which I am grateful.
 
-During the further development of the babel system I received much
-help from Bernd Raichle, for which I am grateful.
+There are also many contributors for specific languages, which are
+mentioned in the respective files. Without them, \babel{} just
+wouldn’t exist.
 
 \begin{thebibliography}{9}
  \bibitem{AT} Huda Smitshuijzen Abifares, \textit{Arabic Typography},
@@ -5171,8 +5213,6 @@ help from Bernd Raichle, for which I am grateful.
 %    \gdef\bblref##1@>{##1\/\egroup$\rangle\rangle$}}%
 %  \global\let\check@percent\saved@check@percent
 %\endgroup
-%
-% \part{Source code}
 %
 % \small
 %
@@ -5260,8 +5300,8 @@ help from Bernd Raichle, for which I am grateful.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.88.12052>>
-%<<date=2023/04/30>>
+%<<version=3.88.12140>>
+%<<date=2023/05/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5686,7 +5726,7 @@ help from Bernd Raichle, for which I am grateful.
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}[2005/12/01]
-\ProvidesPackage{babel}[<@date@> <@version@> The Babel package]
+\ProvidesPackage{babel}[<@date@> v<@version@> The Babel package]
 %    \end{macrocode}
 % 
 % Start with some “private” debugging tool, and then define macros for
@@ -6073,7 +6113,7 @@ help from Bernd Raichle, for which I am grateful.
 \ifx\ldf@quit\@undefined\else
 \endinput\fi % Same line!
 <@Make sure ProvidesFile is defined@>
-\ProvidesFile{babel.def}[<@date@> <@version@> Babel common definitions]
+\ProvidesFile{babel.def}[<@date@> v<@version@> Babel common definitions]
 \ifx\AtBeginDocument\@undefined  % TODO. change test.
   <@Emulate LaTeX@>
 \fi
@@ -8100,12 +8140,12 @@ help from Bernd Raichle, for which I am grateful.
 %  \end{macro}
 %
 %  \begin{macro}{\aliasshorthand}
-%    First the new shorthand needs to be initialized. Then, we define
-%    the new shorthand in terms of the original one, but note with
-%    |\aliasshorthands{"}{/}| is |\active@prefix /\active@char/|, so we
-%    still need to let the lattest to |\active@char"|.
-%
-%
+%    \textit{Deprecated}. First the new shorthand needs to be
+%    initialized. Then, we define the new shorthand in terms of the
+%    original one, but note with |\aliasshorthands{"}{/}| is
+%    |\active@prefix /\active@char/|, so we still need to let the
+%    lattest to |\active@char"|.
+%    
 %    \begin{macrocode}
 \def\aliasshorthand#1#2{%
   \bbl@ifshorthand{#2}%
@@ -12399,10 +12439,12 @@ help from Bernd Raichle, for which I am grateful.
   \bbl@load@language{hebrew}}
 \DeclareOption{hungarian}{\bbl@try@load@lang{}{magyar}{}}
 \DeclareOption{lowersorbian}{\bbl@try@load@lang{}{lsorbian}{}}
+\DeclareOption{northernsami}{\bbl@try@load@lang{}{samin}{}}
 \DeclareOption{nynorsk}{\bbl@try@load@lang{}{norsk}{}}
 \DeclareOption{polutonikogreek}{%
   \bbl@try@load@lang{}{greek}{\languageattribute{greek}{polutoniko}}}
 \DeclareOption{russian}{\bbl@try@load@lang{}{russianb}{}}
+\DeclareOption{scottishgaelic}{\bbl@try@load@lang{}{scottish}{}}
 \DeclareOption{ukrainian}{\bbl@try@load@lang{}{ukraineb}{}}
 \DeclareOption{uppersorbian}{\bbl@try@load@lang{}{usorbian}{}}
 %    \end{macrocode}
@@ -12651,7 +12693,7 @@ help from Bernd Raichle, for which I am grateful.
 %
 %    \begin{macrocode}
 <@Make sure ProvidesFile is defined@>
-\ProvidesFile{hyphen.cfg}[<@date@> <@version@> Babel hyphens]
+\ProvidesFile{hyphen.cfg}[<@date@> v<@version@> Babel hyphens]
 \xdef\bbl@format{\jobname}
 \def\bbl@version{<@version@>}
 \def\bbl@date{<@date@>}
@@ -23105,7 +23147,7 @@ Babel.cjk_breaks = {
 %
 %    \begin{macrocode}
 %<*nil>
-\ProvidesLanguage{nil}[<@date@> <@version@> Nil language]
+\ProvidesLanguage{nil}[<@date@> v<@version@> Nil language]
 \LdfInit{nil}{datenil}
 %    \end{macrocode}
 %
