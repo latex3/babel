@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/05/01 v3.88.12140 The Babel package]
+\ProvidesFile{babel.dtx}[2023/05/01 v3.88.12172 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -48,7 +48,11 @@
      ItalicFont = NotoSans-Italic.ttf,
      BoldItalicFont = NotoSans-BoldItalic.ttf]
   {NotoSans-Regular.ttf}
-\setmonofont[Scale=.88,FakeStretch=.95]{NotoMono-Regular.ttf}
+\setmonofont[
+  Scale=.88, FakeStretch=.95,
+  BoldFont = NotoMono-Regular.ttf,
+  ItalicFont = NotoMono-Regular.ttf,
+  BoldItalicFont = NotoMono-Regular.ttf]{NotoMono-Regular.ttf}
 \raggedright
 \addtolength{\textwidth}{25pt}
 \addtolength{\textheight}{3.5cm}
@@ -244,7 +248,9 @@ Xe\largetex
 \end{titlepage}
 
 \tableofcontents
-\listoftroubles
+\ifx\babelcode\undefined
+  \listoftroubles
+\fi
 \clearpage
 
 \ifx\babelcode\undefined
@@ -253,8 +259,7 @@ Xe\largetex
 \item[\sffamily\color{messages}What is this document about?] This user
 guide focuses on internationalization and localization with \LaTeX{}
 and \pdftex, \xetex{} and \luatex{} with the \babel{} package. There
-are also some notes on its use with e-Plain and pdf-Plain \TeX . Part II
-describes the code, and usually it can be ignored.
+are also some notes on its use with e-Plain and pdf-Plain \TeX.
 
 \item[\sffamily\color{messages}What if I’m interested only in the
 latest changes?] Changes and new features with relation to version 3.8
@@ -297,7 +302,7 @@ necessary in some languages), is described below; go to \ref{inifiles}.
   files}.
   
 \item[\sffamily\color{messages}Where is the code?]
- Run |lualatex --jobname=babel-code \let\babelcode\relax\input{babel.dtx}|.
+  Run |lualatex --jobname=babel-code \let\babelcode\relax\input{babel.dtx}|.
 \end{description}
 
 \section{The user interface}\label{U-I}
@@ -5201,6 +5206,9 @@ wouldn’t exist.
 %
 % \fi
 %
+% \addtolength{\oddsidemargin}{-15pt}
+% \addtolength{\textwidth}{50pt}
+%
 %\begingroup
 %  \catcode`<=\active%
 %  \catcode`>=\active
@@ -5216,91 +5224,64 @@ wouldn’t exist.
 %
 % \small
 %
-% \babel{} is being developed incrementally, which means parts of the
-% code are under development and therefore incomplete. Only documented
-% features are considered complete. In other words, use \babel{} only
-% as documented (except, of course, if you want to explore and test
-% them -- you can post suggestions about multilingual issues to
-% |kadingira@tug.org| on |http://tug.org/mailman/listinfo/kadingira|).
+% The \babel{} package is being developed incrementally, which means
+% parts of the code are under development and therefore incomplete.
+% Only documented features are considered complete. In other words, use
+% \babel{} in real documents only as documented (except, of course, if
+% you want to explore and test them).
 %
 % \section{Identification and loading of required files}
 %
 % \textit{Code documentation is still under revision.}
-%
-% \textbf{The following description is no longer valid, because switch
-% and plain have been merged into babel.def.}
-%
+
 % The \babel{} package after unpacking consists of the following files:
 % \begin{description}
 % \itemsep=-\parskip
-% \item[switch.def] defines macros to set and switch languages.
-% \item[babel.def] defines the rest of macros. It has tow parts: a
-%   generic one and a second one only for LaTeX{}.
 % \item[babel.sty] is the \LaTeX{} package, which set options and
 %   load language styles.
-% \item[plain.def] defines some \LaTeX{} macros required by
-%   \file{babel.def} and provides a few tools for Plain.
+% \item[babel.def] is loaded by Plain.
+% \item[switch.def] defines macros to set and switch languages (it loads
+%   part |babel.def|).
+% \item[plain.def] is not used, and just loads babel.def, for
+%   compatibility.
+% \item[hyphen.cfg] is the file to be used when generating the
+%   formats to load hyphenation patterns.
 % \item[hyphen.cfg] is the file to be used when generating the
 %   formats to load hyphenation patterns.
 % \end{description}
+% There some additional |tex|, |def| and |lua| files
 %
 % The \babel{} installer extends \textsf{docstrip} with a few
 % ``pseudo-guards'' to set ``variables'' used at installation time.
 % They are used with |<||@name@>| at the appropiated places in the
-% source code and shown below with
-% $\langle\langle$\textit{name}$\rangle\rangle$. That brings a little
+% source code and defined with either
+% $\langle\langle$\textit{name}=\textit{value}$\rangle\rangle$, or with
+% a series of lines between
+% $\langle\langle$|*|\textit{name}$\rangle\rangle$ and
+% $\langle\langle$|/|\textit{name}$\rangle\rangle$. They are first
+% extracted to |dummy.log| in a preliminary pass. That brings a little
 % bit of literate programming.
 %
 % \section{\texttt{locale} directory}
 %
-% A required component of \babel{} is a set of |ini| files
-% with basic definitions for about 200 languages. They are distributed
-% as a separate |zip| file, not packed as |dtx|. With them, babel
-% will fully support Unicode engines.
-
-% Most of them are essentially finished (except bugs and mistakes, of
-% course). Some of them are still incomplete (but they will be usable),
-% and there are some omissions (eg, Latin and polytonic Greek, and
-% there are no geographic areas in Spanish). Hindi, French, Occitan and
-% Breton will show a warning related to dates. Not all include LICR
-% variants.
+% A required component of \babel{} is a set of |ini| files with basic
+% definitions for about 250 languages. They are distributed as a
+% separate |zip| file, not packed as |dtx|. Most of them are
+% essentially finished (except bugs and mistakes, of course). Some of
+% them are still incomplete (but they will be usable), and there are
+% some omissions (eg, there are no geographic areas in Spanish). Not
+% all include LICR variants.
 %
-% This is a preliminary documentation.
+% |babel-*.ini| files contain the actual data; |babel-*.tex| files are
+% basically proxies to the corresponding ini files.
 %
-% |ini| files contain the actual data; |tex| files are currently just
-% proxies to the corresponding ini files.
-%
-% Most keys are self-explanatory.
-% \begin{description}
-% \itemsep=-\parskip
-% \item[charset] the encoding used in the ini file.
-% \item[version] of the ini file
-% \item[level] ``version'' of the ini specification . which keys are
-%   available (they may grow in a compatible way) and how they should be
-%   read.
-% \item[encodings] a descriptive list of font encondings.
-% \item[{[captions]}] section of captions in the file charset
-% \item[{[captions.licr]}] same, but in pure ASCII using the LICR
-% \item[date.long] fields are as in the CLDR, but the syntax is
-%   different. Anything inside brackets is a date field (eg, |MMMM| for
-%   the month name) and anything outside is text. In addition, |[ ]| is a
-%   non breakable space and |[.]| is an abbreviation dot.
-% \end{description}
-%
-% Keys may be further qualified in a particular language with a suffix
-% starting with a uppercase letter. It can be just a letter (eg,
-% |babel.name.A|, |babel.name.B|) or a name (eg,
-% |date.long.Nominative|, |date.long.Formal|, but no language is
-% currently using the latter). \textit{Multi-letter} qualifiers are
-% forward compatible in the sense they won’t conflict with new
-% ``global'' keys (which start always with a lowercase case). There is
-% an exception, however: the section |counters| has been devised to
-% have arbitrary keys, so you can add lowercased keys if you want.
+% See \href{https://latex3.github.io/babel/guides/keys-in-ini-files.html}{Keys
+% in \texttt{ini} files} in the the \babel{} site.
 %
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.88.12140>>
+%<<version=3.88.12172>>
 %<<date=2023/05/01>>
 %    \end{macrocode}
 %
@@ -6393,6 +6374,7 @@ wouldn’t exist.
 % Retrieving information from the stack is a little bit less simple, as
 % we need to remove the element from the stack while storing it in the
 % macro |\languagename|. For this we first define a helper function.
+%
 %  \begin{macro}{\bbl@pop@lang}
 %    This macro stores its first element (which is delimited by the
 %    `+'-sign) in |\languagename| and stores the rest of the string
@@ -6588,6 +6570,9 @@ wouldn’t exist.
 % current values, then we check if |\|\langvar|hyphenmins| is
 % defined. If it is not, we set default values (2 and 3), otherwise
 % the values in |\|\langvar|hyphenmins| will be used.
+% 
+% No text is supposed to be added with switching captions and date, so
+% we remove any spurious spaces with |\bbl@bsphack| and |\bbl@esphack|.
 %
 %    \begin{macrocode}
 \newif\ifbbl@usedategroup
@@ -6606,8 +6591,6 @@ wouldn’t exist.
   % set the locale id
   \bbl@id@assign
   % switch captions, date
-  % No text is supposed to be added here, so we remove any
-  % spurious spaces.
   \bbl@bsphack
     \ifcase\bbl@select@type
       \csname captions#1\endcsname\relax
@@ -6678,6 +6661,7 @@ wouldn’t exist.
     \expandafter\expandafter\expandafter\set@hyphenmins
       \csname #1hyphenmins\endcsname\relax
   \fi
+  % reset selector name
   \let\bbl@selectorname\@empty}
 %    \end{macrocode}
 %
@@ -9817,6 +9801,8 @@ wouldn’t exist.
 % loaded |ldf| files.
 %
 %    \begin{macrocode}
+%</package|core>
+%<*package>
 \bbl@trace{Creating languages and reading ini files}
 \let\bbl@extend@ini\@gobble
 \newcommand\babelprovide[2][]{%
@@ -9931,11 +9917,14 @@ wouldn’t exist.
        \\\bbl@toglobal\<bbl@ensure@\languagename>%
        \\\bbl@toglobal\<bbl@ensure@\languagename\space>}%
   \fi
-  % ==
-  % At this point all parameters are defined if 'import'. Now we
-  % execute some code depending on them. But what about if nothing was
-  % imported? We just set the basic parameters, but still loading the
-  % whole ini file.
+%    \end{macrocode}
+%
+% At this point all parameters are defined if 'import'. Now we
+% execute some code depending on them. But what about if nothing was
+% imported? We just set the basic parameters, but still loading the
+% whole ini file.
+%
+%    \begin{macrocode}
   \bbl@load@basic{#2}%
   % == script, language ==
   % Override the values from ini or defines them
@@ -11467,18 +11456,24 @@ wouldn’t exist.
 % As the final task, load the code for lua. TODO: use babel name, override 
 %
 %    \begin{macrocode}
+%</package>
+%<*package|core>
 \ifx\directlua\@undefined\else
   \ifx\bbl@luapatterns\@undefined
     \input luababel.def
   \fi
 \fi
+%</package|core>
+%<*core>
+\let\bbl@ensureinfo\relax
+\let\bbl@provide@locale\relax
+%</core>
+%<*package>
 %    \end{macrocode}
 %
 % Continue with \LaTeX{}.
 %
 %    \begin{macrocode}
-%</package|core>
-%<*package>
 %    \end{macrocode}
 %
 % \subsection{Cross referencing macros}
@@ -23354,7 +23349,7 @@ Babel.cjk_breaks = {
 %</ca-islamic>
 %    \end{macrocode}
 %
-% \section{Hebrew}
+% \subsection{Hebrew}
 %
 % This is basically the set of macros written by Michail Rozman in
 % 1991, with corrections and adaptions by Rama Porrat, Misha, Dan Haran
@@ -23619,7 +23614,7 @@ Babel.cjk_breaks = {
 %</ca-hebrew>
 %    \end{macrocode}
 %
-% \section{Persian}
+% \subsection{Persian}
 %
 % There is an algorithm written in TeX by Jabri, Abolhassani, Pournader
 % and Esfahbod, created for the first versions of the FarsiTeX system
@@ -23662,7 +23657,7 @@ Babel.cjk_breaks = {
 %</ca-persian>
 %    \end{macrocode}
 %
-% \section{Coptic and Ethiopic}
+% \subsection{Coptic and Ethiopic}
 %
 % Adapted from \texttt{jquery.calendars.package-1.1.4}, written by Keith
 % Wood, 2010. Dual license: GPL and MIT. The only difference is the
@@ -23699,7 +23694,7 @@ Babel.cjk_breaks = {
 %</ca-ethiopic>
 %    \end{macrocode}
 %
-% \section{Buddhist}
+% \subsection{Buddhist}
 %
 % That’s very simple.
 %
