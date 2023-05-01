@@ -5,28 +5,43 @@
 Many keys are related to the CLDR (Common Language Data Repository).
 Others are just the TeX primitives with the same name.
 
+
+Keys may be further qualified in a particular language with a suffix
+starting with a uppercase letter. It can be just a letter (eg,
+`babel.name.A`, `babel.name.B`) or a name. *Multi-letter* qualifiers
+starting with an uppercase letter are forward compatible in the sense
+they won’t conflict with new “global” keys (which start always with a
+lowercase case). There is an exception, however: the section `counters`
+has been devised to have arbitrary keys, so you can add lowercased keys
+if you want.
+
 ### `identification`
 
 Most of them are self explanatory.
 
 **charset** The charset in the `ini` file (currently must be `utf8`).
 
-**tag.bcp47** May includes if appropriate language, script and   region.
+**version** of the `ini` file
+
+**tag.bcp47** May includes if appropriate language, script and region.
   Usually only the language.   
 
-**language.tag.bcp47** Th language part.
+**language.tag.bcp47** The language part.
 
-**tag.bcp47.likely** The likely full tag. See   [Likely Subtags (CLDR)](https://unicode-org.github.io/cldr-staging/charts/latest/supplemental/likely_subtags.html)
+**script.tag.bcp47** The script part.
 
-**tag.opentype** 
+**tag.bcp47.likely** The likely full tag. See [Likely Subtags
+(CLDR)](https://unicode-org.github.io/cldr-staging/charts/latest/supplemental/likely_subtags.html).
+ It can be useful when exporting data to tools expecting a full BCP 47
+ tag.
 
-**script.name**
+**tag.opentype**  If different from the BCP 47 tag.
 
-**script.tag.bcp47**
+**script.name**, like, for example, Cyrillic.
 
-**script.tag.opentype**
+**script.tag.opentype** If different from the BCP 47 tag.
 
-**level** `ini`files are based on a set of keys. The level is much a
+**level** `ini` files are based on a set of keys. The level is much a
   ‘version’ of the list of available keys. Currently is 1, and it will
   stay so until there is some significant change.
 
@@ -35,26 +50,36 @@ Most of them are self explanatory.
   example, a publishing house may want to define its own files).
 
 **encodings** A mostly informative field for 8-bit engines requiring
-  font encodings (`T1`, `LGR`, etc.)
+  font encodings (`T1`, `LGR`, etc.), but used when a language is
+  loaded on the fly.
 
 ### `captions`
 
-The `.licr` subsections are used in 8-bit engines. The final `name` is
-added by `babel`.
+The default section defines the Unicode strings.
+
+The `.licr` subsections are used in 8-bit engines, in pure ASCII using
+the LICR.
+
+The final `name` is added by `babel`. 
 
 ### `date`
+
+**date.long** fields are as in the CLDR, but the syntax is
+different. Anything inside brackets is a date field (eg, `[MMMM]` for
+the month name) and anything outside is text. In addition, `[ ]` is a
+non breakable space and `[.]` is an abbreviation dot.
 
 Here are some explanations for dates:
 
 http://cldr.unicode.org/translation/date-time-names 
 
-For example, about narrow:
+For example, about `narrow`:
 
 > The narrow date fields are the shortest possible names (in terms of
 width in common fonts), and are not guaranteed to be unique. Think of
 what you might find on a credit-card-sized wallet or checkbook
 calendar, such as in English for days of the week:
-
+>
 > S M T W T F S
 
 ### `typography`
