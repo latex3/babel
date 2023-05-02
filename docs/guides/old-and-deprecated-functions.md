@@ -28,6 +28,22 @@ and left to right. So, there should be at most 3 directives of this
 kind. The only value is `direction`, and this option won’t be developed
 any further.
 
+`\aliasshorthand` • (Deprecated.) If one prefers for example to use the
+character `/` over `"` in typing Polish texts, this can be achieved by
+entering `\aliasshorthand{"}{/}`. Shorthands remember somehow the
+original character, and the fallback value is that of the latter. So,
+in `\aliasshorthand{~}{^}`, if no shorthand is found, `^` expands to a
+non-breaking space, because this is the value of `~` (internally, `^`
+still calls `\active@char~` or `\normal@char~`). Furthermore, if you
+change the `system` value of `^` with `\defineshorthand` nothing
+happens.
+
+`\substitutefontfamily` • (Deprecated.) This command takes three
+arguments, a font encoding and two font family names. It creates a font
+description file for the first font in the given encoding. This `.fd`
+file will instruct LaTeX to use a font from the second family when a
+font from the first family in the given encoding seems to be needed.
+
 ## Fonts
 
 A couple of tentative macros were provided by `babel` <3.9g with a
