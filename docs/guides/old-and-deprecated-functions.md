@@ -7,7 +7,9 @@ at their time. However, LaTeX has evolved and currently they are of
 limited interest, and therefore their description has been moved here,
 for not to clutter the manual.
 
-`strings` • Package option with a value. Selects the encoding of
+### `strings`
+
+Package option with a value. Selects the encoding of
 strings in languages supporting this feature. Predefined labels are
 `generic` (for traditional TeX, LICR and ASCII strings), `unicode` (for
 engines like `xetex` and `luatex`) and `encoded` (for special cases
@@ -17,7 +19,9 @@ them. Be aware with `encoded` captions are protected, but they work in
 `\MakeUppercase` and the like (this feature misuses some internal LaTeX
 tools, so use it only as a last resort).
 
-`mapfont=direction` • Option in `\babelprovide`. Assigns the font for
+### `mapfont=direction`
+
+Option in `\babelprovide`. Assigns the font for
 the writing direction of this language (only with `bidi=basic`).
 Instead of this option use `onchar`, based on the script. More
 precisely, what `mapfont=direction` means is, ‘when a character has the
@@ -28,21 +32,26 @@ and left to right. So, there should be at most 3 directives of this
 kind. The only value is `direction`, and this option won’t be developed
 any further.
 
-`\aliasshorthand` • (Deprecated.) If one prefers for example to use the
-character `/` over `"` in typing Polish texts, this can be achieved by
-entering `\aliasshorthand{"}{/}`. Shorthands remember somehow the
-original character, and the fallback value is that of the latter. So,
-in `\aliasshorthand{~}{^}`, if no shorthand is found, `^` expands to a
-non-breaking space, because this is the value of `~` (internally, `^`
-still calls `\active@char~` or `\normal@char~`). Furthermore, if you
-change the `system` value of `^` with `\defineshorthand` nothing
+### `\aliasshorthand`
+
+If one prefers for example to use the character `/` over `"` in typing
+Polish texts, this can be achieved by entering `\aliasshorthand{"}{/}`.
+
+One of the reasons for the deprecation is shorthands remember somehow
+the original character, and the fallback value is that of the latter.
+So, in `\aliasshorthand{~}{^}`, if no shorthand is found, `^` expands
+to a non-breaking space, because this is the value of `~` (internally,
+`^` still calls `\active@char~` or `\normal@char~`). Furthermore, if
+you change the `system` value of `^` with `\defineshorthand` nothing
 happens.
 
-`\substitutefontfamily` • (Deprecated.) This command takes three
-arguments, a font encoding and two font family names. It creates a font
-description file for the first font in the given encoding. This `.fd`
-file will instruct LaTeX to use a font from the second family when a
-font from the first family in the given encoding seems to be needed.
+### `\substitutefontfamily`
+
+This command takes three arguments, a font encoding and two font family
+names. It creates a font description file for the first font in the
+given encoding. This `.fd` file will instruct LaTeX to use a font from
+the second family when a font from the first family in the given
+encoding seems to be needed.
 
 ## Fonts
 
