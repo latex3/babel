@@ -1,4 +1,4 @@
-## Babel 3.88.12172
+## Babel 3.88.12632
 
 2023-04-18
 
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.88 are described in:
+Changes in version 3.89 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.88.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.89.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -53,6 +53,7 @@ respective authors.
         option.
       * The manual has been split in two documents: 'babel.pdf' is the
         user guide and 'babel-code.pdf' is the code.
+      * Alternative way to pass 'modifiers' to babel.
 
 3.88  2023-04-18
       * 37 new locale files: Abkhazian, Afar, Atsam, Baluchi, Bhojpuri,

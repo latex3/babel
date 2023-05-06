@@ -26,7 +26,7 @@
 %% and covered by LPPL is defined by the unpacking scripts (with
 %% extension .ins) which are part of the distribution.
 %%
-\def\filedate{2023/05/01}
+\def\filedate{2023/05/06}
 \def\batchfile{babel.ins}
 \input docstrip.tex
 
@@ -74,7 +74,7 @@
   \else
     \activefiles
   \fi}
-  
+
 \newif\ifcollect
 \newif\ifsaving
 
@@ -104,6 +104,32 @@
   \ifsaving
     \expandafter\gdef\csname #1Var\endcsname{#2}%
   \fi}
+
+% The following is somewhat hackish, but it does the job for babel, and
+% must be used in the following way: <-name> starts a block to be
+% ignored if 'name' is active, and <+name> ends the block (in this
+% order). Used to exclude some parts from babel.def. With the original
+% definitions, some code goes 'visually' in comments/documentation, but
+% with this change they are in the real code. However, it must be
+% considered temporal, because the solution must be to reorganize the
+% code.
+
+\let\bblMinus\minusOption
+\def\minusOption-#1>#2\endLine{%
+  \global\let\bblactivefiles\activefiles
+  \def\tempa{}%
+  \def\do##1##2##3{%
+    \def\tempb{#1}\def\tempc{##2}%
+    \ifx\tempb\tempc\else
+      \expandafter\def\expandafter\tempa\expandafter{%
+        \tempa\do##1{##2}##3}%
+    \fi}%
+  \activefiles
+  \let\activefiles\tempa}
+
+\let\bblPlus\plusOption
+\def\plusOption+#1>#2\endLine{%
+  \let\activefiles\bblactivefiles}
 
 % Preambles
 
@@ -153,6 +179,9 @@
          }
 
 % compatibility files
+
+\let\minusOption\bblMinus
+\let\plusOption\bblPlus
 \def\compatfile#1{\file{#1.sty}{\from{bbcompat.dtx}{styfile,#1}}}
 
 \generate{%
@@ -252,5 +281,3 @@
 \Msg{* Happy TeXing}
 \Msg{*}
 \Msg{***********************************************************}
-
-

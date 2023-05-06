@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/05/01 v3.88.12172 The Babel package]
+\ProvidesFile{babel.dtx}[2023/05/06 v3.88.12632 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -635,6 +635,15 @@ needs.}
 Attributes (described below) are considered modifiers, ie, you can
 set an attribute by including it in the list of modifiers.
 
+\New{3.89} Alternatively, modifiers can be set with a separate option,
+with the keyword |modifiers| followed by a dot and the language name
+(note the language is not selected with this option). It is useful to
+activate some feature when the language is declared as a class option:
+\begin{verbatim}
+\documentclass[spanish]{report}
+\usepackage[_modifiers.spanish = notilde.lcroman_]{babel}
+\end{verbatim}
+
 \subsection{Troubleshooting}
 
 \begin{itemize}
@@ -1144,34 +1153,6 @@ The command |\aliasshorthand| was provided to let another character
 perform the same functions as the default shorthand character. However,
 it’s behavior was not always the expected one (the original character
 was remembered somehow), and it’s now deprecated.
-
-% If one
-% prefers for example to use the character |/| over |"| in typing Polish
-% texts, this can be achieved by entering |\aliasshorthand{"}{/}|. For
-% the reasons in the warning below, usage of this macro is not
-% recommended.
-% 
-% \begin{note}
-%   The substitute character must \textit{not} have been declared before
-%   as shorthand (in such a case, |\aliashorthands| is ignored).
-% \end{note}
-% 
-% \begin{example}
-%   The following example shows how to replace a shorthand by another
-% \begin{verbatim}
-% \aliasshorthand{~}{^}
-% \AtBeginDocument{\shorthandoff*{~}}
-% \end{verbatim}
-% \end{example}
-% 
-% \begin{warning}
-%   Shorthands remember somehow the original character, and the fallback
-%   value is that of the latter. So, in this example, if no shorthand is
-%   found, |^| expands to a non-breaking space, because this is the
-%   value of |~| (internally, |^| still calls |\active@char~| or
-%   |\normal@char~|). Furthermore, if you change the |system| value of
-%   |^| with |\defineshorthand| nothing happens.
-% \end{warning}
 
 \subsection{Package options}
 
@@ -2571,9 +2552,10 @@ language the first valid hyphenation rules in the list. For example:
 \begin{verbatim}
 \babelprovide[_hyphenrules=chavacano spanish italian_]{chavacano}
 \end{verbatim}
-If none of the listed hyphenrules exist, the default behavior
-applies. Note in this example we set |chavacano| as first option --
-without it, it would select |spanish| even if |chavacano| exists.
+If none of the listed hyphenrules exist, the default behavior applies.
+Note in this example we set |chavacano| as first option, which can seem
+redundant, but without it, it would select |spanish| even if
+|chavacano| exists.
 
 A special value is |+|, which allocates a new language (in the \TeX{}
 sense). It only makes sense as the last value (or the only one; the
@@ -4246,33 +4228,45 @@ empty, removes them. The last argument is the locale name:
 \Describe{\babeladjust}{\marg{key-value-list}}
 
 \New{3.36} Sometimes you might need to disable some \babel{} features.
-Currently this macro understands the following keys [to be documented],
-with values |on| or |off|:
+Currently this macro understands the following keys, with values |on|
+or |off|:
 \begin{multicols}{3}
 \ttfamily
+autoload.bcp47\\
+bcp47.toname\\
 bidi.mirroring\\
 bidi.text\\
-bidi.math\\%*
+bidi.math\\%
 % bidi.mapdigits\\
 linebreak.sea\\%*
 linebreak.cjk\\%*
 justify.arabic\\%*
 layout.tabular\\%*
-layout.lists\\%*
-autoload.bcp47\\
-bcp47.toname
+layout.lists
 \end{multicols}
+The first four are documented elsewhere. The following by default are
+|on|, but with |off| can disable some features: |bidi.math| (only
+preamble) the changes for math or \textsf{amsmath}, |linebreak.sea|,
+|linebreak.sea| and |justify.arabic| the corresponding algorithms,
+|layout.tabular| and |layout.lists| the changes for tabular and lists.
+Some of the are reverted only to some extent.
 
-Other keys [to be documented] are:
+Other keys are:
 \begin{multicols}{3}
 \ttfamily
-autoload.options\\%*
+autoload.options\\
 autoload.bcp47.prefix\\
 autoload.bcp47.options\\
 prehyphenation.disable\\%*
 select.write\\
 select.encoding\\%*
 \end{multicols}
+Most of them are documented elsewhere. With |select.encoding=off|, the
+encoding is not set when loading a language on the fly with \pdftex
+(only |off|).
+|prehyphenation.disable| is by default |nohyphenation|, which means
+prehyphenation transforms are not applied if the current hyphenation
+rules are |nohyphenation|; with |off| they are never disabled.
 
 For example, you can set |\babeladjust{bidi.text=off}| if you are using
 an alternative algorithm or with large sections not requiring it. Use
@@ -4721,13 +4715,6 @@ file. This file can, for instance, be used to add strings to
 classes. The user will be informed that this
 configuration file has been loaded. This macro is called by
 |\ldf@finish|.
-
-\DescribeMacro{\substitutefontfamily}
-(Deprecated.) This command takes three arguments, a font encoding and
-two font family names. It creates a font description file for the
-first font in the given encoding. This \file{.fd} file will instruct
-\LaTeX\ to use a font from the second family when a font from the
-first family in the given encoding seems to be needed.
 
 \subsection{Skeleton}
 
@@ -5246,8 +5233,6 @@ wouldn’t exist.
 %   compatibility.
 % \item[hyphen.cfg] is the file to be used when generating the
 %   formats to load hyphenation patterns.
-% \item[hyphen.cfg] is the file to be used when generating the
-%   formats to load hyphenation patterns.
 % \end{description}
 % There some additional |tex|, |def| and |lua| files
 %
@@ -5258,9 +5243,11 @@ wouldn’t exist.
 % $\langle\langle$\textit{name}=\textit{value}$\rangle\rangle$, or with
 % a series of lines between
 % $\langle\langle$|*|\textit{name}$\rangle\rangle$ and
-% $\langle\langle$|/|\textit{name}$\rangle\rangle$. They are first
-% extracted to |dummy.log| in a preliminary pass. That brings a little
-% bit of literate programming.
+% $\langle\langle$|/|\textit{name}$\rangle\rangle$. The latter is
+% cumulative (eg, with \textit{More package options}). That brings a
+% little bit of literate programming. The guards |<-name>| and
+% |<+name>| have been redefined, too. See |babel.ins| for further
+% details.
 %
 % \section{\texttt{locale} directory}
 %
@@ -5281,8 +5268,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.88.12172>>
-%<<date=2023/05/01>>
+%<<version=3.88.12632>>
+%<<date=2023/05/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5847,6 +5834,8 @@ wouldn’t exist.
 \bbl@csarg\let{tempa\expandafter}\csname opt@babel.sty\endcsname
 \def\bbl@tempb#1.#2{%  Remove trailing dot
    #1\ifx\@empty#2\else,\bbl@afterfi\bbl@tempb#2\fi}%
+\def\bbl@tempe#1=#2\@@{%
+  \bbl@csarg\edef{mod@#1}{\bbl@tempb#2}}
 \def\bbl@tempd#1.#2\@nnil{%  TODO. Refactor lists?
   \ifx\@empty#2%
     \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1}%
@@ -5856,12 +5845,17 @@ wouldn’t exist.
       \edef\bbl@tempc{%
         \ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1.\bbl@tempb#2}%
     \else
-      \in@{=}{#1}%
+      \in@{$modifiers$}{$#1$}% TODO. Allow spaces.
       \ifin@
-        \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1.#2}%
-      \else    
-        \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1}%
-        \bbl@csarg\edef{mod@#1}{\bbl@tempb#2}%
+        \bbl@tempe#2\@@
+      \else   
+        \in@{=}{#1}%
+        \ifin@
+          \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1.#2}%
+        \else
+          \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1}%
+          \bbl@csarg\edef{mod@#1}{\bbl@tempb#2}%
+        \fi
       \fi
     \fi
   \fi}
@@ -6098,6 +6092,7 @@ wouldn’t exist.
 \ifx\AtBeginDocument\@undefined  % TODO. change test.
   <@Emulate LaTeX@>
 \fi
+<@Basic macros@>
 %    \end{macrocode}
 %
 % That is all for the moment. Now follows some common stuff, for both
@@ -6233,6 +6228,7 @@ wouldn’t exist.
     \fi
   \fi\fi}
 \let\bbl@initoload\relax
+%<-core>
 \def\bbl@provide@locale{%
   \ifx\babelprovide\@undefined
     \bbl@error{For a language to be defined on the fly 'base'\\%
@@ -6265,6 +6261,7 @@ wouldn’t exist.
       {\bbl@exp{\\\babelprovide[\bbl@autoload@options]{\languagename}}}%
       {}%
   \fi}
+%<+core>
 %    \end{macrocode}
 %
 %  \begin{macro}{\iflanguage}
@@ -7075,7 +7072,6 @@ wouldn’t exist.
     \input luababel.def
   \fi
 \fi
-<@Basic macros@>
 \bbl@trace{Compatibility with language.def}
 \ifx\bbl@languages\@undefined
   \ifx\directlua\@undefined
@@ -7212,7 +7208,7 @@ wouldn’t exist.
 \newcommand\EnableBabelHook[1]{\bbl@csarg\let{hk@#1}\@firstofone}
 \newcommand\DisableBabelHook[1]{\bbl@csarg\let{hk@#1}\@gobble}
 \def\bbl@usehooks{\bbl@usehooks@lang\languagename}
-\def\bbl@usehooks@lang#1#2#3{%
+\def\bbl@usehooks@lang#1#2#3{% Test for Plain
   \ifx\UseHook\@undefined\else\UseHook{babel/*/#2}\fi
   \def\bbl@elth##1{%
     \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#2@}#3}}%
@@ -7238,7 +7234,7 @@ wouldn’t exist.
   beforeextras=0,afterextras=0,stopcommands=0,stringprocess=0,%
   hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0,%
   beforestart=0,languagename=2,begindocument=1}
-\ifx\NewHook\@undefined\else
+\ifx\NewHook\@undefined\else % Test for Plain (?)
   \def\bbl@tempa#1=#2\@@{\NewHook{babel/#1}}
   \bbl@foreach\bbl@evargs{\bbl@tempa#1\@@}
 \fi
@@ -9729,6 +9725,7 @@ wouldn’t exist.
 %    \begin{macrocode}
 \bbl@trace{Bidi layout}
 \providecommand\IfBabelLayout[3]{#3}%
+%<-core>
 \newcommand\BabelPatchSection[1]{%
   \@ifundefined{#1}{}{%
     \bbl@exp{\let\<bbl@ss@#1>\<#1>}%
@@ -9762,6 +9759,7 @@ wouldn’t exist.
      \select@language@x{\bbl@main@language}}}{}
 \IfBabelLayout{captions}%
   {\BabelPatchSection{caption}}{}
+%<+core>
 %    \end{macrocode}
 %
 % \subsection{Load engine specific macros}
@@ -9794,6 +9792,8 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % \subsection{Creating and modifying languages}
+%
+% Continue with \LaTeX{} only.
 %
 % |\babelprovide| is a general purpose tool for creating and modifying
 % languages. It creates the language infrastructure, and loads, if
@@ -11277,7 +11277,6 @@ wouldn’t exist.
 %<<*More package options>>
 \DeclareOption{ensureinfo=off}{}
 %<</More package options>>
-%
 \let\bbl@ensureinfo\@gobble
 \newcommand\BabelEnsureInfo{%
   \ifx\InputIfFileExists\@undefined\else
@@ -11451,29 +11450,6 @@ wouldn’t exist.
   \def\bbl@savelastskip##1\bbl@restorelastskip{}}
 \@namedef{bbl@ADJ@select.encoding@off}{%
   \let\bbl@encoding@select@off\@empty}
-%    \end{macrocode}
-%
-% As the final task, load the code for lua. TODO: use babel name, override 
-%
-%    \begin{macrocode}
-%</package>
-%<*package|core>
-\ifx\directlua\@undefined\else
-  \ifx\bbl@luapatterns\@undefined
-    \input luababel.def
-  \fi
-\fi
-%</package|core>
-%<*core>
-\let\bbl@ensureinfo\relax
-\let\bbl@provide@locale\relax
-%</core>
-%<*package>
-%    \end{macrocode}
-%
-% Continue with \LaTeX{}.
-%
-%    \begin{macrocode}
 %    \end{macrocode}
 %
 % \subsection{Cross referencing macros}
@@ -11964,7 +11940,7 @@ wouldn’t exist.
 %
 % \begin{macro}{\substitutefontfamily}
 %
-% Deprecated. Use the tools provides by \LaTeX. The command
+% \textit{Deprecated.} Use the tools provides by \LaTeX. The command
 % |\substitutefontfamily| creates an \file{.fd} file on the fly. The
 % first argument is an encoding mnemonic, the second and third
 % arguments are font family names.
@@ -24279,6 +24255,8 @@ Babel.cjk_breaks = {
 \let\bbl@opt@shorthands\@nnil
 \def\bbl@ifshorthand#1#2#3{#2}%
 \let\bbl@language@opts\@empty
+\let\bbl@ensureinfo\@gobble
+\let\bbl@provide@locale\relax
 \ifx\babeloptionstrings\@undefined
   \let\bbl@opt@strings\@nnil
 \else
