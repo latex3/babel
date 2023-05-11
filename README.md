@@ -1,6 +1,6 @@
-## Babel 3.88.12632
+## Babel 3.89
 
-2023-04-18
+2023-05-11
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,25 +48,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.89  (dev)
+3.89  2023-05-11
       * Deprecating \SetCase, \aliasshorthands, and 'strings' package
-        option.
+        options in the manual.
       * The manual has been split in two documents: 'babel.pdf' is the
-        user guide and 'babel-code.pdf' is the code.
-      * Alternative way to pass 'modifiers' to babel.
-
-3.88  2023-04-18
-      * 37 new locale files: Abkhazian, Afar, Atsam, Baluchi, Bhojpuri,
-        Blin, Corsican, Erzya, Ga, Geez, Guarani, Haryanvi, Inuktitut,
-        Jju, Ligurian, Muscogee, Northern Sotho, Nyanja, N’Ko,
-        Papiamento, Prussian, Rajasthani, Saho, Sicilian, Silesian,
-        South Ndebele, Southern Sotho, Swati, Taroko, Tigre, Tok Pisin,
-        Tsonga, Tswana, Tyap, Venda, Volapük, Wolaytta.
-      * Fixed a few month names in Greek locales (thanks to Günter Milde).
-      * New hook 'begindocument'.
-      * Feature preview: option 'casing' in '\babelprovide' (requires a
-        future change in the LaTeX kernel).
-      * Some minor changes.
+        user guide, and 'babel-code.pdf' is the code.
+      * Alternative syntax to pass 'modifiers' to babel languages.
+      * Code cleaned up: babel.def has been shortened dramatically,
+        and babel.sty is a bit smaller.
 ```
 
 ### Previous changes

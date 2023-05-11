@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/05/06 v3.88.12632 The Babel package]
+\ProvidesFile{babel.dtx}[2023/05/11 v3.89 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -637,8 +637,9 @@ set an attribute by including it in the list of modifiers.
 
 \New{3.89} Alternatively, modifiers can be set with a separate option,
 with the keyword |modifiers| followed by a dot and the language name
-(note the language is not selected with this option). It is useful to
-activate some feature when the language is declared as a class option:
+(note the language is not selected or loaded with this option). It is
+useful to activate some feature when the language is declared as a
+class option:
 \begin{verbatim}
 \documentclass[spanish]{report}
 \usepackage[_modifiers.spanish = notilde.lcroman_]{babel}
@@ -1146,13 +1147,6 @@ preserved for backward compatibility.}
 \Describe\ifbabelshorthand{\marg{character}\marg{true}\marg{false}}
 
 \New{3.23} Tests if a character has been made a shorthand.
-
-\Describe{\aliasshorthand}{\marg{original}\marg{alias}\qquad\textit{Deprecated}}
-
-The command |\aliasshorthand| was provided to let another character
-perform the same functions as the default shorthand character. However,
-it’s behavior was not always the expected one (the original character
-was remembered somehow), and it’s now deprecated.
 
 \subsection{Package options}
 
@@ -4102,7 +4096,7 @@ and |.ldf| file are listed, together with the names of the option which
 you can load \babel\ with for each language. Note this list is open and
 the current options may be different. It does not include |ini| files
 (see below). Except in a few cases (eg, |ngerman|, |serbianc|,
-|canadien|) names are those of the Unicode CLDR.
+|acadien|) names are those of the Unicode CLDR (or based on them).
 
 \begin{description}
 \itemsep=-\parskip
@@ -4122,7 +4116,7 @@ the current options may be different. It does not include |ini| files
 \item[Esperanto] esperanto
 \item[Estonian] estonian
 \item[Finnish] finnish
-\item[French] french, canadien, acadian
+\item[French] french, acadian
 \item[Galician] galician
 \item[German] ngerman, naustrian, german, austrian
 \item[Greek] greek, polutonikogreek
@@ -4158,18 +4152,20 @@ thai, thaicjk, latvian, turkmen, magyar, mongolian, romansh,
 lithuanian, spanglish, vietnamese, japanese, pinyin, arabic, farsi,
 ibygreek, bgreek, serbianc, frenchle, ethiop} and \textsf{friulan}.
 
-There are also some deprecated names (a few has been even removed):
-\textsf{frenchb} or \textsf{francais} (\textsf{french}),
-\textsf{germanb} (\textsf{german}), \textsf{bahasa}, \textsf{indon} or
-\textsf{bahasai} (\textsf{indonesian}), \textsf{lsorbian}
-(\textsf{lowersorbian}), \textsf{bahasam} (\textsf{malay}),
-\textsf{portuges} (\textsf{portuguese}), \textsf{brazil}
-(\textsf{brazilian}), \textsf{russianb} (\textsf{russian}),
-\textsf{usorbian} (\textsf{uppersorbian}), \textsf{vietnam}
-(\textsf{vietnamese}), \textsf{northernsami} (\textsf{samin}),
-\textsf{ukraineb} (\textsf{ukrainian}).
-Deprecated names come in many cases from the times when they had to be
-shortened to 8 characters.
+\begin{note}
+  There are also some deprecated names (a few has been even removed):
+  \textsf{frenchb} or \textsf{francais}, as well as \textsf{canadien}
+  (\textsf{french}), \textsf{germanb} (\textsf{german}),
+  \textsf{bahasa}, \textsf{indon} or \textsf{bahasai}
+  (\textsf{indonesian}), \textsf{lsorbian} (\textsf{lowersorbian}),
+  \textsf{bahasam} (\textsf{malay}), \textsf{portuges}
+  (\textsf{portuguese}), \textsf{brazil} (\textsf{brazilian}),
+  \textsf{russianb} (\textsf{russian}), \textsf{usorbian}
+  (\textsf{uppersorbian}), \textsf{vietnam} (\textsf{vietnamese}),
+  \textsf{northernsami} (\textsf{samin}), \textsf{ukraineb}
+  (\textsf{ukrainian}). Deprecated names come in many cases from the
+  times when they had to be shortened to 8 characters.
+\end{note}
 
 Most of them work out of the box, but some may require extra fonts,
 encoding files, a preprocessor or even a complete framework (like
@@ -4238,17 +4234,17 @@ bidi.mirroring\\
 bidi.text\\
 bidi.math\\%
 % bidi.mapdigits\\
-linebreak.sea\\%*
-linebreak.cjk\\%*
-justify.arabic\\%*
-layout.tabular\\%*
+linebreak.sea\\
+linebreak.cjk\\
+justify.arabic\\
+layout.tabular\\
 layout.lists
 \end{multicols}
-The first four are documented elsewhere. The following by default are
+The first four are documented elsewhere. The following are by default
 |on|, but with |off| can disable some features: |bidi.math| (only
-preamble) the changes for math or \textsf{amsmath}, |linebreak.sea|,
+preamble) changes for math or \textsf{amsmath}, |linebreak.sea|,
 |linebreak.sea| and |justify.arabic| the corresponding algorithms,
-|layout.tabular| and |layout.lists| the changes for tabular and lists.
+|layout.tabular| and |layout.lists| changes for tabular and lists.
 Some of the are reverted only to some extent.
 
 Other keys are:
@@ -4257,16 +4253,16 @@ Other keys are:
 autoload.options\\
 autoload.bcp47.prefix\\
 autoload.bcp47.options\\
-prehyphenation.disable\\%*
+prehyphenation.disable\\
 select.write\\
-select.encoding\\%*
+select.encoding\\
 \end{multicols}
 Most of them are documented elsewhere. With |select.encoding=off|, the
-encoding is not set when loading a language on the fly with \pdftex
-(only |off|).
-|prehyphenation.disable| is by default |nohyphenation|, which means
-prehyphenation transforms are not applied if the current hyphenation
-rules are |nohyphenation|; with |off| they are never disabled.
+encoding is not set when loading a language on the fly with \pdftex{}
+(only |off|). |prehyphenation.disable| is by default |nohyphenation|,
+which means prehyphenation transforms are not applied if the current
+hyphenation rules are |nohyphenation|; with |off| they are never
+disabled.
 
 For example, you can set |\babeladjust{bidi.text=off}| if you are using
 an alternative algorithm or with large sections not requiring it. Use
@@ -5268,8 +5264,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.88.12632>>
-%<<date=2023/05/06>>
+%<<version=3.89>>
+%<<date=2023/05/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
