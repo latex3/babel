@@ -1,6 +1,6 @@
-## Babel 3.89
+## Babel 3.89.13335
 
-2023-05-11
+*Development.*
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,9 +48,12 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.90  (dev)
+      * Main language selected at begindocument/before.
+
 3.89  2023-05-11
       * Deprecating \SetCase, \aliasshorthands, and 'strings' package
-        options in the manual.
+        option in the manual.
       * The manual has been split in two documents: 'babel.pdf' is the
         user guide, and 'babel-code.pdf' is the code.
       * Alternative syntax to pass 'modifiers' to babel languages.

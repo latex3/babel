@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/05/11 v3.89 The Babel package]
+\ProvidesFile{babel.dtx}[2023/05/13 v3.89.13335 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -437,7 +437,12 @@ Package babel Warning: No hyphenation patterns were preloaded for
 \begin{verbatim}
 \usepackage[_pdflang=es-MX_]{hyperref}
 \end{verbatim}
-This is not currently done by \babel{} and you must set it by hand.
+This is not currently done by \babel{} and you must set it by hand. The
+document language can be also set with |\DocumentMetadata|, before
+|\documentclass|; for example:
+\begin{verbatim}
+\DocumentMetadata{_lang=es-MX_}
+\end{verbatim}
 \end{note}
 
 \begin{note}
@@ -5264,8 +5269,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.89>>
-%<<date=2023/05/11>>
+%<<version=3.89.13335>>
+%<<date=2023/05/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7476,12 +7481,18 @@ wouldn’t exist.
       \string\providecommand\string\babel@aux[2]{}}%
     \immediate\write\@mainaux{\string\@nameuse{bbl@beforestart}}%
   \fi
+%<-package>
   \expandafter\selectlanguage\expandafter{\bbl@main@language}%
+%<+package>
   \ifbbl@single  % must go after the line above.
     \renewcommand\selectlanguage[1]{}%
     \renewcommand\foreignlanguage[2]{#2}%
     \global\let\babel@aux\@gobbletwo  % Also as flag
   \fi}
+%<-core>
+\AddToHook{begindocument/before}{%
+  \expandafter\selectlanguage\expandafter{\bbl@main@language}}
+%<+core>
 \ifcase\bbl@engine\or
   \AtBeginDocument{\pagedir\bodydir} % TODO - a better place
 \fi
