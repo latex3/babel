@@ -44,7 +44,11 @@ therefore, although discouraged, is not deprecated.
 in fact a variety of French spoken mainly in New Brunswick. Currently,
 babel-french support only the names `french` and `acadien`, and `babel`
 new reflects this scheme. The former has the BCP 47 tag `fr` and the
-latter `fr-x-acadian`.
+latter `fr-x-acadian`. (Wikipedia provides `fr-u-sd-canb`, literally
+‘French as spoken in the Canadian subregion of New Brunswick’, but it’s
+in fact also spoken in Nova Scotia and Prince Edward Island, among
+other subregions. Since no official source has been found, a
+descriptive tag has been chosen.)
 
 See also
 [Locale
