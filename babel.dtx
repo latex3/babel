@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/05/13 v3.89.13335 The Babel package]
+\ProvidesFile{babel.dtx}[2023/05/27 v3.89.14772 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -48,11 +48,7 @@
      ItalicFont = NotoSans-Italic.ttf,
      BoldItalicFont = NotoSans-BoldItalic.ttf]
   {NotoSans-Regular.ttf}
-\setmonofont[
-  Scale=.88, FakeStretch=.95,
-  BoldFont = NotoMono-Regular.ttf,
-  ItalicFont = NotoMono-Regular.ttf,
-  BoldItalicFont = NotoMono-Regular.ttf]{NotoMono-Regular.ttf}
+\setmonofont[Scale=.86, FakeStretch=.97]{DejaVu Sans Mono}
 \raggedright
 \addtolength{\textwidth}{25pt}
 \addtolength{\textheight}{3.5cm}
@@ -110,6 +106,7 @@
 \newtheorem{note}{Note}
 \newtheorem{example}{Example}
 \newtheorem{troubleshooting}{Troubleshooting}
+\newtheorem{more}{More}
 \let\bblxv\verbatim
 \let\bblexv\endverbatim
 \newcommand\setengine{\def\engine}
@@ -300,7 +297,7 @@ necessary in some languages), is described below; go to \ref{inifiles}.
   there are many
   \href{https://github.com/latex3/babel/tree/master/samples}{sample
   files}.
-  
+
 \item[\sffamily\color{messages}Where is the code?]
   Run |lualatex --jobname=babel-code \let\babelcode\relax\input{babel.dtx}|.
 \end{description}
@@ -588,6 +585,14 @@ beforehand (for example, titles in a bibliography). At this regard, it
 is worth remembering that |\babelfont| does \textit{not} load any font
 until required, so that it can be used just in case.
 
+\New{3.84} With \pdftex, when a language is loaded on the fly
+(actually, with |\babelprovide|, because this is the macro used
+internally to load it) selectors now set the font encoding based on the
+list provided when loading |fontenc|. Not all scripts have an
+associated encoding, so this feature works only with Latin, Cyrillic,
+Greek, Arabic, Hebrew, Cherokee, Armenian, and Georgian, provided a
+suitable font is found.
+
 \begin{example}
   A trivial document with the default font in English and Spanish, and
   FreeSerif in Russian is:
@@ -614,14 +619,6 @@ _\foreignlanguage{spanish}{Español}_.
   language (eg, |lu| can be the locale name with tag |khb| or the tag
   for |lubakatanga|). See section \ref{bcp47} for further details.
 \end{note}
-
-\New{3.84} With \pdftex, when a language is loaded on the fly
-(actually, with |\babelprovide|, because this is the macro used
-internally to load it) selectors now set the font encoding based on the
-list provided when loading |fontenc|. Not all scripts have an
-associated encoding, so this feature works only with Latin, Cyrillic,
-Greek, Arabic, Hebrew, Cherokee, Armenian, and Georgian, provided a
-suitable font is found.
 
 \subsection{Modifiers}
 
@@ -1222,6 +1219,8 @@ languages.
 footlines are not touched (only marks), and if they contain
 language-dependent macros (which is not usual) there may be unexpected
 results. With this option you may set the language in heads and foots.
+An alternative is to set the language explicitly when heads and foots
+are redefined.
 
 \Describe{noconfigs}{} Global and language default config files are
 not loaded, so you can make sure your document is not spoilt by an
@@ -1363,8 +1362,6 @@ reason, does not work as expected.
 \begin{example}
   Although Georgian has its own \texttt{ldf} file, here is how to
   declare this language with an |ini| file in Unicode engines.
-\begingroup
-\setmonofont[Scale=.87,Script=Georgian]{DejaVu Sans Mono}
 \setengine{luatex/xetex}
 \begin{verbatim}
 \documentclass{book}
@@ -1384,8 +1381,12 @@ _\babelprovide[import, main]{georgian}_
 
 \end{document}
 \end{verbatim}
-\endgroup
 \end{example}
+
+\begin{more}
+  There is an example of how to use a template |ini| file
+  \href{https://github.com/latex3/babel/issues/176#issuecomment-1080846575}{here}, for Phoenician.
+\end{more}
 
 \New{3.49} Alternatively, you can tell babel to load all or some
 languages passed as options with |\babelprovide| and not from the |ldf|
@@ -1456,13 +1457,10 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
   wrongly with the default renderer. The comment about Indic scripts
   and \textsf{lualatex} also applies here. Some quick patterns can
   help, with something similar to:
-\begingroup
-\setmonofont[Script=Lao,Scale=MatchLowercase]{DejaVu Sans Mono}
 \begin{verbatim}
 \babelprovide[import, hyphenrules=+]{lao}
 \babelpatterns[lao]{1ດ 1ມ 1ອ 1ງ 1ກ 1າ} % Random
 \end{verbatim}
-\endgroup
 \item[East Asia scripts] Settings for either Simplified of Traditional
   should work out of the box, with basic line breaking with any
   renderer. Although for a few words and shorts texts the |ini| files
@@ -1510,6 +1508,8 @@ captions):
 \def\hascapl{\textsuperscript{l}}
 
 \begin{multicols}{2}
+\tag{aa} Afar
+\tag{ab} Abkhazian
 \tag{af} Afrikaans\hascapu\hascapl
 \tag{agq} Aghem
 \tag{ak} Akan
@@ -1531,11 +1531,14 @@ captions):
 \tag{az-Cyrl} Azerbaijani
 \tag{az-Latn} Azerbaijani
 \tag{az} Azerbaijani\hascapu\hascapl
+\tag{bal} Baluchi
 \tag{bas} Basaa
 \tag{be} Belarusian\hascapu\hascapl
 \tag{bem} Bemba
 \tag{bez} Bena
 \tag{bg} Bulgarian\hascapu\hascapl
+\tag{bgc} Haryanvi
+\tag{bho} Bhojpuri
 \tag{bm} Bambara
 \tag{bn} Bangla\hascapu
 \tag{bo} Tibetan\hascapu
@@ -1544,13 +1547,16 @@ captions):
 \tag{bs-Cyrl} Bosnian
 \tag{bs-Latn} Bosnian\hascapu\hascapl
 \tag{bs} Bosnian\hascapu\hascapl
+\tag{byn} Blin
 \tag{ca} Catalan\hascapu\hascapl
+\tag{cch} Atsam
 \tag{ce} Chechen
 \tag{cgg} Chiga
 \tag{chr} Cherokee
 \tag{ckb-Arab} Central Kurdish\hascapu
 \tag{ckb-Latn} Central Kurdish\hascapu
 \tag{ckb} Central Kurdish\hascapu
+\tag{co} Corsican
 \tag{cop} Coptic
 \tag{cs} Czech\hascapu\hascapl
 \tag{cu-Cyrs} Church Slavic\hascapu
@@ -1598,12 +1604,16 @@ captions):
 \tag{fr-CA} Canadian French\hascapu\hascapl
 \tag{fr-CH} Swiss French\hascapu\hascapl
 \tag{fr-LU} French\hascapu\hascapl
+\tag{fr-x-acadian} Acadian\hascapu\hascapl
 \tag{fr} French\hascapu\hascapl
 \tag{fur} Friulian\hascapu\hascapl
 \tag{fy} Western Frisian
 \tag{ga} Irish\hascapu\hascapl
+\tag{gaa} Ga
 \tag{gd} Scottish Gaelic\hascapu\hascapl
+\tag{gez} Geez
 \tag{gl} Galician\hascapu\hascapl
+\tag{gn} Guarani
 \tag{grc} Ancient Greek\hascapu\hascapl
 \tag{gsw} Swiss German
 \tag{gu} Gujarati
@@ -1625,12 +1635,15 @@ captions):
 \tag{ii} Sichuan Yi
 \tag{is} Icelandic\hascapu\hascapl
 \tag{it} Italian\hascapu\hascapl
+\tag{iu} Inuktitut
 \tag{ja} Japanese\hascapu
 \tag{jgo} Ngomba
 \tag{jmc} Machame
 \tag{ka} Georgian\hascapu
 \tag{kab} Kabyle
+\tag{kaj} Jju
 \tag{kam} Kamba
+\tag{kcg} Tyap
 \tag{kde} Makonde
 \tag{kea} Kabuverdianu
 \tag{kgp} Kaingang
@@ -1654,13 +1667,14 @@ captions):
 \tag{ksh} Colognian
 \tag{kw} Cornish
 \tag{ky} Kyrgyz
-\tag{la-x-classic} Classic Latin\hascapu\hascapl
-\tag{la-x-ecclesia} Ecclesiastic Latin\hascapu\hascapl
+\tag{la-x-classic} Classical Latin\hascapu\hascapl
+\tag{la-x-ecclesia} Ecclesiastical Latin\hascapu\hascapl
 \tag{la-x-medieval} Medieval Latin\hascapu\hascapl
 \tag{la} Latin\hascapu\hascapl
 \tag{lag} Langi
 \tag{lb} Luxembourgish\hascapu\hascapl
 \tag{lg} Ganda
+\tag{lij} Ligurian
 \tag{lkt} Lakota
 \tag{ln} Lingala
 \tag{lo} Lao\hascapu
@@ -1685,7 +1699,9 @@ captions):
 \tag{ms} Malay\hascapu\hascapl
 \tag{mt} Maltese
 \tag{mua} Mundang
+\tag{mus} Muscogee
 \tag{my} Burmese
+\tag{myv} Erzya
 \tag{mzn} Mazanderani
 \tag{naq} Nama
 \tag{nb} Norwegian Bokmål\hascapu\hascapl
@@ -1696,7 +1712,11 @@ captions):
 \tag{nn} Norwegian Nynorsk\hascapu\hascapl
 \tag{nnh} Ngiemboon
 \tag{no} Norwegian\hascapu\hascapl
+\tag{nqo} N’Ko
+\tag{nr} South Ndebele
+\tag{nso} Northern Sotho
 \tag{nus} Nuer
+\tag{ny} Nyanja
 \tag{nyn} Nyankole
 \tag{oc} Occitan\hascapu\hascapl
 \tag{om} Oromo
@@ -1705,13 +1725,16 @@ captions):
 \tag{pa-Arab} Punjabi
 \tag{pa-Guru} Punjabi\hascapu
 \tag{pa} Punjabi\hascapu
+\tag{pap} Papiamento
 \tag{pl} Polish\hascapu\hascapl
 \tag{pms} Piedmontese\hascapu\hascapl
+\tag{prg} Prussian
 \tag{ps} Pashto
 \tag{pt-BR} Brazilian Portuguese\hascapu\hascapl
 \tag{pt-PT} European Portuguese\hascapu\hascapl
 \tag{pt} Portuguese\hascapu\hascapl
 \tag{qu} Quechua
+\tag{raj} Rajasthani
 \tag{rm} Romansh\hascapu\hascapl
 \tag{rn} Rundi
 \tag{ro-MD} Moldavian\hascapu\hascapl
@@ -1731,6 +1754,7 @@ captions):
 \tag{saq} Samburu
 \tag{sbp} Sangu
 \tag{sc} Sardinian
+\tag{scn} Sicilian
 \tag{se} Northern Sami\hascapu\hascapl
 \tag{seh} Sena
 \tag{ses} Koyraboro Senni
@@ -1749,22 +1773,33 @@ captions):
 \tag{sr-Cyrl-ME} Serbian\hascapu\hascapl
 \tag{sr-Cyrl-XK} Serbian\hascapu\hascapl
 \tag{sr-Cyrl} Serbian\hascapu\hascapl
+\tag{sr-ijekavsk} Serbian\hascapu\hascapl
 \tag{sr-Latn-BA} Serbian\hascapu\hascapl
+\tag{sr-Latn-ijekavsk} Serbian\hascapu\hascapl
 \tag{sr-Latn-ME} Serbian\hascapu\hascapl
 \tag{sr-Latn-XK} Serbian\hascapu\hascapl
 \tag{sr-Latn} Serbian\hascapu\hascapl
 \tag{sr} Serbian\hascapu\hascapl
+\tag{ss} Swati
+\tag{ssy} Saho
+\tag{st} Southern Sotho
 \tag{sv} Swedish\hascapu\hascapl
 \tag{sw} Swahili
 \tag{syr} Syriac
+\tag{szl} Silesian
 \tag{ta} Tamil\hascapu
 \tag{te} Telugu\hascapu
 \tag{teo} Teso
 \tag{th} Thai\hascapu\hascapl
 \tag{ti} Tigrinya
+\tag{tig} Tigre
 \tag{tk} Turkmen\hascapu\hascapl
+\tag{tn} Tswana
 \tag{to} Tongan
+\tag{tpi} Tok Pisin
 \tag{tr} Turkish\hascapu\hascapl
+\tag{trv} Taroko
+\tag{ts} Tsonga
 \tag{twq} Tasawaq
 \tag{tzm} Central Atlas Tamazight
 \tag{ug} Uyghur\hascapu
@@ -1777,9 +1812,12 @@ captions):
 \tag{vai-Latn} Vai
 \tag{vai-Vaii} Vai
 \tag{vai} Vai
+\tag{ve} Venda
 \tag{vi} Vietnamese\hascapu\hascapl
+\tag{vo} Volapük
 \tag{vun} Vunjo
 \tag{wae} Walser
+\tag{wal} Wolaytta
 \tag{xog} Soga
 \tag{yav} Yangben
 \tag{yi} Yiddish
@@ -1796,7 +1834,6 @@ captions):
 \tag{zh-Hant} Chinese\hascapu
 \tag{zh} Chinese\hascapu
 \tag{zu} Zulu
-
 \end{multicols}
 \endgroup
 \hrule
@@ -1811,93 +1848,129 @@ by |\babelprovide| with a valueless |import|.
 
 \begingroup
 \bigskip\hrule\nobreak
-
+\small
 \let\\\par
 
-\begin{multicols}{2}
-﻿afrikaans\\
+\begin{multicols}{3}
+﻿abkhazian\\
+acadian\\
+afar\\
+afrikaans\\
 aghem\\
 akan\\
 albanian\\
 american\\
+americanenglish\\
 amharic\\
 ancientgreek\\
 arabic\\
 arabic-algeria\\
-arabic-DZ\\
+arabic-dz\\
+arabic-eg\\
+arabic-egypt\\
+arabic-iq\\
+arabic-iraq\\
+arabic-jo\\
+arabic-jordan\\
+arabic-lb\\
+arabic-lebanon\\
+arabic-ma\\
 arabic-morocco\\
-arabic-MA\\
+arabic-palestinianterritories\\
+arabic-ps\\
+arabic-sa\\
+arabic-saudiarabia\\
+arabic-sy\\
 arabic-syria\\
-arabic-SY\\
+arabic-tn\\
+arabic-tunisia\\
 armenian\\
 assamese\\
 asturian\\
 asu\\
+atsam\\
 australian\\
+australianenglish\\
 austrian\\
+azerbaijani\\
 azerbaijani-cyrillic\\
 azerbaijani-cyrl\\
 azerbaijani-latin\\
 azerbaijani-latn\\
-azerbaijani\\
 bafia\\
+baluchi\\
 bambara\\
+bangla\\
 basaa\\
 basque\\
 belarusian\\
 bemba\\
 bena\\
-bangla\\
+bengali\\
+bhojpuri\\
+blin\\
 bodo\\
+bosnian\\
 bosnian-cyrillic\\
 bosnian-cyrl\\
 bosnian-latin\\
 bosnian-latn\\
-bosnian\\
 brazilian\\
+brazilianportuguese\\
 breton\\
 british\\
+britishenglish\\
 bulgarian\\
 burmese\\
 canadian\\
+canadianenglish\\
 cantonese\\
 catalan\\
 centralatlastamazight\\
 centralkurdish\\
+centralkurdish-latin\\
+centralkurdish-latn\\
 chechen\\
 cherokee\\
 chiga\\
+chinese\\
+chinese-hans\\
 chinese-hans-hk\\
 chinese-hans-mo\\
 chinese-hans-sg\\
-chinese-hans\\
+chinese-hant\\
 chinese-hant-hk\\
 chinese-hant-mo\\
-chinese-hant\\
+chinese-simplified\\
 chinese-simplified-hongkongsarchina\\
 chinese-simplified-macausarchina\\
 chinese-simplified-singapore\\
-chinese-simplified\\
+chinese-traditional\\
 chinese-traditional-hongkongsarchina\\
 chinese-traditional-macausarchina\\
-chinese-traditional\\
-chinese\\
 churchslavic\\
 churchslavic-cyrs\\
+churchslavic-glag\\
+churchslavic-glagolitic\\
 churchslavic-oldcyrillic\footnote{The name in the CLDR
 is Old Church Slavonic Cyrillic, but it has been shortened
 for practical reasons.}\\
 churchsslavic-glag\\
-churchsslavic-glagolitic\\
+churchslavonic\\
+classicallatin\\
 colognian\\
+coptic\\
 cornish\\
+corsican\\
 croatian\\
 czech\\
 danish\\
 duala\\
 dutch\\
 dzongkha\\
+ecclesiasticallatin\\
 embu\\
+english\\
 english-au\\
 english-australia\\
 english-ca\\
@@ -1908,41 +1981,52 @@ english-nz\\
 english-unitedkingdom\\
 english-unitedstates\\
 english-us\\
-english\\
+erzya\\
 esperanto\\
 estonian\\
+europeanportuguese\\
 ewe\\
 ewondo\\
 faroese\\
+farsi\\
 filipino\\
 finnish\\
+french\\
 french-be\\
 french-belgium\\
 french-ca\\
 french-canada\\
+french-canadianfrench\\
 french-ch\\
 french-lu\\
 french-luxembourg\\
+french-swissfrench\\
 french-switzerland\\
-french\\
 friulian\\
 fulah\\
+ga\\
 galician\\
 ganda\\
+geez\\
 georgian\\
+german\\
 german-at\\
 german-austria\\
+german-austria-traditional\\
 german-ch\\
 german-switzerland\\
-german\\
+german-switzerland-traditional\\
+german-traditional\\
 greek\\
+guarani\\
 gujarati\\
 gusii\\
+haryanvi\\
+hausa\\
 hausa-gh\\
 hausa-ghana\\
 hausa-ne\\
 hausa-niger\\
-hausa\\
 hawaiian\\
 hebrew\\
 hindi\\
@@ -1952,12 +2036,15 @@ igbo\\
 inarisami\\
 indonesian\\
 interlingua\\
+inuktitut\\
 irish\\
 italian\\
 japanese\\
+jju\\
 jolafonyi\\
 kabuverdianu\\
 kabyle\\
+kaingang\\
 kako\\
 kalaallisut\\
 kalenjin\\
@@ -1970,18 +2057,22 @@ kikuyu\\
 kinyarwanda\\
 konkani\\
 korean\\
+korean-han\\
+korean-hani\\
 koyraborosenni\\
 koyrachiini\\
+kurmanji\\
 kwasio\\
 kyrgyz\\
 lakota\\
 langi\\
 lao\\
+latin\\
 latvian\\
+ligurian\\
 lingala\\
 lithuanian\\
 lowersorbian\\
-lsorbian\\
 lubakatanga\\
 luo\\
 luxembourgish\\
@@ -1991,69 +2082,92 @@ machame\\
 makhuwameetto\\
 makonde\\
 malagasy\\
+malay\\
 malay-bn\\
 malay-brunei\\
 malay-sg\\
 malay-singapore\\
-malay\\
 malayalam\\
 maltese\\
 manx\\
 marathi\\
 masai\\
 mazanderani\\
+medievallatin\\
 meru\\
 meta\\
 mexican\\
+mexicanspanish\\
+moldavian\\
 mongolian\\
+monotonicgreek\\
 morisyen\\
 mundang\\
+muscogee\\
 nama\\
+naustrian\\
 nepali\\
 newzealand\\
+ngerman\\
 ngiemboon\\
 ngomba\\
+nheengatu\\
+nko\\
 norsk\\
+northernkurdish\\
+northernkurdish-arab\\
+northernkurdish-arabic\\
 northernluri\\
 northernsami\\
+northernsotho\\
 northndebele\\
+norwegian\\
 norwegianbokmal\\
 norwegiannynorsk\\
 nswissgerman\\
 nuer\\
+nyanja\\
 nyankole\\
 nynorsk\\
 occitan\\
+odia\\
 oriya\\
 oromo\\
 ossetic\\
+papiamento\\
 pashto\\
 persian\\
 piedmontese\\
 polish\\
 polytonicgreek\\
+portuguese\\
 portuguese-br\\
 portuguese-brazil\\
 portuguese-portugal\\
 portuguese-pt\\
-portuguese\\
+prussian\\
+punjabi\\
 punjabi-arab\\
 punjabi-arabic\\
 punjabi-gurmukhi\\
 punjabi-guru\\
-punjabi\\
 quechua\\
+rajasthani\\
 romanian\\
+romanian-md\\
+romanian-moldova\\
 romansh\\
 rombo\\
 rundi\\
 russian\\
 rwa\\
+saho\\
 sakha\\
 samburu\\
-samin\\
 sango\\
 sangu\\
+sanskrit\\
+sanskrit-bangla\\
 sanskrit-beng\\
 sanskrit-bengali\\
 sanskrit-deva\\
@@ -2066,83 +2180,101 @@ sanskrit-malayalam\\
 sanskrit-mlym\\
 sanskrit-telu\\
 sanskrit-telugu\\
-sanskrit\\
+sardinian\\
 scottishgaelic\\
 sena\\
+serbian\\
+serbian-cyrillic\\
 serbian-cyrillic-bosniaherzegovina\\
 serbian-cyrillic-kosovo\\
 serbian-cyrillic-montenegro\\
-serbian-cyrillic\\
+serbian-cyrl\\
 serbian-cyrl-ba\\
 serbian-cyrl-me\\
 serbian-cyrl-xk\\
-serbian-cyrl\\
+serbian-ijekavsk\\
+serbian-latin\\
 serbian-latin-bosniaherzegovina\\
 serbian-latin-kosovo\\
 serbian-latin-montenegro\\
-serbian-latin\\
+serbian-latn\\
 serbian-latn-ba\\
+serbian-latn-ijekavsk\\
 serbian-latn-me\\
 serbian-latn-xk\\
-serbian-latn\\
-serbian\\
+serbianc\\
 shambala\\
 shona\\
 sichuanyi\\
+sicilian\\
+silesian\\
 sinhala\\
 slovak\\
 slovene\\
 slovenian\\
 soga\\
 somali\\
+sorani\\
+southernsotho\\
+southndebele\\
+spanish\\
 spanish-mexico\\
 spanish-mx\\
-spanish\\
 standardmoroccantamazight\\
 swahili\\
+swati\\
 swedish\\
 swissgerman\\
+swisshighgerman\\
+syriac\\
+tachelhit\\
 tachelhit-latin\\
 tachelhit-latn\\
 tachelhit-tfng\\
 tachelhit-tifinagh\\
-tachelhit\\
 taita\\
 tamil\\
+taroko\\
 tasawaq\\
 telugu\\
 teso\\
 thai\\
 tibetan\\
+tigre\\
 tigrinya\\
+tokpisin\\
 tongan\\
+tsonga\\
+tswana\\
 turkish\\
 turkmen\\
+tyap\\
 ukenglish\\
 ukrainian\\
 uppersorbian\\
 urdu\\
 usenglish\\
-usorbian\\
 uyghur\\
+uzbek\\
 uzbek-arab\\
 uzbek-arabic\\
 uzbek-cyrillic\\
 uzbek-cyrl\\
 uzbek-latin\\
 uzbek-latn\\
-uzbek\\
+vai\\
 vai-latin\\
 vai-latn\\
 vai-vai\\
 vai-vaii\\
-vai\\
-vietnam\\
+venda\\
 vietnamese\\
+volapuk\\
 vunjo\\
 walser\\
 welsh\\
 westernfrisian\\
+wolaytta\\
 yangben\\
 yiddish\\
 yoruba\\
@@ -2226,7 +2358,7 @@ you may add further key/value pairs if necessary.
 % will be disappointed :-). The following example is built ad hoc to
 % emulate the final result to avoid dependencies, and therefore it's
 % not "real" code.
-\setmonofont[Scale=.87,Script=Hebrew]{DejaVu Sans Mono} \catcode`@=13
+\catcode`@=13
 \def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TLT \else
 \bgroup\textdir TRT \fontspec[Scale=.87,Script=Hebrew]{Liberation
 Mono} \fi}
@@ -2488,6 +2620,20 @@ languages loaded on the fly are not yet available in the preamble.
 \setlocalecaption{arhinish}{refname}{Refirenke}
 \renewcommand\arhinishhyphenmins{22}
 \end{verbatim}
+\end{example}
+
+\begin{example}
+  Sometimes treating the IPA as a language makes sense:
+\begin{verbatim}
+\documentclass{article}
+\usepackage[english]{babel}
+\babelprovide{ipa}
+\babelfont[ipa]{rm}{DejaVu Sans}
+\begin{document}
+Blah \foreignlanguage{ipa}{ɔːlˈðəʊ} Blah.
+\end{document}
+\end{verbatim}
+  Then you can define shorthands, transforms (if \luatex), and so on. 
 \end{example}
 
 \begin{example}
@@ -2991,7 +3137,7 @@ expandable, and the available fields are:
   extension whose singleton is \m{s} (currently the recognized
   singletons are |x|, |t| and |u|). The internal syntax can be somewhat
   complex, and this feature is still somewhat tentative. An example is
-  \textsf{classiclatin} which sets |extension.x.tag.bcp47| to |classic|.
+  \textsf{classicallatin} which sets |extension.x.tag.bcp47| to |classic|.
   \New{3.75}
 \end{description}
 
@@ -3676,7 +3822,8 @@ See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
 % will be disappointed :-). The following example is built ad hoc to
 % emulate the final result to avoid dependencies, and therefore it's
 % not "real" code.
-\setmonofont[Scale=.87,Script=Arabic]{DejaVu Sans Mono} \catcode`@=13
+\setmonofont[Scale=.86, FakeStretch=.97,Script=Arabic]{DejaVu Sans Mono}
+\catcode`@=13
 \def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TLT \else
 \bgroup\textdir TRT \pardir TRT \fi}
 \begin{verbatim}
@@ -3712,7 +3859,8 @@ _\babelprovide[import, main]{arabic}_
   % will be disappointed :-). The following example is built ad hoc to
   % emulate the final result to avoid dependencies, and therefore it's
   % not "real" code.
-  \setmonofont[Scale=.87,Script=Arabic]{DejaVu Sans Mono} \catcode`@=13
+  \setmonofont[Scale=.86, FakeStretch=.97,Script=Arabic]{DejaVu Sans Mono}
+  \catcode`@=13
   \def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TRT \else
   \bgroup\textdir TLT \pardir TLT \fi}
 \begin{verbatim}
@@ -4101,7 +4249,7 @@ and |.ldf| file are listed, together with the names of the option which
 you can load \babel\ with for each language. Note this list is open and
 the current options may be different. It does not include |ini| files
 (see below). Except in a few cases (eg, |ngerman|, |serbianc|,
-|acadien|) names are those of the Unicode CLDR (or based on them).
+|acadian|) names are those of the Unicode CLDR (or based on them). 
 
 \begin{description}
 \itemsep=-\parskip
@@ -4169,7 +4317,7 @@ ibygreek, bgreek, serbianc, frenchle, ethiop} and \textsf{friulan}.
   (\textsf{uppersorbian}), \textsf{vietnam} (\textsf{vietnamese}),
   \textsf{northernsami} (\textsf{samin}), \textsf{ukraineb}
   (\textsf{ukrainian}). Deprecated names come in many cases from the
-  times when they had to be shortened to 8 characters.
+  times when they had to be shortened to 8 characters. 
 \end{note}
 
 Most of them work out of the box, but some may require extra fonts,
@@ -5137,7 +5285,6 @@ Its natural place of use is in hooks or in |\extras|\m{language}.
 
 \fi
 
-
 \section{Acknowledgements}
 
 I would like to thank all who volunteered as $\beta$-testers for their
@@ -5269,8 +5416,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.89.13335>>
-%<<date=2023/05/13>>
+%<<version=3.89.14772>>
+%<<date=2023/05/27>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6026,8 +6173,8 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % With |headfoot=lang| we can set the language used in heads/foots.
-% For example, in babel/3796 just adds |headfoot=english|.  It
-% misuses \cs{@resetactivechars} but seems to work.
+% For example, in babel/3796 just add |headfoot=english|.  It
+% misuses \cs{@resetactivechars}, but seems to work.
 %
 %    \begin{macrocode}
 \ifx\bbl@opt@headfoot\@nnil\else
@@ -10605,6 +10752,8 @@ wouldn’t exist.
   \bbl@exportkey{lbcp}{identification.language.tag.bcp47}{}%
   % Somewhat hackish. TODO
   \bbl@exportkey{casing}{identification.language.tag.bcp47}{}%
+  \bbl@exp{\gdef\<bbl@casing@\languagename>%
+    {\<bbl@lbcp@\languagename>}}%
   \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
   \bbl@exportkey{esname}{identification.script.name}{}%
   \bbl@exp{\\\bbl@exportkey{sname}{identification.script.name.opentype}%
@@ -14228,8 +14377,13 @@ end
 \gdef\bbl@arabicjust{%
   \let\bbl@arabicjust\relax
   \newattribute\bblar@kashida
-  \directlua{ Babel.attr_kashida = luatexbase.registernumber'bblar@kashida' }%
+  \newattribute\bblar@kashida@aux % 0, 1=tatweel, 2=diacritics
+  \directlua{
+    Babel.attr_kashida = luatexbase.registernumber'bblar@kashida' 
+    Babel.attr_kashida_aux = luatexbase.registernumber'bblar@kashida@aux'
+  }%
   \bblar@kashida=\z@
+  \bblar@kashida@aux=\z@
   \bbl@patchfont{{\bbl@parsejalt}}%
   \directlua{
     Babel.arabic.elong_map   = Babel.arabic.elong_map or {}
@@ -14298,6 +14452,7 @@ end
 \begingroup
 \catcode`#=11
 \catcode`~=11
+
 \directlua{
 
 Babel.arabic = Babel.arabic or {}
@@ -14305,6 +14460,7 @@ Babel.arabic.from = {}
 Babel.arabic.dest = {}
 Babel.arabic.justify_factor = 0.95
 Babel.arabic.justify_enabled = true
+Babel.arabic.tatwil_max = -1
 
 function Babel.arabic.justify(head)
   if not Babel.arabic.justify_enabled then return head end
@@ -14333,10 +14489,12 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
   local width, width_new, full, k_curr, wt_pos, goal, shift
   local subst_done = false
   local elong_map = Babel.arabic.elong_map
+  local cnt
   local last_line
   local GLYPH = node.id'glyph'
   local KASHIDA = Babel.attr_kashida
   local LOCALE = Babel.attr_locale
+  local k_middle = {}
 
   if line == nil then
     line = {}
@@ -14405,7 +14563,7 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
     if #k_list == 0 then goto next_line end
 
     width = node.dimensions(line.head)    % The 'natural' width
-    k_curr = #k_list
+    k_curr = #k_list % Traverse backwards, from the end
     wt_pos = 1
 
     while width < goal do
@@ -14429,6 +14587,64 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
         k_curr = k_curr - 1
       end
     end
+
+    % Limit the number of tatweel by removing them. Not very efficient,
+    % but it does the job in a quite predictable way.
+    if Babel.arabic.tatwil_max > -1 then
+      cnt = 0
+      for n in node.traverse_id(GLYPH, line.head) do
+        if n.char == 0x0640 then
+          cnt = cnt + 1
+          if cnt > Babel.arabic.tatwil_max then
+            node.remove(line.head, n)
+          end
+        else
+          cnt = 0
+        end
+      end
+    end
+
+    % WIP. Mostly works, but vertical placement requires more work. 
+    Babel.kashida_placement = Babel.kashida_placement or 'end'
+
+    if Babel.kashida_placement == 'center' then
+      local K_AUX = Babel.attr_kashida_aux
+      cnt = 0
+      for n in node.traverse_id(GLYPH, line.head) do
+        % print('>>', string.format("\@percentchar x", n.char),
+        %       node.get_attribute(n, K_AUX) )
+        if node.get_attribute(n, K_AUX) == 1 or
+            n.char == 0x0640 then
+          % if not(n.char == 0x0640) then print('----', n.char) end
+          cnt = cnt + 1
+          k_middle[cnt] = n
+        elseif node.get_attribute(n, K_AUX) == 2 and cnt > 0 then
+          local xn
+          xn = node.copy(n)
+          if (cnt \@percentchar 2 == 0) then
+            cnt = cnt/2
+            xn.xoffset = n.prev.width/2
+          else
+            cnt = (cnt + 1)/2
+            xn.xoffset = 0
+          end        
+          node.remove(line.head, n)
+          % xn.yoffset = 0
+          node.insert_after(line.head, k_middle[cnt], xn)
+        else
+          cnt = 0
+        end
+      end
+    end
+
+%     print('========')
+%     for n in node.traverse(line.head) do
+%       if n.id == GLYPH then
+%         print('>>', string.format("\@percentchar x", n.char), n.yoffset, n.xoffset)
+%       else
+%         print('[' .. n.id .. ']')
+%       end
+%     end
 
     ::next_line::
 
@@ -14863,12 +15079,26 @@ end
   \directlua{
     Babel = Babel or {}
     %
+    function Babel.kashida_flag(head) % WIP
+      for n in node.traverse_id(node.id'glyph', head) do
+        if n.char == 0x064b or n.char == 0x064d or
+            n.char == 0x064e or n.char == 0x0640f or 
+            n.char == 0x0650  or n.char == 0x0670 then
+          node.set_attribute(n, Babel.attr_kashida_aux, 2)
+        elseif n.char == 0x0640 then
+          node.set_attribute(n, Babel.attr_kashida_aux, 1)
+        end
+      end 
+      return head
+    end
+    %
     function Babel.pre_otfload_v(head)
       if Babel.numbers and Babel.digits_mapped then
         head = Babel.numbers(head)
       end
       if Babel.bidi_enabled then
         head = Babel.bidi(head, false, dir)
+        head = Babel.kashida_flag(head)
       end
       return head
     end
@@ -14879,6 +15109,7 @@ end
       end
       if Babel.bidi_enabled then
         head = Babel.bidi(head, false, dir)
+        head = Babel.kashida_flag(head)
       end
       return head
     end

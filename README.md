@@ -1,4 +1,4 @@
-## Babel 3.89.13335
+## Babel 3.89.14772
 
 *Development.*
 
@@ -50,6 +50,7 @@ respective authors.
 ```
 3.90  (dev)
       * Main language selected at begindocument/before.
+      * Option to limit the number of inserted tatweel.
 
 3.89  2023-05-11
       * Deprecating \SetCase, \aliasshorthands, and 'strings' package
