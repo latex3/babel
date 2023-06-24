@@ -1,4 +1,4 @@
-## Babel 3.89.14772
+## Babel 3.89.17574
 
 *Development.*
 
@@ -41,7 +41,7 @@ contact the developer, and not us!
 
 You may also report them to the current maintainer more informally on:
 
-   http://www.texnia.com/contact.html
+   https://latex3.github.io/babel/contact.html
 
 Bugs related to specific languages are best reported to their
 respective authors.
@@ -51,6 +51,8 @@ respective authors.
 3.90  (dev)
       * Main language selected at begindocument/before.
       * Option to limit the number of inserted tatweel.
+      * New macros `\BabelUppercaseMapping`, 
+        `\BabelLowercaseMapping`, and...
 
 3.89  2023-05-11
       * Deprecating \SetCase, \aliasshorthands, and 'strings' package

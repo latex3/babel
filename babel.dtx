@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/05/27 v3.89.14772 The Babel package]
+\ProvidesFile{babel.dtx}[2023/06/24 v3.89.17574 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2633,7 +2633,7 @@ languages loaded on the fly are not yet available in the preamble.
 Blah \foreignlanguage{ipa}{ɔːlˈðəʊ} Blah.
 \end{document}
 \end{verbatim}
-  Then you can define shorthands, transforms (if \luatex), and so on. 
+  Then you can define shorthands, transforms (with \luatex), and so on. 
 \end{example}
 
 \begin{example}
@@ -5416,8 +5416,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.89.14772>>
-%<<date=2023/05/27>>
+%<<version=3.89.17574>>
+%<<date=2023/06/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10286,9 +10286,10 @@ wouldn’t exist.
         \let\\\@Alph\<bbl@cntr@\bbl@KVP@Alph @\languagename>}}%
   \fi
   % == Casing ==
-  \bbl@exp{\def\<bbl@casing@\languagename>%
-    {\<bbl@lbcp@\languagename>%
-     \ifx\bbl@KVP@casing\@nnil\else-x-\bbl@KVP@casing\fi}}%
+  \ifx\bbl@KVP@casing\@nnil\else
+    \bbl@csarg\xdef{casing@\languagename}%
+      {\@nameuse{bbl@casing@\languagename}-x-\bbl@KVP@casing}%
+  \fi
   % == Calendars ==
   \ifx\bbl@KVP@calendar\@nnil
     \edef\bbl@KVP@calendar{\bbl@cl{calpr}}%
@@ -10749,11 +10750,9 @@ wouldn’t exist.
   \bbl@exp{\\\bbl@exportkey{lname}{identification.name.opentype}%
     {\csname bbl@elname@\languagename\endcsname}}%
   \bbl@exportkey{tbcp}{identification.tag.bcp47}{}%
-  \bbl@exportkey{lbcp}{identification.language.tag.bcp47}{}%
   % Somewhat hackish. TODO
-  \bbl@exportkey{casing}{identification.language.tag.bcp47}{}%
-  \bbl@exp{\gdef\<bbl@casing@\languagename>%
-    {\<bbl@lbcp@\languagename>}}%
+  \bbl@exportkey{casing}{identification.tag.bcp47}{}%
+  \bbl@exportkey{lbcp}{identification.language.tag.bcp47}{}%
   \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
   \bbl@exportkey{esname}{identification.script.name}{}%
   \bbl@exp{\\\bbl@exportkey{sname}{identification.script.name.opentype}%
@@ -11422,8 +11421,18 @@ wouldn’t exist.
       {\bbl@ifunset{bbl@\csname bbl@info@#1.tag.bcp47\endcsname @#2}{}%
         {\bbl@cs{\csname bbl@info@#1.tag.bcp47\endcsname @#2}}}}
 \fi
-% Still somewhat hackish:
+% Still somewhat hackish. WIP.
 \@namedef{bbl@info@casing.tag.bcp47}{casing}
+\newcommand\BabelUppercaseMapping[3]{%
+  \let\bbl@tempx\languagename
+  \edef\languagename{#1}%
+  \DeclareUppercaseMapping[\BCPdata{casing}]{#2}{#3}%
+  \let\languagename\bbl@tempx}
+\newcommand\BabelLowercaseMapping[3]{%
+  \let\bbl@tempx\languagename
+  \edef\languagename{#1}%
+  \DeclareLowercaseMapping[\BCPdata{casing}]{#2}{#3}%
+  \let\languagename\bbl@tempx}
 %    \end{macrocode}
 %
 % With version 3.75 |\BabelEnsureInfo| is executed always, but there is
@@ -12299,7 +12308,7 @@ wouldn’t exist.
 \bbl@trace{Loading basic (internal) bidi support}
 \ifodd\bbl@engine
 \else % TODO. Move to txtbabel
-  \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200
+  \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200 % Any lua bidi=
     \bbl@error
       {The bidi method 'basic' is available only in\\%
        luatex. I'll continue with 'bidi=default', so\\%
@@ -12317,7 +12326,7 @@ wouldn’t exist.
         \bbl@loadfontspec % bidi needs fontspec
         \usepackage#1{bidi}}%
     \fi}
-  \ifnum\bbl@bidimode>200
+  \ifnum\bbl@bidimode>200 % Any xe bidi=
     \ifcase\expandafter\@gobbletwo\the\bbl@bidimode\or
       \bbl@tentative{bidi=bidi}
       \bbl@loadxebidi{}
@@ -12329,7 +12338,7 @@ wouldn’t exist.
   \fi
 \fi
 % TODO? Separate:
-\ifnum\bbl@bidimode=\@ne
+\ifnum\bbl@bidimode=\@ne % Any bidi= except default=1
   \let\bbl@beforeforeign\leavevmode
   \ifodd\bbl@engine
     \newattribute\bbl@attr@dir
@@ -12462,7 +12471,7 @@ wouldn’t exist.
     \newtoks\everypar
     \everypar=\bbl@severypar
     \bbl@severypar{\bbl@xeeverypar\the\everypar}}
-  \ifnum\bbl@bidimode>200
+  \ifnum\bbl@bidimode>200 % Any xe bidi=
     \let\bbl@textdir@i\@gobbletwo
     \let\bbl@xebidipar\@empty
     \AddBabelHook{bidi}{foreign}{%
@@ -13428,7 +13437,7 @@ wouldn’t exist.
 %    \begin{macrocode}
 %<<*Footnote changes>>
 \bbl@trace{Bidi footnotes}
-\ifnum\bbl@bidimode>\z@
+\ifnum\bbl@bidimode>\z@ % Any bidi=
   \def\bbl@footnote#1#2#3{%
     \@ifnextchar[%
       {\bbl@footnote@o{#1}{#2}{#3}}%
@@ -14378,7 +14387,7 @@ end
   \let\bbl@arabicjust\relax
   \newattribute\bblar@kashida
   \newattribute\bblar@kashida@aux % 0, 1=tatweel, 2=diacritics
-  \directlua{
+  \directlua{%  WIP
     Babel.attr_kashida = luatexbase.registernumber'bblar@kashida' 
     Babel.attr_kashida_aux = luatexbase.registernumber'bblar@kashida@aux'
   }%
@@ -14452,7 +14461,6 @@ end
 \begingroup
 \catcode`#=11
 \catcode`~=11
-
 \directlua{
 
 Babel.arabic = Babel.arabic or {}
@@ -14494,7 +14502,6 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
   local GLYPH = node.id'glyph'
   local KASHIDA = Babel.attr_kashida
   local LOCALE = Babel.attr_locale
-  local k_middle = {}
 
   if line == nil then
     line = {}
@@ -14603,48 +14610,6 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
         end
       end
     end
-
-    % WIP. Mostly works, but vertical placement requires more work. 
-    Babel.kashida_placement = Babel.kashida_placement or 'end'
-
-    if Babel.kashida_placement == 'center' then
-      local K_AUX = Babel.attr_kashida_aux
-      cnt = 0
-      for n in node.traverse_id(GLYPH, line.head) do
-        % print('>>', string.format("\@percentchar x", n.char),
-        %       node.get_attribute(n, K_AUX) )
-        if node.get_attribute(n, K_AUX) == 1 or
-            n.char == 0x0640 then
-          % if not(n.char == 0x0640) then print('----', n.char) end
-          cnt = cnt + 1
-          k_middle[cnt] = n
-        elseif node.get_attribute(n, K_AUX) == 2 and cnt > 0 then
-          local xn
-          xn = node.copy(n)
-          if (cnt \@percentchar 2 == 0) then
-            cnt = cnt/2
-            xn.xoffset = n.prev.width/2
-          else
-            cnt = (cnt + 1)/2
-            xn.xoffset = 0
-          end        
-          node.remove(line.head, n)
-          % xn.yoffset = 0
-          node.insert_after(line.head, k_middle[cnt], xn)
-        else
-          cnt = 0
-        end
-      end
-    end
-
-%     print('========')
-%     for n in node.traverse(line.head) do
-%       if n.id == GLYPH then
-%         print('>>', string.format("\@percentchar x", n.char), n.yoffset, n.xoffset)
-%       else
-%         print('[' .. n.id .. ']')
-%       end
-%     end
 
     ::next_line::
 
@@ -15079,26 +15044,12 @@ end
   \directlua{
     Babel = Babel or {}
     %
-    function Babel.kashida_flag(head) % WIP
-      for n in node.traverse_id(node.id'glyph', head) do
-        if n.char == 0x064b or n.char == 0x064d or
-            n.char == 0x064e or n.char == 0x0640f or 
-            n.char == 0x0650  or n.char == 0x0670 then
-          node.set_attribute(n, Babel.attr_kashida_aux, 2)
-        elseif n.char == 0x0640 then
-          node.set_attribute(n, Babel.attr_kashida_aux, 1)
-        end
-      end 
-      return head
-    end
-    %
     function Babel.pre_otfload_v(head)
       if Babel.numbers and Babel.digits_mapped then
         head = Babel.numbers(head)
       end
       if Babel.bidi_enabled then
         head = Babel.bidi(head, false, dir)
-        head = Babel.kashida_flag(head)
       end
       return head
     end
@@ -15109,7 +15060,6 @@ end
       end
       if Babel.bidi_enabled then
         head = Babel.bidi(head, false, dir)
-        head = Babel.kashida_flag(head)
       end
       return head
     end
@@ -15134,7 +15084,7 @@ end
 % math with the package option bidi=.
 %
 %    \begin{macrocode}
-\ifnum\bbl@bidimode>\@ne % Excludes default=1
+\ifnum\bbl@bidimode>\@ne % Any bidi= except default=1
   \let\bbl@beforeforeign\leavevmode
   \AtEndOfPackage{\EnableBabelHook{babel-bidi}}
   \RequirePackage{luatexbase}
@@ -15189,7 +15139,7 @@ end
 % math.
 %
 %    \begin{macrocode}
-\ifnum\bbl@bidimode>\z@
+\ifnum\bbl@bidimode>\z@ % Any bidi=
   \def\bbl@insidemath{0}%
   \def\bbl@everymath{\def\bbl@insidemath{1}}
   \def\bbl@everydisplay{\def\bbl@insidemath{2}}
@@ -15227,6 +15177,17 @@ end
 % --, margins, etc.) with |bidi=basic|, without having to patch
 % almost any macro where text direction is relevant.
 %
+% Still, there are three areas deserving special attention, namely,
+% tabular, math, and graphics, text and intrinsically left-to-right
+% elements are intermingled. I've made some progress in graphics, but
+% they're essentially hacks; I've also made some progress in `tabular`,
+% but when I decided to tackle math (both standard math and `amsmath`)
+% the nightmare began. I'm still not sure how `amsmath` should be
+% modified, but the main problem is that, boxes are “generic”
+% containers that can hold text, math, and graphics (even at the same
+% time; remember that inline math is included in the list of text nodes
+% marked with 'math' (11) nodes too).
+%
 % |\@hangfrom| is useful in many contexts and it is redefined always
 % with the |layout| option.
 %
@@ -15251,7 +15212,7 @@ end
 \DeclareOption{fleqn}{\chardef\bbl@eqnpos\tw@}
 %<</More package options>>
 %
-\ifnum\bbl@bidimode>\z@
+\ifnum\bbl@bidimode>\z@ % Any bidi=
   \ifx\matheqdirmode\@undefined\else
     \matheqdirmode\@ne % A luatex primitive
   \fi
@@ -15449,7 +15410,7 @@ end
   {\IfBabelLayout{notabular}%
     {\chardef\bbl@tabular@mode\z@}%
     {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
-\ifnum\bbl@bidimode>\@ne
+\ifnum\bbl@bidimode>\@ne % Any bidi= except default=1
   \ifnum\bbl@tabular@mode=\@ne
     \let\bbl@parabefore\relax
     \AddToHook{para/before}{\bbl@parabefore}
@@ -15494,7 +15455,7 @@ end
 % |\@hangfrom|.
 %    
 %    \begin{macrocode}
-\ifnum\bbl@bidimode>\z@
+\ifnum\bbl@bidimode>\z@ % Any bidi=
   \def\bbl@nextfake#1{%  non-local changes, use always inside a group!
     \bbl@exp{%
       \def\\\bbl@insidemath{0}%

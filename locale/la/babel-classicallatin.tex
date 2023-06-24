@@ -15,11 +15,7 @@
   \def\BabelDated#1{\@Roman{#1}}}
 
 \StartBabelCommands{\languagename}{}
-  \SetCase
-    {\uccode`u=`V\relax}
-    {\lccode`V=`u\relax}
-  \SetHyphenMap{%
-    \BabelLower{`V}{`u}}
+  \SetHyphenMap{\BabelLower{`V}{`u}}
 \EndBabelCommands
 
 \endinput
