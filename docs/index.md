@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.90](news/whats-new-in-babel-3.90.html) | (dev).|
 | [3.89](news/whats-new-in-babel-3.89.html) | Option `modifiers.<lang>`.|
 | [3.88](news/whats-new-in-babel-3.88.html) | 37 new locale files. |
 | [3.87](news/whats-new-in-babel-3.87.html) | Mainly fixes and minor improvements. |
