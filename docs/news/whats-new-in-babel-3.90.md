@@ -5,7 +5,7 @@
 ## Casing
 
 The option `casing` introduced experimentally in version 3.88 should
-work. Here is again the explanation
+now work. Here is again the explanation.
 
 There is a new option in `\babelprovide` to set the default casing
 rules in a few languages. They are (from `interface3.pdf`):
@@ -22,7 +22,7 @@ For example:
 \babelprovide[casing=iota]{greek}
 ```
 
-New in 3.90 is a few of macros devised as a high level interface for
+New in 3.90 is a couple of macros devised as a high level interface for
 declaring case mappings, based on the locale name as declared by or
 with `babel`. They are the equivalent of `\DeclareUppercaseMapping` and
 `\DeclareLowercaseMapping` (see `usrguide.pdf`):
@@ -30,7 +30,7 @@ with `babel`. They are the equivalent of `\DeclareUppercaseMapping` and
 * `\BabelUppercaseMapping{<locale name>}{<codepoint>}{<output>}`
 * `\BabelLowercaseMapping{<locale name>}{<codepoint>}{<output>}`
 
-(TODO: Titlecase)
+(A variant for titlecasing will follow soon.)
 
 The purpose is twofold:
 * A user-friendly way to declare them, because often BCP 47 tags are not
