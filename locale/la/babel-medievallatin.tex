@@ -15,12 +15,11 @@
   \def\BabelDated#1{\@Roman{#1}}}
 
 \StartBabelCommands{\languagename}{}
-  \SetHyphenMap{%
-    \BabelLower{`V}{`u}}
+  \SetHyphenMap{\BabelLower{`V}{`u}}
 \EndBabelCommands
 
 % TODO. Must be defined somehow in the ini file:
-\DeclareUppercaseMapping[la-x-medieval]{`u}{V}
-\DeclareLowercaseMapping[la-x-medieval]{`v}{U}
+\BabelUppercaseMapping{\languagename}{`u}{V}
+\BabelLowercaseMapping{\languagename}{`v}{U}
 
 \endinput

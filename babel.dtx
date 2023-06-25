@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/06/24 v3.89.17574 The Babel package]
+\ProvidesFile{babel.dtx}[2023/06/25 v3.89.17639 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -280,7 +280,9 @@ found a bug, I strongly beg you to report it in
 \href{https://github.com/latex3/babel/issues}{GitHub}, which is much
 better than just complaining on an e-mail list or a web forum. Remember
 \textit{warnings are not errors} by themselves, they just warn about
-possible problems or incompatibilities.
+possible problems or incompatibilities. Hyphenation rules are
+maintained separately
+\href{https://github.com/hyphenation/tex-hyphen}{here}.
 
 \item[\sffamily\color{messages}How can I contribute a new
 language?] See section \ref{contribute} for contributing a language.
@@ -5416,8 +5418,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.89.17574>>
-%<<date=2023/06/24>>
+%<<version=3.89.17639>>
+%<<date=2023/06/25>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12308,7 +12310,7 @@ wouldn’t exist.
 \bbl@trace{Loading basic (internal) bidi support}
 \ifodd\bbl@engine
 \else % TODO. Move to txtbabel
-  \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200 % Any lua bidi=
+  \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200 % Any xe+lua bidi=
     \bbl@error
       {The bidi method 'basic' is available only in\\%
        luatex. I'll continue with 'bidi=default', so\\%
@@ -15084,6 +15086,7 @@ end
 % math with the package option bidi=.
 %
 %    \begin{macrocode}
+\breakafterdirmode=1
 \ifnum\bbl@bidimode>\@ne % Any bidi= except default=1
   \let\bbl@beforeforeign\leavevmode
   \AtEndOfPackage{\EnableBabelHook{babel-bidi}}
