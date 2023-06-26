@@ -1,6 +1,6 @@
-## Babel 3.89.17639
+## Babel 3.90
 
-*Development.*
+2023-06-26
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,20 +48,18 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.90  (dev)
-      * Main language selected at begindocument/before.
+3.90  2023-06-26
+      * Main language selected at begindocument/before (#240).
       * Option to limit the number of inserted tatweel.
-      * New macros `\BabelUppercaseMapping`, 
-        `\BabelLowercaseMapping`, and...
-
-3.89  2023-05-11
-      * Deprecating \SetCase, \aliasshorthands, and 'strings' package
-        option in the manual.
-      * The manual has been split in two documents: 'babel.pdf' is the
-        user guide, and 'babel-code.pdf' is the code.
-      * Alternative syntax to pass 'modifiers' to babel languages.
-      * Code cleaned up: babel.def has been shortened dramatically,
-        and babel.sty is a bit smaller.
+      * New macros `\BabelUppercaseMapping` and 
+        `\BabelLowercaseMapping`.
+      * Fix: line breaking was sometimes prevented when switching the
+        text direction (#213).
+      * Locale names (in ini files):
+        - `classicallatin` and `ecclesiasticallatin` now preferred to 
+          `classiclatin` and `ecclesiasticlatin`.
+        - `farsi` is a synonymous for `persian`. 
+        - `vietnam` removed - use `vietnamese`.
 ```
 
 ### Previous changes

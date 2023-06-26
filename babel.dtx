@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/06/25 v3.89.17639 The Babel package]
+\ProvidesFile{babel.dtx}[2023/06/26 v3.90 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2577,6 +2577,34 @@ hyphenation. The rest of the language definitions are not touched.
 Without the optional argument it just loads some aditional tools if
 provided by the |ini| file, like extra counters.
 
+\Describe{\BabelUppercaseMapping}
+  {\marg{locale-name}\marg{codepoint}\marg{output}}
+\DescribeOther{\BabelLowercaseMapping}
+  {\marg{locale-name}\marg{codepoint}\marg{output}}
+
+\New{3.90} These macros are devised as a high level interface for
+declaring case mappings, based on the locale name as declared by or
+with \babel. They are the equivalent of |\DeclareUppercaseMapping| and
+|\DeclareLowercaseMapping| (see \textsf{usrguide.pdf}). The purpose is
+twofold: (1) a user-friendly way to declare them, because
+often BCP 47 tags are not known (and sometimes can be complex);
+(2) if for some reason the tag changes (eg, you decide to tag
+`english` as `en-001` instead of `en-US`), the new mappings will be
+still assigned to that language.
+
+\begin{example} For Classical Latin (no need to know the tag is
+\texttt{la-x-classic}):
+\begin{verbatim}
+  \BabelUppercaseMapping{classicallatin}{`u}{V}
+\end{verbatim}
+\end{example}
+
+\begin{note}
+  There are still some rough edges when declaring a mapping with the
+  |x| extension, or when two \babel{} languages share the same BCP 47
+  tag. These issues will be sorted out in future releases.
+\end{note}
+
 \subsection{Creating a language}
 
 \New{3.10} And what if there is no style for your language or none fits
@@ -2741,7 +2769,6 @@ Remerber there is an alternative syntax for the latter:
 
 Finally, also remember you might not need to load |italian| at all if
 there are only a few word in this language (see~\ref{mostlymono}).
-
 \end{example}
 
 \Describe{script=}{\meta{script-name}}
@@ -2763,7 +2790,28 @@ See the next section.
 
 \Describe{Alph=}{\meta{counter-name}} Same for |\Alph|.
 
-\bigskip
+\Describe{casing}{\meta{rules}} \New{3.90} Selects the casing rules in a few
+languages. They are (from \textsf{interface3.pdf}):
+\begin{description}
+  \item[Armenian] |yiwn|, which maps U+0587 to capital ech and yiwn on
+    uppercasing.
+  \item[German] |eszett|, which maps the lowercase \textit{Eszett} to a
+  \textit{großes Eszett}.
+  \item[Greek] |iota|, which converts the \textit{ypogegrammeni} (subscript muted
+    iota) to capital iota when uppercasing.
+\end{description}
+
+\begin{example} For the latter:
+\begin{verbatim}
+\usepackage[greek]{babel}
+\babelprovide[_casing=iota_]{greek} 
+\end{verbatim}
+\end{example}
+
+\smallskip
+\makebox[\linewidth][c]{*\qquad*\qquad*}
+\smallskip
+
 
 A few options (only \luatex) set some properties of the writing system
 used by the language. These properties are \textit{always} applied to
@@ -5418,8 +5466,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.89.17639>>
-%<<date=2023/06/25>>
+%<<version=3.90>>
+%<<date=2023/06/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14470,7 +14518,7 @@ Babel.arabic.from = {}
 Babel.arabic.dest = {}
 Babel.arabic.justify_factor = 0.95
 Babel.arabic.justify_enabled = true
-Babel.arabic.tatwil_max = -1
+Babel.arabic.kashida_limit = -1
 
 function Babel.arabic.justify(head)
   if not Babel.arabic.justify_enabled then return head end
@@ -14599,12 +14647,12 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
 
     % Limit the number of tatweel by removing them. Not very efficient,
     % but it does the job in a quite predictable way.
-    if Babel.arabic.tatwil_max > -1 then
+    if Babel.arabic.kashida_limit > -1 then
       cnt = 0
       for n in node.traverse_id(GLYPH, line.head) do
         if n.char == 0x0640 then
           cnt = cnt + 1
-          if cnt > Babel.arabic.tatwil_max then
+          if cnt > Babel.arabic.kashida_limit then
             node.remove(line.head, n)
           end
         else
