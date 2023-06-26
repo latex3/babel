@@ -1,6 +1,6 @@
 # What's new in babel 3.90
 
-**Draft**
+2023-06-26
 
 ## Casing
 
@@ -51,9 +51,14 @@ issues will be sorted out in future releases.
 ## Improvements in Arabic justification
 
 Kashida are built by adding the Unicode ARABIC TATWEEL character. Now a
-limit can be set with ... The width of the glyph can vary greatly with
-the font, and so does the exact value of this parameter (which is
-currently global).
+limit can be set with a parameter as illustrated:
+```
+\directlua{  Babel.arabic.kashida_limit = 3 }
+```
+`0` means ‘add nothing’ and `-1` means ‘no limit’.
+
+The width of the glyph can vary greatly with the font, and so does the
+exact value of this parameter (which is currently global).
 
 ## Locale names
 
@@ -69,8 +74,8 @@ currently global).
 * `\normalsfcodes` had a wrong value in heads and foots, which meant the
   text was sometimes badly spaced after dots, colons and the like
   (#240).
-
-
+* Line breaking was sometimes prevented when switching the text
+  direction (#213).
 
 
 
