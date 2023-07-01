@@ -1,3 +1,4 @@
+
 # What's new in babel 3.90
 
 2023-06-26
@@ -75,7 +76,7 @@ exact value of this parameter (which is currently global).
   text was sometimes badly spaced after dots, colons and the like
   (#240).
 * Line breaking was sometimes prevented when switching the text
-  direction (#213).
+  direction (#213). Thanks to Udi Fogiel.
 
 
 
