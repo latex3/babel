@@ -1,6 +1,6 @@
-## Babel 3.90
+## Babel 3.90.18344
 
-2023-06-26
+**Draft**
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.91  (dev)
+      * Fixes:
+        - #241
+        - #246
 3.90  2023-06-26
       * Main language selected at begindocument/before (#240).
       * Option to limit the number of inserted tatweel.

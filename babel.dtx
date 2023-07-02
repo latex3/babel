@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/06/26 v3.90 The Babel package]
+\ProvidesFile{babel.dtx}[2023/07/02 v3.90.18344 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2941,7 +2941,7 @@ Languages providing native digits in all or some variants are:
 Arabic\\
 Assamese\\
 Bangla\\
-Tibetar\\
+Tibetan\\
 Bodo\\
 Central Kurdish\\
 Dzongkha\\
@@ -5466,8 +5466,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.90>>
-%<<date=2023/06/26>>
+%<<version=3.90.18344>>
+%<<date=2023/07/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14436,13 +14436,8 @@ end
 \gdef\bbl@arabicjust{%
   \let\bbl@arabicjust\relax
   \newattribute\bblar@kashida
-  \newattribute\bblar@kashida@aux % 0, 1=tatweel, 2=diacritics
-  \directlua{%  WIP
-    Babel.attr_kashida = luatexbase.registernumber'bblar@kashida' 
-    Babel.attr_kashida_aux = luatexbase.registernumber'bblar@kashida@aux'
-  }%
+  \directlua{ Babel.attr_kashida = luatexbase.registernumber'bblar@kashida' }%
   \bblar@kashida=\z@
-  \bblar@kashida@aux=\z@
   \bbl@patchfont{{\bbl@parsejalt}}%
   \directlua{
     Babel.arabic.elong_map   = Babel.arabic.elong_map or {}
@@ -14904,7 +14899,6 @@ end
   \@ifnextchar[{\bbl@settransform{0}}{\bbl@settransform{0}[]}}
 \gdef\babelposthyphenation{&%
   \@ifnextchar[{\bbl@settransform{1}}{\bbl@settransform{1}[]}}
-\gdef\bbl@postlinebreak{\bbl@settransform{2}[]} &% WIP
 \gdef\bbl@settransform#1[#2]#3#4#5{&%
   \ifcase#1
     \bbl@activateprehyphen
@@ -14985,7 +14979,7 @@ end
       local lbkr = Babel.linebreaking.replacements[#1]
       local u = unicode.utf8
       local id, attr, label
-      if #1 == 0 or #1 == 2 then
+      if #1 == 0 then
         id = \the\csname bbl@id@@#3\endcsname\space
       else
         id = \the\csname l@#3\endcsname\space
@@ -15000,7 +14994,7 @@ end
       \fi
       &% Convert pattern:
       local patt = string.gsub([==[#4]==], '%s', '')
-      if #1 == 0 or #1 == 2 then
+      if #1 == 0 then
         patt = string.gsub(patt, '|', ' ')
       end
       if not u.find(patt, '()', nil, true) then
@@ -15488,11 +15482,23 @@ end
              {}}%
     \fi}
   \fi
+%    \end{macrocode}
+%
+% Very likely the |\output| routine must be patched in a quite general
+% way to make sure the |\bodydir| is set to |\pagedir|. Note outside
+% |\output| they can be different (and often are). For the moment, two
+% \textit{ad hoc} changes.
+%
+%    \begin{macrocode}
   \AtBeginDocument{%
     \@ifpackageloaded{multicol}%
       {\toks@\expandafter{\multi@column@out}%
        \edef\multi@column@out{\bodydir\pagedir\the\toks@}}%
-      {}}
+      {}%
+    \@ifpackageloaded{paracol}%
+      {\edef\pcol@output{%
+        \bodydir\pagedir\unexpanded\expandafter{\pcol@output}}}%
+      {}}%
 \fi
 \ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
 %    \end{macrocode}
@@ -15684,9 +15690,12 @@ end
 %
 %    \begin{macrocode}
 \IfBabelLayout{extras}%
-  {\let\bbl@OL@underline\underline
-   \bbl@sreplace\underline{$\@@underline}{\bbl@nextfake$\@@underline}%
-   \let\bbl@OL@LaTeX2e\LaTeX2e
+  {\bbl@ncarg\let\bbl@OL@underline{underline }%
+   \bbl@carg\bbl@sreplace{underline }%
+     {$\@@underline}{\bgroup\bbl@nextfake$\@@underline}%
+   \bbl@carg\bbl@sreplace{underline }%
+     {\m@th$}{\m@th$\egroup}%
+   \let\bbl@OL@LaTeXe\LaTeXe
    \DeclareRobustCommand{\LaTeXe}{\mbox{\m@th
      \if b\expandafter\@car\f@series\@nil\boldmath\fi
      \babelsublr{%
@@ -15720,7 +15729,6 @@ end
 Babel.linebreaking.replacements = {}
 Babel.linebreaking.replacements[0] = {}  -- pre 
 Babel.linebreaking.replacements[1] = {}  -- post
-Babel.linebreaking.replacements[2] = {}  -- post-line WIP
 
 -- Discretionaries contain strings as nodes
 function Babel.str_to_nodes(fn, matches, base)
@@ -15872,7 +15880,6 @@ Babel.us_char = string.char(31)
 function Babel.hyphenate_replace(head, mode)
   local u = unicode.utf8
   local lbkr = Babel.linebreaking.replacements[mode]
-  if mode == 2 then mode = 0 end -- WIP
 
   local word_head = head
 
