@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/07/02 v3.90.18344 The Babel package]
+\ProvidesFile{babel.dtx}[2023/07/08 v3.90.18929 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5466,8 +5466,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.90.18344>>
-%<<date=2023/07/02>>
+%<<version=3.90.18929>>
+%<<date=2023/07/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15370,10 +15370,13 @@ end
       \AddToHook{env/gather*/begin}{\bbl@ams@preset\bbl@ams@lap}%
       \AddToHook{env/align/begin}{\bbl@ams@preset\bbl@ams@lap}%
       \AddToHook{env/align*/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/alignat/begin}{\bbl@ams@preset\bbl@ams@lap}%
+      \AddToHook{env/alignat*/begin}{\bbl@ams@preset\bbl@ams@lap}%
       \AddToHook{env/eqnalign/begin}{\bbl@ams@preset\hbox}%
       % Hackish, for proper alignment. Don’t ask me why it works!:
       \bbl@exp{% Avoid a 'visible' conditional
-        \\\AddToHook{env/align*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
+        \\\AddToHook{env/align*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}%
+        \\\AddToHook{env/alignat*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
       \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
       \AddToHook{env/split/before}{%
         \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%

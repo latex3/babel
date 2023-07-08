@@ -1,4 +1,4 @@
-## Babel 3.90.18344
+## Babel 3.90.18929
 
 **Draft**
 
@@ -49,9 +49,12 @@ respective authors.
 ### Summary of latest changes
 ```
 3.91  (dev)
+      * Transform for transliterated Hebrew, based on cjhebrew.
       * Fixes:
         - #241
         - #246
+        - #208
+        
 3.90  2023-06-26
       * Main language selected at begindocument/before (#240).
       * Option to limit the number of inserted tatweel.
