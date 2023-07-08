@@ -22,3 +22,21 @@ belong to the transliteration proper:
   `amsmath`environments patched for they to work in RTL mode (#208).
 * The package option `layout=extras` was severely broken (#246).
 * English and Arabic document breaks when using paracol (#241).
+
+## Experimental: transforming strings
+
+
+The experimental (an unfinished) macro `\localeprehyphenation`applies
+the prehyphenation transforms for the current locale to a string
+(letters and spaces) and processes it in a fully expandable way (among
+other limitations, the string can’t contain |]==]|).
+
+The way it operates is admittedly rather cumbersome: it converts the
+string to a node list, processes it, and converts it back to a string.
+
+It takes an argument with the string to be converted. So, assuming the
+`omega` transliteration for Greek is active, the following command stores
+in `\mymacro` the string ‘γεια σας’:
+```tex
+\edef\mymacro{\localeprehyphenation{geia sac}}
+```
