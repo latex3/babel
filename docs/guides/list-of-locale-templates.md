@@ -1,5 +1,7 @@
 # List of locale templates
 
+`Babel` provides currently more than 300 `ini` files for about 250 lamguages, which are listed in the manual. In addition, a set of about 500 template files, with a minimal content, are available in this respository.
+
 Here is the list of languages with a minimal `ini` + `tex` template. A few directories contain several `ini` files: for the ‘likely’ script as provided by the Unicode CLDR, and for other scripts. An example is Mundari: `unr` with the Bengali script, and `unr-Deva` with Devanagari.
 
 You can use them to define a new locale just by filling (and fixing if necessary) the empty fields of the required locale, taking some existing one as a model. Feel free to ask for help, and to make feature requests if your language needs specific layout, typographical or cultural conventions.
