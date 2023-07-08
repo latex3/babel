@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/07/08 v3.90.18929 The Babel package]
+\ProvidesFile{babel.dtx}[2023/07/08 v3.90.18967 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5466,7 +5466,7 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.90.18929>>
+%<<version=3.90.18967>>
 %<<date=2023/07/08>>
 %    \end{macrocode}
 %
@@ -15075,6 +15075,19 @@ end
   }}
 %    \end{macrocode}
 %
+% The following experimental (an unfinished) macro applies the
+% prehyphenation transforms for the current locale to a string (letters
+% and spaces) and processes it in a fully expandable way (among other
+% limitations, the string can’t contain |]==]|). The way it operates is
+% admittedly rather cumbersome: it converts the string to a node list,
+% processes it, and converts it back to a string. The lua code is in the
+% lua file below.
+%
+%    \begin{macrocode}
+\newcommand\localeprehyphenation[1]{%
+  \directlua{ Babel.string_prehyphenation([==[#1]==], \the\localeid) }}
+%    \end{macrocode}
+%
 % \subsection{Bidi}
 %
 % As a first step, add a handler for bidi and digits (and potentially
@@ -16212,6 +16225,35 @@ function Babel.capture_kashida(key, wt)
     Babel.kashida_wts = { wt }
   end
   return 'kashida = ' .. wt
+end
+
+-- Experimental: applies prehyphenation transforms to a string (letters
+-- and spaces). 
+function Babel.string_prehyphenation(str, locale)
+  local n, head, last, res
+  head = node.new(8, 0) -- dummy (hack just to start)
+  last = head
+  for s in string.utfvalues(str) do
+    if s == 20 then
+      n = node.new(12, 0)
+    else
+      n = node.new(29, 0)
+      n.char = s
+    end
+    node.set_attribute(n, Babel.attr_locale, locale)
+    last.next = n
+    last = n
+  end
+  head = Babel.hyphenate_replace(head, 0)  
+  res = ''
+  for n in node.traverse(head) do
+    if n.id == 12 then
+      res = res .. ' '
+    elseif n.id == 29 then
+      res = res .. unicode.utf8.char(n.char)
+    end
+  end 
+  tex.print(res)
 end
 %</transforms>
 %    \end{macrocode}

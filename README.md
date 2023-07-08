@@ -1,4 +1,4 @@
-## Babel 3.90.18929
+## Babel 3.90.18967
 
 **Draft**
 
@@ -54,6 +54,8 @@ respective authors.
         - #241
         - #246
         - #208
+      * Experimental: transforming strings with
+        `\localeprehyphenation`.
         
 3.90  2023-06-26
       * Main language selected at begindocument/before (#240).
