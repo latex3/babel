@@ -1,6 +1,6 @@
-## Babel 3.90.18967
+## Babel 3.91
 
-**Draft**
+2023-07-09
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.90 are described in:
+Changes in version 3.91 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.90.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.91.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,27 +48,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.91  (dev)
+3.91  2023-07-09
       * Transform for transliterated Hebrew, based on cjhebrew.
       * Fixes:
-        - #241
-        - #246
-        - #208
+        - alignat and alignat* (amsmath) should now work in RTL mode (#208).
+        - The package option `layout=extras` was severely broken (#246).
+        - English and Arabic documents broken when using paracol (#241).
       * Experimental: transforming strings with
         `\localeprehyphenation`.
-        
-3.90  2023-06-26
-      * Main language selected at begindocument/before (#240).
-      * Option to limit the number of inserted tatweel.
-      * New macros `\BabelUppercaseMapping` and 
-        `\BabelLowercaseMapping`.
-      * Fix: line breaking was sometimes prevented when switching the
-        text direction (#213).
-      * Locale names (in ini files):
-        - `classicallatin` and `ecclesiasticallatin` now preferred to 
-          `classiclatin` and `ecclesiasticlatin`.
-        - `farsi` is a synonymous for `persian`. 
-        - `vietnam` removed - use `vietnamese`.
 ```
 
 ### Previous changes
