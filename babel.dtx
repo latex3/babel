@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/07/09 v3.91 The Babel package]
+\ProvidesFile{babel.dtx}[2023/07/09 v3.91.19073 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5466,7 +5466,7 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.91>>
+%<<version=3.91.19073>>
 %<<date=2023/07/09>>
 %    \end{macrocode}
 %
@@ -7678,9 +7678,18 @@ wouldn’t exist.
       \string\providecommand\string\babel@aux[2]{}}%
     \immediate\write\@mainaux{\string\@nameuse{bbl@beforestart}}%
   \fi
-%<-package>
   \expandafter\selectlanguage\expandafter{\bbl@main@language}%
-%<+package>
+%<-core>
+  \ifx\bbl@normalsf\@empty
+    \ifnum\sfcode`\.=\@m
+      \let\normalsfcodes\frenchspacing
+    \else
+      \let\normalsfcodes\nonfrenchspacing
+    \fi
+  \else
+    \let\normalsfcodes\bbl@normalsf
+  \fi
+%<+core>
   \ifbbl@single  % must go after the line above.
     \renewcommand\selectlanguage[1]{}%
     \renewcommand\foreignlanguage[2]{#2}%
@@ -7688,7 +7697,8 @@ wouldn’t exist.
   \fi}
 %<-core>
 \AddToHook{begindocument/before}{%
-  \expandafter\selectlanguage\expandafter{\bbl@main@language}}
+  \let\bbl@normalsf\normalsfcodes
+  \let\normalsfcodes\relax} % Hack, to delay the setting
 %<+core>
 \ifcase\bbl@engine\or
   \AtBeginDocument{\pagedir\bodydir} % TODO - a better place
@@ -13432,6 +13442,8 @@ wouldn’t exist.
 %     still not sure -- must investigate:
 \def\bbl@fontspec@set#1#2#3#4{% eg \bbl@rmdflt@lang fnt-opt fnt-nme \xxfamily
   \let\bbl@tempe\bbl@mapselect
+  \edef\bbl@tempb{\bbl@stripslash#4/}% Catcodes hack (better pass it).
+  \bbl@exp{\\\bbl@replace\\\bbl@tempb{\bbl@stripslash\family/}{}}%
   \let\bbl@mapselect\relax
   \let\bbl@temp@fam#4%       eg, '\rmfamily', to be restored below
   \let#4\@empty      %       Make sure \renewfontfamily is valid
@@ -13446,7 +13458,7 @@ wouldn’t exist.
     \let\\\bbl@tempfs@nxx\<__fontspec_warning:nxx>%
     \let\<__fontspec_warning:nxx>\\\bbl@fs@warn@nxx
     \\\renewfontfamily\\#4%
-      [\bbl@cl{lsys},#2]}{#3}% ie \bbl@exp{..}{#3}
+      [\bbl@cl{lsys},RawFeature={family=\bbl@tempb},#2]}{#3}% ie \bbl@exp{..}{#3}
   \bbl@exp{%
     \let\<__fontspec_warning:nx>\\\bbl@tempfs@nx
     \let\<__fontspec_warning:nxx>\\\bbl@tempfs@nxx}%
