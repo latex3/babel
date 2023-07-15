@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.92](news/whats-new-in-babel-3.92.html) | A couple of fixes.|
 | [3.91](news/whats-new-in-babel-3.91.html) | Mainly fixes and transliteration for Hebrew.|
 | [3.90](news/whats-new-in-babel-3.90.html) | Casing.|
 | [3.89](news/whats-new-in-babel-3.89.html) | Option `modifiers.<lang>`.|
