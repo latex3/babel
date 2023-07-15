@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/07/09 v3.91.19073 The Babel package]
+\ProvidesFile{babel.dtx}[2023/07/15 v3.92 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5466,8 +5466,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.91.19073>>
-%<<date=2023/07/09>>
+%<<version=3.92>>
+%<<date=2023/07/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13458,7 +13458,9 @@ wouldn’t exist.
     \let\\\bbl@tempfs@nxx\<__fontspec_warning:nxx>%
     \let\<__fontspec_warning:nxx>\\\bbl@fs@warn@nxx
     \\\renewfontfamily\\#4%
-      [\bbl@cl{lsys},RawFeature={family=\bbl@tempb},#2]}{#3}% ie \bbl@exp{..}{#3}
+      [\bbl@cl{lsys},%
+       \ifcase\bbl@engine\or RawFeature={family=\bbl@tempb},\fi
+       #2]}{#3}% ie \bbl@exp{..}{#3}
   \bbl@exp{%
     \let\<__fontspec_warning:nx>\\\bbl@tempfs@nx
     \let\<__fontspec_warning:nxx>\\\bbl@tempfs@nxx}%

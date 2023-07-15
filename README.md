@@ -1,6 +1,6 @@
-## Babel 3.91.19073
+## Babel 3.92
 
-2023-07-09
+2023-07-15
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.91 are described in:
+Changes in version 3.92 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.91.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.92.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,6 +48,13 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.92  2023-07-15
+      * The fix for #240 in version 3.90, related to `\normalsfcodes`,
+        broke the `onchar` mechanism in some cases and some other
+        things. A different fix has been devised.
+      * Weird behavior when declaring the same font for two families
+        (#178).
+
 3.91  2023-07-09
       * Transform for transliterated Hebrew, based on cjhebrew.
       * Fixes:

@@ -29,3 +29,7 @@ Package pdftex.def Info: foo.pdf  used on input line ....
 ! OK.
 l. ......ncludegraphics[width=\linewidth]{foo.pdf}}
 (tlb3523.aux)
+ ***********
+LaTeX2e <2023-06-01> patch level 1
+L3 programming layer <2023-06-16>
+ ***********

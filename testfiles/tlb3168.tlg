@@ -44,3 +44,7 @@ l. ...\setbox0\hbox{>'Anjrwp'os}\showbox0
 .\OT1/cmr/m/n/10 h
 ! OK.
 l. ...\setbox0\hbox{english}\showbox0
+ ***********
+LaTeX2e <2023-06-01> patch level 1
+L3 programming layer <2023-06-16>
+ ***********

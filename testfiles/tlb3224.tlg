@@ -47,3 +47,7 @@ l. ...}{}}
 * After nested \ifthenelse: \protected macro:->\__cmd_start:nNNnnn {s}\pageref  \pageref code {\__cmd_grab_t:w *}{}{}
 [1
 ] (tlb3224.aux)
+ ***********
+LaTeX2e <2023-06-01> patch level 1
+L3 programming layer <2023-06-16>
+ ***********

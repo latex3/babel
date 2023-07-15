@@ -6,7 +6,7 @@ Package: babel
     Options: francais
 > \box...=
 \vbox(70.13878+0.0)x345.0
-.\write1{\newlabel{titi:234}{{}{\thepage }}}
+.\write1{\newlabel{titi:234}{{}{\thepage }{}{}{}}}
 .\glue(\parskip) 0.0
 .\glue(\parskip) 0.0
 .\hbox(7.5+2.5)x345.0, glue set 305.55545fil
@@ -90,3 +90,7 @@ Package: babel
 ! OK.
 l. ...\showbox0
 (tlb2155.aux)
+ ***********
+LaTeX2e <2023-06-01> patch level 1
+L3 programming layer <2023-06-16>
+ ***********

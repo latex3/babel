@@ -39,3 +39,7 @@ Package: harvard
 l. ...\setbox0=\hbox{\cite{cortes71}}\showbox0
 [1
 ] (tlb2430.aux)
+ ***********
+LaTeX2e <2023-06-01> patch level 1
+L3 programming layer <2023-06-16>
+ ***********

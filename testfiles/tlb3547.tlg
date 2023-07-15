@@ -34,8 +34,12 @@ Package: showkeys
 .......\rule(*+*)x0.4
 ......\rule(0.4+0.0)x*
 ..\glue 0.0 plus 1.0fil minus 1.0fil
-.\write1{\newlabel{test:test}{{}{\thepage }}}
+.\write1{\newlabel{test:test}{{}{\thepage }{}{}{}}}
 ! OK.
 l. ...\testit{\label{test:test}} 
                                            % printed ``test\protect :test''"
 (tlb3547.aux)
+ ***********
+LaTeX2e <2023-06-01> patch level 1
+L3 programming layer <2023-06-16>
+ ***********
