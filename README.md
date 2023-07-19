@@ -1,6 +1,6 @@
-## Babel 3.92
+## Babel 3.92.20074
 
-2023-07-15
+** Dev **
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.93  (dev)
+      * Fixes.
+
 3.92  2023-07-15
       * The fix for #240 in version 3.90, related to `\normalsfcodes`,
         broke the `onchar` mechanism in some cases and some other

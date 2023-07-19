@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/07/15 v3.92 The Babel package]
+\ProvidesFile{babel.dtx}[2023/07/19 v3.92.20074 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5466,8 +5466,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.92>>
-%<<date=2023/07/15>>
+%<<version=3.92.20074>>
+%<<date=2023/07/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15485,8 +15485,8 @@ end
   {\IfBabelLayout{notabular}%
     {\chardef\bbl@tabular@mode\z@}%
     {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
-\ifnum\bbl@bidimode>\@ne % Any bidi= except default=1
-  \ifnum\bbl@tabular@mode=\@ne
+\ifnum\bbl@bidimode>\@ne % Any lua bidi= except default=1
+  \ifcase\bbl@tabular@mode\or % 1
     \let\bbl@parabefore\relax
     \AddToHook{para/before}{\bbl@parabefore}
     \AtBeginDocument{%
@@ -15510,7 +15510,18 @@ end
                 \\\bbl@sreplace\\\@classz
                   {\\\do@row@strut\<fi>}{\\\do@row@strut\<fi>\egroup}}}%
              {}}%
-    \fi}
+    \fi}%
+  \or % 2
+    \let\bbl@parabefore\relax
+    \AddToHook{para/before}{\bbl@parabefore}%
+    \AtBeginDocument{%
+      \@ifpackageloaded{colortbl}%
+        {\bbl@replace\@tabular{$}{$%
+           \def\bbl@insidemath{0}%
+           \def\bbl@parabefore{\localerestoredirs}}%
+         \bbl@sreplace\@classz
+           {\hbox\bgroup\bgroup}{\hbox\bgroup\bgroup\localerestoredirs}}%
+        {}}%
   \fi
 %    \end{macrocode}
 %
@@ -15576,7 +15587,10 @@ end
    \let\bbl@NL@@tabular\@tabular
    \AtBeginDocument{%
      \ifx\bbl@NL@@tabular\@tabular\else
-       \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+       \bbl@exp{\\\in@{\\\bbl@nextfake}{\[@tabular]}}%
+       \ifin@\else
+         \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+       \fi
        \let\bbl@NL@@tabular\@tabular
      \fi}}
    {}
