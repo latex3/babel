@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/07/19 v3.92.20074 The Babel package]
+\ProvidesFile{babel.dtx}[2023/08/09 v3.92.22182 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5466,8 +5466,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.92.20074>>
-%<<date=2023/07/19>>
+%<<version=3.92.22182>>
+%<<date=2023/08/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13425,6 +13425,14 @@ wouldn’t exist.
 % |\bbl@mapselect| because |\selectfont| is called internally when a
 % font is defined.
 %
+% For historical reasons, \LaTeX{} can select two different series
+% (|bx| and |b|), for what is conceptually a single one. This can
+% lead to problema when a single family requires several fonts,
+% depending on the language, mainly because ‘subtitutions’ with some
+% combinations are not done consistently -- sometimes |bx/sc| is the
+% correct font, but sometimes points to |b/n|. So, some subtitutions are
+% redefined (in a somewhat hackish way).
+%
 %    \begin{macrocode}
 \def\bbl@font@set#1#2#3{% eg \bbl@rmdflt@lang \rmdefault \rmfamily
   \bbl@xin@{<>}{#1}%
@@ -13468,6 +13476,16 @@ wouldn’t exist.
      #4%
      \xdef#1{\f@family}%     eg, \bbl@rmdflt@lang{FreeSerif(0)}
   \endgroup
+  \bbl@xin@{\string>\string s\string s\string u\string b\string*}%
+    {\expandafter\meaning\csname TU/#1/bx/sc\endcsname}%
+  \ifin@
+    \global\bbl@ccarg\let{TU/#1/bx/sc}{TU/#1/b/sc}%
+  \fi
+  \bbl@xin@{\string>\string s\string s\string u\string b\string*}%
+    {\expandafter\meaning\csname TU/#1/bx/scit\endcsname}%
+  \ifin@
+    \global\bbl@ccarg\let{TU/#1/bx/scit}{TU/#1/b/scit}%
+  \fi
   \let#4\bbl@temp@fam
   \bbl@exp{\let\<\bbl@stripslash#4\space>}\bbl@temp@pfam
   \let\bbl@mapselect\bbl@tempe}%
@@ -14433,6 +14451,10 @@ end
 %
 % \subsection{Arabic justification}
 %
+% WIP. |\bbl@arabicjust| is executed with both elongated an kashida.
+% This must be fine tuned. The attribute kashida is set by transforms
+% with |kashida|-
+%
 %    \begin{macrocode}
 \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200
 \def\bblar@chars{%
@@ -14461,13 +14483,17 @@ end
     luatexbase.add_to_callback('hpack_filter',
       Babel.arabic.justify_hbox, 'Babel.arabic.justify_hbox')
   }}% 
+%    \end{macrocode}
+%
 % Save both node lists to make replacement. TODO. Save also widths to
-% make computations
+% make computations.
+%
+%    \begin{macrocode}
 \def\bblar@fetchjalt#1#2#3#4{%
   \bbl@exp{\\\bbl@foreach{#1}}{%
     \bbl@ifunset{bblar@JE@##1}%
-      {\setbox\z@\hbox{^^^^200d\char"##1#2}}%
-      {\setbox\z@\hbox{^^^^200d\char"\@nameuse{bblar@JE@##1}#2}}%
+      {\setbox\z@\hbox{\textdir TRT ^^^^200d\char"##1#2}}%
+      {\setbox\z@\hbox{\textdir TRT ^^^^200d\char"\@nameuse{bblar@JE@##1}#2}}%
     \directlua{%
       local last = nil
       for item in node.traverse(tex.box[0].head) do
@@ -14477,10 +14503,14 @@ end
         end
       end
       Babel.arabic.#3['##1#4'] = last.char
-    }}}
-% Brute force. No rules at all, yet. The ideal: look at jalt table. And
-% perhaps other tables (falt?, cswh?). What about kaf? And diacritic
-% positioning?
+    }}}    
+%    \end{macrocode}
+%
+% Elongated forms. Brute force. No rules at all, yet. The ideal: look
+% at jalt table. And perhaps other tables (falt?, cswh?). What about
+% kaf? And diacritic positioning?
+%
+%    \begin{macrocode}
 \gdef\bbl@parsejalt{%
   \ifx\addfontfeature\@undefined\else
     \bbl@xin@{/e}{/\bbl@cl{lnbrk}}%
@@ -14516,7 +14546,11 @@ end
         end
       }%
   \endgroup}
+%    \end{macrocode}
 %
+% The actual justification (inspired by \textsc{chickenize}).
+%
+%    \begin{macrocode}
 \begingroup
 \catcode`#=11
 \catcode`~=11
@@ -14644,6 +14678,9 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
           node.remove(line.head, new) % Better compute before
           break
         end
+        if Babel.fix_diacr then
+          Babel.fix_diacr(k_item.next)
+        end
         width = width_new
       end
       if k_curr == 1 then
@@ -14685,7 +14722,7 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
 end
 }
 \endgroup
-\fi\fi % Arabic just block
+\fi\fi % ends Arabic just block: \ifnum\bbl@bidimode>100...
 %    \end{macrocode}
 %
 % \subsection{Common stuff}
