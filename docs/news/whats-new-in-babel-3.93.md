@@ -31,6 +31,37 @@ It can be customized with two macros:
 In case you need different settings for Hebrew and Yiddish, you can
 re(set) these values with the language.
 
+## Chinese calendar
+
+`\babelcalendar` now can convert dates to the Chinese calendar (years
+2015-2044). Intercalary months are numbered from 13 to 24, so that its
+number is 14 in the current year (2023), because it comes after the
+second month (so, 12 + 2).
+
+Strings in the corresponding locales are not yet defined (only in part).
+  
+## New locale files
+
+Many locale templates are quite useable, provided captions and dates
+are not required (which is a very frequent case, particularly in
+ancient languages). So, they will be included in the default `babel`
+distribution. This can serve to encourage contributions, too. A warning
+will remember they are ‘bare minumum locales’. The locales added in
+this release are:
+
+* `southernaltai`
+* `divehi`
+* `ancientegyptian`
+* `egyptianarabic` (aka Masri or Colloquial Egyptian, with tag `arz`,
+  not to be confused with the Standard Arabic as spoken in Egypt, with
+  tag `ar-EG`).
+* `phoenician` (note it’s an RTL language)
+* `newari`
+
+Note some of these language are not targeted (at least currently) by
+the Unicode CLDR, which is focused on written modern languages. This is
+not true for LaTeX.
+
 ## Fixes
 
 * Table with arabic text corrupted when trying to colour cells (#252).
@@ -39,24 +70,3 @@ re(set) these values with the language.
   and I was able to reproduce the issue without it. It’s rather an
   improvement in the way fonts are switched with languages (LaTeX
   assumes a single font and a single series tag per family).
-  
-## New locale files
-
-Many locale templates are quite useable, provided captions and dates
-are not required (which is a very frequent case). So, they will be
-included in the default `babel` distribution. This can serve to encourage
-contributions, too. A warning will remember they are ‘bare
-minumum locales’. The locales added in this release are:
-
-* `southernaltai`
-* `divehi`
-* `ancientegyptian` 
-* `egyptianarabic` (aka Masri or Colloquial Egyptian, with tag `arz`,
-  not ot be confused with the Standard Arabic as spoken in Egypt, with
-  tag `ar-EG`).
-* `phoenician` (note it’s an RTL language)
-* `newari`
-
-Note some of these language are not targeted (at least currently) by
-the Unicode CLDR, which is focused on written modern languages. This is
-not true for LaTeX.
