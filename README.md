@@ -1,4 +1,4 @@
-## Babel 3.92.22182
+s## Babel 3.92.22641
 
 ** Dev **
 
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.92 are described in:
+Changes in version 3.93 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.92.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.93.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -49,7 +49,13 @@ respective authors.
 ### Summary of latest changes
 ```
 3.93  (dev)
-      * Fixes.
+      * More Hebrew numerals (also Yiddish).
+      * Chinese calendar.
+      * Fixes:
+        -
+        -
+      * Added a few ‘bare minimum locales’: Southern Altai, Divehi,
+        Ancient Egyptian, Egyptian Arabic, Phoenician, Newari.
 
 3.92  2023-07-15
       * The fix for #240 in version 3.90, related to `\normalsfcodes`,
@@ -57,15 +63,6 @@ respective authors.
         things. A different fix has been devised.
       * Weird behavior when declaring the same font for two families
         (#178).
-
-3.91  2023-07-09
-      * Transform for transliterated Hebrew, based on cjhebrew.
-      * Fixes:
-        - alignat and alignat* (amsmath) should now work in RTL mode (#208).
-        - The package option `layout=extras` was severely broken (#246).
-        - English and Arabic documents broken when using paracol (#241).
-      * Experimental: transforming strings with
-        `\localeprehyphenation`.
 ```
 
 ### Previous changes
