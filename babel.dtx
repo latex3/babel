@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/08/14 v3.92.22641 The Babel package]
+\ProvidesFile{babel.dtx}[2023/08/29 v3.93 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2989,10 +2989,10 @@ which is not recommended).
 \Describe{\localenumeral}{\marg{style}\marg{number}}
 \DescribeOther{\localecounter}{\marg{style}\marg{counter}}
 
-\New{3.41} Many `ini` locale files has been extended with information
+\New{3.41} Many `ini` locale files provide information
 about non-positional numerical systems, based on those predefined in
 CSS. They only work with \xetex{} and \luatex{} and are fully
-expendable (even inside an unprotected |\edef|). Currently, they are
+expandable (even inside an unprotected |\edef|). Currently, they are
 limited to numbers below 10000.
 
 There are several ways to use them (for the availabe styles in each
@@ -3044,7 +3044,8 @@ The styles are:
 \item[Greek] |lower.modern|, |upper.modern|, |lower.ancient|,
 |upper.ancient| (all with keraia)
 
-\item[Hebrew] |letters| (neither geresh nor gershayim yet)
+\item[Hebrew] |letters| (\New{3.93} if the language is loaded
+explicitly, also |letters.plain|, |letters.gershayim|, |letters.final|)
 
 \item[Hindi] |alphabetic|
 
@@ -3091,7 +3092,9 @@ with the following command.
   {\marg{year}\marg{month}\marg{day}}}
 
 By default the calendar is the Gregorian, but an |ini| file may define
-strings for other calendars (currently |ar|, |ar-|*, |he|, |fa|, |hi|).
+strings for other calendars: |am| (|ethiopic|), |ar| and
+|ar-|* (|islamic|), |cop| (|coptic|), |fa| (|islamic|, |persian|), |he|
+(|hebrew|), |hi| (|indian|), |th| (|buddhist|).
 In the latter case, the three arguments are the year, the month, and
 the day in those in the corresponding calendar. They are \textit{not}
 the Gregorian data to be converted (which means, say, 13 is a valid
@@ -3103,6 +3106,32 @@ Even with a certain calendar there may be variants. In Kurmanji the
 default variant prints something like \textit{30. Çileya Pêşîn 2019},
 but with |variant=izafa| it prints \textit{31’ê Çileya Pêşînê 2019}.
 
+The default calendar for a language can be set in |\babelprovide|, with
+the key |calendar| (an empty value is the same as |gregorian|). In this
+case, |\today| always converts the date. Variants are preceded by a
+dot, so that |calendar = .genitive| in |serbian| |\today| selects the
+date in this variant (more explicitly is |gregorian.genitive|).
+
+\begin{example}
+  By default, |thai| prints the date with |\today| in the Buddhist
+  calendar, but if you need a date in the Gregorian one, write:
+\begin{verbatim}
+  \localedate[calendar=gregorian]{\year}{\month}{\day}
+\end{verbatim}
+(Remember |\year|, |\month| and |\day| is the current Gregorian date,
+so no conversion is necessary.)
+\end{example}
+
+\begin{example}
+  On the other hand (and following the CLDR), the preferred calendar in
+  most locales for Arabic is |gregorian| (in |ar-SA| is
+  |islamic-umalqura|), so to set |islamic-civil| as the
+  default one:
+\begin{verbatim}
+  \babelprovide[import, calendar=islamic-civil]{arabic}
+\end{verbatim}
+\end{example}
+
 \Describe{\babelcalendar}{\oarg{date}%
   \marg{calendar}\marg{year-macro}\m{month-macro}\m{day-macro}}
 
@@ -3111,12 +3140,12 @@ package should be able to, at least, generate correctly the current
 date in the way users would expect in their own culture. Currently,
 |\localedate| can print dates in a few calendars (provided the
 \textsf{ini} locale file has been imported), but year, month and day
-had to be entered by hand, which is very inconvenient. With this macro,
+had to be entered by hand, which is inconvenient. With this macro,
 the current date is converted and stored in the three last arguments,
-which must be macros.
-Allowed calendars are
+which must be macros. Allowed calendars are:
 \begin{multicols}{4}
   |buddhist|\\
+  |chinese| (strings in locales pending) \New{3.93}\\
   |coptic|\\
   |ethiopic|\\
   |hebrew|\\
@@ -3124,10 +3153,10 @@ Allowed calendars are
   |islamic-umalqura|\\
   |persian|
 \end{multicols}
-The optional
-argument converts the given date, in the form
-‘\m{year}-\m{month}-\m{day}’. Please, refer to the page on the news for
-3.76 in the \babel{} site for further details.
+The optional argument converts the given date, in the form
+‘\m{year}-\m{month}-\m{day}’, although for practical reasons most
+calendars accept only a restricted range of years. Please, refer to the
+page on the news for 3.76 in the \babel{} site for further details.
 
 \subsection{Accessing language info}
 
@@ -3492,6 +3521,10 @@ Polytonic and Ancient Greek.}
 convert the sigma at the end of a word (on purpose). This transforms
 does it. To prevent the conversion (an abbreviation, for example), write
 |"s|.}
+
+\trans{Hebrew, Yiddish}{transliteration.cj}{A transliteration system
+based on that devised by Christian Justen for `cjhebrew`. Final letters
+are not converted, and the furtive patah is not shifted.}
 
 \trans{Hindi, Sanskrit}{transliteration.hk}{The Harvard-Kyoto system to
 romanize Devanagari.}
@@ -5466,8 +5499,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.92.22641>>
-%<<date=2023/08/14>>
+%<<version=3.93>>
+%<<date=2023/08/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13427,7 +13460,7 @@ wouldn’t exist.
 %
 % For historical reasons, \LaTeX{} can select two different series
 % (|bx| and |b|), for what is conceptually a single one. This can
-% lead to problema when a single family requires several fonts,
+% lead to problems when a single family requires several fonts,
 % depending on the language, mainly because ‘subtitutions’ with some
 % combinations are not done consistently -- sometimes |bx/sc| is the
 % correct font, but sometimes points to |b/n|, even if |b/sc| exists.
@@ -24052,7 +24085,7 @@ Babel.cjk_breaks = {
 %
 % \subsection{Chinese}
 % 
-% Brute force, with the Julian day of first  day of each month. The
+% Brute force, with the Julian day of first day of each month. The
 % table has been computed with the help of \textsf{python-lunardate} by
 % Ricky Yeung, GPLv2 (but the code itself has not been used). The range
 % is 2015-2044.

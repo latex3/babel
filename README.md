@@ -1,6 +1,6 @@
-s## Babel 3.92.22641
+s## Babel 3.93
 
-** Dev **
+2023-08-29
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,21 +48,15 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.93  (dev)
+3.93  2023-08-29
       * More Hebrew numerals (also Yiddish).
       * Chinese calendar.
       * Fixes:
-        -
-        -
+        - Table with Arabic text corrupted when trying to colour cells (#252).
+        - Bold small caps were wrong in some cases (#92).
+        - Missing numerals in 'sanskri'`.
       * Added a few ‘bare minimum locales’: Southern Altai, Divehi,
         Ancient Egyptian, Egyptian Arabic, Phoenician, Newari.
-
-3.92  2023-07-15
-      * The fix for #240 in version 3.90, related to `\normalsfcodes`,
-        broke the `onchar` mechanism in some cases and some other
-        things. A different fix has been devised.
-      * Weird behavior when declaring the same font for two families
-        (#178).
 ```
 
 ### Previous changes
