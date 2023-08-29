@@ -5,11 +5,11 @@
 
 ## Transform for Hebrew transliteration
 
-Hebrew and Yiddish define a transliteration based on the
-system devised by Christian Justen for `cjhebrew`. As with some other
-transliterations, it has been chosen because it’s TeX-friendy, ASCII
-and consistent. It departs, however, in a couple of points, which don’t
-belong to the transliteration proper:
+Hebrew and Yiddish define a transliteration based on the system devised
+by Christian Justen for `cjhebrew` (`transliteration.cj`). As with some
+other transliterations, it has been chosen because it’s TeX-friendy,
+ASCII and consistent. It departs, however, in a couple of points, which
+don’t belong to the transliteration proper:
 * Final letters are not handled, and therefore they must be entered
   explicitly. This conversion should be a general tool, as a separate
   transform (forthcoming).
