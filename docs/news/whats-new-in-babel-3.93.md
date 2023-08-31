@@ -4,7 +4,8 @@
 
 ## Hebrew counters
 
-The `ini` locales for Hebrew and Yiddish provide a numeral named
+The `ini` locales for
+[Hebrew](https://latex3.github.io/babel/guides/locale-hebrew.html) and Yiddish provide a numeral named
 `letters`, with the usual form in the modern varieties. However, there
 are some variants provided by `babel-hebrew` (the `ldf` language
 style), which were absent. Udi Fogiel (`@Udi-Fogiel`) has made them
@@ -33,13 +34,14 @@ re(set) these values with the language (with `\addto` or
 
 ## Chinese calendar
 
-`\babelcalendar` now can convert dates to the Chinese calendar (years
+`\babelcalendar` now can convert dates to the
+[Chinese](https://latex3.github.io/babel/guides/locale-chinese.html) calendar (years
 2015-2044). Intercalary months are numbered from 13 to 24, so that in
 the current year (2023) it’s 14 , because it comes after the second
 month (so, 12 + 2).
 
 Strings in the corresponding locales are defined only in part — cyclic
-years, with the CLDR code `UU`, and day names will be added in the next
+years, with the CLDR code `U`, and day names will be added in the next
 release.
   
 ## New locale files

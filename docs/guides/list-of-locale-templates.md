@@ -1,6 +1,8 @@
 # List of locale templates
 
-`Babel` provides currently more than 300 `ini` files for about 250 lamguages, which are listed in the manual. In addition, a set of about 500 template files, with a minimal content, are available in this respository.
+`Babel` provides currently more than 300 `ini` files for about 250
+languages, which are listed in the manual. In addition, a set of about 450
+template files, with a minimal content, are available in this respository.
 
 Here is the list of languages with a minimal `ini` + `tex` template. A few directories contain several `ini` files: for the ‘likely’ script as provided by the Unicode CLDR, and for other scripts. An example is Mundari: `unr` with the Bengali script, and `unr-Deva` with Devanagari.
 
@@ -459,5 +461,4 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **zea** Zeelandic
 * **zmi** Negeri Sembilan Malay
 * **zza** Zaza
-================ READY ================
 
