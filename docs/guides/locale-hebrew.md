@@ -13,8 +13,9 @@ There is a complete example (with a table, a footnote, maths, etc.) in the repos
 ![](../media/lua-hebrew.jpg)
 
 For `pdftex` you may need to install separately the [`culmus`
-package](https://www.guyrutenberg.com/culmus-latex/), which is usually
-not included in TeX distributions.
+package](https://www.guyrutenberg.com/culmus-latex/), which is absent
+in some TeX distributions. It’s available in Overleaf and, as
+of August 2023, included in TeXLive.
 
 ## Useful links
 
