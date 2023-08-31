@@ -1,6 +1,6 @@
-s## Babel 3.93
+s## Babel 3.93.24338
 
-2023-08-29
+**Development**
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,8 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.94  (dev)
+
 3.93  2023-08-29
       * More Hebrew numerals (also Yiddish).
       * Chinese calendar.

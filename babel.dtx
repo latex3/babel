@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/08/29 v3.93 The Babel package]
+\ProvidesFile{babel.dtx}[2023/08/31 v3.93.24338 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5499,8 +5499,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.93>>
-%<<date=2023/08/29>>
+%<<version=3.93.24338>>
+%<<date=2023/08/31>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11225,6 +11225,7 @@ wouldn’t exist.
   \bbl@replace\bbl@toreplace{[y]}{\BabelDatey{####1}}%
   \bbl@replace\bbl@toreplace{[yy]}{\BabelDateyy{####1}}%
   \bbl@replace\bbl@toreplace{[yyyy]}{\BabelDateyyyy{####1}}%
+  \bbl@replace\bbl@toreplace{[U]}{\BabelDateU{####1}}%
   \bbl@replace\bbl@toreplace{[y|}{\bbl@datecntr[####1|}%
   \bbl@replace\bbl@toreplace{[m|}{\bbl@datecntr[####2|}%
   \bbl@replace\bbl@toreplace{[d|}{\bbl@datecntr[####3|}%
@@ -14706,6 +14707,8 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
       if k_list[k_curr].weight == Babel.kashida_wts[wt_pos] then       
         d = node.copy(k_item)
         d.char = 0x0640
+        d.yoffset = 0
+        d.xoffset = 0
         line.head, new = node.insert_after(line.head, k_item, d)
         width_new = node.dimensions(line.head)
         if width > goal or width == width_new then
@@ -15356,9 +15359,7 @@ end
 %<</More package options>>
 %
 \ifnum\bbl@bidimode>\z@ % Any bidi=
-  \ifx\matheqdirmode\@undefined\else
-    \matheqdirmode\@ne % A luatex primitive
-  \fi
+  \matheqdirmode\@ne % A luatex primitive
   \let\bbl@eqnodir\relax
   \def\bbl@eqdel{()}
   \def\bbl@eqnum{%
