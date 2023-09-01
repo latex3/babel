@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/08/31 v3.93.24338 The Babel package]
+\ProvidesFile{babel.dtx}[2023/09/01 v3.93.24475 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5499,8 +5499,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.93.24338>>
-%<<date=2023/08/31>>
+%<<version=3.93.24475>>
+%<<date=2023/09/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12418,7 +12418,12 @@ wouldn’t exist.
       \AtEndOfPackage{%
         \EnableBabelHook{babel-bidi}%
         \bbl@loadfontspec % bidi needs fontspec
-        \usepackage#1{bidi}}%
+        \usepackage#1{bidi}%
+        \let\bbl@digitsdotdash\DigitsDotDashInterCharToks
+        \def\DigitsDotDashInterCharToks{% See the 'bidi' package
+          \ifnum\@nameuse{bbl@wdir@\languagename}=\tw@ % 'AL' bidi
+            \bbl@digitsdotdash % So ignore in 'R' bidi
+          \fi}}%
     \fi}
   \ifnum\bbl@bidimode>200 % Any xe bidi=
     \ifcase\expandafter\@gobbletwo\the\bbl@bidimode\or
@@ -12466,7 +12471,7 @@ wouldn’t exist.
     \global\bbl@csarg\chardef{wdir@#1}\@ne
     \bbl@xin@{\csname bbl@sname@#1\endcsname}{\bbl@alscripts}%
     \ifin@
-      \global\bbl@csarg\chardef{wdir@#1}\tw@  % useless in xetex
+      \global\bbl@csarg\chardef{wdir@#1}\tw@
     \fi
   \else
     \global\bbl@csarg\chardef{wdir@#1}\z@
@@ -12507,9 +12512,11 @@ wouldn’t exist.
   \def\bbl@textdir#1{%
     \ifcase#1\relax
        \chardef\bbl@thetextdir\z@
+       \@nameuse{setlatin}%
        \bbl@textdir@i\beginL\endL
      \else
        \chardef\bbl@thetextdir\@ne
+       \@nameuse{setnonlatin}%
        \bbl@textdir@i\beginR\endR
     \fi}
   \def\bbl@textdir@i#1#2{%

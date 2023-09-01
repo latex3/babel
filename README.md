@@ -1,4 +1,4 @@
-s## Babel 3.93.24338
+## Babel 3.93.24475
 
 **Development**
 
@@ -49,6 +49,8 @@ respective authors.
 ### Summary of latest changes
 ```
 3.94  (dev)
+      * Fixes:
+        - #256.
 
 3.93  2023-08-29
       * More Hebrew numerals (also Yiddish).
