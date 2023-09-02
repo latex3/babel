@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/09/01 v3.93.24475 The Babel package]
+\ProvidesFile{babel.dtx}[2023/09/02 v3.93.24539 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5499,8 +5499,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.93.24475>>
-%<<date=2023/09/01>>
+%<<version=3.93.24539>>
+%<<date=2023/09/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11212,6 +11212,7 @@ wouldn’t exist.
       {There is little you can do. Sorry.}%
   \fi\fi\fi\fi}}
 \newcommand\BabelDateyyyy[1]{{\number#1}} % TODO - add leading 0
+\newcommand\BabelDateU[1]{{\number#1}}%
 \def\bbl@replace@finish@iii#1{%
   \bbl@exp{\def\\#1####1####2####3{\the\toks@}}}
 \def\bbl@TG@@date{%
@@ -11227,6 +11228,7 @@ wouldn’t exist.
   \bbl@replace\bbl@toreplace{[yyyy]}{\BabelDateyyyy{####1}}%
   \bbl@replace\bbl@toreplace{[U]}{\BabelDateU{####1}}%
   \bbl@replace\bbl@toreplace{[y|}{\bbl@datecntr[####1|}%
+  \bbl@replace\bbl@toreplace{[U|}{\bbl@datecntr[####1|}%
   \bbl@replace\bbl@toreplace{[m|}{\bbl@datecntr[####2|}%
   \bbl@replace\bbl@toreplace{[d|}{\bbl@datecntr[####3|}%
   \bbl@replace@finish@iii\bbl@toreplace}

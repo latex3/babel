@@ -1,4 +1,4 @@
-## Babel 3.93.24475
+## Babel 3.93.24539
 
 **Development**
 
@@ -49,6 +49,7 @@ respective authors.
 ### Summary of latest changes
 ```
 3.94  (dev)
+      * Chinese dates (numeric and sexagenary).
       * Fixes:
         - #256.
 
