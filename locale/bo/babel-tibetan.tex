@@ -40,10 +40,10 @@
   \edef\bbl@tempe{\directlua{
     tex.print(table.concat(Babel.tibetan.tsheg, ' ', 1, 3))
   }}%
-  \babelprehyphenation{tibetan}{^^^^0f0b([^ ^^^^0f0d^^^^0f0e])}%
+  \babelprehyphenation{tibetan}{^^^^0f0b[^ ^^^^0f0d^^^^0f0e]}%
     { {insert, penalty=10000}, {insert, space=\bbl@tempe, data=1}, {},
-      {insert, space=\bbl@tempe, data=1}, {string = {1}} }}
-
+      {insert, space=\bbl@tempe, data=1}, {} }}
+      
 \def\bbl@tibetanjust{%
   % (3) Justification
   \directlua{

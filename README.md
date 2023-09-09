@@ -1,4 +1,4 @@
-## Babel 3.93.24539
+## Babel 3.93.25242
 
 **Development**
 
@@ -10,9 +10,9 @@ is a set of ini files for about 250 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.93 are described in:
+Changes in version 3.94 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.93.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.94.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -50,8 +50,13 @@ respective authors.
 ```
 3.94  (dev)
       * Chinese dates (numeric and sexagenary).
+      * New locales: Javanese, Nigerian Pidgin, Maithili, Wolof.
+        Minimum locales: Balinese, Ladino, Old Norse, Lombard,
+        Navajo, Akkadian.
       * Fixes:
         - #256.
+        - #261.
+        - #260.
 
 3.93  2023-08-29
       * More Hebrew numerals (also Yiddish).

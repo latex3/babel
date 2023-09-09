@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/09/02 v3.93.24539 The Babel package]
+\ProvidesFile{babel.dtx}[2023/09/09 v3.93.25242 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5499,8 +5499,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.93.24539>>
-%<<date=2023/09/02>>
+%<<version=3.93.25242>>
+%<<date=2023/09/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15381,17 +15381,21 @@ end
   \def\bbl@eqno@flip#1{%
     \ifdim\predisplaysize=-\maxdimen
       \eqno
-      \hb@xt@.01pt{\hb@xt@\displaywidth{\hss{#1}}\hss}%
+      \hb@xt@.01pt{%
+        \hb@xt@\displaywidth{\hss{#1\glet\bbl@upset\@currentlabel}}\hss}%
     \else
-      \leqno\hbox{#1}%
-    \fi}
+      \leqno\hbox{#1\glet\bbl@upset\@currentlabel}%
+    \fi
+    \bbl@exp{\def\\\@currentlabel{\[bbl@upset]}}}
   \def\bbl@leqno@flip#1{%
     \ifdim\predisplaysize=-\maxdimen
       \leqno
-      \hb@xt@.01pt{\hss\hb@xt@\displaywidth{{#1}\hss}}%
+      \hb@xt@.01pt{%
+        \hss\hb@xt@\displaywidth{{#1\glet\bbl@upset\@currentlabel}\hss}}%
     \else
-      \eqno\hbox{#1}%
-    \fi}
+      \eqno\hbox{#1\glet\bbl@upset\@currentlabel}%
+    \fi
+    \bbl@exp{\def\\\@currentlabel{\[bbl@upset]}}}
   \AtBeginDocument{%
     \ifx\bbl@noamsmath\relax\else
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
