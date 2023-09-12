@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/09/09 v3.93.25242 The Babel package]
+\ProvidesFile{babel.dtx}[2023/09/12 v3.94 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2042,6 +2042,7 @@ inuktitut\\
 irish\\
 italian\\
 japanese\\
+javanese\\
 jju\\
 jolafonyi\\
 kabuverdianu\\
@@ -2081,6 +2082,7 @@ luxembourgish\\
 luyia\\
 macedonian\\
 machame\\
+maithiri\\
 makhuwameetto\\
 makonde\\
 malagasy\\
@@ -2114,6 +2116,7 @@ ngerman\\
 ngiemboon\\
 ngomba\\
 nheengatu\\
+nigerianpidgin\\
 nko\\
 norsk\\
 northernkurdish\\
@@ -2277,6 +2280,7 @@ walser\\
 welsh\\
 westernfrisian\\
 wolaytta\\
+wolof\\
 yangben\\
 yiddish\\
 yoruba\\
@@ -2287,6 +2291,30 @@ zulu
 \hrule
 
 \bigskip
+
+Many locale templates are quite useable, provided captions and dates are
+not required (which is a very frequent case, particularly in ancient
+languages). So, they will be included in the default \babel{} distribution.
+This can serve to encourage contributions, too. A warning will remember
+they are ‘bare minumum locales’. The locales are currently
+the following:
+\begin{multicols}{4}
+\small
+akkadian\\
+ancientegyptian\\
+balinese\\
+divehi\\
+egyptianarabic\footnote{Masri or Colloquial Egyptian, with tag
+\texttt{arz}, not to be confused with the Standard Arabic as spoken in
+Egypt, with tag \texttt{ar-EG}).}\\
+ladino\\
+lombard\\
+navajo\\
+newari\\
+oldnorse\\
+phoenician\\
+southernaltai
+\end{multicols}
 
 \textbf{Modifying and adding values to |ini| files}
 
@@ -3145,7 +3173,7 @@ the current date is converted and stored in the three last arguments,
 which must be macros. Allowed calendars are:
 \begin{multicols}{4}
   |buddhist|\\
-  |chinese| (strings in locales pending) \New{3.93}\\
+  |chinese| \New{3.94}\\
   |coptic|\\
   |ethiopic|\\
   |hebrew|\\
@@ -5499,8 +5527,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.93.25242>>
-%<<date=2023/09/09>>
+%<<version=3.94>>
+%<<date=2023/09/12>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14513,7 +14541,7 @@ end
   \catcode`_=11 \catcode`:=11
   \gdef\bblar@nofswarn{\gdef\msg_warning:nnx##1##2##3{}}
 \endgroup
-\gdef\bbl@arabicjust{%
+\gdef\bbl@arabicjust{% TODO. Allow for serveral locales.
   \let\bbl@arabicjust\relax
   \newattribute\bblar@kashida
   \directlua{ Babel.attr_kashida = luatexbase.registernumber'bblar@kashida' }%
@@ -14709,14 +14737,14 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
     width = node.dimensions(line.head)    % The 'natural' width
     k_curr = #k_list % Traverse backwards, from the end
     wt_pos = 1
-
+ 
     while width < goal do
       subst_done = true
       k_item = k_list[k_curr].node
-      if k_list[k_curr].weight == Babel.kashida_wts[wt_pos] then       
+      if k_list[k_curr].weight == Babel.kashida_wts[wt_pos] then        
         d = node.copy(k_item)
         d.char = 0x0640
-        d.yoffset = 0
+        d.yoffset = 0 % TODO. From the prev char. But 0 seems safe.
         d.xoffset = 0
         line.head, new = node.insert_after(line.head, k_item, d)
         width_new = node.dimensions(line.head)

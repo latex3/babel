@@ -1,6 +1,6 @@
-## Babel 3.93.25242
+## Babel 3.94
 
-**Development**
+2023-09-12
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,25 +48,15 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.94  (dev)
+3.94  2023-09-12
       * Chinese dates (numeric and sexagenary).
       * New locales: Javanese, Nigerian Pidgin, Maithili, Wolof.
-        Minimum locales: Balinese, Ladino, Old Norse, Lombard,
-        Navajo, Akkadian.
+      * Minimum locales: Balinese, Ladino, Old Norse, Lombard,         Navajo, Akkadian.
+      * New transform for kashida (by Christian Lück).
       * Fixes:
-        - #256.
-        - #261.
-        - #260.
-
-3.93  2023-08-29
-      * More Hebrew numerals (also Yiddish).
-      * Chinese calendar.
-      * Fixes:
-        - Table with Arabic text corrupted when trying to colour cells (#252).
-        - Bold small caps were wrong in some cases (#92).
-        - Missing numerals in 'sanskri'`.
-      * Added a few ‘bare minimum locales’: Southern Altai, Divehi,
-        Ancient Egyptian, Egyptian Arabic, Phoenician, Newari.
+        - Babel is not aware of \if@nonlatin conditional from bidi  (#256).
+        - Referencing equations doesn't use custom tags (#260).
+        - Hyphenation error with Tibetan and lualatex (#261).
 ```
 
 ### Previous changes
