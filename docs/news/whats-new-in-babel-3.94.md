@@ -38,7 +38,7 @@ Note the string can be slightly diferent depending on the locale.
 * `maithiri`
 * `wolof`
 
-There are a few new ‘bare minimum locales’ (see ...):
+There are a few new ‘bare minimum locales’ (see [What’s new in babel 3.93](https://latex3.github.io/babel/news/whats-new-in-babel-3.93.html#new-locale-files)):
 
 * `akkadian`
 * `balinese`
