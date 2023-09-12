@@ -48,7 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [3.94](news/whats-new-in-babel-3.94.html) | (Development.) |
+| [3.94](news/whats-new-in-babel-3.94.html) | Chinese dates. New transform for kashida. New locale files. |
 | [3.93](news/whats-new-in-babel-3.93.html) | Hebrew numerals. Chinese calendar. 6 new locale files. |
 | [3.92](news/whats-new-in-babel-3.92.html) | A couple of fixes.|
 | [3.91](news/whats-new-in-babel-3.91.html) | Mainly fixes and transliteration for Hebrew.|

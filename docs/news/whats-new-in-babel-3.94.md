@@ -1,6 +1,6 @@
 # What's new in babel 3.94
 
-**Draft**
+2023-09-12
 
 ## Chinese dates
 
@@ -54,6 +54,20 @@ engines) is again maintained, and it’s useable directly in TeXlive. The
 `ini` files in the `babel` core have been adjusted to reflect correctly
 the font encondings for `pdflatex`.
 
+# New transform for kashida
+
+Christian Lück has contributed a new transform, similar to
+`kashida.plain`, but with diacritics stacked to the actual base
+character and not the kashida extension. Its name is
+`kashida.base`, and with evenly inserted tatweels results are
+better (even much better) than with `kashida.plain`.
+
+It’s still a set of rules for ‘plain’ Arabic font, with no ligatures.
+Some fonts may require aditional transforma to avoid the kashida at
+specific places. See
+
 ## Fixes
 
-* 
+* Babel is not aware of \if@nonlatin conditional from bidi (#256).
+* Referencing equations doesn't use custom tags (#260).
+* Hyphenation error with Tibetan and lualatex (#261).
