@@ -12278,6 +12278,8 @@ wouldn’t exist.
 \let\org@TeX\TeX
 \let\org@LaTeX\LaTeX
 \let\ensureascii\@firstofone
+\def\asciiencoding{OT1}
+\let\asciiensure\relax
 \AtBeginDocument{%
   \def\@elt#1{,#1,}%
   \edef\bbl@tempa{\expandafter\@gobbletwo\@fontenc@load@list}%
