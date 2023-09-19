@@ -12265,9 +12265,9 @@ wouldn’t exist.
 %  encoding. There is a list of non-ASCII encodings. Requested
 %  encodings are currently stored in |\@fontenc@load@list|. If a
 %  non-ASCII has been loaded, we define versions of |\TeX| and |\LaTeX|
-%  for them using |\ensureascii|. The default ASCII encoding is set,
-%  too (in reverse order): the ``main'' encoding (when the document
-%  begins), the last loaded, or |OT1|.
+%  for them using |\ensureascii|. The default ASCII encoding is set
+%  and stored in |\asciiencoding|, too (in reverse order): the ``main''
+%  encoding (when the document begins), the last loaded, or |OT1|.
 %
 %  \begin{macro}{\ensureascii}
 %
@@ -12300,8 +12300,15 @@ wouldn’t exist.
     \ifin@\else
       \edef\bbl@tempc{\cf@encoding}% The default if ascii wins
     \fi
-    \edef\ensureascii#1{%
-      {\noexpand\fontencoding{\bbl@tempc}\noexpand\selectfont#1}}%
+    \edef\asciiencoding{\bbl@tempc}%
+	\DeclareRobustCommand{\asciiensure}{%
+      \fontencoding{\asciiencoding}\selectfont
+      \def\encodingdefault{\asciiencoding}}%
+	\ifx\@undefined\DeclareTextFontCommand
+	  \DeclareRobustCommand{\ensureascii}[1]{\leavevmode{\asciiensure #1}}%
+	\else
+	  \DeclareTextFontCommand{\ensureascii}{\asciiensure}%
+	\fi
     \DeclareTextCommandDefault{\TeX}{\ensureascii{\org@TeX}}%
     \DeclareTextCommandDefault{\LaTeX}{\ensureascii{\org@LaTeX}}%
   \fi}
