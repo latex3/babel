@@ -25,7 +25,7 @@ The rules for the assigned encoding are the following:
 * If the valid encodings as set in the `ini` file contain the main font
   encoding, use this one.
 * Otherwise, select the first encoding set in the `ini` file and
-  declared with `fontspec`.
+  declared with `fontenc`.
   
 You can customize its behaviour in several ways:
 * Disable it altogether with `\babeladjust{ select.encoding = off }`.
