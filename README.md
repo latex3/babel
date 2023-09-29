@@ -1,18 +1,18 @@
-## Babel 3.94
+## Babel 3.95
 
-2023-09-12
+2023-09-29
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
 language styles work with pdflatex, as well as with xelatex and
 lualatex out of the box. A few even work with plain formats. Included
-is a set of ini files for about 250 languages.
+is a set of ini files for about 275 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.94 are described in:
+Changes in version 3.95 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.94.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.95.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,15 +48,12 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.94  2023-09-12
-      * Chinese dates (numeric and sexagenary).
-      * New locales: Javanese, Nigerian Pidgin, Maithili, Wolof.
-      * Minimum locales: Balinese, Ladino, Old Norse, Lombard,         Navajo, Akkadian.
-      * New transform for kashida (by Christian Lück).
-      * Fixes:
-        - Babel is not aware of \if@nonlatin conditional from bidi  (#256).
-        - Referencing equations doesn't use custom tags (#260).
-        - Hyphenation error with Tibetan and lualatex (#261).
+3.95 2023-09-29
+     * New locales: Cebuano, Chuvash, Dogri, Northern Frisian,
+       Hmong Njua, Maori, Manipuri, Santali, Sindhi, Sundanese, Tajik,
+       Tatar, Xhosa.       
+     * Minimum locales: Awadhi, Gothic, Saraiki.
+     * Fix: added some missing native numbers and character ranges.
 ```
 
 ### Previous changes
