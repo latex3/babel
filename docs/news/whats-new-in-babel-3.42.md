@@ -26,7 +26,10 @@ And `\hechap` is set to the corresponding value.
 * **Church Slavic**, in 3 scripts: the ‘default’ Cyrl, plus Cyrs and Glag
 * **Syriac**. See an example in https://github.com/latex3/babel/blob/master/samples/lua-syriac.pdf .
 
-Armenian now has captions. [**Warning**. There are also numerals, but their names are not correct: they are `lower` and `upper`, but must be `lower.letters` and `upper.letters`. It will be fixed in the next release. Sorry for the slip.]
+Armenian now has captions and numerals. <del>[**Warning**. There are also numerals, but
+their names are not correct: they are `lower` and `upper`, but must be
+`lower.letters` and `upper.letters`. It will be fixed in the next
+release. Sorry for the slip.]</del>[Fixed]
 
 A few mistakes has been fixed in Sanskrit and Belarusian.
 

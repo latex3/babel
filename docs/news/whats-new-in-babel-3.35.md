@@ -4,7 +4,7 @@
 
 ## Shorthands work in bibs and refs even with safe=none
 
-Shorthands are based on active characters, and if their definitions are not expandable (and shorthands are not), old TeX raises an error in some contexts (citations and cross references). `Babel` did tricky things to overcome this issue, but they were imperfect and problematic, so `babel` 3.9 added some options to deactivate them, with the side effect shorthands could not be used in these cases. But eTeX provides an easy mechanism to get the proper behavior easily. This is what this version has done.
+Shorthands are based on active characters, and if their definitions are not expandable (and shorthands are not), old TeX raises an error in some contexts (citations and cross references). `Babel` did tricky things to overcome this issue, but they were imperfect and problematic, so `babel` 3.9 added some options to deactivate them, with the side effect shorthands could not be used in these cases. But eTeX provides an easy mechanism to get the proper behavior. This is what this version has done.
 
 ## Fixes
 

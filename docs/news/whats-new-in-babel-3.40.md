@@ -18,7 +18,7 @@ A new field has been added to some `ini` files, with a list of characters whose 
 ## Fixes
 
 * Old Plain TeX and Plain XeTeX raised an error.
-* Option T1 in `fontenc` was not recognized when setting `\latinencoding` with LaTeX 2020-02-02.
+* Option `T1` in `fontenc` was not recognized when setting `\latinencoding` with LaTeX 2020-02-02.
 * Locale names were hardcoded in some `babel-...tex` files.
 
   

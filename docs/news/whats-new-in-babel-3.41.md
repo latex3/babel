@@ -4,7 +4,13 @@
 
 ## Counters and numerals
 
-Many `ini` locale files has been extended with information about non-positional numerical systems, based on those  [predefined in CSS](https://www.w3.org/TR/predefined-counter-styles/). They only work with `xetex` and `luatex` (but it _may_ work in `pdftex`) and are fully expandable (even inside an `\edef`). Currently, they are limited to numbers below 10000. See an example in PDF in https://github.com/latex3/babel/blob/master/samples/numerals.pdf .
+Many `ini` locale files has been extended with information about
+non-positional numerical systems, based on those  [predefined in
+CSS](https://www.w3.org/TR/predefined-counter-styles/). They only work
+with `xetex` and `luatex` (but it _may_ work in `pdftex`) and are fully
+expandable (even inside an `\edef`). Currently, they are limited to
+numbers below 10000. See an example in PDF in the
+[repository](https://github.com/latex3/babel/blob/master/samples/numerals.pdf).
 
 There are several way to use them (for the availabe styles in each language, see the list below):
 
@@ -48,6 +54,8 @@ There are several way to use them (for the availabe styles in each language, see
 You can find another example [here](https://tex.stackexchange.com/questions/529813/how-to-define-counters-with-arbitrary-alphabet/530491#530491).
 
 ### List of styles
+
+[**Update.** This list has been extended. See the manual.]
 
 * Ancient Greek
   * lower.ancient
@@ -138,6 +146,6 @@ You can find another example [here](https://tex.stackexchange.com/questions/5298
 
 ## Fixes
 
-* A bug in the fix for #47 (T1 not recognized after a change in the   LaTeX kernel), because `\@elt` was not reset (#51).
+* A bug in the fix for #47 (`T1` not recognized after a change in the   LaTeX kernel), because `\@elt` was not reset (#51).
 * Error when `french` was loaded and an ini file read, because the semicolon (;) was not   reset to ‘other’ (#50).
 * A typo in Greek files: Miriad must read Myriad (so, the name of the corresponding macro has changed and now is `\BabelGreekNumeralMyriads`)
