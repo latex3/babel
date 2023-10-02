@@ -4,7 +4,7 @@
 % latex generates an error. Diagnosis: 'francais' redefines ':' in a
 % particular way and cite does not handle this case (but \label and \ref
 % do it)
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[]{article}
 \START

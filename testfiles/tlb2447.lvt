@@ -9,7 +9,7 @@
 With BG's french.sty babel.def was loaded more than once
 and hence \ref became defined circular...
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[english,french]{article}
 \START
 \AUTHOR{[e-mail hidden] (Jean-Daniel Fekete)}

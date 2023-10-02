@@ -20,7 +20,7 @@ which was though as solved in babel v3.6p resumes the problem.
 Loading LCY encoding causes error st \begin{document}.
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{book}
 
 \START

@@ -16,7 +16,7 @@ while other languages does not do so.
 "XXX XXX", and not "XXXXXX" as expected.
 
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \nofiles
 \START

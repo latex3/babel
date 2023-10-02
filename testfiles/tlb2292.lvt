@@ -1,4 +1,4 @@
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \FORMAT{LaTeX2e<1996/06/01>}

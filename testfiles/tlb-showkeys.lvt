@@ -6,7 +6,7 @@ can work together
 
 \errorcontextlines=20
 %\documentclass{amsart}
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 

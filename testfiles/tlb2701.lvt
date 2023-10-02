@@ -5,7 +5,7 @@
 % (variables written as $\bar{E}$) are included in one or more
 % section headers. Run the down below code to see result.
 %
-\input{test2e}  
+\input{test2e}\input{test2eb}  
 \documentclass{article}
 
 \START

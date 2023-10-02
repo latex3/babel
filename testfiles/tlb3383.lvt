@@ -8,7 +8,7 @@
   This file is to prove that user level shorthands do work.
 \fi
  
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[romanian,12pt]{book}
  

@@ -2,7 +2,7 @@
 % Conflict between babel and ifthen. The construction \isodd{\pageref{key}} 
 % does not work when babel is active. 
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{[e-mail hidden] (J\o rgen Larsen)}

@@ -23,7 +23,7 @@ Sample file which indicates the problem:
 It should run fine now with 3.6 upwards
 
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 
 \START

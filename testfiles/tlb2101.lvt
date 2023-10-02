@@ -1,7 +1,7 @@
 % Test file for LaTeX2e/Babel bug report 2101
 % Words with umlauts are not hypheanted, but should be
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[11pt]{article}
 \START
 \AUTHOR{Carsten Schroeder <[e-mail hidden]>}

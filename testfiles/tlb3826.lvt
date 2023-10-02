@@ -25,7 +25,7 @@ So I think it would be good to add a something like
 Sample file which indicates the problem:
 ========================================
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{book}
 \START
 \FORMAT{LaTeX2e<2003/12/01>}

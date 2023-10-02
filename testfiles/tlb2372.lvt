@@ -8,7 +8,7 @@
 % This should *not* generate an error 
 % and print "Hallo one" in the log file
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{}

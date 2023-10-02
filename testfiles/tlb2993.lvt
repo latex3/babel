@@ -18,7 +18,7 @@ It seems to me, that previous versions of the babel package had defined
 \lefthyphenmin=3D2, \righthypnenmin=3D3 by default.
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 \START

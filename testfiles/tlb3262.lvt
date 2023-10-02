@@ -43,7 +43,7 @@ Sample file which indicates the problem:
 ========================================
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{book}
 
 \START

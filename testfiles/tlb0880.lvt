@@ -1,7 +1,7 @@
 % Test file for LaTeX2e/Babel bug report #0882
 % just make sure that the languages english, dutch and catalan don't
 % interfere with each other
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{josep rifa <[e-mail hidden]>}

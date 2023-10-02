@@ -18,7 +18,7 @@ russianb.ldf
 %%\fi
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \errorcontextlines=20
 \documentclass{article}
 \START

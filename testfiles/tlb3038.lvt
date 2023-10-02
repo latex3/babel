@@ -21,7 +21,7 @@ Too many }'s! Bug in Greek.ldf, line 154!
 Sample file which indicates the problem:
 ========================================
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[11pt]{article}
 \START
 \FORMAT{LaTeX2e<1998/12/01>}

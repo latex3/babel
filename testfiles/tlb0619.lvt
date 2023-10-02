@@ -1,6 +1,6 @@
 % Test file for LaTeX2e/Babel bug report #0619
 % t1enc broke german umlauts with babel's germanb.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[germanb]{article}
 \START
 \AUTHOR{}

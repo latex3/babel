@@ -27,7 +27,7 @@ system installed on my pc, using babel 3.5, which does have the problem.
 Sample file which indicates the problem:
 ========================================
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Arthur Berkowicz <[e-mail hidden]>}

@@ -16,7 +16,7 @@
 % inputenc.sty/german.sty conflict.
 
 % Input the test macros for LaTeX2e
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 

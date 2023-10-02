@@ -1,6 +1,6 @@
 % Test file for LaTeX2e/Babel bug report #0916
 % dutch and spanish both use the active " which used to give a conflict
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Johannes Braams} 

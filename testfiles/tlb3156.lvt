@@ -23,7 +23,7 @@ Fixing the bug requires nothing more than adding
 
   \let\dateUSenglish=\dateamerican
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[a4paper,12pt]{article}
 \START

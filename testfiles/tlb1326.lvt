@@ -4,7 +4,7 @@
 % - {\em "Hi"} gives error
 % - 'n should give n with tilde
 % - using ' in math gives problems
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Agust'in Mart'in <[e-mail hidden]>}

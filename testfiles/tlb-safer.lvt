@@ -1,5 +1,5 @@
 %$PDFLaTeX  -*- coding: utf-8 -*- 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Javier Bezos}

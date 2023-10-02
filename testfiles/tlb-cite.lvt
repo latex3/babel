@@ -1,6 +1,6 @@
 % the \cite produced an missing \endcsname error.
 % It shouldn;t do that...
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{J.L. Braams}

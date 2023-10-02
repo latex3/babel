@@ -15,7 +15,7 @@ Description of bug:
 babel version
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \FORMAT{LaTeX2e<1998/12/01>}

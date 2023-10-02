@@ -27,7 +27,7 @@ and the '~' accents in polutonikogreek (see >~oun below:
 both accents are printed before the 'o' instead of above it).
 
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[a4paper,12pt]{article}
 
 \START

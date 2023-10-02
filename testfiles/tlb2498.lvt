@@ -3,7 +3,7 @@
 % If greek is the backgroundlanguage of the document, the alphabet cannot
 % be switched to latin. However, other conventions seem to switch correctly.
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{report}
 \nofiles
 \START

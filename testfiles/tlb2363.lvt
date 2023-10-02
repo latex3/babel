@@ -16,7 +16,7 @@ I use TeTeX 0.4 under Linux and I intall the version 3.6 of Babel.
 Thanks you to look at the problem.
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Eric Gamess <[e-mail hidden]>}

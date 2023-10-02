@@ -48,7 +48,7 @@ peek ahead.
 Is the call to \@sh@^@sel required?
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \FORMAT{LaTeX2e<1997/06/01>}

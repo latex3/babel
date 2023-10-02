@@ -14,7 +14,7 @@ has this problem and I'd really appreciate a quick fix.
 
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \errorcontextlines=20
 \documentclass{minimal}
 \START

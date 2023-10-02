@@ -18,7 +18,3 @@ Package pdftex.def Info: foo.pdf  used on input line ....
 (pdftex.def)             Requested size: 172.5pt x 185.06145pt.
 [1
  <./foo.pdf>] (tlb1347.aux)
- ***********
-LaTeX2e <2023-06-01> patch level 1
-L3 programming layer <2023-08-29>
- ***********

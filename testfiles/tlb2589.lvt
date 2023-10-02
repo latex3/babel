@@ -2,7 +2,7 @@
 % Description of bug:
 % Some of the ligature constructs don't work
 %
-\input{test2e}  
+\input{test2e}\input{test2eb}  
 \documentclass{article}
 
 \START

@@ -14,7 +14,7 @@ surrounding
 Release:        LaTeX2e <1996/12/01> patch level 1Babel <v3.6h> and
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[]{article}
 

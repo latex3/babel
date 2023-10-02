@@ -1,7 +1,7 @@
 % test file to show that the main language is the last option
 % of babel, even when the option is passed more then once through
 % an intermediate package.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \begin{filecontents}{testopt.sty}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{testopt}[1996/10/08

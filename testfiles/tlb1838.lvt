@@ -2,7 +2,7 @@
 % The active characters for french created problems when 
 % either of the packages arry or graphicx were loaded after babel
 % The .tlg file should be empty
-\input{test2e}
+\input{test2e}\input{test2eb}
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
 \documentclass{book}
 \START

@@ -3,7 +3,7 @@
 % appear in the optional argument of \bibitem and when
 % they appear in the label.
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Hermann Lauer <[e-mail hidden]>}

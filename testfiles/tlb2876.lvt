@@ -13,7 +13,7 @@ the redefinition of the ifthenelse function
 Now expect Babel error messages about the missing language option
 and undefined language
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[a4paper]{article}
 
 \START

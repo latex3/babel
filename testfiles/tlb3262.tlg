@@ -39,8 +39,3 @@ LaTeX Warning: Citation `huh' on page 1 undefined on input line ....
 ! OK.
 l. ...\testit{A cite \cite[cap'itol 5]{huh}}
 (tlb3262.aux)
- ***********
-LaTeX2e <2023-06-01> patch level 1
-L3 programming layer <2023-08-29>
- ***********
-LaTeX Warning: There were undefined references.

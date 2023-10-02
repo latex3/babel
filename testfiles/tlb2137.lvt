@@ -2,7 +2,7 @@
 % the internal command \bblref ended up in the .toc file
 % where it was unrecognised and hence undefined.
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{book}
 \START
 \AUTHOR{<[e-mail hidden]>}

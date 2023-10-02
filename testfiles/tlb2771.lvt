@@ -11,7 +11,7 @@
 % in conjunction with ifthen (changed at the same time from v1.01 to
 % v1.0m). 
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[german]{article}
 
 \START

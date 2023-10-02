@@ -1,7 +1,7 @@
 % Test file for LaTeX2e/Babel bug report 2103
 % The use of babel broke AMSLaTeX's \tag command
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Hans Ekkehard Plesser <[e-mail hidden]>}

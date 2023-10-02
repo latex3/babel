@@ -19,7 +19,7 @@ ifx's; and citations now appear as [] (no ref number).
 This test file to make sure natbib also works
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 
 \START

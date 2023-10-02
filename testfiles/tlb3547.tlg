@@ -39,7 +39,3 @@ Package: showkeys
 l. ...\testit{\label{test:test}} 
                                            % printed ``test\protect :test''"
 (tlb3547.aux)
- ***********
-LaTeX2e <2023-06-01> patch level 1
-L3 programming layer <2023-08-29>
- ***********

@@ -32,7 +32,7 @@ every file inside the filecontents-environment.
 
 \end{filecontents}
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 
 \START

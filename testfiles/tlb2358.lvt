@@ -1,6 +1,6 @@
 % test file for PR 2358
 % .fd file didn't specify bold font correctly
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{}

@@ -19,7 +19,7 @@ The .tlg file should almost be empty; one page should be generated
 with a diagram on it.
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[11pt]{article}
 

@@ -16,7 +16,7 @@ The \selectlanguage command adheres to groupping inside an text file but not
 inside an auxilary (aux, tof, tot, toc) files.
 
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \FORMAT{LaTeX2e<2000/06/01>}

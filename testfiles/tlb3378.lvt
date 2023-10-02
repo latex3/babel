@@ -22,7 +22,7 @@ hyphenated. This worked earlier. Has the system changed?
 Sample file which indicates the problem:
 ========================================
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[finnish]{article}
 
 \START

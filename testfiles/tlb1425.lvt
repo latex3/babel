@@ -1,6 +1,6 @@
 % Test file for LaTeX2e/Babel bug report #1425
 % babel and amsmath 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[english]{article}
 \START
 \AUTHOR{Johannes Braams} 

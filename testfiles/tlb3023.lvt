@@ -16,7 +16,7 @@ cite.sty package.  Notice the messages about incomplete
 ifx's; and citations now appear as [] (no ref number).
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 
 \START

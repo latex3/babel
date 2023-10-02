@@ -1,6 +1,6 @@
 % Spaces added by \babelensure with \selectlanguage
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[welsh,british]{article}
 \START
 \AUTHOR{Javier Bezos}

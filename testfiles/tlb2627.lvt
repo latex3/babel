@@ -9,7 +9,7 @@
 %                        \def\mdqoff{\catcode`\"12\relax}
 % all works fine.
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[a5paper,10pt,twoside]{article}
 

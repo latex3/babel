@@ -7,7 +7,7 @@ If somebody uses \iflanguage with an macro with its parameter
 after \iflanguage the macro is broken by \cs{else} or \cs{fi}.
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 

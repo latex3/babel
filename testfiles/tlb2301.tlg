@@ -8,7 +8,3 @@ Package: epsfig
 File: test.ps Graphic file (type eps)
 <test.ps> [1
 ]
- ***********
-LaTeX2e <2023-06-01> patch level 1
-L3 programming layer <2023-08-29>
- ***********

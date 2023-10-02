@@ -1,5 +1,5 @@
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{book}
 \START
 \FORMAT{LaTeX2e <2009/09/24>}

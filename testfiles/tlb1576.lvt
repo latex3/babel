@@ -1,7 +1,7 @@
 % Test file for LaTeX2e/Babel bug report #1576
 % Storing an active : in a replacement text led to errors when the cs
 % was used in a different language environment
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Peter K. Schilling <[e-mail hidden]>} 

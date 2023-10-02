@@ -11,7 +11,7 @@ Description of bug:
 Undefined control sequence, GREEK.LDF: line 213
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \errorcontextlines=40
 \documentclass[11pt,a4paper]{scrartcl}
 %\usepackage{t1enc}

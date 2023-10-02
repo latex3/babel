@@ -1,6 +1,6 @@
 % test file for PR2357; \LaTeX, \copyright etc
 % came out in the wrong fontencoding when russian options used
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{}

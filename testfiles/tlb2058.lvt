@@ -4,7 +4,7 @@
 % the OT1 as provided by the file babel.def v3.5e, are no
 % good for fonts other then OT1/cmr/m/n (in particular not
 % for italic and slanted fonts)
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[12pt]{article}
 \START

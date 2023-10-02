@@ -1,6 +1,6 @@
 % Test file for LaTeX2e/Babel bug report #0868
 % Make sure that \pageref can be used in a \caption.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{report}
 \START
 \AUTHOR{Thomas Evensen <[e-mail hidden]>}

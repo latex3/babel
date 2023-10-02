@@ -16,7 +16,7 @@
 % inputenc package conflicts with babel package.
 
 % Input the test macros for LaTeX2e
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[germanb]{article}
 

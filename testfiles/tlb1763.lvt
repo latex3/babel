@@ -1,7 +1,7 @@
 % test file for LaTeX2e/Babel bug report # 1763
 % When the german option follows esperanto a problem occured
 % with the active ^.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[a4paper,10pt]{article}[1995/06/01]
 \nofiles
 \START

@@ -17,7 +17,7 @@ when using short insertions of polutonikogreek.
 Sample file which indicates the problem:
 ========================================
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[a4paper]{article}
 \START

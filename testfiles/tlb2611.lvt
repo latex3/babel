@@ -12,7 +12,7 @@ Was it always disallowed to use umlauts in \hyphenation with
 T1 font encoding? I read about it in comp.text.tex, and it used
 to work.
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \nofiles
 \START

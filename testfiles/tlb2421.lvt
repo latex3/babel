@@ -1,7 +1,7 @@
 % Test file for bug report 2421
 % Active characters should be enabled in the second and third
 % argument of \ifthenelse.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{}\FORMAT{LaTeX2e<1996/12/01>}

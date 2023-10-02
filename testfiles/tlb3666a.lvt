@@ -24,7 +24,7 @@ not sure. I'm also not sure of the way to fix it...
 Sample file which indicates the problem:
 ========================================
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \begin{filecontents}{testl.ldf}
 \ProvidesFile{testl.ldf}[2004/04/18 v0.0 Test file]
 

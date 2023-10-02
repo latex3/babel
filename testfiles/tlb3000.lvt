@@ -11,7 +11,7 @@ has redundant leading zeros some of the trailing digits are not
 processed.
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 \START

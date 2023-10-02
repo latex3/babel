@@ -1,6 +1,6 @@
 %test file for LaTeX2e/Babel Bug report #1212
 % Tha active `:' in french broke hhline.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Benjamin BAYART, [e-mail hidden]}

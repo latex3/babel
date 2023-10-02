@@ -14,7 +14,7 @@ If I use \vref I get the following *output*
 on page \nobreakspace {}
 
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[german]{article}
 \START
 \FORMAT{LaTeX2e<1999/12/01>}

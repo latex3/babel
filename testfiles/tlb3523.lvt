@@ -26,7 +26,7 @@ l.6 \includegraphics[width=\linewidth]{example1} >
 >How-To-Repeat:
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \begin{filecontents}{example1.ps}
 %!PS-Adobe-2.0

@@ -2,7 +2,7 @@
 % The word `Glava' (chapter) didn't come out in cyrillic
 % encoding as was expected after a language change that 
 % involved an encoding change.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[german,russian]{book}
 \START
 \AUTHOR{[e-mail hidden] (Hans-Georg Buchheit)}

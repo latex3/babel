@@ -1,5 +1,5 @@
 % small test file to test compatibility with XY-pic
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[german]{article}
 
 \START

@@ -1,7 +1,7 @@
 % Test file for LaTeX2e/Babel bug report 2008
 % The definition of \lgem missed a \fi.
 % The .tlg file should be empty.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{"Robert Ricard Fuster Capilla" <[e-mail hidden]>} 

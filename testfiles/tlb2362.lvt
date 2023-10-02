@@ -1,7 +1,7 @@
 % test file for PR 2362
 % \foreignlanguage spanish generated unwanted space
 % the digit of \date was eaten by \foreignlanguage
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{}

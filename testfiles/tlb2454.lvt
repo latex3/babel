@@ -8,7 +8,7 @@
 % \showthe\test. This problem occurs with at least Polish and Danish,
 % but for some reason not with German.
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[danish,german,polish]{article}
 
 \nofiles

@@ -14,7 +14,7 @@
 % the other time outside. The result is wrong for the first time, but ok
 % for the second.
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass[german]{article}
 

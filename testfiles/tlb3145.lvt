@@ -20,7 +20,7 @@ Author et``nobreakspace -"al.(year)
 
 I tested Babel v3.6m 1999/04/05 and it worked fine!
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 

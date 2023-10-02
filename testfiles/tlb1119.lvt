@@ -2,7 +2,7 @@
 % The active double quote `ate' spaces and couldn't be followed by 
 % a closing brace.
 % the .tlg file should be empty.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article} 
 \START
 \AUTHOR{}

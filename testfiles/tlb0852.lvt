@@ -2,7 +2,7 @@
 % check that \w and \r both yeild the ring accent in bot OT1 and T1
 % encoding 
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Frank Thierbach <[e-mail hidden]>}

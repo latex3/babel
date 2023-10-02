@@ -25,7 +25,7 @@ definition that needs a normal equals sign).
 >How-To-Repeat:
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{minimal}
 
 \START

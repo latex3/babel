@@ -1,6 +1,6 @@
 % Test file for LaTeX2e/Babel bug report #1301
 % Babel and T1 output encoding, latin1 input encoding
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{} 

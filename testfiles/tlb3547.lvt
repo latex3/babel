@@ -19,7 +19,7 @@ is, \label{test:test} will print "test\protect :test" instead of
 
 >How-To-Repeat:
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 
 \START

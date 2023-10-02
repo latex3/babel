@@ -1,7 +1,7 @@
 % Test file for LaTeX2e/Babel bug report # 2301
 % tests that PostScript figure can be read when french is active
 % For French the ! is made active...
-\input{test2e}
+\input{test2e}\input{test2eb}
 \begin{filecontents}{test.ps}
 %!PS-Adobe-2.0
 %%BoundingBox: 0 0 100 100

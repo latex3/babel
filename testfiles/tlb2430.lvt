@@ -1,7 +1,7 @@
 % testfile for PR2430
 % Claimed to get to much white space because ~ was written
 % to .aux file as "~ ". Turned out not to be true.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{}

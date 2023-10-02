@@ -17,7 +17,7 @@ redefinition of \pageref does also have an effect in the
 second and third argument of \ifthenelse. Here \pageref
 should have its normal meaning.
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 

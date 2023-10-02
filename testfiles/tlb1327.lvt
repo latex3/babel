@@ -1,6 +1,6 @@
 % Test file for LaTeX2e/Babel bug report #1327
 % Germanb and T1 encoding didn't work together
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Johannes Braams} 

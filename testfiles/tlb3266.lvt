@@ -38,7 +38,7 @@ error is raised. The problem is in the definition of
 %            \textormath{##1}{^\bgroup\prim@s}}%
 %
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{book}
 \START
 \FORMAT{LaTeX2e<2000/06/01>}

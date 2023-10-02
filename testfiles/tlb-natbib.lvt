@@ -3,7 +3,7 @@
 This file tests that the packages natbib and babel with option frenchb
 work together
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[12pt,a4paper]{article}
 \START
 \AUTHOR{J.L. Braams}

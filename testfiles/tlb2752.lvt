@@ -10,7 +10,7 @@ commands like appendix or nested enumerate.
 The same bug appears on NTeX (Linux) and MiKTeX (Win95).
 
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{report}
 
 \START

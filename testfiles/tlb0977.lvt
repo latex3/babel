@@ -1,6 +1,6 @@
 % Test file for LaTeX2e/Babel bug report #0977
 % the input \^{\i} should give expected result
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Franck Vamparys <[e-mail hidden]>} 

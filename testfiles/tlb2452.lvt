@@ -2,7 +2,7 @@
 % Active cahracters are not active before \begin{document}
 % But they should be with the option "KeepShorthandsActive"
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[german]{article}
 \START
 \AUTHOR{}

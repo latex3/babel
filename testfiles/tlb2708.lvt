@@ -19,7 +19,7 @@
 % support is a must. I'll write about these issues in a couple of days
 % (by private e-mail)
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 \START

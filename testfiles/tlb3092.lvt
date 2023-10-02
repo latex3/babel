@@ -23,7 +23,7 @@ To get command tokens, a simple \let should suffice:
 
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{minimal}
 \START
 \AUTHOR{Heiko Oberdiek <[e-mail hidden]>}

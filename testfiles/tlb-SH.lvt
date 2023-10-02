@@ -1,5 +1,5 @@
 % test file for shorthands and author-year citations.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Werenfried Spit <[e-mail hidden]>}

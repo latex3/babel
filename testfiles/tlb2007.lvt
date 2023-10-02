@@ -1,7 +1,7 @@
 % Test file for LaTeX2e/Babel bug report 2007
 % loading catalan as the first language resulted in an error.
 % The .tlg file should be empty.
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{"Robert Ricard Fuster Capilla" <[e-mail hidden]>} 

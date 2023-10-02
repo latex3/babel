@@ -22,7 +22,7 @@ references
 
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 

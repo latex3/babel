@@ -18,7 +18,7 @@ by amsart.cls 2004/08/06 v2.20;
 No error message shows up in the .log file though.
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{amsart}
 

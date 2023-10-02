@@ -21,7 +21,7 @@ This file demonstrates how such a thing should be defined; it works
 with both babel 3.6 and 3.7
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 
 \documentclass{article}
 

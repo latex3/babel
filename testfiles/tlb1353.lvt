@@ -1,6 +1,6 @@
 % Test file for LaTeX2e/Babel bug report #1353
 % Using \ref inside a \caption should work
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Agustin Martin <[e-mail hidden]>} 

@@ -8,7 +8,7 @@
 % english ukhyphen.tex
 % =UKenglish
 %
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Peter K. Schilling <[e-mail hidden]>}

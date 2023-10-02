@@ -1,6 +1,6 @@
 % Test file for LaTeX2e/Babel bug report #1048
 % a d' (\prime) inside array gave infinite loop
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \AUTHOR{Michel Goossens <[e-mail hidden]>}

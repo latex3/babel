@@ -14,7 +14,7 @@ Second, there is a bug around \th being silently re-defined.
 I guess the first one is very easy to fix (just define the missing commands). The second is a bit more tricky: make \th a russian-specific command, via the \extraXXX and \noextraXXX commands.
 \fi
 
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[francais]{article}
 \nofiles
 \START

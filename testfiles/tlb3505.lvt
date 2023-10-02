@@ -13,7 +13,7 @@ assuming that ! always has catcode 12, which french.lfd changes even
 before the beginning the document.
 
 \fi
-\input{test2e}
+\input{test2e}\input{test2eb}
 \documentclass[a4paper]{article}
 
 \START
