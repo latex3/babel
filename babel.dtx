@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/09/29 v3.95 The Babel package]
+\ProvidesFile{babel.dtx}[2023/10/02 v3.95.27572 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3859,7 +3859,7 @@ backwards compatibility.}
 LICR-savvy encoding in the ASCII range. It is used to redefine |\TeX|
 and |\LaTeX| so that they are correctly typeset even with |LGR| or
 |X2| (the complete list is stored in |\BabelNonASCII|, which by default
-is |LGR|, |X2|, |OT2|, |OT3|, |OT6|, |LHE|, |LWN|, |LMA|, |LMC|,
+is |LGR|, |LGI|, |X2|, |OT2|, |OT3|, |OT6|, |LHE|, |LWN|, |LMA|, |LMC|,
 |LMS|, |LMU|, but you can modify it). So, in some sense it fixes the
 bug described in the previous paragraph.
 
@@ -5545,8 +5545,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.95>>
-%<<date=2023/09/29>>
+%<<version=3.95.27572>>
+%<<date=2023/10/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12291,7 +12291,7 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \bbl@trace{Encoding and fonts}
-\newcommand\BabelNonASCII{LGR,X2,OT2,OT3,OT6,LHE,LWN,LMA,LMC,LMS,LMU}
+\newcommand\BabelNonASCII{LGR,LGI,X2,OT2,OT3,OT6,LHE,LWN,LMA,LMC,LMS,LMU}
 \newcommand\BabelNonText{TS1,T3,TS3}
 \let\org@TeX\TeX
 \let\org@LaTeX\LaTeX

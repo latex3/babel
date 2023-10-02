@@ -1,6 +1,6 @@
-## Babel 3.95
+## Babel 3.95.27572
 
-2023-09-29
+(dev)
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.96 (dev)
+     * Add LGI to non-ASCII encodings.
+     
 3.95 2023-09-29
      * New locales: Cebuano, Chuvash, Dogri, Northern Frisian,
        Hmong Njua, Maori, Manipuri, Santali, Sindhi, Sundanese, Tajik,
