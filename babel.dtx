@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/10/02 v3.95.27572 The Babel package]
+\ProvidesFile{babel.dtx}[2023/10/18 v3.95.29149 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -82,22 +82,33 @@
 \usepackage{color,colortbl}
 \usepackage[linkcolor=blue,urlcolor=blue,colorlinks=true]{hyperref}
 \hypersetup{%
-  pdfsubject={LaTeX Multilingual documents and localization for pdfTeX, LuaTex and
-  XeTeX.},
-  pdfauthor={Johannes Braams, Javier Bezos},
+  pdfsubject={LaTeX Multilingual documents and localization for pdfTeX,
+    LuaTeX and XeTeX.},
+  pdfauthor={Javier Bezos, Johannes Braams},
   pdftitle={Babel},
   pdfkeywords={TeX, LaTeX, pdfTeX, LuaTeX, XeTeX, internationalization,
-  localization}}
+    localization}}
+\ExplSyntaxOn
 \newcommand\New[1]{%
-  \colorbox[rgb]{.92, .86, .73}{New #1}\enspace\ignorespaces}
-\definecolor{thered}  {rgb}{0.65,0.04,0.07}
-\definecolor{thegrey} {gray}{0.8}
+  \regex_extract_once:nnN{(\d\d?)\.(\d\d)}{#1}\bbltempa
+  \seq_pop_right:NN\bbltempa\bbltempb
+  \seq_pop_right:NN\bbltempa\bbltempa
+  \colorbox[rgb]{.92, .86, .73}%
+    {New~#1%
+    \quark_if_no_value:NTF\bbltempb{}%
+      {~\ifnum\bbltempa>2 \ifnum\bbltempb>34
+         \href{https://latex3.github.io/babel/news/%
+               whats-new-in-babel-\bbltempa.\bbltempb.html}%
+              {\raisebox{.15ex}{$\oplus$}}%
+       \fi\fi}}\enspace\ignorespaces}
+\ExplSyntaxOff
+\definecolor{thered}{rgb}{0.65,0.04,0.07}
+\definecolor{thegrey}{gray}{0.8}
 \definecolor{shadecolor}{rgb}{1,1,0.97}
 \definecolor{messages}{rgb}{.66,.13,.27}
 \makeatletter
 \def\@begintheorem#1#2{%
   \list{}{}%
-  % \small
   \global\advance\@listdepth\m@ne
   \item[{\sffamily\bfseries\color{messages}\hspace*{1.3em}%
         \MakeUppercase{#1}}]}%
@@ -2618,7 +2629,7 @@ with \babel. They are the equivalent of |\DeclareUppercaseMapping| and
 twofold: (1) a user-friendly way to declare them, because
 often BCP 47 tags are not known (and sometimes can be complex);
 (2) if for some reason the tag changes (eg, you decide to tag
-`english` as `en-001` instead of `en-US`), the new mappings will be
+|english| as |en-001| instead of |en-US|), the new mappings will be
 still assigned to that language.
 
 \begin{example} For Classical Latin (no need to know the tag is
@@ -2631,7 +2642,7 @@ still assigned to that language.
 \begin{note}
   There are still some rough edges when declaring a mapping with the
   |x| extension, or when two \babel{} languages share the same BCP 47
-  tag. These issues will be sorted out in future releases.
+  tag. These issues are expected be sorted out in future releases.
 \end{note}
 
 \subsection{Creating a language}
@@ -3260,6 +3271,12 @@ expandable, and the available fields are:
   \textsf{classicallatin} which sets |extension.x.tag.bcp47| to |classic|.
   \New{3.75}
 \end{description}
+
+\begin{note}
+  Currently, |x| is used for two separate functions, namely,
+  identifying a \babel{} locale without a BCP47 tag and setting an
+  alternative set of rules for casing.
+\end{note}
 
 \begin{warning}
   \New{3.46} As of version 3.46 |tag.bcp47| returns the full BCP 47
@@ -5545,8 +5562,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.95.27572>>
-%<<date=2023/10/02>>
+%<<version=3.95.29149>>
+%<<date=2023/10/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10458,6 +10475,7 @@ wouldn’t exist.
          \let\BabelBeforeIni\@gobbletwo
          \chardef\atcatcode=\catcode`\@
          \catcode`\@=11\relax
+         \def\CurrentOption{#2}%
          \bbl@input@texini{\bbl@cs{rqtex@\languagename}}%
          \catcode`\@=\atcatcode
          \let\atcatcode\relax
@@ -12296,6 +12314,7 @@ wouldn’t exist.
 \let\org@TeX\TeX
 \let\org@LaTeX\LaTeX
 \let\ensureascii\@firstofone
+\let\asciiencoding\@empty
 \AtBeginDocument{%
   \def\@elt#1{,#1,}%
   \edef\bbl@tempa{\expandafter\@gobbletwo\@fontenc@load@list}%
@@ -12305,10 +12324,10 @@ wouldn’t exist.
   \bbl@foreach\BabelNonASCII{% LGR loaded in a non-standard way
     \bbl@ifunset{T@#1}{}{\def\bbl@tempb{#1}}}%
   \bbl@foreach\bbl@tempa{%
-    \bbl@xin@{#1}{\BabelNonASCII}%
+    \bbl@xin@{,#1,}{,\BabelNonASCII,}%
     \ifin@
       \def\bbl@tempb{#1}% Store last non-ascii
-    \else\bbl@xin@{#1}{\BabelNonText}% Pass
+    \else\bbl@xin@{,#1,}{,\BabelNonText,}% Pass
       \ifin@\else
         \def\bbl@tempc{#1}% Store last ascii
       \fi
@@ -12318,8 +12337,9 @@ wouldn’t exist.
     \ifin@\else
       \edef\bbl@tempc{\cf@encoding}% The default if ascii wins
     \fi
-    \edef\ensureascii#1{%
-      {\noexpand\fontencoding{\bbl@tempc}\noexpand\selectfont#1}}%
+    \let\asciiencoding\bbl@tempc
+    \renewcommand\ensureascii[1]{%
+      {\fontencoding{\asciiencoding}\selectfont#1}}%
     \DeclareTextCommandDefault{\TeX}{\ensureascii{\org@TeX}}%
     \DeclareTextCommandDefault{\LaTeX}{\ensureascii{\org@LaTeX}}%
   \fi}

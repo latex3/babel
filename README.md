@@ -1,4 +1,4 @@
-## Babel 3.95.27572
+## Babel 3.95.29149
 
 (dev)
 
@@ -50,6 +50,8 @@ respective authors.
 ```
 3.96 (dev)
      * Add LGI to non-ASCII encodings.
+     * New macro: \asciiencoding.
+     * Removed OT1 in some ini files.
      
 3.95 2023-09-29
      * New locales: Cebuano, Chuvash, Dogri, Northern Frisian,
