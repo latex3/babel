@@ -2,16 +2,24 @@
 
 2020-06-10
 
-**Note.** There is a typo in the note on p. 19 of the manual. It should read: “... as a rule of thumb prefer the default renderer, and resort to Harfbuzz only if the former does **not** work for you.”
+<del>**Note.** There is a typo in the note on p. 19 of the manual. It
+should read: “... as a rule of thumb prefer the default renderer, and
+resort to Harfbuzz only if the former does **not** work for you.”</del>
 
 ## Date
 
-The command `\localedate` admits an optional argument with two keys: `calendar` and `variant`. With them you have access to non-Gregorian date formats defined in `ini` files. The three arguments are those in the corresponding
+The command `\localedate` admits an optional argument with two keys:
+ `calendar` and `variant`. With them you have access to non-Gregorian date formats defined in `ini` files. The three arguments are those in the corresponding 
 lunisolar calendar. They are _not_ the Gregorian data to be converted (which means 13 is a valid month number with `calendar=hebrew`).
  
-Note currently `babel` doesn't convert dates between calendars, because a general tool for this purpose could be as large as babel itself, and very likely it's best done by a separate package (or even an external program, see below).
+<del>Note currently `babel` doesn't convert dates between calendars,
+because a general tool for this purpose could be as large as babel
+itself, and very likely it's best done by a separate package (or even an
+external program, see below).</del> [**Update.** Currently can convert
+several calendars, although only a few decades. See the manual.]
 
-`ini` files with strings defined for some non-Gregorian calendar are: `ar`, `ar-*`, `he`, `fa`, `hi`.
+`ini` files with strings defined for some non-Gregorian calendar are:
+`ar`, `ar-*`, `he`, `fa`, `hi`. [**Update.** Currently there a few more.]
 
 Even with a certain calendar there may be variants. In Kurmanji the default variant prints something like ''30. Çileya Pêşîn 2019'', but with `variant=izafa` it prints ''31’ê Çileya Pêşînê 2019''.
 
@@ -40,6 +48,8 @@ A couple of wrong settings have been fixed: `prehyphenchar` in Hindi was set to 
 * Not sure it's a bug, but it was a quite unexpected behaviour (and annoying, because it was not easy to fix): `\MakeUppercase{\today}` didn't uppercase the date.
 
 ## Appendix. Using an external program for dates
+
+[**Update.** Note _hijri_ is now supported.]
 
 An example with Windows and Powershell. Create a file named `hijridate.ps1`:
 ```powershell

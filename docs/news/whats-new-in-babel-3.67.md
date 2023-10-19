@@ -22,6 +22,9 @@ environment `otherlanguage*`.
 
 ## Turning on and off transforms
 
+[**Update**. A higher level interface was introduced in version
+  [3.85](whats-new-in-babel-3.85.html).]
+
 Until now, the only way to turn on or off a feature was by switching
 the language, Now, you can associate a user defined transform to an
 attribute, so that it’s active only when it’s set (currently its

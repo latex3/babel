@@ -10,6 +10,7 @@ Let's say you need the string for the chapter name in Hebrew. You can write:
 ```
 And `\hechap` is set to the corresponding value.
 {% raw %}
+
 `\LocaleForEach` loops the loaded `ini` files with `#1` as the locale name. Here is a somewhat low level example:
 ```tex
 \LocaleForEach{%
@@ -19,11 +20,15 @@ And `\hechap` is set to the corresponding value.
 ```
 {% endraw %}
 
+[**Update**. This command raises an error if the property doesn’t exist.
+`\getlocaleproperty*` doesn’t.]
+
 ## Coptic, Church Slavic, Syriac, Armenian, Sanskrit
 
 `ini` files for 3 locales have been added:
 * **Coptic**, with 2 numerals: `epact` and `lower.letters`.
-* **Church Slavic**, in 3 scripts: the ‘default’ Cyrl, plus Cyrs and Glag
+* **Church Slavic**, in 3 scripts: the ‘default’ `Cyrl`, plus `Cyrs` and
+  `Glag`
 * **Syriac**. See an example in https://github.com/latex3/babel/blob/master/samples/lua-syriac.pdf .
 
 Armenian now has captions and numerals. <del>[**Warning**. There are also numerals, but

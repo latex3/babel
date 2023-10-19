@@ -9,7 +9,7 @@ Creating a new locale has never been easier, thanks to a set of pre-built `ini`+
 ## Fixes
 
 * Spurious spaces when autoloading locales (bug introduced in 3.46 when fixing #80).
-* In dtx files, autoloading printed some spurious text (because % is set to ignore, #87).
+* In `dtx` files, autoloading printed some spurious text (because % is set to ignore, #87).
 
 ## Other changes
 

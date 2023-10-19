@@ -4,11 +4,13 @@
 
 ## More BCP 47
 
-Now, BCP 47 codes may be used to select languages loaded as package or class options, if desired. Because this feature is mainly meant for special uses, it must be explicitly turned on with:
+Now, BCP 47 codes may be used to select languages loaded as package or
+class options by name, if desired. Because this feature is mainly meant for special uses, it must be explicitly turned on with:
 ```tex
 \babeladjust{ bcp47.toname = on }
 ```
-The best place for this feature to be activated is just after loading `babel`, especially if there are some `\babelprovide`. For example, 
+The best place for this feature to be activated is just after loading
+`babel`, especially if there is some `\babelprovide`. For example, 
 ```tex
 \documentclass{book}
 \usepackage[spanish, english]{babel}
@@ -21,7 +23,13 @@ The best place for this feature to be activated is just after loading `babel`, e
 
 ## Changes in `\BabelEnsureInfo`
 
-Now, `\BabelEnsureInfo` loads the data for the requested languages as package or class options immediately, because they can be useful in the preamble and for other packages. They will be loaded after all in most cases, and the sooner, the better (and even if some language is not used in the document, it won't hurt).
+[**Update.** Currently the basic info loaded always, for all languages.]
+
+<del>Now, `\BabelEnsureInfo` loads the data for the requested languages
+as package or class options immediately, because they can be useful in
+the preamble and for other packages. They will be loaded after all in
+most cases, and the sooner, the better (and even if some language is not
+used in the document, it won't hurt).</del>
 
 ## Fixes
 

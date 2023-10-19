@@ -26,26 +26,34 @@ In addition, you can switch captions with `captions`. There are plans to add mor
 According to [Approaches to line breaking](https://www.w3.org/International/articles/typography/linebreak)
 when word separators are used, Ethiopic wraps after any character, except with the separators. Modern practice, however, is to separate words with spaces and not to break words (much like Arabic or Hebrew).
 
-Now with `luatex`, Amharic by default follows the modern practice, but the traditional one can be activated just by selecting `hyphenrules=amharic` (in other words, the patterns for Amharic are _not_ set to those named `amharic` in `language.dat`). Internally, the mechanism is the same as that for South East Asian scripts, which means the line breaks can be fine-tuned with `\babelpatterns` and `\babelposthyphenation`.
+Now with `luatex`, Amharic by default follows the modern practice, but
+the traditional one can be activated just by selecting
+`hyphenrules=amharic` (in other words, the patterns for Amharic are
+_not_ set by default to those named `amharic` in `language.dat`). Internally,
+the mechanism is the same as that for South East Asian scripts, which
+means the line breaks can be fine-tuned with `\babelpatterns` and
+`\babelposthyphenation`.
 
 ![](../media/babel-wiki-ahmaric.jpg)
 
-There is a good deal of alphabetic counters for Ethiopic languages in the CSS [Ready-made counter styles](https://www.w3.org/TR/predefined-counter-styles/), and they have been added: afar, agaw, ari, blin, dizi, gedeo, gumuz, hadiyya, harari, kaffa, kebena, kembata, konso, kunama, meen, oromo, saho, sidama, silti, tigre, wolaita, yemsa.
+There is a good deal of alphabetic counters for Ethiopic languages in the CSS [Ready-made counter styles](https://www.w3.org/TR/predefined-counter-styles/), and they have been added: `afar`, `agaw`, `ari`, `blin`, `dizi`, `gedeo`, `gumuz`, `hadiyya`, `harari`, `kaffa`, `kebena`, `kembata`, `konso`, `kunama`, `meen`, `oromo`, `saho`, `sidama`, `silti`, `tigre`, `wolaita`, `yemsa`.
 
 ### Other changes
 
-* **French.** Now the first day of the month is 1<sup>er</sup>.
+* **French.** Now the first day of the month is “1<sup>er</sup>”.
 * **Portuguese.** Month names are now lowercase, following the recent orthographic rules.
 
 ## Preliminary code for `\babelprehyphenation`
 
-Note it is tentative, but the current behavior for glyphs should be correct. 
+[**Update.** See the manual for the final version.]
 
-It is similar to `\babelposthyphenation`, but (as its name implies) applied before hyphenation. There are other differences: (1) the first argument is the *locale* instead the name of hyphenation patterns; (2) in the search patterns `=` has no special meaning (`|` is still reserved, but currently unused); (3) in the replacement, discretionaries are not accepted, only `remove`, `{}`, and `string = ..`. Also, you *must not* use `^` or `$`.
+<del>Note it is tentative, but the current behavior for glyphs should be correct.</del>
 
-Currently it handles glyphs, not discretionaries or spaces (in particular, it will not catch the hyphen and you can't insert or remove spaces). Also, you are limited to substitutions as done by lua, although a future implementation may alternatively accept lpeg.
+<del>It is similar to `\babelposthyphenation`, but (as its name implies) applied before hyphenation. There are other differences: (1) the first argument is the *locale* instead the name of hyphenation patterns; (2) in the search patterns `=` has no special meaning (`|` is still reserved, but currently unused); (3) in the replacement, discretionaries are not accepted, only `remove`, `{}`, and `string = ..`. Also, you *must not* use `^` or `$`.</del>
 
-Performance is still somewhat poor.
+<del>Currently it handles glyphs, not discretionaries or spaces (in particular, it will not catch the hyphen and you can't insert or remove spaces). Also, you are limited to substitutions as done by lua, although a future implementation may alternatively accept lpeg.</del>
+
+<del>Performance is still somewhat poor.</del>
 
 ### Example 1: transliteration
 
@@ -94,7 +102,11 @@ we get the following output:
 
 ### Example 2: combining chars
 
-Currently, `lualatex` doesn't deal with combining chars out of the box. As a result, and depending on the language, chars could not be composed correctly and valid hyphenation points could be discarded. As a workaround, you can use `\babelprehyphenation` in the following way:
+Currently, `lualatex` doesn't deal with combining chars out of the box.
+[**Update.** Fixed and no longer true.] As a result, and depending on the language, chars could not
+be composed correctly and valid hyphenation points could be discarded.
+As a workaround, you can use `\babelprehyphenation` in the following
+way:
 ```tex
 \documentclass{article}
 

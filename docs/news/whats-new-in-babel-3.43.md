@@ -4,7 +4,12 @@
 
 ## Autoloading based on BCP 47 codes
 
-The most relevant new feature is the [loading on the fly](whats-new-in-babel-3.39.md) based on BCP 47 codes. It must be activated explicitly, because they are meant for special tasks (most document are mainly monolingual). Mapping from BCP 47 codes to locale names are not hardcoded in `babel`. Instead the data is taken from the `ini` files, which means currently about 250 tags are already recognized
+The most relevant new feature is the [loading on the
+fly](whats-new-in-babel-3.39.md) based on BCP 47 codes. It must be
+activated explicitly with `\babeladjust`, because it is meant for special tasks (most
+document are mainly monolingual). Mapping from BCP 47 codes to locale
+names are not hardcoded in `babel`. Instead the data is taken from the
+`ini` files, which means currently about <del>250</del> 275 tags are already recognized
 
 ```tex
 \documentclass{article}
@@ -24,7 +29,11 @@ The most relevant new feature is the [loading on the fly](whats-new-in-babel-3.3
 \end{document}
 ```
 
-Babel performs a simple lookup in the following way: `fr-Latn-FR` → `fr-Latn` → `fr-FR` → `fr`. Languages with the same resolved name are considered the same. Case is normalized before, so that `fr-latn-fr` → `fr-Latn-FR`. If a tag and a name overlap, the tag takes precedence.
+Babel performs a simple lookup in the following way: `fr-Latn-FR` →
+`fr-Latn` → `fr-FR` → `fr`. Languages with the same resolved name are
+considered the same. Case is normalized before, so that `fr-latn-fr` →
+`fr-Latn-FR`. If a tag and a name overlap, the tag takes precedence (for
+example, `lu` is considered `lubakatanga`). 
 
 Currently the locales loaded are based on the `ini` files and decoupled from the main `ldf` files. This is by design, to ensure code generated externally produces the same result regardless of the languages requested in the document, but an option to use the `ldf` instead will be added in a future release, because both options make sense depending on the particular needs of each document (there will be some restrictions, however).
 
@@ -46,7 +55,7 @@ The behaviour is adjusted with `\babeladjust` with the following parameters:
 * **Finnish**: Fixed `contents` (#61, by Teemu Likonen).
 * **Marathi**: A couple of corrections (from polyglossia #409, by NiranjanTambe), and `alphabetic` counter.
 * **Bengali**: `alphabetic` counter. 
-* **Luxembourgish**: Much expanded (by Sam Mersch).
+* **Luxembourgish**: Much expanded (thanks by Sam Mersch).
 * **Armenian**: Fixed counter names (see the [news for 3.42](whats-new-in-babel-3.42.md)).
 
 ## Macros in `\selectlanguage`
@@ -57,13 +66,23 @@ Since its beginnings, an alternative syntax was allowed in the argument of `\sel
 \selectlanguage{\mylang}
 ```
 
-The alternative syntax is not recommended (there will be an ‘info’ about this).
+The alternative syntax is deprecated. <del>not recommended (there will be an ‘info’ about this).</del>
 
 ## Reorganization of the internal code
 
 This change may affect a few packages.
 
-* Some `babel` commands have been loaded with the LaTeX format for years, but most of them didn't work without `\usepackage{babel}` and raised some cryptic errors. Now in the format some of them have minimal definitions (`\addlanguage`, `\adddialect`, `\iflanguage`, `\providehyphenmins`) and others raise a more explanatory error (`\selectlanguage` and other selectors). The macros in the format with minimal definitions behave as described in the `babel` manual, but without some additional internal actions added by and specific to the `babel` package (for example, it adds code for `\AddBabelHook{..}{adddialect}{..}` to work). It should work without rebuilding the format, but it may be necessary in some cases.
+* Some `babel` commands have been loaded with the LaTeX format for
+  years, but most of them didn't work without `\usepackage{babel}` and
+  raised some cryptic errors. Now in the format some of them have
+  minimal definitions (`\addlanguage`, `\adddialect`, `\iflanguage`,
+  `\providehyphenmins`) and others raise a more explanatory error
+  (`\selectlanguage` and other selectors). The macros in the format with
+  minimal definitions behave as described in the `babel` manual, but
+  without some additional internal actions added by and specific to the
+  `babel` package (for example, it adds code for
+  `\AddBabelHook{..}{adddialect}{..}` to work). It should work without
+  rebuilding the format, but it may be necessary in some cases.
 
 * The files `switch.def` and `plain.def` will eventually disappear. Their code has been merged into `babel.def`, but they are still present as proxy files loading the relevant parts now in the latter.
 
