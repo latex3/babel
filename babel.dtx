@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/10/18 v3.95.29149 The Babel package]
+\ProvidesFile{babel.dtx}[2023/10/20 v3.95.29372 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5562,8 +5562,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.95.29149>>
-%<<date=2023/10/18>>
+%<<version=3.95.29372>>
+%<<date=2023/10/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10250,6 +10250,11 @@ wouldn’t exist.
          Babel.set_chranges_b('\bbl@cl{sbcp}', '\bbl@cl{chrng}') }}%
   \fi
    % == onchar ==
+  \ifcase\bbl@engine\or
+    \directlua{   %%%%%%%%%%%%%%%% WIP. Move to load ini
+      Babel.locale_props[\the\localeid].script = '\bbl@cl{sbcp}'
+    }%
+  \fi
   \ifx\bbl@KVP@onchar\@nnil\else
     \bbl@luahyphenate
     \bbl@exp{%
@@ -10279,9 +10284,7 @@ wouldn’t exist.
       % TODO - error/warning if no script
       \directlua{
         if Babel.script_blocks['\bbl@cl{sbcp}'] then
-          Babel.loc_to_scr[\the\localeid] =
-            Babel.script_blocks['\bbl@cl{sbcp}']
-          Babel.locale_props[\the\localeid].lc = \the\localeid\space
+          Babel.loc_to_scr[\the\localeid] = Babel.script_blocks['\bbl@cl{sbcp}']
           Babel.locale_props[\the\localeid].lg = \the\@nameuse{l@\languagename}\space
         end
       }%
@@ -14849,15 +14852,17 @@ end
 % \subsection{Automatic fonts and ids switching}
 %
 % After defining the blocks for a number of scripts (must be extended
-% and very likely fine tuned), we define a short function which just
-% traverse the node list to carry out the replacements. The table
-% |loc_to_scr| gets the locale form a script range (note the locale is
-% the key, and that there is an intermediate table built on the fly for
-% optimization). This locale is then used to get the |\language| and
-% the |\localeid| as stored in |locale_props|, as well as the font (as
-% requested). In the latter table a key starting with |/| maps the font
-% from the global one (the key) to the local one (the value). Maths are
-% skipped and discretionaries are handled in a special way.
+% and very likely fine tuned), we define a the function
+% |Babel.locale_map|, which just traverse the node list to carry out
+% the replacements. The table |loc_to_scr| stores the script range for
+% each locale (whose id is the key), copied from this table (so that it
+% can be modified on a locale basis); there is an intermediate table
+% named |chr_to_loc| built on the fly for optimization, which maps a
+% char to the locale. This locale is then used to get the |\language|
+% as stored in |locale_props|, as well as the font (as requested). In
+% the latter table a key starting with |/| maps the font from the
+% global one (the key) to the local one (the value). Maths are skipped
+% and discretionaries are handled in a special way.
 %
 %    \begin{macrocode}
 % TODO - to a lua file
@@ -14939,31 +14944,44 @@ function Babel.locale_map(head)
             end
           end
         end
+        % Treat composite chars in a different fashion, because they
+        % 'inherit' the previous locale.
+        if (item.char >= 0x0300 and item.char <= 0x036F) or
+           (item.char >= 0x1AB0 and item.char <= 0x1AFF) or
+           (item.char >= 0x1DC0 and item.char <= 0x1DFF) then
+             Babel.chr_to_loc[item.char] = -2000
+             toloc = -2000
+        end
+        if not toloc then
+          Babel.chr_to_loc[item.char] = -1000
+        end
       end
-      % Now, take action, but treat composite chars in a different
-      % fashion, because they 'inherit' the previous locale. Not yet
-      % optimized.
-      if not toloc and 
-          (item.char >= 0x0300 and item.char <= 0x036F) or
-          (item.char >= 0x1AB0 and item.char <= 0x1AFF) or
-          (item.char >= 0x1DC0 and item.char <= 0x1DFF) then
+      if toloc == -2000 then
         toloc = toloc_save
+      elseif toloc == -1000 then
+        toloc = nil
       end
       if toloc and Babel.locale_props[toloc] and
           Babel.locale_props[toloc].letters and
           tex.getcatcode(item.char) \string~= 11 then
         toloc = nil
       end
-      if toloc and toloc > -1 then
+      if toloc and Babel.locale_props[toloc].script
+          and Babel.locale_props[node.get_attribute(item, LOCALE)].script
+          and Babel.locale_props[toloc].script ==
+            Babel.locale_props[node.get_attribute(item, LOCALE)].script then 
+        toloc = nil
+      end
+      if toloc then
         if Babel.locale_props[toloc].lg then
           item.lang = Babel.locale_props[toloc].lg
           node.set_attribute(item, LOCALE, toloc)
-        end      
+        end 
         if Babel.locale_props[toloc]['/'..item.font] then
           item.font = Babel.locale_props[toloc]['/'..item.font]
         end
-        toloc_save = toloc
       end
+      toloc_save = toloc
     elseif not inmath and item.id == 7 then % Apply recursively
       item.replace = item.replace and Babel.locale_map(item.replace)
       item.pre     = item.pre and Babel.locale_map(item.pre)
