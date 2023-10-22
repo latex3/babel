@@ -13,7 +13,7 @@ corner and attempts to render RTL text correctly.
 
 ## Uyghur
 
-Tentative captions provided by Osman Tursun (https://github.com/neouyghur).
+Tentative captions provided by [Osman Tursun](https://github.com/neouyghur).
 
 ## Fixes
 

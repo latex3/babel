@@ -13,6 +13,10 @@ same, because in `babel` they are focused on the typographical level.
 Transforms have been available for more than a year, but in this
 version they can be defined in `ini`files, too.
 
+See also
+[Transforms and non-standard hyphenation with
+`luatex`](https://latex3.github.io/babel/guides/non-standard-hyphenation-with-luatex.html).
+
 ## Inserting spaces (with `luatex`)
 
 Some languages require readjusting the space before or after some
@@ -58,11 +62,13 @@ word separation in the font.
 ```
 
 As you can see, now multiple insertions are allowed, which is often
-necessary when a space is added.
+necessary when a space is added. (No direct relation to TeX
+`\spacefactor`.)
 
 In addition, the code has been refactored, to improve both stability
-with overlapping patterns and speed. There are still some issues to be
-sorted out, like the behavior in verbatim mode.
+with overlapping patterns and speed. <del>There are still some issues to be
+sorted out, like the behavior in verbatim mode.</del> [**Update.**
+Fixed in 3.58.]
 
 ## Transforms in `ini` files
 

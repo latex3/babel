@@ -21,7 +21,9 @@ Here `provide=*` means ‘load the main language with the `\babelprovide` mechan
 
 (The value will allow in the future other options, as for example `onchar` or `mapdigits`, but for the moment you must restrict yourself to `*`. Also, a similar tool for languages loaded on the fly can be useful, for the reasons explained in [issue #82](https://github.com/latex3/babel/issues/82), but I've left it to a later version.)
 
-Note `babel` itself is not the responsible to set the languages. It recognizes the options passed by the user as class or package options. 
+Note `babel` itself is not the responsible to ‘set’ which languages are
+to be used in the document. It recognizes the options passed by the
+user as class or package options.
 
 ## French spacing with `ini` files
 

@@ -7,7 +7,7 @@
 This is a fix for a critical bug (#134).
 
 For the languages to be recognized in class options, `babel` used a trick
-which was, admittedly a bit faulty. It used to work, but with the
+which was, admittedly, a bit faulty. It used to work, but with the
 latest changes in the LaTeX kernel class options were messed up, and
 many documents were spoilt.
 

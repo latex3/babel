@@ -21,7 +21,16 @@ Penalties can be inserted with both `\babelprehyphenation` and `\babelposthyphen
 
 ### Inserted items
 
-A new key `insert` adds the node before the ‘current’ one, instead of replacing it. It must be the first key in the replacement item specification and works not only with the new `penalty` but also with discretionaries (the latter only with `\babelposthyphenation`). The example above matches 3 items, but there are 4 replacements, so that ‹space-“a”-space› becomes ‹penalty-space-“a”-space›. ⚠ There is currently a limitation, yet – only an item can be inserted at each matched item (in this example, you cannot insert, say, another penalty before the first space).
+A new key `insert` adds the node before the ‘current’ one, instead of
+replacing it. It must be the first key in the replacement item
+specification and works not only with the new `penalty` but also with
+discretionaries (the latter only with `\babelposthyphenation`). The
+example above matches 3 items, but there are 4 replacements, so that
+‹space-“a”-space› becomes ‹penalty-space-“a”-space›. <del>⚠ There is
+currently a limitation, yet – only an item can be inserted at each
+matched item (in this example, you cannot insert, say, another penalty
+before the first space).</del> [**Update.** The limitation was lifted
+in 3.56.]
 
 ## Fixes
 

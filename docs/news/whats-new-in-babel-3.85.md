@@ -61,7 +61,7 @@ always reset with a font selector. Currently they cannot be enabled or
 disabled with the macros described in the previous section.
 
 In `\babelprovide`, transform labels can be tagged before its name,
-with a list separated with colonsm like:
+with a list separated with colons, like:
 ```tex
 transforms = rm:sf:transform.name
 ```

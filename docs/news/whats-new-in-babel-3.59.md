@@ -52,8 +52,9 @@ tatwil):
 ```tex
 \babelprehyphenation{arabic}{ () ب () ر }{ kashida = 0 } % 0 = no kashida
 ```
-Of course, these setting must be also font dependent, but for the
-moment this is what it is.
+Of course, these setting must be also font dependent, [**Update:**] which can be accomplished
+with the syntax described
+[here](https://latex3.github.io/babel/news/whats-new-in-babel-3.85.html#font-dependent-transforms).
 
 As an example of a tranform, the following rule is applied to words
 with at least 3 letters. With certain combinations, a (probably long)
@@ -80,7 +81,7 @@ position in the line, and so on).
 
 There is some tolerance in the insertion of kashida, set with (syntax
 liable to change!):
-```
+```tex
 \directlua{ Babel.arabic.justify_factor = 0.95 }
 ```
 This is the default. 1 means no tolerance. With lower values, there are
@@ -100,7 +101,7 @@ replacement (eg, `{ string = a, step = -1 }`)
   behaviour (no break at all). Tailored behavior for specific locales
   will be added in a next release, but remenber you can always use
   something like:
-```
+```tex
 \babelcharproperty{`“}{linebreak}{op}
 \babelcharproperty{`”}{linebreak}{cl}
 ```

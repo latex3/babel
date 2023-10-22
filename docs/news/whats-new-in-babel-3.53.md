@@ -9,7 +9,8 @@
 \setlocalecaption{japanese}{chapter.template}{[[prechapter]] [chapter] [[postchapter]]}
 ```
 
-This new feature is related to issue [#111](https://github.com/latex3/babel/issues/111)
+This new feature is related to issue
+[#111](https://github.com/latex3/babel/issues/111).
 
 ## `\babelprovide` with `ldf` files
 

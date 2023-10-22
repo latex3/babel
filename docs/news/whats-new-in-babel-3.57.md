@@ -31,11 +31,12 @@ Devanagari.
 
 Some tentative code has been added to the Uyghur locale for the words
 to be hyphenated correctly, preserving the joining forms. See
-https://www.w3.org/TR/css-text-3/#word-break-shaping . It assumes the
+[CSS Text Module Level 3 – Shaping Across Intra-word
+Breaks](https://www.w3.org/TR/css-text-3/#word-break-shaping). It assumes the
 basic forms (initial, medial, final). 
 
 Here is an example (text copypasted from
-https://github.com/azmat21/Syllabification-for-Uyghur ).
+[Syllabification-for-Uyghur](https://github.com/azmat21/Syllabification-for-Uyghur).
 ```
 \documentclass{article}
 
@@ -83,11 +84,17 @@ https://github.com/azmat21/Syllabification-for-Uyghur ).
 
 ![Uyghur](../media/uyghur-hyphenation.png)
 
+[**Update**. At the time of this writing (2021) there was some work in
+progress for a set of Uyghur hyphenation rules. Sadly, as of 2023 this
+project seems abandoned.]
+
 ## Other changes
 
-* Transforms: {xxxx} syntax also in `string =`, which is replace by the
-   character with the given hex code (at least 4 hex digits).
+* Transforms: `{xxxx}` syntax also in `string =`, which is replaced by the
+   character with the given hex code (at least 4 ‘hex digits’).
 
 * `magyar` as alternative name to `hungarian` in `\babelprovide`.
+  [**Update.** But the preferred name is still `hungarian`, per the
+  Unicode CLDR.]
 
 

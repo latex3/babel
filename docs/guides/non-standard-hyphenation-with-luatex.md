@@ -1,4 +1,4 @@
-# Non-standard hyphenation with `luatex`
+# Transforms and non-standard hyphenation with `luatex`
 
 Hyphenation in LaTeX is accomplished by means of the so-called
 discretionaries. You can find a brief description

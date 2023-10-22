@@ -9,7 +9,7 @@
 **Czech, Polish, Slovak** ▸  `oneletter.nobreak` ▸ Converts a space after a non-syllabic preposition or conjunction into a non-breaking space.
 
 **Hindi, Sanskrit** ▸ `punctuation.space` ▸ Inserts a space before the following
-four characters: `!?:;`. Added `transliteration.hk` for
+four characters: `!?:;`. Added `transliteration.hk` to
 Sanskrit, too.
 
 **Serbian** ▸ `transliteration.gajica` ▸ (Note `serbian` with `ini` files refers to the Cyrillic script, which is here the target.) The standard system devised by Ljudevit Gaj. 
@@ -21,7 +21,7 @@ hyphenation patterns are `nohyphenation`, so that they aren't applied
 in verbatim mode.
 
 This behavior can be switched with:
-```
+```tex
 \babeladjust{ prehyphenation.disable = nohyphenation }
 \babeladjust{ prehyphenation.disable = off }
 ```
@@ -54,6 +54,11 @@ could be added in the future, and there is work in progress for
 
 See also [here](whats-new-in-babel-3.57.md) for Uyghur hyphenation.
 
+[**Update**. An alternative syntax, added later, is:]
+```tex
+\babelprovide[justification = unhyphenated]{<language>}
+```
+
 ## Arabic justification (experimental)
 
 There is some experimental code for Arabic justification, for
@@ -76,7 +81,7 @@ The preamble used in the previous example is:
 
 \ArabicSetupJust
 ```
-The last macro is temporary. It will be removed.
+[**Update**. The last macro was temporary. It has been removed.]
 
 ## Fixes
 
