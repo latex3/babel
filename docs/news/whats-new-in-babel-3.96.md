@@ -1,9 +1,10 @@
 # What's new in babel 3.96
 
-**Draft**
+2023-10-25
 
-Version number is reaching 3.100, so a new numbering schema will be
-introduced in 2024, with the year (abbreviated) and a correlative number.
+Version number is reaching 3.100, and a new numbering schema will be
+introduced in 2024, with the year (abbreviated) and a correlative
+number. 
 
 ## Improved `onchar`
 
@@ -21,16 +22,24 @@ But this handles every Cyrillic letter, including those in something like:
 To avoid it, `onchar` is now applied only if the original and the
 target scripts are different.
 
-## Improved Odia
+## Improved locales
 
-Thanks to ଅଶୋକ ଦାସ୍ and [ଅଭିଷେକ ଜେନା](https://github.com/avisekjena). Captions has been defined, a few
-months have been fixed and there are a couple of alphabetic counters,
-namely, `alphabetic` and `akshar`.
+* **Oriya.** Captions has been defined, a few months have been fixed and there are a
+couple of alphabetic counters, namely, `alphabetic` and `akshar`.
+Thanks to ଅଶୋକ ଦାସ୍ and [ଅଭିଷେକ ଜେନା](https://github.com/avisekjena).
+
+* **Croatian.** Transform `hyphen.repeat`.
+
+A few encodings have been sorted out, to remove `OT1`.
 
 ## ASCII encoding
 
-As suggested by [Udi Fogiel](https://github.com/Udi-Fogiel), with the macro `\asciiencoding` you can
-retrieve and modify its value, which is determined by `babel` (it’s the
-same used by `\ensureascii`).
+As suggested by [Udi Fogiel](https://github.com/Udi-Fogiel), with the
+macro `\asciiencoding` you can retrieve and modify the value determined
+by `babel` for `\ensureascii`.
 
 ## Fixes
+
+* Fixed the name for the counter `date.day` (from `date.days`) in `zh`
+locales.
+* Added the `LGI` encoding to the non-ASCII list.
