@@ -1,6 +1,6 @@
-s## Babel 3.95.29372
+## Babel 3.96
 
-(dev)
+2023-10-25
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,9 +10,9 @@ is a set of ini files for about 275 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.95 are described in:
+Changes in version 3.96 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.95.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.96.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,18 +48,12 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.96 (dev)
-     * Add LGI to non-ASCII encodings.
+3.96 2023-10-25
+     * Added LGI to non-ASCII encodings.
      * New macro: \asciiencoding.
      * Removed OT1 in some ini files.
-     * Improved 'onchar'.
-     
-3.95 2023-09-29
-     * New locales: Cebuano, Chuvash, Dogri, Northern Frisian,
-       Hmong Njua, Maori, Manipuri, Santali, Sindhi, Sundanese, Tajik,
-       Tatar, Xhosa.       
-     * Minimum locales: Awadhi, Gothic, Saraiki.
-     * Fix: added some missing native numbers and character ranges.
+     * Improved support for Odia (thanks to @avisekjena).
+     * Transform 'hyphen.repeat' in Croatian.
 ```
 
 ### Previous changes

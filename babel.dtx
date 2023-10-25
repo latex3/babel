@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/10/20 v3.95.29372 The Babel package]
+\ProvidesFile{babel.dtx}[2023/10/25 v3.96 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2943,7 +2943,8 @@ It’s still somewhat experimental. Again, there is an explanation in the
   {\babel\ site}.
 
 \Describe{linebreaking=}{}
-\New{3.59} Just a synonymous for \texttt{justification}.
+\New{3.59} Just a synonymous for \texttt{justification}. Depending on
+the language, this name can make more sense.
 
 \begin{note}
   (1) If you need shorthands, you can define them with |\useshorthands|
@@ -3555,7 +3556,7 @@ devised by Yannis Haralambous for \textsf{dad} (simple and
 recommended way to make these transformations (the best way is with
 OTF features), but it can get you out of a hurry.}
 
-\trans{Czech, Polish, Portuguese, Slovak,
+\trans{Croatian, Czech, Polish, Portuguese, Slovak,
 Spanish}{hyphen.repeat}{Explicit hyphens behave like
 |\string\babelhyphen|\allowbreak|\{repeat\}|.}
 
@@ -5562,8 +5563,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.95.29372>>
-%<<date=2023/10/20>>
+%<<version=3.96>>
+%<<date=2023/10/25>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10250,11 +10251,6 @@ wouldn’t exist.
          Babel.set_chranges_b('\bbl@cl{sbcp}', '\bbl@cl{chrng}') }}%
   \fi
    % == onchar ==
-  \ifcase\bbl@engine\or
-    \directlua{   %%%%%%%%%%%%%%%% WIP. Move to load ini
-      Babel.locale_props[\the\localeid].script = '\bbl@cl{sbcp}'
-    }%
-  \fi
   \ifx\bbl@KVP@onchar\@nnil\else
     \bbl@luahyphenate
     \bbl@exp{%
@@ -10927,6 +10923,11 @@ wouldn’t exist.
   % Also maps bcp47 -> languagename
   \ifbbl@bcptoname
     \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
+  \fi
+  \ifcase\bbl@engine\or
+    \directlua{%
+      Babel.locale_props[\the\bbl@cs{id@@\languagename}].script
+        = '\bbl@cl{sbcp}'}%
   \fi
   % Conditional
   \ifnum#1>\z@         % 0 = only info, 1, 2 = basic, (re)new
@@ -23686,7 +23687,7 @@ Babel.cjk_breaks = {
 \@namedef{bbl@esname@nil}{Latin}
 \@namedef{bbl@sname@nil}{Latin}
 \@namedef{bbl@sbcp@nil}{Latn}
-\@namedef{bbl@sotf@nil}{Latn}
+\@namedef{bbl@sotf@nil}{latn}
 %    \end{macrocode}
 %
 %    The macro |\ldf@finish| takes care of looking for a
