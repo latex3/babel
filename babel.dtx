@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/10/25 v3.96 The Babel package]
+\ProvidesFile{babel.dtx}[2023/11/01 v3.96.30536 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5426,6 +5426,24 @@ is true with any of these two environment selectors.
 
 Its natural place of use is in hooks or in |\extras|\m{language}.
 
+\subsection{Support for \xetex{} interchar}
+
+(To be filled.)
+
+\begin{example}
+  Not very useful, but illustrative (taken from the unfortunately
+  obsolete \textsf{interchar} package, by Zou Ho). It colorizes the
+  letters ‘e’ and ‘s’.
+\begin{verbatim}
+\usepackage{color}
+\BabelCharClass{english}{colored}{es}
+\BabelInterChar{english}{default}{colored}{\bgroup\color{red}}
+\BabelInterChar{english}{boundary}{colored}{\bgroup\color{red}}
+\BabelInterChar{english}{colored}{default}{\egroup}
+\BabelInterChar{english}{colored}{boundary}{\egroup}
+\end{verbatim}
+\end{example}
+
 \else
 
 \DocInput{babel.dtx}
@@ -5563,8 +5581,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.96>>
-%<<date=2023/10/25>>
+%<<version=3.96.30536>>
+%<<date=2023/11/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5757,7 +5775,7 @@ wouldn’t exist.
   \bbl@trim{\expandafter\bbl@kvcmd\expandafter{\bbl@forkv@a}}{#2}{#4}}
 %    \end{macrocode}
 %
-% A \textit{for} loop. Each item (trimmed), is |#1|.  It cannot be
+% A \textit{for} loop. Each item (trimmed) is |#1|.  It cannot be
 % nested (it's doable, but we don't need it).
 %
 %    \begin{macrocode}
@@ -13747,6 +13765,84 @@ wouldn’t exist.
 \DisableBabelHook{babel-fontspec}
 <@Font selection@>
 \def\bbl@provide@extra#1{}
+%    \end{macrocode}
+%
+% \section{Support for interchar}
+%
+% WIP.
+%
+% XeTeX predefines some values, so we skip them and define some user
+% names for these global classes.
+%
+%    \begin{macrocode}
+\ifnum\xe@alloc@intercharclass<\thr@@
+  \xe@alloc@intercharclass\thr@@
+\fi
+\chardef\bbl@xeclass@default@=\z@
+\chardef\bbl@xeclass@cjkideograms@=\@ne
+\chardef\bbl@xeclass@cjkleftpunctuation@=\tw@
+\chardef\bbl@xeclass@cjkrightpunctuation@=\thr@@
+\chardef\bbl@xeclass@boundary@=4095
+\chardef\bbl@xeclass@ignored@=4096
+%    \end{macrocode}
+%
+% The machinery is activated with a hook (enabled only if actually
+% used). Here |\bbl@tempc| is pre-set with |\bbl@usingxeclass|, defined
+% below. The standard mechanism based on |\originalTeX| to save, set
+% and restore values is used. TODO: Single hook or per language?
+%
+%    \begin{macrocode}
+\AddBabelHook{babel-interchar}{beforeextras}{%
+  \let\bbl@elt\bbl@setcharclass
+  \@nameuse{bbl@xechars@\languagename}}
+\DisableBabelHook{babel-interchar}
+\def\bbl@setcharclass#1{% TODO. Or defined directly in the hook?
+  \babel@savevariable{\XeTeXcharclass\string`#1}%
+  \XeTeXcharclass\string`#1 \bbl@tempc}
+%    \end{macrocode}
+%
+% Now the two user macros. Char classes are declared implicitly, and
+% then the macro to be executed at the |babel-interchar| hook is
+% created. The list of chars to be handled by the hook defined above
+% has internally the form
+% |\bbl@usingxeclass\bbl@xeclass@punct@english||\bbl@elt{.}|%
+% |\bbl@elt{,}| (etc.), where |\bbl@usingxeclass| stores the class to be
+% applied to the subsequent characters. The \cs{ifcat} part deals with
+% the alternative way to enter characters as macros (eg, |\}|).
+%
+%    \begin{macrocode}
+\def\BabelCharClass#1#2#3{%
+  \EnableBabelHook{babel-interchar}%
+  \bbl@csarg\newXeTeXintercharclass{xeclass@#2@#1}%
+  \let\bbl@elt\relax
+  \def\bbl@tempb##1{%
+    \ifx##1\@empty\else
+      \bbl@elt{\ifcat\noexpand##1\relax\bbl@stripslash##1\else\string##1\fi}%
+      \expandafter\bbl@tempb
+    \fi}%
+  \bbl@ifunset{bbl@xechars@#1}%
+   {\toks@{%
+      \babel@savevariable\XeTeXinterchartokenstate
+      \XeTeXinterchartokenstate\@ne
+    }}%
+   {\toks@\expandafter\expandafter\expandafter{%
+      \csname bbl@xechars@#1\endcsname}}
+  \bbl@csarg\edef{xechars@#1}{%
+    \the\toks@
+    \bbl@usingxeclass\csname bbl@xeclass@#2@#1\endcsname
+    \bbl@tempb#3\@empty}}  
+\protected\def\bbl@usingxeclass#1{\let\bbl@tempc#1} 
+%    \end{macrocode}
+%
+% And finally, the command with the code to be inserted. If the language
+% doesn’t define a class, then use the global one, as defined above.
+%
+%    \begin{macrocode}
+\def\BabelInterChar#1#2#3#4{%
+  \XeTeXinterchartoks
+    \@nameuse{bbl@xeclass@#2@\bbl@ifunset{bbl@xeclass@#2@#1}{}{#1}}
+    \@nameuse{bbl@xeclass@#3@\bbl@ifunset{bbl@xeclass@#3@#1}{}{#1}}
+    = {#4}}
 %</xetex>
 %    \end{macrocode}
 %
@@ -14227,7 +14323,7 @@ wouldn’t exist.
 end
 }
 \endgroup
-\ifx\newattribute\@undefined\else
+\ifx\newattribute\@undefined\else % Test for plain
   \newattribute\bbl@attr@locale
   \directlua{ Babel.attr_locale = luatexbase.registernumber'bbl@attr@locale' }
   \AddBabelHook{luatex}{beforeextras}{%

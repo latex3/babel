@@ -1,6 +1,6 @@
-## Babel 3.96
+## Babel 3.96.30536
 
-2023-10-25
+2023-11-01
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.97 (dev)
+     * Support for 'interchar' (xetex).
+
 3.96 2023-10-25
      * Added LGI to non-ASCII encodings.
      * New macro: \asciiencoding.
