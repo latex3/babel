@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/11/01 v3.96.30536 The Babel package]
+\ProvidesFile{babel.dtx}[2023/11/04 v3.96.30856 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5432,15 +5432,22 @@ Its natural place of use is in hooks or in |\extras|\m{language}.
 
 \begin{example}
   Not very useful, but illustrative (taken from the unfortunately
-  obsolete \textsf{interchar} package, by Zou Ho). It colorizes the
-  letters ‘e’ and ‘s’.
+  obsolete \textsf{interchar} package, by Zou Ho), to colorize the
+  letters ‘e’ and ‘s’ (this way to group text is usually not a
+  good idea, however).
 \begin{verbatim}
 \usepackage{color}
-\BabelCharClass{english}{colored}{es}
-\BabelInterChar{english}{default}{colored}{\bgroup\color{red}}
-\BabelInterChar{english}{boundary}{colored}{\bgroup\color{red}}
-\BabelInterChar{english}{colored}{default}{\egroup}
-\BabelInterChar{english}{colored}{boundary}{\egroup}
+\babelcharclass{english}{colored}{es}
+\babelinterchar{english}{default, boundary}{colored}{\bgroup\color{red}}
+\babelinterchar{english}{colored}{default, boundary}{\egroup}
+\end{verbatim}
+  A more realistic example follows, which inserts a thin space
+  between a digit and a percent sign. Note the former is entered as a
+  range and the latter in command form:
+\begin{verbatim}
+\babelcharclass{english}{digit}{0-9}
+\babelcharclass{english}{percent}{\%}
+\babelinterchar{english}{digit}{percent}{\,}
 \end{verbatim}
 \end{example}
 
@@ -5581,8 +5588,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.96.30536>>
-%<<date=2023/11/01>>
+%<<version=3.96.30856>>
+%<<date=2023/11/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13644,9 +13651,9 @@ wouldn’t exist.
 %
 % \subsection{XeTeX}
 %
-%    Unfortunately, the current encoding cannot be retrieved and
-%    therefore it is reset always to |utf8|, which seems a sensible
-%    default.
+% Unfortunately, the current encoding cannot be retrieved and
+% therefore it is reset always to |utf8|, which seems a sensible
+% default.
 %
 %    \begin{macrocode}
 %<<*Footnote changes>>
@@ -13771,8 +13778,9 @@ wouldn’t exist.
 %
 % WIP.
 %
-% XeTeX predefines some values, so we skip them and define some user
-% names for these global classes.
+% \xetex{} reserves some values for CJK (although they are not set in
+% \textsc{xelatex}), so we make sure they are skipped. Define some user
+% names for the global classes, too.
 %
 %    \begin{macrocode}
 \ifnum\xe@alloc@intercharclass<\thr@@
@@ -13789,35 +13797,53 @@ wouldn’t exist.
 % The machinery is activated with a hook (enabled only if actually
 % used). Here |\bbl@tempc| is pre-set with |\bbl@usingxeclass|, defined
 % below. The standard mechanism based on |\originalTeX| to save, set
-% and restore values is used. TODO: Single hook or per language?
+% and restore values is used. |\count@| stores the previous char to be
+% set, except at the beginning (0) and after |\bbl@upto|, which is the
+% previous char negated, as a flag to mark a range.
 %
 %    \begin{macrocode}
 \AddBabelHook{babel-interchar}{beforeextras}{%
-  \let\bbl@elt\bbl@setcharclass
   \@nameuse{bbl@xechars@\languagename}}
 \DisableBabelHook{babel-interchar}
-\def\bbl@setcharclass#1{% TODO. Or defined directly in the hook?
-  \babel@savevariable{\XeTeXcharclass\string`#1}%
-  \XeTeXcharclass\string`#1 \bbl@tempc}
+\protected\def\bbl@charclass#1{%
+  \ifnum\count@<\z@
+    \count@-\count@
+    \loop
+      \bbl@exp{%
+        \\\babel@savevariable{\XeTeXcharclass`\Uchar\count@}}%
+      \XeTeXcharclass\count@ \bbl@tempc
+      \ifnum\count@<`#1\relax
+      \advance\count@\@ne
+    \repeat
+  \else
+    \babel@savevariable{\XeTeXcharclass`#1}%
+    \XeTeXcharclass`#1 \bbl@tempc
+  \fi
+  \count@`#1\relax}
 %    \end{macrocode}
 %
 % Now the two user macros. Char classes are declared implicitly, and
 % then the macro to be executed at the |babel-interchar| hook is
 % created. The list of chars to be handled by the hook defined above
 % has internally the form
-% |\bbl@usingxeclass\bbl@xeclass@punct@english||\bbl@elt{.}|%
-% |\bbl@elt{,}| (etc.), where |\bbl@usingxeclass| stores the class to be
+% |\bbl@usingxeclass\bbl@xeclass@punct@english||\bbl@charclass{.}|%
+% |\bbl@charclass{,}| (etc.), where |\bbl@usingxeclass| stores the class to be
 % applied to the subsequent characters. The \cs{ifcat} part deals with
-% the alternative way to enter characters as macros (eg, |\}|).
+% the alternative way to enter characters as macros (eg, |\}|). As a
+% special case, hyphens are stored as |\bbl@upto|, to deal with ranges.
 %
 %    \begin{macrocode}
-\def\BabelCharClass#1#2#3{%
+\newcommand\babelcharclass[3]{%
   \EnableBabelHook{babel-interchar}%
   \bbl@csarg\newXeTeXintercharclass{xeclass@#2@#1}%
-  \let\bbl@elt\relax
   \def\bbl@tempb##1{%
     \ifx##1\@empty\else
-      \bbl@elt{\ifcat\noexpand##1\relax\bbl@stripslash##1\else\string##1\fi}%
+      \ifx##1-%
+        \bbl@upto
+      \else
+        \bbl@charclass{%
+          \ifcat\noexpand##1\relax\bbl@stripslash##1\else\string##1\fi}%
+      \fi
       \expandafter\bbl@tempb
     \fi}%
   \bbl@ifunset{bbl@xechars@#1}%
@@ -13831,18 +13857,46 @@ wouldn’t exist.
     \the\toks@
     \bbl@usingxeclass\csname bbl@xeclass@#2@#1\endcsname
     \bbl@tempb#3\@empty}}  
-\protected\def\bbl@usingxeclass#1{\let\bbl@tempc#1} 
+\protected\def\bbl@usingxeclass#1{\count@\z@ \let\bbl@tempc#1}
+\protected\def\bbl@upto{%
+  \ifnum\count@>\z@
+    \advance\count@\@ne
+    \count@-\count@
+  \else\ifnum\count@=\z@
+    \bbl@charclass{-}%
+  \else
+    \bbl@error{Double hyphens aren't allowed in \string\babelcharclass\\%
+               because it's potentially ambiguous}%
+              {See the manual for further info}%
+  \fi\fi}
 %    \end{macrocode}
 %
 % And finally, the command with the code to be inserted. If the language
 % doesn’t define a class, then use the global one, as defined above.
+% For the definition there is a intermediate macro, which can be
+% ‘disabled’ with |\bbl@ic@<label>@<lang>|.
 %
 %    \begin{macrocode}
-\def\BabelInterChar#1#2#3#4{%
-  \XeTeXinterchartoks
-    \@nameuse{bbl@xeclass@#2@\bbl@ifunset{bbl@xeclass@#2@#1}{}{#1}}
-    \@nameuse{bbl@xeclass@#3@\bbl@ifunset{bbl@xeclass@#3@#1}{}{#1}}
-    = {#4}}
+\newcommand\babelinterchar[5][]{%
+  \let\bbl@kv@label\@empty
+  \bbl@forkv{#1}{\bbl@csarg\edef{kv@##1}{##2}}%
+  \@namedef{\zap@space bbl@xeinter@\bbl@kv@label @#3@#4@#2 \@empty}{#5}%
+  \bbl@csarg\let{ic@\bbl@kv@label @#1}\@firstofone
+  \bbl@exp{\\\bbl@for\\\bbl@tempa{\zap@space#3 \@empty}}{%
+    \bbl@exp{\\\bbl@for\\\bbl@tempb{\zap@space#4 \@empty}}{%     
+      \XeTeXinterchartoks
+        \@nameuse{bbl@xeclass@\bbl@tempa @%
+          \bbl@ifunset{bbl@xeclass@\bbl@tempa @#2}{}{#2}}
+        \@nameuse{bbl@xeclass@\bbl@tempb @%
+          \bbl@ifunset{bbl@xeclass@\bbl@tempb @#2}{}{#2}}
+        = \expandafter{%
+           \csname bbl@ic@\bbl@kv@label @#2\expandafter\endcsname
+           \csname\zap@space bbl@xeinter@\bbl@kv@label 
+              @#3@#4@#2 \@empty\endcsname}}}}
+\newcommand\enablelocaleinterchar[1]{%
+  \bbl@csarg\let{ic@#1@\languagename}\@firstofone}
+\newcommand\disablelocaleinterchar[1]{%
+  \bbl@csarg\let{ic@#1@\languagename}\@gobble}
 %</xetex>
 %    \end{macrocode}
 %
@@ -15103,14 +15157,14 @@ end
   \else
     \bbl@error{\string\babelcharproperty\space can be used only in\\%
                vertical mode (preamble or between paragraphs)}%
-              {See the manual for futher info}%
+              {See the manual for further info}%
   \fi}
 \newcommand\bbl@chprop[3][\the\count@]{%
   \@tempcnta=#1\relax
   \bbl@ifunset{bbl@chprop@#2}%
     {\bbl@error{No property named '#2'. Allowed values are\\%
                 direction (bc), mirror (bmg), and linebreak (lb)}%
-               {See the manual for futher info}}%
+               {See the manual for further info}}%
     {}%
   \loop
     \bbl@cs{chprop@#2}{#3}%
