@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/11/04 v3.96.30856 The Babel package]
+\ProvidesFile{babel.dtx}[2023/11/09 v3.96.31373 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -271,10 +271,11 @@ are also some notes on its use with e-Plain and pdf-Plain \TeX.
 
 \item[\sffamily\color{messages}What if I’m interested only in the
 latest changes?] Changes and new features with relation to version 3.8
-are highlighted with \New{X.XX}\hspace{-.5em}, and there are some notes
-for the latest versions in
-\href{https://latex3.github.io/babel/}{the
-\babel{} site}. The most recent features can be still unstable.
+are highlighted with \New{X.XX}\hspace{-.5em}
+(\raisebox{.15ex}{$\oplus$} is a link to the \babel{} site), and there
+are some notes for the latest versions in
+\href{https://latex3.github.io/babel/}{the \babel{} site}. The most
+recent features can be still unstable.
 
 \item[\sffamily\color{messages}Can I help?] Sure! If you are interested
 in the \TeX{} multilingual support, please join the
@@ -2852,7 +2853,6 @@ languages. They are (from \textsf{interface3.pdf}):
 \makebox[\linewidth][c]{*\qquad*\qquad*}
 \smallskip
 
-
 A few options (only \luatex) set some properties of the writing system
 used by the language. These properties are \textit{always} applied to
 the script, no matter which language is active. Although somewhat
@@ -3772,6 +3772,73 @@ This feature is activated with the first |\babelposthyphenation| or
 \New{3.85} Enables and disables the transform with the given label in
 the current language.
 
+\subsection{Support for \xetex{} interchar}
+
+\New{3.97} A few macros are provided to deal with locale dependent
+inter-character rules (aka ‘interchar’). With these macros they are.
+
+\Describe{\babelcharclass}{\marg{locale}\marg{name}\marg{char-list}}
+
+Declares a new character class, which is assigned to the characters in
+\marg{char-list}, entered either as characters or in macro form
+(eg,~|\}|). If you need to enter them by their numeric value, use the
+\TeX{} |^|-notation (eg,~|^^^^1fa0|). Ranges are allowed, with an
+hyphen (eg,~|.,;a-zA-Z|). If you need the hyphen to be assigned a
+class, write it at the very beginning of the list.
+
+There are several predefined ‘global’ classes, namely 
+|default|, |cjkideogram|, |cjkleftpunctuation|, |cjkrightpunctuation|,
+|boundary|, and |ignore|, which  are described in the \xetex{} manual
+(currently CJK classes are ‘empty’, but they will be assigned in a
+future release). 
+
+\Describe{\babelinterchar}{\oarg{options}\marg{locale}
+  \marg{class-first}\marg{class-second}\marg{code}}
+
+\marg{class-first} and \marg{class-second} can be comma separated lists
+of char classes, and all combinations are defined (so that 2 first
+classes with 2 second classes, define 4 combinations). In the
+\marg{options} field a key named |label| is allowed, so that you can
+enable or disable the rule with the following two commands. Like
+prehyphenation transforms in \luatex{}, interchar is not applied if the
+current hyphenation rules are |nohyphenation|.
+
+\Describe{\enablelocaleinterchar}{\marg{label}}
+\DescribeOther{\disablelocaleinterchar}{\marg{label}}
+
+Enable or disable the interchar rules with the given label for the
+current language.
+
+\begin{example}
+  Not very useful, but illustrative (taken from the unfortunately
+  obsolete \textsf{interchar} package, by Zou Ho), to colorize the
+  letters ‘x’ and ‘y’ (this way to group text is usually not a
+  good idea, however).
+\begin{verbatim}
+\usepackage{color}
+\babelcharclass{english}{colored}{xy}
+\babelinterchar{english}{default, boundary}{colored}{\bgroup\color{red}}
+\babelinterchar{english}{colored}{default, boundary}{\egroup}
+\end{verbatim}
+  A more realistic example follows, which inserts a thin space
+  between a digit and a percent sign. Note the former is entered as a
+  range, and the latter in command form:
+\begin{verbatim}
+\babelcharclass{english}{digit}{0-9}
+\babelcharclass{english}{percent}{\%}
+\babelinterchar[label=percent]{english}{digit}{percent}{\,}
+\end{verbatim}
+\end{example}
+
+\begin{warning}
+  Keep in mind two points: (1) a character can be assigned a single
+  class; this is a limitation in the interchar mechanims that often
+  leads to incompatibilities; (2) since the character classes set with
+  |\babelcharclass| are saved (so that they can be restored), there is a
+  limit in the number of characters in the \marg{char-list} (which,
+  however, must be large enough for many uses).
+\end{warning}
+
 \subsection{Selection based on BCP 47 tags}
 \label{bcp47}
 
@@ -4462,7 +4529,7 @@ ibygreek, bgreek, serbianc, frenchle, ethiop} and \textsf{friulan}.
   (\textsf{portuguese}), \textsf{brazil} (\textsf{brazilian}),
   \textsf{russianb} (\textsf{russian}), \textsf{usorbian}
   (\textsf{uppersorbian}), \textsf{vietnam} (\textsf{vietnamese}),
-  \textsf{northernsami} (\textsf{samin}), \textsf{ukraineb}
+  \textsf{samin} (\textsf{northernsami}), \textsf{ukraineb}
   (\textsf{ukrainian}). Deprecated names come in many cases from the
   times when they had to be shortened to 8 characters. 
 \end{note}
@@ -5426,31 +5493,6 @@ is true with any of these two environment selectors.
 
 Its natural place of use is in hooks or in |\extras|\m{language}.
 
-\subsection{Support for \xetex{} interchar}
-
-(To be filled.)
-
-\begin{example}
-  Not very useful, but illustrative (taken from the unfortunately
-  obsolete \textsf{interchar} package, by Zou Ho), to colorize the
-  letters ‘e’ and ‘s’ (this way to group text is usually not a
-  good idea, however).
-\begin{verbatim}
-\usepackage{color}
-\babelcharclass{english}{colored}{es}
-\babelinterchar{english}{default, boundary}{colored}{\bgroup\color{red}}
-\babelinterchar{english}{colored}{default, boundary}{\egroup}
-\end{verbatim}
-  A more realistic example follows, which inserts a thin space
-  between a digit and a percent sign. Note the former is entered as a
-  range and the latter in command form:
-\begin{verbatim}
-\babelcharclass{english}{digit}{0-9}
-\babelcharclass{english}{percent}{\%}
-\babelinterchar{english}{digit}{percent}{\,}
-\end{verbatim}
-\end{example}
-
 \else
 
 \DocInput{babel.dtx}
@@ -5588,8 +5630,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.96.30856>>
-%<<date=2023/11/04>>
+%<<version=3.96.31373>>
+%<<date=2023/11/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13791,7 +13833,7 @@ wouldn’t exist.
 \chardef\bbl@xeclass@cjkleftpunctuation@=\tw@
 \chardef\bbl@xeclass@cjkrightpunctuation@=\thr@@
 \chardef\bbl@xeclass@boundary@=4095
-\chardef\bbl@xeclass@ignored@=4096
+\chardef\bbl@xeclass@ignore@=4096
 %    \end{macrocode}
 %
 % The machinery is activated with a hook (enabled only if actually
@@ -13852,7 +13894,7 @@ wouldn’t exist.
       \XeTeXinterchartokenstate\@ne
     }}%
    {\toks@\expandafter\expandafter\expandafter{%
-      \csname bbl@xechars@#1\endcsname}}
+      \csname bbl@xechars@#1\endcsname}}%
   \bbl@csarg\edef{xechars@#1}{%
     \the\toks@
     \bbl@usingxeclass\csname bbl@xeclass@#2@#1\endcsname
@@ -13880,8 +13922,9 @@ wouldn’t exist.
 \newcommand\babelinterchar[5][]{%
   \let\bbl@kv@label\@empty
   \bbl@forkv{#1}{\bbl@csarg\edef{kv@##1}{##2}}%
-  \@namedef{\zap@space bbl@xeinter@\bbl@kv@label @#3@#4@#2 \@empty}{#5}%
-  \bbl@csarg\let{ic@\bbl@kv@label @#1}\@firstofone
+  \@namedef{\zap@space bbl@xeinter@\bbl@kv@label @#3@#4@#2 \@empty}%
+    {\ifnum\language=\l@nohyphenation\else#5\fi}%
+  \bbl@csarg\let{ic@\bbl@kv@label @#2}\@firstofone
   \bbl@exp{\\\bbl@for\\\bbl@tempa{\zap@space#3 \@empty}}{%
     \bbl@exp{\\\bbl@for\\\bbl@tempb{\zap@space#4 \@empty}}{%     
       \XeTeXinterchartoks
@@ -13893,10 +13936,20 @@ wouldn’t exist.
            \csname bbl@ic@\bbl@kv@label @#2\expandafter\endcsname
            \csname\zap@space bbl@xeinter@\bbl@kv@label 
               @#3@#4@#2 \@empty\endcsname}}}}
-\newcommand\enablelocaleinterchar[1]{%
-  \bbl@csarg\let{ic@#1@\languagename}\@firstofone}
-\newcommand\disablelocaleinterchar[1]{%
-  \bbl@csarg\let{ic@#1@\languagename}\@gobble}
+\DeclareRobustCommand\enablelocaleinterchar[1]{%
+  \bbl@ifunset{bbl@ic@#1@\languagename}%
+    {\bbl@error
+       {'#1' for '\languagename' cannot be enabled.\\%
+        Maybe there is a typo.}%
+       {See the manual for further details.}}% 
+    {\bbl@csarg\let{ic@#1@\languagename}\@firstofone}}
+\DeclareRobustCommand\disablelocaleinterchar[1]{%
+  \bbl@ifunset{bbl@ic@#1@\languagename}%
+    {\bbl@error
+       {'#1' for '\languagename' cannot be disabled.\\%
+        Maybe there is a typo.}%
+       {See the manual for further details.}}% 
+    {\bbl@csarg\let{ic@#1@\languagename}\@gobble}}
 %</xetex>
 %    \end{macrocode}
 %
@@ -14929,7 +14982,7 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
     width = node.dimensions(line.head)    % The 'natural' width
     k_curr = #k_list % Traverse backwards, from the end
     wt_pos = 1
- 
+
     while width < goal do
       subst_done = true
       k_item = k_list[k_curr].node

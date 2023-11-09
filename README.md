@@ -1,4 +1,4 @@
-## Babel 3.96.30856
+## Babel 3.96.31373
 
 2023-11-01
 
@@ -50,6 +50,7 @@ respective authors.
 ```
 3.97 (dev)
      * Support for 'interchar' (xetex).
+     * New locale for Buriat, thanks to J. Khaganov.
 
 3.96 2023-10-25
      * Added LGI to non-ASCII encodings.
