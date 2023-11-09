@@ -6,12 +6,15 @@
 
 `babel` now provides built-in tools to set localized rules based on the
 XeTeX `interchar` mechanism. Some ideas ideas has been borrowed from the
-`interchar` package by ... and the `babel` style for French (by Daniel
+`interchar` package (by Zou Ho) and the `babel` style for French (by Daniel
 Flipo). 
 
 This is the a further step towards a more complete support for XeTeX,
 beyond line breaking rules for languages like Thai, which are already
 handled by `babel`.
+
+The commands are the following, described in more
+detail in the `babel` manual.
 
 ```
 \babelcharclass{locale}{name}{char-list}
@@ -21,15 +24,17 @@ handled by `babel`.
 \enablelocaleinterchar{label}
 \disablelocaleinterchar{label}
 ```
-<class-first> and <class-second> can be comma separated lists, and all
+‹class-first› and ‹class-second› can be comma separated lists, and all
 combinations are defined (so that 2 first classes with 2 second
 classes, defines 4 combinations).
 
 Not very useful, but illustrative (taken from `interchar`), here is how
-to colorize the letters ‘e’ and ‘s’:
+to colorize the letters ‘e’ and ‘s’. Here `default` and `boundary` are
+classes predefined by `babel` (see the `xetex` manual for further
+info):
 ```tex
 \usepackage{color}
-\babelcharclass{english}{colored}{es}
+\babelcharclass{english}{colored}{xy}
 \babelinterchar{english}{default, boundary}{colored}{\bgroup\color{red}}
 \babelinterchar{english}{colored}{default, boundary}{\egroup}
 ```
@@ -40,7 +45,7 @@ range and the latter in command form:
 ```tex
 \babelcharclass{english}{digit}{0-9}
 \babelcharclass{english}{percent}{\%}
-\babelinterchar{english}{digit}{percent}{\,}
+\babelinterchar[label=percent]{english}{digit}{percent}{\,}
 ```
 
 # Locales
