@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.97 (dev)](news/whats-new-in-babel-3.97.html) | New: `\babelcharclass`, `\babelinterchar` (`xetex`) |
 | [3.96](news/whats-new-in-babel-3.96.html) | Improved Odia. Improved `onchar` |
 | [3.95](news/whats-new-in-babel-3.95.html) | 16 new locale files (and a few fixes). |
 | [3.94](news/whats-new-in-babel-3.94.html) | Chinese dates. New transform for kashida. New locale files. |
