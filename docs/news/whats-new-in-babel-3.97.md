@@ -1,6 +1,6 @@
 # What's new in babel 3.97
 
-**Draft**
+2023-11-11
 
 # Support for `interchar` (XeTeX)
 
@@ -26,10 +26,10 @@ detail in the `babel` manual.
 ```
 ‹class-first› and ‹class-second› can be comma separated lists, and all
 combinations are defined (so that 2 first classes with 2 second
-classes, defines 4 combinations).
+classes, define 4 combinations).
 
 Not very useful, but illustrative (taken from `interchar`), here is how
-to colorize the letters ‘e’ and ‘s’. Here `default` and `boundary` are
+to colorize the letters ‘x’ and ‘y’. Here `default` and `boundary` are
 classes predefined by `babel` (see the `xetex` manual for further
 info):
 ```tex
