@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/11/09 v3.96.31373 The Babel package]
+\ProvidesFile{babel.dtx}[2023/11/11 v3.97 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3775,14 +3775,14 @@ the current language.
 \subsection{Support for \xetex{} interchar}
 
 \New{3.97} A few macros are provided to deal with locale dependent
-inter-character rules (aka ‘interchar’). With these macros they are.
+inter-character rules (aka ‘interchar’).
 
 \Describe{\babelcharclass}{\marg{locale}\marg{name}\marg{char-list}}
 
 Declares a new character class, which is assigned to the characters in
 \marg{char-list}, entered either as characters or in macro form
 (eg,~|\}|). If you need to enter them by their numeric value, use the
-\TeX{} |^|-notation (eg,~|^^^^1fa0|). Ranges are allowed, with an
+\TeX{} |^|-notation (eg,~|^^^^1fa0|). Ranges are allowed, with a
 hyphen (eg,~|.,;a-zA-Z|). If you need the hyphen to be assigned a
 class, write it at the very beginning of the list.
 
@@ -3798,9 +3798,9 @@ future release).
 \marg{class-first} and \marg{class-second} can be comma separated lists
 of char classes, and all combinations are defined (so that 2 first
 classes with 2 second classes, define 4 combinations). In the
-\marg{options} field a key named |label| is allowed, so that you can
-enable or disable the rule with the following two commands. Like
-prehyphenation transforms in \luatex{}, interchar is not applied if the
+\marg{options} field a key named |label| is available, which allows to
+enable or to disable the rule with the following two commands. Like
+prehyphenation transforms in \luatex{}, interchars are not applied if the
 current hyphenation rules are |nohyphenation|.
 
 \Describe{\enablelocaleinterchar}{\marg{label}}
@@ -5630,8 +5630,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.96.31373>>
-%<<date=2023/11/09>>
+%<<version=3.97>>
+%<<date=2023/11/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13818,8 +13818,6 @@ wouldn’t exist.
 %
 % \section{Support for interchar}
 %
-% WIP.
-%
 % \xetex{} reserves some values for CJK (although they are not set in
 % \textsc{xelatex}), so we make sure they are skipped. Define some user
 % names for the global classes, too.
@@ -13829,7 +13827,7 @@ wouldn’t exist.
   \xe@alloc@intercharclass\thr@@
 \fi
 \chardef\bbl@xeclass@default@=\z@
-\chardef\bbl@xeclass@cjkideograms@=\@ne
+\chardef\bbl@xeclass@cjkideogram@=\@ne
 \chardef\bbl@xeclass@cjkleftpunctuation@=\tw@
 \chardef\bbl@xeclass@cjkrightpunctuation@=\thr@@
 \chardef\bbl@xeclass@boundary@=4095
@@ -13923,7 +13921,12 @@ wouldn’t exist.
   \let\bbl@kv@label\@empty
   \bbl@forkv{#1}{\bbl@csarg\edef{kv@##1}{##2}}%
   \@namedef{\zap@space bbl@xeinter@\bbl@kv@label @#3@#4@#2 \@empty}%
-    {\ifnum\language=\l@nohyphenation\else#5\fi}%
+    {\ifnum\language=\l@nohyphenation
+       \expandafter\@gobble
+     \else
+       \expandafter\@firstofone
+     \fi
+     {#5}}%
   \bbl@csarg\let{ic@\bbl@kv@label @#2}\@firstofone
   \bbl@exp{\\\bbl@for\\\bbl@tempa{\zap@space#3 \@empty}}{%
     \bbl@exp{\\\bbl@for\\\bbl@tempb{\zap@space#4 \@empty}}{%     
