@@ -1,6 +1,6 @@
-## Babel 3.97
+## Babel 3.97.33470
 
-2023-11-11
+2023-11-30
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.98 2023-11-30
+     * New: \ShowLocaleProperties.
+     * Case mappings in ini files.
+     
 3.97 2023-11-11
      * Support for 'interchar' (xetex).
      * New locale for Buriat, thanks to J. Khaganov.

@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/11/11 v3.97 The Babel package]
+\ProvidesFile{babel.dtx}[2023/11/30 v3.97.33470 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1562,6 +1562,7 @@ captions):
 \tag{bs-Cyrl} Bosnian
 \tag{bs-Latn} Bosnian\hascapu\hascapl
 \tag{bs} Bosnian\hascapu\hascapl
+\tag{bua} Buriat\hascapu\hascapl
 \tag{byn} Blin
 \tag{ca} Catalan\hascapu\hascapl
 \tag{cch} Atsam
@@ -1936,6 +1937,7 @@ breton\\
 british\\
 britishenglish\\
 bulgarian\\
+buriat\\
 burmese\\
 canadian\\
 canadianenglish\\
@@ -3497,6 +3499,22 @@ automatically if a language with one of those scripts are loaded with
 Unicode engines, spacing is based on the ``current'' em unit (the size
 of the previous char in \luatex, and the font size set by the last
 |\selectfont| in \xetex).
+
+\begin{note}
+  With Unicode engines, a line break can happen just before an explicit
+  combining char (eg, \textit{\~{g}}, used in Guarani and Filipino, is
+  not included as a combined char and it’s represented in Unicode as
+  |U+0067|~|U+0303|. This issue is not directly related to \babel, but
+  to the hyphenation patterns and/or the font renderer. However, at
+  least with \luatex{} there is a workaround (change the language name
+  to what you are using):
+\begin{verbatim}
+\babelposthyphenation{guarani}{ | [{0300}-{036F}] }{ remove, {} }
+\end{verbatim}
+The Lua pattern means ‘a discretionary followed by a character in the
+range |U+0300|--|U+0367| (which contains combining chars)’. An
+alternative to a transform is |\babelpatterns|.
+\end{note}
 
 \subsection{Transforms}
 \label{transforms}
@@ -5440,12 +5458,17 @@ to define |\abmoniname|, |\abmoniiname|, etc. (and similarly with
 \end{verbatim}
 |#1| is replaced by the roman numeral.
 
-\Describe\SetCase{\oarg{map-list}\marg{toupper-code}\marg{tolower-code}\qquad\textit{Deprecated}}
+% \Describe\SetCase{\oarg{map-list}\marg{toupper-code}%
+%   \marg{tolower-code}\qquad\textit{Deprecated}}
+% 
+% \begin{warning}
+% This feature doesn’t work any longer after some changes in the \LaTeX{}
+% kernel. It’s now deprecated and an alternative is on the way.
+% \end{warning}
 
-\begin{warning}
-This feature doesn’t work any longer after some changes in the \LaTeX{}
-kernel. It’s now deprecated and an alternative is on the way.
-\end{warning}
+\Describe{\SetCaseMapping}{}
+
+\textit{Work in progress.}
 
 \Describe{\SetHyphenMap}{\marg{to-lower-macros}}
 \New{3.9g} Case mapping for hyphenation is handled with |\SetHyphenMap|
@@ -5630,8 +5653,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.97>>
-%<<date=2023/11/11>>
+%<<version=3.97.33470>>
+%<<date=2023/11/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9181,37 +9204,8 @@ wouldn’t exist.
 \def\bbl@toglobal#1{\global\let#1#1}
 %    \end{macrocode}
 %
-% The second one. We need to patch |\@uclclist|, but it is done once
-% and only if |\SetCase| is used or if strings are encoded.  The code
-% is far from satisfactory for several reasons, including the fact
-% |\@uclclist| is not a list any more. Therefore a package option is
-% added to ignore it. Instead of gobbling the macro
-% getting the next two elements (usually |\reserved@a|), we pass it as
-% argument to |\bbl@uclc|. The parser is restarted inside
-% |\|\m{lang}|@bbl@uclc| because we do not know how many expansions
-% are necessary (depends on whether strings are encoded). The last
-% part is tricky -- when uppercasing, we have:
-%\begin{verbatim}
-% \let\bbl@tolower\@empty\bbl@toupper\@empty
-%\end{verbatim}
-% and starts over (and similarly when lowercasing).
-%
-%    \begin{macrocode}
-\@ifpackagewith{babel}{nocase}%
-  {\let\bbl@patchuclc\relax}%
-  {\def\bbl@patchuclc{% TODO. Delete. Doesn’t work any more.
-    \global\let\bbl@patchuclc\relax
-    \g@addto@macro\@uclclist{\reserved@b{\reserved@b\bbl@uclc}}%
-    \gdef\bbl@uclc##1{%
-      \let\bbl@encoded\bbl@encoded@uclc
-      \bbl@ifunset{\languagename @bbl@uclc}% and resumes it
-        {##1}%
-        {\let\bbl@tempa##1\relax % Used by LANG@bbl@uclc
-         \csname\languagename @bbl@uclc\endcsname}%
-      {\bbl@tolower\@empty}{\bbl@toupper\@empty}}%
-    \gdef\bbl@tolower{\csname\languagename @bbl@lc\endcsname}%
-    \gdef\bbl@toupper{\csname\languagename @bbl@uc\endcsname}}}
-%    \end{macrocode}
+% The following option is currently no-op. It was meant for the
+% deprecated |\SetCase|.
 %
 %    \begin{macrocode}
 %<<*More package options>>
@@ -9426,31 +9420,12 @@ wouldn’t exist.
       \csname\bbl@LC\expandafter\endcsname\expandafter{\BabelString}}}
 %    \end{macrocode}
 %
-%     Now, some addtional stuff to be used when encoded strings are
-%     used. Captions then include |\bbl@encoded| for string to be
-%     expanded in case transformations. It is |\relax| by default, but
-%     in |\MakeUppercase| and |\MakeLowercase| its value is a modified
-%     expandable |\@changed@cmd|.
+% A little auxiliary command sets the string. TODO: Formerly used with
+% casing. Very likely no longer necessary, although its used in
+% |\setlocalecaption|.
 %
 %    \begin{macrocode}
-\ifx\bbl@opt@strings\relax
-  \def\bbl@scset#1#2{\def#1{\bbl@encoded#2}}
-  \bbl@patchuclc
-  \let\bbl@encoded\relax
-  \def\bbl@encoded@uclc#1{%
-    \@inmathwarn#1%
-    \expandafter\ifx\csname\cf@encoding\string#1\endcsname\relax
-      \expandafter\ifx\csname ?\string#1\endcsname\relax
-        \TextSymbolUnavailable#1%
-      \else
-        \csname ?\string#1\endcsname
-      \fi
-    \else
-      \csname\cf@encoding\string#1\endcsname
-    \fi}
-\else
-  \def\bbl@scset#1#2{\def#1{#2}}
-\fi
+\def\bbl@scset#1#2{\def#1{#2}}
 %    \end{macrocode}
 %
 % Define |\SetStringLoop|, which is actually set inside
@@ -9484,18 +9459,11 @@ wouldn’t exist.
 %
 % \paragraph{Case mapping}
 %
-% The command |\SetCase| provides a way to change the behavior of
-% |\MakeUppercase| and |\MakeLowercase|. |\bbl@tempa| is set by the
-% patched |\@uclclist| to the parsing command. \textit{Deprecated.}
+% The command |\SetCase| is deprecated, with a dummy definition.
 %
 %    \begin{macrocode}
 %<<*Macros local to BabelCommands>>
-  \newcommand\SetCase[3][]{%
-    \bbl@patchuclc
-    \bbl@forlang\bbl@tempa{%
-      \bbl@carg\bbl@encstring{\bbl@tempa @bbl@uclc}{\bbl@tempa##1}%
-      \bbl@carg\bbl@encstring{\bbl@tempa @bbl@uc}{##2}%
-      \bbl@carg\bbl@encstring{\bbl@tempa @bbl@lc}{##3}}}%
+  \newcommand\SetCase[3][]{}%
 %<</Macros local to BabelCommands>>
 %    \end{macrocode}
 %
@@ -11037,6 +11005,7 @@ wouldn’t exist.
 \let\bbl@inikv@date\bbl@inikv
 \let\bbl@inikv@typography\bbl@inikv
 \let\bbl@inikv@characters\bbl@inikv
+\bbl@csarg\let{bbl@inikv@characters.casing}\bbl@inikv
 \let\bbl@inikv@numbers\bbl@inikv
 %    \end{macrocode}
 %
@@ -11637,6 +11606,12 @@ wouldn’t exist.
 % singletons may change.
 %
 %    \begin{macrocode}
+\ifcase\bbl@engine % Converts utf8 to its code (expandable)
+  \def\bbl@utftocode#1{\the\numexpr\decode@UTFviii#1\relax}
+\else
+  \def\bbl@utftocode#1{\expandafter`\string#1}
+\fi
+% Still somewhat hackish. WIP.
 \providecommand\BCPdata{}
 \ifx\renewcommand\@undefined\else % For plain. TODO. It’s a quick fix
   \renewcommand\BCPdata[1]{\bbl@bcpdata@i#1\@empty}
@@ -11652,18 +11627,40 @@ wouldn’t exist.
       {\bbl@ifunset{bbl@\csname bbl@info@#1.tag.bcp47\endcsname @#2}{}%
         {\bbl@cs{\csname bbl@info@#1.tag.bcp47\endcsname @#2}}}}
 \fi
-% Still somewhat hackish. WIP.
 \@namedef{bbl@info@casing.tag.bcp47}{casing}
 \newcommand\BabelUppercaseMapping[3]{%
-  \let\bbl@tempx\languagename
-  \edef\languagename{#1}%
-  \DeclareUppercaseMapping[\BCPdata{casing}]{#2}{#3}%
-  \let\languagename\bbl@tempx}
+  \DeclareUppercaseMapping[\@nameuse{bbl@casing@#1}]{#2}{#3}}
+\newcommand\BabelTitlecaseMapping[3]{%
+  \DeclareTitlecaseMapping[\@nameuse{bbl@casing@#1}]{#2}{#3}}
 \newcommand\BabelLowercaseMapping[3]{%
-  \let\bbl@tempx\languagename
-  \edef\languagename{#1}%
-  \DeclareLowercaseMapping[\BCPdata{casing}]{#2}{#3}%
-  \let\languagename\bbl@tempx}
+  \DeclareLowercaseMapping[\@nameuse{bbl@casing@#1}]{#2}{#3}}
+% WIP. Tentative and incomplete. To be used by 'ini' files (with a new
+% key).
+\def\SetCaseMapping#1#2{%
+  \def\bbl@tempa##1 ##2{%
+    \bbl@casemapping{##1}%
+    \ifx\@empty##2\else\bbl@afterfi\bbl@tempa##2\fi}%
+  \edef\bbl@tempe{#1}% Language
+  \def\bbl@tempc{#2 }% Casing list
+  \expandafter\bbl@tempa\bbl@tempc\@empty}
+\def\bbl@casemapping#1{%
+  \def\bbl@tempb{#1}%
+  \ifcase\bbl@engine % Handle utf8 chars in pdftex, by surrounding them with {}
+    \@nameuse{regex_replace_all:nnN}%
+      {[\x{c0}-\x{ff}][\x{80}-\x{bf}]*}{{\0}}\bbl@tempb
+  \else
+    \@nameuse{regex_replace_all:nnN}{.}{{\0}}\bbl@tempb
+  \fi
+  \expandafter\bbl@casemapping@i\bbl@tempb\@@}
+\def\bbl@casemapping@i#1#2#3\@@{%
+  \ifx\relax#3\relax
+    \BabelUppercaseMapping{\bbl@tempe}{\bbl@utftocode{#1}}{#2}%
+    \BabelLowercaseMapping{\bbl@tempe}{\bbl@utftocode{#2}}{#1}%
+  \else
+    \BabelTitlecaseMapping{\bbl@tempe}{\bbl@utftocode{#1}}{#2}%
+    \BabelUppercaseMapping{\bbl@tempe}{\bbl@utftocode{#1}}{#3}%
+    \BabelLowercaseMapping{\bbl@tempe}{\bbl@utftocode{#3}}{#1}%
+  \fi}
 %    \end{macrocode}
 %
 % With version 3.75 |\BabelEnsureInfo| is executed always, but there is
@@ -11715,6 +11712,12 @@ wouldn’t exist.
   \fi}
 \let\bbl@ini@loaded\@empty
 \newcommand\LocaleForEach{\bbl@foreach\bbl@ini@loaded}
+\def\ShowLocaleProperties#1{%
+  \typeout{}%
+  \typeout{*** Properties for language '#1' ***}
+  \def\bbl@elt##1##2##3{\typeout{##1/##2 = ##3}}%
+  \@nameuse{bbl@inidata@#1}%
+  \typeout{*******}}
 %    \end{macrocode}
 %
 % \section{Adjusting the Babel bahavior}
