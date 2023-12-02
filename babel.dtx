@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/11/30 v3.97.33470 The Babel package]
+\ProvidesFile{babel.dtx}[2023/12/02 v3.97.33650 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -580,6 +580,16 @@ _\usepackage[vietnamese,danish]{babel}_
 \begin{note}
   Once loaded a language, you can select it with the corresponding
   BCP47 tag. See section \ref{bcp47} for further details.
+\end{note}
+
+\begin{note}
+  Documents with several input encodings are not frequent, but
+  sometimes are useful. You can set different encodings for different
+  languages as the following example shows:
+\begin{verbatim}
+\addto\extrasfrench{\inputencoding{latin1}}
+\addto\extrasrussian{\inputencoding{koi8-r}}
+\end{verbatim}
 \end{note}
 
 \subsection{Mostly monolingual documents}
@@ -2624,16 +2634,18 @@ provided by the |ini| file, like extra counters.
   {\marg{locale-name}\marg{codepoint}\marg{output}}
 \DescribeOther{\BabelLowercaseMapping}
   {\marg{locale-name}\marg{codepoint}\marg{output}}
+\DescribeOther{\BabelTitlecaseMapping}
+  {\marg{locale-name}\marg{codepoint}\marg{output}}
 
 \New{3.90} These macros are devised as a high level interface for
 declaring case mappings, based on the locale name as declared by or
-with \babel. They are the equivalent of |\DeclareUppercaseMapping| and
-|\DeclareLowercaseMapping| (see \textsf{usrguide.pdf}). The purpose is
-twofold: (1) a user-friendly way to declare them, because
-often BCP 47 tags are not known (and sometimes can be complex);
-(2) if for some reason the tag changes (eg, you decide to tag
-|english| as |en-001| instead of |en-US|), the new mappings will be
-still assigned to that language.
+with \babel. They are the equivalent of |\DeclareUppercaseMapping|,
+|\DeclareLowercaseMapping|, and |\DeclareTitlecaseMapping| (see
+\textsf{usrguide.pdf}). The purpose is twofold: (1) a user-friendly way
+to declare them, because often BCP 47 tags are not known (and sometimes
+can be complex); (2) if for some reason the tag changes (eg, you decide
+to tag |english| as |en-001| instead of |en-US|), the new mappings will
+be still assigned to that language.
 
 \begin{example} For Classical Latin (no need to know the tag is
 \texttt{la-x-classic}):
@@ -4680,13 +4692,6 @@ options (like paragraph direction with |bidi.text|).
   with the correct catcodes for \verb/|/ and
   \verb|:|).\catcode`\|=\active
 
-\item Documents with several input encodings are not frequent, but
-  sometimes are useful. You can set different encodings for different
-  languages as the following example shows:
-\begin{verbatim}
-\addto\extrasfrench{\inputencoding{latin1}}
-\addto\extrasrussian{\inputencoding{koi8-r}}
-\end{verbatim}
  \item For the hyphenation to work correctly, lccodes cannot change,
    because \TeX{} only takes into account the values when the
    paragraph is hyphenated, i.e., when it has been
@@ -5458,18 +5463,6 @@ to define |\abmoniname|, |\abmoniiname|, etc. (and similarly with
 \end{verbatim}
 |#1| is replaced by the roman numeral.
 
-% \Describe\SetCase{\oarg{map-list}\marg{toupper-code}%
-%   \marg{tolower-code}\qquad\textit{Deprecated}}
-% 
-% \begin{warning}
-% This feature doesn’t work any longer after some changes in the \LaTeX{}
-% kernel. It’s now deprecated and an alternative is on the way.
-% \end{warning}
-
-\Describe{\SetCaseMapping}{}
-
-\textit{Work in progress.}
-
 \Describe{\SetHyphenMap}{\marg{to-lower-macros}}
 \New{3.9g} Case mapping for hyphenation is handled with |\SetHyphenMap|
 and controlled with the package option |hyphenmap|.
@@ -5653,8 +5646,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.97.33470>>
-%<<date=2023/11/30>>
+%<<version=3.97.33650>>
+%<<date=2023/12/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9421,7 +9414,7 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % A little auxiliary command sets the string. TODO: Formerly used with
-% casing. Very likely no longer necessary, although its used in
+% casing. Very likely no longer necessary, although it’s used in
 % |\setlocalecaption|.
 %
 %    \begin{macrocode}
@@ -10498,6 +10491,11 @@ wouldn’t exist.
     \ifx\bbl@tempb\@empty\else
       ,variant=\bbl@tempb
     \fi}%
+  % == Case mapping ==
+  \bbl@ifunset{bbl@casng@\languagename}{}%
+    {\expandafter\ifx\csname bbl@casng@\languagename\endcsname\@empty\else
+       \bbl@exp{\\\SetCaseMapping{\languagename}{\[bbl@casng@\languagename]}}%
+     \fi}%
   % == engine specific extensions ==
   % Defined in XXXbabel.def
   \bbl@provide@extra{#2}%
@@ -10977,6 +10975,7 @@ wouldn’t exist.
     \bbl@exportkey{intsp}{typography.intraspace}{}%
     \bbl@exportkey{frspc}{typography.frenchspacing}{u}%
     \bbl@exportkey{chrng}{characters.ranges}{}%
+    \bbl@exportkey{casng}{characters.casing}{}%
     \bbl@exportkey{quote}{characters.delimiters.quotes}{}%
     \bbl@exportkey{dgnat}{numbers.digits.native}{}%
     \ifnum#1=\tw@           % only (re)new
@@ -11005,7 +11004,6 @@ wouldn’t exist.
 \let\bbl@inikv@date\bbl@inikv
 \let\bbl@inikv@typography\bbl@inikv
 \let\bbl@inikv@characters\bbl@inikv
-\bbl@csarg\let{bbl@inikv@characters.casing}\bbl@inikv
 \let\bbl@inikv@numbers\bbl@inikv
 %    \end{macrocode}
 %
@@ -11640,7 +11638,8 @@ wouldn’t exist.
   \def\bbl@tempa##1 ##2{%
     \bbl@casemapping{##1}%
     \ifx\@empty##2\else\bbl@afterfi\bbl@tempa##2\fi}%
-  \edef\bbl@tempe{#1}% Language
+  \edef\bbl@templ{#1}% Language
+  \def\bbl@tempe{0}%   Mode (upper/lower...)
   \def\bbl@tempc{#2 }% Casing list
   \expandafter\bbl@tempa\bbl@tempc\@empty}
 \def\bbl@casemapping#1{%
@@ -11653,13 +11652,24 @@ wouldn’t exist.
   \fi
   \expandafter\bbl@casemapping@i\bbl@tempb\@@}
 \def\bbl@casemapping@i#1#2#3\@@{%
-  \ifx\relax#3\relax
-    \BabelUppercaseMapping{\bbl@tempe}{\bbl@utftocode{#1}}{#2}%
-    \BabelLowercaseMapping{\bbl@tempe}{\bbl@utftocode{#2}}{#1}%
+  \in@{#1#3}{<>}%
+  \ifin@
+    \edef\bbl@tempe{%
+      \if#2u1 \else\if#2l2 \else\if#2t3 \else\if#2m4 \fi\fi\fi\fi}%
   \else
-    \BabelTitlecaseMapping{\bbl@tempe}{\bbl@utftocode{#1}}{#2}%
-    \BabelUppercaseMapping{\bbl@tempe}{\bbl@utftocode{#1}}{#3}%
-    \BabelLowercaseMapping{\bbl@tempe}{\bbl@utftocode{#3}}{#1}%
+    \ifcase\bbl@tempe\relax
+      \BabelUppercaseMapping{\bbl@templ}{\bbl@utftocode{#1}}{#2}%
+      \BabelLowercaseMapping{\bbl@templ}{\bbl@utftocode{#2}}{#1}%
+    \or
+      \BabelUppercaseMapping{\bbl@templ}{\bbl@utftocode{#1}}{#2}%
+    \or
+      \BabelLowercaseMapping{\bbl@templ}{\bbl@utftocode{#1}}{#2}%
+    \or
+      \BabelTitlecaseMapping{\bbl@templ}{\bbl@utftocode{#1}}{#2}%
+    \or
+      \@namedef{c__text_uppercase_\string#1_tl}{#2}%
+      \@namedef{c__text_lowercase_\string#2_tl}{#1}%
+    \fi
   \fi}
 %    \end{macrocode}
 %

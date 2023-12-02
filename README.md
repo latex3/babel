@@ -1,6 +1,6 @@
-## Babel 3.97.33470
+## Babel 3.97.33650
 
-2023-11-30
+2023-02-02
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,9 +10,9 @@ is a set of ini files for about 275 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.97 are described in:
+Changes in version 3.98 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.97.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.98.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
