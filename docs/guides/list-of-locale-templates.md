@@ -70,7 +70,6 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **bss** Akoose
 * **bto** Rinconada Bikol
 * **btv** Bateri
-* **bua** Buriat
 * **buc** Bushi
 * **bug** Buginese
 * **bum** Bulu
