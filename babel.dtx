@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/12/02 v3.97.33650 The Babel package]
+\ProvidesFile{babel.dtx}[2023/12/03 v3.97.33765 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5646,8 +5646,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.97.33650>>
-%<<date=2023/12/02>>
+%<<version=3.97.33765>>
+%<<date=2023/12/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9452,11 +9452,24 @@ wouldn’t exist.
 %
 % \paragraph{Case mapping}
 %
-% The command |\SetCase| is deprecated, with a dummy definition.
+% The command |\SetCase| is deprecated. Currently it consists in a
+% definition with a hack just for backward compatibility in the macro
+% mapping.
 %
 %    \begin{macrocode}
 %<<*Macros local to BabelCommands>>
-  \newcommand\SetCase[3][]{}%
+  \newcommand\SetCase[3][]{%
+    \def\bbl@tempa####1####2{%
+      \ifx####1\@empty\else
+        \bbl@carg\bbl@add{extras\CurrentOption}{%
+          \bbl@carg\babel@save{c__text_uppercase_\string####1_tl}%
+          \bbl@carg\def{c__text_uppercase_\string####1_tl}{####2}%
+          \bbl@carg\babel@save{c__text_lowercase_\string####2_tl}%
+          \bbl@carg\def{c__text_lowercase_\string####2_tl}{####1}}%
+        \expandafter\bbl@tempa
+      \fi}%
+    \bbl@tempa##1\@empty\@empty
+    \bbl@carg\bbl@toglobal{extras\CurrentOption}}
 %<</Macros local to BabelCommands>>
 %    \end{macrocode}
 %
@@ -10157,6 +10170,7 @@ wouldn’t exist.
       Alph,labels,labels*,calendar,date,casing}%
     {\bbl@csarg\let{KVP@##1}\@nnil}%
   \global\let\bbl@release@transforms\@empty
+  \global\let\bbl@release@casing\@empty
   \let\bbl@calendars\@empty
   \global\let\bbl@inidata\@empty
   \global\let\bbl@extend@ini\@gobble
@@ -10469,9 +10483,10 @@ wouldn’t exist.
         \let\\\@Alph\<bbl@cntr@\bbl@KVP@Alph @\languagename>}}%
   \fi
   % == Casing ==
+  \bbl@release@casing
   \ifx\bbl@KVP@casing\@nnil\else
     \bbl@csarg\xdef{casing@\languagename}%
-      {\@nameuse{bbl@casing@\languagename}-x-\bbl@KVP@casing}%
+      {\@nameuse{bbl@casing@\languagename}\bbl@maybextx\bbl@KVP@casing}%
   \fi
   % == Calendars ==
   \ifx\bbl@KVP@calendar\@nnil
@@ -10491,11 +10506,6 @@ wouldn’t exist.
     \ifx\bbl@tempb\@empty\else
       ,variant=\bbl@tempb
     \fi}%
-  % == Case mapping ==
-  \bbl@ifunset{bbl@casng@\languagename}{}%
-    {\expandafter\ifx\csname bbl@casng@\languagename\endcsname\@empty\else
-       \bbl@exp{\\\SetCaseMapping{\languagename}{\[bbl@casng@\languagename]}}%
-     \fi}%
   % == engine specific extensions ==
   % Defined in XXXbabel.def
   \bbl@provide@extra{#2}%
@@ -10924,6 +10934,7 @@ wouldn’t exist.
        Reported }}}
 %
 \let\bbl@release@transforms\@empty
+\let\bbl@release@casing\@empty
 \def\bbl@ini@exports#1{%
   % Identification always exported
   \bbl@iniwarning{}%
@@ -10939,7 +10950,7 @@ wouldn’t exist.
   \bbl@exp{\\\bbl@exportkey{lname}{identification.name.opentype}%
     {\csname bbl@elname@\languagename\endcsname}}%
   \bbl@exportkey{tbcp}{identification.tag.bcp47}{}%
-  % Somewhat hackish. TODO
+  % Somewhat hackish. TODO:
   \bbl@exportkey{casing}{identification.tag.bcp47}{}%
   \bbl@exportkey{lbcp}{identification.language.tag.bcp47}{}%
   \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
@@ -10975,7 +10986,6 @@ wouldn’t exist.
     \bbl@exportkey{intsp}{typography.intraspace}{}%
     \bbl@exportkey{frspc}{typography.frenchspacing}{u}%
     \bbl@exportkey{chrng}{characters.ranges}{}%
-    \bbl@exportkey{casng}{characters.casing}{}%
     \bbl@exportkey{quote}{characters.delimiters.quotes}{}%
     \bbl@exportkey{dgnat}{numbers.digits.native}{}%
     \ifnum#1=\tw@           % only (re)new
@@ -11003,8 +11013,29 @@ wouldn’t exist.
 \let\bbl@inikv@identification\bbl@inikv
 \let\bbl@inikv@date\bbl@inikv
 \let\bbl@inikv@typography\bbl@inikv
-\let\bbl@inikv@characters\bbl@inikv
 \let\bbl@inikv@numbers\bbl@inikv
+%    \end{macrocode}
+%
+% The |characters| section also stores the values, but |casing| is
+% treated in a different fashion. 
+%
+%    \begin{macrocode}
+\def\bbl@maybextx{-\bbl@csarg\ifx{extx@\languagename}\@empty x-\fi}
+\def\bbl@inikv@characters#1#2{%
+  \bbl@ifsamestring{#1}{casing}%
+    {\bbl@exp{%
+       \\\g@addto@macro\\\bbl@release@casing{%
+         \\\SetCaseMapping{\languagename}{\unexpanded{#2}}}}}%
+    {\in@{$casing.}{$#1}%
+     \ifin@
+       \lowercase{\def\bbl@tempb{#1}}%
+       \bbl@replace\bbl@tempb{casing.}{}%
+       \bbl@exp{\\\g@addto@macro\\\bbl@release@casing{%
+         \\\SetCaseMapping
+           [\\\bbl@maybextx\bbl@tempb]{\languagename}{\unexpanded{#2}}}}%
+     \else
+       \bbl@inikv{#1}{#2}%
+     \fi}}
 %    \end{macrocode}
 %
 % Additive numerals require an additional definition. When |.1| is
@@ -11341,7 +11372,6 @@ wouldn’t exist.
 % \textbf{Transforms.}
 %
 %    \begin{macrocode}
-\let\bbl@release@transforms\@empty
 \bbl@csarg\let{inikv@transforms.prehyphenation}\bbl@inikv
 \bbl@csarg\let{inikv@transforms.posthyphenation}\bbl@inikv
 \def\bbl@transforms@aux#1#2#3#4,#5\relax{%
@@ -11632,15 +11662,14 @@ wouldn’t exist.
   \DeclareTitlecaseMapping[\@nameuse{bbl@casing@#1}]{#2}{#3}}
 \newcommand\BabelLowercaseMapping[3]{%
   \DeclareLowercaseMapping[\@nameuse{bbl@casing@#1}]{#2}{#3}}
-% WIP. Tentative and incomplete. To be used by 'ini' files (with a new
-% key).
-\def\SetCaseMapping#1#2{%
+% WIP. 
+\newcommand\SetCaseMapping[3][]{%
   \def\bbl@tempa##1 ##2{%
     \bbl@casemapping{##1}%
     \ifx\@empty##2\else\bbl@afterfi\bbl@tempa##2\fi}%
-  \edef\bbl@templ{#1}% Language
+  \edef\bbl@templ{\@nameuse{bbl@casing@#2}#1}%  Language code
   \def\bbl@tempe{0}%   Mode (upper/lower...)
-  \def\bbl@tempc{#2 }% Casing list
+  \def\bbl@tempc{#3 }% Casing list
   \expandafter\bbl@tempa\bbl@tempc\@empty}
 \def\bbl@casemapping#1{%
   \def\bbl@tempb{#1}%
@@ -11658,17 +11687,14 @@ wouldn’t exist.
       \if#2u1 \else\if#2l2 \else\if#2t3 \else\if#2m4 \fi\fi\fi\fi}%
   \else
     \ifcase\bbl@tempe\relax
-      \BabelUppercaseMapping{\bbl@templ}{\bbl@utftocode{#1}}{#2}%
-      \BabelLowercaseMapping{\bbl@templ}{\bbl@utftocode{#2}}{#1}%
+      \DeclareUppercaseMapping[\bbl@templ]{\bbl@utftocode{#1}}{#2}%
+      \DeclareLowercaseMapping[\bbl@templ]{\bbl@utftocode{#2}}{#1}%
     \or
-      \BabelUppercaseMapping{\bbl@templ}{\bbl@utftocode{#1}}{#2}%
+      \DeclareUppercaseMapping[\bbl@templ]{\bbl@utftocode{#1}}{#2}%
     \or
-      \BabelLowercaseMapping{\bbl@templ}{\bbl@utftocode{#1}}{#2}%
+      \DeclareLowercaseMapping[\bbl@templ]{\bbl@utftocode{#1}}{#2}%
     \or
-      \BabelTitlecaseMapping{\bbl@templ}{\bbl@utftocode{#1}}{#2}%
-    \or
-      \@namedef{c__text_uppercase_\string#1_tl}{#2}%
-      \@namedef{c__text_lowercase_\string#2_tl}{#1}%
+      \DeclareTitlecaseMapping[\bbl@templ]{\bbl@utftocode{#1}}{#2}%
     \fi
   \fi}
 %    \end{macrocode}

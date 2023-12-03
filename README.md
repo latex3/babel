@@ -1,6 +1,6 @@
-## Babel 3.97.33650
+## Babel 3.97.33765
 
-2023-02-02
+**Development**
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,7 +48,7 @@ respective authors.
 
 ### Summary of latest changes
 ```
-3.98 2023-11-30
+3.98 (dev)
      * New: \ShowLocaleProperties.
      * Case mappings in ini files.
      
