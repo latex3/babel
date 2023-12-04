@@ -5,7 +5,6 @@
 Many keys are related to the CLDR (Common Language Data Repository).
 Others are just the TeX primitives with the same name.
 
-
 Keys may be further qualified in a particular language with a suffix
 starting with a uppercase letter. It can be just a letter (eg,
 `babel.name.A`, `babel.name.B`) or a name. *Multi-letter* qualifiers
@@ -13,7 +12,9 @@ starting with an uppercase letter are forward compatible in the sense
 they won’t conflict with new “global” keys (which start always with a
 lowercase case). There is an exception, however: the section `counters`
 has been devised to have arbitrary keys, so you can add lowercased keys
-if you want.
+if you want. Note the fact a qualifier starts with a uppercase letter
+doesn’t mean it must be preserved in the user interface (date and
+casing variants are examples).
 
 ### `identification`
 

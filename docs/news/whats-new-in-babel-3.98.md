@@ -5,15 +5,17 @@
 # Casing rules in `ini` files
 
 It consists of a space-separated list of character pairs in the order
-lower/upper which define a bidirectional mapping. This is the default
-but there are 3 modifiers for unidirectional settings: `<u>`, `<l>`,
-`<t>`. With `<u>` the uppercase form comes first. 
+lower/upper which define a bidirectional mapping. By means of 3
+modifiers in the list, unidirectional mappings are also possible: `<u>`
+(uppercase), `<l>` (lowercase) and `<t>` (titlecase). With `<u>` the
+uppercase form comes first. They affect the subsequent pairs.
 
 The first element must be a character. With the default bidirectional
 mapping the second one must be also a character, but with `<u>`, `<l>`,
 `<t>` the second element can be a macro or a token list between braces.
 
-For example:
+In the following example, a couple of bidirectional mappings are
+declared, and then come other unidirectional mappings:
 ```ini
 [characters]
 casing = uV ťŤ <u> éE ôO ǰ{\v{J}} <t> ǆǅ
@@ -21,7 +23,8 @@ casing = uV ťŤ <u> éE ôO ǰ{\v{J}} <t> ǆǅ
 
 Alternative casing rules can be defined, too, by providing a name after
 a dot. A real example follows, from `la-x-classic` (ie, Classical Latin):
-```init
+```ini
+[characters]
 casing = uV
 casing.Nouv = uU vV
 ```
@@ -31,19 +34,32 @@ behavior, is activated with something like:
 ```tex
 \babelprovide[import, casing = nouv]{classicallatin}
 ```
-Note the first letter is uppercase in the `ini` file, but lowercase in
-`\babelprovide`. See [Keys in `ini`
-files](https://latex3.github.io/babel/guides/keys-in-ini-files.html) for an explanation of this
-convention.
+Note the first letter of the alternative rules is uppercased in the
+`ini` file, but lowercased in `\babelprovide`. See [Keys in `ini`
+files](https://latex3.github.io/babel/guides/keys-in-ini-files.html)
+for an explanation of this convention.
 
 These alternative rules are available in `\MakeUppercase` and
 `\MakeUppercase`, but currently you must resort to the LaTeX low level
 interface, with the internal BCP 47 tag, like:
-```
+```tex
 \MakeUppercase[locale=la-x-classic-nouv]{uv}
 ```
-Complex rules based on contextual analysis cannot be defined, as LaTeX
-provides no interface for them.
+Complex rules based on contextual analysis cannot be defined that way
+because LaTeX provides no interface for them.
+
+# Locales
+
+The `ini` file for Persian/Farsi hans been improved by [Farshad
+Rasuli](https://github.com/farshadrasuli), with some
+mistakes fixed.
+
+The locales for Latin define, using the mechanism describe above, the
+following casing variants:
+* `nouv`, in `classicallatin` and `medievallatin` reverts the default
+  rules, which maps u ↔ V.
+* `uv` in `ecclesianticallatin` and the basic `latin` locale applies
+  the map u ↔ V (by default it’s u ↔ U and v ↔ V).
 
 # Showing locale properties
 
