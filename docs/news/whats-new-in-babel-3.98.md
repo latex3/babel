@@ -1,6 +1,6 @@
 # What's new in babel 3.98
 
-**Draft.**
+2023-12-06
 
 # Casing rules in `ini` files
 
