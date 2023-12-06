@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/12/03 v3.97.33765 The Babel package]
+\ProvidesFile{babel.dtx}[2023/12/06 v3.98 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1448,7 +1448,7 @@ Or also:
   corresponding behavior is not always implemented. Also, there are
   some limitations in the engines. A few remarks follow (which could no
   longer be valid when you read this manual, if the packages involved
-  han been updated). The Harfbuzz renderer has still some issues, so as
+  have been updated). The Harfbuzz renderer still has some issues, so as
   a rule of thumb prefer the default renderer, and resort to Harfbuzz
   only if the former does not work for you. Fortunately, fonts can be
   loaded twice with different renderers; for example:
@@ -2321,7 +2321,7 @@ Many locale templates are quite useable, provided captions and dates are
 not required (which is a very frequent case, particularly in ancient
 languages). So, they will be included in the default \babel{} distribution.
 This can serve to encourage contributions, too. A warning will remember
-they are ‘bare minumum locales’. The locales are currently
+they are ‘bare minimum locales’. The locales are currently
 the following:
 \begin{multicols}{4}
 \small
@@ -2627,7 +2627,7 @@ something like:
 first loads |danish.ldf|, and then redefines the captions for
 \texttt{danish} (as provided by the |ini| file) and prevents
 hyphenation. The rest of the language definitions are not touched.
-Without the optional argument it just loads some aditional tools if
+Without the optional argument it just loads some additional tools if
 provided by the |ini| file, like extra counters.
 
 \Describe{\BabelUppercaseMapping}
@@ -2846,14 +2846,19 @@ See the next section.
 \Describe{Alph=}{\meta{counter-name}} Same for |\Alph|.
 
 \Describe{casing}{\meta{rules}} \New{3.90} Selects the casing rules in a few
-languages. They are (from \textsf{interface3.pdf}):
+languages. The first ones are predefined by \LaTeX{} (see
+\textsf{interface3.pdf}), while the following are defined by \babel:
 \begin{description}
-  \item[Armenian] |yiwn|, which maps U+0587 to capital ech and yiwn on
+  \item[Armenian] |yiwn| maps U+0587 to capital ech and yiwn on
     uppercasing.
-  \item[German] |eszett|, which maps the lowercase \textit{Eszett} to a
+  \item[German] |eszett| maps the lowercase \textit{Eszett} to a
   \textit{großes Eszett}.
-  \item[Greek] |iota|, which converts the \textit{ypogegrammeni} (subscript muted
+  \item[Greek] |iota| converts the \textit{ypogegrammeni} (subscript muted
     iota) to capital iota when uppercasing.
+  \item[Latin] |nouv| in |classicallatin| and |medievallatin| reverts
+    the default rules, which maps u ↔ V; |uv| in |ecclesianticallatin|
+    and the basic |latin| locale applies the map u ↔ V (by default it’s
+    u ↔ U and v ↔ V).
 \end{description}
 
 \begin{example} For the latter:
@@ -3062,7 +3067,7 @@ CSS. They only work with \xetex{} and \luatex{} and are fully
 expandable (even inside an unprotected |\edef|). Currently, they are
 limited to numbers below 10000.
 
-There are several ways to use them (for the availabe styles in each
+There are several ways to use them (for the available styles in each
 language, see the list below):
 
 \begin{itemize}
@@ -3341,6 +3346,10 @@ note several locales may share a single |\language|, so they are
 separated concepts. In \luatex, the |\localeid| is saved in each node
 (when it makes sense) as an attribute, too.
 
+\Describe{\ShowLocaleProporties}{\marg{language}}
+\New{3.98} Prints to the |log| file all the key/value pairs declared in
+the |ini| locale file for \meta{language}.
+
 \Describe{\LocaleForEach}{\marg{code}}
 \Babel{} remembers which |ini| files have been loaded. There is a loop
 named |\LocaleForEach| to traverse the list, where |#1| is the name of
@@ -3544,7 +3553,7 @@ It currently embraces |\babelprehyphenation| and
 \New{3.57} Several \textsf{ini} files predefine some transforms. They
 are activated with the key |transforms| in |\babelprovide|, either if
 the locale is being defined with this macro or the languages has been
-previouly loaded as a class or package option, as the following example
+previously loaded as a class or package option, as the following example
 illustrates:
 \begin{verbatim}
   \usepackage[hungarian]{babel}
@@ -3828,7 +3837,7 @@ future release).
 \marg{class-first} and \marg{class-second} can be comma separated lists
 of char classes, and all combinations are defined (so that 2 first
 classes with 2 second classes, define 4 combinations). In the
-\marg{options} field a key named |label| is available, which allows to
+\meta{options} field a key named |label| is available, which allows to
 enable or to disable the rule with the following two commands. Like
 prehyphenation transforms in \luatex{}, interchars are not applied if the
 current hyphenation rules are |nohyphenation|.
@@ -3862,7 +3871,7 @@ current language.
 
 \begin{warning}
   Keep in mind two points: (1) a character can be assigned a single
-  class; this is a limitation in the interchar mechanims that often
+  class; this is a limitation in the interchar mechanisms that often
   leads to incompatibilities; (2) since the character classes set with
   |\babelcharclass| are saved (so that they can be restored), there is a
   limit in the number of characters in the \marg{char-list} (which,
@@ -4640,7 +4649,7 @@ layout.lists
 The first four are documented elsewhere. The following are by default
 |on|, but with |off| can disable some features: |bidi.math| (only
 preamble) changes for math or \textsf{amsmath}, |linebreak.sea|,
-|linebreak.sea| and |justify.arabic| the corresponding algorithms,
+|linebreak.cjk| and |justify.arabic| the corresponding algorithms,
 |layout.tabular| and |layout.lists| changes for tabular and lists.
 Some of the are reverted only to some extent.
 
@@ -4687,7 +4696,7 @@ options (like paragraph direction with |bidi.text|).
 \end{verbatim}
   \textit{before} loading babel. This way, when the document begins
   the sequence is (1) make \verb/|/ active (\textsf{ltxdoc}); (2) make
-  it unactive (your settings); (3) make babel shorthands active
+  it inactive (your settings); (3) make babel shorthands active
   (\textsf{babel)}; (4) reload \textsf{hhline} (\textsf{babel}, now
   with the correct catcodes for \verb/|/ and
   \verb|:|).\catcode`\|=\active
@@ -4957,8 +4966,8 @@ recommended.
 \label{contribute}
 
 Currently, the easiest way to contribute a new language is by taking
-one the the 500 or so |ini| templates available on GitHub as a basis.
-Just make a pull request o dowonload it and then, after filling the
+one of the 500 or so |ini| templates available on GitHub as a basis.
+Just make a pull request or download it and then, after filling the
 fields, sent it to me. Fell free to ask for help or to make feature
 requests.
 
@@ -5203,7 +5212,7 @@ The \TeX book states: ``Plain \TeX\ includes a macro called
 all characters that have a special category code.'' \cite[p.~380]{DEK}
 It is used to set text `verbatim'.  To make this work if more
 characters get a special category code, you have to add this character
-to the macro |\dospecial|.  \LaTeX\ adds another macro called
+to the macro |\dospecials|.  \LaTeX\ adds another macro called
 |\@sanitize| representing the same character set, but without the
 curly braces.  The macros |\bbl@add@special|\meta{char} and
 |\bbl@remove@special|\meta{char} add and remove the character
@@ -5616,7 +5625,7 @@ wouldn’t exist.
 %
 % The \babel{} installer extends \textsf{docstrip} with a few
 % ``pseudo-guards'' to set ``variables'' used at installation time.
-% They are used with |<||@name@>| at the appropiated places in the
+% They are used with |<||@name@>| at the appropriate places in the
 % source code and defined with either
 % $\langle\langle$\textit{name}=\textit{value}$\rangle\rangle$, or with
 % a series of lines between
@@ -5646,8 +5655,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.97.33765>>
-%<<date=2023/12/03>>
+%<<version=3.98>>
+%<<date=2023/12/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -5874,14 +5883,14 @@ wouldn’t exist.
   \edef#1{\the\toks@}}
 %    \end{macrocode}
 %
-% An extensison to the previous macro. It takes into account the
+% An extension to the previous macro. It takes into account the
 % parameters, and it is string based (ie, if you replace |elax| by
 % |ho|, then |\relax| becomes |\rho|). No checking is done at all,
 % because it is not a general purpose macro, and it is used by \babel{}
 % only when it works (an example where it does \textit{not} work is in
 % |\bbl@TG@@date|, and also fails if there are macros with spaces,
 % because they are retokenized). It may change! (or even merged with
-% |\bbl@replace|; I'm not sure ckecking the replacement is really
+% |\bbl@replace|; I'm not sure checking the replacement is really
 % necessary or just paranoia).
 % 
 %    \begin{macrocode}
@@ -6116,7 +6125,7 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % This file also takes care of a number of compatibility issues with
-% other packages an defines a few aditional package options. Apart from
+% other packages an defines a few additional package options. Apart from
 % all the language options below we also have a few options that
 % influence the behavior of language definition files.
 %
@@ -6140,7 +6149,7 @@ wouldn’t exist.
 %
 % If the format created a list of loaded languages (in
 % |\bbl@languages|), get the name of the 0-th to show the actual
-% language used. Also avaliable with |base|, because it just shows
+% language used. Also available with |base|, because it just shows
 % info.
 %
 %    \begin{macrocode}
@@ -6172,7 +6181,7 @@ wouldn’t exist.
 % it exits.
 %
 % Now the \texttt{base} option. With it we can define (and load, with
-% \luatex) hyphenation patterns, even if we are not interesed in the
+% \luatex) hyphenation patterns, even if we are not interested in the
 % rest of babel.
 %
 %    \begin{macrocode}
@@ -6392,7 +6401,7 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % The following is ignored with |shorthands=off|, since it is
-% intended to take some aditional actions for certain chars.
+% intended to take some additional actions for certain chars.
 %
 %    \begin{macrocode}
   \bbl@ifshorthand{'}%
@@ -6831,7 +6840,7 @@ wouldn’t exist.
 %
 % The macro |\bbl@set@language| takes care of switching the language
 % environment \emph{and} of writing entries on the auxiliary files.
-% For historial reasons, language names can be either |language| of
+% For historical reasons, language names can be either |language| of
 % |\language|. To catch either form a trick is used, but
 % unfortunately as a side effect the catcodes of letters in
 % |\languagename| are messed up. This is a bug, but preserved for
@@ -8027,7 +8036,7 @@ wouldn’t exist.
 %
 %   The very first thing to do is saving the original catcode and the
 %   original definition, even if not active, which is possible
-%   (undefined characters require a special treatement to avoid
+%   (undefined characters require a special treatment to avoid
 %   making them |\relax| and preserving some degree of protection).
 %
 %    \begin{macrocode}
@@ -8466,14 +8475,14 @@ wouldn’t exist.
 %
 %  \begin{macro}{\defineshorthand}
 %
-%    Currently we only support two groups of user level shorthands,
-%    named internally |user| and |user@<lang>| (language-dependent
-%    user shorthands). By default, only the first one is taken into
-%    account, but if the former is also used (in the optional argument
-%    of |\defineshorthand|) a new level is inserted for it
-%    (|user@generic|, done by |\bbl@set@user@generic|); we make also
-%    sure |{}| and |\protect| are taken into account in this new top
-%    level.
+% Currently we only support two groups of user level shorthands,
+% named internally |user| and |user@<lang>| (language-dependent
+% user shorthands). By default, only the first one is taken into
+% account, but if the former is also used (in the optional argument
+% of |\defineshorthand|) a new level is inserted for it
+% (|user@generic|, done by |\bbl@set@user@generic|); we make also
+% sure |{}| and |\protect| are taken into account in this new top
+% level.
 %
 %    \begin{macrocode}
 \def\user@language@group{user@\language@group}
@@ -8501,12 +8510,12 @@ wouldn’t exist.
 %
 %  \begin{macro}{\languageshorthands}
 %
-%    A user level command to change the language from which shorthands
-%    are used. Unfortunately, \babel{} currently does not keep track
-%    of defined groups, and therefore there is no way to catch a
-%    possible change in casing to fix it in the same way languages names
-%    are fixed. [TODO].
-%
+%  A user level command to change the language from which shorthands
+%  are used. Unfortunately, \babel{} currently does not keep track
+%  of defined groups, and therefore there is no way to catch a
+%  possible change in casing to fix it in the same way languages names
+%  are fixed. [TODO].
+% %
 %    \begin{macrocode}
 \def\languageshorthands#1{\def\language@group{#1}}
 %    \end{macrocode}
@@ -8514,11 +8523,12 @@ wouldn’t exist.
 %  \end{macro}
 %
 %  \begin{macro}{\aliasshorthand}
-%    \textit{Deprecated}. First the new shorthand needs to be
-%    initialized. Then, we define the new shorthand in terms of the
-%    original one, but note with |\aliasshorthands{"}{/}| is
-%    |\active@prefix /\active@char/|, so we still need to let the
-%    lattest to |\active@char"|.
+%
+% \textit{Deprecated}. First the new shorthand needs to be
+% initialized. Then, we define the new shorthand in terms of the
+% original one, but note with |\aliasshorthands{"}{/}| is
+% |\active@prefix /\active@char/|, so we still need to let the
+% latter to |\active@char"|.
 %    
 %    \begin{macrocode}
 \def\aliasshorthand#1#2{%
@@ -8557,9 +8567,10 @@ wouldn’t exist.
 %
 %  \begin{macro}{\shorthandon}
 %  \begin{macro}{\shorthandoff}
-%    The first level definition of these macros just passes the
-%    argument on to |\bbl@switch@sh|, adding |\@nil| at the end to
-%    denote the end of the list of characters.
+%
+% The first level definition of these macros just passes the
+% argument on to |\bbl@switch@sh|, adding |\@nil| at the end to
+% denote the end of the list of characters.
 %
 %    \begin{macrocode}
 \newcommand*\shorthandon[1]{\bbl@switch@sh\@ne#1\@nnil}
@@ -8570,19 +8581,19 @@ wouldn’t exist.
 %
 %  \begin{macro}{\bbl@switch@sh}
 %
-%    The macro |\bbl@switch@sh| takes the list of characters apart one
-%    by one and subsequently switches the category code of the
-%    shorthand character according to the first argument of
-%    |\bbl@switch@sh|.
+% The macro |\bbl@switch@sh| takes the list of characters apart one
+% by one and subsequently switches the category code of the
+% shorthand character according to the first argument of
+% |\bbl@switch@sh|.
 %
-%    But before any of this switching takes place we make sure that the
-%    character we are dealing with is known as a shorthand character.
-%    If it is, a macro such as |\active@char"| should exist.
+% But before any of this switching takes place we make sure that the
+% character we are dealing with is known as a shorthand character.
+% If it is, a macro such as |\active@char"| should exist.
 %
-%    Switching off and on is easy -- we just set the category code to
-%    `other' (12) and |\active|. With the starred version, the original
-%    catcode and the original definition, saved in
-%    |@initiate@active@char|, are restored.
+% Switching off and on is easy -- we just set the category code to
+% `other' (12) and |\active|. With the starred version, the original
+% catcode and the original definition, saved in
+% |@initiate@active@char|, are restored.
 %
 %    \begin{macrocode}
 \def\bbl@switch@sh#1#2{%
@@ -8621,8 +8632,8 @@ wouldn’t exist.
 %  \end{macro}
 %  \end{macro}
 %
-% Note the value is that at the expansion time; eg, in the preample
-% shorhands are usually deactivated.
+% Note the value is that at the expansion time; eg, in the preamble
+% shorthands are usually deactivated.
 %
 %    \begin{macrocode}
 \def\babelshorthand{\active@prefix\babelshorthand\bbl@putsh}
@@ -8694,15 +8705,15 @@ wouldn’t exist.
 %  \end{macro}
 %  \end{macro}
 %
-%    Usually the |~| is active and expands to \verb*=\penalty\@M\ =.
-%    When it is written to the \file{.aux} file it is written
-%    expanded. To prevent that and to be able to use the character |~|
-%    as a start character for a shorthand, it is redefined here as a
-%    one character shorthand on system level. The system declaration
-%    is in most cases redundant (when |~| is still a non-break space),
-%    and in some cases is inconvenient (if |~| has been redefined);
-%    however, for backward compatibility it is maintained (some
-%    existing documents may rely on the \babel{} value).
+% Usually the |~| is active and expands to \verb*=\penalty\@M\ =.
+% When it is written to the \file{.aux} file it is written
+% expanded. To prevent that and to be able to use the character |~|
+% as a start character for a shorthand, it is redefined here as a
+% one character shorthand on system level. The system declaration
+% is in most cases redundant (when |~| is still a non-break space),
+% and in some cases is inconvenient (if |~| has been redefined);
+% however, for backward compatibility it is maintained (some
+% existing documents may rely on the \babel{} value).
 %
 %    \begin{macrocode}
 \initiate@active@char{~}
@@ -8739,6 +8750,7 @@ wouldn’t exist.
 %    Language attributes provide a means to give the user control over
 %    which features of the language definition files he wants to
 %    enable.
+%
 %  \begin{macro}{\languageattribute}
 %
 %    The macro |\languageattribute| checks whether its arguments are
@@ -8755,10 +8767,10 @@ wouldn’t exist.
     \bbl@vforeach{#2}{%
 %    \end{macrocode}
 %
-%    We want to make sure that each attribute is selected only once;
-%    therefore we store the already selected attributes in
-%    |\bbl@known@attribs|. When that control sequence is not yet
-%    defined this attribute is certainly not selected before.
+% To make sure each attribute is selected only once, we store the
+% already selected attributes in |\bbl@known@attribs|. When that
+% control sequence is not yet defined this attribute is certainly
+% not selected before.
 %
 %    \begin{macrocode}
       \ifx\bbl@known@attribs\@undefined
@@ -8773,9 +8785,9 @@ wouldn’t exist.
       \else
 %    \end{macrocode}
 %
-%    When we end up here the attribute is not selected before. So, we
-%    add it to the list of selected attributes and execute the
-%    associated \TeX-code.
+% When we end up here the attribute is not selected before. So, we
+% add it to the list of selected attributes and execute the
+% associated \TeX-code.
 %
 %    \begin{macrocode}
         \bbl@exp{%
@@ -9182,7 +9194,7 @@ wouldn’t exist.
 %
 % \subsection{Multiencoding strings}
 %
-% The aim following commands is to provide a commom interface for
+% The aim following commands is to provide a common interface for
 % strings in several encodings. They also contains several hooks which
 % can be used by \luatex{} and \xetex. The code is organized here with
 % pseudo-guards, so we start with the basic commands.
@@ -9267,7 +9279,7 @@ wouldn’t exist.
 %
 % Parse the encoding info to get the label, input, and font parts.
 %
-% Select the behavior of |\SetString|. Thre are two main cases,
+% Select the behavior of |\SetString|. There are two main cases,
 % depending of if there is an optional argument: without it and
 % |strings=encoded|, strings are defined
 % always; otherwise, they are set only if they are still undefined
@@ -10149,7 +10161,7 @@ wouldn’t exist.
 %
 % |\babelprovide| is a general purpose tool for creating and modifying
 % languages. It creates the language infrastructure, and loads, if
-% requested, an |ini| file. It may be used in conjunction to previouly
+% requested, an |ini| file. It may be used in conjunction to previously
 % loaded |ldf| files.
 %
 %    \begin{macrocode}
@@ -11017,22 +11029,24 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % The |characters| section also stores the values, but |casing| is
-% treated in a different fashion. 
+% treated in a different fashion. Much like transforms, a set of
+% commands calling the parser are stored in |\bbl@release@casing|,
+% which is executed in |\babelprovide|.
 %
 %    \begin{macrocode}
 \def\bbl@maybextx{-\bbl@csarg\ifx{extx@\languagename}\@empty x-\fi}
 \def\bbl@inikv@characters#1#2{%
-  \bbl@ifsamestring{#1}{casing}%
+  \bbl@ifsamestring{#1}{casing}%  eg, casing = uV
     {\bbl@exp{%
        \\\g@addto@macro\\\bbl@release@casing{%
-         \\\SetCaseMapping{\languagename}{\unexpanded{#2}}}}}%
-    {\in@{$casing.}{$#1}%
+         \\\bbl@casemapping{}{\languagename}{\unexpanded{#2}}}}}%
+    {\in@{$casing.}{$#1}%  eg, casing.Uv = uV 
      \ifin@
        \lowercase{\def\bbl@tempb{#1}}%
        \bbl@replace\bbl@tempb{casing.}{}%
        \bbl@exp{\\\g@addto@macro\\\bbl@release@casing{%
-         \\\SetCaseMapping
-           [\\\bbl@maybextx\bbl@tempb]{\languagename}{\unexpanded{#2}}}}%
+         \\\bbl@casemapping
+           {\\\bbl@maybextx\bbl@tempb}{\languagename}{\unexpanded{#2}}}}%
      \else
        \bbl@inikv{#1}{#2}%
      \fi}}
@@ -11453,7 +11467,7 @@ wouldn’t exist.
            \fi
            \AtBeginDocument{%
              \bbl@patchfont{\bbl@xenohyph}%
-             \expandafter\select@language\expandafter{\languagename}}%
+             {\expandafter\select@language\expandafter{\languagename}}}%
         \fi}}%
   \fi
   \bbl@csarg\bbl@toglobal{lsys@#1}}
@@ -11568,7 +11582,7 @@ wouldn’t exist.
 \def\bbl@alphnumeral#1#2{%
   \expandafter\bbl@alphnumeral@i\number#2 76543210\@@{#1}}
 \def\bbl@alphnumeral@i#1#2#3#4#5#6#7#8\@@#9{%
-  \ifcase\@car#8\@nil\or   % Currenty <10000, but prepared for bigger
+  \ifcase\@car#8\@nil\or   % Currently <10000, but prepared for bigger
     \bbl@alphnumeral@ii{#9}000000#1\or
     \bbl@alphnumeral@ii{#9}00000#1#2\or
     \bbl@alphnumeral@ii{#9}0000#1#2#3\or
@@ -11639,7 +11653,8 @@ wouldn’t exist.
 \else
   \def\bbl@utftocode#1{\expandafter`\string#1}
 \fi
-% Still somewhat hackish. WIP.
+% Still somewhat hackish. WIP. Note |\str_if_eq:nnTF| is fully
+% expandable (|\bbl@ifsamestring| isn’t).
 \providecommand\BCPdata{}
 \ifx\renewcommand\@undefined\else % For plain. TODO. It’s a quick fix
   \renewcommand\BCPdata[1]{\bbl@bcpdata@i#1\@empty}
@@ -11662,29 +11677,33 @@ wouldn’t exist.
   \DeclareTitlecaseMapping[\@nameuse{bbl@casing@#1}]{#2}{#3}}
 \newcommand\BabelLowercaseMapping[3]{%
   \DeclareLowercaseMapping[\@nameuse{bbl@casing@#1}]{#2}{#3}}
-% WIP. 
-\newcommand\SetCaseMapping[3][]{%
-  \def\bbl@tempa##1 ##2{%
-    \bbl@casemapping{##1}%
+%    \end{macrocode}
+% 
+% The parser for |casing| and |casing.|\meta{variant}. 
+% 
+%    \begin{macrocode}
+\def\bbl@casemapping#1#2#3{% 1:variant
+  \def\bbl@tempa##1 ##2{% Loop
+    \bbl@casemapping@i{##1}%
     \ifx\@empty##2\else\bbl@afterfi\bbl@tempa##2\fi}%
   \edef\bbl@templ{\@nameuse{bbl@casing@#2}#1}%  Language code
   \def\bbl@tempe{0}%   Mode (upper/lower...)
   \def\bbl@tempc{#3 }% Casing list
   \expandafter\bbl@tempa\bbl@tempc\@empty}
-\def\bbl@casemapping#1{%
+\def\bbl@casemapping@i#1{%
   \def\bbl@tempb{#1}%
-  \ifcase\bbl@engine % Handle utf8 chars in pdftex, by surrounding them with {}
+  \ifcase\bbl@engine % Handle utf8 in pdftex, by surrounding chars with {}
     \@nameuse{regex_replace_all:nnN}%
       {[\x{c0}-\x{ff}][\x{80}-\x{bf}]*}{{\0}}\bbl@tempb
   \else
-    \@nameuse{regex_replace_all:nnN}{.}{{\0}}\bbl@tempb
+    \@nameuse{regex_replace_all:nnN}{.}{{\0}}\bbl@tempb % TODO. needed?
   \fi
-  \expandafter\bbl@casemapping@i\bbl@tempb\@@}
-\def\bbl@casemapping@i#1#2#3\@@{%
-  \in@{#1#3}{<>}%
+  \expandafter\bbl@casemapping@ii\bbl@tempb\@@}
+\def\bbl@casemapping@ii#1#2#3\@@{%
+  \in@{#1#3}{<>}% ie, if <u>, <l>, <t>
   \ifin@
     \edef\bbl@tempe{%
-      \if#2u1 \else\if#2l2 \else\if#2t3 \else\if#2m4 \fi\fi\fi\fi}%
+      \if#2u1 \else\if#2l2 \else\if#2t3 \fi\fi\fi}%
   \else
     \ifcase\bbl@tempe\relax
       \DeclareUppercaseMapping[\bbl@templ]{\bbl@utftocode{#1}}{#2}%
@@ -11758,7 +11777,7 @@ wouldn’t exist.
 %
 % \section{Adjusting the Babel bahavior}
 %
-% A generic high level inteface is provided to adjust some global
+% A generic high level interface is provided to adjust some global
 % and general settings.
 %
 %    \begin{macrocode}
@@ -12813,7 +12832,7 @@ wouldn’t exist.
 % \textit{except} if a |main| language has been set. In such a
 % case, it is not loaded until all options has been processed.
 % The following macro inputs the ldf file and does some additional
-% checks (|\input| works, too, but possible errors are not catched).
+% checks (|\input| works, too, but possible errors are not caught).
 %
 %    \begin{macrocode}
 \bbl@trace{Language options}
@@ -12938,7 +12957,7 @@ wouldn’t exist.
 %
 % Now define the corresponding loaders. With package options, assume
 % the language exists. With class options, check if the option is a
-% language by checking if the correspondin file exists.
+% language by checking if the corresponding file exists.
 % 
 %    \begin{macrocode}
 \bbl@foreach\bbl@language@opts{%
@@ -13647,10 +13666,10 @@ wouldn’t exist.
 % For historical reasons, \LaTeX{} can select two different series
 % (|bx| and |b|), for what is conceptually a single one. This can
 % lead to problems when a single family requires several fonts,
-% depending on the language, mainly because ‘subtitutions’ with some
+% depending on the language, mainly because ‘substitutions’ with some
 % combinations are not done consistently -- sometimes |bx/sc| is the
 % correct font, but sometimes points to |b/n|, even if |b/sc| exists.
-% So, some subtitutions are redefined (in a somewhat hackish way, by
+% So, some substitutions are redefined (in a somewhat hackish way, by
 % inspecting if the variant declaration contains |>ssub*|).
 %
 %    \begin{macrocode}
@@ -14669,7 +14688,7 @@ end
 % \subsection{CJK line breaking}
 %
 % Minimal line breaking for CJK scripts, mainly intended for simple
-% documents and short texts as a secundary language. Only line
+% documents and short texts as a secondary language. Only line
 % breaking, with a little stretching for justification, without any
 % attempt to adjust the spacing. It is based on (but does not strictly
 % follow) the Unicode algorithm.
@@ -14828,7 +14847,7 @@ end
   \catcode`_=11 \catcode`:=11
   \gdef\bblar@nofswarn{\gdef\msg_warning:nnx##1##2##3{}}
 \endgroup
-\gdef\bbl@arabicjust{% TODO. Allow for serveral locales.
+\gdef\bbl@arabicjust{% TODO. Allow for several locales.
   \let\bbl@arabicjust\relax
   \newattribute\bblar@kashida
   \directlua{ Babel.attr_kashida = luatexbase.registernumber'bblar@kashida' }%
@@ -24691,7 +24710,7 @@ Babel.cjk_breaks = {
 \@onlypreamble\@onlypreamble
 %    \end{macrocode}
 %
-%    Mimick \LaTeX's |\AtBeginDocument|; for this to work the user
+%    Mimic \LaTeX's |\AtBeginDocument|; for this to work the user
 %    needs to add |\begindocument| to his file.
 %
 %    \begin{macrocode}
@@ -24711,7 +24730,7 @@ Babel.cjk_breaks = {
 \def\AtBeginDocument{\g@addto@macro\@begindocumenthook}
 %    \end{macrocode}
 %
-%    We also have to mimick \LaTeX's |\AtEndOfPackage|. Our
+%    We also have to mimic \LaTeX's |\AtEndOfPackage|. Our
 %    replacement macro is much simpler; it stores its argument in
 %    |\@endofldf|.
 %
@@ -24738,7 +24757,7 @@ Babel.cjk_breaks = {
 \catcode`\&=4
 %    \end{macrocode}
 %
-%    Mimick \LaTeX's commands to define control sequences.
+%    Mimic \LaTeX's commands to define control sequences.
 %
 %    \begin{macrocode}
 \def\newcommand{\@star@or@long\new@command}
@@ -25055,7 +25074,7 @@ Babel.cjk_breaks = {
 %
 % For a couple of languages we need the \LaTeX-control sequence
 % |\scriptsize| to be available. Because plain \TeX\ doesn't have such
-% a sofisticated font mechanism as \LaTeX\ has, we just |\let| it to
+% a sophisticated font mechanism as \LaTeX\ has, we just |\let| it to
 % |\sevenrm|.
 %
 %    \begin{macrocode}
