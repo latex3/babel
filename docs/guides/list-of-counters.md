@@ -245,7 +245,8 @@ The way the keraia is defined is tentative, and very likely it will change. Do *
 
 ## he
 
-There are some additional counters defined in `babel-hebrew.tex`.
+There are some additional counters defined in `babel-hebrew.tex`,
+namely `letters.long`, `letters.gershayim` and `letters.final`.
 
 * `letters.1` = א ב ג  ד  ה ו  ז  ח ט
 * `letters.2` = י כ ל מ נ ס ע פ צ
@@ -461,6 +462,9 @@ Tentative.
 
 ## yi
 
+There are some additional counters defined in `babel-hebrew.tex` and
+loaded by Yiddish, namely `letters.long`, `letters.gershayim` and `letters.final`.
+
 * `letters.1` = א ב ג  ד  ה ו  ז  ח ט
 * `letters.2` = י כ ל מ נ ס ע פ צ
 * `letters.F.15` = טו
@@ -542,6 +546,9 @@ Tentative.
 * `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
 
 ## zh
+
+Also available in all `zh` locales is `date.sexagenary`, defined in
+`babel-chinese.tex` and used in the Chinese calendar.
 
 * `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
 * `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸

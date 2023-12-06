@@ -4,15 +4,17 @@
 
 # Casing rules in `ini` files
 
-It consists of a space-separated list of character pairs in the order
+A new key named `casing` is available in the `characters` section. It
+consists of a space-separated list of character pairs in the order
 lower/upper which define a bidirectional mapping. By means of 3
-modifiers in the list, unidirectional mappings are also possible: `<u>`
-(uppercase), `<l>` (lowercase) and `<t>` (titlecase). With `<u>` the
-uppercase form comes first. They affect the subsequent pairs.
+modifiers in the list, affecting the subsequent pairs, unidirectional
+mappings are also possible: `<u>` (uppercase), `<l>` (lowercase) and
+`<t>` (titlecase). With `<u>` the uppercase form comes first.
 
-The first element must be a character. With the default bidirectional
-mapping the second one must be also a character, but with `<u>`, `<l>`,
-`<t>` the second element can be a macro or a token list between braces.
+The first element of each pair must be a character. With the default
+bidirectional mapping the second one must be also a character, but with
+`<u>`, `<l>`, `<t>` the second element can be a macro or a token list
+between braces.
 
 In the following example, a couple of bidirectional mappings are
 declared, and then come other unidirectional mappings:
@@ -50,7 +52,7 @@ because LaTeX provides no interface for them.
 
 # Locales
 
-The `ini` file for Persian/Farsi hans been improved by [Farshad
+The `ini` file for Persian/Farsi has been much improved by [Farshad
 Rasuli](https://github.com/farshadrasuli), with some
 mistakes fixed.
 
@@ -65,4 +67,9 @@ following casing variants:
 
 The new command `\ShowLocaleProporties` prints to the log file all the
 key/value pairs for a locale.
+
+# Fixes
+
+`\foreignlanguage` printed the language name in `xetex` with `thai`,
+`malayalam`, `sanskrit` and other languages that don’t use hyphens.
 
