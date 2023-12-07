@@ -9,7 +9,7 @@ consists of a space-separated list of character pairs in the order
 lower/upper which define a bidirectional mapping. By means of 3
 modifiers in the list, affecting the subsequent pairs, unidirectional
 mappings are also possible: `<u>` (uppercase), `<l>` (lowercase) and
-`<t>` (titlecase). With `<u>` the uppercase form comes first.
+`<t>` (titlecase). With `<l>` the uppercase form comes first.
 
 The first element of each pair must be a character. With the default
 bidirectional mapping the second one must be also a character, but with
