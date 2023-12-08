@@ -65,8 +65,8 @@ following casing variants:
 
 # Showing locale properties
 
-The new command `\ShowLocaleProporties` prints to the log file all the
-key/value pairs for a locale.
+The new command `\ShowLocaleProperties{<locale-name>}` prints to the
+log file all the key/value pairs for a locale.
 
 # Fixes
 
