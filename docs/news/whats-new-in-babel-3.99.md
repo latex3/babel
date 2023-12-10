@@ -33,7 +33,7 @@ In addition, the following bare minimum locales have been added:
 * `tangut`
 * `waray`
 
-Most of scripts in the Unicode basic plane are now covered with, at
+Most scripts in the Unicode basic plane are now covered with, at
 least, a minimal locale.
 
 Here is a sample, with `lualatex` and the Noto family:

@@ -15,16 +15,11 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **ach** Acoli
 * **ada** Adangme
 * **ady** Adyghe
-* **ae** Avestan
 * **aeb** Tunisian Arabic
 * **aho** Ahom
-* **akk** Akkadian
 * **aln** Gheg Albanian
 * **amo** Amo
 * **aoz** Uab Meto
-* **arc** Aramaic
-* **arc-Nbat** Aramaic
-* **arc-Palm** Aramaic
 * **arn** Mapuche
 * **aro** Araona
 * **arq** Algerian Arabic
@@ -32,14 +27,8 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **ase** American Sign Language
 * **atj** Atikamekw
 * **av** Avaric
-* **awa** Awadhi
-* **ay** Aymara
-* **ba** Bashkir
-* **ban** Balinese
 * **bap** Bantawa
-* **bar** Bavarian
 * **bax** Bamun
-* **bbc** Batak Toba
 * **bbj** Ghomala
 * **bci** Baoulé
 * **bej** Beja
@@ -76,9 +65,6 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **bvb** Bube
 * **byv** Medumba
 * **bze** Jenaama Bozo
-* **ccp** Chakma
-* **ccp-Cakm** Chakma
-* **ceb** Cebuano
 * **ch** Chamorro
 * **chk** Chuukese
 * **chm** Mari
@@ -96,14 +82,12 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **csb** Kashubian
 * **csw** Swampy Cree
 * **ctd** Tedim Chin
-* **cv** Chuvash
 * **dak** Dakota
 * **dar** Dargwa
 * **dcc** Deccan
 * **den** Slave
 * **dgr** Dogrib
 * **dnj** Dan
-* **doi** Dogri
 * **dtm** Tomo Kan Dogon
 * **dtp** Central Dusun
 * **dty** Dotyali
@@ -122,7 +106,6 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **fon** Fon
 * **frc** Cajun French
 * **frp** Arpitan
-* **frr** Northern Frisian
 * **frs** Eastern Frisian
 * **fud** East Futuna
 * **fuq** Central-Eastern Niger Fulfulde
@@ -142,7 +125,6 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **gon** Gondi
 * **gor** Gorontalo
 * **gos** Gronings
-* **got** Gothic
 * **grt** Garo
 * **gub** Guajajára
 * **guc** Wayuu
@@ -157,7 +139,6 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **hmd** Large Flowery Miao
 * **hnd** Southern Hindko
 * **hne** Chhattisgarhi
-* **hnj** Hmong Njua
 * **hnn** Hanunoo
 * **hno** Northern Hindko
 * **ho** Hiri Motu
@@ -171,12 +152,10 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **ik** Inupiaq
 * **ikt** Inuinnaqtun
 * **ilo** Iloko
-* **inh** Ingush
 * **izh** Ingrian
 * **jam** Jamaican Creole English
 * **jml** Jumli
 * **jut** Jutish
-* **jv** Javanese
 * **kaa** Kara-Kalpak
 * **kac** Kachin
 * **kao** Xaasongaxango
@@ -190,7 +169,6 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **kg** Kongo
 * **kge** Komering
 * **kha** Khasi
-* **khb** Lü
 * **khn** Khandesi
 * **kht** Khamti
 * **khw** Khowar
@@ -209,28 +187,21 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **ku** Kurdish
 * **ku-Arab** Kurdish
 * **kum** Kumyk
-* **kv** Komi
 * **kvr** Kerinci
 * **kvx** Parkari Koli
 * **kxm** Northern Khmer
 * **kxp** Wadiyara Koli
-* **lab** Linear A
-* **lad** Ladino
 * **lah** Lahnda
 * **laj** Lango (Uganda)
 * **lbe** Lak
 * **lbw** Tolaki
 * **lcp** Western Lawa
-* **lep** Lepcha
 * **lez** Lezghian
 * **li** Limburgish
-* **lif** Limbu
-* **lif-Limb** Limbu
 * **lis** Lisu
 * **ljp** Lampung Api
 * **lki** Laki
 * **lmn** Lambadi
-* **lmo** Lombard
 * **lol** Mongo
 * **loz** Lozi
 * **ltg** Latgalian
@@ -243,9 +214,7 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **maf** Mafa
 * **mag** Magahi
 * **mai** Maithili
-* **mak** Makasar
 * **man** Mandingo
-* **man-Nkoo** Mandingo
 * **maz** Central Mazahua
 * **mdf** Moksha
 * **mdh** Maguindanaon
@@ -255,11 +224,9 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **mgp** Eastern Magar
 * **mgy** Mbunga
 * **mh** Marshallese
-* **mi** Maori
 * **min** Minangkabau
 * **mis** Uncoded languages
 * **mls** Masalit
-* **mni** Manipuri
 * **mnw** Mon
 * **moe** Montagnais
 * **moh** Mohawk
@@ -274,13 +241,11 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **mwv** Mentawai
 * **mxc** Manyika
 * **myx** Masaaba
-* **myz** Classical Mandaic
 * **na** Nauru
 * **nan** Min Nan Chinese
 * **nap** Neapolitan
 * **nch** Central Huasteca Nahuatl
 * **ndc** Ndau
-* **nds** Low German
 * **ng** Ndonga
 * **ngl** Lomwe
 * **nhe** Eastern Huasteca Nahuatl
@@ -290,9 +255,7 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **njo** Ao Naga
 * **nod** Northern Thai
 * **noe** Nimadi
-* **non** Old Norse
 * **nsk** Naskapi
-* **nv** Navajo
 * **nxq** Naxi
 * **nym** Nyamwezi
 * **nzi** Nzima
@@ -326,7 +289,6 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **rjs** Rajbanshi
 * **rkt** Rangpuri
 * **rmf** Kalo Finnish Romani
-* **rmo** Sinte Romani
 * **rmt** Domari
 * **rmu** Tavringer Romani
 * **rng** Ronga
@@ -337,15 +299,10 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **ryu** Central Okinawan
 * **saf** Safaliba
 * **sas** Sasak
-* **sat** Santali
 * **saz** Saurashtra
 * **sck** Sadri
 * **sco** Scots
 * **scs** North Slavey
-* **sd** Sindhi
-* **sd-Deva** Sindhi
-* **sd-Khoj** Sindhi
-* **sd-Sind** Sindhi
 * **sdc** Sassarese Sardinian
 * **sdh** Southern Kurdish
 * **sef** Cebaara Senoufo
@@ -354,13 +311,11 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **sgs** Samogitian
 * **shn** Shan
 * **sid** Sidamo
-* **skr** Saraiki
 * **sli** Lower Silesian
 * **sly** Selayar
 * **sm** Samoan
 * **sma** Southern Sami
 * **smj** Lule Sami
-* **smp** Samaritan
 * **sms** Skolt Sami
 * **snk** Soninke
 * **sou** Southern Thai
@@ -369,7 +324,6 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **srr** Serer
 * **srx** Sirmauri
 * **stq** Saterland Frisian
-* **su** Sundanese
 * **suk** Sukuma
 * **sus** Susu
 * **swb** Comorian
@@ -381,13 +335,10 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **taj** Eastern Tamang
 * **tbw** Tagbanwa
 * **tcy** Tulu
-* **tdd** Tai Nüa
 * **tdg** Western Tamang
 * **tdh** Thulung
 * **tem** Timne
 * **tet** Tetum
-* **tg** Tajik
-* **tg-Arab** Tajik
 * **thl** Dangaura Tharu
 * **thq** Kochila Tharu
 * **thr** Rana Tharu
@@ -403,13 +354,11 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **tsd** Tsakonian
 * **tsg** Tausug
 * **tsj** Tshangla
-* **tt** Tatar
 * **ttj** Tooro
 * **tts** Northeastern Thai
 * **ttt** Muslim Tat
 * **tum** Tumbuka
 * **tvl** Tuvalu
-* **txg** Tangut
 * **ty** Tahitian
 * **tyv** Tuvinian
 * **udm** Udmurt
@@ -428,18 +377,15 @@ You can find them [here](https://github.com/latex3/babel/tree/master/locale-temp
 * **vot** Votic
 * **vro** Võro
 * **wa** Walloon
-* **war** Waray
 * **wbp** Warlpiri
 * **wbq** Waddar
 * **wbr** Wagdi
 * **wls** Wallisian
 * **wni** Ndzwani Comorian
-* **wo** Wolof
 * **wtm** Mewati
 * **wuu** Wu Chinese
 * **xav** Xavánte
 * **xcr** Carian
-* **xh** Xhosa
 * **xlc** Lycian
 * **xld** Lydian
 * **xmf** Mingrelian
