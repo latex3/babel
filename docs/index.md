@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [3.99](news/whats-new-in-babel-3.99.html) | About 25 new locale files. |
 | [3.98](news/whats-new-in-babel-3.98.html) | `casing` in `ini` files. Improved `persian`/`farsi` |
 | [3.97](news/whats-new-in-babel-3.97.html) | `\babelcharclass`, `\babelinterchar` (`xetex`) |
 | [3.96](news/whats-new-in-babel-3.96.html) | Improved Odia. Improved `onchar` |

@@ -66,7 +66,7 @@ following casing variants:
 # Showing locale properties
 
 The new command `\ShowLocaleProperties{<locale-name>}` prints to the
-log file all the key/value pairs for a locale.
+`log` file all the loaded key/value pairs for a locale.
 
 # Fixes
 
