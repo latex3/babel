@@ -37,6 +37,7 @@ Most of scripts in the Unicode basic plane are now covered with, at
 least, a minimal locale.
 
 Here is a sample, with `lualatex` and the Noto family:
+{% raw  %}
 ```tex
 \documentclass{article}
 
@@ -74,4 +75,5 @@ Here is a sample, with `lualatex` and the Noto family:
 
 \end{document}
 ```
+{% endraw %}
 ![](../media/avestan-and-others.png)
