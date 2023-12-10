@@ -1,18 +1,18 @@
-## Babel 3.98
+## Babel 3.99
 
-2023-12-06
+2023-12-10
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
 language styles work with pdflatex, as well as with xelatex and
 lualatex out of the box. A few even work with plain formats. Included
-is a set of ini files for about 275 languages.
+is a set of ini files for about 300 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.98 are described in:
+Changes in version 3.99 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.98.html
+https://latex3.github.io/babel/news/whats-new-in-babel-3.99.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,6 +48,15 @@ respective authors.
 
 ### Summary of latest changes
 ```
+3.99 2023-12-10
+     * Spurious space in some cases because of a missing % (introduced
+     in 3.98).
+     * Two new locales: chakma and lowgerman.
+     * And more bare minimum locales: aramaic, avestan, aymara,
+     bashkir, bataktoba, bavarian, classicalmandaic, ingush, komi,
+     lepcha, limbu, lineara, lu, makasar, samaritan, sinteromani,
+     tainua, tangut, waray.
+
 3.98 2023-12-06
      * Case mappings in ini files, with new casing variants in the
        Latin locales.

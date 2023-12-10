@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/12/06 v3.98 The Babel package]
+\ProvidesFile{babel.dtx}[2023/12/10 v3.99 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1576,6 +1576,7 @@ captions):
 \tag{byn} Blin
 \tag{ca} Catalan\hascapu\hascapl
 \tag{cch} Atsam
+\tag{ccp} Chakma
 \tag{ce} Chechen
 \tag{cgg} Chiga
 \tag{chr} Cherokee
@@ -1732,6 +1733,7 @@ captions):
 \tag{naq} Nama
 \tag{nb} Norwegian Bokmål\hascapu\hascapl
 \tag{nd} North Ndebele
+\tag{nds} Low German
 \tag{ne} Nepali
 \tag{nl} Dutch\hascapu\hascapl
 \tag{nmg} Kwasio
@@ -1957,6 +1959,7 @@ centralatlastamazight\\
 centralkurdish\\
 centralkurdish-latin\\
 centralkurdish-latn\\
+chakma\\
 chechen\\
 cherokee\\
 chiga\\
@@ -2101,6 +2104,7 @@ ligurian\\
 lingala\\
 lithuanian\\
 lowersorbian\\
+lowgerman\\
 lubakatanga\\
 luo\\
 luxembourgish\\
@@ -2327,18 +2331,37 @@ the following:
 \small
 akkadian\\
 ancientegyptian\\
+aramaic\\
+avestan\\
+aymara\\
 balinese\\
+bashkir\\
+bataktoba\\
+bavarian\\
+classicalmandaic\\
 divehi\\
 egyptianarabic\footnote{Masri or Colloquial Egyptian, with tag
 \texttt{arz}, not to be confused with the Standard Arabic as spoken in
-Egypt, with tag \texttt{ar-EG}).}\\
+Egypt, with tag \texttt{ar-EG}.}\\
+ingush\\
+komi\\
 ladino\\
+lepcha\\
+limbu\\
+lineara\\
 lombard\\
+lu\\
+makasar\\
 navajo\\
 newari\\
 oldnorse\\
 phoenician\\
-southernaltai
+samaritan\\
+sinteromani\\
+southernaltai\\
+tainua\\
+tangut\\
+waray
 \end{multicols}
 
 \textbf{Modifying and adding values to |ini| files}
@@ -3346,9 +3369,9 @@ note several locales may share a single |\language|, so they are
 separated concepts. In \luatex, the |\localeid| is saved in each node
 (when it makes sense) as an attribute, too.
 
-\Describe{\ShowLocaleProporties}{\marg{language}}
-\New{3.98} Prints to the |log| file all the key/value pairs declared in
-the |ini| locale file for \meta{language}.
+\Describe{\ShowLocaleProperties}{\marg{language}}
+\New{3.98} Prints to the |log| file all the loaded key/value pairs from
+the |ini| locale file for \meta{language}. 
 
 \Describe{\LocaleForEach}{\marg{code}}
 \Babel{} remembers which |ini| files have been loaded. There is a loop
@@ -5655,8 +5678,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.98>>
-%<<date=2023/12/06>>
+%<<version=3.99>>
+%<<date=2023/12/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9481,7 +9504,7 @@ wouldn’t exist.
         \expandafter\bbl@tempa
       \fi}%
     \bbl@tempa##1\@empty\@empty
-    \bbl@carg\bbl@toglobal{extras\CurrentOption}}
+    \bbl@carg\bbl@toglobal{extras\CurrentOption}}%
 %<</Macros local to BabelCommands>>
 %    \end{macrocode}
 %
@@ -13945,16 +13968,16 @@ wouldn’t exist.
       \expandafter\bbl@tempb
     \fi}%
   \bbl@ifunset{bbl@xechars@#1}%
-   {\toks@{%
-      \babel@savevariable\XeTeXinterchartokenstate
-      \XeTeXinterchartokenstate\@ne
-    }}%
-   {\toks@\expandafter\expandafter\expandafter{%
-      \csname bbl@xechars@#1\endcsname}}%
+    {\toks@{%
+       \babel@savevariable\XeTeXinterchartokenstate
+       \XeTeXinterchartokenstate\@ne
+      }}%
+    {\toks@\expandafter\expandafter\expandafter{%
+       \csname bbl@xechars@#1\endcsname}}%
   \bbl@csarg\edef{xechars@#1}{%
     \the\toks@
     \bbl@usingxeclass\csname bbl@xeclass@#2@#1\endcsname
-    \bbl@tempb#3\@empty}}  
+    \bbl@tempb#3\@empty}}
 \protected\def\bbl@usingxeclass#1{\count@\z@ \let\bbl@tempc#1}
 \protected\def\bbl@upto{%
   \ifnum\count@>\z@
