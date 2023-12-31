@@ -9,4 +9,38 @@
 \fi
 \BabelBeforeIni{fr-CA}{%
 }
+
+
+\ifcase\bbl@engine\or\or % XeTeX
+
+% Partly based on babel-french, by Daniel Flipo
+\IfBabelIntercharT{puntuation.space}{%
+  \providecommand{\BabelFrenchGuillemetSpace}{%
+    \leavevmode\nobreak\hskip.8\fontdimen2\font
+      plus.3\fontdimen3\font
+      minus.8\fontdimen4\font\relax}%
+  \providecommand{\BabelFrenchColonSpace}{\nobreakspace}%
+%
+  \babelcharclass{\CurrentOption}{colon}{:}%
+  \babelcharclass{\CurrentOption}{leftguillemet}{«}%
+  \babelcharclass{\CurrentOption}{rightguillemet}{»}%
+  \babelcharclass{\CurrentOption}{opening}{([\{}% just make != default
+%
+  \babelinterchar[label=puntuation.space]{\CurrentOption}%
+    {default, rightguillemet}{colon}{\BabelFrenchColonSpace}%
+  \babelinterchar[label=puntuation.space]{\CurrentOption}%
+    {leftguillemet}{default}{\BabelFrenchGuillemetSpace}%
+  \babelinterchar[label=puntuation.space]{\CurrentOption}%
+    {default}{rightguillemet}{\BabelFrenchGuillemetSpace}%
+%
+% Here boundary means essentialy space:
+  \babelinterchar[label=puntuation.space]{\CurrentOption}%
+    {boundary}{colon}{\ifhmode\unskip\nobreak\fi\BabelFrenchColonSpace}%
+  \babelinterchar[label=puntuation.space]{\CurrentOption}%
+    {leftguillemet}{boundary}{\BabelFrenchGuillemetSpace\ignorespaces}%
+  \babelinterchar[label=puntuation.space]{\CurrentOption}%
+    {boundary}{rightguillemet}{\ifhmode\unskip\fi\BabelFrenchGuillemetSpace}%
+}
+
+\fi
 \endinput

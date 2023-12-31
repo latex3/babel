@@ -1,4 +1,4 @@
-## Babel 3.99
+## Babel 3.99.36567
 
 2023-12-10
 
@@ -48,6 +48,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
+24.1 2024-01-?? (dev)
+     * New key in \babelprovide: interchar (xe)
+     * Definitions for French interchar=punctuation.space (xe)
+     
 3.99 2023-12-10
      * Spurious space in some cases because of a missing % (introduced
      in 3.98).
@@ -57,14 +61,6 @@ respective authors.
      lepcha, limbu, lineara, lu, makasar, samaritan, sinteromani,
      tainua, tangut, waray.
 
-3.98 2023-12-06
-     * Case mappings in ini files, with new casing variants in the
-       Latin locales.
-     * New: \ShowLocaleProperties.
-     * Improved Persian/Farsi, thanks to Farshad Rasuli
-       (@farshadrasuli).
-     * In some languages and xetex, the language name was printed with
-       the first \foreignlanguage.
 ```
 
 ### Previous changes

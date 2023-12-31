@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/12/10 v3.99 The Babel package]
+\ProvidesFile{babel.dtx}[2023/12/31 v3.99.36567 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5678,8 +5678,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.99>>
-%<<date=2023/12/10>>
+%<<version=3.99.36567>>
+%<<date=2023/12/31>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10202,7 +10202,7 @@ wouldn’t exist.
   \bbl@vforeach{captions,date,import,main,script,language,%
       hyphenrules,linebreaking,justification,mapfont,maparabic,%
       mapdigits,intraspace,intrapenalty,onchar,transforms,alph,%
-      Alph,labels,labels*,calendar,date,casing}%
+      Alph,labels,labels*,calendar,date,casing,interchar}%
     {\bbl@csarg\let{KVP@##1}\@nnil}%
   \global\let\bbl@release@transforms\@empty
   \global\let\bbl@release@casing\@empty
@@ -12872,9 +12872,17 @@ wouldn’t exist.
         \csname bbl@mod@\CurrentOption\endcsname
      \bbl@exp{\\\AtBeginDocument{%
        \\\bbl@usehooks@lang{\CurrentOption}{begindocument}{{\CurrentOption}}}}}%
-    {\bbl@error{%
+    {\IfFileExists{babel-#1.tex}%
+      {\def\bbl@tempa{%
+         .\\There is a locale ini file for this language.\\%
+         If it’s the main language, try adding `provide=*'\\%
+         to the babel package options}}%
+      {\let\bbl@tempa\empty}%
+     \bbl@error{%
        Unknown option '\CurrentOption'. Either you misspelled it\\%
-       or the language definition file \CurrentOption.ldf was not found}{%
+       or the language definition file \CurrentOption.ldf\\%
+       was not found%
+       \bbl@tempa}{%
        Valid options are, among others: shorthands=, KeepShorthandsActive,\\%
        activeacute, activegrave, noconfigs, safe=, main=, math=\\%
        headfoot=, strings=, config=, hyphenmap=, or a language name.}}}
@@ -13954,6 +13962,18 @@ wouldn’t exist.
 % special case, hyphens are stored as |\bbl@upto|, to deal with ranges.
 %
 %    \begin{macrocode}
+\newcommand\IfBabelIntercharT[1]{%
+  \let\bbl@tempa\@gobble        % Assume to ignore
+  \edef\bbl@tempb{\zap@space#1 \@empty}%
+  \ifx\bbl@KVP@interchar\@nnil\else
+      \bbl@replace\bbl@KVP@interchar{ }{,}%
+      \bbl@foreach\bbl@tempb{%
+        \bbl@xin@{,##1,}{,\bbl@KVP@interchar,}%
+        \ifin@
+          \let\bbl@tempa\@firstofone 
+        \fi}%
+  \fi
+  \bbl@tempa}
 \newcommand\babelcharclass[3]{%
   \EnableBabelHook{babel-interchar}%
   \bbl@csarg\newXeTeXintercharclass{xeclass@#2@#1}%
@@ -14013,9 +14033,9 @@ wouldn’t exist.
     \bbl@exp{\\\bbl@for\\\bbl@tempb{\zap@space#4 \@empty}}{%     
       \XeTeXinterchartoks
         \@nameuse{bbl@xeclass@\bbl@tempa @%
-          \bbl@ifunset{bbl@xeclass@\bbl@tempa @#2}{}{#2}}
+          \bbl@ifunset{bbl@xeclass@\bbl@tempa @#2}{}{#2}} %
         \@nameuse{bbl@xeclass@\bbl@tempb @%
-          \bbl@ifunset{bbl@xeclass@\bbl@tempb @#2}{}{#2}}
+          \bbl@ifunset{bbl@xeclass@\bbl@tempb @#2}{}{#2}} %
         = \expandafter{%
            \csname bbl@ic@\bbl@kv@label @#2\expandafter\endcsname
            \csname\zap@space bbl@xeinter@\bbl@kv@label 
@@ -14151,7 +14171,8 @@ wouldn’t exist.
 % \subsection{8-bit TeX}
 %
 % Which start just above, because some code is shared with \xetex. Now,
-% 8-bit specific stuff.
+% 8-bit specific stuff. If just one encoding has been declared, then
+% asume no switching is necessary (1). 
 %
 %    \begin{macrocode}
 %<*texxet>
@@ -14165,7 +14186,7 @@ wouldn’t exist.
        \bbl@foreach\bbl@tempe{%
          \def\bbl@tempd{##1}%  Save last declared
          \advance\count@\@ne}%
-       \ifnum\count@>\@ne
+       \ifnum\count@>\@ne    % (1)
          \getlocaleproperty*\bbl@tempa{#1}{identification/encodings}%
          \ifx\bbl@tempa\relax \let\bbl@tempa\@empty \fi
          \bbl@replace\bbl@tempa{ }{,}%
