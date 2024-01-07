@@ -48,7 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [24.1](news/whats-new-in-babel-24.1.html) | **New version numbering**. Key `interchar` in `\babelprovide`. |
+| [24.1](news/whats-new-in-babel-24.1.html) | **New version numbering**. `interchar` in `\babelprovide`. Spaces in French. |
 | [3.99](news/whats-new-in-babel-3.99.html) | About 25 new locale files. |
 | [3.98](news/whats-new-in-babel-3.98.html) | `casing` in `ini` files. Improved `persian`/`farsi` |
 | [3.97](news/whats-new-in-babel-3.97.html) | `\babelcharclass`, `\babelinterchar` (`xetex`) |
