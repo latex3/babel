@@ -1,7 +1,7 @@
 % \iffalse
 % This document requires lualatex
 %%
-%% Copyright (C) 2012-2023 Javier Bezos and Johannes L. Braams.
+%% Copyright (C) 2012-2024 Javier Bezos and Johannes L. Braams.
 %% Copyright (C) 1989-2012 Johannes L. Braams and
 %%           any individual authors listed elsewhere in this file.
 %% All rights reserved.
@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2023/12/31 v3.99.36567 The Babel package]
+\ProvidesFile{babel.dtx}[2024/01/07 v24.1 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -90,17 +90,23 @@
     localization}}
 \ExplSyntaxOn
 \newcommand\New[1]{%
-  \regex_extract_once:nnN{(\d\d?)\.(\d\d)}{#1}\bbltempa
+  \regex_extract_once:nnN{(\d\d?)\.(\d\d?)}{#1}\bbltempa
   \seq_pop_right:NN\bbltempa\bbltempb
   \seq_pop_right:NN\bbltempa\bbltempa
   \colorbox[rgb]{.92, .86, .73}%
     {New~#1%
     \quark_if_no_value:NTF\bbltempb{}%
-      {~\ifnum\bbltempa>2 \ifnum\bbltempb>34
+      {~
+       \ifnum\bbltempa>2 \ifnum\bbltempb>34
          \href{https://latex3.github.io/babel/news/%
                whats-new-in-babel-\bbltempa.\bbltempb.html}%
               {\raisebox{.15ex}{$\oplus$}}%
-       \fi\fi}}\enspace\ignorespaces}
+       \fi\fi
+       \ifnum\bbltempa>23
+         \href{https://latex3.github.io/babel/news/%
+               whats-new-in-babel-\bbltempa.\bbltempb.html}%
+              {\raisebox{.15ex}{$\oplus$}}%
+       \fi}}\enspace\ignorespaces}
 \ExplSyntaxOff
 \definecolor{thered}{rgb}{0.65,0.04,0.07}
 \definecolor{thegrey}{gray}{0.8}
@@ -275,7 +281,8 @@ are highlighted with \New{X.XX}\hspace{-.5em}
 (\raisebox{.15ex}{$\oplus$} is a link to the \babel{} site), and there
 are some notes for the latest versions in
 \href{https://latex3.github.io/babel/}{the \babel{} site}. The most
-recent features can be still unstable.
+recent features can be still unstable. Remember version 24.1 follows
+3.99, because of a new numbering scheme.
 
 \item[\sffamily\color{messages}Can I help?] Sure! If you are interested
 in the \TeX{} multilingual support, please join the
@@ -3628,6 +3635,9 @@ a non-syllabic preposition or conjunction into a non-breaking space.}
 \trans{Finnish}{prehyphen.nobreak}{Line breaks just after hyphens
 prepended to words are prevented, like in “pakastekaapit ja -arkut”.}
 
+\trans{French}{punctuation.space}{Rules for proper spacing with
+characters \textit{;:!?«»} are applied.}
+
 \trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
 upsilon if hyphenated just before. It works with the three variants.}
 
@@ -3900,6 +3910,13 @@ current language.
   limit in the number of characters in the \marg{char-list} (which,
   however, must be large enough for many uses).
 \end{warning}
+
+\Describe{interchar=}{\meta{interchar-list}}
+
+\New{24.1} This key in |\babelprovide| activates predefined rules for
+the ‘provided’ locale. Currently there is a set of rules for French
+named |punctuation.space|, which applies proper spacing with characters
+\textit{;:!?«»}.
 
 \subsection{Selection based on BCP 47 tags}
 \label{bcp47}
@@ -5678,8 +5695,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=3.99.36567>>
-%<<date=2023/12/31>>
+%<<version=24.1>>
+%<<date=2024/01/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They

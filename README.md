@@ -1,6 +1,6 @@
-## Babel 3.99.36567
+## Babel 24.1
 
-2023-12-10
+2024-01-07
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -10,9 +10,9 @@ is a set of ini files for about 300 languages.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 3.99 are described in:
+Changes in version 24.1 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-3.99.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.1.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,19 +48,11 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.1 2024-01-?? (dev)
-     * New key in \babelprovide: interchar (xe)
-     * Definitions for French interchar=punctuation.space (xe)
-     
-3.99 2023-12-10
-     * Spurious space in some cases because of a missing % (introduced
-     in 3.98).
-     * Two new locales: chakma and lowgerman.
-     * And more bare minimum locales: aramaic, avestan, aymara,
-     bashkir, bataktoba, bavarian, classicalmandaic, ingush, komi,
-     lepcha, limbu, lineara, lu, makasar, samaritan, sinteromani,
-     tainua, tangut, waray.
-
+24.1 2024-01-07
+     * New version numbering scheme.
+     * New key in \babelprovide: interchar (xe).
+     * Definitions for French interchar=punctuation.space (xe) and
+       transforms=punctuation.space (lua).
 ```
 
 ### Previous changes
