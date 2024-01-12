@@ -1,6 +1,6 @@
-## Babel 24.1
+## Babel 24.1.37776
 
-2024-01-07
+(dev)
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,8 @@ respective authors.
 
 ### Summary of latest changes
 ```
+24.2 (dev)
+
 24.1 2024-01-07
      * New version numbering scheme.
      * New key in \babelprovide: interchar (xe).

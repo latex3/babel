@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/01/07 v24.1 The Babel package]
+\ProvidesFile{babel.dtx}[2024/01/12 v24.1.37776 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5695,8 +5695,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.1>>
-%<<date=2024/01/07>>
+%<<version=24.1.37776>>
+%<<date=2024/01/12>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6142,11 +6142,12 @@ wouldn’t exist.
      \directlua{ Babel = Babel or {}
        Babel.debug = false }%
    \fi}
-\def\bbl@error#1#2{%
+\def\bbl@error#1{% Implicit #2#3#4
   \begingroup
-    \def\\{\MessageBreak}%
-    \PackageError{babel}{#1}{#2}%
-  \endgroup}
+    \catcode`\\=0 \catcode`\==12 \catcode`\`=12
+    \input errbabel.def
+  \endgroup
+  \bbl@error{#1}}
 \def\bbl@warning#1{%
   \begingroup
     \def\\{\MessageBreak}%
@@ -6344,12 +6345,7 @@ wouldn’t exist.
   \bbl@csarg\ifx{opt@#1}\@nnil
     \bbl@csarg\edef{opt@#1}{#2}%
   \else
-    \bbl@error
-     {Bad option '#1=#2'. Either you have misspelled the\\%
-      key or there is a previous setting of '#1'. Valid\\%
-      keys are, among others, 'shorthands', 'main', 'bidi',\\%
-      'strings', 'config', 'headfoot', 'safe', 'math'.}%
-     {See the manual for further details.}
+    \bbl@error{bad-package-option}{#1}{#2}{}%
   \fi}
 %    \end{macrocode}
 %
@@ -6658,11 +6654,7 @@ wouldn’t exist.
 %<-core>
 \def\bbl@provide@locale{%
   \ifx\babelprovide\@undefined
-    \bbl@error{For a language to be defined on the fly 'base'\\%
-               is not enough, and the whole package must be\\%
-               loaded. Either delete the 'base' option or\\%
-               request the languages explicitly}%
-              {See the manual for further details.}%
+    \bbl@error{base-on-the-fly}{}{}{}%
   \fi
   \let\bbl@auxname\languagename % Still necessary. TODO
   \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
@@ -7413,10 +7405,7 @@ wouldn’t exist.
 % will use the concept of `locale':
 %
 %    \begin{macrocode}
-\providecommand\setlocale{%
-  \bbl@error
-    {Not yet available}%
-    {Find an armchair, sit down and wait}}
+\providecommand\setlocale{\bbl@error{not-yet-available}{}{}{}}
 \let\uselocale\setlocale
 \let\locale\setlocale
 \let\selectlocale\setlocale
@@ -7472,12 +7461,7 @@ wouldn’t exist.
     They might not work as expected and their behavior\\%
     could change in the future.\\%
     Reported}}
-\def\@nolanerr#1{%
-  \bbl@error
-    {You haven't defined the language '#1' yet.\\%
-     Perhaps you misspelled it or your installation\\%
-     is not complete}%
-    {Your command will be ignored, type <return> to proceed}}
+\def\@nolanerr#1{\bbl@error{undefined-language}{#1}{}{}}
 \def\@nopatterns#1{%
   \bbl@warning
     {No hyphenation patterns were preloaded for\\%
@@ -8505,10 +8489,7 @@ wouldn’t exist.
      \initiate@active@char{#2}%
      #1%
      \bbl@activate{#2}}%
-    {\bbl@error
-       {I can't declare a shorthand turned off (\string#2)}
-       {Sorry, but you can't use shorthands which have been\\%
-        turned off in the package options}}}
+    {\bbl@error{shorthand-is-off}{}{#2}{}}}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -8583,10 +8564,7 @@ wouldn’t exist.
          \bbl@activate{#2}%
        \fi
      \fi}%
-    {\bbl@error
-       {Cannot declare a shorthand turned off (\string#2)}
-       {Sorry, but you cannot use shorthands which have been\\%
-        turned off in the package options}}}
+    {\bbl@error{shorthand-is-off}{}{#2}{}}}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -8594,13 +8572,7 @@ wouldn’t exist.
 %  \begin{macro}{\@notshorthand}
 %
 %    \begin{macrocode}
-\def\@notshorthand#1{%
-  \bbl@error{%
-    The character '\string #1' should be made a shorthand character;\\%
-    add the command \string\useshorthands\string{#1\string} to
-    the preamble.\\%
-    I will ignore your instruction}%
-   {You may proceed, but expect unexpected results}}
+\def\@notshorthand#1{\bbl@error{not-a-shorthand}{#1}{}{}}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -8639,10 +8611,7 @@ wouldn’t exist.
 \def\bbl@switch@sh#1#2{%
   \ifx#2\@nnil\else
     \bbl@ifunset{bbl@active@\string#2}%
-      {\bbl@error
-         {I can't switch '\string#2' on or off--not a shorthand}%
-         {This character is not a shorthand. Maybe you made\\%
-          a typing mistake? I will ignore your instruction.}}%
+      {\bbl@error{not-a-shorthand-b}{}{#2}{}}%
       {\ifcase#1%   off, on, off*
          \catcode`#212\relax
        \or
@@ -8845,9 +8814,7 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \newcommand*{\@attrerr}[2]{%
-  \bbl@error
-    {The attribute #2 is unknown for language #1.}%
-    {Your command will be ignored, type <return> to proceed}}
+  \bbl@error{unknown-attribute}{#1}{#2}{}}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -9384,9 +9351,7 @@ wouldn’t exist.
   \bbl@scswitch
   \ifx\bbl@G\@empty
     \def\SetString##1##2{%
-      \bbl@error{Missing group for string \string##1}%
-        {You must assign strings to some category, typically\\%
-         captions or extras, but you set none}}%
+      \bbl@error{missing-group}{##1}{}{}}%
   \fi
   \ifx\@empty#1%
     \bbl@usehooks{defaultcommands}{}%
@@ -10180,14 +10145,8 @@ wouldn’t exist.
 \or
   \input xebabel.def
 \fi
-\providecommand\babelfont{%
-  \bbl@error
-    {This macro is available only in LuaLaTeX and XeLaTeX.}%
-    {Consider switching to these engines.}}
-\providecommand\babelprehyphenation{%
-  \bbl@error
-    {This macro is available only in LuaLaTeX.}%
-    {Consider switching to that engine.}}
+\providecommand\babelfont{\bbl@error@{only-lua-xe}{}{}{}}
+\providecommand\babelprehyphenation{\bbl@error{only-lua}{}{}{}}
 \ifx\babelposthyphenation\@undefined
   \let\babelposthyphenation\babelprehyphenation
   \let\babelpatterns\babelprehyphenation
@@ -10235,9 +10194,7 @@ wouldn’t exist.
       \bbl@renewinikey##1\@@{##2}%
     \else
       \bbl@csarg\ifx{KVP@##1}\@nnil\else
-        \bbl@error
-          {Unknown key '##1' in \string\babelprovide}%
-          {See the manual for valid keys}%
+        \bbl@error{unknown-provide-key}{##1}{}{}%
       \fi
       \bbl@csarg\def{KVP@##1}{##2}%
     \fi}%
@@ -10413,9 +10370,7 @@ wouldn’t exist.
   % For bidi texts, to switch the font based on direction
   \ifx\bbl@KVP@mapfont\@nnil\else
     \bbl@ifsamestring{\bbl@KVP@mapfont}{direction}{}%
-      {\bbl@error{Option '\bbl@KVP@mapfont' unknown for\\%
-                  mapfont. Use 'direction'.%
-                 {See the manual for details.}}}%
+      {\bbl@error{unknown-mapfont}{}{}{}}%
     \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
     \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
     \ifx\bbl@mapselect\@undefined % TODO. See onchar.
@@ -10825,11 +10780,7 @@ wouldn’t exist.
   \global\let\bbl@extend@ini\@gobble
   \openin\bbl@readstream=babel-#1.ini
   \ifeof\bbl@readstream
-    \bbl@error
-      {There is no ini file for the requested language\\%
-       (#1: \languagename). Perhaps you misspelled it or your\\%
-       installation is not complete.}%
-      {Fix the name or reinstall babel.}%
+    \bbl@error{no-ini-file}{#1}{}{}%
   \else
     % == Store ini data in \bbl@inidata ==
     \catcode`\[=12 \catcode`\]=12 \catcode`\==12 \catcode`\&=12
@@ -11100,9 +11051,7 @@ wouldn’t exist.
 %    \begin{macrocode}
 \def\bbl@inikv@counters#1#2{%
   \bbl@ifsamestring{#1}{digits}%
-    {\bbl@error{The counter name 'digits' is reserved for mapping\\%
-                decimal digits}%
-               {Use another name.}}%
+    {\bbl@error{digits-is-reserved}{}{}{}}%
     {}%
   \def\bbl@tempc{#1}%
   \bbl@trim@def{\bbl@tempb*}{#2}%
@@ -11393,10 +11342,7 @@ wouldn’t exist.
   \else\ifnum#1<1000 \expandafter\@gobble\number#1 %
   \else\ifnum#1<10000 \expandafter\@gobbletwo\number#1 %
   \else
-    \bbl@error
-      {Currently two-digit years are restricted to the\\
-       range 0-9999.}%
-      {There is little you can do. Sorry.}%
+    \bbl@error{limit-two-digits}{}{}{}%
   \fi\fi\fi\fi}}
 \newcommand\BabelDateyyyy[1]{{\number#1}} % TODO - add leading 0
 \newcommand\BabelDateU[1]{{\number#1}}%
@@ -11641,8 +11587,7 @@ wouldn’t exist.
      \fi}%
     {\bbl@cs{cntr@#1.F.\number#5#6#7#8@\languagename}}}
 \def\bbl@alphnum@invalid#1{%
-  \bbl@error{Alphabetic numeral too large (#1)}%
-    {Currently this is the limit.}}
+  \bbl@error{alphabetic-too-large}{#1}{}{}}
 %    \end{macrocode}
 %
 % The information in the identification section can be useful, so the
@@ -11658,10 +11603,7 @@ wouldn’t exist.
     \bbl@afterelse\bbl@localeinfo{}%
   \else
     \bbl@localeinfo
-      {\bbl@error{I've found no info for the current locale.\\%
-                  The corresponding ini file has not been loaded\\%
-                  Perhaps it doesn't exist}%
-                 {See the manual for details.}}%
+      {\bbl@error{no-ini-info}{}{}{}}%
       {#1}%
   \fi}
 % \@namedef{bbl@info@name.locale}{lcname}
@@ -11704,9 +11646,7 @@ wouldn’t exist.
       {\bbl@bcpdata@ii{#1#2#3#4#5#6}\languagename}}%   
   \def\bbl@bcpdata@ii#1#2{%
     \bbl@ifunset{bbl@info@#1.tag.bcp47}%
-      {\bbl@error{Unknown field '#1' in \string\BCPdata.\\%
-                  Perhaps you misspelled it.}%
-                 {See the manual for details.}}%
+      {\bbl@error{unknown-ini-field}{#1}{}{}}%
       {\bbl@ifunset{bbl@\csname bbl@info@#1.tag.bcp47\endcsname @#2}{}%
         {\bbl@cs{\csname bbl@info@#1.tag.bcp47\endcsname @#2}}}}
 \fi
@@ -11799,11 +11739,7 @@ wouldn’t exist.
 \def\bbl@getproperty@x#1#2#3{%
   \bbl@getproperty@s{#1}{#2}{#3}%
   \ifx#1\relax
-    \bbl@error
-      {Unknown key for locale '#2':\\%
-       #3\\%
-       \string#1 will be set to \relax}%
-      {Perhaps you misspelled it.}%
+    \bbl@error{unknown-locale-key}{#1}{#2}{#3}%
   \fi}
 \let\bbl@ini@loaded\@empty
 \newcommand\LocaleForEach{\bbl@foreach\bbl@ini@loaded}
@@ -11834,10 +11770,7 @@ wouldn’t exist.
       \expandafter\expandafter\expandafter\@gobble
     \fi
   \fi      
-  {\bbl@error   % The error is gobbled if everything went ok.
-     {Currently, #1 related features can be adjusted only\\%
-      in the main vertical list.}%
-     {Maybe things change in the future, but this is what it is.}}}
+  {\bbl@error{adjust-only-vertical}{#1}{}{}}}% Gobbled if everything went ok. 
 \@namedef{bbl@ADJ@bidi.mirroring@on}{%
   \bbl@adjust@lua{bidi}{mirroring_enabled=true}}
 \@namedef{bbl@ADJ@bidi.mirroring@off}{%
@@ -11873,10 +11806,7 @@ wouldn’t exist.
     #1%
     \expandafter\@gobble
   \fi
-  {\bbl@error   % The error is gobbled if everything went ok.
-     {Currently, layout related features can be adjusted only\\%
-      in vertical mode.}%
-     {Maybe things change in the future, but this is what it is.}}}
+  {\bbl@error{layout-only-vertical}{}{}{}}}% Gobbled if everything went ok.
 \@namedef{bbl@ADJ@layout.tabular@on}{%
   \ifnum\bbl@tabular@mode=\tw@
     \bbl@adjust@layout{\let\@tabular\bbl@NL@@tabular}%
@@ -12640,11 +12570,7 @@ wouldn’t exist.
 \ifodd\bbl@engine
 \else % TODO. Move to txtbabel
   \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200 % Any xe+lua bidi=
-    \bbl@error
-      {The bidi method 'basic' is available only in\\%
-       luatex. I'll continue with 'bidi=default', so\\%
-       expect wrong results}%
-      {See the manual for further details.}%
+    \bbl@error{bidi-only-lua}{}{}{}%
     \let\bbl@beforeforeign\leavevmode
     \AtEndOfPackage{%
       \EnableBabelHook{babel-bidi}%
@@ -12760,8 +12686,7 @@ wouldn’t exist.
     \ifhmode
       \ifnum\currentgrouplevel>\z@
         \ifnum\currentgrouplevel=\bbl@dirlevel
-          \bbl@error{Multiple bidi settings inside a group}%
-            {I'll insert a new group, but expect wrong results.}%
+          \bbl@error{multiple-bidi}{}{}{}%
           \bgroup\aftergroup#2\aftergroup\egroup
         \else
           \ifcase\currentgrouptype\or % 0 bottom
@@ -12895,14 +12820,7 @@ wouldn’t exist.
          If it’s the main language, try adding `provide=*'\\%
          to the babel package options}}%
       {\let\bbl@tempa\empty}%
-     \bbl@error{%
-       Unknown option '\CurrentOption'. Either you misspelled it\\%
-       or the language definition file \CurrentOption.ldf\\%
-       was not found%
-       \bbl@tempa}{%
-       Valid options are, among others: shorthands=, KeepShorthandsActive,\\%
-       activeacute, activegrave, noconfigs, safe=, main=, math=\\%
-       headfoot=, strings=, config=, hyphenmap=, or a language name.}}}
+     \bbl@error{unknown-package-option}{}{}{}}}
 %    \end{macrocode}
 %
 % Now, we set a few language options whose names are different from
@@ -12952,9 +12870,7 @@ wouldn’t exist.
     {\typeout{*************************************^^J%
              * Local config file \bbl@opt@config.cfg used^^J%
              *}}%
-    {\bbl@error{%
-       Local config file '\bbl@opt@config.cfg' not found}{%
-       Perhaps you misspelled it.}}%
+    {\bbl@error{config-not-found}{}{}{}}%
 \fi
 %    \end{macrocode}
 %
@@ -13110,10 +13026,7 @@ wouldn’t exist.
 \fi
 \bbl@exp{% 
   \\\AtBeginDocument{\\\bbl@usehooks@lang{/}{begindocument}{{}}}}%
-\def\AfterBabelLanguage{%
-  \bbl@error
-    {Too late for \string\AfterBabelLanguage}%
-    {Languages have been loaded, so I can do nothing}}
+\def\AfterBabelLanguage{\bbl@error{late-after-babel}{}{}{}}
 %    \end{macrocode}
 %      
 % In order to catch the case where the user didn’t specify a
@@ -13158,6 +13071,197 @@ wouldn’t exist.
 \input babel.def
 \let\bbl@onlyswitch\@undefined
 %</kernel>
+%
+% \section{Error messages}
+%
+% They are loaded when |\bll@error| is first called. To save space, the
+% main code just identifies them with a tag, and messages are stored in
+% a separate file. Since it can be loaded anywhere, you make sure some
+% catcodes have the right value, although those for |\|, |`|, |^^M|,
+% |%| and |=| are reset before loading the file.
+%
+%<*errors>
+\catcode`\{=1  \catcode`\}=2  \catcode`\#=6
+\catcode`\:=12 \catcode`\,=12 \catcode`\.=12 \catcode`\-=12
+\catcode`\'=12 \catcode`\(=12 \catcode`\)=12 
+\catcode`\@=11 \catcode`\^=7
+%
+\ifx\MessageBreak\@undefined
+  \gdef\bbl@error@i#1#2{%
+    \begingroup
+      \newlinechar=`\^^J
+      \def\\{^^J(babel) }%
+      \errhelp{#2}\errmessage{\\#1}%
+    \endgroup}
+\else
+  \gdef\bbl@error@i#1#2{%
+    \begingroup
+      \def\\{\MessageBreak}%
+      \PackageError{babel}{#1}{#2}%
+    \endgroup}
+\fi
+\def\bbl@errmessage#1#2#3{%
+  \expandafter\gdef\csname bbl@err@#1\endcsname##1##2##3{%
+    \bbl@error@i{#2}{#3}}} 
+% Implicit #2#3#4:
+\gdef\bbl@error#1{\csname bbl@err@#1\endcsname}
+%
+\bbl@errmessage{not-yet-available}
+    {Not yet available}%
+    {Find an armchair, sit down and wait}
+\bbl@errmessage{bad-package-option}%
+   {Bad option '#1=#2'. Either you have misspelled the\\%
+    key or there is a previous setting of '#1'. Valid\\%
+    keys are, among others, 'shorthands', 'main', 'bidi',\\%
+    'strings', 'config', 'headfoot', 'safe', 'math'.}%
+   {See the manual for further details.}
+\bbl@errmessage{base-on-the-fly}
+   {For a language to be defined on the fly 'base'\\%
+    is not enough, and the whole package must be\\%
+    loaded. Either delete the 'base' option or\\%
+    request the languages explicitly}%
+   {See the manual for further details.}
+\bbl@errmessage{undefined-language}
+   {You haven't defined the language '#1' yet.\\%
+    Perhaps you misspelled it or your installation\\%
+    is not complete}%
+   {Your command will be ignored, type <return> to proceed}
+\bbl@errmessage{shorthand-is-off}
+   {I can't declare a shorthand turned off (\string#2)}
+   {Sorry, but you can't use shorthands which have been\\%
+    turned off in the package options}
+\bbl@errmessage{not-a-shorthand}
+   {The character '\string #1' should be made a shorthand character;\\%
+    add the command \string\useshorthands\string{#1\string} to
+    the preamble.\\%
+    I will ignore your instruction}%
+   {You may proceed, but expect unexpected results}
+\bbl@errmessage{not-a-shorthand-b}
+   {I can't switch '\string#2' on or off--not a shorthand}%
+   {This character is not a shorthand. Maybe you made\\%
+    a typing mistake? I will ignore your instruction.}
+\bbl@errmessage{unknown-attribute}
+   {The attribute #2 is unknown for language #1.}%
+   {Your command will be ignored, type <return> to proceed}
+\bbl@errmessage{missing-group}
+   {Missing group for string \string#1}%
+   {You must assign strings to some category, typically\\%
+    captions or extras, but you set none}
+\bbl@errmessage{only-lua-xe}
+   {This macro is available only in LuaLaTeX and XeLaTeX.}%
+   {Consider switching to these engines.}
+\bbl@errmessage{only-lua}
+   {This macro is available only in LuaLaTeX.}%
+   {Consider switching to that engine.}
+\bbl@errmessage{unknown-provide-key}
+   {Unknown key '#1' in \string\babelprovide}%
+   {See the manual for valid keys}%
+\bbl@errmessage{unknown-mapfont}
+   {Option '\bbl@KVP@mapfont' unknown for\\%
+    mapfont. Use 'direction'.}%
+   {See the manual for details.}
+\bbl@errmessage{no-ini-file}
+   {There is no ini file for the requested language\\%
+    (#1: \languagename). Perhaps you misspelled it or your\\%
+    installation is not complete.}%
+   {Fix the name or reinstall babel.}
+\bbl@errmessage{digits-is-reserved}
+   {The counter name 'digits' is reserved for mapping\\%
+    decimal digits}%
+   {Use another name.}
+\bbl@errmessage{limit-two-digits}
+   {Currently two-digit years are restricted to the\\
+    range 0-9999.}%
+   {There is little you can do. Sorry.}
+\bbl@errmessage{alphabetic-too-large}
+ {Alphabetic numeral too large (#1)}%
+ {Currently this is the limit.}
+\bbl@errmessage{no-ini-info}
+   {I've found no info for the current locale.\\%
+    The corresponding ini file has not been loaded\\%
+    Perhaps it doesn't exist}%
+   {See the manual for details.}
+\bbl@errmessage{unknown-ini-field}
+   {Unknown field '#1' in \string\BCPdata.\\%
+    Perhaps you misspelled it.}%
+   {See the manual for details.}
+\bbl@errmessage{unknown-locale-key}
+   {Unknown key for locale '#2':\\%
+    #3\\%
+    \string#1 will be set to \relax}%
+   {Perhaps you misspelled it.}%
+\bbl@errmessage{adjust-only-vertical}
+   {Currently, #1 related features can be adjusted only\\%
+    in the main vertical list.}%
+   {Maybe things change in the future, but this is what it is.}
+\bbl@errmessage{layout-only-vertical}
+   {Currently, layout related features can be adjusted only\\%
+    in vertical mode.}%
+   {Maybe things change in the future, but this is what it is.}
+\bbl@errmessage{bidi-only-lua}
+   {The bidi method 'basic' is available only in\\%
+    luatex. I'll continue with 'bidi=default', so\\%
+    expect wrong results}%
+   {See the manual for further details.}
+\bbl@errmessage{multiple-bidi}
+   {Multiple bidi settings inside a group}%
+   {I'll insert a new group, but expect wrong results.}
+\bbl@errmessage{unknown-package-option}
+   {Unknown option '\CurrentOption'. Either you misspelled it\\%
+    or the language definition file \CurrentOption.ldf\\%
+    was not found%
+    \bbl@tempa}
+   {Valid options are, among others: shorthands=, KeepShorthandsActive,\\%
+    activeacute, activegrave, noconfigs, safe=, main=, math=\\%
+    headfoot=, strings=, config=, hyphenmap=, or a language name.}
+\bbl@errmessage{config-not-found}
+   {Local config file '\bbl@opt@config.cfg' not found}%
+   {Perhaps you misspelled it.}
+\bbl@errmessage{late-after-babel}
+   {Too late for \string\AfterBabelLanguage}%
+   {Languages have been loaded, so I can do nothing}
+\bbl@errmessage{double-hyphens-class}
+   {Double hyphens aren't allowed in \string\babelcharclass\\%
+    because it's potentially ambiguous}%
+   {See the manual for further info}
+\bbl@errmessage{unknown-interchar}
+   {'#1' for '\languagename' cannot be enabled.\\%
+    Maybe there is a typo.}%
+   {See the manual for further details.}
+\bbl@errmessage{unknown-interchar-b}
+   {'#1' for '\languagename' cannot be disabled.\\%
+    Maybe there is a typo.}%
+   {See the manual for further details.}
+\bbl@errmessage{charproperty-only-vertical}
+   {\string\babelcharproperty\space can be used only in\\%
+    vertical mode (preamble or between paragraphs)}%
+   {See the manual for further info}
+\bbl@errmessage{unknown-char-property}
+   {No property named '#2'. Allowed values are\\%
+    direction (bc), mirror (bmg), and linebreak (lb)}%
+   {See the manual for further info}
+\bbl@errmessage{bad-transform-option}
+   {Bad option '#1' in a transform.\\%
+    I’ll ignore it but expect more errors}%
+   {See the manual for further info.}
+\bbl@errmessage{font-conflict-transforms}
+   {Transforms cannot be re-assigned to different\\%
+    fonts. The conflict is in '\bbl@kv@label'.\\%
+    Apply the same fonts or use a different label}%
+   {See the manual for further details.}
+\bbl@errmessage{transform-not-available}
+   {'#1' for '\languagename' cannot be enabled.\\%
+    Maybe there is a typo or it’s a font-dependent transform}%
+   {See the manual for further details.}
+\bbl@errmessage{transform-not-available-b}
+   {'#1' for '\languagename' cannot be disabled.\\%
+    Maybe there is a typo or it’s a font-dependent transform}%
+   {See the manual for further details.}
+\bbl@errmessage{year-out-range}
+   {Year out of range.\\%
+    The allowed range is #1}%
+   {See the manual for further details.}
+%</errors>
 %<*patterns>
 %    \end{macrocode}
 %
@@ -13386,7 +13490,7 @@ wouldn’t exist.
   \def\bbl@usehooks##1##2{}% TODO. Temporary!!
   \def\setlocale{%
     \errhelp{Find an armchair, sit down and wait}%
-    \errmessage{Not yet available}}%
+    \errmessage{(babel) Not yet available}}%
   \let\uselocale\setlocale
   \let\locale\setlocale
   \let\selectlocale\setlocale
@@ -14023,9 +14127,7 @@ wouldn’t exist.
   \else\ifnum\count@=\z@
     \bbl@charclass{-}%
   \else
-    \bbl@error{Double hyphens aren't allowed in \string\babelcharclass\\%
-               because it's potentially ambiguous}%
-              {See the manual for further info}%
+    \bbl@error{double-hyphens-class}{}{}{}%
   \fi\fi}
 %    \end{macrocode}
 %
@@ -14059,17 +14161,11 @@ wouldn’t exist.
               @#3@#4@#2 \@empty\endcsname}}}}
 \DeclareRobustCommand\enablelocaleinterchar[1]{%
   \bbl@ifunset{bbl@ic@#1@\languagename}%
-    {\bbl@error
-       {'#1' for '\languagename' cannot be enabled.\\%
-        Maybe there is a typo.}%
-       {See the manual for further details.}}% 
+    {\bbl@error{unknown-interchar}{#1}{}{}}% 
     {\bbl@csarg\let{ic@#1@\languagename}\@firstofone}}
 \DeclareRobustCommand\disablelocaleinterchar[1]{%
   \bbl@ifunset{bbl@ic@#1@\languagename}%
-    {\bbl@error
-       {'#1' for '\languagename' cannot be disabled.\\%
-        Maybe there is a typo.}%
-       {See the manual for further details.}}% 
+    {\bbl@error{unknown-interchar-b}{#1}{}{}}% 
     {\bbl@csarg\let{ic@#1@\languagename}\@gobble}}
 %</xetex>
 %    \end{macrocode}
@@ -15329,17 +15425,13 @@ end
   \count@=#1\relax
   \ifvmode
     \expandafter\bbl@chprop
-  \else
-    \bbl@error{\string\babelcharproperty\space can be used only in\\%
-               vertical mode (preamble or between paragraphs)}%
-              {See the manual for further info}%
+  \else 
+    \bbl@error{charproperty-only-vertical}{}{}{}%
   \fi}
 \newcommand\bbl@chprop[3][\the\count@]{%
   \@tempcnta=#1\relax
-  \bbl@ifunset{bbl@chprop@#2}%
-    {\bbl@error{No property named '#2'. Allowed values are\\%
-                direction (bc), mirror (bmg), and linebreak (lb)}%
-               {See the manual for further info}}%
+  \bbl@ifunset{bbl@chprop@#2}% {unknown-char-property}
+    {\bbl@error{unknown-char-property}{}{#2}{}}%
     {}%
   \loop
     \bbl@cs{chprop@#2}{#3}%
@@ -15443,10 +15535,7 @@ end
         \in@{,####1,}{,nil,step,data,remove,insert,string,no,pre,&%
             no,post,penalty,kashida,space,spacefactor,}&%
         \ifin@\else
-          \bbl@error
-           {Bad option '####1' in a transform.\\&%
-            I’ll ignore it but expect more errors}&%
-           {See the manual for further info.}&%
+          \bbl@error{bad-transform-option}{####1}{}{}&%
         \fi}}&% 
     \let\bbl@kv@attribute\relax
     \let\bbl@kv@label\relax
@@ -15463,11 +15552,7 @@ end
           \bbl@ifsamestring{#3,\bbl@kv@label}{##1,##2}&%
             {\bbl@ifsamestring{\bbl@kv@fonts}{##3}&%
                {\count@\@ne}&%
-               {\bbl@error
-                 {Transforms cannot be re-assigned to different\\&%
-                  fonts. The conflict is in '\bbl@kv@label'.\\&%
-                  Apply the same fonts or use a different label}&%
-                 {See the manual for further details.}}}&%
+               {\bbl@error{font-conflict-transforms}{}{}{}}}&%
             {}}&%
         \bbl@transfont@list
         \ifnum\count@=\z@
@@ -15556,17 +15641,11 @@ end
       {}}}
 \DeclareRobustCommand\enablelocaletransform[1]{%
   \bbl@ifunset{bbl@ATR@#1@\languagename @}%
-    {\bbl@error
-       {'#1' for '\languagename' cannot be enabled.\\%
-        Maybe there is a typo or it’s a font-dependent transform}%
-       {See the manual for further details.}}% 
+    {\bbl@error{transform-not-available}{#1}{}{}}%
     {\bbl@csarg\setattribute{ATR@#1@\languagename @}\@ne}}
 \DeclareRobustCommand\disablelocaletransform[1]{%
   \bbl@ifunset{bbl@ATR@#1@\languagename @}%
-    {\bbl@error
-       {'#1' for '\languagename' cannot be disabled.\\%
-        Maybe there is a typo or it’s a font-dependent transform}%
-       {See the manual for further details.}}% 
+    {\bbl@error{transform-not-available-b}{#1}{}{}}% 
     {\bbl@csarg\unsetattribute{ATR@#1@\languagename @}}}
 \def\bbl@activateposthyphen{%
   \let\bbl@activateposthyphen\relax
@@ -24126,7 +24205,7 @@ Babel.cjk_breaks = {
   \ifnum#2>2014 \ifnum#2<2038
     \bbl@afterfi\expandafter\@gobble
   \fi\fi
-    {\bbl@error{Year~out~of~range}{The~allowed~range~is~2014-2038}}%
+    {\bbl@error{year-out-range}{2014-2038}{}{}}%
   \edef\bbl@tempd{\fp_eval:n{ % (Julian) day
     \bbl@cs@jd{#2}{#3}{#4} + 0.5 - 2400000 #1}}%
   \count@\@ne
@@ -24437,7 +24516,7 @@ Babel.cjk_breaks = {
   \ifnum\bbl@tempa>2012 \ifnum\bbl@tempa<2051
     \bbl@afterfi\expandafter\@gobble
   \fi\fi
-    {\bbl@error{Year~out~of~range}{The~allowed~range~is~2013-2050}}%
+    {\bbl@error{year-out-range}{2013-2050}{}{}}%
   \bbl@xin@{\bbl@tempa}{\bbl@cs@firstjal@xx}%
   \ifin@\def\bbl@tempe{20}\else\def\bbl@tempe{21}\fi
   \edef\bbl@tempc{\fp_eval:n{\bbl@cs@jd{\bbl@tempa}{#2}{#3}+.5}}% current
@@ -24736,12 +24815,13 @@ Babel.cjk_breaks = {
   \ifx#2\@empty\else\expandafter\zap@space\fi
   #2}
 \let\bbl@trace\@gobble
-\def\bbl@error#1#2{%
+\def\bbl@error#1{% Implicit #2#3#4
   \begingroup
-    \newlinechar=`\^^J
-    \def\\{^^J(babel) }%
-    \errhelp{#2}\errmessage{\\#1}%
-  \endgroup}
+    \catcode`\\=0   \catcode`\==12 \catcode`\`=12
+    \catcode`\^^M=5 \catcode`\%=14
+    \input errbabel.def
+  \endgroup
+  \bbl@error{#1}}
 \def\bbl@warning#1{%
   \begingroup
     \newlinechar=`\^^J
