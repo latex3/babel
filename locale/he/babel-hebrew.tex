@@ -10,7 +10,6 @@
 \BabelBeforeIni{he}{%
 }
 
-\ifcase\bbl@engine\else
 % Contributed by Udi Fogiel, with some changes
 \def\BabelHebrewNumeralMarkerSingle{׳}% Number is a single letter
 \def\BabelHebrewNumeralMarkerFinal{״}%  Before final letter
@@ -129,7 +128,5 @@
       \or\ifnum#2>0 \ifnum#1=9 ט\BabelHebrewNumeralMarkerSingle
         \else\BabelHebrewNumeralMarkerFinal ט\fi\else ט\fi
   \fi\fi\fi}
-
-\fi
 
 \endinput
