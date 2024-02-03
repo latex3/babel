@@ -10,12 +10,11 @@
 \BabelBeforeIni{he}{%
 }
 
-\ifcase\bbl@engine\else
 % Contributed by Udi Fogiel, with some changes
 \def\BabelHebrewNumeralMarkerSingle{׳}% Number is a single letter
 \def\BabelHebrewNumeralMarkerFinal{״}%  Before final letter
 
-\@namedef{bbl@cntr@letters.long@\CurrentOption}#1%
+\@namedef{bbl@cntr@letters.plain@\CurrentOption}#1%
   {\expandafter\@hebrew@@numeral\expandafter{\the\numexpr#1}0}
 
 \@namedef{bbl@cntr@letters.gershayim@\CurrentOption}#1%
@@ -53,7 +52,7 @@
   
 \def\hebrew@alph@zero{}
 \def\hebrew@num@nomil#1#2{%
-  \ifcase\hebrew@num@trunc{#1}{100}%    print nothing if no hundreds
+  \ifcase\hebrew@num@trunc{#1}{100} % terminating space, do not remove! print nothing if no hundreds
     \or ק\ifnum#2>0 \ifnum#1=100 \BabelHebrewNumeralMarkerSingle\fi\fi
     \or ר\ifnum#2>0 \ifnum#1=200 \BabelHebrewNumeralMarkerSingle\fi\fi
     \or ש\ifnum#2>0 \ifnum#1=300 \BabelHebrewNumeralMarkerSingle\fi\fi
@@ -108,7 +107,7 @@
         \if #22ץ\else צ\fi\ifnum#2>0 \ifnum#1=90 \BabelHebrewNumeralMarkerSingle \fi\fi
       \fi
   \fi
-  \ifcase\numexpr #1-10*\hebrew@num@trunc{#1}{10}%
+  \ifcase\numexpr #1-10*\hebrew@num@trunc{#1}{10} % terminating space, do not remove!
       \hebrew@alph@zero %  empty but can be defined if desired
       \or\ifnum#2>0 \ifnum#1=1 א\BabelHebrewNumeralMarkerSingle
         \else\BabelHebrewNumeralMarkerFinal א\fi\else א\fi
@@ -129,7 +128,5 @@
       \or\ifnum#2>0 \ifnum#1=9 ט\BabelHebrewNumeralMarkerSingle
         \else\BabelHebrewNumeralMarkerFinal ט\fi\else ט\fi
   \fi\fi\fi}
-
-\fi
 
 \endinput
