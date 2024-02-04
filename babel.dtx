@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/01/12 v24.1.37776 The Babel package]
+\ProvidesFile{babel.dtx}[2024/02/04 v24.1.40037 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1164,7 +1164,8 @@ check them, as they may change:\footnote{Thanks to Enrico Gregorio}
 \item[Estonian] |" ~|
 \item[French] (all varieties) |: ; ? !|
 \item[Galician] |" . ' ~ < >|
-\item[Greek] |~|
+\item[Greek] (ancient, polutoniko, only 8-bit \TeX) |~|, (optional, see
+the manual for Greek) |;|
 \item[Hungarian] |`|
 \item[Kurmanji] |^|
 \item[Latin] |" ^ =|
@@ -1528,849 +1529,6 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
   redefined easily.
 \end{note}
 
-Here is the list (u means Unicode captions, and l means LICR
-captions):
-
-\begingroup
-\bigskip\hrule\nobreak
-
-\makeatletter
-\def\tag#1{\par\@hangfrom{\makebox[7em][l]{#1}}\ignorespaces}
-\def\hascapu{\textsuperscript{u}}
-\def\hascapl{\textsuperscript{l}}
-
-\begin{multicols}{2}
-\tag{aa} Afar
-\tag{ab} Abkhazian
-\tag{af} Afrikaans\hascapu\hascapl
-\tag{agq} Aghem
-\tag{ak} Akan
-\tag{am} Amharic\hascapu\hascapl
-\tag{ar-DZ} Arabic\hascapu
-\tag{ar-EG} Arabic\hascapu
-\tag{ar-IQ} Arabic\hascapu
-\tag{ar-JO} Arabic\hascapu
-\tag{ar-LB} Arabic\hascapu
-\tag{ar-MA} Arabic\hascapu
-\tag{ar-PS} Arabic\hascapu
-\tag{ar-SA} Arabic\hascapu
-\tag{ar-SY} Arabic\hascapu
-\tag{ar-TN} Arabic\hascapu
-\tag{ar} Arabic\hascapu
-\tag{as} Assamese\hascapu
-\tag{asa} Asu
-\tag{ast} Asturian\hascapu\hascapl
-\tag{az-Cyrl} Azerbaijani
-\tag{az-Latn} Azerbaijani
-\tag{az} Azerbaijani\hascapu\hascapl
-\tag{bal} Baluchi
-\tag{bas} Basaa
-\tag{be} Belarusian\hascapu\hascapl
-\tag{bem} Bemba
-\tag{bez} Bena
-\tag{bg} Bulgarian\hascapu\hascapl
-\tag{bgc} Haryanvi
-\tag{bho} Bhojpuri
-\tag{bm} Bambara
-\tag{bn} Bangla\hascapu
-\tag{bo} Tibetan\hascapu
-\tag{br} Breton\hascapu\hascapl
-\tag{brx} Bodo
-\tag{bs-Cyrl} Bosnian
-\tag{bs-Latn} Bosnian\hascapu\hascapl
-\tag{bs} Bosnian\hascapu\hascapl
-\tag{bua} Buriat\hascapu\hascapl
-\tag{byn} Blin
-\tag{ca} Catalan\hascapu\hascapl
-\tag{cch} Atsam
-\tag{ccp} Chakma
-\tag{ce} Chechen
-\tag{cgg} Chiga
-\tag{chr} Cherokee
-\tag{ckb-Arab} Central Kurdish\hascapu
-\tag{ckb-Latn} Central Kurdish\hascapu
-\tag{ckb} Central Kurdish\hascapu
-\tag{co} Corsican
-\tag{cop} Coptic
-\tag{cs} Czech\hascapu\hascapl
-\tag{cu-Cyrs} Church Slavic\hascapu
-\tag{cu-Glag} Church Slavic
-\tag{cu} Church Slavic\hascapu
-\tag{cy} Welsh\hascapu\hascapl
-\tag{da} Danish\hascapu\hascapl
-\tag{dav} Taita
-\tag{de-1901} German\hascapu\hascapl
-\tag{de-1996} German\hascapu\hascapl
-\tag{de-AT-1901} Austrian German\hascapu\hascapl
-\tag{de-AT-1996} Austrian German\hascapu\hascapl
-\tag{de-AT} Austrian German\hascapu\hascapl
-\tag{de-CH-1901} Swiss High German\hascapu\hascapl
-\tag{de-CH-1996} Swiss High German\hascapu\hascapl
-\tag{de-CH} Swiss High German\hascapu\hascapl
-\tag{de} German\hascapu\hascapl
-\tag{dje} Zarma
-\tag{dsb} Lower Sorbian\hascapu\hascapl
-\tag{dua} Duala
-\tag{dyo} Jola-Fonyi
-\tag{dz} Dzongkha
-\tag{ebu} Embu
-\tag{ee} Ewe
-\tag{el-polyton} Polytonic Greek\hascapu\hascapl
-\tag{el} Greek\hascapu\hascapl
-\tag{en-AU} Australian English\hascapu\hascapl
-\tag{en-CA} Canadian English\hascapu\hascapl
-\tag{en-GB} British English\hascapu\hascapl
-\tag{en-NZ} English\hascapu\hascapl
-\tag{en-US} American English\hascapu\hascapl
-\tag{en} English\hascapu\hascapl
-\tag{eo} Esperanto\hascapu\hascapl
-\tag{es-MX} Mexican Spanish\hascapu\hascapl
-\tag{es} Spanish\hascapu\hascapl
-\tag{et} Estonian\hascapu\hascapl
-\tag{eu} Basque\hascapu\hascapl\hascapl
-\tag{ewo} Ewondo
-\tag{fa} Persian\hascapu
-\tag{ff} Fulah
-\tag{fi} Finnish\hascapu\hascapl
-\tag{fil} Filipino
-\tag{fo} Faroese
-\tag{fr-BE} French\hascapu\hascapl
-\tag{fr-CA} Canadian French\hascapu\hascapl
-\tag{fr-CH} Swiss French\hascapu\hascapl
-\tag{fr-LU} French\hascapu\hascapl
-\tag{fr-x-acadian} Acadian\hascapu\hascapl
-\tag{fr} French\hascapu\hascapl
-\tag{fur} Friulian\hascapu\hascapl
-\tag{fy} Western Frisian
-\tag{ga} Irish\hascapu\hascapl
-\tag{gaa} Ga
-\tag{gd} Scottish Gaelic\hascapu\hascapl
-\tag{gez} Geez
-\tag{gl} Galician\hascapu\hascapl
-\tag{gn} Guarani
-\tag{grc} Ancient Greek\hascapu\hascapl
-\tag{gsw} Swiss German
-\tag{gu} Gujarati
-\tag{guz} Gusii
-\tag{gv} Manx
-\tag{ha-GH} Hausa
-\tag{ha-NE} Hausa
-\tag{ha} Hausa\hascapu\hascapl
-\tag{haw} Hawaiian
-\tag{he} Hebrew\hascapu\hascapl
-\tag{hi} Hindi\hascapu
-\tag{hr} Croatian\hascapu\hascapl
-\tag{hsb} Upper Sorbian\hascapu\hascapl
-\tag{hu} Hungarian\hascapu\hascapl\hascapl\hascapl
-\tag{hy} Armenian\hascapu\hascapl
-\tag{ia} Interlingua\hascapu\hascapl
-\tag{id} Indonesian\hascapu\hascapl
-\tag{ig} Igbo
-\tag{ii} Sichuan Yi
-\tag{is} Icelandic\hascapu\hascapl
-\tag{it} Italian\hascapu\hascapl
-\tag{iu} Inuktitut
-\tag{ja} Japanese\hascapu
-\tag{jgo} Ngomba
-\tag{jmc} Machame
-\tag{ka} Georgian\hascapu
-\tag{kab} Kabyle
-\tag{kaj} Jju
-\tag{kam} Kamba
-\tag{kcg} Tyap
-\tag{kde} Makonde
-\tag{kea} Kabuverdianu
-\tag{kgp} Kaingang
-\tag{khq} Koyra Chiini
-\tag{ki} Kikuyu
-\tag{kk} Kazakh
-\tag{kkj} Kako
-\tag{kl} Kalaallisut
-\tag{kln} Kalenjin
-\tag{km} Khmer\hascapu
-\tag{kmr-Arab} Northern Kurdish\hascapu
-\tag{kmr-Latn} Northern Kurdish\hascapu\hascapl
-\tag{kmr} Northern Kurdish\hascapu\hascapl
-\tag{kn} Kannada\hascapu
-\tag{ko-Hani} Korean\hascapu
-\tag{ko} Korean\hascapu
-\tag{kok} Konkani
-\tag{ks} Kashmiri
-\tag{ksb} Shambala
-\tag{ksf} Bafia
-\tag{ksh} Colognian
-\tag{kw} Cornish
-\tag{ky} Kyrgyz
-\tag{la-x-classic} Classical Latin\hascapu\hascapl
-\tag{la-x-ecclesia} Ecclesiastical Latin\hascapu\hascapl
-\tag{la-x-medieval} Medieval Latin\hascapu\hascapl
-\tag{la} Latin\hascapu\hascapl
-\tag{lag} Langi
-\tag{lb} Luxembourgish\hascapu\hascapl
-\tag{lg} Ganda
-\tag{lij} Ligurian
-\tag{lkt} Lakota
-\tag{ln} Lingala
-\tag{lo} Lao\hascapu
-\tag{lrc} Northern Luri
-\tag{lt} Lithuanian\hascapu\hascapl\hascapl\hascapl
-\tag{lu} Luba-Katanga
-\tag{luo} Luo
-\tag{luy} Luyia
-\tag{lv} Latvian\hascapu\hascapl
-\tag{mas} Masai
-\tag{mer} Meru
-\tag{mfe} Morisyen
-\tag{mg} Malagasy
-\tag{mgh} Makhuwa-Meetto
-\tag{mgo} Metaʼ
-\tag{mk} Macedonian\hascapu\hascapl
-\tag{ml} Malayalam\hascapu
-\tag{mn} Mongolian
-\tag{mr} Marathi\hascapu
-\tag{ms-BN} Malay
-\tag{ms-SG} Malay
-\tag{ms} Malay\hascapu\hascapl
-\tag{mt} Maltese
-\tag{mua} Mundang
-\tag{mus} Muscogee
-\tag{my} Burmese
-\tag{myv} Erzya
-\tag{mzn} Mazanderani
-\tag{naq} Nama
-\tag{nb} Norwegian Bokmål\hascapu\hascapl
-\tag{nd} North Ndebele
-\tag{nds} Low German
-\tag{ne} Nepali
-\tag{nl} Dutch\hascapu\hascapl
-\tag{nmg} Kwasio
-\tag{nn} Norwegian Nynorsk\hascapu\hascapl
-\tag{nnh} Ngiemboon
-\tag{no} Norwegian\hascapu\hascapl
-\tag{nqo} N’Ko
-\tag{nr} South Ndebele
-\tag{nso} Northern Sotho
-\tag{nus} Nuer
-\tag{ny} Nyanja
-\tag{nyn} Nyankole
-\tag{oc} Occitan\hascapu\hascapl
-\tag{om} Oromo
-\tag{or} Odia
-\tag{os} Ossetic
-\tag{pa-Arab} Punjabi
-\tag{pa-Guru} Punjabi\hascapu
-\tag{pa} Punjabi\hascapu
-\tag{pap} Papiamento
-\tag{pl} Polish\hascapu\hascapl
-\tag{pms} Piedmontese\hascapu\hascapl
-\tag{prg} Prussian
-\tag{ps} Pashto
-\tag{pt-BR} Brazilian Portuguese\hascapu\hascapl
-\tag{pt-PT} European Portuguese\hascapu\hascapl
-\tag{pt} Portuguese\hascapu\hascapl
-\tag{qu} Quechua
-\tag{raj} Rajasthani
-\tag{rm} Romansh\hascapu\hascapl
-\tag{rn} Rundi
-\tag{ro-MD} Moldavian\hascapu\hascapl
-\tag{ro} Romanian\hascapu\hascapl
-\tag{rof} Rombo
-\tag{ru} Russian\hascapu\hascapl
-\tag{rw} Kinyarwanda
-\tag{rwk} Rwa
-\tag{sa-Beng} Sanskrit
-\tag{sa-Deva} Sanskrit
-\tag{sa-Gujr} Sanskrit
-\tag{sa-Knda} Sanskrit
-\tag{sa-Mlym} Sanskrit
-\tag{sa-Telu} Sanskrit
-\tag{sa} Sanskrit
-\tag{sah} Sakha
-\tag{saq} Samburu
-\tag{sbp} Sangu
-\tag{sc} Sardinian
-\tag{scn} Sicilian
-\tag{se} Northern Sami\hascapu\hascapl
-\tag{seh} Sena
-\tag{ses} Koyraboro Senni
-\tag{sg} Sango
-\tag{shi-Latn} Tachelhit
-\tag{shi-Tfng} Tachelhit
-\tag{shi} Tachelhit
-\tag{si} Sinhala\hascapu
-\tag{sk} Slovak\hascapu\hascapl
-\tag{sl} Slovenian\hascapu\hascapl
-\tag{smn} Inari Sami
-\tag{sn} Shona
-\tag{so} Somali
-\tag{sq} Albanian\hascapu\hascapl
-\tag{sr-Cyrl-BA} Serbian\hascapu\hascapl
-\tag{sr-Cyrl-ME} Serbian\hascapu\hascapl
-\tag{sr-Cyrl-XK} Serbian\hascapu\hascapl
-\tag{sr-Cyrl} Serbian\hascapu\hascapl
-\tag{sr-ijekavsk} Serbian\hascapu\hascapl
-\tag{sr-Latn-BA} Serbian\hascapu\hascapl
-\tag{sr-Latn-ijekavsk} Serbian\hascapu\hascapl
-\tag{sr-Latn-ME} Serbian\hascapu\hascapl
-\tag{sr-Latn-XK} Serbian\hascapu\hascapl
-\tag{sr-Latn} Serbian\hascapu\hascapl
-\tag{sr} Serbian\hascapu\hascapl
-\tag{ss} Swati
-\tag{ssy} Saho
-\tag{st} Southern Sotho
-\tag{sv} Swedish\hascapu\hascapl
-\tag{sw} Swahili
-\tag{syr} Syriac
-\tag{szl} Silesian
-\tag{ta} Tamil\hascapu
-\tag{te} Telugu\hascapu
-\tag{teo} Teso
-\tag{th} Thai\hascapu\hascapl
-\tag{ti} Tigrinya
-\tag{tig} Tigre
-\tag{tk} Turkmen\hascapu\hascapl
-\tag{tn} Tswana
-\tag{to} Tongan
-\tag{tpi} Tok Pisin
-\tag{tr} Turkish\hascapu\hascapl
-\tag{trv} Taroko
-\tag{ts} Tsonga
-\tag{twq} Tasawaq
-\tag{tzm} Central Atlas Tamazight
-\tag{ug} Uyghur\hascapu
-\tag{uk} Ukrainian\hascapu\hascapl
-\tag{ur} Urdu\hascapu
-\tag{uz-Arab} Uzbek
-\tag{uz-Cyrl} Uzbek
-\tag{uz-Latn} Uzbek
-\tag{uz} Uzbek
-\tag{vai-Latn} Vai
-\tag{vai-Vaii} Vai
-\tag{vai} Vai
-\tag{ve} Venda
-\tag{vi} Vietnamese\hascapu\hascapl
-\tag{vo} Volapük
-\tag{vun} Vunjo
-\tag{wae} Walser
-\tag{wal} Wolaytta
-\tag{xog} Soga
-\tag{yav} Yangben
-\tag{yi} Yiddish
-\tag{yo} Yoruba
-\tag{yrl} Nheengatu
-\tag{yue} Cantonese
-\tag{zgh} Standard Moroccan Tamazight
-\tag{zh-Hans-HK} Chinese
-\tag{zh-Hans-MO} Chinese
-\tag{zh-Hans-SG} Chinese
-\tag{zh-Hans} Chinese\hascapu
-\tag{zh-Hant-HK} Chinese
-\tag{zh-Hant-MO} Chinese
-\tag{zh-Hant} Chinese\hascapu
-\tag{zh} Chinese\hascapu
-\tag{zu} Zulu
-\end{multicols}
-\endgroup
-\hrule
-\bigskip
-
-In some contexts (currently |\babelfont|) an \texttt{ini} file may be
-loaded by its name. Here is the list of the names currently supported.
-With these languages, |\babelfont| loads (if not done before) the
-language and script names (even if the language is defined as a package
-option with an \textsf{ldf} file). These are also the names recognized 
-by |\babelprovide| with a valueless |import|.
-
-\begingroup
-\bigskip\hrule\nobreak
-\small
-\let\\\par
-
-\begin{multicols}{3}
-﻿abkhazian\\
-acadian\\
-afar\\
-afrikaans\\
-aghem\\
-akan\\
-albanian\\
-american\\
-americanenglish\\
-amharic\\
-ancientgreek\\
-arabic\\
-arabic-algeria\\
-arabic-dz\\
-arabic-eg\\
-arabic-egypt\\
-arabic-iq\\
-arabic-iraq\\
-arabic-jo\\
-arabic-jordan\\
-arabic-lb\\
-arabic-lebanon\\
-arabic-ma\\
-arabic-morocco\\
-arabic-palestinianterritories\\
-arabic-ps\\
-arabic-sa\\
-arabic-saudiarabia\\
-arabic-sy\\
-arabic-syria\\
-arabic-tn\\
-arabic-tunisia\\
-armenian\\
-assamese\\
-asturian\\
-asu\\
-atsam\\
-australian\\
-australianenglish\\
-austrian\\
-azerbaijani\\
-azerbaijani-cyrillic\\
-azerbaijani-cyrl\\
-azerbaijani-latin\\
-azerbaijani-latn\\
-bafia\\
-baluchi\\
-bambara\\
-bangla\\
-basaa\\
-basque\\
-belarusian\\
-bemba\\
-bena\\
-bengali\\
-bhojpuri\\
-blin\\
-bodo\\
-bosnian\\
-bosnian-cyrillic\\
-bosnian-cyrl\\
-bosnian-latin\\
-bosnian-latn\\
-brazilian\\
-brazilianportuguese\\
-breton\\
-british\\
-britishenglish\\
-bulgarian\\
-buriat\\
-burmese\\
-canadian\\
-canadianenglish\\
-cantonese\\
-catalan\\
-centralatlastamazight\\
-centralkurdish\\
-centralkurdish-latin\\
-centralkurdish-latn\\
-chakma\\
-chechen\\
-cherokee\\
-chiga\\
-chinese\\
-chinese-hans\\
-chinese-hans-hk\\
-chinese-hans-mo\\
-chinese-hans-sg\\
-chinese-hant\\
-chinese-hant-hk\\
-chinese-hant-mo\\
-chinese-simplified\\
-chinese-simplified-hongkongsarchina\\
-chinese-simplified-macausarchina\\
-chinese-simplified-singapore\\
-chinese-traditional\\
-chinese-traditional-hongkongsarchina\\
-chinese-traditional-macausarchina\\
-churchslavic\\
-churchslavic-cyrs\\
-churchslavic-glag\\
-churchslavic-glagolitic\\
-churchslavic-oldcyrillic\footnote{The name in the CLDR
-is Old Church Slavonic Cyrillic, but it has been shortened
-for practical reasons.}\\
-churchsslavic-glag\\
-churchslavonic\\
-classicallatin\\
-colognian\\
-coptic\\
-cornish\\
-corsican\\
-croatian\\
-czech\\
-danish\\
-duala\\
-dutch\\
-dzongkha\\
-ecclesiasticallatin\\
-embu\\
-english\\
-english-au\\
-english-australia\\
-english-ca\\
-english-canada\\
-english-gb\\
-english-newzealand\\
-english-nz\\
-english-unitedkingdom\\
-english-unitedstates\\
-english-us\\
-erzya\\
-esperanto\\
-estonian\\
-europeanportuguese\\
-ewe\\
-ewondo\\
-faroese\\
-farsi\\
-filipino\\
-finnish\\
-french\\
-french-be\\
-french-belgium\\
-french-ca\\
-french-canada\\
-french-canadianfrench\\
-french-ch\\
-french-lu\\
-french-luxembourg\\
-french-swissfrench\\
-french-switzerland\\
-friulian\\
-fulah\\
-ga\\
-galician\\
-ganda\\
-geez\\
-georgian\\
-german\\
-german-at\\
-german-austria\\
-german-austria-traditional\\
-german-ch\\
-german-switzerland\\
-german-switzerland-traditional\\
-german-traditional\\
-greek\\
-guarani\\
-gujarati\\
-gusii\\
-haryanvi\\
-hausa\\
-hausa-gh\\
-hausa-ghana\\
-hausa-ne\\
-hausa-niger\\
-hawaiian\\
-hebrew\\
-hindi\\
-hungarian\\
-icelandic\\
-igbo\\
-inarisami\\
-indonesian\\
-interlingua\\
-inuktitut\\
-irish\\
-italian\\
-japanese\\
-javanese\\
-jju\\
-jolafonyi\\
-kabuverdianu\\
-kabyle\\
-kaingang\\
-kako\\
-kalaallisut\\
-kalenjin\\
-kamba\\
-kannada\\
-kashmiri\\
-kazakh\\
-khmer\\
-kikuyu\\
-kinyarwanda\\
-konkani\\
-korean\\
-korean-han\\
-korean-hani\\
-koyraborosenni\\
-koyrachiini\\
-kurmanji\\
-kwasio\\
-kyrgyz\\
-lakota\\
-langi\\
-lao\\
-latin\\
-latvian\\
-ligurian\\
-lingala\\
-lithuanian\\
-lowersorbian\\
-lowgerman\\
-lubakatanga\\
-luo\\
-luxembourgish\\
-luyia\\
-macedonian\\
-machame\\
-maithiri\\
-makhuwameetto\\
-makonde\\
-malagasy\\
-malay\\
-malay-bn\\
-malay-brunei\\
-malay-sg\\
-malay-singapore\\
-malayalam\\
-maltese\\
-manx\\
-marathi\\
-masai\\
-mazanderani\\
-medievallatin\\
-meru\\
-meta\\
-mexican\\
-mexicanspanish\\
-moldavian\\
-mongolian\\
-monotonicgreek\\
-morisyen\\
-mundang\\
-muscogee\\
-nama\\
-naustrian\\
-nepali\\
-newzealand\\
-ngerman\\
-ngiemboon\\
-ngomba\\
-nheengatu\\
-nigerianpidgin\\
-nko\\
-norsk\\
-northernkurdish\\
-northernkurdish-arab\\
-northernkurdish-arabic\\
-northernluri\\
-northernsami\\
-northernsotho\\
-northndebele\\
-norwegian\\
-norwegianbokmal\\
-norwegiannynorsk\\
-nswissgerman\\
-nuer\\
-nyanja\\
-nyankole\\
-nynorsk\\
-occitan\\
-odia\\
-oriya\\
-oromo\\
-ossetic\\
-papiamento\\
-pashto\\
-persian\\
-piedmontese\\
-polish\\
-polytonicgreek\\
-portuguese\\
-portuguese-br\\
-portuguese-brazil\\
-portuguese-portugal\\
-portuguese-pt\\
-prussian\\
-punjabi\\
-punjabi-arab\\
-punjabi-arabic\\
-punjabi-gurmukhi\\
-punjabi-guru\\
-quechua\\
-rajasthani\\
-romanian\\
-romanian-md\\
-romanian-moldova\\
-romansh\\
-rombo\\
-rundi\\
-russian\\
-rwa\\
-saho\\
-sakha\\
-samburu\\
-sango\\
-sangu\\
-sanskrit\\
-sanskrit-bangla\\
-sanskrit-beng\\
-sanskrit-bengali\\
-sanskrit-deva\\
-sanskrit-devanagari\\
-sanskrit-gujarati\\
-sanskrit-gujr\\
-sanskrit-kannada\\
-sanskrit-knda\\
-sanskrit-malayalam\\
-sanskrit-mlym\\
-sanskrit-telu\\
-sanskrit-telugu\\
-sardinian\\
-scottishgaelic\\
-sena\\
-serbian\\
-serbian-cyrillic\\
-serbian-cyrillic-bosniaherzegovina\\
-serbian-cyrillic-kosovo\\
-serbian-cyrillic-montenegro\\
-serbian-cyrl\\
-serbian-cyrl-ba\\
-serbian-cyrl-me\\
-serbian-cyrl-xk\\
-serbian-ijekavsk\\
-serbian-latin\\
-serbian-latin-bosniaherzegovina\\
-serbian-latin-kosovo\\
-serbian-latin-montenegro\\
-serbian-latn\\
-serbian-latn-ba\\
-serbian-latn-ijekavsk\\
-serbian-latn-me\\
-serbian-latn-xk\\
-serbianc\\
-shambala\\
-shona\\
-sichuanyi\\
-sicilian\\
-silesian\\
-sinhala\\
-slovak\\
-slovene\\
-slovenian\\
-soga\\
-somali\\
-sorani\\
-southernsotho\\
-southndebele\\
-spanish\\
-spanish-mexico\\
-spanish-mx\\
-standardmoroccantamazight\\
-swahili\\
-swati\\
-swedish\\
-swissgerman\\
-swisshighgerman\\
-syriac\\
-tachelhit\\
-tachelhit-latin\\
-tachelhit-latn\\
-tachelhit-tfng\\
-tachelhit-tifinagh\\
-taita\\
-tamil\\
-taroko\\
-tasawaq\\
-telugu\\
-teso\\
-thai\\
-tibetan\\
-tigre\\
-tigrinya\\
-tokpisin\\
-tongan\\
-tsonga\\
-tswana\\
-turkish\\
-turkmen\\
-tyap\\
-ukenglish\\
-ukrainian\\
-uppersorbian\\
-urdu\\
-usenglish\\
-uyghur\\
-uzbek\\
-uzbek-arab\\
-uzbek-arabic\\
-uzbek-cyrillic\\
-uzbek-cyrl\\
-uzbek-latin\\
-uzbek-latn\\
-vai\\
-vai-latin\\
-vai-latn\\
-vai-vai\\
-vai-vaii\\
-venda\\
-vietnamese\\
-volapuk\\
-vunjo\\
-walser\\
-welsh\\
-westernfrisian\\
-wolaytta\\
-wolof\\
-yangben\\
-yiddish\\
-yoruba\\
-zarma\\
-zulu
-\end{multicols}
-\endgroup
-\hrule
-
-\bigskip
-
-Many locale templates are quite useable, provided captions and dates are
-not required (which is a very frequent case, particularly in ancient
-languages). So, they will be included in the default \babel{} distribution.
-This can serve to encourage contributions, too. A warning will remember
-they are ‘bare minimum locales’. The locales are currently
-the following:
-\begin{multicols}{4}
-\small
-akkadian\\
-ancientegyptian\\
-aramaic\\
-avestan\\
-aymara\\
-balinese\\
-bashkir\\
-bataktoba\\
-bavarian\\
-classicalmandaic\\
-divehi\\
-egyptianarabic\footnote{Masri or Colloquial Egyptian, with tag
-\texttt{arz}, not to be confused with the Standard Arabic as spoken in
-Egypt, with tag \texttt{ar-EG}.}\\
-ingush\\
-komi\\
-ladino\\
-lepcha\\
-limbu\\
-lineara\\
-lombard\\
-lu\\
-makasar\\
-navajo\\
-newari\\
-oldnorse\\
-phoenician\\
-samaritan\\
-sinteromani\\
-southernaltai\\
-tainua\\
-tangut\\
-waray
-\end{multicols}
-
 \textbf{Modifying and adding values to |ini| files}
 
 \nobreak 
@@ -2389,6 +1547,582 @@ parameters.
 %   the |ini| file is enough, and also a variant with your own
 %   hyphenation with  
 % \end{example}
+
+\subsection{List of locales available in \cs{babelprovide}}
+
+Here is the list of the names currently supported with |ini| locale
+files, with |\babelprovide|. With these languages, |\babelfont| loads
+(if not done before) the language and script names (even if the
+language is defined as a package option with an \textsf{ldf} file).
+These are also the names recognized by |\babelprovide| with a valueless
+|import|, which will load the |ini| file with the tag given in
+parenthesis.
+
+Many locale are quite useable, provided captions and dates are
+not required (which is a very frequent case, particularly in ancient
+languages). So, they are included in the default \babel{} distribution.
+This can serve to encourage contributions, too. A warning will remember
+they are ‘bare minimum locales’. They are set in
+\textcolor[gray]{.4}{gray} in the following list
+
+\begin{note}
+  Although the names of the corresponding |lfd| files match those in
+  this list, there are some exceptions, particularly in German and
+  Serbian. So, |ngerman| is called here |german|, which is the name in
+  the CLDR and, actually, the most logical.
+\end{note}
+
+\begingroup
+\bigskip\hrule\nobreak
+
+\makeatletter
+\def\tag#1{\par\@hangfrom{\makebox[10em][l]{#1}}\ignorespaces}
+\def\tag#1#2#3{\par
+  \hspace{-2em}\textcolor{thered}{\texttt{#1}}#2\enspace
+  \mbox{\footnotesize(#3)}}
+\def\subtag#1#2#3{\par
+  \hspace{-1em}\texttt{#1}#2\enspace
+  \mbox{\footnotesize(#3)}}
+\def\subtagalt#1#2#3{\par
+  \hspace{-1em}\textcolor{thered}{\texttt{#1}}#2\enspace
+  \mbox{\footnotesize(#3)}}
+\def\tagmin#1#2#3{\par
+  \hspace{-2em}\textcolor[gray]{.4}{\texttt{#1}}#2\enspace
+  \mbox{\footnotesize(#3)}}
+\def\subtagmin#1#2#3{\par
+  \hspace{-1em}\textcolor[gray]{.4}{\texttt{#1}}#2\enspace
+  \mbox{\footnotesize(#3)}}
+\def\hascapu{\textsuperscript{u}}
+\def\hascapl{\textsuperscript{l}}
+\def\note#1{\par{\footnotesize#1\par}}
+\small
+
+\bigskip
+
+Recommended names are set in \textcolor{thered}{red}.\\
+Bare minimum locales are set in \textcolor[gray]{.4}{gray}.\\
+Discouraged and deprecated names are not included.\\
+\hascapu{} means Unicode captions; \hascapl{} means LICR captions.
+
+\bigskip\hrule\nobreak
+
+\begin{multicols}{2}
+\leftskip2em
+\tag{abkhazian}{}{ab}
+\tag{afar}{}{aa}
+\tag{afrikaans}{\hascapu\hascapl}{af}
+\tag{aghem}{}{agq}
+\tag{akan}{}{ak}
+\tagmin{akkadian}{}{akk}
+\tag{albanian}{\hascapu\hascapl}{sq}
+\tag{amharic}{\hascapu\hascapl}{am}
+\tagmin{ancientegyptian}{}{egy}
+\tag{ancientgreek}{\hascapu\hascapl}{grc}\note{It’s a different
+language from \texttt{greek}.}
+\tag{arabic}{\hascapu}{ar}
+\subtag{arabic-algeria}{\hascapu}{ar-DZ}
+\subtag{arabic-dz}{\hascapu}{ar-DZ}
+\subtag{arabic-egypt}{\hascapu}{ar-EG}
+\subtag{arabic-eg}{\hascapu}{ar-EG}
+\subtag{arabic-iraq}{\hascapu}{ar-IQ}
+\subtag{arabic-iq}{\hascapu}{ar-IQ}
+\subtag{arabic-jordan}{\hascapu}{ar-JO}
+\subtag{arabic-jo}{\hascapu}{ar-JO}
+\subtag{arabic-lebanon}{\hascapu}{ar-LB}
+\subtag{arabic-lb}{\hascapu}{ar-LB}
+\subtag{arabic-morocco}{\hascapu}{ar-MA}
+\subtag{arabic-ma}{\hascapu}{ar-MA}
+\subtag{arabic-palestinianterritories}{\hascapu}{ar-PS}
+\subtag{arabic-ps}{\hascapu}{ar-PS}
+\subtag{arabic-saudiarabia}{\hascapu}{ar-SA}
+\subtag{arabic-sa}{\hascapu}{ar-SA}
+\subtag{arabic-syria}{\hascapu}{ar-SY}
+\subtag{arabic-sy}{\hascapu}{ar-SY}
+\subtag{arabic-tunisia}{\hascapu}{ar-TN}
+\subtag{arabic-tn}{\hascapu}{ar-TN}
+\tagmin{aramaic}{}{arc}
+\subtagmin{aramaic-nabataean}{}{arc-nbat}
+\subtagmin{aramaic-nbat}{}{arc-nbat}
+\subtagmin{aramaic-palmyrene}{}{arc-palm}
+\subtagmin{aramaic-palm}{}{arc-palm}
+\tag{armenian}{\hascapu\hascapl}{hy}
+\tag{assamese}{\hascapu}{as}
+\tag{asturian}{\hascapu\hascapl}{ast}
+\tag{asu}{}{asa}
+\tag{atsam}{}{cch}
+\tagmin{avestan}{}{ae}
+\tag{awadhi}{}{awa}
+\tagmin{aymara}{}{ay}
+\tag{azerbaijani}{\hascapu\hascapl}{az}
+\subtag{azerbaijani-cyrillic}{}{az-Cyrl}
+\subtag{azerbaijani-cyrl}{}{az-Cyrl}
+\subtag{azerbaijani-latin}{}{az-Latn}
+\subtag{azerbaijani-latn}{}{az-Latn}
+\tag{bafia}{}{ksf}
+\tagmin{balinese}{}{ban}
+\tag{baluchi}{}{bal}
+\tag{bambara}{}{bm}
+\tag{bangla}{\hascapu}{bn}
+\tag{basaa}{}{bas}
+\tagmin{bashkir}{}{ba}
+\tag{basque}{\hascapu\hascapl}{eu}
+\tagmin{bataktoba}{}{bbc}
+\tagmin{bavarian}{}{bar}
+\tag{belarusian}{\hascapu\hascapl}{be}
+\tag{bemba}{}{bem}
+\tag{bena}{}{bez}
+\tag{bengali}{\hascapu}{bn}
+\tag{bhojpuri}{}{bho}
+\tag{blin}{}{byn}
+\tag{bodo}{}{brx}
+\tag{bosnian}{\hascapu\hascapl}{bs}
+\subtag{bosnian-cyrillic}{}{bs-Cyrl}
+\subtag{bosnian-cyrl}{}{bs-Cyrl}
+\subtag{bosnian-latin}{\hascapu\hascapl}{bs-Latn}
+\subtag{bosnian-latn}{\hascapu\hascapl}{bs-Latn}
+\tag{breton}{\hascapu\hascapl}{br}
+\tag{bulgarian}{\hascapu\hascapl}{bg}
+\tag{buriat}{\hascapu\hascapl}{bua}
+\tag{burmese}{}{my}
+\tag{cantonese}{}{yue}
+\tag{catalan}{\hascapu\hascapl}{ca}
+\tag{cebuano}{}{ceb}
+\tag{centralatlastamazight}{}{tzm}
+\tag{centralkurdish}{\hascapu}{ckb}
+\subtag{centralkurdish-latin}{\hascapu}{ckb-Latn}
+\subtag{centralkurdish-latn}{\hascapu}{ckb-Latn}
+\tag{chakma}{}{ccp}
+\tag{chechen}{}{ce}
+\tag{cherokee}{}{chr}
+\tag{chiga}{}{cgg}
+\tag{chinese}{\hascapu}{zh}
+\subtag{chinese-simplified}{\hascapu}{zh-Hans}
+\subtag{chinese-hans}{\hascapu}{zh-Hans}
+\subtag{chinese-traditional}{\hascapu}{zh-Hant}
+\subtag{chinese-hant}{\hascapu}{zh-Hant}
+\subtag{chinese-simplified-hongkongsarchina}{}{zh-Hans-HK}
+\subtag{chinese-hans-hk}{}{zh-Hans-HK}
+\subtag{chinese-simplified-macausarchina}{}{zh-Hans-MO}
+\subtag{chinese-hans-mo}{}{zh-Hans-MO}
+\subtag{chinese-simplified-singapore}{}{zh-Hans-SG}
+\subtag{chinese-hans-sg}{}{zh-Hans-SG}
+\subtag{chinese-hant-hk}{}{zh-Hant-HK}
+\subtag{chinese-traditional-hongkongsarchina}{}{zh-Hant-HK}
+\subtag{chinese-hant-mo}{}{zh-Hant-MO}
+\subtag{chinese-traditional-macausarchina}{}{zh-Hant-MO}
+\tag{churchslavic}{\hascapu}{cu}
+\subtag{churchslavic-cyrs}{\hascapu}{cu-Cyrs}
+\subtag{churchslavic-glag}{}{cu-Glag}
+\subtag{churchslavic-glagolitic}{}{cu-Glag}
+\subtag{churchslavic-oldcyrillic}{\hascapu}{cu-Cyrs}
+% \tag{churchslavonic}{\hascapu}{cu}
+\tag{chuvash}{}{cv}
+\tagmin{classicalmandaic}{}{myz}
+% \tag{classiclatin}{\hascapu\hascapl}{la-x-classic}
+\tag{colognian}{}{ksh}
+\tag{coptic}{}{cop}
+\tag{cornish}{}{kw}
+\tag{corsican}{}{co}
+\tag{croatian}{\hascapu\hascapl}{hr}
+\tag{czech}{\hascapu\hascapl}{cs}
+\tag{danish}{\hascapu\hascapl}{da}
+\tagmin{divehi}{}{dv}
+\tag{dogri}{}{doi}
+\tag{duala}{}{dua}
+\tag{dutch}{\hascapu\hascapl}{nl}
+\tag{dzongkha}{}{dz}
+% \tag{ecclesiasticlatin}{\hascapu\hascapl}{la-x-ecclesia}
+\tagmin{egyptianarabic}{}{arz}\note{Masri or Colloquial Egyptian, with tag
+\texttt{arz}, different from Standard Arabic as spoken in
+Egypt, with tag \texttt{ar-EG}.}
+\tag{embu}{}{ebu}
+\tag{english}{\hascapu\hascapl}{en}
+\subtagalt{american}{\hascapu\hascapl}{en-US}
+\subtag{americanenglish}{\hascapu\hascapl}{en-US}
+\subtagalt{australian}{\hascapu\hascapl}{en-AU}
+\subtag{australianenglish}{\hascapu\hascapl}{en-AU}
+\subtagalt{british}{\hascapu\hascapl}{en-GB}
+\subtag{britishenglish}{\hascapu\hascapl}{en-GB}
+\subtagalt{canadian}{\hascapu\hascapl}{en-CA}
+\subtag{canadianenglish}{\hascapu\hascapl}{en-CA}
+\subtag{english-australia}{\hascapu\hascapl}{en-AU}
+\subtag{english-au}{\hascapu\hascapl}{en-AU}
+\subtag{english-canada}{\hascapu\hascapl}{en-CA}
+\subtag{english-ca}{\hascapu\hascapl}{en-CA}
+\subtag{english-unitedkingdom}{\hascapu\hascapl}{en-GB}
+\subtag{english-gb}{\hascapu\hascapl}{en-GB}
+\subtag{english-newzealand}{\hascapu\hascapl}{en-NZ}
+\subtag{english-unitedstates}{\hascapu\hascapl}{en-US}
+\subtag{english-nz}{\hascapu\hascapl}{en-NZ}
+\subtag{english-us}{\hascapu\hascapl}{en-US}
+\tag{erzya}{}{myv}
+\tag{esperanto}{\hascapu\hascapl}{eo}
+\tag{estonian}{\hascapu\hascapl}{et}
+\tag{ewe}{}{ee}
+\tag{ewondo}{}{ewo}
+\tag{faroese}{}{fo}
+\tag{farsi}{\hascapu}{fa}
+\tag{filipino}{}{fil}
+\tag{finnish}{\hascapu\hascapl}{fi}
+\tag{french}{\hascapu\hascapl}{fr}
+\subtagalt{acadian}{\hascapu\hascapl}{fr-x-acadian}
+\subtag{canadianfrench}{\hascapu\hascapl}{fr-CA}
+\subtag{swissfrench}{\hascapu\hascapl}{fr-CH}
+\subtag{french-belgium}{\hascapu\hascapl}{fr-BE}
+\subtag{french-be}{\hascapu\hascapl}{fr-BE}
+\subtag{french-canada}{\hascapu\hascapl}{fr-CA}
+\subtag{french-ca}{\hascapu\hascapl}{fr-CA}
+\subtag{french-luxembourg}{\hascapu\hascapl}{fr-LU}
+\subtag{french-lu}{\hascapu\hascapl}{fr-LU}
+\subtag{french-switzerland}{\hascapu\hascapl}{fr-CH}
+\subtag{french-ch}{\hascapu\hascapl}{fr-CH}
+\tag{friulian}{\hascapu\hascapl}{fur}
+\tag{fulah}{}{ff}
+\tag{ga}{}{gaa}
+\tag{galician}{\hascapu\hascapl}{gl}
+\tag{ganda}{}{lg}
+\tag{geez}{}{gez}
+\tag{georgian}{\hascapu}{ka}
+\tag{german}{\hascapu\hascapl}{de}
+\note{Note the \texttt{ldf} names differ. See note above.} 
+\subtag{german-traditional}{\hascapu\hascapl}{de-1901}
+\subtagalt{austrian}{\hascapu\hascapl}{de-AT}
+\subtag{german-austria}{\hascapu\hascapl}{de-AT}
+\subtag{german-at}{\hascapu\hascapl}{de-AT}
+\subtag{german-austria-traditional}{\hascapu\hascapl}{de-AT-1901}
+\subtagalt{swisshighgerman}{\hascapu\hascapl}{de-CH}\note{\texttt{swissgerman},
+with tag \texttt{gsw} is a different language.}
+\subtag{german-switzerland}{\hascapu\hascapl}{de-CH}
+\subtag{german-ch}{\hascapu\hascapl}{de-CH}
+\subtag{german-switzerland-traditional}{\hascapu\hascapl}{de-CH-1901}
+\tagmin{gothic}{}{got}
+\tag{greek}{\hascapu\hascapl}{el}
+\subtag{monotonicgreek}{\hascapu\hascapl}{el}
+\subtagalt{polytonicgreek}{\hascapu\hascapl}{el-polyton}
+\tag{guarani}{}{gn}
+\tag{gujarati}{\hascapu}{gu}
+\tag{gusii}{}{guz}
+\tag{haryanvi}{}{bgc}
+\tag{hausa}{\hascapu\hascapl}{ha}
+\subtag{hausa-ghana}{}{ha-GH}
+\subtag{hausa-gh}{}{ha-GH}
+\subtag{hausa-niger}{}{ha-NE}
+\subtag{hausa-ne}{}{ha-NE}
+\tag{hawaiian}{}{haw}
+\tag{hebrew}{\hascapu\hascapl}{he}
+\tag{hindi}{\hascapu}{hi}
+\tag{hmongnjua}{}{hnj}
+\tag{hungarian}{\hascapu\hascapl\hascapl\hascapl}{hu}
+\tag{icelandic}{\hascapu\hascapl}{is}
+\tag{igbo}{}{ig}
+\tag{inarisami}{}{smn}
+\tag{indonesian}{\hascapu\hascapl}{id}
+\tagmin{ingush}{}{inh}
+\tag{interlingua}{\hascapu\hascapl}{ia}
+\tag{inuktitut}{}{iu}
+\tag{irish}{\hascapu\hascapl}{ga}
+\tag{italian}{\hascapu\hascapl}{it}
+\tag{japanese}{\hascapu}{ja}
+\tag{javanese}{}{jv}
+\tag{jju}{}{kaj}
+\tag{jolafonyi}{}{dyo}
+\tag{kabuverdianu}{}{kea}
+\tag{kabyle}{}{kab}
+\tag{kaingang}{}{kgp}
+\tag{kako}{}{kkj}
+\tag{kalaallisut}{}{kl}
+\tag{kalenjin}{}{kln}
+\tag{kamba}{}{kam}
+\tag{kannada}{\hascapu}{kn}
+\tag{kashmiri}{}{ks}
+\tag{kazakh}{}{kk}
+\tag{khmer}{\hascapu}{km}
+\tag{kikuyu}{}{ki}
+\tag{kinyarwanda}{}{rw}
+\tagmin{komi}{}{kv}
+\tag{konkani}{}{kok}
+\tag{korean}{\hascapu}{ko}
+\subtag{korean-han}{\hascapu}{ko-Hani}
+\subtag{korean-hani}{\hascapu}{ko-Hani}
+\tag{koyraborosenni}{}{ses}
+\tag{koyrachiini}{}{khq}
+\tag{kurmanji}{\hascapu\hascapl}{kmr}
+\tag{kwasio}{}{nmg}
+\tag{kyrgyz}{}{ky}
+\tagmin{ladino}{}{lad}
+\tag{lakota}{}{lkt}
+\tag{langi}{}{lag}
+\tag{lao}{\hascapu}{lo}
+\tag{latin}{\hascapu\hascapl}{la}
+\subtagalt{ecclesiasticallatin}{\hascapu\hascapl}{la-x-ecclesia}
+\subtagalt{classicallatin}{\hascapu\hascapl}{la-x-classic}
+\subtagalt{medievallatin}{\hascapu\hascapl}{la-x-medieval}
+\tag{latvian}{\hascapu\hascapl}{lv}
+\tagmin{lepcha}{}{lep}
+\tag{ligurian}{}{lij}
+\tagmin{limbu}{}{lif}
+\subtagmin{limbu-limb}{}{lif-limb}
+\subtagmin{limbu-limbu}{}{lif-limb}
+\tagmin{lineara}{}{lab}
+\tag{lingala}{}{ln}
+\tag{lithuanian}{\hascapu\hascapl\hascapl\hascapl}{lt}
+\tagmin{lombard}{}{lmo}
+\tag{lowersorbian}{\hascapu\hascapl}{dsb}
+\tag{lowgerman}{}{nds}
+% \tag{lsorbian}{\hascapu\hascapl}{dsb}
+\tagmin{lu}{}{khb}
+\tag{lubakatanga}{}{lu}
+\tag{luo}{}{luo}
+\tag{luxembourgish}{\hascapu\hascapl}{lb}
+\tag{luyia}{}{luy}
+\tag{macedonian}{\hascapu\hascapl}{mk}
+\tag{machame}{}{jmc}
+\tag{magyar}{\hascapu\hascapl\hascapl\hascapl}{hu}
+\tag{maithili}{}{mai}
+\tagmin{makasar}{}{mak}
+\subtagmin{makasar-bugi}{}{mak-Bugi}
+\subtagmin{makasar-buginese}{}{mak-Bugi}
+\tag{makhuwameetto}{}{mgh}
+\tag{makonde}{}{kde}
+\tag{malagasy}{}{mg}
+\tag{malay}{\hascapu\hascapl}{ms}
+\subtag{malay-brunei}{}{ms-BN}
+\subtag{malay-bn}{}{ms-BN}
+\subtag{malay-singapore}{}{ms-SG}
+\subtag{malay-sg}{}{ms-SG}
+\tag{malayalam}{\hascapu}{ml}
+\tag{maltese}{}{mt}
+\tag{manipuri}{}{mni}
+\tag{manx}{}{gv}
+\tag{maori}{}{mi}
+\tag{marathi}{\hascapu}{mr}
+\tag{masai}{}{mas}
+\tag{mazanderani}{}{mzn}
+\tag{meru}{}{mer}
+\tag{meta}{}{mgo}
+\tag{mongolian}{}{mn}
+\tag{monotonicgreek}{\hascapu\hascapl}{el}
+\tag{morisyen}{}{mfe}
+\tag{mundang}{}{mua}
+\tag{muscogee}{}{mus}
+\tag{nama}{}{naq}
+% \tag{naustrian}{\hascapu\hascapl}{de-AT}
+\tagmin{navajo}{}{nv}
+\tag{nepali}{}{ne}
+\tagmin{newari}{}{new}
+\tag{newzealand}{\hascapu\hascapl}{en-NZ}
+% \tag{ngerman}{\hascapu\hascapl}{de}
+\tag{ngiemboon}{}{nnh}
+\tag{ngomba}{}{jgo}
+\tag{nheengatu}{}{yrl}
+\tag{nigerianpidgin}{}{pcm}
+\tag{nko}{}{nqo}
+\tag{northernfrisian}{}{frr}
+\tag{northernkurdish}{\hascapu\hascapl}{kmr}
+\subtag{northernkurdish-arab}{\hascapu}{kmr-Arab}
+\subtag{northernkurdish-arabic}{\hascapu}{kmr-Arab}
+\tag{northernluri}{}{lrc}
+\tag{northernsami}{\hascapu\hascapl}{se}
+\tag{northernsotho}{}{nso}
+\tag{northndebele}{}{nd}
+\tag{norwegian}{\hascapu\hascapl}{no}
+\subtag{norsk}{\hascapu\hascapl}{no}
+\note{In the CLDR, \texttt{norwegianbokmal} (nb) just inherites from
+\texttt{norwegian}, so use the latter.}
+% \tag{norwegianbokmal}{\hascapu\hascapl}{nb}
+\tag{nswissgerman}{\hascapu\hascapl}{de-CH}
+\tag{nuer}{}{nus}
+\tag{nyanja}{}{ny}
+\tag{nyankole}{}{nyn}
+\tag{nynorsk}{\hascapu\hascapl}{nn}
+\subtag{norwegiannynorsk}{\hascapu\hascapl}{nn}
+\tag{occitan}{\hascapu\hascapl}{oc}
+\tag{odia}{\hascapu}{or}
+\tagmin{oldnorse}{}{non}
+% \tag{oriya}{\hascapu}{or}
+\tag{oromo}{}{om}
+\tag{ossetic}{}{os}
+\tag{papiamento}{}{pap}
+\tag{pashto}{}{ps}
+\tag{persian}{\hascapu}{fa}
+\subtag{farsi}{\hascapu}{fa}
+\tagmin{phoenician}{}{phn}
+\tag{piedmontese}{\hascapu\hascapl}{pms}
+\tag{polish}{\hascapu\hascapl}{pl}
+\tag{portuguese}{\hascapu\hascapl}{pt}
+\subtagalt{brazilian}{\hascapu\hascapl}{pt-BR}
+\subtag{brazilianportuguese}{\hascapu\hascapl}{pt-BR}
+\subtag{portuguese-brazil}{\hascapu\hascapl}{pt-BR}
+\subtag{portuguese-br}{\hascapu\hascapl}{pt-BR}
+\subtag{europeanportuguese}{\hascapu\hascapl}{pt-PT}
+\subtag{portuguese-portugal}{\hascapu\hascapl}{pt-PT}
+\subtag{portuguese-pt}{\hascapu\hascapl}{pt-PT}
+\tag{prussian}{}{prg}
+\tag{punjabi}{\hascapu}{pa}
+\subtag{punjabi-arabic}{}{pa-Arab}
+\subtag{punjabi-arab}{}{pa-Arab}
+\subtag{punjabi-gurmukhi}{\hascapu}{pa-Guru}
+\subtag{punjabi-guru}{\hascapu}{pa-Guru}
+\tag{quechua}{}{qu}
+\tag{rajasthani}{}{raj}
+\tag{romanian}{\hascapu\hascapl}{ro}
+\subtagalt{moldavian}{\hascapu\hascapl}{ro-MD}
+\subtag{romanian-moldova}{\hascapu\hascapl}{ro-MD}
+\subtag{romanian-md}{\hascapu\hascapl}{ro-MD}
+\tag{romansh}{\hascapu\hascapl}{rm}
+\tag{rombo}{}{rof}
+\tag{rundi}{}{rn}
+\tag{russian}{\hascapu\hascapl}{ru}
+\tag{rwa}{}{rwk}
+\tag{saho}{}{ssy}
+\tag{sakha}{}{sah}
+\tagmin{samaritan}{}{smp}
+\tag{samburu}{}{saq}
+\tag{samin}{\hascapu\hascapl}{se}
+\tag{sango}{}{sg}
+\tag{sangu}{}{sbp}
+\tag{sanskrit}{}{sa}
+\subtag{sanskrit-bangla}{}{sa-Beng}
+\subtag{sanskrit-beng}{}{sa-Beng}
+% \subtag{sanskrit-bengali}{}{sa-Beng}
+\subtag{sanskrit-devanagari}{}{sa-Deva}
+\subtag{sanskrit-deva}{}{sa-Deva}
+\subtag{sanskrit-gujarati}{}{sa-Gujr}
+\subtag{sanskrit-gujr}{}{sa-Gujr}
+\subtag{sanskrit-kannada}{}{sa-Knda}
+\subtag{sanskrit-knda}{}{sa-Knda}
+\subtag{sanskrit-malayalam}{}{sa-Mlym}
+\subtag{sanskrit-mlym}{}{sa-Mlym}
+\subtag{sanskrit-telugu}{}{sa-Telu}
+\subtag{sanskrit-telu}{}{sa-Telu}
+\tag{santali}{}{sat}
+\tag{saraiki}{}{skr}
+\tag{sardinian}{}{sc}
+\tag{scottishgaelic}{\hascapu\hascapl}{gd}
+\tag{sena}{}{seh}
+\tag{serbian}{\hascapu\hascapl}{sr}
+\note{Note the \texttt{ldf} names differ. See note above.}
+\subtag{serbian-cyrillic}{\hascapu\hascapl}{sr-Cyrl}
+\subtag{serbian-cyrl}{\hascapu\hascapl}{sr-Cyrl}
+\subtag{serbian-cyrillic-bosniaherzegovina}{\hascapu\hascapl}{sr-Cyrl-BA}
+\subtag{serbian-cyrl-ba}{\hascapu\hascapl}{sr-Cyrl-BA}
+\subtag{serbian-cyrillic-kosovo}{\hascapu\hascapl}{sr-Cyrl-XK}
+\subtag{serbian-cyrl-xk}{\hascapu\hascapl}{sr-Cyrl-XK}
+\subtag{serbian-cyrillic-montenegro}{\hascapu\hascapl}{sr-Cyrl-ME}
+\subtag{serbian-cyrl-me}{\hascapu\hascapl}{sr-Cyrl-ME}
+\subtag{serbian-latin}{\hascapu\hascapl}{sr-Latn}
+\subtag{serbian-latn}{\hascapu\hascapl}{sr-Latn}
+\subtag{serbian-latin-bosniaherzegovina}{\hascapu\hascapl}{sr-Latn-BA}
+\subtag{serbian-latn-ba}{\hascapu\hascapl}{sr-Latn-BA}
+\subtag{serbian-latin-kosovo}{\hascapu\hascapl}{sr-Latn-XK}
+\subtag{serbian-latn-xk}{\hascapu\hascapl}{sr-Latn-XK}
+\subtag{serbian-latin-montenegro}{\hascapu\hascapl}{sr-Latn-ME}
+\subtag{serbian-latn-me}{\hascapu\hascapl}{sr-Latn-ME}
+\subtag{serbian-ijekavsk}{\hascapu\hascapl}{sr-ijekavsk}
+\subtag{serbian-latn-ijekavsk}{\hascapu\hascapl}{sr-Latn-ijekavsk}
+% \tag{serbianc}{\hascapu\hascapl}{sr}
+\tag{shambala}{}{ksb}
+\tag{shona}{}{sn}
+\tag{sichuanyi}{}{ii}
+\tag{sicilian}{}{scn}
+\tag{silesian}{}{szl}
+\tag{sindhi}{}{sd}
+\subtag{sindhi-devanagari}{}{sd-deva}
+\subtag{sindhi-deva}{}{sd-deva}
+\subtag{sindhi-khojki}{}{sd-khoj}
+\subtag{sindhi-khoj}{}{sd-khoj}
+\subtag{sindhi-khudawadi}{}{sd-sind}
+\subtag{sindhi-sind}{}{sd-sind}
+\tag{sinhala}{\hascapu}{si}
+\tagmin{sinteromani}{}{rmo}
+\tag{slovak}{\hascapu\hascapl}{sk}
+\tag{slovene}{\hascapu\hascapl}{sl}
+\tag{slovenian}{\hascapu\hascapl}{sl}
+\tag{soga}{}{xog}
+\tag{somali}{}{so}
+\tag{sorani}{\hascapu}{ckb}
+\tagmin{southernaltai}{}{alt}
+\tag{southernsotho}{}{st}
+\tag{southndebele}{}{nr}
+\tag{spanish}{\hascapu\hascapl}{es}
+\subtagalt{mexican}{\hascapu\hascapl}{es-MX}
+\subtag{mexicanspanish}{\hascapu\hascapl}{es-MX}
+\subtag{spanish-mexico}{\hascapu\hascapl}{es-MX}
+\subtag{spanish-mx}{\hascapu\hascapl}{es-MX}
+\tag{standardmoroccantamazight}{}{zgh}
+\tag{sundanese}{}{su}
+\tag{swahili}{}{sw}
+\tag{swati}{}{ss}
+\tag{swedish}{\hascapu\hascapl}{sv}
+\tag{swissgerman}{}{gsw}
+\note{Different from \texttt{swisshighgerman} (de-CH), which is German as spoken
+in Switzerland.}
+\tag{syriac}{}{syr}
+\tag{tachelhit}{}{shi}
+\subtag{tachelhit-latin}{}{shi-Latn}
+\subtag{tachelhit-latn}{}{shi-Latn}
+\subtag{tachelhit-tifinagh}{}{shi-Tfng}
+\subtag{tachelhit-tfng}{}{shi-Tfng}
+\tagmin{tainua}{}{tdd}
+\tag{taita}{}{dav}
+\tag{tajik}{}{tg}
+\tag{tamil}{\hascapu}{ta}
+\tagmin{tangut}{}{txg}
+\tag{taroko}{}{trv}
+\tag{tasawaq}{}{twq}
+\tag{tatar}{}{tt}
+\tag{telugu}{\hascapu}{te}
+\tag{teso}{}{teo}
+\tag{thai}{\hascapu\hascapl}{th}
+\tag{tibetan}{\hascapu}{bo}
+\tag{tigre}{}{tig}
+\tag{tigrinya}{}{ti}
+\tag{tokpisin}{}{tpi}
+\tag{tongan}{}{to}
+\tag{tsonga}{}{ts}
+\tag{tswana}{}{tn}
+\tag{turkish}{\hascapu\hascapl}{tr}
+\tag{turkmen}{\hascapu\hascapl}{tk}
+\tag{tyap}{}{kcg}
+\tag{ukenglish}{\hascapu\hascapl}{en-GB}
+\tag{ukrainian}{\hascapu\hascapl}{uk}
+\tag{uppersorbian}{\hascapu\hascapl}{hsb}
+\tag{urdu}{\hascapu}{ur}
+\tag{usenglish}{\hascapu\hascapl}{en-US}
+\tag{usorbian}{\hascapu\hascapl}{hsb}
+\tag{uyghur}{\hascapu}{ug}
+\tag{uzbek}{}{uz}
+\subtag{uzbek-arabic}{}{uz-Arab}
+\subtag{uzbek-arab}{}{uz-Arab}
+\subtag{uzbek-cyrillic}{}{uz-Cyrl}
+\subtag{uzbek-cyrl}{}{uz-Cyrl}
+\subtag{uzbek-latin}{}{uz-Latn}
+\subtag{uzbek-latn}{}{uz-Latn}
+\tag{vai}{}{vai}
+\subtag{vai-latin}{}{vai-Latn}
+\subtag{vai-latn}{}{vai-Latn}
+\subtag{vai-vai}{}{vai-Vaii}
+\subtag{vai-vaii}{}{vai-Vaii}
+\tag{venda}{}{ve}
+\tag{vietnamese}{\hascapu\hascapl}{vi}
+\tag{volapuk}{}{vo}
+\tag{vunjo}{}{vun}
+\tag{walser}{}{wae}
+\tagmin{waray}{}{war}
+\tag{welsh}{\hascapu\hascapl}{cy}
+\tag{westernfrisian}{}{fy}
+\tag{wolaytta}{}{wal}
+\tag{wolof}{}{wo}
+\tag{xhosa}{}{xh}
+\tag{yangben}{}{yav}
+\tag{yiddish}{}{yi}
+\tag{yoruba}{}{yo}
+\tag{zarma}{}{dje}
+\tag{zulu}{}{zu}
+\end{multicols}
+\endgroup
+\hrule
+\bigskip
 
 \subsection{Selecting fonts}
 
@@ -5695,8 +5429,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.1.37776>>
-%<<date=2024/01/12>>
+%<<version=24.1.40037>>
+%<<date=2024/02/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12022,8 +11756,8 @@ wouldn’t exist.
 \bbl@xin@{B}\bbl@opt@safe
 \ifin@
   \bbl@redefine\@citex[#1]#2{%
-    \@safe@activestrue\edef\@tempa{#2}\@safe@activesfalse
-    \org@@citex[#1]{\@tempa}}
+    \@safe@activestrue\edef\bbl@tempa{#2}\@safe@activesfalse
+    \org@@citex[#1]{\bbl@tempa}}
 %    \end{macrocode}
 %
 % Unfortunately, the packages \pkg{natbib} and \pkg{cite} need a
@@ -12048,8 +11782,8 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
     \def\@citex[#1][#2]#3{%
-      \@safe@activestrue\edef\@tempa{#3}\@safe@activesfalse
-      \org@@citex[#1][#2]{\@tempa}}%
+      \@safe@activestrue\edef\bbl@tempa{#3}\@safe@activesfalse
+      \org@@citex[#1][#2]{\bbl@tempa}}%
     }{}}
 %    \end{macrocode}
 %
@@ -12835,16 +12569,16 @@ wouldn’t exist.
     {#1\bbl@load@language{#2}#3}}
 %
 \DeclareOption{hebrew}{%
+  \ifcase\bbl@engine\or
+    \bbl@error{only-pdftex-lang}{hebrew}{luatex}{}%
+  \fi
   \input{rlbabel.def}%
   \bbl@load@language{hebrew}}
 \DeclareOption{hungarian}{\bbl@try@load@lang{}{magyar}{}}
 \DeclareOption{lowersorbian}{\bbl@try@load@lang{}{lsorbian}{}}
-\DeclareOption{northernsami}{\bbl@try@load@lang{}{samin}{}}
-\DeclareOption{nynorsk}{\bbl@try@load@lang{}{norsk}{}}
 \DeclareOption{polutonikogreek}{%
   \bbl@try@load@lang{}{greek}{\languageattribute{greek}{polutoniko}}}
 \DeclareOption{russian}{\bbl@try@load@lang{}{russianb}{}}
-\DeclareOption{scottishgaelic}{\bbl@try@load@lang{}{scottish}{}}
 \DeclareOption{ukrainian}{\bbl@try@load@lang{}{ukraineb}{}}
 \DeclareOption{uppersorbian}{\bbl@try@load@lang{}{usorbian}{}}
 %    \end{macrocode}
@@ -13260,6 +12994,12 @@ wouldn’t exist.
 \bbl@errmessage{year-out-range}
    {Year out of range.\\%
     The allowed range is #1}%
+   {See the manual for further details.}
+\bbl@errmessage{only-pdftex-lang}
+   {The '#1' ldf style doesn't work with #2,\\%
+    but you can use the ini locale instead.\\%
+    Try adding 'provide=*' to the option list. You may\\%
+    also want to set 'bidi=' to some value.}%
    {See the manual for further details.}
 %</errors>
 %<*patterns>
