@@ -1,4 +1,4 @@
-## Babel 24.1.40037
+## Babel 24.1.40072
 
 (dev)
 
@@ -49,6 +49,8 @@ respective authors.
 ### Summary of latest changes
 ```
 24.2 (dev)
+     * Cleaned up some language names.
+     * Mosty internal changes and minor fixes.
 
 24.1 2024-01-07
      * New version numbering scheme.
