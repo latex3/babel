@@ -1,6 +1,6 @@
 # What's new in babel 24.2
 
-**Draft**
+2024-02-07
 
 The list of locales in the manual (in fact, there were several lists) has
 been reworked. 
@@ -11,7 +11,7 @@ There are some minor fixes:
 * `\cite` failed in some rare cases (#277).
 * The `cancel` package didn't work sometimes in Hebrew (#279, fix
   provided by [Udi Fogiel](https://github.com/Udi-Fogiel)).
-* `\selectfont` in math mode raised an error with onchar (#281).
+* `\selectfont` in math mode raised an error with `onchar` (#281).
 * `scottish` was missing in the `ini` locale names
 
 ## Error messages
