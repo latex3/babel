@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/02/04 v24.1.40082 The Babel package]
+\ProvidesFile{babel.dtx}[2024/02/07 v24.2 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -824,6 +824,13 @@ course, with |date,| |captions|). Until 3.43 you had to write something
 like |{\selectlanguage{..} ..}|, which was not always the most
 convenient way.
 
+\begin{note}
+  |\bibitem| is out of sync with |\selectlanguage| in the \file{.aux}
+  file. The reason is |\bibitem| uses |\immediate| (and others, in
+  fact), while |\selectlanguage| doesn't. There is a similar issue with
+  floats, too. There is no known workaround.
+\end{note}
+
 \subsection{Auxiliary language selectors}
 
 \Describe{\begin\menv{otherlanguage}}{\marg{language}\Eenv{otherlanguage}}
@@ -1181,6 +1188,23 @@ preserved for backward compatibility.}
 \Describe\ifbabelshorthand{\marg{character}\marg{true}\marg{false}}
 
 \New{3.23} Tests if a character has been made a shorthand.
+
+\begin{note}
+  \catcode`\|=12\relax Both \textsf{ltxdoc} and \textsf{babel} use
+  \verb|\AtBeginDocument| to change some catcodes, and babel reloads
+  \textsf{hhline} to make sure \verb|:| has the right one, so if you
+  want to change the catcode of \verb/|/ it has to be done using the
+  same method at the proper place, with
+\begin{verbatim}
+\AtBeginDocument{\DeleteShortVerb{\|}}
+\end{verbatim}
+  \textit{before} loading babel. This way, when the document begins
+  the sequence is (1) make \verb/|/ active (\textsf{ltxdoc}); (2) make
+  it inactive (your settings); (3) make babel shorthands active
+  (\textsf{babel)}; (4) reload \textsf{hhline} (\textsf{babel}, now
+  with the correct catcodes for \verb/|/ and
+  \verb|:|).\catcode`\|=\active
+\end{note}
 
 \subsection{Package options}
 
@@ -1551,19 +1575,19 @@ parameters.
 \subsection{List of locales available in \cs{babelprovide}}
 
 Here is the list of the names currently supported with |ini| locale
-files, with |\babelprovide|. With these languages, |\babelfont| loads
-(if not done before) the language and script names (even if the
-language is defined as a package option with an \textsf{ldf} file).
-These are also the names recognized by |\babelprovide| with a valueless
-|import|, which will load the |ini| file with the tag given in
-parenthesis.
+files, with |\babelprovide| (or |provide=|). With these languages,
+|\babelfont| loads (if not done before) the language and script names
+(even if the language is defined as a package option with an
+\textsf{ldf} file). These are also the names recognized by
+|\babelprovide| with a valueless |import|, which will load the |ini|
+file with the tag given in parenthesis.
 
 Many locale are quite useable, provided captions and dates are
 not required (which is a very frequent case, particularly in ancient
 languages). So, they are included in the default \babel{} distribution.
 This can serve to encourage contributions, too. A warning will remember
 they are ‘bare minimum locales’. They are set in
-\textcolor[gray]{.4}{gray} in the following list
+\textcolor[gray]{.4}{gray} in the following list.
 
 \begin{note}
   Although the names of the corresponding |lfd| files match those in
@@ -1600,9 +1624,12 @@ they are ‘bare minimum locales’. They are set in
 \bigskip
 
 Recommended names are set in \textcolor{thered}{red}.\\
+In variants with the region or the script name (which are not
+highlighted), prefer the full forms.\\
 Bare minimum locales are set in \textcolor[gray]{.4}{gray}.\\
 Discouraged and deprecated names are not included.\\
-\hascapu{} means Unicode captions; \hascapl{} means LICR captions.
+\hascapu{} means Unicode captions; \hascapl{} means LICR captions.\\
+There are some notes in a few locales.
 
 \bigskip\hrule\nobreak
 
@@ -4452,29 +4479,6 @@ options (like paragraph direction with |bidi.text|).
 \subsection{Tips, workarounds, known issues and notes}
 
 \begin{itemize}
-\item If you use the document class \cls{book} \emph{and} you use
-  |\ref| inside the argument of |\chapter| (or just use |\ref| inside
-  |\MakeUppercase|), \LaTeX\ will keep complaining about an undefined
-  label.  To prevent such problems, you can revert to using
-  uppercase labels, you can use |\lowercase{\ref{foo}}| inside the
-  argument of |\chapter|, or, if you will not use shorthands in
-  labels, set the |safe| option to |none| or |bib|.
-
-\item\catcode`\|=12\relax Both \textsf{ltxdoc} and \textsf{babel} use
-  \verb|\AtBeginDocument| to change some catcodes, and babel reloads
-  \textsf{hhline} to make sure \verb|:| has the right one, so if you
-  want to change the catcode of \verb/|/ it has to be done using the
-  same method at the proper place, with
-\begin{verbatim}
-\AtBeginDocument{\DeleteShortVerb{\|}}
-\end{verbatim}
-  \textit{before} loading babel. This way, when the document begins
-  the sequence is (1) make \verb/|/ active (\textsf{ltxdoc}); (2) make
-  it inactive (your settings); (3) make babel shorthands active
-  (\textsf{babel)}; (4) reload \textsf{hhline} (\textsf{babel}, now
-  with the correct catcodes for \verb/|/ and
-  \verb|:|).\catcode`\|=\active
-
  \item For the hyphenation to work correctly, lccodes cannot change,
    because \TeX{} only takes into account the values when the
    paragraph is hyphenated, i.e., when it has been
@@ -4488,19 +4492,13 @@ options (like paragraph direction with |bidi.text|).
    \babel. Alternatively, you may use |\useshorthands| to activate |'|
    and |\defineshorthand|, or redefine |\textquoteright| (the latter
    is called by the non-ASCII right quote).
-\item \verb|\bibitem| is out of sync with \verb|\selectlanguage| in
-  the \file{.aux} file. The reason is \verb|\bibitem| uses
-  \verb|\immediate| (and others, in fact), while
-  \verb|\selectlanguage| doesn't. There is a similar issue with floats,
-  too. There is no known workaround.
 \item Babel does not take into account |\normalsfcodes| and
   (non-)French spacing is not always properly (un)set by
   languages. However, problems are unlikely to happen and therefore
-  this part remains untouched in version 3.9 (but it is in the `to
-  do' list).
+  this part remains untouched (but it is in the `to do' list).
 \item Using a character mathematically active (ie, with math code
   |"8000|) as a shorthand can make \TeX{} enter in an infinite loop in
-  some rare cases. (Another issue in the `to do' list, although there
+  some rare cases. (Another issue in the ‘to do’ list, although there
   is a partial solution.)
 \end{itemize}
 
@@ -5429,8 +5427,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.1.40082>>
-%<<date=2024/02/04>>
+%<<version=24.2>>
+%<<date=2024/02/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
