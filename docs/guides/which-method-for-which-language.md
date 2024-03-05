@@ -39,7 +39,7 @@ CJK** texts, this is also the preferred method, but in more complex
 ones you should resort to some CKJ framework like
 [luatexja](https://ctan.org/pkg/luatexja),
 [xeCJK](https://ctan.org/pkg/xecjk), [CTeX](https://ctan.org/pkg/ctex),
-[kotex](https://ctan.javinator9889.com/language/korean/kotex-utf/doc/kotexdoc.pdf),
+[kotex](https://mirrors.ctan.org/language/korean/kotex-utf/doc/kotex-utf-doc.pdf),
 and the like.
 
 Some languages may require additional options. Examples are Arabic,
