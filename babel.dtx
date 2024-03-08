@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/02/07 v24.2 The Babel package]
+\ProvidesFile{babel.dtx}[2024/03/08 v24.2.43377 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -785,15 +785,18 @@ This command can be used as environment, too.
     rarely happens, but if it were the case, you must use
     |otherlanguage| instead.
   \item In addition, this macro inserts a |\write| in vertical mode,
-  which may break the vertical spacing in some cases (for example,
-  between lists). \New{3.64} The behavior can be adjusted with
-  |\babeladjust{select.write=|\m{mode}|}|, where \m{mode} is |shift|
-  (which shifts the skips down and adds a |\penalty|); |keep| (the
-  default -- with it the |\write| and the skips are kept in the order
-  they are written), and |omit| (which may seem a too drastic solution,
-  because nothing is written, but more often than not this command is
-  applied to more or less shorts texts with no sectioning or similar
-  commands and therefore no language synchronization is necessary).
+    which may break the vertical spacing in some cases (for example,
+    between lists or at the beginning of a table cell). \New{3.64} The
+    behavior can be adjusted with
+    |\babeladjust{select.write=|\m{mode}|}|, where \m{mode} is |shift|
+    (which shifts the skips down and adds a |\penalty|); |keep| (the
+    default -- with it the |\write| and the skips are kept in the order
+    they are written), and |omit| (which may seem a too drastic
+    solution, because nothing is written, but more often than not this
+    command is applied to more or less shorts texts with no sectioning
+    or similar commands, and therefore no language synchronization is
+    necessary). In a table cell, a |\leavevmode| just before the
+    selector may be enough.
 \end{itemize}
 \end{warning}
 
@@ -853,6 +856,12 @@ environment with an additional grouping, like braces |{}|.
 
 Spaces after the environment are ignored.
 
+\begin{warning}
+  Being similar to |\selectlanguage|, the warning above about the
+  internal |\write| also applies here. The current mode (vertical or
+  horizonal) is also not changed.
+\end{warning}
+
 \Describe{\begin\menv{otherlanguage*}}%
 {\oarg{option-list}\marg{language}\Eenv{otherlanguage*}}
 
@@ -889,9 +898,10 @@ group.
   |\textcolor| and many others). The same applies to environments,
   because |arabic| conflicts with |\arabic|. Furthermore, and because of
   this overloading, detecting the language of a chunk of text by
-  external tools can become unfeasible. Except if there is a reason for
+  external tools can become unfeasible (is |\textga| the locale for the
+  African language Gã or something else?). Except if there is a reason for
   this ‘syntactical sugar’, the best option is to stick to the default
-  selectors or to define your own alternatives.
+  selectors or even to define your own alternatives.
 \end{warning}
 
 \begin{example}
@@ -2258,19 +2268,11 @@ to select fonts in addition to the three basic families.
 \babelfont[hindi]{rm}{Shobhika}
 \end{verbatim}
   This makes sure the OpenType script for Devanagari is |deva| and not
-  |dev2|, in case it is not detected correctly. You may also pass some
-  options to \textsf{fontspec}: with |silent|, the warnings about
-  unavailable scripts or languages are not shown (they are only really
-  useful when the document format is being set up).
-\end{note}
-
-\begin{note}
-  Directionality is a property affecting margins, indentation, column
-  order, etc., not just text. Therefore, it is under the direct control
-  of the language, which applies both the script and the direction to
-  the text. As a consequence, there is no need to set \texttt{Script}
-  when declaring a font with |\babelfont| (nor \texttt{Language}). In
-  fact, it is even discouraged.
+  |dev2|, in case it is not detected correctly.
+%   You may also pass some
+%   options to \textsf{fontspec}: with |silent|, the warnings about
+%   unavailable scripts or languages are not shown (they are only really
+%   useful when the document format is being set up).
 \end{note}
 
 \begin{note}
@@ -2282,6 +2284,15 @@ to select fonts in addition to the three basic families.
   example, each font has its own set of features and a generic setting
   for several of them can be problematic, and also preserving a
   “lower-level” font selection is useful.
+\end{note}
+
+\begin{note}
+  Directionality is a property affecting margins, indentation, column
+  order, etc., not just text. Therefore, it is under the direct control
+  of the language, which applies both the script and the direction to
+  the text. As a consequence, there is no need to set \texttt{Script}
+  when declaring a font with |\babelfont| (nor \texttt{Language}). In
+  fact, it is even discouraged.
 \end{note}
 
 \begin{note}
@@ -5427,8 +5438,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.2>>
-%<<date=2024/02/07>>
+%<<version=24.2.43377>>
+%<<date=2024/03/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6814,14 +6825,10 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % \begin{environment}{otherlanguage}
-% The \Lenv{otherlanguage} environment can be used as an
-% alternative to using the |\selectlanguage| declarative
-% command. When you are typesetting a document which mixes
-% left-to-right and right-to-left typesetting you have to use this
-% environment in order to let things work as you expect them to.
-%
-% The |\ignorespaces| command is necessary to hide the environment
-% when it is entered in horizontal mode.
+% The \Lenv{otherlanguage} environment can be used as an alternative to
+% using the |\selectlanguage| declarative command. The |\ignorespaces|
+% command is necessary to hide the environment when it is entered in
+% horizontal mode.
 %
 %    \begin{macrocode}
 \long\def\otherlanguage#1{%
@@ -15540,9 +15547,14 @@ end
             local d = node.new(node.id'dir')
             d.dir = '+TRT'
             node.insert_before(head, node.has_glyph(head), d)
+            local inmath = false
             for item in node.traverse(head) do
-              node.set_attribute(item,
-                Babel.attr_dir, token.get_macro('bbl@thedir'))
+              if item.id == 11 then
+                inmath = (item.subtype == 0)
+              elseif not inmath then
+                node.set_attribute(item,
+                  Babel.attr_dir, token.get_macro('bbl@thedir'))
+              end
             end
           end
         end
@@ -15552,6 +15564,14 @@ end
         "Babel.math_box_dir", 0)
   }}%
 \fi
+%    \end{macrocode}
+%
+% Experimental. Tentative name.
+%
+%    \begin{macrocode}
+\DeclareRobustCommand\localebox[1]{%
+  {\def\bbl@insidemath{0}%
+   \mbox{\foreignlanguage{\languagename}{#1}}}}
 %    \end{macrocode}
 %
 % \subsection{Layout}

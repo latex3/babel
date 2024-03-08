@@ -1,6 +1,6 @@
-## Babel 24.2
+## Babel 24.2.43377
 
-2024-02-07
+(dev)
 
 This package manages culturally-determined typographical (and other)
 rules, and hyphenation patterns for a wide range of languages. Many
@@ -48,6 +48,8 @@ respective authors.
 
 ### Summary of latest changes
 ```
+24.3 (dev)
+
 24.2 2024-02-07
      * Cleaned up some language names.
      * Mosty internal changes and minor fixes.
