@@ -1,18 +1,18 @@
-## Babel 24.2.43377
+## Babel 24.3
 
-(dev)
+2024-03-29
 
-This package manages culturally-determined typographical (and other)
-rules, and hyphenation patterns for a wide range of languages. Many
-language styles work with pdflatex, as well as with xelatex and
-lualatex out of the box. A few even work with plain formats. Included
-is a set of ini files for about 300 languages.
+`babel` is the multilingual framework for localizing documents in
+LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
+typographical (and other) rules for about 170 to 300 languages,
+depending on the engine, with several levels of coverage. A few
+languages even work with Plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.2 are described in:
+Changes in version 24.3 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.2.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.3.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,11 +48,12 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.3 (dev)
-
-24.2 2024-02-07
-     * Cleaned up some language names.
-     * Mosty internal changes and minor fixes.
+24.3 2024-03-29
+     * A silly mistake in the French locales: the interchar
+       'punctuation.space' was named 'puntuation.space' (xetex)
+     * New setting 'interchar.disable' in \babeladjust (xetex)
+     * Experimental macro '\localebox' (luatex)
+     * Alphabetic counter for Bodo (lua/xe)
 ```
 
 ### Previous changes

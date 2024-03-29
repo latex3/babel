@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/03/08 v24.2.43377 The Babel package]
+\ProvidesFile{babel.dtx}[2024/03/29 v24.3 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -748,7 +748,9 @@ for the language chosen:
 \selectlanguage{german}
 \end{verbatim}
 
-This command can be used as environment, too.
+This command can be used as environment, too, in case there are
+relatively short texts and you do not want to reset the language with a
+hardcode value.
 
 \begin{note}
   For ``historical reasons'', a macro name is converted to a language
@@ -854,7 +856,11 @@ is roughly equivalent to:
 If you want a change which is really local, you must enclose this
 environment with an additional grouping, like braces |{}|.
 
-Spaces after the environment are ignored.
+Spaces after the environment are ignored.\footnote{Very likely, and
+because of the limitations of many old editors with bidi text, the idea
+was \cs{end}\texttt{\{otherlanguage\}} had to be a line by itself.} If this
+behavior is not desired, you may use the environment
+\texttt{selectlanguage}.
 
 \begin{warning}
   Being similar to |\selectlanguage|, the warning above about the
@@ -3690,6 +3696,11 @@ the ‘provided’ locale. Currently there is a set of rules for French
 named |punctuation.space|, which applies proper spacing with characters
 \textit{;:!?«»}.
 
+\begin{note}
+  You can use |transforms| and |interchar| at the same time. Only the
+  relevant key for the current engine is taken into account.
+\end{note}
+
 \subsection{Selection based on BCP 47 tags}
 \label{bcp47}
 
@@ -4472,15 +4483,17 @@ autoload.options\\
 autoload.bcp47.prefix\\
 autoload.bcp47.options\\
 prehyphenation.disable\\
+interchar.disable\\
 select.write\\
 select.encoding\\
 \end{multicols}
 Most of them are documented elsewhere. With |select.encoding=off|, the
 encoding is not set when loading a language on the fly with \pdftex{}
 (only |off|). |prehyphenation.disable| is by default |nohyphenation|,
-which means prehyphenation transforms are not applied if the current
+which means \luatex{} prehyphenation transforms are not applied if the current
 hyphenation rules are |nohyphenation|; with |off| they are never
-disabled.
+disabled. |interchar.disable| takes the same values, but for the
+\xetex{} interchar mechanism.
 
 For example, you can set |\babeladjust{bidi.text=off}| if you are using
 an alternative algorithm or with large sections not requiring it. Use
@@ -5438,8 +5451,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.2.43377>>
-%<<date=2024/03/08>>
+%<<version=24.3>>
+%<<date=2024/03/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6599,7 +6612,8 @@ wouldn’t exist.
     \chardef\localeid\bbl@cl{id@}}
 %    \end{macrocode}
 %
-% The unprotected part of |\selectlanguage|.
+% The unprotected part of |\selectlanguage|. In case it is used as
+% environment, declare |\endselectlaguage|, just for safety.
 %
 %    \begin{macrocode}
 \expandafter\def\csname selectlanguage \endcsname#1{%
@@ -6607,6 +6621,7 @@ wouldn’t exist.
   \bbl@push@language
   \aftergroup\bbl@pop@language
   \bbl@set@language{#1}}
+\let\endselectlanguage\relax
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -6842,8 +6857,7 @@ wouldn’t exist.
 % itself when it is called in horizontal mode.
 %
 %    \begin{macrocode}
-\long\def\endotherlanguage{%
-  \global\@ignoretrue\ignorespaces}
+\long\def\endotherlanguage{\@ignoretrue\ignorespaces}
 %    \end{macrocode}
 %
 %  \end{environment}
@@ -11592,6 +11606,15 @@ wouldn’t exist.
   \directlua{ Babel.ignore_pre_char = function(node)
       return false
     end }}
+\@namedef{bbl@ADJ@interchar.disable@nohyphenation}{%
+  \def\bbl@ignoreinterchar{%
+    \ifnum\language=\l@nohyphenation
+      \expandafter\@gobble
+    \else
+      \expandafter\@firstofone
+    \fi}}
+\@namedef{bbl@ADJ@interchar.disable@off}{%
+  \let\bbl@ignoreinterchar\@firstofone}
 \@namedef{bbl@ADJ@select.write@shift}{%
   \let\bbl@restorelastskip\relax
   \def\bbl@savelastskip{%
@@ -13605,7 +13628,7 @@ wouldn’t exist.
     \let\\\bbl@tempfs@nxx\<__fontspec_warning:nxx>%
     \let\<__fontspec_warning:nxx>\\\bbl@fs@warn@nxx
     \\\renewfontfamily\\#4%
-      [\bbl@cl{lsys},%
+      [\bbl@cl{lsys},% xetex removes unknown features :-(
        \ifcase\bbl@engine\or RawFeature={family=\bbl@tempb},\fi
        #2]}{#3}% ie \bbl@exp{..}{#3}
   \bbl@exp{%
@@ -13885,16 +13908,17 @@ wouldn’t exist.
 % ‘disabled’ with |\bbl@ic@<label>@<lang>|.
 %
 %    \begin{macrocode}
+\def\bbl@ignoreinterchar{%
+  \ifnum\language=\l@nohyphenation
+    \expandafter\@gobble
+  \else
+    \expandafter\@firstofone
+  \fi}
 \newcommand\babelinterchar[5][]{%
   \let\bbl@kv@label\@empty
   \bbl@forkv{#1}{\bbl@csarg\edef{kv@##1}{##2}}%
   \@namedef{\zap@space bbl@xeinter@\bbl@kv@label @#3@#4@#2 \@empty}%
-    {\ifnum\language=\l@nohyphenation
-       \expandafter\@gobble
-     \else
-       \expandafter\@firstofone
-     \fi
-     {#5}}%
+    {\bbl@ignoreinterchar{#5}}%
   \bbl@csarg\let{ic@\bbl@kv@label @#2}\@firstofone
   \bbl@exp{\\\bbl@for\\\bbl@tempa{\zap@space#3 \@empty}}{%
     \bbl@exp{\\\bbl@for\\\bbl@tempb{\zap@space#4 \@empty}}{%     
