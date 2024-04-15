@@ -16,6 +16,10 @@ if you want. Note the fact a qualifier starts with a uppercase letter
 doesn’t mean it must be preserved in the user interface (date and
 casing variants are examples).
 
+Values may contain `;` and `#`. `ini` files only considers comments
+lines starting with `;`, at the beginning. So, `ini` parser must be
+configured accordingly.
+
 ### `identification`
 
 Most of them are self explanatory.
