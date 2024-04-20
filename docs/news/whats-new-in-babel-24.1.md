@@ -17,7 +17,7 @@ spaces.
 
 A new macro filters in the `tex` file which ones are set up, namely
 `\IfBabelIntercharT{<list-of-interchar>}{<code>}` — if any of the
-values in the `\babelprovide` are listed, the the `<code>` is executed.
+values in the `\babelprovide` are listed, then the `<code>` is executed.
 
 See the following section for an example.
 

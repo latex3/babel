@@ -1,14 +1,14 @@
 # French
 
 To typeset French documents it’s strongly advisable using the default
-style by Daniel Flipo. It’s a very complete and customizable style, and
+style by Daniel Flipo. It’s very complete and customizable, and
 works very well with `pdflatex`, `lualatex` and `xelatex`, although
 the last two, ie, the Unicode engines, handle much better the spacing.
 
 Please, refer to its detailed manual for further info, available
 [here](https://ctan.org/pkg/babel-french).
 
-# Locale files
+## Locale files
 
 Alternatively, and mainly as a secondary language, you can resort to the
 `ini` locale files, loaded with `\babelprovide` (or with some of the
