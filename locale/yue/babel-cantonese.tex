@@ -9,4 +9,70 @@
 \fi
 \BabelBeforeIni{yue}{%
 }
+
+
+\ifcase\bbl@engine\or\or % xe
+
+\IfBabelIntercharT{linebreak.basic}{%
+  \bbl@input@classes
+  \bbl@carg\bbl@add{extras\CurrentOption}%
+    {\babel@savevariable\XeTeXinterchartokenstate
+     \XeTeXinterchartokenstate\@ne}%
+%
+  \def\BabelCJKGlue{\hskip0pt plus 0.1em\relax}%
+  \def\BabelCJKSpace{\hskip0.2em plus 0.2em minus 0.1em\relax}%
+% 
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {default}{cjkideogram}%
+    {\BabelCJKSpace}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {default}{cjkleftpunctuation}%
+    {\BabelCJKSpace}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {default}{cjkrightpunctuation}%
+    {\nobreak\BabelCJKSpace}%
+%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkideogram}{default}%
+    {\BabelCJKSpace}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkleftpunctuation}{default}%
+    {\nobreak\BabelCJKSpace}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkrightpunctuation}{default}%
+    {\BabelCJKSpace}%
+%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkideogram}{cjkideogram}%
+    {\BabelCJKGlue}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkideogram}{cjkleftpunctuation}%
+    {\BabelCJKGlue}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkideogram}{cjkrightpunctuation}%
+    {\nobreak\BabelCJKGlue}%
+%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkleftpunctuation}{cjkideogram}%
+    {\nobreak\BabelCJKGlue}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkleftpunctuation}{cjkleftpunctuation}%
+    {\nobreak\BabelCJKGlue}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkleftpunctuation}{cjkrightpunctuation}%
+    {\BabelCJKGlue}%
+%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkrightpunctuation}{cjkideogram}%
+    {\BabelCJKGlue}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkrightpunctuation}{cjkleftpunctuation}%
+    {\BabelCJKGlue}%
+  \babelinterchar[label=linebreak.basic]{\CurrentOption}%
+    {cjkrightpunctuation}{cjkrightpunctuation}%
+    {\nobreak\BabelCJKGlue}%
+}
+    
+\fi
+
 \endinput

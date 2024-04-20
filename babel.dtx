@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/03/29 v24.3 The Babel package]
+\ProvidesFile{babel.dtx}[2024/04/20 v24.4 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1362,13 +1362,13 @@ options. See section~\ref{inifiles}, which describes also the variants
 
 \subsection{The \texttt{base} option}
 
-With this package option \babel{} just loads some basic macros (those
-in |switch.def|), defines |\AfterBabelLanguage| and exits. It also
-selects the hyphenation patterns for the last language passed as
-option (by its name in |language.dat|). There are two main uses:
-classes and packages, and as a last resort in case there are, for some
-reason, incompatible languages. It can be used if you just want to
-select the hyphenation patterns of a single language, too.
+With this package option \babel{} just loads some basic macros (mainly
+the selectors), defines |\AfterBabelLanguage| and exits. It also
+selects the hyphenation patterns for the last language passed as option
+(by its name in |language.dat|). There are two main uses: classes and
+packages, and as a last resort in case there are, for some reason,
+incompatible languages. It can be used if you just want to select the
+hyphenation patterns of a single language, too.
 
 \Describe\AfterBabelLanguage{\marg{option-name}\marg{code}}
 
@@ -1413,8 +1413,8 @@ be the same as the option name as set in |\usepackage|!).
 
 An alternative approach to define a language (or, more precisely, a
 \textit{locale}) is by means of an \texttt{ini} file. Currently
-\babel{} provides about 360 of these files containing the basic data
-required for a locale, covering about 270 languages, plus basic
+\babel{} provides about 380 of these files containing the basic data
+required for a locale, covering about 300 languages, plus basic
 templates for about 400 locales.
 
 |ini| files are not meant only for \babel, and they has been devised as
@@ -1428,9 +1428,9 @@ Most of them set the date, and many also the captions (Unicode and
 LICR). They will be evolving with the time to add more features
 (something to keep in mind if backward compatibility is important). The
 following section shows how to make use of them by means of
-|\babelprovide|. In other words, |\babelprovide| is mainly meant
-for auxiliary tasks, and as alternative when the |ldf|, for some
-reason, does not exists or does not work as expected.
+|\babelprovide|. In other words, |\babelprovide| is mainly meant as
+alternative when the |ldf| does not exists or does not work as
+expected, and for secondary tasks.
 
 \begin{example}
   Although Georgian has its own \texttt{ldf} file, here is how to
@@ -1457,8 +1457,10 @@ _\babelprovide[import, main]{georgian}_
 \end{example}
 
 \begin{more}
-  There is an example of how to use a template |ini| file
-  \href{https://github.com/latex3/babel/issues/176#issuecomment-1080846575}{here}, for Phoenician.
+  There is an example of how to use an |ini| template file
+  \href{https://github.com/latex3/babel/issues/176#issuecomment-1080846575}{here},
+  for Phoenician (although currently this locale is bundled with
+  \babel).
 \end{more}
 
 \New{3.49} Alternatively, you can tell babel to load all or some
@@ -3692,9 +3694,31 @@ current language.
 \Describe{interchar=}{\meta{interchar-list}}
 
 \New{24.1} This key in |\babelprovide| activates predefined rules for
-the ‘provided’ locale. Currently there is a set of rules for French
-named |punctuation.space|, which applies proper spacing with characters
-\textit{;:!?«»}.
+the ‘provided’ locale. Currently the following |interchar|’s are defined:
+
+\begingroup
+\def\trans#1#2#3{%
+  \vspace{1.5mm}%
+  \parbox[t]{2.2cm}{\raggedright\strut#1}%
+  \hspace{2mm}%
+  \parbox[t]{4.0cm}{\strut\ttfamily#2}%
+  \hspace{2mm}%
+  \parbox[t]{6.6cm}{\strut#3}\par}
+\bigskip\hrule\nobreak\vspace{.5mm}
+
+\trans{Cantonese, Chinese, Japanese,
+Korean}{linebreak.basic}{\New{24.4} Basic settings for CJK
+defined in (plain) \xetex. See the linked news page for details.}
+
+\trans{French}{punctuation.space}{Rules for proper spacing with
+characters \textit{;:!?«»} are applied.}
+
+\vspace{2mm}\hrule\nobreak
+\endgroup
+
+\begin{warning}
+  This feature requires |import|.
+\end{warning}
 
 \begin{note}
   You can use |transforms| and |interchar| at the same time. Only the
@@ -5451,8 +5475,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.3>>
-%<<date=2024/03/29>>
+%<<version=24.4>>
+%<<date=2024/04/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9898,7 +9922,7 @@ wouldn’t exist.
 \or
   \input xebabel.def
 \fi
-\providecommand\babelfont{\bbl@error@{only-lua-xe}{}{}{}}
+\providecommand\babelfont{\bbl@error{only-lua-xe}{}{}{}}
 \providecommand\babelprehyphenation{\bbl@error{only-lua}{}{}{}}
 \ifx\babelposthyphenation\@undefined
   \let\babelposthyphenation\babelprehyphenation
@@ -10305,6 +10329,8 @@ wouldn’t exist.
   \fi
   % == transforms ==
   % > luababel.def
+  \def\CurrentOption{#2}%
+  \@nameuse{bbl@icsave@#2}%
   % == main ==
   \ifx\bbl@KVP@main\@nnil  % Restore only if not 'main'
     \let\languagename\bbl@savelangname
@@ -13745,6 +13771,9 @@ wouldn’t exist.
 \AddBabelHook{xetex}{stopcommands}{%
   \xebbl@stop
   \let\xebbl@stop\relax}
+\def\bbl@input@classes{% Used in CJK intraspaces
+  \input{load-unicode-xetex-classes.tex}%
+  \let\bbl@input@classes\relax}
 \def\bbl@intraspace#1 #2 #3\@@{%
   \bbl@csarg\gdef{xeisp@\languagename}%
     {\XeTeXlinebreakskip #1em plus #2em minus #3em\relax}}
@@ -13789,7 +13818,7 @@ wouldn’t exist.
         \AtBeginDocument{\bbl@patchfont{\bbl@ispacesize}}%
       \fi}%
   \fi}
-\ifx\DisableBabelHook\@undefined\endinput\fi
+\ifx\DisableBabelHook\@undefined\endinput\fi %%%% TODO: why
 \AddBabelHook{babel-fontspec}{afterextras}{\bbl@switchfont}
 \AddBabelHook{babel-fontspec}{beforestart}{\bbl@ckeckstdfonts}
 \DisableBabelHook{babel-fontspec}
@@ -13854,7 +13883,7 @@ wouldn’t exist.
 % special case, hyphens are stored as |\bbl@upto|, to deal with ranges.
 %
 %    \begin{macrocode}
-\newcommand\IfBabelIntercharT[1]{%
+\newcommand\bbl@ifinterchar[1]{%
   \let\bbl@tempa\@gobble        % Assume to ignore
   \edef\bbl@tempb{\zap@space#1 \@empty}%
   \ifx\bbl@KVP@interchar\@nnil\else
@@ -13866,6 +13895,8 @@ wouldn’t exist.
         \fi}%
   \fi
   \bbl@tempa}
+\newcommand\IfBabelIntercharT[2]{%
+  \bbl@carg\bbl@add{bbl@icsave@\CurrentOption}{\bbl@ifinterchar{#1}{#2}}}%
 \newcommand\babelcharclass[3]{%
   \EnableBabelHook{babel-interchar}%
   \bbl@csarg\newXeTeXintercharclass{xeclass@#2@#1}%
@@ -16033,17 +16064,15 @@ end
       \fi
       \ifx\tcolorbox\@undefined\else
         \def\tcb@drawing@env@begin{%
-        \csname tcb@before@\tcb@split@state\endcsname
-        \bbl@pictsetdir\tw@
-        \begin{\kvtcb@graphenv}%
-        \tcb@bbdraw%
-        \tcb@apply@graph@patches
-        }%
-       \def\tcb@drawing@env@end{%
-       \end{\kvtcb@graphenv}%
-       \bbl@pictresetdir
-       \csname tcb@after@\tcb@split@state\endcsname
-       }%
+          \csname tcb@before@\tcb@split@state\endcsname
+          \bbl@pictsetdir\tw@
+          \begin{\kvtcb@graphenv}%
+          \tcb@bbdraw
+          \tcb@apply@graph@patches}%
+        \def\tcb@drawing@env@end{%
+          \end{\kvtcb@graphenv}%
+          \bbl@pictresetdir
+          \csname tcb@after@\tcb@split@state\endcsname}%
       \fi
     }}
   {}

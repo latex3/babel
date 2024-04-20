@@ -1,6 +1,6 @@
-## Babel 24.3
+## Babel 24.4
 
-2024-03-29
+2024-04-20
 
 `babel` is the multilingual framework for localizing documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -10,9 +10,9 @@ languages even work with Plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.3 are described in:
+Changes in version 24.4 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.3.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.4.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,12 +48,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.3 2024-03-29
-     * A silly mistake in the French locales: the interchar
-       'punctuation.space' was named 'puntuation.space' (xetex)
-     * New setting 'interchar.disable' in \babeladjust (xetex)
-     * Experimental macro '\localebox' (luatex)
-     * Alphabetic counter for Bodo (lua/xe)
+24.4 2024-04-20
+     * New ‘interchar’ declarations for Cantonese, Chinese, Japanese and
+       Korean: linebreak.basic (xe).
+     * Fixed Tibetan line breaking with closing punctuation (lua).
 ```
 
 ### Previous changes

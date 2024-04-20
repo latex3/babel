@@ -33,6 +33,7 @@
   \babelprehyphenation{tibetan}{[{a}{p}]|}%
     { {}, {space=\bbl@tempe, data=1 } }%
   % (2) Line breaking
+  % 0f0d=shad, 0f0e=nyis shad, 0f0b=tsheg
   \babelprehyphenation{tibetan}{[^^^^0f0d^^^^0f0e]|[^^^^0f0d^^^^0f0e]}%
     { {}, {insert, penalty=10000}, {}, {} }%
   \babelprehyphenation{tibetan}{[^^^^0f0d^^^^0f0e][^^^^0f40-^^^^0f6a]}%
@@ -40,9 +41,14 @@
   \edef\bbl@tempe{\directlua{
     tex.print(table.concat(Babel.tibetan.tsheg, ' ', 1, 3))
   }}%
-  \babelprehyphenation{tibetan}{^^^^0f0b[^ ^^^^0f0d^^^^0f0e]}%
+  \babelprehyphenation{tibetan}%
+    {^^^^0f0b[^ ^^^^0f0d^^^^0f0e{)}{]}’”»{007D}^^^^0f3b^^^^0f3d〉〉》」』】〕〗〙〛]}%
     { {insert, penalty=10000}, {insert, space=\bbl@tempe, data=1}, {},
-      {insert, space=\bbl@tempe, data=1}, {} }}
+      {insert, space=\bbl@tempe, data=1}, {} }%
+  \babelprehyphenation{tibetan}% 
+    {^^^^0f0b[{)}{]}’”»{007D}^^^^0f3b^^^^0f3d〉〉》」』】〕〗〙〛]{a}}%
+    { {insert, penalty=10000}, {insert, space=\bbl@tempe, data=1}, {},
+      {}, {insert, space=\bbl@tempe, data=1}, {} }}
       
 \def\bbl@tibetanjust{%
   % (3) Justification
