@@ -1,6 +1,6 @@
-## Babel 24.4
+## Babel 24.4.48377
 
-2024-04-20
+(dev)
 
 `babel` is the multilingual framework for localizing documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -48,6 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+24.5 (dev)
+     * Fixes:
+     - 
 24.4 2024-04-20
      * New ‘interchar’ declarations for Cantonese, Chinese, Japanese and
        Korean: linebreak.basic (xe).

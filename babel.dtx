@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/04/20 v24.4 The Babel package]
+\ProvidesFile{babel.dtx}[2024/04/27 v24.4.48377 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2567,11 +2567,11 @@ languages above. So, the previous example is best written as:
 \babelprovide[_import_]{hungarian}
 \end{verbatim}
 
-There are about 250 |ini| files, with data taken from the |ldf| files
-and the CLDR provided by Unicode. Not all languages in the latter are
-complete, and therefore neither are the |ini| files. A few languages
-may show a warning about the current lack of suitability of some
-features.
+There are 380 |ini| files for about 300 languages, with data taken from
+the |ldf| files and the CLDR provided by Unicode. Not all languages in
+the latter are complete, and therefore neither are the |ini| files. A
+few languages may show a warning about the current lack of suitability
+of some features.
 
 Besides |\today|, this option defines an additional command for dates:
 |\<language>date|, which takes three arguments, namely, year, month and
@@ -5475,8 +5475,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.4>>
-%<<date=2024/04/20>>
+%<<version=24.4.48377>>
+%<<date=2024/04/27>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10354,15 +10354,15 @@ wouldn’t exist.
   \@namedef{extras#1}{}%
   \@namedef{noextras#1}{}%
   \bbl@startcommands*{#1}{captions}%
-    \ifx\bbl@KVP@captions\@nnil %      and also if import, implicit
+    \ifx\bbl@KVP@captions\@nnil %     and also if import, implicit
       \def\bbl@tempb##1{%             elt for \bbl@captionslist
-        \ifx##1\@empty\else
+        \ifx##1\@nnil\else
           \bbl@exp{%
             \\\SetString\\##1{%
               \\\bbl@nocaption{\bbl@stripslash##1}{#1\bbl@stripslash##1}}}%
           \expandafter\bbl@tempb
         \fi}%
-      \expandafter\bbl@tempb\bbl@captionslist\@empty
+      \expandafter\bbl@tempb\bbl@captionslist\@nnil
     \else
       \ifx\bbl@initoload\relax
         \bbl@read@ini{\bbl@KVP@captions}2%  % Here letters cat = 11
