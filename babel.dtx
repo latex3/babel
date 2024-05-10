@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/04/27 v24.4.48377 The Babel package]
+\ProvidesFile{babel.dtx}[2024/05/10 v24.4.49682 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5475,8 +5475,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.4.48377>>
-%<<date=2024/04/27>>
+%<<version=24.4.49682>>
+%<<date=2024/05/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14592,10 +14592,10 @@ end
   }}
 \begingroup
 \catcode`\%=12
-\catcode`\^=14
+\catcode`\&=14  
 \catcode`\'=12
 \catcode`\~=12
-\gdef\bbl@seaintraspace{^
+\gdef\bbl@seaintraspace{&
   \let\bbl@seaintraspace\relax
   \directlua{
     Babel = Babel or {}
@@ -14611,7 +14611,7 @@ end
     function Babel.sea_disc_to_space (head)
       local sea_ranges = Babel.sea_ranges
       local last_char = nil
-      local quad = 655360      ^% 10 pt = 655360 = 10 * 65536
+      local quad = 655360      &% 10 pt = 655360 = 10 * 65536
       for item in node.traverse(head) do
         local i = item.id
         if i == node.id'glyph' then
@@ -14621,16 +14621,16 @@ end
           quad = font.getfont(last_char.font).size
           for lg, rg in pairs(sea_ranges) do
             if last_char.char > rg[1] and last_char.char < rg[2] then
-              lg = lg:sub(1, 4)  ^% Remove trailing number of, eg, Cyrl1
+              lg = lg:sub(1, 4)  &% Remove trailing number of, eg, Cyrl1
               local intraspace = Babel.intraspaces[lg]
               local intrapenalty = Babel.intrapenalties[lg]
               local n
               if intrapenalty ~= 0 then
-                n = node.new(14, 0)     ^% penalty
+                n = node.new(14, 0)     &% penalty
                 n.penalty = intrapenalty
                 node.insert_before(head, item, n)
               end    
-              n = node.new(12, 13)      ^% (glue, spaceskip)
+              n = node.new(12, 13)      &% (glue, spaceskip)
               node.setglue(n, intraspace.b * quad,
                               intraspace.p * quad,
                               intraspace.m * quad)
@@ -14641,7 +14641,7 @@ end
         end
       end
     end
-  }^^
+  }&
   \bbl@luahyphenate}  
 %    \end{macrocode}
 %    
@@ -14668,10 +14668,12 @@ end
     Babel.cjk_enabled = true
     function Babel.cjk_linebreak(head)
       local GLYPH = node.id'glyph'
+      local DISC = node.id'disc'
       local last_char = nil
       local quad = 655360      % 10 pt = 655360 = 10 * 65536
       local last_class = nil
       local last_lang = nil
+      local nobreak = false
 
       for item in node.traverse(head) do
         if item.id == GLYPH then
@@ -14699,7 +14701,13 @@ end
           if br == 1 and props.linebreak == 'c' and
               lang ~= \the\l@nohyphenation\space and
               last_lang ~= \the\l@nohyphenation then
-            local intrapenalty = props.intrapenalty
+            local intrapenalty
+            if nobreak then
+              intrapenalty = 10000
+              node.remove(head, item.prev)
+            else
+              intrapenalty = props.intrapenalty
+            end
             if intrapenalty ~= 0 then
               local n = node.new(14, 0)     % penalty
               n.penalty = intrapenalty
@@ -14712,12 +14720,14 @@ end
                             intraspace.m * quad)
             node.insert_before(head, item, n)
           end
-
           if font.getfont(item.font) then
             quad = font.getfont(item.font).size
           end
           last_class = class
           last_lang = lang
+          nobreak = false
+        elseif item.id == 7 and item.subtype == 3 then
+          nobreak = true
         else % if penalty, glue or anything else
           last_class = nil
         end
@@ -14736,10 +14746,10 @@ end
           func(head)
         end
       end
+      lang.hyphenate(head)
       if Babel.cjk_enabled then
         Babel.cjk_linebreak(head)
       end
-      lang.hyphenate(head)
       if Babel.linebreaking.after then
         for k, func in ipairs(Babel.linebreaking.after)  do
           func(head)
@@ -15321,9 +15331,11 @@ end
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
            if #1 == 0 or #1 == 2 then
-             rep = rep:gsub('(space)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
+             rep = rep:gsub(&%
+               '(space)%s*=%s*([%-%d%.]+)%s+([%-%d%.]+)%s+([%-%d%.]+)',
                'space = {' .. '%2, %3, %4' .. '}')
-             rep = rep:gsub('(spacefactor)%s*=%s*([%d%.]+)%s+([%d%.]+)%s+([%d%.]+)',
+             rep = rep:gsub(&%
+               '(spacefactor)%s*=%s*([%-%d%.]+)%s+([%-%d%.]+)%s+([%-%d%.]+)',
                'spacefactor = {' .. '%2, %3, %4' .. '}')
              rep = rep:gsub('(kashida)%s*=%s*([^%s,]*)', Babel.capture_kashida)
            else  

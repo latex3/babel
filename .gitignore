@@ -3,3 +3,6 @@ build/*
 *.pdf
 !*/testfiles/*.pdf
 /*.py
+/ls-R
+/testfiles/*.diff
+/*.cnf
