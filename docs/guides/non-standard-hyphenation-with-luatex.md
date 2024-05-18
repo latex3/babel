@@ -60,16 +60,16 @@ replaced by a discretionary, but no `data` is required because the
 item to be replaced is a character, which already contains the required
 data. (Remember discretionaries are not allowed in
 `\babelprehyphenation`.)
-3. The key `string` replaces the character with the string. If empty,
+3. The key `string` replaces the character with the **string**. If empty,
 the item (in TeX jargon, the node) is removed; to insert chars, just
 use a multi-character string. The nodes created are literal copies of
 the original (the same font, language, and so on), but with the new
 characters.
-4. With `remove` the node is, well, removed. A synonymous is `string=`.
+4. With `remove` the node is, well, **removed**. A synonymous is `string=`.
 5. **Spaces** are declared with something like `space =.2 .1 0`. The
 values are in em units, and they are the natural width, the `plus`, and
 the `minus`. Here, you may need `data`, too. With `spacefactor` the
-unit is the font size of the current font (if the node is a glyph; you
+unit is the ordinary space of the current font (with the latter, you
 may need a `data=` pointing to a specific glyph).
 6. **Penalties** are declared with `penalty`.
 
