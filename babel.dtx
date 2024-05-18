@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/05/10 v24.4.49682 The Babel package]
+\ProvidesFile{babel.dtx}[2024/05/18 v24.5 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3892,22 +3892,26 @@ There are some package options controlling bidi writing.
   $\string|$ \texttt{basic-r} $\string|$ \texttt{bidi-l} $\string|$
   \texttt{bidi-r}}
 
-\New{3.14} Selects the bidi algorithm to be used. With |default| the
-bidi mechanism is just activated (by default it is not), but every
-change must be marked up. In \xetex{} and \pdftex{} this is the only
-option.
+\New{3.14} Selects the bidi algorithm to be used.
 
-In \luatex, |basic-r| provides a simple and fast method for R text,
-which handles numbers and unmarked L text within an R context many in
-typical cases. \New{3.19} Finally, |basic| supports both L and R text,
-and it is the preferred method (support for |basic-r| is currently
-limited). (They are named \texttt{basic} mainly because they only
-consider the intrinsic direction of scripts and weak directionality.)
+With |default| the bidi mechanism is just activated (by default it is
+not), but every change must be marked up. In \pdftex{} this is the only
+option. If the RL text only consists of letters and punctuation, it
+will be fine in most cases, but numbers, for example, will be rendered
+in the wrong order.
 
-\New{3.29} In \xetex, |bidi-r| and |bidi-l| resort to the package
-\textsf{bidi} (by Vafa Khalighi). Integration is still somewhat
-tentative, but it mostly works. For RL documents use the former, and
-for LR ones use the latter.
+In \luatex, the preferred method is |basic|, which supports both L and
+R text. |basic-r| was a first attempt to create a bidi algorith and
+provides a simple and fast method for R text in some typical cases.
+(They are named \texttt{basic} mainly because they only consider the
+intrinsic direction of scripts and weak directionality.)
+
+In \xetex, |bidi-r| and |bidi-l| resort to the package \textsf{bidi}
+(by Vafa Khalighi). For RL documents use the former, and for LR ones
+use the latter. However, this package patches heavily lots of macros
+and packages even if the RL script is not the main one, which can lead
+to some surprising results, so for short and simple texts (letters and
+punctuation) the |default| method can be preferable.
 
 There are samples on GitHub, under \texttt{/required/babel/samples}.
 See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
@@ -5475,8 +5479,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.4.49682>>
-%<<date=2024/05/10>>
+%<<version=24.5>>
+%<<date=2024/05/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14668,12 +14672,10 @@ end
     Babel.cjk_enabled = true
     function Babel.cjk_linebreak(head)
       local GLYPH = node.id'glyph'
-      local DISC = node.id'disc'
       local last_char = nil
       local quad = 655360      % 10 pt = 655360 = 10 * 65536
       local last_class = nil
       local last_lang = nil
-      local nobreak = false
 
       for item in node.traverse(head) do
         if item.id == GLYPH then
@@ -14701,13 +14703,7 @@ end
           if br == 1 and props.linebreak == 'c' and
               lang ~= \the\l@nohyphenation\space and
               last_lang ~= \the\l@nohyphenation then
-            local intrapenalty
-            if nobreak then
-              intrapenalty = 10000
-              node.remove(head, item.prev)
-            else
-              intrapenalty = props.intrapenalty
-            end
+            local intrapenalty = props.intrapenalty
             if intrapenalty ~= 0 then
               local n = node.new(14, 0)     % penalty
               n.penalty = intrapenalty
@@ -14720,14 +14716,12 @@ end
                             intraspace.m * quad)
             node.insert_before(head, item, n)
           end
+
           if font.getfont(item.font) then
             quad = font.getfont(item.font).size
           end
           last_class = class
           last_lang = lang
-          nobreak = false
-        elseif item.id == 7 and item.subtype == 3 then
-          nobreak = true
         else % if penalty, glue or anything else
           last_class = nil
         end
@@ -14746,10 +14740,10 @@ end
           func(head)
         end
       end
-      lang.hyphenate(head)
       if Babel.cjk_enabled then
         Babel.cjk_linebreak(head)
       end
+      lang.hyphenate(head)
       if Babel.linebreaking.after then
         for k, func in ipairs(Babel.linebreaking.after)  do
           func(head)

@@ -1,6 +1,6 @@
-## Babel 24.4.49682
+## Babel 24.5
 
-(dev)
+2024-05-18
 
 `babel` is the multilingual framework for localizing documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -10,9 +10,9 @@ languages even work with Plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.4 are described in:
+Changes in version 24.5 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.4.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.5.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,13 +48,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.5 (dev)
-     * Fixes:
-     - 
-24.4 2024-04-20
-     * New ‘interchar’ declarations for Cantonese, Chinese, Japanese and
-       Korean: linebreak.basic (xe).
-     * Fixed Tibetan line breaking with closing punctuation (lua).
+24.5 2024-05-18
+     * Change the first item in `abjad` and `maghrebi.abjad` counters
+       in `ar-DZ`, `ar-MA` and `ar-TN`), from ا to أ. Suggested by
+       @seloumi.
+     * Fixed an error when a locale is loaded on the fly and there are empty
+       captions in another language (#294)
+     * Fix in transforms (lua): negative values in `space` and `spacefactor`
+       raised and error.
 ```
 
 ### Previous changes
