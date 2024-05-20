@@ -1,6 +1,6 @@
-## Babel 24.5
+## Babel 24.5.50668
 
-2024-05-18
+(dev)
 
 `babel` is the multilingual framework for localizing documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -48,6 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+25.6 (dev)
+     * New keys in transforms: kern, nullbox.
+
 24.5 2024-05-18
      * Change the first item in `abjad` and `maghrebi.abjad` counters
        in `ar-DZ`, `ar-MA` and `ar-TN`), from ا to أ. Suggested by

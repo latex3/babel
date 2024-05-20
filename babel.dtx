@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/05/18 v24.5 The Babel package]
+\ProvidesFile{babel.dtx}[2024/05/20 v24.5.50668 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5479,8 +5479,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.5>>
-%<<date=2024/05/18>>
+%<<version=24.5.50668>>
+%<<date=2024/05/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15323,6 +15323,8 @@ end
            local rep = [=[##1]=]             
            rep = rep:gsub('^%s*(remove)%s*$', 'remove = true')
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
+           rep = rep:gsub('^%s*(nullbox)%s*$', 'nullbox = true')
+           rep = rep:gsub(',%s*(nullbox)%s*$', ', nullbox = true')
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
            if #1 == 0 or #1 == 2 then
              rep = rep:gsub(&%
@@ -15342,7 +15344,7 @@ end
     \bbl@foreach\babeltempb{&%
       \bbl@forkv{{##1}}{&%
         \in@{,####1,}{,nil,step,data,remove,insert,string,no,pre,&%
-            no,post,penalty,kashida,space,spacefactor,}&%
+            no,post,penalty,kashida,space,spacefactor,kern,nullbox}&%
         \ifin@\else
           \bbl@error{bad-transform-option}{####1}{}{}&%
         \fi}}&% 
@@ -15414,6 +15416,7 @@ end
                return u.gsub(u.char(tonumber(n, 16)), '(%p)', '%%%1')
              end)            
       lbkr[id] = lbkr[id] or {}
+      print('*****' .. patt)
       table.insert(lbkr[id],
         { label=label, attr=attr, pattern=patt, replace={\babeltempb} })
     }&%
@@ -16541,6 +16544,18 @@ function Babel.hyphenate_replace(head, mode)
 
           elseif mode == 0 and crep and crep.space then
             -- ERROR
+            
+          elseif crep and crep.kern then
+            d = node.new(13, 1)      -- (kern, user)
+            local quad = font.getfont(item_base.font).size or 655360
+            d.attr = item_base.attr
+            d.kern = crep.kern * quad
+            head, new = node.insert_before(head, item, d)
+            
+          elseif crep and crep.nullbox then
+            d = node.new(1, 0)      -- (hlist, unknown)
+            d.attr = item_base.attr
+            head, new = node.insert_before(head, item, d)
 
           end  -- ie replacement cases
 
