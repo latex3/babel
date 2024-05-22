@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/05/20 v24.5.50668 The Babel package]
+\ProvidesFile{babel.dtx}[2024/05/22 v24.5.50868 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5479,8 +5479,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.5.50668>>
-%<<date=2024/05/20>>
+%<<version=24.5.50868>>
+%<<date=2024/05/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14357,6 +14357,7 @@ wouldn’t exist.
 \endinput\fi
   % Here stops reading code for hyphen.cfg
   % The following is read the 2nd time it's loaded
+  % First, global declarations for lua
 \begingroup  % TODO - to a lua file
 \catcode`\%=12
 \catcode`\'=12
@@ -14364,6 +14365,10 @@ wouldn’t exist.
 \catcode`\:=12
 \directlua{
   Babel = Babel or {}
+  function Babel.lua_error(e, a)
+    tex.print([[\noexpand\csname bbl@error\endcsname{]] .. 
+      e .. '}{' .. (a or '') .. '}{}{}')
+  end
   function Babel.bytes(line)
     return line:gsub("(.)",
       function (chr) return unicode.utf8.char(string.byte(chr)) end)
@@ -15323,9 +15328,8 @@ end
            local rep = [=[##1]=]             
            rep = rep:gsub('^%s*(remove)%s*$', 'remove = true')
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
-           rep = rep:gsub('^%s*(nullbox)%s*$', 'nullbox = true')
-           rep = rep:gsub(',%s*(nullbox)%s*$', ', nullbox = true')
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
+           rep = rep:gsub('node%s*=%s*(%a+)%s*(%a*)', Babel.capture_node)
            if #1 == 0 or #1 == 2 then
              rep = rep:gsub(&%
                '(space)%s*=%s*([%-%d%.]+)%s+([%-%d%.]+)%s+([%-%d%.]+)',
@@ -15344,7 +15348,7 @@ end
     \bbl@foreach\babeltempb{&%
       \bbl@forkv{{##1}}{&%
         \in@{,####1,}{,nil,step,data,remove,insert,string,no,pre,&%
-            no,post,penalty,kashida,space,spacefactor,kern,nullbox}&%
+            no,post,penalty,kashida,space,spacefactor,kern,node}&%
         \ifin@\else
           \bbl@error{bad-transform-option}{####1}{}{}&%
         \fi}}&% 
@@ -16552,14 +16556,14 @@ function Babel.hyphenate_replace(head, mode)
             d.kern = crep.kern * quad
             head, new = node.insert_before(head, item, d)
             
-          elseif crep and crep.nullbox then
-            d = node.new(1, 0)      -- (hlist, unknown)
+          elseif crep and crep.node then
+            d = node.new(crep.node[1], crep.node[2])  
             d.attr = item_base.attr
             head, new = node.insert_before(head, item, d)
 
           end  -- ie replacement cases
 
-          -- Shared by disc, space and penalty.
+          -- Shared by disc, space(factor), kern, node and penalty.
           if sc == 1 then
             word_head = head
           end
@@ -16662,6 +16666,14 @@ function Babel.capture_kashida(key, wt)
     Babel.kashida_wts = { wt }
   end
   return 'kashida = ' .. wt
+end
+
+function Babel.capture_node(id, subtype)
+  local sbt = 0
+  for k, v in pairs(node.subtypes(id)) do
+    if v == subtype then sbt = k end
+  end
+  return 'node = {' .. node.id(id) .. ', ' .. sbt .. '}'
 end
 
 -- Experimental: applies prehyphenation transforms to a string (letters
