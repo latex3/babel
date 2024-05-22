@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [24.6](news/whats-new-in-babel-24.6.html) | (dev)|
 | [24.5](news/whats-new-in-babel-24.5.html) | Minor changes and fixes. |
 | [24.4](news/whats-new-in-babel-24.4.html) | `interchar=linebreak.basic` for CJK (`xetex`) |
 | [24.3](news/whats-new-in-babel-24.3.html) | Also minor changes and fixes (including spaces in French). |
