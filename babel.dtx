@@ -865,7 +865,7 @@ behavior is not desired, you may use the environment
 \begin{warning}
   Being similar to |\selectlanguage|, the warning above about the
   internal |\write| also applies here. The current mode (vertical or
-  horizonal) is also not changed.
+  horizontal) is also not changed.
 \end{warning}
 
 \Describe{\begin\menv{otherlanguage*}}%
@@ -1600,7 +1600,7 @@ files, with |\babelprovide| (or |provide=|). With these languages,
 |\babelprovide| with a valueless |import|, which will load the |ini|
 file with the tag given in parenthesis.
 
-Many locale are quite useable, provided captions and dates are
+Many locale are quite usable, provided captions and dates are
 not required (which is a very frequent case, particularly in ancient
 languages). So, they are included in the default \babel{} distribution.
 This can serve to encourage contributions, too. A warning will remember
@@ -2731,12 +2731,12 @@ one whose script is Latin.
 Sets the interword space for the writing system of the language, in em
 units (so, |0 .1 0| is |0em plus .1em|). Like |\spaceskip|, the em unit
 applied is that of the current text (more precisely, the previous 
-glyph). Currently used only in Southeast Asian scrips, like Thai, and
+glyph). Currently used only in Southeast Asian scripts, like Thai, and
 CJK.
 
 \Describe{intrapenalty=}{\meta{penalty}}
 Sets the interword penalty for the writing system of this language.
-Currently used only in Southeast Asian scrips, like Thai. Ignored if 0
+Currently used only in Southeast Asian scripts, like Thai. Ignored if 0
 (which is the default value).
 
 \Describe{transforms=}{\meta{transform-list}}
@@ -3148,7 +3148,7 @@ Each language in the \babel{} sense has its own unique numeric
 identifier, which can be retrieved with |\localeid|.
 
 The |\localeid| is not the same as the |\language| identifier, which
-refers to a set of hyphenation patters (which, in turn, is just a
+refers to a set of hyphenation patterns (which, in turn, is just a
 component of the line breaking algorithm described in the next
 section). The data about preloaded patterns are store in an internal
 macro named |\bbl@languages| (see the code for further details), but
@@ -3901,7 +3901,7 @@ will be fine in most cases, but numbers, for example, will be rendered
 in the wrong order.
 
 In \luatex, the preferred method is |basic|, which supports both L and
-R text. |basic-r| was a first attempt to create a bidi algorith and
+R text. |basic-r| was a first attempt to create a bidi algorithm and
 provides a simple and fast method for R text in some typical cases.
 (They are named \texttt{basic} mainly because they only consider the
 intrinsic direction of scripts and weak directionality.)
@@ -4131,7 +4131,7 @@ There are \textit{three} R blocks and \textit{two} L blocks, and the
 order is \textit{RTL B and still ltr 1 ltr text RTL A}. This is by
 design to provide the proper behavior in the most usual cases — but if
 you need to use |\ref| in an L text inside R, the L text must be marked
-up explictly; for example:
+up explicitly; for example:
 \begin{verbatim}
 RTL A \foreignlanguage{english}{ltr text \thechapter{} and still ltr} RTL B
 \end{verbatim}
@@ -11537,7 +11537,7 @@ wouldn’t exist.
   \typeout{*******}}
 %    \end{macrocode}
 %
-% \section{Adjusting the Babel bahavior}
+% \section{Adjusting the Babel behavior}
 %
 % A generic high level interface is provided to adjust some global
 % and general settings.
@@ -11997,7 +11997,7 @@ wouldn’t exist.
 %    documentclasses \cls{report} and \cls{book} define and set the
 %    headings for the page. While doing so they also store a copy of
 %    |\markboth| in |\@mkboth|. Therefore we need to check whether
-%    |\@mkboth| has already been set. If so we neeed to do that again
+%    |\@mkboth| has already been set. If so we need to do that again
 %    with the new definition of |\markboth|. (As of Oct 2019, \LaTeX{}
 %    stores the definition in an intermediate macro, so it's not
 %    necessary anymore, but it's preserved for older versions.)
@@ -12111,7 +12111,7 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % The package \pkg{varioref} defines |\Ref| to be a robust command
-% wich uppercases the first character of the reference text. In
+% which uppercases the first character of the reference text. In
 % order to be able to do that it needs to access the expandable form
 % of |\ref|. So we employ a little trick here. We redefine the
 % (internal) command \verb*|\Ref | to call |\org@ref| instead of
@@ -14092,7 +14092,7 @@ wouldn’t exist.
 %
 % Which start just above, because some code is shared with \xetex. Now,
 % 8-bit specific stuff. If just one encoding has been declared, then
-% asume no switching is necessary (1). 
+% assume no switching is necessary (1). 
 %
 %    \begin{macrocode}
 %<*texxet>
