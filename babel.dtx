@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/05/22 v24.5.50868 The Babel package]
+\ProvidesFile{babel.dtx}[2024/05/25 v24.5.51177 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5479,8 +5479,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.5.50868>>
-%<<date=2024/05/22>>
+%<<version=24.5.51177>>
+%<<date=2024/05/25>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15328,6 +15328,7 @@ end
            local rep = [=[##1]=]             
            rep = rep:gsub('^%s*(remove)%s*$', 'remove = true')
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
+           rep = rep:gsub('^%s*(after)%s*,', 'after = true, ')
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
            rep = rep:gsub('node%s*=%s*(%a+)%s*(%a*)', Babel.capture_node)
            if #1 == 0 or #1 == 2 then
@@ -15348,7 +15349,7 @@ end
     \bbl@foreach\babeltempb{&%
       \bbl@forkv{{##1}}{&%
         \in@{,####1,}{,nil,step,data,remove,insert,string,no,pre,&%
-            no,post,penalty,kashida,space,spacefactor,kern,node}&%
+          no,post,penalty,kashida,space,spacefactor,kern,node,after,}&%
         \ifin@\else
           \bbl@error{bad-transform-option}{####1}{}{}&%
         \fi}}&% 
@@ -15420,7 +15421,6 @@ end
                return u.gsub(u.char(tonumber(n, 16)), '(%p)', '%%%1')
              end)            
       lbkr[id] = lbkr[id] or {}
-      print('*****' .. patt)
       table.insert(lbkr[id],
         { label=label, attr=attr, pattern=patt, replace={\babeltempb} })
     }&%
@@ -16365,6 +16365,7 @@ function Babel.hyphenate_replace(head, mode)
           print('=====')
         end
         local new  -- used when inserting and removing nodes
+        local dummy_node -- used by after
 
         local matches = { u.match(w, p, last_match) }
 
@@ -16409,7 +16410,8 @@ function Babel.hyphenate_replace(head, mode)
         -- rc = the replacement table index
         local rc = 0
 
-        while rc < last-first+1 do -- for each replacement
+------- TODO. dummy_node?
+        while rc < last-first+1 or dummy_node do -- for each replacement
           if Babel.debug then
             print('.....', rc + 1)
           end
@@ -16441,11 +16443,31 @@ function Babel.hyphenate_replace(head, mode)
           end
 
           if crep then
-            step = crep.step or 0
+            step = crep.step or step
+          end
+          
+          if crep and crep.after then
+            crep.insert = true
+            if dummy_node then
+              item = dummy_node
+            else -- TODO. if there is a node after?
+              d = node.copy(item_base)
+              head, item = node.insert_after(head, item, d)
+              dummy_node = item
+            end
+          end
+          
+          if crep and not crep.after and dummy_node then
+            node.remove(head, dummy_node)
+            dummy_node = nil
           end
 
           if (not enabled) or (crep and next(crep) == nil) then -- = {}
-            last_match = save_last    -- Optimization
+            if step == 0 then
+              last_match = save_last    -- Optimization
+            else
+              last_match = utf8.offset(w, sc+step)
+            end
             goto next
 
           elseif crep == nil or crep.remove then
@@ -16455,7 +16477,7 @@ function Babel.hyphenate_replace(head, mode)
             sc = sc - 1  -- Nothing has been inserted.
             last_match = utf8.offset(w, sc+1+step)
             goto next
-
+            
           elseif crep and crep.kashida then -- Experimental
             node.set_attribute(item,
                Babel.attr_kashida, 
@@ -16587,6 +16609,11 @@ function Babel.hyphenate_replace(head, mode)
             print('.....', '/')
             Babel.debug_hyph(w, w_nodes, sc, first, last, last_match)
         end
+      
+      if dummy_node then
+        node.remove(head, dummy_node)
+        dummy_node = nil
+      end
 
       end  -- for match
 
