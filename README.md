@@ -1,4 +1,4 @@
-## Babel 24.5.51177
+## Babel 24.5.51831
 
 (dev)
 
@@ -49,7 +49,7 @@ respective authors.
 ### Summary of latest changes
 ```
 25.6 (dev)
-     * New keys in transforms: kern, node, after.
+     * New keys in transforms: kern, norule, after, node.
 
 24.5 2024-05-18
      * Change the first item in `abjad` and `maghrebi.abjad` counters

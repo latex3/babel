@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/05/25 v24.5.51177 The Babel package]
+\ProvidesFile{babel.dtx}[2024/06/01 v24.5.51831 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5479,8 +5479,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.5.51177>>
-%<<date=2024/05/25>>
+%<<version=24.5.51831>>
+%<<date=2024/06/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15331,6 +15331,9 @@ end
            rep = rep:gsub('^%s*(after)%s*,', 'after = true, ')
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
            rep = rep:gsub('node%s*=%s*(%a+)%s*(%a*)', Babel.capture_node)
+           rep = rep:gsub(&%
+             '(norule)%s*=%s*([%-%d%.]+)%s+([%-%d%.]+)%s+([%-%d%.]+)',
+             'norule = {' .. '%2, %3, %4' .. '}')
            if #1 == 0 or #1 == 2 then
              rep = rep:gsub(&%
                '(space)%s*=%s*([%-%d%.]+)%s+([%-%d%.]+)%s+([%-%d%.]+)',
@@ -16554,6 +16557,15 @@ function Babel.hyphenate_replace(head, mode)
             if mode == 0 then
               placeholder = ' '
             end
+            head, new = node.insert_before(head, item, d)
+            
+          elseif crep and crep.norule then
+            -- 655360 = 10 pt = 10 * 65536 sp
+            d = node.new(2, 3)      -- (rule, empty) = \no*rule
+            local quad = font.getfont(item_base.font).size or 655360
+            d.width   = crep.norule[1] * quad
+            d.height  = crep.norule[2] * quad
+            d.depth   = crep.norule[3] * quad
             head, new = node.insert_before(head, item, d)
 
           elseif crep and crep.spacefactor then
