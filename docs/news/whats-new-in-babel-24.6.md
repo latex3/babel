@@ -15,8 +15,8 @@ height and depth of the empty (invisible) rule to be added, again in
 em units.
 
 With the following declaration, the quotation mark is made half-width,
-while the period is made half-width only at the start of a line (in other
-words, `。“` takes 1.5 em if in the same line):
+while the period is made half-width only at the end of a line (which
+means `。“` takes 1.5 em if in the same line):
 ```
 \babelprehyphenation{chinese}{ 。“ }{
   {},
@@ -51,7 +51,7 @@ with subtype is `node = hlist cell`.
 Note these new keys are not added to the string to be transformed (only
 spaces, glyphs and discretionaries are).
 
-A bug in `step` (which sometimes was ignored) has been fixed.
+A bug in `step` (which was sometimes ignored) has been fixed.
 
  
   
