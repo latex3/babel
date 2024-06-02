@@ -48,9 +48,6 @@ node with the given type and, if provided after a space, subtype (0 by
 default). Use names, not values (see the `luatex` manual). An example
 with subtype is `node = hlist cell`.
 
-Note these new keys are not added to the string to be transformed (only
-spaces, glyphs and discretionaries are).
-
 A bug in `step` (which was sometimes ignored) has been fixed.
 
  
