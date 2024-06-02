@@ -1,6 +1,6 @@
 # What's new in babel 24.6
 
-**Draft.**
+2024-06-02
 
 ## Improved transforms
 
@@ -14,8 +14,8 @@ in em units, while the second takes three arguments with the width,
 height and depth of the empty (invisible) rule to be added, again in
 em units.
 
-With the following declaration, the quotation mark is made half-width,
-while the period is made half-width only at the end of a line (which
+With the following declaration, the quotation mark is made halfwidth,
+while the period is made halfwidth only at the end of a line (which
 means `。“` takes 1.5 em if in the same line):
 ```
 \babelprehyphenation{chinese}{ 。“ }{
