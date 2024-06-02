@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/06/01 v24.5.51831 The Babel package]
+\ProvidesFile{babel.dtx}[2024/06/02 v24.6 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5479,8 +5479,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.5.51831>>
-%<<date=2024/06/01>>
+%<<version=24.6>>
+%<<date=2024/06/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12395,16 +12395,16 @@ wouldn’t exist.
   \fi
 \fi
 % TODO? Separate:
-\ifnum\bbl@bidimode=\@ne % Any bidi= except default=1
+\ifnum\bbl@bidimode=\@ne % bidi=default
   \let\bbl@beforeforeign\leavevmode
-  \ifodd\bbl@engine
+  \ifodd\bbl@engine % lua
     \newattribute\bbl@attr@dir
     \directlua{ Babel.attr_dir = luatexbase.registernumber'bbl@attr@dir' }
     \bbl@exp{\output{\bodydir\pagedir\the\output}}
   \fi
   \AtEndOfPackage{%
-    \EnableBabelHook{babel-bidi}%
-    \ifodd\bbl@engine\else
+    \EnableBabelHook{babel-bidi}% pdf/lua/xe
+    \ifodd\bbl@engine\else % pdf/xe
       \bbl@xebidipar
     \fi}
 \fi
@@ -13995,12 +13995,12 @@ wouldn’t exist.
 %<*xetex|texxet>
 \providecommand\bbl@provide@intraspace{}
 \bbl@trace{Redefinitions for bidi layout}
-\def\bbl@sspre@caption{%
+\def\bbl@sspre@caption{%  TODO: Unused!
   \bbl@exp{\everyhbox{\\\bbl@textdir\bbl@cs{wdir@\bbl@main@language}}}}
 \ifx\bbl@opt@layout\@nnil\else % if layout=.. 
 \def\bbl@startskip{\ifcase\bbl@thepardir\leftskip\else\rightskip\fi}
 \def\bbl@endskip{\ifcase\bbl@thepardir\rightskip\else\leftskip\fi}
-\ifx\bbl@beforeforeign\leavevmode % A poor test for bidi=
+\ifnum\bbl@bidimode>\z@  % TODO: always?
   \def\@hangfrom#1{%
     \setbox\@tempboxa\hbox{{#1}}%
     \hangindent\ifcase\bbl@thepardir\wd\@tempboxa\else-\wd\@tempboxa\fi
