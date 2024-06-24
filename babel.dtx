@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/06/02 v24.6 The Babel package]
+\ProvidesFile{babel.dtx}[2024/06/24 v24.6.54168 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5479,8 +5479,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.6>>
-%<<date=2024/06/02>>
+%<<version=24.6.54168>>
+%<<date=2024/06/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15351,8 +15351,8 @@ end
          }}}&%
     \bbl@foreach\babeltempb{&%
       \bbl@forkv{{##1}}{&%
-        \in@{,####1,}{,nil,step,data,remove,insert,string,no,pre,&%
-          no,post,penalty,kashida,space,spacefactor,kern,node,after,}&%
+        \in@{,####1,}{,nil,step,data,remove,insert,string,no,pre,no,&%
+          post,penalty,kashida,space,spacefactor,kern,node,after,norule,}&%
         \ifin@\else
           \bbl@error{bad-transform-option}{####1}{}{}&%
         \fi}}&% 
