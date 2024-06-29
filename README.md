@@ -1,6 +1,6 @@
 ## Babel 24.7
 
-2014-05-26
+2024-06-26
 
 `babel` is the multilingual framework for localizing documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -48,7 +48,7 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.7  2024-05-26
+24.7  2024-06-26
       * Improvements in some locales:
         - Filipino (thanks to Leothelion, @ponte-vecchio)
         - Line breaking in Blin, Geez, Tigre, Tigrinya, Wolaytta.
