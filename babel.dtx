@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/06/26 v24.7 The Babel package]
+\ProvidesFile{babel.dtx}[2024/06/30 v24.7.54769 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5479,8 +5479,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.7>>
-%<<date=2024/06/26>>
+%<<version=24.7.54769>>
+%<<date=2024/06/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -16776,7 +16776,7 @@ Babel.ranges = {
  {0x07C0, 0x085F, 'r'},
  {0x0860, 0x086F, 'al'},
  {0x08A0, 0x08FF, 'al'},
- {0xE000, 0xF8FF, 'on'}, -- PUA
+ -- {0xE000, 0xF8FF, 'on'}, -- PUA
  {0xFB1D, 0xFB4F, 'r'},
  {0xFB50, 0xFDFF, 'al'},
  {0xFE70, 0xFEFF, 'al'},
@@ -16784,8 +16784,8 @@ Babel.ranges = {
  {0x1E800, 0x1E8DF, 'r'},
  {0x1E900, 0x1E95F, 'r'},
  {0x1F300, 0x1F9FF, 'on'},
- {0xF0000, 0xFFFFD, 'on'}, -- PUA
- {0x100000, 0x10FFFD, 'on'} -- PUA
+ -- {0xF0000, 0xFFFFD, 'on'}, -- PUA
+ -- {0x100000, 0x10FFFD, 'on'} -- PUA
 }
 
 Babel.characters = {
@@ -23254,6 +23254,7 @@ function Babel.bidi(head, ispar, hdir)
   local has_hyperlink = false
 
   local ATDIR = Babel.attr_dir
+  local attr_d
 
   local save_outer
   local temp = node.get_attribute(head, ATDIR)
@@ -23285,9 +23286,11 @@ function Babel.bidi(head, ispar, hdir)
     -- current one is not added until we start processing the neutrals.
 
     -- three cases: glyph, dir, otherwise
-    if glyph_not_symbol_font(item)
+    if glyph_not_symbol_font(item)   
        or (item.id == 7 and item.subtype == 2) then
 
+      if node.get_attribute(item, ATDIR) < 0 then goto nextnode end
+      
       local d_font = nil
       local item_r
       if item.id == 7 and item.subtype == 2 then
@@ -23438,8 +23441,12 @@ function Babel.bidi(head, ispar, hdir)
     end
 
     outer_first = nil
+    
+    node.set_attribute(item, ATDIR, -1)
+    
+    ::nextnode::
 
-  end
+  end -- for each node
 
   -- TODO -- repeated here in case EN/ET is the last node. Find a
   -- better way of doing things:
