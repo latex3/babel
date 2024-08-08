@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/06/30 v24.7.54769 The Babel package]
+\ProvidesFile{babel.dtx}[2024/08/08 v24.7.58672 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3908,10 +3908,14 @@ intrinsic direction of scripts and weak directionality.)
 
 In \xetex, |bidi-r| and |bidi-l| resort to the package \textsf{bidi}
 (by Vafa Khalighi). For RL documents use the former, and for LR ones
-use the latter. However, this package patches heavily lots of macros
-and packages even if the RL script is not the main one, which can lead
-to some surprising results, so for short and simple texts (letters and
-punctuation) the |default| method can be preferable.
+use the latter. 
+
+\begin{warning}
+  This package patches heavily lots of macros and packages even if the
+  RL script is not the main one, which can lead to some surprising
+  results, so for short and simple texts (letters and punctuation) the
+  |default| method is more often than not much preferable.
+\end{warning}
 
 There are samples on GitHub, under \texttt{/required/babel/samples}.
 See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
@@ -5479,8 +5483,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.7.54769>>
-%<<date=2024/06/30>>
+%<<version=24.7.58672>>
+%<<date=2024/08/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15543,7 +15547,8 @@ end
 % The basic setup. The output is modified at a very low level to set
 % the |\bodydir| to the |\pagedir|. Sadly, we have to deal with boxes
 % in math with basic, so the |\bbl@mathboxdir| hack is activated every
-% math with the package option bidi=.
+% math with the package option bidi=. The hack for the PUA is no longer
+% necessary with |basic|, but it’s kept in |basic-r|.
 %
 %    \begin{macrocode}
 \breakafterdirmode=1
@@ -15557,7 +15562,10 @@ end
     \ifcase\expandafter\@gobbletwo\the\bbl@bidimode\or
       require('babel-bidi-basic.lua')
     \or
-      require('babel-bidi-basic-r.lua')
+      require('babel-bidi-basic-r.lua') 
+      table.insert(Babel.ranges, {0xE000,   0xF8FF, 'on'})
+      table.insert(Babel.ranges, {0xF0000,  0xFFFFD, 'on'})
+      table.insert(Babel.ranges, {0x100000, 0x10FFFD, 'on'})
     \fi}
   \newattribute\bbl@attr@dir
   \directlua{ Babel.attr_dir = luatexbase.registernumber'bbl@attr@dir' }
@@ -15633,6 +15641,12 @@ end
       end
       luatexbase.add_to_callback("hpack_filter", Babel.math_box_dir,
         "Babel.math_box_dir", 0)
+      if Babel.unset_atdir then
+        luatexbase.add_to_callback("pre_linebreak_filter", Babel.unset_atdir,
+          "Babel.unset_atdir")
+        luatexbase.add_to_callback("hpack_filter", Babel.unset_atdir,
+          "Babel.unset_atdir")
+      end
   }}%
 \fi
 %    \end{macrocode}
@@ -16448,7 +16462,7 @@ function Babel.hyphenate_replace(head, mode)
           if crep then
             step = crep.step or step
           end
-          
+
           if crep and crep.after then
             crep.insert = true
             if dummy_node then
@@ -16459,7 +16473,7 @@ function Babel.hyphenate_replace(head, mode)
               dummy_node = item
             end
           end
-          
+
           if crep and not crep.after and dummy_node then
             node.remove(head, dummy_node)
             dummy_node = nil
@@ -16480,7 +16494,7 @@ function Babel.hyphenate_replace(head, mode)
             sc = sc - 1  -- Nothing has been inserted.
             last_match = utf8.offset(w, sc+1+step)
             goto next
-            
+
           elseif crep and crep.kashida then -- Experimental
             node.set_attribute(item,
                Babel.attr_kashida, 
@@ -16558,7 +16572,7 @@ function Babel.hyphenate_replace(head, mode)
               placeholder = ' '
             end
             head, new = node.insert_before(head, item, d)
-            
+
           elseif crep and crep.norule then
             -- 655360 = 10 pt = 10 * 65536 sp
             d = node.new(2, 3)      -- (rule, empty) = \no*rule
@@ -16582,14 +16596,14 @@ function Babel.hyphenate_replace(head, mode)
 
           elseif mode == 0 and crep and crep.space then
             -- ERROR
-            
+
           elseif crep and crep.kern then
             d = node.new(13, 1)      -- (kern, user)
             local quad = font.getfont(item_base.font).size or 655360
             d.attr = item_base.attr
             d.kern = crep.kern * quad
             head, new = node.insert_before(head, item, d)
-            
+
           elseif crep and crep.node then
             d = node.new(crep.node[1], crep.node[2])  
             d.attr = item_base.attr
@@ -16621,7 +16635,7 @@ function Babel.hyphenate_replace(head, mode)
             print('.....', '/')
             Babel.debug_hyph(w, w_nodes, sc, first, last, last_match)
         end
-      
+
       if dummy_node then
         node.remove(head, dummy_node)
         dummy_node = nil
@@ -16776,16 +16790,13 @@ Babel.ranges = {
  {0x07C0, 0x085F, 'r'},
  {0x0860, 0x086F, 'al'},
  {0x08A0, 0x08FF, 'al'},
- -- {0xE000, 0xF8FF, 'on'}, -- PUA
  {0xFB1D, 0xFB4F, 'r'},
  {0xFB50, 0xFDFF, 'al'},
  {0xFE70, 0xFEFF, 'al'},
  {0x10800, 0x10C4F, 'r'},
  {0x1E800, 0x1E8DF, 'r'},
  {0x1E900, 0x1E95F, 'r'},
- {0x1F300, 0x1F9FF, 'on'},
- -- {0xF0000, 0xFFFFD, 'on'}, -- PUA
- -- {0x100000, 0x10FFFD, 'on'} -- PUA
+ {0x1F300, 0x1F9FF, 'on'}
 }
 
 Babel.characters = {
@@ -23085,7 +23096,7 @@ function Babel.bidi(head, ispar)
       elseif first_d and dir ~= strong_lr then
         dir_mark(head, first_d, last_d, outer)
         first_d, last_d = nil, nil
-     end
+      end
     end
 %    \end{macrocode}
 %
@@ -23094,10 +23105,8 @@ function Babel.bidi(head, ispar)
 % clearly <r> and <l>, resptly, but with other combinations depends on
 % outer. From all these, we select only those resolving <on> $\to$
 % <r>. At the beginning (when |last_lr| is nil) of an R text, they are
-% mirrored directly.
-%
-% TODO - numbers in R mode are processed. It doesn't hurt, but should
-% not be done.
+% mirrored directly. Numbers in R mode are processed. It should not be
+% done, but it doesn't hurt.
 %
 %    \begin{macrocode}
     if dir and not last_lr and dir ~= 'l' and outer == 'r' then
@@ -23289,8 +23298,8 @@ function Babel.bidi(head, ispar, hdir)
     if glyph_not_symbol_font(item)   
        or (item.id == 7 and item.subtype == 2) then
 
-      if node.get_attribute(item, ATDIR) < 0 then goto nextnode end
-      
+      if node.get_attribute(item, ATDIR) == 128 then goto nextnode end
+
       local d_font = nil
       local item_r
       if item.id == 7 and item.subtype == 2 then
@@ -23298,6 +23307,7 @@ function Babel.bidi(head, ispar, hdir)
       else
         item_r = item
       end
+
       local chardata = characters[item_r.char]
       d = chardata and chardata.d or nil
       if not d or d == 'nsm' then
@@ -23425,6 +23435,7 @@ function Babel.bidi(head, ispar, hdir)
 
     -- Force mathdir in math if ON (currently works as expected only
     -- with 'l')
+
     if inmath and d == 'on' then
       d = ('TRT' == tex.mathdir) and 'r' or 'l'
     end
@@ -23440,10 +23451,9 @@ function Babel.bidi(head, ispar, hdir)
       table.insert(nodes, {item, d, outer_first})
     end
 
+    node.set_attribute(item, ATDIR, 128)
     outer_first = nil
-    
-    node.set_attribute(item, ATDIR, -1)
-    
+
     ::nextnode::
 
   end -- for each node
@@ -23605,6 +23615,17 @@ function Babel.bidi(head, ispar, hdir)
     end
   end
 
+  return head
+end
+-- Make sure anything is marked as 'bidi done' (including nodes inserted
+-- after the babel algorithm). 
+function Babel.unset_atdir(head)
+  local ATDIR = Babel.attr_dir
+  local MATH = node.id'math'
+  local DIR = node.id'dir'
+  for item in node.traverse(head) do
+    node.set_attribute(item, ATDIR, 128)
+  end
   return head
 end
 %</basic>
