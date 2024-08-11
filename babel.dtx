@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/08/08 v24.7.58672 The Babel package]
+\ProvidesFile{babel.dtx}[2024/08/11 v24.7.58966 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -5483,8 +5483,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.7.58672>>
-%<<date=2024/08/08>>
+%<<version=24.7.58966>>
+%<<date=2024/08/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6970,24 +6970,43 @@ wouldn’t exist.
   \begingroup
     \def\bbl@selectorname{foreign}%
     \def\bbl@select@opts{#1}%
-    \let\BabelText\@firstofone
     \bbl@beforeforeign
     \foreign@language{#2}%
+    \let\BabelText\@firstofone
+    \let\bbl@prefgtext\@empty
+    \let\bbl@postfgtext\@empty
+    \def\bbl@fgcnt{0}%
     \bbl@usehooks{foreign}{}%
-    \BabelText{#3}% Now in horizontal mode!
+    \bbl@exp{%
+      \[bbl@prefgtext]\unexpanded{\BabelText{#3}}\[bbl@postfgtext]}%
   \endgroup}
 \def\bbl@foreign@s#1#2{% TODO - \shapemode, \@setpar, ?\@@par
   \begingroup
     {\par}%
     \def\bbl@selectorname{foreign*}%
     \let\bbl@select@opts\@empty
-    \let\BabelText\@firstofone
     \foreign@language{#1}%
+    \let\BabelText\@firstofone
+    \let\bbl@prefgtext\@empty
+    \let\bbl@postfgtext\@empty
+    \def\bbl@fgcnt{0}%
     \bbl@usehooks{foreign*}{}%
     \bbl@dirparastext
-    \BabelText{#2}% Still in vertical mode!
+    \bbl@exp{%
+      \[bbl@prefgtext]\unexpanded{\BabelText{#2}}\[bbl@postfgtext]}%
     {\par}%
   \endgroup}
+\def\BabelWrapText{%
+  \edef\bbl@fgcnt{\the\numexpr\bbl@fgcnt+1\relax}%
+  \bbl@carg\let{bbl@fgmacro\bbl@fgcnt}\relax
+  \bbl@exp{%
+    \def\\\bbl@prefgtext{\<bbl@fgmacro\bbl@fgcnt>\[bbl@prefgtext]}%
+    \def\\\bbl@postfgtext{\[bbl@postfgtext]\<bbl@fgmacro\bbl@fgcnt>}}%
+  \afterassignment\bbl@wraptext
+  \toks@}
+\def\bbl@wraptext{%
+  \bbl@exp{%
+    \def\<bbl@fgmacro\bbl@fgcnt>####1\<bbl@fgmacro\bbl@fgcnt>{\the\toks@}}}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -15520,7 +15539,7 @@ end
       return head
     end
     %
-    function Babel.pre_otfload_h(head, gc, sz, pt, dir)
+    function Babel.pre_otfload_h(head, gc, sz, pt, dir) %%% TODO
       if Babel.numbers and Babel.digits_mapped then
         head = Babel.numbers(head)
       end
@@ -15906,7 +15925,8 @@ end
     {\chardef\bbl@tabular@mode\z@}%
     {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
 \ifnum\bbl@bidimode>\@ne % Any lua bidi= except default=1
-  \ifcase\bbl@tabular@mode\or % 1
+  \def\@arstrut{\relax\copy\@arstrutbox}%
+  \ifcase\bbl@tabular@mode\or % 1 = Mixed - default
     \let\bbl@parabefore\relax
     \AddToHook{para/before}{\bbl@parabefore}
     \AtBeginDocument{%
@@ -15931,7 +15951,7 @@ end
                   {\\\do@row@strut\<fi>}{\\\do@row@strut\<fi>\egroup}}}%
              {}}%
     \fi}%
-  \or % 2
+  \or % 2 = All RTL - tabular 
     \let\bbl@parabefore\relax
     \AddToHook{para/before}{\bbl@parabefore}%
     \AtBeginDocument{%
@@ -15976,9 +15996,9 @@ end
 \ifnum\bbl@bidimode>\z@ % Any bidi=
   \def\bbl@nextfake#1{%  non-local changes, use always inside a group!
     \bbl@exp{%
-      \def\\\bbl@insidemath{0}%
       \mathdir\the\bodydir  
       #1%              Once entered in math, set boxes to restore values
+      \def\\\bbl@insidemath{0}%
       \<ifmmode>%
         \everyvbox{%
           \the\everyvbox

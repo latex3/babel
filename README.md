@@ -1,4 +1,4 @@
-## Babel 24.7.58672
+## Babel 24.7.58966
 
 (dev)
 
@@ -43,12 +43,14 @@ You may also report them to the current maintainer more informally on:
 
    https://latex3.github.io/babel/contact.html
 
-Bugs related to specific languages are best reported to their
+Bugs related to specific languages are best reported to theirs
 respective authors.
 
 ### Summary of latest changes
 ```
 24.8  (dev)
+      * Internal changes in bidi=basic (more reliable).
+      * \BabelWrapText, a tool for the foreign hook.
 
 24.7  2024-06-26
       * Improvements in some locales:
