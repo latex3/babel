@@ -48,6 +48,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [24.8](news/whats-new-in-babel-24.8.html) | (dev) `\BabelWrapText` and hook `foreign`. |
 | [24.7](news/whats-new-in-babel-24.7.html) | Improved a few locales: Filipino, Geez, etc. |
 | [24.6](news/whats-new-in-babel-24.6.html) | Improved transforms: `kern`, `norule`, `after`. |
 | [24.5](news/whats-new-in-babel-24.5.html) | Minor changes and fixes. |
