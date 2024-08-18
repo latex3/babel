@@ -10,11 +10,11 @@ boxes. See [issue #25](https://github.com/latex3/babel/issues/25).
 
 Actually it’s not new, but it wasn’t documented because its interface
 was not finished. Now it is and you can define actions to be executed at
-`\begindocument`, as well as manipulate the string with a new command
+`\foreignlanguage`, as well as manipulate the string with a new command
 `\BabelWrapText`.
 
 Here is an example:
-```
+```tex
 \AddBabelHook[danish]{one}{foreign}{\BabelWrapText{[##1]}}
 \AddBabelHook[danish]{two}{foreign}{\BabelWrapText{(##1)}}
 ```
