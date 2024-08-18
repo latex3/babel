@@ -1,6 +1,6 @@
-## Babel 24.7.58966
+## Babel 24.8
 
-(dev)
+2024-08-18
 
 `babel` is the multilingual framework for localizing documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -10,9 +10,9 @@ languages even work with Plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.7 are described in:
+Changes in version 24.8 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.7.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.8.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,14 +48,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.8  (dev)
+24.8  2024-08-18
       * Internal changes in bidi=basic (more reliable).
-      * \BabelWrapText, a tool for the foreign hook.
-
-24.7  2024-06-26
-      * Improvements in some locales:
-        - Filipino (thanks to Leothelion, @ponte-vecchio)
-        - Line breaking in Blin, Geez, Tigre, Tigrinya, Wolaytta.
+      * Hook 'foreign' and \BabelWrapText.
+      * Improved some locales thanks to Stephen Huan (@stephen-huan).
 ```
 
 ### Previous changes

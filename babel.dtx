@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/08/11 v24.7.58966 The Babel package]
+\ProvidesFile{babel.dtx}[2024/08/18 v24.8 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -4297,6 +4297,17 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
   language in this particular case is the language that wrote the code.
   The special value |/| means ‘return to the core \babel{} definitions’
   (in other words, what follows hasn’t been written by any language).
+\item[foreign] \New{24.8} Executed by |\foreignlanguage| after the
+  language has been set up and just before typesetting the text from the
+  second argument. Its main purpose it to wrap the text with some
+  code, with the help of |\BabelWrapText|. For example, with:
+\begin{verbatim}
+\AddBabelHook{one}{foreign}{\BabelWrapText{\textit{##1}}
+\AddBabelHook{two}{foreign}{\BabelWrapText{\parse{##1}}
+\end{verbatim}
+the text becomes |\textit{\parse{|\m{text}|}}|. 
+
+  
 % STILL UNDER STUDY:
 % \item[beforestart] \New{3.34} Executed either at the beginning of the
 %   |aux| file (when read at the start of the document), or else at begin
@@ -5483,8 +5494,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.7.58966>>
-%<<date=2024/08/11>>
+%<<version=24.8>>
+%<<date=2024/08/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6970,43 +6981,27 @@ wouldn’t exist.
   \begingroup
     \def\bbl@selectorname{foreign}%
     \def\bbl@select@opts{#1}%
+    \let\BabelText\@firstofone
     \bbl@beforeforeign
     \foreign@language{#2}%
-    \let\BabelText\@firstofone
-    \let\bbl@prefgtext\@empty
-    \let\bbl@postfgtext\@empty
-    \def\bbl@fgcnt{0}%
     \bbl@usehooks{foreign}{}%
-    \bbl@exp{%
-      \[bbl@prefgtext]\unexpanded{\BabelText{#3}}\[bbl@postfgtext]}%
+    \BabelText{#3}% Now in horizontal mode!
   \endgroup}
 \def\bbl@foreign@s#1#2{% TODO - \shapemode, \@setpar, ?\@@par
   \begingroup
     {\par}%
     \def\bbl@selectorname{foreign*}%
     \let\bbl@select@opts\@empty
-    \foreign@language{#1}%
     \let\BabelText\@firstofone
-    \let\bbl@prefgtext\@empty
-    \let\bbl@postfgtext\@empty
-    \def\bbl@fgcnt{0}%
+    \foreign@language{#1}%
     \bbl@usehooks{foreign*}{}%
     \bbl@dirparastext
-    \bbl@exp{%
-      \[bbl@prefgtext]\unexpanded{\BabelText{#2}}\[bbl@postfgtext]}%
+    \BabelText{#2}% Still in vertical mode!
     {\par}%
   \endgroup}
-\def\BabelWrapText{%
-  \edef\bbl@fgcnt{\the\numexpr\bbl@fgcnt+1\relax}%
-  \bbl@carg\let{bbl@fgmacro\bbl@fgcnt}\relax
-  \bbl@exp{%
-    \def\\\bbl@prefgtext{\<bbl@fgmacro\bbl@fgcnt>\[bbl@prefgtext]}%
-    \def\\\bbl@postfgtext{\[bbl@postfgtext]\<bbl@fgmacro\bbl@fgcnt>}}%
-  \afterassignment\bbl@wraptext
-  \toks@}
-\def\bbl@wraptext{%
-  \bbl@exp{%
-    \def\<bbl@fgmacro\bbl@fgcnt>####1\<bbl@fgmacro\bbl@fgcnt>{\the\toks@}}}
+\providecommand\BabelWrapText[1]{%
+   \def\bbl@tempa{\def\BabelText####1}%
+   \expandafter\bbl@tempa\expandafter{\BabelText{#1}}}
 %    \end{macrocode}
 %
 %  \end{macro}
@@ -11592,6 +11587,7 @@ wouldn’t exist.
   \let\bbl@noamsmath\@empty}
 \@namedef{bbl@ADJ@bidi.math@off}{%
   \let\bbl@noamsmath\relax}
+%
 \@namedef{bbl@ADJ@bidi.mapdigits@on}{%
   \bbl@adjust@lua{bidi}{digits_mapped=true}}
 \@namedef{bbl@ADJ@bidi.mapdigits@off}{%
@@ -12556,11 +12552,10 @@ wouldn’t exist.
     \let\bbl@textdir@i\@gobbletwo
     \let\bbl@xebidipar\@empty
     \AddBabelHook{bidi}{foreign}{%
-      \def\bbl@tempa{\def\BabelText####1}%
       \ifcase\bbl@thetextdir
-        \expandafter\bbl@tempa\expandafter{\BabelText{\LR{##1}}}%
+        \BabelWrapText{\LR{##1}}%
       \else
-        \expandafter\bbl@tempa\expandafter{\BabelText{\RL{##1}}}%
+        \BabelWrapText{\RL{##1}}%
       \fi}
     \def\bbl@pardir#1{\ifcase#1\relax\setLR\else\setRL\fi}
   \fi
@@ -15925,6 +15920,7 @@ end
     {\chardef\bbl@tabular@mode\z@}%
     {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
 \ifnum\bbl@bidimode>\@ne % Any lua bidi= except default=1
+  % Redefine: vrules mess up dirs:
   \def\@arstrut{\relax\copy\@arstrutbox}%
   \ifcase\bbl@tabular@mode\or % 1 = Mixed - default
     \let\bbl@parabefore\relax
@@ -23638,11 +23634,9 @@ function Babel.bidi(head, ispar, hdir)
   return head
 end
 -- Make sure anything is marked as 'bidi done' (including nodes inserted
--- after the babel algorithm). 
+-- after the babel algorithm).
 function Babel.unset_atdir(head)
   local ATDIR = Babel.attr_dir
-  local MATH = node.id'math'
-  local DIR = node.id'dir'
   for item in node.traverse(head) do
     node.set_attribute(item, ATDIR, 128)
   end
