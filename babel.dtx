@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/08/18 v24.8 The Babel package]
+\ProvidesFile{babel.dtx}[2024/08/19 v24.8.59765 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3392,8 +3392,14 @@ some fine-tuning. More to follow in future releases.)
   \hspace{2mm}%
   \parbox[t]{6.6cm}{\strut#3}\par}
 \bigskip\hrule\nobreak\vspace{.5mm}
-% \strut\hfil Transforms 
-% \medskip\hrule\nobreak
+
+\trans{}{digits.native}{\New{24.9} An alternative to |mapdigits|,
+available in the same locales. While |mapdigits| is applied after the
+last posthyphenation, this transform is applied before the first
+prehyphenation. Another difference is |mapdigits| cannot be disabled in
+the middle of a paragraph.\footnote{This transform is \textit{not} declared
+explicitly in |ini| files. Instead, it’s declared if the key
+\texttt{numbers/digits.native} exists.}}
 
 \trans{Arabic}{transliteration.dad}{Applies the transliteration system
 devised by Yannis Haralambous for \textsf{dad} (simple and
@@ -5494,8 +5500,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.8>>
-%<<date=2024/08/18>>
+%<<version=24.8.59765>>
+%<<date=2024/08/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11180,7 +11186,7 @@ wouldn’t exist.
 \bbl@csarg\let{inikv@transforms.posthyphenation}\bbl@inikv
 \def\bbl@transforms@aux#1#2#3#4,#5\relax{%
   #1[#2]{#3}{#4}{#5}}
-\begingroup %  A hack. TODO. Don't require an specific order
+\begingroup %  A hack. TODO. Don't require a specific order
   \catcode`\%=12
   \catcode`\&=14
   \gdef\bbl@transforms#1#2#3{&%
@@ -15899,6 +15905,19 @@ end
         \bbl@replace\bbl@tempa{transforms.}{}%
         \bbl@carg\bbl@transforms{babel\bbl@tempa}{##2}{##3}%
       \fi}%
+    \bbl@exp{% 
+      \\\bbl@ifblank{\bbl@cl{dgnat}}%
+       {\let\\\bbl@tempa\relax}%
+       {\def\\\bbl@tempa{%
+         \\\bbl@elt{transforms.prehyphenation}%
+          {digits.native.1.0}{([0-9])}%
+         \\\bbl@elt{transforms.prehyphenation}%
+          {digits.native.1.1}{string={1|0123456789|\bbl@cl{dgnat}}}}}}%
+    \ifx\bbl@tempa\relax\else
+      \bbl@exp{%
+        \def\<bbl@inidata@\languagename>{%
+          \[bbl@tempa]\[bbl@inidata@\languagename]}}%
+    \fi
     \csname bbl@inidata@\languagename\endcsname
     \bbl@release@transforms\relax % \relax closes the last item.
   \fi}
