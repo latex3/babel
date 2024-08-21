@@ -1,4 +1,4 @@
-## Babel 24.8.59765
+## Babel 24.8.59969
 
 (dev)
 
@@ -50,6 +50,7 @@ respective authors.
 ```
 24.9  (dev)
       * New transform 'digits.native' (alternative to `mapdigits').
+      * CJK transforms...
 
 24.8  2024-08-18
       * Internal changes in bidi=basic (more reliable).

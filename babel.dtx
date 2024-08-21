@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/08/19 v24.8.59765 The Babel package]
+\ProvidesFile{babel.dtx}[2024/08/21 v24.8.59969 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -50,6 +50,7 @@
   {NotoSans-Regular.ttf}
 \setmonofont[Scale=.86, FakeStretch=.97]{DejaVu Sans Mono}
 \raggedright
+\frenchspacing
 \addtolength{\textwidth}{25pt}
 \addtolength{\textheight}{3.5cm}
 \addtolength{\topmargin}{-2cm}
@@ -3394,12 +3395,12 @@ some fine-tuning. More to follow in future releases.)
 \bigskip\hrule\nobreak\vspace{.5mm}
 
 \trans{}{digits.native}{\New{24.9} An alternative to |mapdigits|,
-available in the same locales. While |mapdigits| is applied after the
-last posthyphenation, this transform is applied before the first
-prehyphenation. Another difference is |mapdigits| cannot be disabled in
-the middle of a paragraph.\footnote{This transform is \textit{not} declared
-explicitly in |ini| files. Instead, it’s declared if the key
-\texttt{numbers/digits.native} exists.}}
+available in the same locales. This transform is applied before the
+first prehyphenation, while |mapdigits| is applied after the last
+posthyphenation. Another difference is |mapdigits| cannot be disabled
+in the middle of a paragraph. (This transform is \textit{not} declared
+explicitly in |ini| files. Instead, it’s defined if the key
+\texttt{numbers/digits.native} exists.)}
 
 \trans{Arabic}{transliteration.dad}{Applies the transliteration system
 devised by Yannis Haralambous for \textsf{dad} (simple and
@@ -5500,8 +5501,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.8.59765>>
-%<<date=2024/08/19>>
+%<<version=24.8.59969>>
+%<<date=2024/08/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14721,8 +14722,10 @@ end
             class = props.cjk_quotes[item.char]
           end
 
-          if class == 'cp' then class = 'cl' end % )] as CL
-          if class == 'id' then class = 'I' end
+          if class == 'cp' then class = 'cl' % )] as CL
+          elseif class == 'id' then class = 'I'
+          elseif class == 'cj' then class = 'I' % loose
+          end
 
           local br = 0
           if class and last_class and Babel.cjk_breaks[last_class][class] then 
@@ -14769,10 +14772,10 @@ end
           func(head)
         end
       end
+      lang.hyphenate(head)
       if Babel.cjk_enabled then
         Babel.cjk_linebreak(head)
       end
-      lang.hyphenate(head)
       if Babel.linebreaking.after then
         for k, func in ipairs(Babel.linebreaking.after)  do
           func(head)
@@ -15914,9 +15917,11 @@ end
          \\\bbl@elt{transforms.prehyphenation}%
           {digits.native.1.1}{string={1|0123456789|\bbl@cl{dgnat}}}}}}%
     \ifx\bbl@tempa\relax\else
-      \bbl@exp{%
-        \def\<bbl@inidata@\languagename>{%
-          \[bbl@tempa]\[bbl@inidata@\languagename]}}%
+      \toks@\expandafter\expandafter\expandafter{%
+        \csname bbl@inidata@\languagename\endcsname}%
+      \bbl@csarg\edef{inidata@\languagename}{%
+        \unexpanded\expandafter{\bbl@tempa}%
+        \the\toks@}%
     \fi
     \csname bbl@inidata@\languagename\endcsname
     \bbl@release@transforms\relax % \relax closes the last item.
@@ -23685,10 +23690,10 @@ Babel = Babel or {}
 
 Babel.cjk_characters = {
   [0x0021]={c='ex'},
-  [0x0022]={c='qu'},          
+  [0x0022]={c='qu'},
   [0x0024]={c='pr'},
   [0x0025]={c='po'},
-  [0x0027]={c='qu'},          
+  [0x0027]={c='qu'},
   [0x0028]={c='op'},
   [0x0029]={c='cp'},
   [0x002B]={c='pr'},
@@ -23709,18 +23714,18 @@ Babel.cjk_characters = {
   [0x00A3]={c='pr'},
   [0x00A4]={c='pr'},
   [0x00A5]={c='pr'},
-  [0x00AB]={c='qu'},          
+  [0x00AB]={c='qu'},
   [0x00B0]={c='po'},
   [0x00B1]={c='pr'},
-  [0x00BB]={c='qu'},          
-  [0x2018]={c='qu'},          
-  [0x2019]={c='qu'},          
+  [0x00BB]={c='qu'},
+  [0x2018]={c='qu'},
+  [0x2019]={c='qu'},
   [0x201A]={c='op'},
   [0x201B]={c='qu'},    
   [0x201C]={c='qu'},    
-  [0x201D]={c='qu'},          
+  [0x201D]={c='qu'},
   [0x201E]={c='op'},
-  [0x201F]={c='qu'},          
+  [0x201F]={c='qu'},
   [0x2024]={c='in'},
   [0x2025]={c='in'},
   [0x2026]={c='in'},
@@ -23732,8 +23737,8 @@ Babel.cjk_characters = {
   [0x2035]={c='po'},
   [0x2036]={c='po'},
   [0x2037]={c='po'},
-  [0x2039]={c='qu'},          
-  [0x203A]={c='qu'},            
+  [0x2039]={c='qu'},
+  [0x203A]={c='qu'},  
   [0x203C]={c='ns'},
   [0x203D]={c='ns'},
   [0x2044]={c='is'},
@@ -23792,22 +23797,22 @@ Babel.cjk_characters = {
   [0x29FD]={c='cl'},
   [0x2CF9]={c='ex'},
   [0x2CFE]={c='ex'},
-  [0x2E02]={c='qu'},          
-  [0x2E03]={c='qu'},          
-  [0x2E04]={c='qu'},          
-  [0x2E05]={c='qu'},          
+  [0x2E02]={c='qu'},
+  [0x2E03]={c='qu'},
+  [0x2E04]={c='qu'},
+  [0x2E05]={c='qu'},
   [0x2E06]={c='qu'},    
   [0x2E07]={c='qu'},    
   [0x2E08]={c='qu'},    
-  [0x2E09]={c='qu'},          
-  [0x2E0A]={c='qu'},          
-  [0x2E0B]={c='qu'},          
-  [0x2E0C]={c='qu'},          
-  [0x2E0D]={c='qu'},          
+  [0x2E09]={c='qu'},
+  [0x2E0A]={c='qu'},
+  [0x2E0B]={c='qu'},
+  [0x2E0C]={c='qu'},
+  [0x2E0D]={c='qu'},
   [0x2E18]={c='op'},
-  [0x2E1C]={c='qu'},          
-  [0x2E1D]={c='qu'},          
-  [0x2E20]={c='qu'},          
+  [0x2E1C]={c='qu'},
+  [0x2E1D]={c='qu'},
+  [0x2E20]={c='qu'},
   [0x2E21]={c='qu'}, 
   [0x2E22]={c='op'},
   [0x2E23]={c='cl'},
@@ -23844,14 +23849,39 @@ Babel.cjk_characters = {
   [0x301D]={c='op'},
   [0x301E]={c='cl'},
   [0x301F]={c='cl'},
+  [0x3043]={c='cj'},
+  [0x3045]={c='cj'},
+  [0x3047]={c='cj'},
+  [0x3049]={c='cj'},
+  [0x3063]={c='cj'},
+  [0x3083]={c='cj'},
+  [0x3085]={c='cj'},
+  [0x3087]={c='cj'},
+  [0x308E]={c='cj'},
+  [0x3095]={c='cj'},
+  [0x3096]={c='cj'},
   [0x303B]={c='ns'},
   [0x303C]={c='ns'},
+  [0x3041]={c='cj'},
   [0x309B]={c='ns'},
   [0x309C]={c='ns'},
   [0x309D]={c='ns'},
   [0x309E]={c='ns'},
   [0x30A0]={c='ns'},
+  [0x30A1]={c='cj'},
+  [0x30A3]={c='cj'},
+  [0x30A5]={c='cj'},
+  [0x30A7]={c='cj'},
+  [0x30A9]={c='cj'},
+  [0x30C3]={c='cj'},
+  [0x30E3]={c='cj'},
+  [0x30E5]={c='cj'},
+  [0x30E7]={c='cj'},
+  [0x30EE]={c='cj'},
+  [0x30F5]={c='cj'},
+  [0x30F6]={c='cj'},
   [0x30FB]={c='ns'},
+  [0x30FC]={c='cj'},
   [0x30FD]={c='ns'},
   [0x30FE]={c='ns'},
   [0xA015]={c='ns'},
@@ -23921,30 +23951,38 @@ Babel.cjk_characters = {
   [0xFF61]={c='cl', w='h'},
   [0xFF62]={c='op', w='h'},
   [0xFF63]={c='cl', w='h'},
-  [0xFF64]={c='cl', w='h'} 
+  [0xFF64]={c='cl', w='h'},
+  [0xFF70]={c='cj'}
 }
 
 Babel.cjk_class = setmetatable ( Babel.cjk_characters, {
   __index = function(_, k)
     if (k >= 0xAC00  and k <= 0xD7A3)      -- H2/H3
-        or (k >= 0x2E80  and k <= 0x9FFF)
+        or (k >= 0x2E80  and k <= 0x31E9)  -- Skip small
+        or (k >= 0x3200  and k <= 0x9FFF)
         or (k >= 0xA000  and k <= 0xA48F)  -- Yi
         or (k >= 0xA490  and k <= 0xA4CF)  -- Yi
         or (k >= 0xF900  and k <= 0xFAFF)
         or (k >= 0xFE10  and k <= 0xFE1F) 
         or (k >= 0xFE30  and k <= 0xFE6F)
-        or (k >= 0xFF00  and k <= 0xFFEF)
+        or (k >= 0xFF00  and k <= 0xFF66)  -- Skip small
+        or (k >= 0xFF70  and k <= 0xFFEF)
         or (k >= 0x1F000 and k <= 0x1FFFD)
         or (k >= 0x20000 and k <= 0x2FFFD)
         or (k >= 0x30000 and k <= 0x3FFFD) then
       return {c='I'}
     elseif (k >= 0x20A0  and k <= 0x20CF) then
       return {c='pr'}
+    elseif (k >= 0x31F0  and k <= 0x31FF)  
+        or (k >= 0xFF67  and k <= 0xFF6F)
+        or (k >= 0x1B150 and k <= 0x1B152)
+        or (k >= 0x1B164 and k <= 0x1B167) then
+      return {c='cj'}
     else
       return {c='O'}
     end
   end })
-
+  
 -- Note ns = ex = sy = is = po = hy. Here, 'I' and 'O' are
 -- pseudo-classes for ideographic-like (id, h2, h3), and 'other',
 -- respectively. Jamo is not considered yet, but very likely at least
