@@ -1,4 +1,4 @@
-## Babel 24.8.59969
+## Babel 24.8.60066
 
 (dev)
 
@@ -10,9 +10,9 @@ languages even work with Plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.8 are described in:
+Changes in version 24.9 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.8.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.9.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -50,7 +50,7 @@ respective authors.
 ```
 24.9  (dev)
       * New transform 'digits.native' (alternative to `mapdigits').
-      * CJK transforms...
+      * CJK transforms for spacing and line brreaking...
 
 24.8  2024-08-18
       * Internal changes in bidi=basic (more reliable).
