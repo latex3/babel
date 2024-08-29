@@ -1,35 +1,36 @@
 # What's new in babel 24.9
 
-**Draft**
+2024-08-29
 
 ## Counters
 
 (LuaLaTeX.) Now localized counters are also available as transforms,
-with name `digits.native`. It an alternative to `mapdigits`, which the
+with name `digits.native`. It’s an alternative to `mapdigits`, which the
 advantage it can be enabled and disabled in the middle of the
 paragraph.
 
 ## CJK spacing and line breaking
 
-**Liable to change.** (LuaLaTeX).
+A couple of tentative transforms apply rules to follow some common
+conventions in Chinese and Japanese (currently only locales `jp` and
+`zh`).
 
-A few transforms adjust the spacing to follow some common conventions
-in Chinese and Japanese.
-
-`linebreak.strict` (Japanese) prevents line breaks before small kana
+* `linebreak.strict` (only Japanese) prevents line breaks before small kana
 variants.
 
-`spacing.trim.pairs` reduces the space between some characters (eg,
-`）。`), by inserting a negative kern of −.5 em.
+* `spacing.basic` trims some characters at the start and end of the
+  line, for they to get visually aligned to the margin, and reduces the
+  space between some characters (eg, `）。`), by inserting a negative
+  kern of −.5 em.
+  
+Note currently `spacing.basic` assumes punctuation marks (comma, colon,
+period, etc.) are visually aligned in the font to the left inside the
+character block (eg, Noto JP and SC). Centered punctuation (eg, Noto TC
+and HK) will be addressed in a future release (including middle dot).
 
-`spacing.trim.edges` trims some characters at the start and end of the
-line, for they to get visually aligned with the margin.
-
-[The spacing transforms will be merged somehow. They are currently
-separated for testing purposes.]
-
-As its name implies, this feature trims the characters with the help a
-kern to reduce the spacing. (An alternative approach based on the
-`halt` OpenType table is on the way).
+Also, although it is barely noticeable, the tiny spaces inserted for
+justification are missing in these transforms. This limitation will be fixed in the next
+releases and a way to configure the values of kerns and spaces will be
+added (in general for transforms, not only CJK).
 
 
