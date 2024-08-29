@@ -3,26 +3,25 @@
 
 % ===================
 
-\usepackage[english,
-            bidi=basic, 
-            headfoot=arabic,  % an alternative is layout=sectioning
+\usepackage[arabic,
+            provide={
+              justification = kashida,
+              transforms = kashida.base digits.native},
+            bidi=basic,   
+            % headfoot=arabic,  % an alternative is layout=sectioning
             layout=counters tabular]{babel}        
-\babelprovide[import, main,
-  justification = kashida,
-  transforms = kashida.plain
-  ]{arabic}
 
-% == Alternative without kashida ==    
+% == Alternative without kashida ==
 
 % \usepackage[english, arabic, provide=*,
-%             bidi=basic, 
+%             bidi=basic,
 %             headfoot=arabic,  % an alternative is layout=sectioning
 %             layout=counters tabular]{babel}
 
 % =====================
 
 \babelfont{rm}
-          [ItalicFont=FreeSerif, Numbers=Arabic]
+          [ItalicFont=FreeSerif]
           {FreeSerif}
 \babelfont[english]{rm}{FreeSerif} % We need some italics
 
@@ -34,9 +33,9 @@
 \usepackage{booktabs}
 
 \title{كهرباء}
-\author{From Wikipedia\\%
-        Typeset with \textsf{babel}
-        \addfontfeatures{Numbers=ArabicOff} \csname bbl@version\endcsname}
+\author{\foreignlanguage{english}{From Wikipedia}\\%
+        \foreignlanguage{english}{%  Remember it's a tabular
+          Typeset with \textsf{babel} \csname bbl@version\endcsname}}
 
 \begin{document}
 
@@ -209,7 +208,7 @@ is split looks wrong (but actually “correct”).}
 \begin{table}
 \centering
 \caption{جدول التوزيع الإلكتروني}
-\addfontfeatures{Numbers=ArabicOff}
+\disablelocaletransform{digits.native}
 \begin{tabular}{lllllllll}
 \toprule
 \multicolumn{1}{c}{الرقم} &  العنصر & 1 & 2 & 3 & 4 & 5 & 6 & 7\\

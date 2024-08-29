@@ -22,8 +22,8 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .\vbox(0.0+0.0)x0.0
 .\penalty -10001
 .\write1{\@writefile{toc}{\protect \contentsline {chapter}{\protect \numberline {1}It was \protect \TeX  {} the first}{\thepage }{}\protected@file@percent }}
-.\marks1{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{{\protect \cyrillictext  \CYRG \cyrl \cyra \cyrv \cyra }\ 1. \ It was \protect \TeX  {} the first}}}
-.\marks2{\prg_do_nothing: }
+.\marks1{\__mark_id:n {1}\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{{\protect \cyrillictext  \CYRG \cyrl \cyra \cyrv \cyra }\ 1. \ It was \protect \TeX  {} the first}}}
+.\marks2{\__mark_id:n {2}}
 .\mark{{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{{\protect \cyrillictext  \CYRG \cyrl \cyra \cyrv \cyra }\ 1. \ It was \protect \TeX  {} the first}}}{}}
 .\write1{\@writefile{lof}{\protect \addvspace {10\p@ }}}
 .\write1{\@writefile{lot}{\protect \addvspace {10\p@ }}}
@@ -121,8 +121,8 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ..\penalty 10000
 ..\glue(\parfillskip) 0.0 plus 1.0fil
 ..\glue(\rightskip) 0.0
-.\marks2{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{1.1. \ \protect \LaTeX  }}}
-.\marks3{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{1.1. \ \protect \LaTeX  }}}
+.\marks2{\__mark_id:n {3}\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{1.1. \ \protect \LaTeX  }}}
+.\marks3{\__mark_id:n {4}\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{1.1. \ \protect \LaTeX  }}}
 .\mark{{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{{\protect \cyrillictext  \CYRG \cyrl \cyra \cyrv \cyra }\ 1. \ It was \protect \TeX  {} the first}}}{\protect \foreignlanguage {russian}{\protect \bbl@restore@actives \MakeUppercase    []{1.1. \ \protect \LaTeX  }}}}
 .etc.
 ! OK.
