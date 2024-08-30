@@ -26,7 +26,7 @@
 %% and covered by LPPL is defined by the unpacking scripts (with
 %% extension .ins) which are part of the distribution.
 %%
-\def\filedate{2024/08/29}
+\def\filedate{2024/08/30}
 \def\batchfile{babel.ins}
 \input docstrip.tex
 
@@ -105,32 +105,6 @@
     \expandafter\gdef\csname #1Var\endcsname{#2}%
   \fi}
 
-% The following is somewhat hackish, but it does the job for babel, and
-% must be used in the following way: <-name> starts a block to be
-% ignored if 'name' is active, and <+name> ends the block (in this
-% order). Used to exclude some parts from babel.def. With the original
-% definitions, some code goes 'visually' in comments/documentation, but
-% with this change they are in the real code. However, it must be
-% considered temporal, because the solution must be to reorganize the
-% code.
-
-\let\bblMinus\minusOption
-\def\minusOption-#1>#2\endLine{%
-  \global\let\bblactivefiles\activefiles
-  \def\tempa{}%
-  \def\do##1##2##3{%
-    \def\tempb{#1}\def\tempc{##2}%
-    \ifx\tempb\tempc\else
-      \expandafter\def\expandafter\tempa\expandafter{%
-        \tempa\do##1{##2}##3}%
-    \fi}%
-  \activefiles
-  \let\activefiles\tempa}
-
-\let\bblPlus\plusOption
-\def\plusOption+#1>#2\endLine{%
-  \let\activefiles\bblactivefiles}
-
 % Preambles
 
 \declarepreamble\mainpreamble
@@ -179,11 +153,30 @@
           \file{bplain.tex}{\from{babel.dtx}{bplain}}
           \file{blplain.tex}{\from{babel.dtx}{blplain}}
          }
+         
+% MakeIndex style files
 
-% compatibility files
+\usedir{makeindex/babel}
+
+\generate{\file{bbind.ist}{\from{bbidxglo.dtx}{idx}}
+          \file{bbglo.ist}{\from{bbidxglo.dtx}{glo}}}
+
+% lua code
+
+\def\MetaPrefix{--}
+\usepreamble\luapreamble
+\nopostamble
+\generate{\file{babel-transforms.lua}{\from{babel.dtx}{transforms}}}
+\generate{\file{babel-data-bidi.lua}{\from{babel.dtx}{bididata}}}
+\generate{\file{babel-data-cjk.lua}{\from{babel.dtx}{cjkdata}}}
+\generate{\file{babel-bidi-basic-r.lua}{\from{babel.dtx}{basic-r}}}
+\generate{\file{babel-bidi-basic.lua}{\from{babel.dtx}{basic}}}
+
+% Compatibility files
 
 \let\minusOption\bblMinus
 \let\plusOption\bblPlus
+
 \def\compatfile#1{\file{#1.sty}{\from{bbcompat.dtx}{styfile,#1}}}
 
 \generate{%
@@ -246,23 +239,6 @@
          \compatfile{bahasam}
          }
 
-% MakeIndex style files
-
-\usedir{makeindex/babel}
-
-\generate{\file{bbind.ist}{\from{bbidxglo.dtx}{idx}}
-          \file{bbglo.ist}{\from{bbidxglo.dtx}{glo}}}
-
-% lua code
-
-\def\MetaPrefix{--}
-\usepreamble\luapreamble
-\nopostamble
-\generate{\file{babel-transforms.lua}{\from{babel.dtx}{transforms}}}
-\generate{\file{babel-data-bidi.lua}{\from{babel.dtx}{bididata}}}
-\generate{\file{babel-data-cjk.lua}{\from{babel.dtx}{cjkdata}}}
-\generate{\file{babel-bidi-basic-r.lua}{\from{babel.dtx}{basic-r}}}
-\generate{\file{babel-bidi-basic.lua}{\from{babel.dtx}{basic}}}
 
 \Msg{***********************************************************}
 \Msg{*}

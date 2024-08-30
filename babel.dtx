@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/08/29 v24.9 The Babel package]
+\ProvidesFile{babel.dtx}[2024/08/30 v24.9.60865 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -3069,26 +3069,28 @@ page on the news for 3.76 in the \babel{} site for further details.
 
 \subsection{Accessing language info}
 
-\Describe{\languagename}{}
-The control sequence |\languagename| contains the name of the
-current language.
+\Describe{\localename}{}
+\DescribeOther{\mainlocalename}
+\DescribeOther{\languagename}
+The control sequence |\localename| contains the name of the current
+locale. \New{29.10} This is the recommended way to retrieve the current
+language. In addtion, |\mainlocalename| contains the main language.
+
+|\languagename| is still used internally, but it is now discouraged at
+the user level.
 
 \begin{warning}
-  Due to some internal inconsistencies in catcodes, it should
-  \textit{not} be used to test its value. Use \textsf{iflang}, by
-  Heiko Oberdiek.
+  Due to a bug, which lead to some internal inconsistencies in
+  catcodes, |\languagename| should \textit{not} be used to test which
+  is the current language. Rely on |\localename| or, if you still need
+  |\languagename| for some reason, on \textsf{iflang}, by Heiko Oberdiek.
 \end{warning}
 
 \Describe{\iflanguage}{\marg{language}\marg{true}\marg{false}}
 
-If more than one language is used, it might be necessary to know which
-language is active at a specific time. This can be checked by a call
-to |\iflanguage|, but note here ``language'' is used in the \TeX{}
-sense, as a set of hyphenation patterns, and \textit{not} as its
-\textsf{babel} name. This macro takes three arguments.  The first
-argument is the name of a language; the second and third arguments are
-the actions to take if the result of the test is true or false
-respectively.
+Here ``language'' is used in the \TeX{} sense, as a set of hyphenation
+patterns, and \textit{not} as its \textsf{babel} name. The first
+argument is the name of a language.
 
 \Describe{\localeinfo}{%
  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}{\marg{field}}}
@@ -3099,8 +3101,6 @@ expandable, and the available fields are:
 \begin{description}
 \itemsep=-\parskip
 \item[|name.english|] as provided by the Unicode CLDR.
-%%% \item[|name.locale|] is the equivalent of |\languagename|. Not yet
-%%% activated because the bug in \languagename is far from trivial.
 \item[|tag.ini|] is the tag of the |ini| file (the way this
   file is identified in its name).
 \item[|tag.bcp47|] is the full BCP 47 tag (see the warning below). This
@@ -5507,8 +5507,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.9>>
-%<<date=2024/08/29>>
+%<<version=24.9.60865>>
+%<<date=2024/08/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6070,7 +6070,7 @@ wouldn’t exist.
    #1\ifx\@empty#2\else,\bbl@afterfi\bbl@tempb#2\fi}%
 \def\bbl@tempe#1=#2\@@{%
   \bbl@csarg\edef{mod@#1}{\bbl@tempb#2}}
-\def\bbl@tempd#1.#2\@nnil{%  TODO. Refactor lists?
+\def\bbl@tempd#1.#2\@nnil{%
   \ifx\@empty#2%
     \edef\bbl@tempc{\ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1}%
   \else
@@ -6079,7 +6079,7 @@ wouldn’t exist.
       \edef\bbl@tempc{%
         \ifx\bbl@tempc\@empty\else\bbl@tempc,\fi#1.\bbl@tempb#2}%
     \else
-      \in@{$modifiers$}{$#1$}% TODO. Allow spaces.
+      \in@{$modifiers$}{$#1$}%
       \ifin@
         \bbl@tempe#2\@@
       \else
@@ -6316,7 +6316,7 @@ wouldn’t exist.
 \endinput\fi % Same line!
 <@Make sure ProvidesFile is defined@>
 \ProvidesFile{babel.def}[<@date@> v<@version@> Babel common definitions]
-\ifx\AtBeginDocument\@undefined  % TODO. change test.
+\ifx\AtBeginDocument\@undefined
   <@Emulate LaTeX@>
 \fi
 <@Basic macros@>
@@ -6454,12 +6454,13 @@ wouldn’t exist.
     \fi
   \fi\fi}
 \let\bbl@initoload\relax
-%<-core>
+%</package|core>
+%<*package>
 \def\bbl@provide@locale{%
   \ifx\babelprovide\@undefined
     \bbl@error{base-on-the-fly}{}{}{}%
   \fi
-  \let\bbl@auxname\languagename % Still necessary. TODO
+  \let\bbl@auxname\languagename % Still necessary.
   \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
     {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}}%
   \ifbbl@bcpallowed
@@ -6483,7 +6484,8 @@ wouldn’t exist.
       {\bbl@exp{\\\babelprovide[\bbl@autoload@options]{\languagename}}}%
       {}%
   \fi}
-%<+core>
+%</package>
+%<*package|core>
 %    \end{macrocode}
 %
 % \begin{macro}{\iflanguage}
@@ -6704,26 +6706,7 @@ wouldn’t exist.
   \edef\languagename{%
     \ifnum\escapechar=\expandafter`\string#1\@empty
     \else\string#1\@empty\fi}%
-  \ifcat\relax\noexpand#1%
-    \expandafter\ifx\csname date\languagename\endcsname\relax
-      \edef\languagename{#1}%
-      \let\localename\languagename
-    \else
-      \bbl@info{Using '\string\language' instead of 'language' is\\%
-                deprecated. If what you want is to use a\\%
-                macro containing the actual locale, make\\%
-                sure it does not not match any language.\\%
-                Reported}%
-      \ifx\scantokens\@undefined
-         \def\localename{??}%
-      \else
-        \scantokens\expandafter{\expandafter
-          \def\expandafter\localename\expandafter{\languagename}}%
-      \fi
-    \fi
-  \else
-    \def\localename{#1}% This one has the correct catcodes
-  \fi
+  \edef\localename{#1}%
   \select@language{\languagename}%
   % write to auxs
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
@@ -6751,7 +6734,6 @@ wouldn’t exist.
   % set name
   \edef\languagename{#1}%
   \bbl@fixname\languagename
-  % TODO. name@map must be here?
   \bbl@provide@locale
   \bbl@iflanguage\languagename{%
     \let\bbl@select@type\z@
@@ -6759,7 +6741,7 @@ wouldn’t exist.
 \def\babel@aux#1#2{%
   \select@language{#1}%
   \bbl@foreach\BabelContentsFiles{% \relax -> don't assume vertical mode
-    \@writefile{##1}{\babel@toc{#1}{#2}\relax}}}% TODO - plain?
+    \@writefile{##1}{\babel@toc{#1}{#2}\relax}}}%
 \def\babel@toc#1#2{%
   \select@language{#1}}
 %    \end{macrocode}
@@ -6862,6 +6844,12 @@ wouldn’t exist.
   \ifin@\else\bbl@xin@{/k}{/\bbl@tempa}\fi % only kashida
   \ifin@\else\bbl@xin@{/p}{/\bbl@tempa}\fi % padding (eg, Tibetan)
   \ifin@\else\bbl@xin@{/v}{/\bbl@tempa}\fi % variable font
+  % hyphenation - save mins
+  \babel@savevariable\lefthyphenmin
+  \babel@savevariable\righthyphenmin
+  \ifnum\bbl@engine=\@ne
+    \babel@savevariable\hyphenationmin
+  \fi
   \ifin@
     % unhyphenated/kashida/elongated/padding = allow stretching
     \language\l@unhyphenated
@@ -6873,16 +6861,18 @@ wouldn’t exist.
     % other = select patterns
     \bbl@patterns{#1}%
   \fi
-  % hyphenation - mins
-  \babel@savevariable\lefthyphenmin
-  \babel@savevariable\righthyphenmin
+  % hyphenation - set mins
   \expandafter\ifx\csname #1hyphenmins\endcsname\relax
     \set@hyphenmins\tw@\thr@@\relax
+    \@nameuse{bbl@hyphenmins@}%
   \else
     \expandafter\expandafter\expandafter\set@hyphenmins
       \csname #1hyphenmins\endcsname\relax
   \fi
-  % reset selector name
+  \@nameuse{bbl@hyphenmins@}%
+  \@nameuse{bbl@hyphenmins@\languagename}%
+  \@nameuse{bbl@hyphenatmin@}%
+  \@nameuse{bbl@hyphenatmin@\languagename}%
   \let\bbl@selectorname\@empty}
 %    \end{macrocode}
 %
@@ -7634,7 +7624,7 @@ wouldn’t exist.
 % code of the @-sign.
 %
 %    \begin{macrocode}
-\def\bbl@afterldf#1{% TODO. Merge into the next macro? Unused elsewhere
+\def\bbl@afterldf#1{%
   \bbl@afterlang
   \let\bbl@afterlang\relax
   \let\BabelModifiers\relax
@@ -7668,7 +7658,9 @@ wouldn’t exist.
 %    \begin{macrocode}
 \def\main@language#1{%
   \def\bbl@main@language{#1}%
-  \let\languagename\bbl@main@language % TODO. Set localename
+  \let\languagename\bbl@main@language
+  \let\localename\bbl@main@language
+  \let\mainlocalename\bbl@main@language
   \bbl@id@assign
   \bbl@patterns{\languagename}}
 %    \end{macrocode}
@@ -7677,8 +7669,7 @@ wouldn’t exist.
 % beginning of the document, either when the |aux| file is read or, if
 % it does not exist, when the |\AtBeginDocument| is executed. Languages
 % do not set |\pagedir|, so we set here for the whole document to the
-% main |\bodydir|. TODO. Handle correctly the 'nil' language, to avoid
-% errors in toc files if there was a typo in a name.
+% main |\bodydir|.
 %
 % The code written to the |aux| file attempts to avoid errors if
 % \babel\ is removed from the document.
@@ -7699,7 +7690,8 @@ wouldn’t exist.
     \immediate\write\@mainaux{\string\@nameuse{bbl@beforestart}}%
   \fi
   \expandafter\selectlanguage\expandafter{\bbl@main@language}%
-%<-core>
+%</package|core>
+%<*package>
   \ifx\bbl@normalsf\@empty
     \ifnum\sfcode`\.=\@m
       \let\normalsfcodes\frenchspacing
@@ -7709,19 +7701,22 @@ wouldn’t exist.
   \else
     \let\normalsfcodes\bbl@normalsf
   \fi
-%<+core>
+%</package>
+%<*package|core>
   \ifbbl@single  % must go after the line above.
     \renewcommand\selectlanguage[1]{}%
     \renewcommand\foreignlanguage[2]{#2}%
     \global\let\babel@aux\@gobbletwo  % Also as flag
   \fi}
-%<-core>
+%</package|core>
+%<*package>
 \AddToHook{begindocument/before}{%
   \let\bbl@normalsf\normalsfcodes
   \let\normalsfcodes\relax} % Hack, to delay the setting
-%<+core>
+%</package>%
+%<*package|core>
 \ifcase\bbl@engine\or
-  \AtBeginDocument{\pagedir\bodydir} % TODO - a better place
+  \AtBeginDocument{\pagedir\bodydir}
 \fi
 %    \end{macrocode}
 %
@@ -8079,7 +8074,7 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \begingroup
-\bbl@ifunset{ifincsname}% TODO. Ugly. Correct? Only Plain?
+\bbl@ifunset{ifincsname}%
   {\gdef\active@prefix#1{%
      \ifx\protect\@typeset@protect
      \else
@@ -8262,7 +8257,7 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \def\user@group{user}
-\def\language@group{english} % TODO. I don't like defaults
+\def\language@group{english}
 \def\system@group{system}
 %    \end{macrocode}
 %
@@ -8337,7 +8332,6 @@ wouldn’t exist.
 % used. Unfortunately, \babel{} currently does not keep track of
 % defined groups, and therefore there is no way to catch a possible
 % change in casing to fix it in the same way languages names are fixed.
-% [TODO].
 %
 %    \begin{macrocode}
 \def\languageshorthands#1{\def\language@group{#1}}
@@ -8897,6 +8891,31 @@ wouldn’t exist.
 %
 % \end{macro}
 %
+% \begin{macro}{\babelhyphenmins}
+%
+% Only \LaTeX.
+%
+%    \begin{macrocode}
+\ifx\NewDocumentCommand\@undefined\else
+  \NewDocumentCommand\babelhyphenmins{sommo}{%
+    \IfNoValueTF{#2}%
+      {\protected@edef\bbl@hyphenmins@{\set@hyphenmins{#3}{#4}}%
+       \IfValueT{#5}{%
+         \protected@edef\bbl@hyphenatmin@{\hyphenationmin=#5\relax}}}%
+      {\edef\bbl@tempb{\zap@space#2 \@empty}%
+       \bbl@for\bbl@tempa\bbl@tempb{%
+         \@namedef{bbl@hyphenmins@\bbl@tempa}{\set@hyphenmins{#3}{#4}}%
+         \IfValueT{#5}{%
+           \@namedef{bbl@hyphenatmin@\bbl@tempa}{\hyphenationmin=#5\relax}}}}%
+     \IfBooleanT{#1}{%
+       \lefthyphenmin=#3\relax
+       \righthyphenmin=#4\relax
+       \IfValueT{#5}{\hyphenationmin=#5\relax}}}
+\fi
+%    \end{macrocode}
+%
+% \end{macro}
+%
 % \begin{macro}{\bbl@allowhyphens}
 %
 % This macro makes hyphenation possible. Basically its definition
@@ -9228,7 +9247,7 @@ wouldn’t exist.
       \csname\bbl@LC\expandafter\endcsname\expandafter{\BabelString}}}
 %    \end{macrocode}
 %
-% A little auxiliary command sets the string. TODO: Formerly used with
+% A little auxiliary command sets the string. Formerly used with
 % casing. Very likely no longer necessary, although it’s used in
 % |\setlocalecaption|.
 %
@@ -9362,7 +9381,7 @@ wouldn’t exist.
 % separates these two steps.
 %
 %    \begin{macrocode}
-\newcommand\setlocalecaption{%  TODO. Catch typos.
+\newcommand\setlocalecaption{%
   \@ifstar\bbl@setcaption@s\bbl@setcaption@x}
 \def\bbl@setcaption@x#1#2#3{%  language caption-name string
   \bbl@trim@def\bbl@tempa{#2}%
@@ -9416,7 +9435,6 @@ wouldn’t exist.
       \bbl@toglobal\bbl@captionslist
     \fi
   \fi}
-% \def\bbl@setcaption@s#1#2#3{} % TODO. Not yet implemented (w/o 'name')
 %    \end{macrocode}
 %
 % \subsection{Macros common to a number of languages}
@@ -9889,7 +9907,8 @@ wouldn’t exist.
 %    \begin{macrocode}
 \bbl@trace{Bidi layout}
 \providecommand\IfBabelLayout[3]{#3}%
-%<-core>
+%</package|core>
+%<*package>
 \newcommand\BabelPatchSection[1]{%
   \@ifundefined{#1}{}{%
     \bbl@exp{\let\<bbl@ss@#1>\<#1>}%
@@ -9923,7 +9942,8 @@ wouldn’t exist.
      \select@language@x{\bbl@main@language}}}{}
 \IfBabelLayout{captions}%
   {\BabelPatchSection{caption}}{}
-%<+core>
+%</package>
+%<*package|core>
 %    \end{macrocode}
 %
 % \subsection{Load engine specific macros}
@@ -10028,7 +10048,7 @@ wouldn’t exist.
       {}%
     \let\bbl@KVP@date\@empty
   \fi
-  \let\bbl@KVP@captions@@\bbl@KVP@captions % TODO. A dirty hack
+  \let\bbl@KVP@captions@@\bbl@KVP@captions
   \ifx\bbl@KVP@captions\@nnil
     \let\bbl@KVP@captions\bbl@KVP@import
   \fi
@@ -10123,7 +10143,6 @@ wouldn’t exist.
       \fi
       \bbl@exp{\\\bbl@add\\\bbl@starthyphens
         {\\\bbl@patterns@lua{\languagename}}}%
-      % TODO - error/warning if no script
       \directlua{
         if Babel.script_blocks['\bbl@cl{sbcp}'] then
           Babel.loc_to_scr[\the\localeid] = Babel.script_blocks['\bbl@cl{sbcp}']
@@ -10194,7 +10213,7 @@ wouldn’t exist.
     \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
   \fi
   \bbl@provide@intraspace
-  % == Line breaking: CJK quotes == TODO -> @extras
+  % == Line breaking: CJK quotes ==
   \ifcase\bbl@engine\or
     \bbl@xin@{/c}{/\bbl@cl{lnbrk}}%
     \ifin@
@@ -10430,7 +10449,7 @@ wouldn’t exist.
 % Load the basic parameters (ids, typography, counters, and a few
 % more), while captions and dates are left out. But it may happen some
 % data has been loaded before automatically, so we first discard the
-% saved values. (TODO. But preserving previous values would be useful.)
+% saved values.
 %
 %    \begin{macrocode}
 \def\bbl@load@basic#1{%

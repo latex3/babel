@@ -1,6 +1,6 @@
-## Babel 24.9
+## Babel 24.9.60865
 
-2024-08-29
+dev)
 
 `babel` is the multilingual framework for localizing documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -48,9 +48,13 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.9  2024-08-29
-      * New transform 'digits.native' (alternative to `mapdigits').
-      * Tentative transforms for CJK spacing and line breaking.
+24.10  (dev)
+       * \localename, \mainlocalename
+       * \babelhyphenmins
+
+24.9   2024-08-29
+       * New transform 'digits.native' (alternative to `mapdigits').
+       * Tentative transforms for CJK spacing and line breaking.
 ```
 
 ### Previous changes
