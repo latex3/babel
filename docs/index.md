@@ -48,7 +48,8 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [24.9](news/whats-new-in-babel-24.8.html) | Transforms: `digits.native`, CJK spacing (tentative). |
+| [24.10](news/whats-new-in-babel-24.10.html) | `\localename`, `mainlocalename`, `babelhyphenmins` |
+| [24.9](news/whats-new-in-babel-24.9.html) | Transforms: `digits.native`, CJK spacing (tentative). |
 | [24.8](news/whats-new-in-babel-24.8.html) | `\BabelWrapText` and hook `foreign`. |
 | [24.7](news/whats-new-in-babel-24.7.html) | Improved a few locales: Filipino, Geez, etc. |
 | [24.6](news/whats-new-in-babel-24.6.html) | Improved transforms: `kern`, `norule`, `after`. |
