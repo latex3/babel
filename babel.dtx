@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/08/30 v24.9.60865 The Babel package]
+\ProvidesFile{babel.dtx}[2024/09/18 v24.10 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -168,7 +168,10 @@
 \def\args#1{%
   \def\bbl@tempa{#1}%
   \ifx\bbl@tempa\@empty\else#1\vskip1ex\fi\ignorespaces}
-\begingroup % Changes to ltxdoc (add <<...>> syntax)
+% Changes to doc.sty (add <<...>> syntax)
+\def\Module#1{%
+  \mod@math@codes$\langle${\color{thered}$\mathsf{#1}$}$\rangle$}
+\begingroup 
   \catcode`\<\active
   \catcode`\>\active
   \gdef\check@plus@etc{%
@@ -182,8 +185,8 @@
     \fi\fi\fi
     \bbl@next}
   \gdef\var@module#1#2#3>>{%
-    $\langle$\pm@module#2#3>$\rangle$%
-    \ifx*#2\ $\equiv$\fi}
+     $\langle$\pm@module#2#3>$\rangle$%
+     \ifx*#2\ $\equiv$\fi}
 \endgroup
 \renewcommand*\l@section[2]{%
   \ifnum \c@tocdepth >\z@
@@ -281,6 +284,19 @@ guide focuses on internationalization and localization with \LaTeX{}
 and \pdftex, \xetex{} and \luatex{} with the \babel{} package. There
 are also some notes on its use with e-Plain and pdf-Plain \TeX.
 
+\item[\sffamily\color{messages}I only need learn the most basic
+features.] The first subsections (1.1-1.3) describe the traditional way
+of loading a language (with |ldf| files), which is usually all you need.
+The alternative way based on |ini| files, which complements the
+previous one (it does \textit{not} replace it, although it is still
+necessary in some languages), is described below; go to \ref{inifiles}.
+
+\item[\sffamily\color{messages}I don’t like manuals. I prefer sample
+  files.] This manual contains lots of examples and tips, but in GitHub
+  there are many
+  \href{https://github.com/latex3/babel/tree/master/samples}{sample
+  files}.
+
 \item[\sffamily\color{messages}What if I’m interested only in the
 latest changes?] Changes and new features with relation to version 3.8
 are highlighted with \New{X.XX}\hspace{-.5em}
@@ -311,19 +327,6 @@ maintained separately
 
 \item[\sffamily\color{messages}How can I contribute a new
 language?] See section \ref{contribute} for contributing a language.
-
-\item[\sffamily\color{messages}I only need learn the most basic
-features.] The first subsections (1.1-1.3) describe the traditional way
-of loading a language (with |ldf| files), which is usually all you need.
-The alternative way based on |ini| files, which complements the
-previous one (it does \textit{not} replace it, although it is still
-necessary in some languages), is described below; go to \ref{inifiles}.
-
-\item[\sffamily\color{messages}I don’t like manuals. I prefer sample
-  files.] This manual contains lots of examples and tips, but in GitHub
-  there are many
-  \href{https://github.com/latex3/babel/tree/master/samples}{sample
-  files}.
 
 \item[\sffamily\color{messages}Where is the code?]
   Run |lualatex --jobname=babel-code \let\babelcode\relax\input{babel.dtx}|.
@@ -656,6 +659,100 @@ _\foreignlanguage{spanish}{Español}_.
   language (eg, |lu| can be the locale name with tag |khb| or the tag
   for |lubakatanga|). See section \ref{bcp47} for further details.
 \end{note}
+
+\subsection{Languages supported by \babel{} with \textsf{ldf} files}
+
+(To be updated.) In the following table most of the languages supported
+by \babel{} with and |.ldf| file are listed, together with the names of
+the option which you can load \babel\ with for each language. Note this
+list is open and the current options may be different. It does not
+include |ini| files (see below). Except in a few cases (eg, |ngerman|,
+|serbianc|, |acadian|) names are those of the Unicode CLDR (or based on
+them).
+
+\begin{description}
+\itemsep=-\parskip
+\sffamily
+\item[Afrikaans] afrikaans
+\item[Azerbaijani] azerbaijani
+\item[Basque] basque
+\item[Breton] breton
+\item[Bulgarian] bulgarian
+\item[Catalan] catalan
+\item[Croatian] croatian
+\item[Czech] czech
+\item[Danish] danish
+\item[Dutch] dutch
+\item[English] english, american (\textit{preferred to} USenglish), british (\textit{preferred to} 
+  UKenglish), canadian, australian, newzealand
+\item[Esperanto] esperanto
+\item[Estonian] estonian
+\item[Finnish] finnish
+\item[French] french, acadian
+\item[Galician] galician
+\item[German] ngerman, naustrian, german, austrian
+\item[Greek] greek, polutonikogreek
+\item[Hebrew] hebrew
+\item[Icelandic] icelandic
+\item[Indonesian] indonesian
+\item[Interlingua] interlingua
+\item[Irish Gaelic] irish
+\item[Italian] italian
+\item[Latin] latin
+\item[Lower Sorbian] lowersorbian
+\item[Malay] malay (\textit{preferred to} melayu)
+\item[Northern Sami] northernsami
+\item[Norwegian] norsk, nynorsk
+\item[Polish] polish
+\item[Portuguese] portuguese, brazilian
+\item[Romanian] romanian
+\item[Russian] russian
+\item[Scottish Gaelic] scottishgaelic (\textit{preferred to} scottish)
+\item[Spanish]  spanish
+\item[Slovakian] slovak
+\item[Slovenian]  slovene
+\item[Swedish] swedish
+\item[Serbian] serbian
+\item[Turkish] turkish
+\item[Ukrainian] ukrainian
+\item[Upper Sorbian] uppersorbian
+\item[Welsh] welsh
+\end{description}
+
+There are more languages not listed above, including \textsf{hindi,
+thai, thaicjk, latvian, turkmen, magyar, mongolian, romansh,
+lithuanian, spanglish, vietnamese, japanese, pinyin, arabic, farsi,
+ibygreek, bgreek, serbianc, frenchle, ethiop} and \textsf{friulan}.
+
+\begin{note}
+  There are also some deprecated names (a few has been even removed):
+  \textsf{frenchb} or \textsf{francais}, as well as \textsf{canadien}
+  (\textsf{french}), \textsf{germanb} (\textsf{german}),
+  \textsf{bahasa}, \textsf{indon} or \textsf{bahasai}
+  (\textsf{indonesian}), \textsf{lsorbian} (\textsf{lowersorbian}),
+  \textsf{bahasam} (\textsf{malay}), \textsf{portuges}
+  (\textsf{portuguese}), \textsf{brazil} (\textsf{brazilian}),
+  \textsf{russianb} (\textsf{russian}), \textsf{usorbian}
+  (\textsf{uppersorbian}), \textsf{vietnam} (\textsf{vietnamese}),
+  \textsf{samin} (\textsf{northernsami}), \textsf{ukraineb}
+  (\textsf{ukrainian}). Deprecated names come in many cases from the
+  times when they had to be shortened to 8 characters. 
+\end{note}
+
+Most of them work out of the box, but some may require extra fonts,
+encoding files, a preprocessor or even a complete framework (like
+\textsf{CJK} or \textsf{luatexja}). For example, if you have got the
+\textsf{velthuis/devnag} package, you can create a file with extension
+|.dn|:
+\begin{verbatim}
+\documentclass{article}
+\usepackage[hindi]{babel}
+\begin{document}
+{\dn devaanaa.m priya.h}
+\end{document}
+\end{verbatim}
+Then you preprocess it with |devnag| \m{file}, which creates
+\m{file}|.tex|; you can then typeset the latter with \LaTeX.
 
 \subsection{Modifiers}
 
@@ -3072,8 +3169,8 @@ page on the news for 3.76 in the \babel{} site for further details.
 \Describe{\localename}{}
 \DescribeOther{\mainlocalename}
 \DescribeOther{\languagename}
-The control sequence |\localename| contains the name of the current
-locale. \New{29.10} This is the recommended way to retrieve the current
+\New{29.10} The control sequence |\localename| contains the name of the current
+locale. This is now the recommended way to retrieve the current
 language. In addtion, |\mainlocalename| contains the main language.
 
 |\languagename| is still used internally, but it is now discouraged at
@@ -3297,8 +3394,16 @@ font encodings are the same, like in Unicode based engines.
 \begin{note}
   Using |\babelhyphenation| with Southeast Asian scripts is mostly
   pointless. But with |\babelpatterns| (below) you may fine-tune line
-  breaking (only \luatex). Even if there are no patterns for the
-  language, you can add at least some typical cases.
+  breaking (only \luatex). For example:
+\begingroup
+\catcode`@=13
+\def@#1@{{\fontspec{Loma}#1}}
+\begin{verbatim}
+\babelpatterns[thai]{@ศึก@2@ษา@}
+\end{verbatim}
+\endgroup
+  Even if there are no patterns for the language, you can add at least
+  some typical cases.
 \end{note}
 
 \begin{note}
@@ -3307,21 +3412,6 @@ font encodings are the same, like in Unicode based engines.
   a selector. In the preamble the hyphenation rules are not always
   fully set up and an error can be raised.
 \end{note}
-
-\Describe{\begin\menv{hyphenrules}}{\marg{language}\Eenv{hyphenrules}}
-
-The environment \Lenv{hyphenrules} can be used to select \emph{only} the
-hyphenation rules to be used (it can be used as command, too). This can
-for instance be used to select ‘nohyphenation’, provided that in
-\file{language.dat} the ‘language’ \textsf{nohyphenation} is defined by
-loading \file{zerohyph.tex}. It deactivates language shorthands, too
-(but not user shorthands).
-
-Except for these simple uses, |hyphenrules| is deprecated and
-|otherlanguage*| (the starred version) is preferred, because the former
-does not take into account possible changes in encodings of characters
-like, say, |'| done by some languages (eg, \textsf{italian},
-\textsf{french}, \textsf{ukrainian}).
 
 \Describe{\babelpatterns}{\texttt{[}\langlist\texttt{]}%
     \marg{patterns}}
@@ -3373,6 +3463,46 @@ The Lua pattern means ‘a discretionary followed by a character in the
 range |U+0300|--|U+0367| (which contains combining chars)’. An
 alternative to a transform is |\babelpatterns|.
 \end{note}
+
+\Describe{\babelhyphenmins}{%
+  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
+  \texttt{[}\langlist\texttt{]}%
+  \marg{left}\marg{right}\oarg{hyphenationmin}}
+
+\New{24.10} See the news page for the rationale for this commands. It
+sets the corresponding values for the given languages (all languages
+without the optional argument). With the star, the values are also
+applied immediately (the optional argument and the star are currently
+incompatible). The optional argument is available only in \luatex.
+\begin{example}
+You are typesetting a book with wide lines and want to limit the
+number of hyphens in all languages:
+\begin{verbatim}
+  \babelhyphenmins{3}{4}
+\end{verbatim}
+But there are also some 3-column text and you want to be more flexible:
+\begin{verbatim}
+  \begin{multicols}{3}
+  \babelhyphenmins*{2}{3}
+  ...
+  \end{multicols}
+\end{verbatim}
+\end{example}
+
+\Describe{\begin\menv{hyphenrules}}{\marg{language}\Eenv{hyphenrules}}
+
+The environment \Lenv{hyphenrules} can be used to select \emph{only} the
+hyphenation rules to be used (it can be used as command, too). This can
+for instance be used to select ‘nohyphenation’, provided that in
+\file{language.dat} the ‘language’ \textsf{nohyphenation} is defined by
+loading \file{zerohyph.tex}. It deactivates language shorthands, too
+(but not user shorthands).
+
+Except for these simple uses, |hyphenrules| is deprecated and
+|otherlanguage*| (the starred version) is preferred, because the former
+does not take into account possible changes in encodings of characters
+like, say, |'| done by some languages (eg, \textsf{italian},
+\textsf{french}, \textsf{ukrainian}).
 
 \subsection{Transforms}
 \label{transforms}
@@ -4385,99 +4515,6 @@ requiring a command to switch the language. Its default value is
 |toc,lof,lot|, but you may redefine it with |\renewcommand| (it's up
 to you to make sure no toc type is duplicated).
 
-\subsection{Languages supported by \babel{} with \textsf{ldf} files}
-
-In the following table most of the languages supported by \babel{} with
-and |.ldf| file are listed, together with the names of the option which
-you can load \babel\ with for each language. Note this list is open and
-the current options may be different. It does not include |ini| files
-(see below). Except in a few cases (eg, |ngerman|, |serbianc|,
-|acadian|) names are those of the Unicode CLDR (or based on them). 
-
-\begin{description}
-\itemsep=-\parskip
-\sffamily
-\item[Afrikaans] afrikaans
-\item[Azerbaijani] azerbaijani
-\item[Basque] basque
-\item[Breton] breton
-\item[Bulgarian] bulgarian
-\item[Catalan] catalan
-\item[Croatian] croatian
-\item[Czech] czech
-\item[Danish] danish
-\item[Dutch] dutch
-\item[English] english, american (\textit{preferred to} USenglish), british (\textit{preferred to} 
-  UKenglish), canadian, australian, newzealand
-\item[Esperanto] esperanto
-\item[Estonian] estonian
-\item[Finnish] finnish
-\item[French] french, acadian
-\item[Galician] galician
-\item[German] ngerman, naustrian, german, austrian
-\item[Greek] greek, polutonikogreek
-\item[Hebrew] hebrew
-\item[Icelandic] icelandic
-\item[Indonesian] indonesian
-\item[Interlingua] interlingua
-\item[Irish Gaelic] irish
-\item[Italian] italian
-\item[Latin] latin
-\item[Lower Sorbian] lowersorbian
-\item[Malay] malay (\textit{preferred to} melayu)
-\item[Northern Sami] northernsami
-\item[Norwegian] norsk, nynorsk
-\item[Polish] polish
-\item[Portuguese] portuguese, brazilian
-\item[Romanian] romanian
-\item[Russian] russian
-\item[Scottish Gaelic] scottishgaelic (\textit{preferred to} scottish)
-\item[Spanish]  spanish
-\item[Slovakian] slovak
-\item[Slovenian]  slovene
-\item[Swedish] swedish
-\item[Serbian] serbian
-\item[Turkish] turkish
-\item[Ukrainian] ukrainian
-\item[Upper Sorbian] uppersorbian
-\item[Welsh] welsh
-\end{description}
-
-There are more languages not listed above, including \textsf{hindi,
-thai, thaicjk, latvian, turkmen, magyar, mongolian, romansh,
-lithuanian, spanglish, vietnamese, japanese, pinyin, arabic, farsi,
-ibygreek, bgreek, serbianc, frenchle, ethiop} and \textsf{friulan}.
-
-\begin{note}
-  There are also some deprecated names (a few has been even removed):
-  \textsf{frenchb} or \textsf{francais}, as well as \textsf{canadien}
-  (\textsf{french}), \textsf{germanb} (\textsf{german}),
-  \textsf{bahasa}, \textsf{indon} or \textsf{bahasai}
-  (\textsf{indonesian}), \textsf{lsorbian} (\textsf{lowersorbian}),
-  \textsf{bahasam} (\textsf{malay}), \textsf{portuges}
-  (\textsf{portuguese}), \textsf{brazil} (\textsf{brazilian}),
-  \textsf{russianb} (\textsf{russian}), \textsf{usorbian}
-  (\textsf{uppersorbian}), \textsf{vietnam} (\textsf{vietnamese}),
-  \textsf{samin} (\textsf{northernsami}), \textsf{ukraineb}
-  (\textsf{ukrainian}). Deprecated names come in many cases from the
-  times when they had to be shortened to 8 characters. 
-\end{note}
-
-Most of them work out of the box, but some may require extra fonts,
-encoding files, a preprocessor or even a complete framework (like
-\textsf{CJK} or \textsf{luatexja}). For example, if you have got the
-\textsf{velthuis/devnag} package, you can create a file with extension
-|.dn|:
-\begin{verbatim}
-\documentclass{article}
-\usepackage[hindi]{babel}
-\begin{document}
-{\dn devaanaa.m priya.h}
-\end{document}
-\end{verbatim}
-Then you preprocess it with |devnag| \m{file}, which creates
-\m{file}|.tex|; you can then typeset the latter with \LaTeX.
-
 \subsection{Unicode character properties in \luatex}
 
 \New{3.32} Part of the \babel{} job is to apply Unicode rules to some
@@ -4615,38 +4652,6 @@ some languages (kerning and spacing). Ligatures can be disabled.
   Unicode block to another.
 \item[zhspacing] Spacing for CJK documents in \xetex.
 \end{description}
-
-\subsection{Current and future work}
-
-The current work is focused on the so-called complex scripts in \luatex{}.
-In 8-bit engines, \babel{} provided a basic support for bidi text as
-part of the style for Hebrew, but it is somewhat unsatisfactory and
-internally replaces some hardwired commands by other hardwired commands
-(generic changes would be much better).
-
-Useful additions would be, for example, time, currency, addresses and
-personal names.\footnote{See for example POSIX, ISO 14652 and the
-Unicode Common Locale Data Repository (CLDR). Those systems, however,
-have limited application to \TeX\ because their aim is just to display
-information and not fine typesetting.}. But that is the easy
-part, because they don't require modifying the \LaTeX{} internals.
-Calendars (Arabic, Persian, Indic, etc.) are under study.
-
-Also interesting are differences in the sentence structure or related
-to it. For example, in Basque the number precedes the name (including
-chapters), in Hungarian ``from (1)'' is ``(1)-b\H{o}l'', but ``from
-(3)'' is ``(3)-b\'{o}l'', in Spanish an item labelled
-``3.$^{\textrm{\scriptsize o}}$'' may be referred to as either
-``\'{\i}tem 3.$^{\textrm{\scriptsize o}}$'' or
-``3.$^{\textrm{\scriptsize er}}$ \'{\i}tem'', and so on.
-
-An option to manage bidirectional document layout in \luatex{} (lists,
-footnotes, etc.) is almost finished, but \xetex{} required more work.
-Unfortunately, proper support for \xetex{} requires patching somehow
-lots of macros and packages (and some issues related to |\special|s
-remain, like color and hyperlinks), so \babel{} resorts to the
-\textsf{bidi} package (by Vafa Khalighi). See the \babel{} repository
-for a small example (|xe-bidi|).
 
 \subsection{Tentative and experimental code}
 
@@ -5507,8 +5512,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.9.60865>>
-%<<date=2024/08/30>>
+%<<version=24.10>>
+%<<date=2024/09/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6702,11 +6707,8 @@ wouldn’t exist.
 %    \begin{macrocode}
 \def\BabelContentsFiles{toc,lof,lot}
 \def\bbl@set@language#1{% from selectlanguage, pop@
-  % The old buggy way. Preserved for compatibility.
-  \edef\languagename{%
-    \ifnum\escapechar=\expandafter`\string#1\@empty
-    \else\string#1\@empty\fi}%
-  \edef\localename{#1}%
+  % The old buggy way. Preserved for compatibility, but simplified
+  \edef\languagename{\expandafter\string#1\@empty}%
   \select@language{\languagename}%
   % write to auxs
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
@@ -6725,15 +6727,22 @@ wouldn’t exist.
 %
 \newif\ifbbl@bcpallowed
 \bbl@bcpallowedfalse
-\def\select@language#1{% from set@, babel@aux
+%
+\def\select@language#1{% from set@, babel@aux, babel@toc
   \ifx\bbl@selectorname\@empty
     \def\bbl@selectorname{select}%
-  % set hymap
   \fi
+  % set hymap
   \ifnum\bbl@hymapsel=\@cclv\chardef\bbl@hymapsel4\relax\fi
-  % set name
+  % set name (when coming from babel@aux)
   \edef\languagename{#1}%
   \bbl@fixname\languagename
+  % define \localename when coming from set@, with a trick 
+  \ifx\scantokens\@undefined
+    \def\localename{??}%
+  \else
+    \bbl@exp{\\\scantokens{\def\\\localename{\languagename}\\\noexpand}\relax}%
+  \fi
   \bbl@provide@locale
   \bbl@iflanguage\languagename{%
     \let\bbl@select@type\z@
@@ -7016,6 +7025,7 @@ wouldn’t exist.
     \bbl@usedategroupfalse
   \fi
   \bbl@fixname\languagename
+  \let\localename\languagename
   % TODO. name@map here?
   \bbl@provide@locale
   \bbl@iflanguage\languagename{%
@@ -8893,7 +8903,7 @@ wouldn’t exist.
 %
 % \begin{macro}{\babelhyphenmins}
 %
-% Only \LaTeX.
+% Only \LaTeX (basically because it’s defined with a \LaTeX{} tool).
 %
 %    \begin{macrocode}
 \ifx\NewDocumentCommand\@undefined\else
@@ -8901,16 +8911,17 @@ wouldn’t exist.
     \IfNoValueTF{#2}%
       {\protected@edef\bbl@hyphenmins@{\set@hyphenmins{#3}{#4}}%
        \IfValueT{#5}{%
-         \protected@edef\bbl@hyphenatmin@{\hyphenationmin=#5\relax}}}%
+         \protected@edef\bbl@hyphenatmin@{\hyphenationmin=#5\relax}}%
+       \IfBooleanT{#1}{%
+         \lefthyphenmin=#3\relax
+         \righthyphenmin=#4\relax
+         \IfValueT{#5}{\hyphenationmin=#5\relax}}}%
       {\edef\bbl@tempb{\zap@space#2 \@empty}%
        \bbl@for\bbl@tempa\bbl@tempb{%
          \@namedef{bbl@hyphenmins@\bbl@tempa}{\set@hyphenmins{#3}{#4}}%
          \IfValueT{#5}{%
-           \@namedef{bbl@hyphenatmin@\bbl@tempa}{\hyphenationmin=#5\relax}}}}%
-     \IfBooleanT{#1}{%
-       \lefthyphenmin=#3\relax
-       \righthyphenmin=#4\relax
-       \IfValueT{#5}{\hyphenationmin=#5\relax}}}
+           \@namedef{bbl@hyphenatmin@\bbl@tempa}{\hyphenationmin=#5\relax}}}%
+       \IfBooleanT{#1}{\bbl@error{hyphenmins-args}{}{}{}}}}
 \fi
 %    \end{macrocode}
 %
@@ -12446,23 +12457,30 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % Now come the macros used to set the direction when a language is
-% switched. First the (mostly) common macros.
+% switched. Testing are based on script names, because it’s the user
+% interface (including |language| and |script| in |\babelprovide|.
+% First the (mostly) common macros. 
 %
 %    \begin{macrocode}
 \bbl@trace{Macros to switch the text direction}
+\def\bbl@alscripts{,Arabic,Syriac,Thaana,}
+\def\bbl@rscripts{% 
+  ,Imperial Aramaic,Avestan,Cypriot,Hatran,Hebrew,%
+  Old Hungarian,Lydian,Mandaean,Manichaean,%
+  Meroitic Cursive,Meroitic,Old North Arabian,%
+  Nabataean,N'Ko,Orkhon,Palmyrene,Inscriptional Pahlavi,%
+  Psalter Pahlavi,Phoenician,Inscriptional Parthian,Samaritan,%
+  Old South Arabian,}%
 \def\bbl@provide@dirs#1{%
-  \bbl@xin@{\csname bbl@sbcp@#1\endcsname}{,Arab,Syrc,Thaa,}%
+  \bbl@xin@{\csname bbl@sname@#1\endcsname}{\bbl@alscripts\bbl@rscripts}%
   \ifin@
-    \global\bbl@csarg\chardef{wdir@#1}\tw@
-  \else
-    \bbl@xin@{\csname bbl@sbcp@#1\endcsname}{%
-      ,Armi,Avst,Cprt,Hatr,Hebr,Hung,Lydi,Mand,Mani,Merc,Mero,%
-       Narb,Nbat,Nkoo,Orkh,Palm,Phli,Phlp,Phnx,Prti,Samr,Sarb,}%
+    \global\bbl@csarg\chardef{wdir@#1}\@ne
+    \bbl@xin@{\csname bbl@sname@#1\endcsname}{\bbl@alscripts}%
     \ifin@
-      \global\bbl@csarg\chardef{wdir@#1}\@ne
-    \else
-      \global\bbl@csarg\chardef{wdir@#1}\z@
+      \global\bbl@csarg\chardef{wdir@#1}\tw@
     \fi
+  \else
+    \global\bbl@csarg\chardef{wdir@#1}\z@
   \fi
   \ifodd\bbl@engine
     \bbl@csarg\ifcase{wdir@#1}%
@@ -12973,19 +12991,19 @@ wouldn’t exist.
    {This macro is available only in LuaLaTeX and XeLaTeX.}%
    {Consider switching to these engines.}
 \bbl@errmessage{only-lua}
-   {This macro is available only in LuaLaTeX.}%
+   {This macro is available only in LuaLaTeX}%
    {Consider switching to that engine.}
 \bbl@errmessage{unknown-provide-key}
    {Unknown key '#1' in \string\babelprovide}%
    {See the manual for valid keys}%
 \bbl@errmessage{unknown-mapfont}
    {Option '\bbl@KVP@mapfont' unknown for\\%
-    mapfont. Use 'direction'.}%
+    mapfont. Use 'direction'}%
    {See the manual for details.}
 \bbl@errmessage{no-ini-file}
    {There is no ini file for the requested language\\%
     (#1: \languagename). Perhaps you misspelled it or your\\%
-    installation is not complete.}%
+    installation is not complete}%
    {Fix the name or reinstall babel.}
 \bbl@errmessage{digits-is-reserved}
    {The counter name 'digits' is reserved for mapping\\%
@@ -12993,7 +13011,7 @@ wouldn’t exist.
    {Use another name.}
 \bbl@errmessage{limit-two-digits}
    {Currently two-digit years are restricted to the\\
-    range 0-9999.}%
+    range 0-9999}%
    {There is little you can do. Sorry.}
 \bbl@errmessage{alphabetic-too-large}
  {Alphabetic numeral too large (#1)}%
@@ -13005,20 +13023,20 @@ wouldn’t exist.
    {See the manual for details.}
 \bbl@errmessage{unknown-ini-field}
    {Unknown field '#1' in \string\BCPdata.\\%
-    Perhaps you misspelled it.}%
+    Perhaps you misspelled it}%
    {See the manual for details.}
 \bbl@errmessage{unknown-locale-key}
    {Unknown key for locale '#2':\\%
     #3\\%
-    \string#1 will be set to \relax}%
+    \string#1 will be set to \string\relax}%
    {Perhaps you misspelled it.}%
 \bbl@errmessage{adjust-only-vertical}
    {Currently, #1 related features can be adjusted only\\%
-    in the main vertical list.}%
+    in the main vertical list}%
    {Maybe things change in the future, but this is what it is.}
 \bbl@errmessage{layout-only-vertical}
    {Currently, layout related features can be adjusted only\\%
-    in vertical mode.}%
+    in vertical mode}%
    {Maybe things change in the future, but this is what it is.}
 \bbl@errmessage{bidi-only-lua}
    {The bidi method 'basic' is available only in\\%
@@ -13048,11 +13066,11 @@ wouldn’t exist.
    {See the manual for further info}
 \bbl@errmessage{unknown-interchar}
    {'#1' for '\languagename' cannot be enabled.\\%
-    Maybe there is a typo.}%
+    Maybe there is a typo}%
    {See the manual for further details.}
 \bbl@errmessage{unknown-interchar-b}
    {'#1' for '\languagename' cannot be disabled.\\%
-    Maybe there is a typo.}%
+    Maybe there is a typo}%
    {See the manual for further details.}
 \bbl@errmessage{charproperty-only-vertical}
    {\string\babelcharproperty\space can be used only in\\%
@@ -13087,7 +13105,11 @@ wouldn’t exist.
    {The '#1' ldf style doesn't work with #2,\\%
     but you can use the ini locale instead.\\%
     Try adding 'provide=*' to the option list. You may\\%
-    also want to set 'bidi=' to some value.}%
+    also want to set 'bidi=' to some value}%
+   {See the manual for further details.}
+\bbl@errmessage{hyphenmins-args}
+   {\string\babelhyphenmins\ accepts either the optional\\%
+    argument or the star, but not both at the same time}%
    {See the manual for further details.}
 %</errors>
 %<*patterns>

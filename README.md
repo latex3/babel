@@ -1,6 +1,6 @@
-## Babel 24.9.60865
+## Babel 24.10
 
-dev)
+2024-09-18
 
 `babel` is the multilingual framework for localizing documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -10,9 +10,9 @@ languages even work with Plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.9 are described in:
+Changes in version 24.10 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.9.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.10.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,13 +48,11 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.10  (dev)
-       * \localename, \mainlocalename
-       * \babelhyphenmins
-
-24.9   2024-08-29
-       * New transform 'digits.native' (alternative to `mapdigits').
-       * Tentative transforms for CJK spacing and line breaking.
+24.10  2024-09-18
+       * \localename replaces the buggy \languagename. Added
+         \mainlocalename.
+       * \babelhyphenmins for better control of those parameters and,
+         in lualatex, \hyphenationmin.
 ```
 
 ### Previous changes
