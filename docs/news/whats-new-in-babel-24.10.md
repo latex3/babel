@@ -18,7 +18,8 @@ Consider the following document:
 \savelanguage$=$\languagename?
 \ifx\savelanguage\languagename True\else False!?!?\fi
 \end{document}
-``` Is ‘english’ not the same as ‘english’? As explained in the manual,
+```
+Is ‘english’ not the same as ‘english’? As explained in the manual,
 there was a bug in `babel` which messed up catcodes. No alternative was
 provided, but now there is one: `\localename`. The name of this macro
 follows the new paradigm in `babel`, based on the concept of ‘locale’
@@ -43,19 +44,19 @@ in Plain).
 \babelhyphenmins*[<language-list>]{<left>}{<right>}[<hyphenationmin>]
 ```
 
-The rationale behind this new command is the following: hyphenmins are
+The rationale behind this new command is hyphenmins are
 very often a stylistic choice. There are in fact three possible
 sets of values, which I’m going to illustrate with Spanish:
 
-* A technical limit imposed by the patterns, especially when they have
-  been generated with `patgen`. This limit in Spanish is 1/1, because it
+* A technical limit imposed by the patterns, especially when 
+  generated with `patgen`. This limit in Spanish is 1/1, because it
   includes patterns like `4b.` and `.b2`. Sadly, this limit is often
   unknown or has been lost.
 * The ‘traditional’ limit marked by typographical conventions in each
   country (very likely the same language). Note sometimes there is not
   a single convention even in the same country. In Spanish it’s 2/2.
 * The layout. If the text box is wide, you can decide to raise the
-  value to 2/3 or even 3/3.
+  value to 3/2 or even 3/3.
 
 Now, consider a document written in English with some words in other
 languages with lower values (in Greek it’s 1/1!). This will lead to
