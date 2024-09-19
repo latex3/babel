@@ -1,6 +1,6 @@
-## Babel 24.10
+## Babel 24.10.62871
 
-2024-09-18
+(dev)
 
 `babel` is the multilingual framework for localizing documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined

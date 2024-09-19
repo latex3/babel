@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/09/18 v24.10 The Babel package]
+\ProvidesFile{babel.dtx}[2024/09/19 v24.10.62871 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -51,8 +51,8 @@
 \setmonofont[Scale=.86, FakeStretch=.97]{DejaVu Sans Mono}
 \raggedright
 \frenchspacing
-\addtolength{\oddsidemargin}{1em}
-\addtolength{\textwidth}{25pt}
+\addtolength{\oddsidemargin}{-1em}
+\addtolength{\textwidth}{25.5pt}
 \addtolength{\textheight}{3.5cm}
 \addtolength{\topmargin}{-2cm}
 \font\manual=logo10 % font used for the METAFONT logo, etc.
@@ -111,6 +111,7 @@
 \ExplSyntaxOff
 \definecolor{thered}{rgb}{0.65,0.04,0.07}
 \definecolor{thegrey}{gray}{0.8}
+\definecolor{thegreyed}{gray}{0.4}
 \definecolor{shadecolor}{rgb}{1,1,0.97}
 \definecolor{messages}{rgb}{.66,.13,.27}
 \makeatletter
@@ -152,22 +153,25 @@
 \def\MacroFont{\fontencoding \encodingdefault \fontfamily\ttdefault
   \fontseries\mddefault \fontshape\updefault \small \catcode`\_=\active}
 \definecolor{shadecolor}{rgb}{0.96,0.96,0.93}
-\AtBeginDocument{%
-  \def\PrintDescribeMacro#1{%
-    \strut\MacroFont\color{thered}\normalsize\string#1}}
-\def\Describe#1{%
-  \par\penalty-500\vskip3ex\noindent
-  \DescribeMacro{#1}\args}
-\def\DescribeOther{\vskip-4ex\Describe}
-\makeatletter
+%
+\makeatletter   
+\def\Describe#1#2{%
+  \@startsection{subsubsection}{100}{\z@}%
+    {-3.25ex\@plus -1ex \@minus -.2ex}%
+    {1.5ex \@plus .2ex}%
+    {\hspace{-2cm}\color{thegreyed}\normalsize\ttfamily}*%
+    {\underline{\strut{\color{thered}\string#1}\color{black}#2}}}
+\def\DescribeOther{\addvspace{-1.5ex}\Describe}
+\def\macro#1{% WIP
+  \@startsection{paragraph}{101}{\z@}%
+    {3.25ex \@plus1ex \@minus.2ex}%
+    {-1em}%
+    {\sffamily\bfseries\color{thered}}*{\hspace*{-1em}\string#1}}
 \def\trouble#1{\addcontentsline{tsh}{trouble}{#1}}
 \def\listoftroubles{\section*{Troubleshoooting}\@starttoc{tsh}}
 \let\l@trouble\l@figure
 \let\saved@check@percent\check@percent
 \let\check@percent\relax
-\def\args#1{%
-  \def\bbl@tempa{#1}%
-  \ifx\bbl@tempa\@empty\else#1\vskip1ex\fi\ignorespaces}
 % Changes to doc.sty (add <<...>> syntax)
 \def\Module#1{%
   \mod@math@codes$\langle${\color{thered}$\mathsf{#1}$}$\rangle$}
@@ -285,11 +289,8 @@ and \pdftex, \xetex{} and \luatex{} with the \babel{} package. There
 are also some notes on its use with e-Plain and pdf-Plain \TeX.
 
 \item[\sffamily\color{messages}I only need learn the most basic
-features.] The first subsections (1.1-1.3) describe the traditional way
-of loading a language (with |ldf| files), which is usually all you need.
-The alternative way based on |ini| files, which complements the
-previous one (it does \textit{not} replace it, although it is still
-necessary in some languages), is described below; go to \ref{inifiles}.
+features.] The first subsections (1.1-1.6) describe the ways
+of loading a language, which is usually all you need.
 
 \item[\sffamily\color{messages}I don’t like manuals. I prefer sample
   files.] This manual contains lots of examples and tips, but in GitHub
@@ -334,7 +335,23 @@ language?] See section \ref{contribute} for contributing a language.
 
 \section{The user interface}\label{U-I}
 
-\subsection{Monolingual documents}
+There are two ways to load a language with babel, namely, the old good
+‘classical’ one, based on mostly self-contained declarations in a file
+with |ldf| extension, and the ‘modern’ one, based on a brand new
+mechanism based on descriptive |ini| files. 
+
+‘Classical’ doesn’t mean outdated or obsolete. In fact, this is the
+recommended method in most languages where an |ldf| file exists. Below
+is a list of the supported languages. See also
+\href{https://latex3.github.io/%
+babel/guides/which-method-for-which-language.html}{Which
+method for which language} in the \babel{} site.
+
+Note \babel{} doesn’t set the languages. It just recognizes the options
+passed to the class or the package, which is the standard way to deal
+with languages in \LaTeX.
+
+\subsection{Monolingual documents: the ‘classical’ way}
 
 In most cases, a single language is required, and then all you need in
 \LaTeX{} is to load the package using its standard mechanism for this
@@ -346,13 +363,12 @@ other packages detect and use it. This is the standard way in \LaTeX{}
 for an option – in this case a language – to be recognized by several
 packages.
 
-Many languages are compatible with \textsf{xetex} and \textsf{luatex}.
-With them you can use \babel{} to localize the documents. When these
-engines are used, the Latin script is covered by default in current
-\LaTeX{} (provided the document encoding is UTF-8), because the font
-loader is preloaded and the font is switched to |lmroman|. Other
-scripts require loading \textsf{fontspec}. You may want to set the font
-attributes with \textsf{fontspec}, too.
+Many languages are compatible with \textsf{xetex} and \textsf{luatex},
+but a few only work with \pdftex. When these engines are used, the
+Latin script is covered by default in current \LaTeX{} (provided the
+document encoding is UTF-8). Other scripts require loading
+\textsf{fontspec}, although \babel{} provides a higher level interface
+(see |\babelfont| below). 
 
 \begin{example}
   Here is a simple full example for “traditional” \TeX{} engines
@@ -386,7 +402,7 @@ the option |french| and will be able to use it.
 \end{example}
 
 \begin{example}
-And now a simple monolingual document in Russian (text from the
+Now a simple monolingual document in Russian (text from the
 Wikipedia) with \xetex{} or \luatex{}. Note neither \textsf{fontenc}
 nor \textsf{inputenc} are necessary, but the document should be encoded
 in UTF-8 and a so-called Unicode font must be loaded (in this example
@@ -411,33 +427,50 @@ _\babelfont{rm}{DejaVu Serif}_
 \end{verbatim}
 \end{example}
 
-\begin{troubleshooting}
-\trouble{Paragraph ended before \textbackslash UTFviii@three@octets
-was complete}
-A common source of trouble is a wrong setting of the input encoding.
-Depending on the \LaTeX{} version you can get the following somewhat
-cryptic error:
-\begin{verbatim}
-! Paragraph ended before \UTFviii@three@octets was complete.
-\end{verbatim}
-Or the more explanatory:
-\begin{verbatim}
-! Package inputenc Error: Invalid UTF-8 byte ...
-\end{verbatim}
-Make sure you set the encoding actually used by your editor.
-\end{troubleshooting}
-
 \begin{note}
   Because of the way \babel{} has evolved, ``language'' can refer to
-  (1) a set of hyphenation patterns as preloaded into the format, (2)
-  a package option, (3) an |ldf| file, and (4) a name used in the
-  document to select a language or dialect. So, a package option
-  refers to a language in a generic way -- sometimes it is the actual
-  language name used to select it, sometimes it is a file name loading
-  a language with a different name, sometimes it is a file name
-  loading several languages. Please, read the documentation for
-  specific languages for further info.
+  (1) a set of hyphenation patterns as preloaded into the format, (2) a
+  package option, (3) an |ldf| file, and (4) a name used in the
+  document to select a language or dialect. Please, read the
+  documentation for specific languages for further info.
 \end{note}
+
+\begin{note}
+  \Babel{} does not make any readjustments by default in font size,
+  vertical positioning or line height by default. This is on purpose
+  because the optimal solution depends on the document layout and the
+  font, and very likely the most appropriate one is a combination of
+  these settings.
+\end{note}
+
+\begin{note}
+  Although it has been customary to recommend placing |\title|,
+  |\author| and other elements printed by |\maketitle| after
+  |\begin{document}|, mainly because of shorthands, it is advisable to
+  keep them in the preamble. Currently there is no real need to use
+  shorthands in those macros.
+\end{note}
+
+\begin{note}
+  With \textsf{hyperref} you may want to set the PDF document language
+  with something like:
+\begin{verbatim}
+\usepackage[_pdflang=es-MX_]{hyperref}
+\end{verbatim}
+This is not currently done by \babel{} and you must set it by hand. The
+PDF document language can be also set with |\DocumentMetadata|, before
+|\documentclass|; for example:
+\begin{verbatim}
+\DocumentMetadata{_lang=es-MX_}
+\end{verbatim}
+\end{note}
+
+\begin{troubleshooting}
+\trouble{Package inputenc Error: Invalid UTF-8 byte ...}
+A common source of trouble is a wrong setting of the input encoding.
+Make sure you set the encoding actually used by your editor, or
+even better, make sure the encoding in your editor is set to UTF-8.
+\end{troubleshooting}
 
 \begin{troubleshooting}
   The following warning is about hyphenation patterns, which are
@@ -458,42 +491,100 @@ Package babel Warning: No hyphenation patterns were preloaded for
   etc.) for further info about how to configure it.
 \end{troubleshooting}
 
-\begin{note}
-  With \textsf{hyperref} you may want to set the document language with
-  something like:
+\subsection{Monolingual documents: the ‘modern’ way}
+
+When, for whatever reason, the ‘classical’ way with the |ldf| is not
+suitable for the needs of a document or a document system, you have to
+resort to a different mechanism, which is activated with the package
+option |provide=*| (in monolingual documents).
+
+\begin{example}
+  Although Georgian has its own \texttt{ldf} file, here is how to
+  declare this language in Unicode engines. Here, as in a previous
+  example, we resort to |\babelfont| to set the font for this language
+  (with the |Harfbuzz| renderer).
+\setengine{luatex/xetex}
 \begin{verbatim}
-\usepackage[_pdflang=es-MX_]{hyperref}
+\documentclass{book}
+
+\usepackage[_georgian, provide=*_]{babel}
+
+_\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}_
+
+\begin{document}
+
+\tableofcontents
+
+\chapter{სამზარეულო და სუფრის ტრადიციები}
+
+ქართული ტრადიციული სამზარეულო ერთ-ერთი უმდიდრესია მთელ მსოფლიოში.
+
+\end{document}
 \end{verbatim}
-This is not currently done by \babel{} and you must set it by hand. The
-document language can be also set with |\DocumentMetadata|, before
-|\documentclass|; for example:
+\end{example}
+
+\subsection{Mostly monolingual documents}
+\label{mostlymono}
+
+\New{3.39} Very often, multilingual documents consist of a main
+language with small pieces of text in another languages (words, idioms,
+short sentences). Typically, all you need is to set the line breaking
+rules and, perhaps, the font. In such a case, \babel{} does not
+require declaring these secondary languages explicitly, because the
+basic settings are loaded on the fly when the language is selected.
+
+This is particularly useful, too, when there are short texts of this
+kind coming from an external source whose contents are not known on
+beforehand (for example, titles in a bibliography). At this regard, it
+is worth remembering that |\babelfont| does \textit{not} load any font
+until required, so that it can be used just in case.
+
+\New{3.84} With \pdftex, when a language is loaded on the fly
+(actually, with |\babelprovide|, because this is the macro used
+internally to load it) selectors now set the font encoding based on the
+list provided when loading |fontenc|. Not all scripts have an
+associated encoding, so this feature works only with Latin, Cyrillic,
+Greek, Arabic, Hebrew, Cherokee, Armenian, and Georgian, provided a
+suitable font is found.
+
+\begin{example}
+  A trivial document with the default font in English and Spanish, and
+  FreeSerif in Russian is:
+\setengine{luatex/xetex}
 \begin{verbatim}
-\DocumentMetadata{_lang=es-MX_}
+\documentclass[english]{article}
+\usepackage{babel}
+
+_\babelfont[russian]{rm}{FreeSerif}_
+
+\begin{document}
+
+English. _\foreignlanguage{russian}{Русский}_.
+_\foreignlanguage{spanish}{Español}_.
+
+\end{document}
 \end{verbatim}
-\end{note}
+If you need the ‘modern’ way to load the main language set as global
+option, just write:
+\begin{verbatim}
+\usepackage[provide=*]{babel}
+\end{verbatim}
+\end{example}
 
 \begin{note}
-  Although it has been customary to recommend placing |\title|,
-  |\author| and other elements printed by |\maketitle| after
-  |\begin{document}|, mainly because of shorthands, it is advisable to
-  keep them in the preamble. Currently there is no real need to use
-  shorthands in those macros.
+  Instead of its name, you may prefer to select the language with the
+  corresponding BCP47 tag. This alternative, however, must be activated
+  explicitly, because a two- or tree-letter word is a valid name for a
+  language (eg, |lu| can be the locale name with tag |khb| or the tag
+  for |lubakatanga|). See section \ref{bcp47} for further details.
 \end{note}
 
-\begin{note}
-  \Babel{} does not make any readjustments by default in font size,
-  vertical positioning or line height by default. This is on purpose
-  because the optimal solution depends on the document layout and the
-  font, and very likely the most appropriate one is a combination of
-  these settings.
-\end{note}
+\subsection{Multilingual documents: the ‘classical’ way}
 
-\subsection{Multilingual documents}
-
-In multilingual documents, just use a list of the required languages as
-package or class options. The last language is considered the main one,
-activated by default. Sometimes, the main language changes the document
-layout (eg, |spanish| and |french|).
+In multilingual documents, just use a list of the required languages
+either as package or as class options. The last language is considered the
+main one, activated by default. Sometimes, the main language changes
+the document layout (eg, |spanish| and |french|).
 
 \begin{example}
   In \LaTeX, the preamble of the document:
@@ -506,14 +597,16 @@ layout (eg, |spanish| and |french|).
   language in use, and the main one.
 \end{example}
 
-You can also set the main language explicitly, but it is discouraged
-except if there is a real reason to do so:
+\begin{note}
+  Although strongly discouraged, languages can be set as global and as
+  package option at the same time, but in such a case you should set
+  explicitly the main language with the package option |main|,
+  described below:
 \begin{verbatim}
-\documentclass{article}
-\usepackage[_main=english_,dutch]{babel}
+\documentclass[_italian_]{book}
+\usepackage[ngerman,_main=italian_]{babel}
 \end{verbatim}
-
-Examples of cases where |main| is useful are the following.
+\end{note}
 
 \begin{example}
 Some classes load \babel{} with a hardcoded language option. Sometimes,
@@ -523,16 +616,6 @@ the main language can be overridden with something like that before
 \PassOptionsToPackage{main=english}{babel}
 \end{verbatim}
 \end{example}
-
-\begin{note}
-  Languages may be set as global and as package option at the same
-  time, but in such a case you should set explicitly the main language
-  with the package option |main|:
-\begin{verbatim}
-\documentclass[_italian_]{book}
-\usepackage[ngerman,_main=italian_]{babel}
-\end{verbatim}
-\end{note}
 
 \begin{warning}
   In the preamble the main language has \textit{not} been selected,
@@ -606,58 +689,6 @@ _\usepackage[vietnamese,danish]{babel}_
 \addto\extrasfrench{\inputencoding{latin1}}
 \addto\extrasrussian{\inputencoding{koi8-r}}
 \end{verbatim}
-\end{note}
-
-\subsection{Mostly monolingual documents}
-\label{mostlymono}
-
-\New{3.39} Very often, multilingual documents consist of a main
-language with small pieces of text in another languages (words, idioms,
-short sentences). Typically, all you need is to set the line breaking
-rules and, perhaps, the font. In such a case, \babel{} now does not
-require declaring these secondary languages explicitly, because the
-basic settings are loaded on the fly when the language is selected (and
-also when provided in the optional argument of |\babelfont|, if used).
-
-This is particularly useful, too, when there are short texts of this
-kind coming from an external source whose contents are not known on
-beforehand (for example, titles in a bibliography). At this regard, it
-is worth remembering that |\babelfont| does \textit{not} load any font
-until required, so that it can be used just in case.
-
-\New{3.84} With \pdftex, when a language is loaded on the fly
-(actually, with |\babelprovide|, because this is the macro used
-internally to load it) selectors now set the font encoding based on the
-list provided when loading |fontenc|. Not all scripts have an
-associated encoding, so this feature works only with Latin, Cyrillic,
-Greek, Arabic, Hebrew, Cherokee, Armenian, and Georgian, provided a
-suitable font is found.
-
-\begin{example}
-  A trivial document with the default font in English and Spanish, and
-  FreeSerif in Russian is:
-\setengine{luatex/xetex}
-\begin{verbatim}
-\documentclass[english]{article}
-\usepackage{babel}
-
-_\babelfont[russian]{rm}{FreeSerif}_
-
-\begin{document}
-
-English. _\foreignlanguage{russian}{Русский}_.
-_\foreignlanguage{spanish}{Español}_.
-
-\end{document}
-\end{verbatim}
-\end{example}
-
-\begin{note}
-  Instead of its name, you may prefer to select the language with the
-  corresponding BCP47 tag. This alternative, however, must be activated
-  explicitly, because a two- or tree-letter word is a valid name for a
-  language (eg, |lu| can be the locale name with tag |khb| or the tag
-  for |lubakatanga|). See section \ref{bcp47} for further details.
 \end{note}
 
 \subsection{Languages supported by \babel{} with \textsf{ldf} files}
@@ -754,6 +785,213 @@ encoding files, a preprocessor or even a complete framework (like
 Then you preprocess it with |devnag| \m{file}, which creates
 \m{file}|.tex|; you can then typeset the latter with \LaTeX.
 
+
+\subsection{Selecting fonts in Unicode engines}
+
+\New{3.15} Babel provides a high level interface on top of |fontspec|
+to select fonts. There is no need to load \textsf{fontspec} explicitly
+– \babel{} does it for you with the first |\babelfont|. (See
+also the package \textsf{combofont} for a complementary approach.)
+
+\Describe\babelfont{\oarg{language-list}\marg{font-family}%
+  \oarg{font-options}\marg{font-name}}
+
+% \begin{note}
+%   See the note in the previous section about some issues in
+%   specific languages.
+% \end{note}
+
+The main purpose of |\babelfont| is to define at once the fonts
+required by the different languages, with their corresponding language
+systems (script and language). So, if you load, say, 4 languages,
+|\babelfont{rm}{FreeSerif}| defines 4 fonts (with their variants, of
+course), which are switched with the language by \babel. It is a tool
+to make things easier and transparent to the user.
+
+Here \textit{font-family} is |rm|, |sf| or |tt| (or newly defined
+ones, as explained below), and \textit{font-name} is the same as in
+\textsf{fontspec} and the like.
+
+If no language is given, then it is considered the default font for
+the family, activated when a language is selected.
+
+On the other hand, if there is one or more languages in the optional
+argument, the font will be assigned to them, overriding the default one.
+Alternatively, you may set a font for a script -- just precede its name
+(lowercase) with a star (eg, |*devanagari|).
+
+With the optional argument, the font is \textit{not} yet loaded, but
+just predeclared. This means you may define as many fonts as you want
+‘just in case’, because if the language is never selected, the
+corresponding |\babelfont| declaration is just ignored.
+
+\Babel{} takes care of the font language and the font script when
+languages are selected (as well as the writing direction). In most
+cases, you will not need \textit{font-options}, which is the same as in
+\textsf{fontspec}, but you may add further key/value pairs if
+necessary.
+
+\begin{example}
+  Usage in most cases is very simple. Let us assume you are setting up
+  a document in Swedish, with some words in Hebrew, with a font suited
+  for both languages. Here the option |bidi=default| activates a simple
+  (or, better, simplistic) bidirectional mode.
+  \begingroup
+% If you are looking at the code to see how it has been written, you
+% will be disappointed :-). The following example is built ad hoc to
+% emulate the final result to avoid dependencies, and therefore it's
+% not "real" code.
+\catcode`@=13
+\def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TLT \else
+\bgroup\textdir TRT \fontspec[Scale=.87,Script=Hebrew]{Liberation
+Mono} \fi}
+\setengine{luatex/xetex}
+\begin{verbatim}
+\documentclass{article}
+
+\usepackage[swedish, bidi=default]{babel}
+
+\babelprovide[import]{hebrew}
+
+_\babelfont{rm}{FreeSerif}_
+
+\begin{document}
+
+Svenska \foreignlanguage{hebrew}{@2עִבְרִית@0} svenska.
+
+\end{document}
+\end{verbatim}
+\endgroup
+
+If on the other hand you have to resort to different fonts, you can
+replace the red line above with, say:
+\setengine{luatex/xetex}
+\begin{verbatim}
+\babelfont{rm}{Iwona}
+\babelfont[hebrew]{rm}{FreeSerif}
+\end{verbatim}
+\end{example}
+
+|\babelfont| can be used to implicitly define a new font family. Just
+write its name instead of |rm|, |sf| or |tt|. This is the preferred way
+to select fonts in addition to the three basic families.
+
+\begin{example}
+  Here is how to do it:
+\setengine{luatex/xetex}
+\begin{verbatim}
+\babelfont{kai}{FandolKai}
+\end{verbatim}
+  Now, |\kaifamily| and |\kaidefault|, as well as |\textkai| are at
+  your disposal.
+\end{example}
+
+\begin{note}
+  You may load \textsf{fontspec} explicitly. For example:
+\setengine{luatex/xetex}
+\begin{verbatim}
+\usepackage{fontspec}
+\newfontscript{Devanagari}{deva}
+\babelfont[hindi]{rm}{Shobhika}
+\end{verbatim}
+  This makes sure the OpenType script for Devanagari is |deva| and not
+  |dev2|, in case it is not detected correctly.
+%   You may also pass some
+%   options to \textsf{fontspec}: with |silent|, the warnings about
+%   unavailable scripts or languages are not shown (they are only really
+%   useful when the document format is being set up).
+\end{note}
+
+\begin{note}
+  |\fontspec| is not touched at all, only the preset font families
+  (|rm|, |sf|, |tt|, and the like). If a language is switched when an
+  \textit{ad hoc} font is active, or you select the font with this
+  command, neither the script nor the language is passed. You must
+  add them by hand. This is by design, for several reasons —for
+  example, each font has its own set of features and a generic setting
+  for several of them can be problematic, and also preserving a
+  “lower-level” font selection is useful.
+\end{note}
+
+\begin{note}
+  Directionality is a property affecting margins, indentation, column
+  order, etc., not just text. Therefore, it is under the direct control
+  of the language, which applies both the script and the direction to
+  the text. As a consequence, there is no need to set \texttt{Script}
+  when declaring a font with |\babelfont| (nor \texttt{Language}). In
+  fact, it is even discouraged.
+\end{note}
+
+\begin{note}
+  The keys |Language| and |Script| just pass these values to the
+  \textit{font}, and do \textit{not} set the script for the
+  \textit{language} (and therefore the writing direction). In other
+  words, the |ini| file or |\babelprovide| provides default values for
+  |\babelfont| if omitted, but the opposite is not true. See the note
+  above for the reasons of this behavior.
+\end{note}
+
+\begin{warning}
+  Using |\set|\textit{xxxx}|font| and |\babelfont| at the same time is
+  discouraged, but very often works as expected. However, be aware with
+  |\set|\textit{xxxx}|font| the language system will not be set by
+  \babel{} and should be set with |fontspec| if necessary.
+\end{warning}
+
+\begin{troubleshooting}
+  \trouble{Package fontspec Info: Language '<lang>' not explicitly
+  supported within font '<font>' with script '<script>'.}
+  \textit{Package fontspec Info: Language '<lang>' not explicitly
+  supported within font '<font>' with script '<script>'.}.
+
+  \textbf{This is \textit{not} and error.} This info is shown by
+  \textsf{fontspec}, not by \babel. If everything is okay in your
+  document (and almost always it is), the best thing you can do is just
+  to ignore it altogether.
+
+  In some forums you can find the advice to set, more or less
+  mechanically, |Language=Default|. \textit{Do not follow it}, because
+  font features for the language will not be applied, which can be
+  relevant for many languages, like Urdu and Turkish. Set the
+  |Language| explicitly only if there is a reason to do it. If you
+  really want to conceal this message, use instead:
+\begin{verbatim}
+\PassOptionsToPackage{silent}{fontspec}
+\end{verbatim}
+\end{troubleshooting}
+
+\begin{troubleshooting}
+  \trouble{Package babel Info: The following fonts are not babel
+  standard families} \textit{Package babel Info: The following fonts
+  are not babel standard families}.
+
+  \textbf{This is \textit{not} an error.} \babel{} assumes that if you
+  are using |\babelfont| for a family, very likely you want to define
+  the rest of them. If you don't, you can find some inconsistencies
+  between families. This checking is done at the beginning of the
+  document, at a point where we cannot know which families will be
+  used.
+
+  Actually, there is no real need to use |\babelfont| in a monolingual
+  document, if you set the language system in |\setmainfont| (or not,
+  depending on what you want).
+
+  As the message explains, \textit{there is nothing intrinsically
+  wrong} with not defining all the families. In fact, there is nothing
+  intrinsically wrong with not using |\babelfont| at all. But you must
+  be aware that this may lead to some problems.
+\end{troubleshooting}
+
+\begin{note}
+  |\babelfont| is a high level interface to \textsf{fontspec}, and
+  therefore in \xetex{} you can apply |Mapping|s. For example, there is
+  a set of 
+  \href{https://github.com/davidmjones/brahmic-maps}{transliterations
+  for Brahmic scripts} by Davis M. Jones. After installing
+  them in you distribution, just set the map as you would do with
+  \textsf{fontspec}.
+\end{note}
+
 \subsection{Modifiers}
 
 \New{3.9c} The basic behavior of some languages can be modified when
@@ -841,6 +1079,7 @@ The main language is selected automatically when the |document|
 environment begins.
 
 \Describe{\selectlanguage}{\marg{language}}
+
 When a user wants to switch from one language to another he can
 do so using the macro |\selectlanguage|. This macro takes the
 language, defined previously by a language definition file, as
@@ -854,15 +1093,6 @@ for the language chosen:
 This command can be used as environment, too, in case there are
 relatively short texts and you do not want to reset the language with a
 hardcode value.
-
-\begin{note}
-  For ``historical reasons'', a macro name is converted to a language
-  name without the leading |\|; in other words,
-  |\selectlanguage{\german}| is equivalent to
-  |\selectlanguage{german}|. Using a macro instead of a ``real'' name
-  is deprecated. \New{3.43} However, if the macro name does not match
-  any language, it will get expanded as expected.
-\end{note}
 
 \begin{note}
   Bear in mind |\selectlanguage| can be automatically executed, in some
@@ -936,7 +1166,8 @@ convenient way.
   |\bibitem| is out of sync with |\selectlanguage| in the \file{.aux}
   file. The reason is |\bibitem| uses |\immediate| (and others, in
   fact), while |\selectlanguage| doesn't. There is a similar issue with
-  floats, too. There is no known workaround.
+  floats, too. There is no known workaround, but it’s not usually a
+  real issue.
 \end{note}
 
 \subsection{Auxiliary language selectors}
@@ -1193,9 +1424,9 @@ may want to add |\languageshorthands|\marg{language} to the corresponding
 |\extras<language>|, as explained below). By default, user shorthands
 are (re)defined.
 
-User shorthands override language ones, which in turn override
-system shorthands. Language-dependent user shorthands (new in
-3.9) take precedence over ``normal'' user shorthands.
+User shorthands override language ones, which in turn override system
+shorthands. Language-dependent user shorthands take precedence over
+``normal'' user shorthands.
 
 \begin{example}
   Let's assume you want a unified set of shorthand for discretionaries
@@ -1384,10 +1615,20 @@ a shorthand) are not a source of trouble anymore.
 of the default config file |bblopts.cfg| (the file is loaded even
 with |noconfigs|).
 
-\Describe{main=}{\meta{language}} Sets the main language, as explained
-above, ie, this language is always loaded last. If it is not given as
-package or global option, it is added to the list of requested
-languages.
+\Describe{main=}{\meta{language}} Forces the main languages, but this
+option should not be used except if there a need to do it. If the
+language is not given as such as package or global option, it is added
+to the list of requested languages. For example:
+\begin{verbatim}
+\documentclass{article}
+\usepackage[_main=english_,dutch]{babel}
+\end{verbatim}
+Some classes load \babel{} with a hardcoded language option. Sometimes,
+the main language can be overridden with something like that before
+|\documentclass|:
+\begin{verbatim}
+\PassOptionsToPackage{main=english}{babel}
+\end{verbatim}
 
 \Describe{headfoot=}{\meta{language}} By default, headlines and
 footlines are not touched (only marks), and if they contain
@@ -1534,29 +1775,7 @@ following section shows how to make use of them by means of
 alternative when the |ldf| does not exists or does not work as
 expected, and for secondary tasks.
 
-\begin{example}
-  Although Georgian has its own \texttt{ldf} file, here is how to
-  declare this language with an |ini| file in Unicode engines.
-\setengine{luatex/xetex}
-\begin{verbatim}
-\documentclass{book}
 
-\usepackage{babel}
-_\babelprovide[import, main]{georgian}_
-
-\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}
-
-\begin{document}
-
-\tableofcontents
-
-\chapter{სამზარეულო და სუფრის ტრადიციები}
-
-ქართული ტრადიციული სამზარეულო ერთ-ერთი უმდიდრესია მთელ მსოფლიოში.
-
-\end{document}
-\end{verbatim}
-\end{example}
 
 \begin{more}
   There is an example of how to use an |ini| template file
@@ -2271,210 +2490,6 @@ in Switzerland.}
 \hrule
 \bigskip
 
-\subsection{Selecting fonts}
-
-\New{3.15} Babel provides a high level interface on top of |fontspec|
-to select fonts. There is no need to load \textsf{fontspec} explicitly
--- \babel{} does it for you with the first |\babelfont|.\footnote{See
-also the package \textsf{combofont} for a complementary approach.}
-
-\Describe\babelfont{\oarg{language-list}\marg{font-family}%
-  \oarg{font-options}\marg{font-name}}
-
-\begin{note}
-  See the note in the previous section about some issues in
-  specific languages.
-\end{note}
-
-The main purpose of |\babelfont| is to define at once in a multilingual
-document the fonts required by the different languages, with their
-corresponding language systems (script and language). So, if you load,
-say, 4 languages, |\babelfont{rm}{FreeSerif}| defines 4 fonts (with
-their variants, of course), which are switched with the language by
-\babel. It is a tool to make things easier and transparent to the user.
-
-Here \textit{font-family} is |rm|, |sf| or |tt| (or newly defined
-ones, as explained below), and \textit{font-name} is the same as in
-\textsf{fontspec} and the like.
-
-If no language is given, then it is considered the default font for
-the family, activated when a language is selected.
-
-On the other hand, if there is one or more languages in the optional
-argument, the font will be assigned to them, overriding the default one.
-Alternatively, you may set a font for a script -- just precede its name
-(lowercase) with a star (eg, |*devanagari|). With this optional
-argument, the font is \textit{not} yet defined, but just predeclared.
-This means you may define as many fonts as you want ‘just in case’,
-because if the language is never selected, the corresponding
-|\babelfont| declaration is just ignored.
-
-\Babel{} takes care of the font language and the font script when
-languages are selected (as well as the writing direction); see the
-recognized languages above. In most cases, you will not need
-\textit{font-options}, which is the same as in \textsf{fontspec}, but
-you may add further key/value pairs if necessary.
-
-\begin{example}
-  Usage in most cases is very simple. Let us assume you are setting up
-  a document in Swedish, with some words in Hebrew, with a font suited
-  for both languages.
-  \begingroup
-% If you are looking at the code to see how it has been written, you
-% will be disappointed :-). The following example is built ad hoc to
-% emulate the final result to avoid dependencies, and therefore it's
-% not "real" code.
-\catcode`@=13
-\def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TLT \else
-\bgroup\textdir TRT \fontspec[Scale=.87,Script=Hebrew]{Liberation
-Mono} \fi}
-\setengine{luatex/xetex}
-\begin{verbatim}
-\documentclass{article}
-
-\usepackage[swedish, bidi=default]{babel}
-
-\babelprovide[import]{hebrew}
-
-_\babelfont{rm}{FreeSerif}_
-
-\begin{document}
-
-Svenska \foreignlanguage{hebrew}{@2עִבְרִית@0} svenska.
-
-\end{document}
-\end{verbatim}
-\endgroup
-
-If on the other hand you have to resort to different fonts, you can
-replace the red line above with, say:
-\setengine{luatex/xetex}
-\begin{verbatim}
-\babelfont{rm}{Iwona}
-\babelfont[hebrew]{rm}{FreeSerif}
-\end{verbatim}
-\end{example}
-
-|\babelfont| can be used to implicitly define a new font family. Just
-write its name instead of |rm|, |sf| or |tt|. This is the preferred way
-to select fonts in addition to the three basic families.
-
-\begin{example}
-  Here is how to do it:
-\setengine{luatex/xetex}
-\begin{verbatim}
-\babelfont{kai}{FandolKai}
-\end{verbatim}
-  Now, |\kaifamily| and |\kaidefault|, as well as |\textkai| are at
-  your disposal.
-\end{example}
-
-\begin{note}
-  You may load \textsf{fontspec} explicitly. For example:
-\setengine{luatex/xetex}
-\begin{verbatim}
-\usepackage{fontspec}
-\newfontscript{Devanagari}{deva}
-\babelfont[hindi]{rm}{Shobhika}
-\end{verbatim}
-  This makes sure the OpenType script for Devanagari is |deva| and not
-  |dev2|, in case it is not detected correctly.
-%   You may also pass some
-%   options to \textsf{fontspec}: with |silent|, the warnings about
-%   unavailable scripts or languages are not shown (they are only really
-%   useful when the document format is being set up).
-\end{note}
-
-\begin{note}
-  |\fontspec| is not touched at all, only the preset font families
-  (|rm|, |sf|, |tt|, and the like). If a language is switched when an
-  \textit{ad hoc} font is active, or you select the font with this
-  command, neither the script nor the language is passed. You must
-  add them by hand. This is by design, for several reasons —for
-  example, each font has its own set of features and a generic setting
-  for several of them can be problematic, and also preserving a
-  “lower-level” font selection is useful.
-\end{note}
-
-\begin{note}
-  Directionality is a property affecting margins, indentation, column
-  order, etc., not just text. Therefore, it is under the direct control
-  of the language, which applies both the script and the direction to
-  the text. As a consequence, there is no need to set \texttt{Script}
-  when declaring a font with |\babelfont| (nor \texttt{Language}). In
-  fact, it is even discouraged.
-\end{note}
-
-\begin{note}
-  The keys |Language| and |Script| just pass these values to the
-  \textit{font}, and do \textit{not} set the script for the
-  \textit{language} (and therefore the writing direction). In other
-  words, the |ini| file or |\babelprovide| provides default values for
-  |\babelfont| if omitted, but the opposite is not true. See the note
-  above for the reasons of this behavior.
-\end{note}
-
-\begin{warning}
-  Using |\set|\textit{xxxx}|font| and |\babelfont| at the same time is
-  discouraged, but very often works as expected. However, be aware with
-  |\set|\textit{xxxx}|font| the language system will not be set by
-  \babel{} and should be set with |fontspec| if necessary.
-\end{warning}
-
-\begin{troubleshooting}
-  \trouble{Package fontspec Info: Language '<lang>' not explicitly
-  supported within font '<font>' with script '<script>'.}
-  \textit{Package fontspec Info: Language '<lang>' not explicitly
-  supported within font '<font>' with script '<script>'.}.
-
-  \textbf{This is \textit{not} and error.} This info is shown by
-  \textsf{fontspec}, not by \babel. If everything is okay in your
-  document (and almost always it is), the best thing you can do is just
-  to ignore it altogether.
-
-  In some forums you can find the advice to set, more or less
-  mechanically, |Language=Default|. \textit{Do not follow it}, because
-  font features for the language will not be applied, which can be
-  relevant for many languages, like Urdu and Turkish. Set the
-  |Language| explicitly only if there is a reason to do it. If you
-  really want to conceal this message, use instead:
-\begin{verbatim}
-\PassOptionsToPackage{silent}{fontspec}
-\end{verbatim}
-\end{troubleshooting}
-
-\begin{troubleshooting}
-  \trouble{Package babel Info: The following fonts are not babel
-  standard families} \textit{Package babel Info: The following fonts
-  are not babel standard families}.
-
-  \textbf{This is \textit{not} an error.} \babel{} assumes that if you
-  are using |\babelfont| for a family, very likely you want to define
-  the rest of them. If you don't, you can find some inconsistencies
-  between families. This checking is done at the beginning of the
-  document, at a point where we cannot know which families will be
-  used.
-
-  Actually, there is no real need to use |\babelfont| in a monolingual
-  document, if you set the language system in |\setmainfont| (or not,
-  depending on what you want).
-
-  As the message explains, \textit{there is nothing intrinsically
-  wrong} with not defining all the families. In fact, there is nothing
-  intrinsically wrong with not using |\babelfont| at all. But you must
-  be aware that this may lead to some problems.
-\end{troubleshooting}
-
-\begin{note}
-  |\babelfont| is a high level interface to \textsf{fontspec}, and
-  therefore in \xetex{} you can apply |Mapping|s. For example, there is
-  a set of 
-  \href{https://github.com/davidmjones/brahmic-maps}{transliterations
-  for Brahmic scripts} by Davis M. Jones. After installing
-  them in you distribution, just set the map as you would do with
-  \textsf{fontspec}.
-\end{note}
-
 \subsection{Modifying a language}
 
 Modifying the behavior of a language (say, the chapter
@@ -2675,9 +2690,10 @@ If the language has been loaded as an argument in |\documentclass| or
 
 \Describe{import=}{\meta{language-tag}}
 \New{3.13} Imports data from an |ini| file, including captions and date
-(also line breaking rules in newly defined languages). For example:
+(also line breaking rules in newly defined languages). For example, if
+you want the locale \texttt{ar-DZ}, but still just named as |arabic|:
 \begin{verbatim}
-\babelprovide[_import=hu_]{hungarian}
+\babelprovide[_import=ar-DZ_]{arabic}
 \end{verbatim}
 Unicode engines load the UTF-8 variants, while 8-bit engines load the
 LICR (ie, with macros like |\'| or |\ss|) ones.
@@ -2737,8 +2753,7 @@ list is empty).
 alternative to |justification=unhyphenated|.
 
 \Describe{main}{} This valueless option makes the language the main one
-(thus overriding that set when \babel\ is loaded). Only in newly defined
-languages.
+(thus overriding that set when \babel\ is loaded).
 \begin{example}
   Let's assume your document (\xetex{} or \luatex{}) is mainly in
   Polytonic Greek with but with some sections in Italian. Then, the
@@ -2779,7 +2794,7 @@ See the next section.
 
 \Describe{Alph=}{\meta{counter-name}} Same for |\Alph|.
 
-\Describe{casing}{\meta{rules}} \New{3.90} Selects the casing rules in a few
+\Describe{casing=}{\meta{rules}} \New{3.90} Selects the casing rules in a few
 languages. The first ones are predefined by \LaTeX{} (see
 \textsf{interface3.pdf}), while the following are defined by \babel:
 \begin{description}
@@ -3169,7 +3184,8 @@ page on the news for 3.76 in the \babel{} site for further details.
 \Describe{\localename}{}
 \DescribeOther{\mainlocalename}{}
 \DescribeOther{\languagename}{}
-\New{29.10} The control sequence |\localename| contains the name of the current
+
+\New{24.10} The control sequence |\localename| contains the name of the current
 locale. This is now the recommended way to retrieve the current
 language. In addtion, |\mainlocalename| contains the main language.
 
@@ -4096,6 +4112,7 @@ See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
 \catcode`@=13
 \def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TLT \else
 \bgroup\textdir TRT \pardir TRT \fi}
+\setengine{luatex}
 \begin{verbatim}
 \documentclass{article}
 
@@ -4271,8 +4288,15 @@ the same for \textsf{pgf/tikz}. Somewhat experimental. \New{3.32}.
 
 \begin{example}
   Typically, in an Arabic document you would need:
+\setengine{luatex}
 \begin{verbatim}
 \usepackage[bidi=basic,
+            layout=counters tabular]{babel}
+\end{verbatim}
+or
+\setengine{xetex}
+\begin{verbatim}
+\usepackage[bidi=bidi,
             layout=counters tabular]{babel}
 \end{verbatim}
 \end{example}
@@ -4603,6 +4627,30 @@ For example, you can set |\babeladjust{bidi.text=off}| if you are using
 an alternative algorithm or with large sections not requiring it. Use
 with care, because these options do not deactivate other related
 options (like paragraph direction with |bidi.text|).
+
+\section{Compatibility with other packages}
+
+\begingroup
+\def\trans#1#2{%
+  \vspace{1.5mm}%
+  \parbox[t]{3.0cm}{\strut\sffamily#1}%
+  \hspace{2mm}%
+  \parbox[t]{10cm}{\strut#2}\par}
+\bigskip\hrule\nobreak\vspace{.5mm}
+
+\trans{polyglossia}{This package is not compatible with \babel{} and
+must not be used together. Macros are different and even those with the
+same name doesn’t behave in the same way. Also, languages are organized
+quite differently.}
+
+\trans{tikz/pgf}{There are some issues with shorthands, which are
+usually solved with \texttt{\string\usetikzlibrary\{babel\}}.}
+
+\trans{cleveref}{Because of a long standing bug in this package, some
+languages can raise and error (particularly |spanish| and |greek|).}
+
+\vspace{2mm}\hrule\nobreak
+\endgroup
 
 \subsection{Tips, workarounds, known issues and notes}
 
@@ -5512,8 +5560,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.10>>
-%<<date=2024/09/18>>
+%<<version=24.10.62871>>
+%<<date=2024/09/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8115,7 +8163,8 @@ wouldn’t exist.
 %
 % \end{macro}
 %
-% \begin{macro}{\if@safe@actives}
+% \begin{macro}{if@safe@actives}
+%
 % In some circumstances it is necessary to be able to reset the
 % shorthand to its ‘normal’ value (usually the character with catcode
 % ‘other’) on the fly. For this purpose the switch |@safe@actives| is
@@ -8646,6 +8695,7 @@ wouldn’t exist.
 % \end{macro}
 %
 % \begin{macro}{\bbl@ifattributeset}
+%
 % This internal macro has 4 arguments. It can be used to interpret
 % \TeX\ code based on whether a certain attribute was set. This command
 % should appear inside the argument to |\AtBeginDocument| because the
@@ -12371,7 +12421,7 @@ wouldn’t exist.
 %
 % \subsection{Basic bidi support}
 %
-% \textbf{Work in progress.} This code is currently placed here for
+% This code is currently placed here for
 % practical reasons. It will be moved to the correct place soon, I
 % hope.
 %
