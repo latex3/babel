@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/09/21 v24.10.63051 The Babel package]
+\ProvidesFile{babel.dtx}[2024/09/23 v24.10.63275 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -50,6 +50,7 @@
   {NotoSans-Regular.ttf}
 \setmonofont[Scale=.86, FakeStretch=.97]{DejaVu Sans Mono}
 \raggedright
+\setlength{\parindent}{.8em}
 \frenchspacing
 \addtolength{\oddsidemargin}{-1em}
 \addtolength{\textwidth}{25.5pt}
@@ -115,6 +116,9 @@
 \definecolor{shadecolor}{rgb}{1,1,0.97}
 \definecolor{messages}{rgb}{.66,.13,.27}
 \makeatletter
+\def\@seccntformat#1{%
+  \llap{\makebox[1.7cm][l]{\csname the#1\endcsname.}}%
+  \hspace{-.7cm}}
 \def\@begintheorem#1#2{%
   \list{}{}%
   \global\advance\@listdepth\m@ne
@@ -125,7 +129,6 @@
 \newtheorem{note}{Note}
 \newtheorem{example}{Example}
 \newtheorem{troubleshooting}{Troubleshooting}
-\newtheorem{more}{More}
 \let\bblxv\verbatim
 \let\bblexv\endverbatim
 \newcommand\setengine{\def\engine}
@@ -157,7 +160,7 @@
 \makeatletter   
 \def\Describe#1#2{%
   \@startsection{subsubsection}{100}{\z@}%
-    {-3.25ex\@plus -1ex \@minus -.2ex}%
+    {2.5ex\@plus .7ex \@minus .2ex}%
     {1.5ex \@plus .2ex}%
     {\hspace{-2cm}\color{thegreyed}\normalsize\ttfamily}*%
     {\underline{\strut{\color{thered}\string#1}\color{black}#2}}}
@@ -333,7 +336,7 @@ language?] See section \ref{contribute} for contributing a language.
   Run |lualatex --jobname=babel-code \let\babelcode\relax\input{babel.dtx}|.
 \end{description}
 
-\section{The user interface}\label{U-I}
+\section{The basic user interface}\label{U-I}
 
 There are two ways to load a language with babel, namely, the old good
 ‘classical’ one, based on mostly self-contained declarations in a file
@@ -349,9 +352,9 @@ method for which language} in the \babel{} site.
 
 Basically, what you need is typically:
 \begin{enumerate}
-\item tell \babel{} which language or languages are required;
-\item with non-Latin scripts, select a suitable font;
-\item in multilingual documents, switch the language in the text body.
+\item Tell \babel{} which language or languages are required.
+\item With non-Latin scripts, select a suitable font.
+\item In multilingual documents, switch the language in the text body.
 \end{enumerate}
 
 \subsection{Monolingual documents: the ‘classical’ way}
@@ -469,11 +472,11 @@ PDF document language can be also set with |\DocumentMetadata|, before
 \end{note}
 
 \begin{warning}
-  In the preamble, \textit{no} language has been selected,
-  except hyphenation patterns and the name assigned to |\languagename|
-  (in particular, shorthands, captions and date are not activated). If
-  you need to define boxes and the like in the preamble, you might
-  want to use some of the language selectors described below.
+  In the preamble, \textit{no} language has been selected, except
+  hyphenation patterns and the name assigned to |\localename| (and
+  |\languagename|) (in particular, shorthands, captions and date are not
+  activated). If you need to define boxes and the like in the preamble,
+  you might want to use some of the language selectors described below.
 \end{warning}
 
 \begin{troubleshooting}
@@ -485,6 +488,26 @@ even better, make sure the encoding in your editor is set to UTF-8.
 \end{troubleshooting}
 
 \begin{troubleshooting}
+Another typical error when using \babel{} is the
+  following:\footnote{In old versions the error read ``You haven't
+  loaded the language LANG yet''.}
+\trouble{Unknown language `LANG'}
+\begin{verbatim}
+! Package babel Error: Unknown language `#1'. Either you have
+(babel)                misspelled its name, it has not been installed,
+(babel)                or you requested it in a previous run. Fix its name,
+(babel)                install it or just rerun the file, respectively. In
+(babel)                some cases, you may need to remove the aux file
+\end{verbatim}
+  The most frequent reason is, by far, the latest (for example, you
+  included |spanish|, but you realized this language is not used after
+  all, and therefore you removed it from the option list). In most
+  cases, the error vanishes when the document is typeset again, but in
+  more severe ones you will need to remove the |aux| file.
+\end{troubleshooting}
+
+\begin{troubleshooting}
+\textit{No hyphenation patterns were preloaded...}
   The following warning is about hyphenation patterns, which are
   not under the direct control of \babel:
 \trouble{No hyphenation patterns were preloaded for (babel) the
@@ -501,6 +524,20 @@ Package babel Warning: No hyphenation patterns were preloaded for
   this warning wrongly (because they are not hyphenated) -- just ignore
   it. See the manual of your distribution (Mac\TeX, Mik\TeX, \TeX Live,
   etc.) for further info about how to configure it.
+\end{troubleshooting}
+
+\begin{troubleshooting}
+\textit{You are loading directly a language style.}
+Loading directly |sty| files in \LaTeX{} (ie,
+    |\usepackage{<language>}|) was deprecated many years ago and you will get the
+    error:\footnote{In old versions the error read ``You have used an
+    old interface to call babel'', not very helpful.}
+  \trouble{You are loading directly a language style}
+\begin{verbatim}
+! Package babel Error: You are loading directly a language style.
+(babel)                This syntax is deprecated and you must use
+(babel)                \usepackage[language]{babel}.
+\end{verbatim}
 \end{troubleshooting}
 
 \subsection{Monolingual documents: the ‘modern’ way}
@@ -534,6 +571,12 @@ _\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}_
 ქართული ტრადიციული სამზარეულო ერთ-ერთი უმდიდრესია მთელ მსოფლიოში.
 
 \end{document}
+\end{verbatim}
+And with a global option:
+\begin{verbatim}
+\documentclass[_georgian_]{book}
+\usepackage[_provide=*_]{babel}
+\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}
 \end{verbatim}
 \end{example}
 
@@ -703,10 +746,10 @@ Vietnamese: \prefacename, \alsoname, \today.
 \end{verbatim}
 \end{note}
 
-\subsection{Languages supported by \babel{} with \textsf{ldf} files}
+\subsection{Languages supported by \babel{} in the ‘classical’ mode}
 
 (To be updated.) In the following table most of the languages supported
-by \babel{} with and |.ldf| file are listed, together with the names of
+by \babel{} with an |.ldf| file are listed, together with the names of
 the option which you can load \babel\ with for each language. Note this
 list is open and the current options may be different. It does not
 include |ini| files (see below). Except in a few cases (eg, |ngerman|,
@@ -718,6 +761,7 @@ encoding files, a preprocessor or even a complete framework (like
 \textsf{CJK} or \textsf{luatexja}). 
 
 \begingroup
+
 \bigskip\hrule\nobreak
 
 \makeatletter
@@ -745,7 +789,7 @@ There are some notes in a few languages.
 \bigskip\hrule\nobreak
 
 \begin{multicols}{2}
-\leftskip2em
+\leftskip2em\parindent0pt
 \tag{afrikaans}{}
 \tag{albanian}{}
 \tag{arabic}{}
@@ -881,1144 +925,7 @@ the names in the block \textsf{ngerman}.}
   \m{file}|.tex|; you can then typeset the latter with \LaTeX.
 \end{example}
 
-\subsection{Selecting fonts in Unicode engines}
-
-\New{3.15} Babel provides a high level interface on top of |fontspec|
-to select fonts. There is no need to load \textsf{fontspec} explicitly
-– \babel{} does it for you with the first |\babelfont|. (See
-also the package \textsf{combofont} for a complementary approach.)
-
-\Describe\babelfont{\oarg{language-list}\marg{font-family}%
-  \oarg{font-options}\marg{font-name}}
-
-% \begin{note}
-%   See the note in the previous section about some issues in
-%   specific languages.
-% \end{note}
-
-The main purpose of |\babelfont| is to define at once the fonts
-required by the different languages, with their corresponding language
-systems (script and language). So, if you load, say, 4 languages,
-|\babelfont{rm}{FreeSerif}| defines 4 fonts (with their variants, of
-course), which are switched with the language by \babel. It is a tool
-to make things easier and transparent to the user.
-
-Here \textit{font-family} is |rm|, |sf| or |tt| (or newly defined
-ones, as explained below), and \textit{font-name} is the same as in
-\textsf{fontspec} and the like.
-
-If no language is given, then it is considered the default font for
-the family, activated when a language is selected.
-
-On the other hand, if there is one or more languages in the optional
-argument, the font will be assigned to them, overriding the default one.
-Alternatively, you may set a font for a script -- just precede its name
-(lowercase) with a star (eg, |*devanagari|).
-
-With the optional argument, the font is \textit{not} yet loaded, but
-just predeclared. This means you may define as many fonts as you want
-‘just in case’, because if the language is never selected, the
-corresponding |\babelfont| declaration is just ignored.
-
-\Babel{} takes care of the font language and the font script when
-languages are selected (as well as the writing direction). In most
-cases, you will not need \textit{font-options}, which is the same as in
-\textsf{fontspec}, but you may add further key/value pairs if
-necessary.
-
-\begin{example}
-  Usage in most cases is very simple. Let us assume you are setting up
-  a document in Swedish, with some words in Hebrew, with a font suited
-  for both languages. Here the option |bidi=default| activates a simple
-  (or, better, simplistic) bidirectional mode.
-  \begingroup
-% If you are looking at the code to see how it has been written, you
-% will be disappointed :-). The following example is built ad hoc to
-% emulate the final result to avoid dependencies, and therefore it's
-% not "real" code.
-\catcode`@=13
-\def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TLT \else
-\bgroup\textdir TRT \fontspec[Scale=.87,Script=Hebrew]{Liberation
-Mono} \fi}
-\setengine{luatex/xetex}
-\begin{verbatim}
-\documentclass{article}
-
-\usepackage[swedish, bidi=default]{babel}
-
-\babelprovide[import]{hebrew}
-
-_\babelfont{rm}{FreeSerif}_
-
-\begin{document}
-
-Svenska \foreignlanguage{hebrew}{@2עִבְרִית@0} svenska.
-
-\end{document}
-\end{verbatim}
-\endgroup
-
-If on the other hand you have to resort to different fonts, you can
-replace the red line above with, say:
-\setengine{luatex/xetex}
-\begin{verbatim}
-\babelfont{rm}{Iwona}
-\babelfont[hebrew]{rm}{FreeSerif}
-\end{verbatim}
-\end{example}
-
-\begin{example}
-Thanks to high level interface to |fontenc|, the roman fonts for all secondary languages in
-the Cyrillic, and Greek scripts can be set at once with the following single line:
-\setengine{luatex/xetex}
-\begin{verbatim}
-\babelfont[_*cyrillic, *greek_]{rm}{NewComputerModern10}
-\end{verbatim}
-With some scripts, the \textsf{Harfbuzz} renderer is preferred:
-\begin{verbatim}
-  \babelfont[_*arabic, *devanagari_]{rm}[_Renderer=Harfbuzz_]{FreeSerif}
-\end{verbatim}
-\Babel{} does the rest for you.
-\end{example}
-
-|\babelfont| can be used to implicitly define a new font family. Just
-write its name instead of |rm|, |sf| or |tt|. This is the preferred way
-to select fonts in addition to the three basic families.
-
-\begin{example}
-  Here is how to declare a new family:
-\setengine{luatex/xetex}
-\begin{verbatim}
-\babelfont{kai}{FandolKai}
-\end{verbatim}
-  Now, |\kaifamily| and |\kaidefault|, as well as |\textkai| are at
-  your disposal.
-\end{example}
-
-\begin{note}
-  You may load \textsf{fontspec} explicitly. For example:
-\setengine{luatex/xetex}
-\begin{verbatim}
-\usepackage{fontspec}
-\newfontscript{Devanagari}{deva}
-\babelfont[hindi]{rm}{Shobhika}
-\end{verbatim}
-  This makes sure the OpenType script for Devanagari is |deva| and not
-  |dev2|, in case it is not detected correctly.
-%   You may also pass some
-%   options to \textsf{fontspec}: with |silent|, the warnings about
-%   unavailable scripts or languages are not shown (they are only really
-%   useful when the document format is being set up).
-\end{note}
-
-\begin{note}
-  |\fontspec| is not touched at all, only the preset font families
-  (|rm|, |sf|, |tt|, and the like). If a language is switched when an
-  \textit{ad hoc} font is active, or you select the font with this
-  command, neither the script nor the language is passed. You must
-  add them by hand. This is by design, for several reasons —for
-  example, each font has its own set of features and a generic setting
-  for several of them can be problematic, and also preserving a
-  “lower-level” font selection is useful.
-\end{note}
-
-\begin{note}
-  Directionality is a property affecting margins, indentation, column
-  order, etc., not just text. Therefore, it is under the direct control
-  of the language, which applies both the script and the direction to
-  the text. As a consequence, there is no need to set \texttt{Script}
-  when declaring a font with |\babelfont| (nor \texttt{Language}). In
-  fact, it is even discouraged.
-\end{note}
-
-\begin{note}
-  The keys |Language| and |Script| just pass these values to the
-  \textit{font}, and do \textit{not} set the script for the
-  \textit{language} (and therefore the writing direction). In other
-  words, the |ini| file or |\babelprovide| provides default values for
-  |\babelfont| if omitted, but the opposite is not true. See the note
-  above for the reasons of this behavior.
-\end{note}
-
-\begin{warning}
-  Using |\set|\textit{xxxx}|font| and |\babelfont| at the same time is
-  discouraged, but very often works as expected. However, be aware with
-  |\set|\textit{xxxx}|font| the language system will not be set by
-  \babel{} and should be set with |fontspec| if necessary.
-\end{warning}
-
-\begin{troubleshooting}
-  \trouble{Package fontspec Info: Language '<lang>' not explicitly
-  supported within font '<font>' with script '<script>'.}
-  \textit{Package fontspec Info: Language '<lang>' not explicitly
-  supported within font '<font>' with script '<script>'.}.
-
-  \textbf{This is \textit{not} and error.} This info is shown by
-  \textsf{fontspec}, not by \babel. If everything is okay in your
-  document (and almost always it is), the best thing you can do is just
-  to ignore it altogether.
-
-  In some forums you can find the advice to set, more or less
-  mechanically, |Language=Default|. \textit{Do not follow it}, because
-  font features for the language will not be applied, which can be
-  relevant for many languages, like Urdu and Turkish. Set the
-  |Language| explicitly only if there is a reason to do it. If you
-  really want to conceal this message, use instead:
-\begin{verbatim}
-\PassOptionsToPackage{silent}{fontspec}
-\end{verbatim}
-\end{troubleshooting}
-
-\begin{troubleshooting}
-  \trouble{Package babel Info: The following fonts are not babel
-  standard families} \textit{Package babel Info: The following fonts
-  are not babel standard families}.
-
-  \textbf{This is \textit{not} an error.} \babel{} assumes that if you
-  are using |\babelfont| for a family, very likely you want to define
-  the rest of them. If you don't, you can find some inconsistencies
-  between families. This checking is done at the beginning of the
-  document, at a point where we cannot know which families will be
-  used.
-
-  Actually, there is no real need to use |\babelfont| in a monolingual
-  document, if you set the language system in |\setmainfont| (or not,
-  depending on what you want).
-
-  As the message explains, \textit{there is nothing intrinsically
-  wrong} with not defining all the families. In fact, there is nothing
-  intrinsically wrong with not using |\babelfont| at all. But you must
-  be aware that this may lead to some problems.
-\end{troubleshooting}
-
-\begin{note}
-  |\babelfont| is a high level interface to \textsf{fontspec}, and
-  therefore in \xetex{} you can apply |Mapping|s. For example, there is
-  a set of 
-  \href{https://github.com/davidmjones/brahmic-maps}{transliterations
-  for Brahmic scripts} by Davis M. Jones. After installing
-  them in you distribution, just set the map as you would do with
-  \textsf{fontspec}.
-\end{note}
-
-\subsection{Modifiers}
-
-\New{3.9c} The basic behavior of some languages can be modified when
-loading \babel{} by means of \textit{modifiers}. They are set after
-the language name, and are prefixed with a dot (only when the language
-is set as package option -- neither global options nor the |main| key
-accepts them). An example is (spaces are not significant and they can
-be added or removed):\footnote{No predefined ``axis'' for modifiers
-are provided because languages and their scripts have quite different
-needs.}
-\begin{verbatim}
-\usepackage[latin_.medieval_, spanish_.notilde.lcroman_, danish]{babel}
-\end{verbatim}
-
-Attributes (described below) are considered modifiers, ie, you can
-set an attribute by including it in the list of modifiers.
-
-\New{3.89} Alternatively, modifiers can be set with a separate option,
-with the keyword |modifiers| followed by a dot and the language name
-(note the language is not selected or loaded with this option). It is
-useful to activate some feature when the language is declared as a
-class option:
-\begin{verbatim}
-\documentclass[spanish]{report}
-\usepackage[_modifiers.spanish = notilde.lcroman_]{babel}
-\end{verbatim}
-
-\subsection{Troubleshooting}
-
-\begin{itemize}
-\item Loading directly |sty| files in \LaTeX{} (ie,
-  |\usepackage{<language>}|) is deprecated and you will get the
-  error:\footnote{In old versions the error read ``You have used an
-  old interface to call babel'', not very helpful.}
-\trouble{You are loading directly a language style}
-\begin{verbatim}
-! Package babel Error: You are loading directly a language style.
-(babel)                This syntax is deprecated and you must use
-(babel)                \usepackage[language]{babel}.
-\end{verbatim}
-
-\item  Another typical error when using \babel{} is the
-  following:\footnote{In old versions the error read ``You haven't
-  loaded the language LANG yet''.}
-\trouble{Unknown language `LANG'}
-\begin{verbatim}
-! Package babel Error: Unknown language `#1'. Either you have
-(babel)                misspelled its name, it has not been installed,
-(babel)                or you requested it in a previous run. Fix its name,
-(babel)                install it or just rerun the file, respectively. In
-(babel)                some cases, you may need to remove the aux file
-\end{verbatim}
-  The most frequent reason is, by far, the latest (for example, you
-  included |spanish|, but you realized this language is not used after
-  all, and therefore you removed it from the option list). In most
-  cases, the error vanishes when the document is typeset again, but in
-  more severe ones you will need to remove the |aux| file.
-\end{itemize}
-
-\subsection{Plain}
-
-In e-Plain and pdf-Plain, load languages styles with |\input| and then use
-|\begindocument| (the latter is defined by \babel):
-\begin{verbatim}
-\input estonian.sty
-\begindocument
-\end{verbatim}
-
-\begin{warning}
-  Not all languages provide a |sty| file and some of them are not
-  compatible with those formats. Please, refer to
-  \href{https://latex3.github.io/babel/guides/using-babel-with-plain.html}%
-   {Using babel with Plain} for further details.
-\end{warning}
-
-\subsection{Basic language selectors}
-
-This section describes the commands to be used in the document to
-switch the language in multilingual documents. In most cases, only the
-two basic macros |\selectlanguage| and |\foreignlanguage| are
-necessary. The environments |otherlanguage|, |otherlanguage*| and
-|hyphenrules| are auxiliary, and described in the next section.
-
-The main language is selected automatically when the |document|
-environment begins.
-
-\Describe{\selectlanguage}{\marg{language}}
-
-When a user wants to switch from one language to another he can
-do so using the macro |\selectlanguage|. This macro takes the
-language, defined previously by a language definition file, as
-its argument. It calls several macros that should be defined in
-the language definition files to activate the special definitions
-for the language chosen:
-\begin{verbatim}
-\selectlanguage{german}
-\end{verbatim}
-
-This command can be used as environment, too, in case there are
-relatively short texts and you do not want to reset the language with a
-hardcode value.
-
-\begin{note}
-  Bear in mind |\selectlanguage| can be automatically executed, in some
-  cases, in the auxiliary files, at heads and foots, and after the
-  environment |otherlanguage*|.
-\end{note}
-
-\begin{warning}
-  If used inside braces there might be some non-local changes, as this
-  would be roughly equivalent to:
-\begin{verbatim}
-{\selectlanguage{<inner-language>} ...}\selectlanguage{<outer-language>}
-\end{verbatim}
-  If you want a change which is really local, you must enclose this
-  code with an additional grouping level.
-\end{warning}
-
-\begin{warning}
-  There are a couple of issues related to the way the language
-  information is written to the auxiliary files:
-\begin{itemize}
-  \item |\selectlanguage| should not be used inside some boxed environments
-    (like floats or |minipage|) to switch the language if you need the
-    information written to the |aux| be correctly synchronized. This
-    rarely happens, but if it were the case, you must use
-    |otherlanguage| instead.
-  \item In addition, this macro inserts a |\write| in vertical mode,
-    which may break the vertical spacing in some cases (for example,
-    between lists or at the beginning of a table cell). \New{3.64} The
-    behavior can be adjusted with
-    |\babeladjust{select.write=<mode>}|, where \m{mode} is |shift|
-    (which shifts the skips down and adds a |\penalty|); |keep| (the
-    default -- with it the |\write| and the skips are kept in the order
-    they are written), and |omit| (which may seem a too drastic
-    solution, because nothing is written, but more often than not this
-    command is applied to more or less shorts texts with no sectioning
-    or similar commands, and therefore no language synchronization is
-    necessary). In a table cell, a |\leavevmode| just before the
-    selector may be enough.
-\end{itemize}
-\end{warning}
-
-\Describe{\foreignlanguage}{\oarg{option-list}\marg{language}\marg{text}}
-
-The command |\foreignlanguage| takes two arguments; the second argument
-is a phrase to be typeset according to the rules of the language named
-in its first one.
-
-This command (1) only switches the extra definitions and the
-hyphenation rules for the language, \emph{not} the names and dates, (2)
-does not send information about the language to auxiliary files (i.e.,
-the surrounding language is still in force), and (3) it works even if
-the language has not been set as package option (but in such a case it
-only sets the hyphenation patterns and a warning is shown). With the
-|bidi| option, it also enters in horizontal mode (this is not done
-always for backwards compatibility), and since it is meant for phrases
-only the text direction (and not the paragraph one) is set.
-
-\New{3.44} As already said, captions and dates are not switched.
-However, with the optional argument you can switch them, too. So, you
-can write:
-\begin{verbatim}
-\foreignlanguage[date]{polish}{\today}
-\end{verbatim}
-In addition, captions can be switched with |captions| (or both, of
-course, with |date,| |captions|). Until 3.43 you had to write something
-like |{\selectlanguage{..} ..}|, which was not always the most
-convenient way.
-
-\begin{note}
-  |\bibitem| is out of sync with |\selectlanguage| in the \file{.aux}
-  file. The reason is |\bibitem| uses |\immediate| (and others, in
-  fact), while |\selectlanguage| doesn't. There is a similar issue with
-  floats, too. There is no known workaround, but it’s not usually a
-  real issue.
-\end{note}
-
-\subsection{Auxiliary language selectors}
-
-\Describe{\begin\menv{otherlanguage}}{\marg{language}\Eenv{otherlanguage}}
-
-The environment \Lenv{otherlanguage} does basically the same as
-|\selectlanguage|, except that language change is (mostly) local to
-the environment.
-
-Actually, there might be some non-local changes, as this environment
-is roughly equivalent to:
-\begin{verbatim}
-\begingroup
-\selectlanguage{<inner-language>}
-...
-\endgroup
-\selectlanguage{<outer-language>}
-\end{verbatim}
-If you want a change which is really local, you must enclose this
-environment with an additional grouping, like braces |{}|.
-
-Spaces after the environment are ignored.\footnote{Very likely, and
-because of the limitations of many old editors with bidi text, the idea
-was \cs{end}\texttt{\{otherlanguage\}} had to be a line by itself.} If this
-behavior is not desired, you may use the environment
-\texttt{selectlanguage}.
-
-\begin{warning}
-  Being similar to |\selectlanguage|, the warning above about the
-  internal |\write| also applies here. The current mode (vertical or
-  horizontal) is also not changed.
-\end{warning}
-
-\Describe{\begin\menv{otherlanguage*}}%
-{\oarg{option-list}\marg{language}\Eenv{otherlanguage*}}
-
-Same as |\foreignlanguage| but as environment. Spaces after the
-environment are \textit{not} ignored.
-
-This environment was originally intended for intermixing left-to-right
-typesetting with right-to-left typesetting in engines not supporting a
-change in the writing direction inside a line. However, by default it
-never complied with the documented behavior and it is just a version as
-environment of |\foreignlanguage|, except when the option |bidi| is 
-set -- in this case, |\foreignlanguage| emits a |\leavevmode|, while 
-|otherlanguage*| does not.
-
-\subsection{More on selection}
-
-\Describe{\babeltags}{\char`\{\m{tag1} \texttt{=} \m{language1}, \m{tag2}
-\texttt{=} \m{language2}, \dots\char`\}}
-
-\New{3.9i} In multilingual documents with many language-switches the
-commands above can be cumbersome. With this tool shorter names can be
-defined. It adds nothing really new -- it is just syntactical sugar.
-
-It defines |\text<tag1>{<text>}| to be
-|\foreignlanguage{<language1>}{<text>}|, and |\begin{<tag1>}|
-to be |\begin{otherlanguage*}{<language1>}|, and so on. Note
-|\<tag1>| is also allowed, but remember to set it locally inside a
-group.
-
-\begin{warning}
-  There is a clear drawback to this feature, namely, the ‘prefix’
-  |\text...| is heavily overloaded in \LaTeX{} and conflicts with
-  existing macros may arise (|\textlatin|, |\textbar|, |\textit|,
-  |\textcolor| and many others). The same applies to environments,
-  because |arabic| conflicts with |\arabic|. Furthermore, and because of
-  this overloading, detecting the language of a chunk of text by
-  external tools can become unfeasible (is |\textga| the locale for the
-  African language Gã or something else?). Except if there is a reason for
-  this ‘syntactical sugar’, the best option is to stick to the default
-  selectors or even to define your own alternatives.
-\end{warning}
-
-\begin{example}
-With
-\begin{verbatim}
-\babeltags{de = german}
-\end{verbatim}
-you can write
-\begin{verbatim}
-text \textde{German text} text
-\end{verbatim}
-and
-\begin{verbatim}
-text
-\begin{de}
-  German text
-\end{de}
-text
-\end{verbatim}
-\end{example}
-
-\begin{note}
-  Something like \verb|\babeltags{finnish = finnish}| is legitimate --
-  it defines |\textfinnish| and |\finnish| (and, of course,
-  |\begin{finnish}|).
-\end{note}
-
-\Describe{\babelensure}{|[include=|\m{commands}|,exclude=|\m{commands}%
-  |,fontenc=|\m{encoding}|]|\marg{language}}
-
-\New{3.9i} Except in a few languages, like \textsf{russian},
-captions and dates are just strings, and do not switch the
-language. That means you should set it explicitly if you want to use
-them, or hyphenation (and in some cases the text itself) will be
-wrong. For example:
-\begin{verbatim}
-\foreignlanguage{russian}{text \foreignlanguage{polish}{\seename} text}
-\end{verbatim}
-
-Of course, \TeX{} can do it for you. To avoid switching the language
-all the while, |\babelensure| redefines the captions for a given
-language to wrap them with a selector:
-\begin{verbatim}
-\babelensure{polish}
-\end{verbatim}
-By default only the basic captions and |\today| are redefined, but you
-can add further macros with the key |include| in the optional argument
-(without commas). Macros not to be modified are listed in
-|exclude|. You can also enforce a font encoding with the option
-|fontenc|.\footnote{With it, encoded strings may not work as expected.}
-A couple of examples:
-\begin{verbatim}
-\babelensure[include=\Today]{spanish}
-\babelensure[fontenc=T5]{vietnamese}
-\end{verbatim}
-
-They are activated when the language is selected (at the |afterextras|
-event), and it makes some assumptions which could not be fulfilled in
-some languages. Note also you should include only macros defined by
-the language, not global macros (eg, |\TeX| of |\dag|).
-
-With |ini| files (see below), captions are ensured by default.
-
-\subsection{Shorthands}
-
-A \textit{shorthand} is a sequence of one or two characters that
-expands to arbitrary \TeX{} code.
-
-Shorthands can be used for different kinds of things; for example:
-(1) in some languages shorthands such as |"a| are defined to be able
-to hyphenate the word if the encoding is |OT1|; (2) in some languages
-shorthands such as |!| are used to insert the right amount of white
-space; (3) several kinds of discretionaries and breaks can be inserted
-easily with |"-|, |"=|, etc.
-
-The package \textsf{inputenc} as well as \xetex{} and \luatex{} have
-alleviated entering non-ASCII characters, but minority languages and
-some kinds of text can still require characters not directly available
-on the keyboards (and sometimes not even as separated or precomposed
-Unicode characters). As to the point 2, now \textsf{pdfTeX} provides
-|\knbccode|, and \luatex{} can manipulate the glyph list. Tools for
-point 3 can be still very useful in general.
-
-There are four levels of shorthands: \textit{user}, \textit{language},
-\textit{system}, and \textit{language user} (by order of precedence).
-In most cases, you will use only shorthands provided by languages.
-
-\begin{note} Keep in mind the following:
-\begin{enumerate}
-\item Activated chars used for two-char shorthands cannot be followed
-  by a closing brace |}| and the spaces following are gobbled.  With
-  one-char shorthands (eg,~|:|), they are preserved.
-\item If on a certain level (system, language, user, language user)
-  there is a one-char shorthand, two-char ones starting with that char
-  and on the same level are ignored.
-\item Since they are active, a shorthand cannot contain the same
-  character in its definition (except if deactivated with, eg,
-  |\string|).
-\end{enumerate}
-\end{note}
-
-\begin{troubleshooting}
-\trouble{Argument of \textbackslash language@active@arg"
-has an extra \textbraceright}
-A typical error when using shorthands is the following:
-\begin{verbatim}
-! Argument of \language@active@arg" has an extra }.
-\end{verbatim}
-It means there is a closing brace just after a shorthand, which is not
-allowed (eg,~|"}|). Just add |{}| after (eg,~|"{}}|).
-\end{troubleshooting}
-
-\Describe{\shorthandon}{\marg{shorthands-list}}
-\DescribeOther{\shorthandoff}{%
-\colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
-\marg{shorthands-list}}
-It is sometimes necessary to switch a shorthand
-character off temporarily, because it must be used in an
-entirely different way. For this purpose, the user commands
-|\shorthandoff| and |\shorthandon| are provided. They each take a
-list of characters as their arguments.
-
-The command |\shorthandoff| sets the |\catcode| for each of the
-characters in its argument to other (12); the command |\shorthandon|
-sets the |\catcode| to active (13). Both commands only work on `known'
-shorthand characters, and an error will be raised otherwise. You can
-check if a character is a shorthand with |\ifbabelshorthand| (see
-below).
-
-\New{3.9a} However, |\shorthandoff| does not behave as
-you would expect with characters like |~| or |^|, because they
-usually are not ``other''. For them |\shorthandoff*| is provided,
-so that with
-\begin{verbatim}
-\shorthandoff*{~^}
-\end{verbatim}
-|~| is still active, very likely with the meaning of a non-breaking
-space, and |^| is the superscript character. The catcodes used are
-those when the shorthands are defined, usually when language files are
-loaded.
-
-If you do not need shorthands, or prefer an alternative approach of
-your own, you may want to switch them off with the package option
-|shorthands=off|, as described below.
-
-\begin{warning}
-  It is worth emphasizing these macros are meant for temporary changes.
-  Whenever possible and if there are not conflicts with other packages,
-  shorthands must be always enabled (or disabled).
-\end{warning}
-
-\Describe{\useshorthands}{%
-\colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
-\marg{char}}
-
-The command |\useshorthands| initiates the definition of user-defined
-shorthand sequences. It has one argument, the character that starts
-these personal shorthands.
-
-\New{3.9a} User shorthands are not always alive, as they may
-be deactivated by languages (for example, if you use |"| for your user
-shorthands and switch from \textsf{german} to \textsf{french}, they
-stop working). Therefore, a starred version
-|\useshorthands*|\marg{char} is provided, which makes sure shorthands
-are always activated.
-
-If the package option |shorthands| is used, you must include any
-character to be activated with |\useshorthands|.
-
-\Describe\defineshorthand{\texttt{[}\langlist\texttt{]}%
-     \marg{shorthand}\marg{code}}
-
-The command |\defineshorthand| takes two arguments: the first is
-a one- or two-character shorthand sequence, and the second is the
-code the shorthand should expand to.
-
-\New{3.9a} An optional argument allows to (re)define language and
-system shorthands (some languages do not activate shorthands, so you
-may want to add |\languageshorthands|\marg{language} to the corresponding
-|\extras<language>|, as explained below). By default, user shorthands
-are (re)defined.
-
-User shorthands override language ones, which in turn override system
-shorthands. Language-dependent user shorthands take precedence over
-``normal'' user shorthands.
-
-\begin{example}
-  Let's assume you want a unified set of shorthand for discretionaries
-  (languages do not define shorthands consistently, and |"-|, |\-|,
-  |"=| have different meanings).  You can start with, say:
-\begin{verbatim}
-\useshorthands*{"}
-\defineshorthand{"*}{\babelhyphen{soft}}
-\defineshorthand{"-}{\babelhyphen{hard}}
-\end{verbatim}
-  However, the behavior of hyphens is language-dependent. For example, in
-  languages like Polish and Portuguese, a hard hyphen inside compound
-  words are repeated at the beginning of the next line. You can then
-  set:
-\begin{verbatim}
-\defineshorthand[*polish,*portuguese]{"-}{\babelhyphen{repeat}}
-\end{verbatim}
-  Here, options with |*| set a language-dependent user shorthand,
-  which means the generic one above only applies for the rest of
-  languages; without |*| they would (re)define the language shorthands
-  instead, which are overridden by user ones.
-
-  Now, you have a single unified shorthand (|"-|), with a
-  content-based meaning (`compound word hyphen') whose visual behavior
-  is that expected in each context.
-\end{example}
-
-\Describe{\languageshorthands}{\marg{language}} The command
-|\languageshorthands| can be used to switch the shorthands on the
-language level. It takes one argument, the name of a language or
-|none| (the latter does what its name suggests).\footnote{Actually,
-any name not corresponding to a language group does the same as
-\texttt{none}. However, follow this convention because it might be
-enforced in future releases of \babel{} to catch possible errors.}
-Note that for this to work the language should have been specified as
-an option when loading the \babel\ package.  For example, you can use
-in \textsf{english} the shorthands defined by \textsf{ngerman} with
-\begin{verbatim}
-\addto\extrasenglish{\languageshorthands{ngerman}}
-\end{verbatim}
-(You may also need to activate them as user shorthands in the preamble
-with, for example, |\useshorthands| or |\useshorthands*|.)
-
-\begin{example}
-  Very often, this is a more convenient way to deactivate shorthands
-  than |\shorthandoff|, for example if you want to define a macro
-  to easy typing phonetic characters with \textsf{tipa}:
-\begin{verbatim}
-\newcommand{\myipa}[1]{{_\languageshorthands{none}_\tipaencoding#1}}
-\end{verbatim}
-\end{example}
-
-\Describe{\babelshorthand}{\marg{shorthand}}
-With this command you can use a shorthand even if (1) not activated in
-\texttt{shorthands} (in this case only shorthands for the current
-language are taken into account, ie, not user shorthands), (2) turned
-off with |\shorthandoff| or (3) deactivated with the internal
-|\bbl@deactivate|; for example, \verb|\babelshorthand{"u}| or
-\verb|\babelshorthand{:}|.  (You can conveniently define your own
-macros, or even your own user shorthands provided they do not overlap.)
-
-\begin{example}
-  Since by default shorthands are not activated until
-  |\begin{document}|, you may use this macro when defining the |\title|
-  in the preamble:
-\begin{verbatim}
-\title{Documento científico_\babelshorthand{"-}_técnico}
-\end{verbatim}
-\end{example}
-
-\bigskip
-
-For your records, here is a list of shorthands, but you must double
-check them, as they may change:\footnote{Thanks to Enrico Gregorio}
-
-\begin{description}
-\itemsep=-\parskip
-\item[Languages with no shorthands] Croatian, English (any variety),
-  Indonesian, Hebrew, Interlingua, Irish, Lower Sorbian, Malaysian,
-  North Sami, Romanian, Scottish, Welsh
-\item[Languages with only \texttt{"} as defined shorthand character]
-  Albanian, Bulgarian, Danish, Dutch, Finnish, German (old and new
-  orthography, also Austrian), Icelandic, Italian, Norwegian, Polish,
-  Portuguese (also Brazilian), Russian, Serbian (with Latin script),
-  Slovene, Swedish, Ukrainian, Upper Sorbian
-\item[Basque] |" ' ~|
-\item[Breton] |: ; ? !|
-\item[Catalan] |" ' `|
-\item[Czech] |" -|
-\item[Esperanto] |^|
-\item[Estonian] |" ~|
-\item[French] (all varieties) |: ; ? !|
-\item[Galician] |" . ' ~ < >|
-\item[Greek] (ancient, polutoniko, only 8-bit \TeX) |~|, (optional, see
-the manual for Greek) |;|
-\item[Hungarian] |`|
-\item[Kurmanji] |^|
-\item[Latin] |" ^ =|
-\item[Slovak] |" ^ ' -|
-\item[Spanish] |" . < > ' ~|
-\item[Turkish] |: ! =|
-\end{description}
-In addition, the \babel{} core declares |~| as a one-char shorthand
-which is let, like the standard |~|, to a non breaking
-space.\footnote{This declaration serves to nothing, but it is
-preserved for backward compatibility.}
-
-\Describe\ifbabelshorthand{\marg{character}\marg{true}\marg{false}}
-
-\New{3.23} Tests if a character has been made a shorthand.
-
-\begin{note}
-  \catcode`\|=12\relax Both \textsf{ltxdoc} and \textsf{babel} use
-  \verb|\AtBeginDocument| to change some catcodes, and \babel{} reloads
-  \textsf{hhline} to make sure \verb|:| has the right one, so if you
-  want to change the catcode of \verb/|/ it has to be done using the
-  same method at the proper place, with
-\begin{verbatim}
-\AtBeginDocument{\DeleteShortVerb{\|}}
-\end{verbatim}
-  \textit{before} loading \babel. This way, when the document begins
-  the sequence is (1) make \verb/|/ active (\textsf{ltxdoc}); (2) make
-  it inactive (your settings); (3) make \babel{} shorthands active
-  (\textsf{babel}); (4) reload \textsf{hhline} (\textsf{babel}, now
-  with the correct catcodes for \verb/|/ and
-  \verb|:|).\catcode`\|=\active
-\end{note}
-
-\subsection{Package options}
-
-\New{3.9a}
-These package options are processed before language options, so
-that they are taken into account irrespective of its order. The first
-three options have been available in previous versions.
-
-\Describe{KeepShorthandsActive}{}
-Tells \babel{} not to deactivate shorthands after loading a language
-file, so that they are also available in the preamble.
-
-\Describe{activeacute}{} For some languages \babel\ supports this
-options to set |'| as a shorthand in case it is not done by default.
-
-\Describe{activegrave}{}
-Same for |`|.
-
-\Describe{shorthands=}{\meta{char}\meta{char}...
-$\string|$ \texttt{off}}
-The only language shorthands activated
-are those given, like, eg:
-\begin{verbatim}
-\usepackage[esperanto,french,_shorthands=:;!?_]{babel}
-\end{verbatim}
-If \verb|'| is included, \texttt{activeacute} is set; if \verb|`| is
-included, \texttt{activegrave} is set.  Active characters (like
-\verb|~|) should be preceded by \verb|\string| (otherwise they will be
-expanded by \LaTeX{} before they are passed to the package and
-therefore they will not be recognized); however, |t| is provided for
-the common case of |~| (as well as |c| for not so common case of the
-comma).
-
-With |shorthands=off| no language shorthands are defined,
-As some languages use this mechanism for tools not available
-otherwise, a macro \verb|\babelshorthand| is defined, which allows
-using them; see above.
-
-\Describe{safe=}{\texttt{none} $\string|$ \texttt{ref} $\string|$
-\texttt{bib}} Some \LaTeX{} macros are redefined so that using
-shorthands is safe. With \texttt{safe=bib} only |\nocite|, |\bibcite|
-and |\bibitem| are redefined. With |safe=ref| only |\newlabel|, |\ref|
-and |\pageref| are redefined (as well as a few macros from
-\textsf{varioref} and \textsf{ifthen}).
-
-With |safe=none| no macro is redefined. This option is strongly
-recommended, because a good deal of incompatibilities and errors are
-related to these redefinitions. As of \New{3.34}, in $\epsilon$\TeX{}
-based engines (ie, almost every engine except the oldest ones)
-shorthands can be used in these macros (formerly you could not).
-
-\Describe{math=}{\texttt{active} $\string|$ \texttt{normal}}
-Shorthands are mainly intended for text, not for math. By setting this
-option with the value |normal| they are deactivated in math mode
-(default is |active|) and things like |${a'}$| (a closing brace after
-a shorthand) are not a source of trouble anymore.
-
-\Describe{config=}{\meta{file}} Load \meta{file}\texttt{.cfg} instead
-of the default config file |bblopts.cfg| (the file is loaded even
-with |noconfigs|).
-
-\Describe{main=}{\meta{language}} Forces the main languages, but this
-option should not be used except if there a need to do it. If the
-language is not given as such as package or global option, it is added
-to the list of requested languages. For example:
-\begin{verbatim}
-\documentclass{article}
-\usepackage[_main=english_,dutch]{babel}
-\end{verbatim}
-Some classes load \babel{} with a hardcoded language option. Sometimes,
-the main language can be overridden with something like that before
-|\documentclass|:
-\begin{verbatim}
-\PassOptionsToPackage{main=english}{babel}
-\end{verbatim}
-
-\Describe{headfoot=}{\meta{language}} By default, headlines and
-footlines are not touched (only marks), and if they contain
-language-dependent macros (which is not usual) there may be unexpected
-results. With this option you may set the language in heads and foots.
-An alternative is to set the language explicitly when heads and foots
-are redefined.
-
-\Describe{noconfigs}{} Global and language default config files are
-not loaded, so you can make sure your document is not spoilt by an
-unexpected \texttt{.cfg} file. However, if the key |config| is set,
-this file is loaded.
-
-\Describe{showlanguages}{} Prints to the log the list of languages
-loaded when the format was created: number (remember dialects can
-share it), name, hyphenation file and exceptions file.
-
-% \Describe{nocase}{} \New{3.9l} Language settings for uppercase and
-% lowercase mapping (as set by |\SetCase|) are ignored. Use only if there
-% are incompatibilities with other packages.
-
-\Describe{silent}{} \New{3.9l} No warnings and no \textit{infos} are
-written to the log file.\footnote{You can use alternatively the
-package \textsf{silence}.}
-
-\Describe{hyphenmap=}{\texttt{off} $\string|$ \texttt{first}
-$\string|$ \texttt{select} $\string|$ \texttt{other} $\string|$
-\texttt{other*}}
-
-\New{3.9g} Sets the behavior of case mapping for hyphenation,
-provided the language defines it.\footnote{Turned off in plain.} It
-can take the following values:
-\begin{description}
-\renewcommand\makelabel[1]{%
-  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
-\itemsep=-\parskip
-\item[off] deactivates this feature and no case mapping is applied;
-\item[first] sets it at the first switching commands in the
-  current or parent scope (typically, when the aux file is first read
-  and at |\begin{document}|, but also the first |\selectlanguage| in
-    the preamble), and it's the default if a single
-    language option has been stated;\footnote{Duplicated options count
-    as several ones.}
-\item[select] sets it only at |\selectlanguage|;
-\item[other] also sets it at |otherlanguage|;
-\item[other*] also sets it at |otherlanguage*| as well as in heads and
-  foots (if the option |headfoot| is used) and in auxiliary files (ie,
-  at |\select@language|), and it's the default if several language
-  options have been stated. The option |first| can be regarded as an
-  optimized version of \texttt{other*} for monolingual
-  documents.\footnote{Providing |foreign| is pointless, because the
-  case mapping applied is that at the end of the paragraph, but if either
-  \xetex{} or \luatex{} change this behavior it might be added. On
-  the other hand, |other| is provided even if I [JBL] think it isn't
-  really useful, but who knows.}
-\end{description}
-
-\Describe{bidi=}{\texttt{default} $\string|$ \texttt{basic}
-  $\string|$ \texttt{basic-r} $\string|$ \texttt{bidi-l} $\string|$
-  \texttt{bidi-r}}
-
-\New{3.14} Selects the bidi algorithm to be used in \luatex{} and
-\xetex{}. See sec.~\ref{bidi}.
-
-\Describe{layout=}{}
-
-\New{3.16} Selects which layout elements are adapted in bidi
-documents. See sec.~\ref{bidi}.
-
-\Describe{provide=}{\texttt{*}}
-\New{3.49} An alternative to |\babelprovide| for languages passed as
-options. See section~\ref{inifiles}, which describes also the variants
-|provide+=| and |provide*=|.
-
-\subsection{The \texttt{base} option}
-
-With this package option \babel{} just loads some basic macros (mainly
-the selectors), defines |\AfterBabelLanguage| and exits. It also
-selects the hyphenation patterns for the last language passed as option
-(by its name in |language.dat|). There are two main uses: classes and
-packages, and as a last resort in case there are, for some reason,
-incompatible languages. It can be used if you just want to select the
-hyphenation patterns of a single language, too.
-
-\Describe\AfterBabelLanguage{\marg{option-name}\marg{code}}
-
-This command is currently the only provided by |base|. Executes
-\meta{code} when the file loaded by the corresponding package option
-is finished (at |\ldf@finish|). The setting is global. So
-\begin{verbatim}
-\AfterBabelLanguage{french}{...}
-\end{verbatim}
-does ... at the end of |french.ldf|. It can be used in |ldf| files,
-too, but in such a case the code is executed only if
-\meta{option-name} is the same as |\CurrentOption| (which could not
-be the same as the option name as set in |\usepackage|!).
-
-\begin{example}
-  Consider two languages \textsf{foo} and \textsf{bar} defining the
-  same |\macro| with |\newcommand|. An error is raised if you attempt
-  to load both. Here is a way to overcome this problem:
-\begin{verbatim}
-\usepackage[base]{babel}
-\AfterBabelLanguage{foo}{%
-  \let\macroFoo\macro
-  \let\macro\relax}
-\usepackage[foo,bar]{babel}
-\end{verbatim}
-\end{example}
-
-\begin{note}
-  With a recent version of \LaTeX, an alternative method to execute
-  some code just after an |ldf| file is loaded is with |\AddToHook| and
-  the hook |file/<language>.ldf/after|. \Babel{} does not predeclare
-  it, and you have to do it yourself with |\ActivateGenericHook|.
-\end{note}
-
-\begin{warning}
-  Currently this option is not compatible with languages loaded on the
-  fly.
-\end{warning}
-
-\subsection{\texttt{ini} files}
-\label{inifiles}
-
-An alternative approach to define a language (or, more precisely, a
-\textit{locale}) is by means of an \texttt{ini} file. Currently
-\babel{} provides about 380 of these files containing the basic data
-required for a locale, covering about 300 languages, plus basic
-templates for about 400 locales.
-
-|ini| files are not meant only for \babel, and they has been devised as
-a resource for other packages. To easy interoperability between \TeX{}
-and other systems, they are identified with the BCP 47 codes as
-preferred by the Unicode Common Locale Data Repository, which was
-used as source for most of the data provided by these files, too (the
-main exception being the |\...name| strings).
-
-Most of them set the date, and many also the captions (Unicode and
-LICR). They will be evolving with the time to add more features
-(something to keep in mind if backward compatibility is important). The
-following section shows how to make use of them by means of
-|\babelprovide|. In other words, |\babelprovide| is mainly meant as
-alternative when the |ldf| does not exists or does not work as
-expected, and for secondary tasks.
-
-\begin{more}
-  There is an example of how to use an |ini| template file
-  \href{https://github.com/latex3/babel/issues/176#issuecomment-1080846575}{here},
-  for Phoenician (although currently this locale is bundled with
-  \babel).
-\end{more}
-
-\New{3.49} Alternatively, you can tell \babel{} to load all or some
-languages passed as options with |\babelprovide| and not from the |ldf|
-file in a few few typical cases. Thus, |provide=*| means ‘load the main
-language with the |\babelprovide| mechanism instead of the |ldf| file’
-applying the basic features, which in this case means |import,| |main|.
-There are (currently) three options:
-\begin{itemize}
-\item |provide=*| is the option just explained, for the main language;
-\item |provide+=*| is the same for additional languages (the main
-  language is still the |ldf| file);
-\item |provide*=*| is the same for all languages, ie, main and
-  additional.
-\end{itemize}
-
-\begin{example}
-  The preamble in the previous example can be more compactly written
-  as:
-\begin{verbatim}
-\documentclass{book}
-\usepackage[_georgian, provide=*_]{babel}
-\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}
-\end{verbatim}
-Or also:
-\begin{verbatim}
-\documentclass[_georgian_]{book}
-\usepackage[_provide=*_]{babel}
-\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}
-\end{verbatim}
-\end{example}
-
-\begin{note}
-  The \texttt{ini} files just define and set some parameters, but the
-  corresponding behavior is not always implemented. Also, there are
-  some limitations in the engines. A few remarks follow (which could no
-  longer be valid when you read this manual, if the packages involved
-  have been updated). The Harfbuzz renderer still has some issues, so as
-  a rule of thumb prefer the default renderer, and resort to Harfbuzz
-  only if the former does not work for you. Fortunately, fonts can be
-  loaded twice with different renderers; for example:
-\begin{verbatim}
-\babelfont[spanish]{rm}{FreeSerif}
-\babelfont[hindi]{rm}[Renderer=Harfbuzz]{FreeSerif}
-\end{verbatim}
-\begin{description}
-\itemsep=-\parskip
-\item[Arabic] Monolingual documents mostly work in \luatex, but it must
-  be fine tuned, particularly math and graphical elements like
-  |picture|. In \xetex{} \babel{} resorts to the \textsf{bidi} package,
-  which seems to work.
-\item[Hebrew] Niqqud marks seem to work in both engines, but depending 
-  on the font cantillation marks might be misplaced (\xetex{} or
-  \luatex{} with Harfbuzz seems better).
-\item[Devanagari] In \luatex{} and the default renderer many fonts
-work, but some others do not, the main issue being the ‘ra’. You may
-need to set explicitly the script to either |deva| or |dev2|, eg:
-\begin{verbatim}
-\newfontscript{Devanagari}{deva}
-\end{verbatim}
-  Other Indic scripts are still under development in the default
-  \luatex{} renderer, but should work with |Renderer=Harfbuzz|. They
-  also work with \xetex{}, although unlike with \luatex{} fine tuning
-  the font behavior is not always possible.
-\item[Southeast scripts] Thai works in both \luatex{} and \xetex{}, but
-  line breaking differs (rules are hard-coded in \xetex, but they can
-  be modified in \luatex). Lao seems to work, too, but there are no
-  patterns for the latter in \luatex{}. Khemer clusters are rendered
-  wrongly with the default renderer. The comment about Indic scripts
-  and \textsf{lualatex} also applies here. Some quick patterns can
-  help, with something similar to:
-\begin{verbatim}
-\babelprovide[import, hyphenrules=+]{lao}
-\babelpatterns[lao]{1ດ 1ມ 1ອ 1ງ 1ກ 1າ} % Random
-\end{verbatim}
-\item[East Asia scripts] Settings for either Simplified of Traditional
-  should work out of the box, with basic line breaking with any
-  renderer. Although for a few words and shorts texts the |ini| files
-  should be fine, CJK texts are best set with a dedicated framework
-  (\textsf{CJK}, \textsf{luatexja}, \textsf{kotex}, \textsf{CTeX},
-  etc.). This is what the class |ltjbook| does with \luatex, which can
-  be used in conjunction with the |ldf| for |japanese|, because the
-  following piece of code loads \textsf{luatexja}:
-\begin{verbatim}
-\documentclass[japanese]{ltjbook}
-\usepackage{babel}
-\end{verbatim}
-\item[Latin, Greek, Cyrillic] Combining chars with the default
- \luatex{} font renderer might be wrong; on then other hand, with the
- Harfbuzz renderer diacritics are stacked correctly, but many
- hyphenations points are discarded (this bug is related to kerning,
- so it depends on the font). With \xetex{} both combining characters
- and hyphenation work as expected (not quite, but in most cases it
- works; the problem here are font clusters).
-\end{description}
-\end{note}
-
-\begin{note}
-  Wikipedia defines a \textit{locale} as follows: “In computing, a
-  locale is a set of parameters that defines the user’s language,
-  region and any special variant preferences that the user wants to see
-  in their user interface. Usually a locale identifier consists of at
-  least a language code and a country/region code.” \Babel{} is moving
-  gradually from the old and fuzzy concept of \textit{language} to the
-  more modern of \textit{locale}. Note each locale is by itself a
-  separate “language”, which explains why there are so many files. This
-  is on purpose, so that possible variants can be created and/or
-  redefined easily.
-\end{note}
-
-\textbf{Modifying and adding values to |ini| files}
-
-\nobreak 
-\New{3.39} There is a way to modify the values of |ini| files when they
-get loaded with |\babelprovide| and |import|. To set, say,
-|digits.native| in the |numbers| section, use something like
-|numbers/digits.native=abcdefghij|. Keys may be added, too. Without
-|import| you may modify the identification keys.
-
-This can be used to create private variants easily. All you need is to
-import the same |ini| file with a different locale name and different
-parameters. 
-
-% \begin{example}
-%   Let's assume you need only the basic features of `spanish`, so that
-%   the |ini| file is enough, and also a variant with your own
-%   hyphenation with
-% \end{example}
-
-\subsection{List of locales available in \cs{babelprovide}}
+\subsection{Languages supported by \babel{} in the ‘modern’ mode}
 
 Here is the list of the names currently supported with |ini| locale
 files, with |\babelprovide| (or |provide=|). With these languages,
@@ -2046,7 +953,7 @@ they are ‘bare minimum locales’. They are set in
 \bigskip\hrule\nobreak
 
 \makeatletter
-\def\tag#1{\par\@hangfrom{\makebox[10em][l]{#1}}\ignorespaces}
+\def\tag#1{\par\@hangfrom{\makebox[1em][l]{#1}}\ignorespaces}
 \def\tag#1#2#3{\par
   \hspace{-2em}\textcolor{thered}{\texttt{#1}}#2\enspace
   \mbox{\footnotesize(#3)}}
@@ -2080,7 +987,7 @@ There are some notes in a few locales.
 \bigskip\hrule\nobreak
 
 \begin{multicols}{2}
-\leftskip2em
+\leftskip2em\parindent0pt
 \tag{abkhazian}{}{ab}
 \tag{afar}{}{aa}
 \tag{afrikaans}{\hascapu\hascapl}{af}
@@ -2597,12 +1504,977 @@ in Switzerland.}
 \hrule
 \bigskip
 
-\subsection{Modifying a language}
+\subsection{Selecting fonts in Unicode engines}
+
+\New{3.15} Babel provides a high level interface on top of |fontspec|
+to select fonts. There is no need to load \textsf{fontspec} explicitly
+– \babel{} does it for you with the first |\babelfont|. (See
+also the package \textsf{combofont} for a complementary approach.)
+
+\Describe\babelfont{\oarg{language-list}\marg{font-family}%
+  \oarg{font-options}\marg{font-name}}
+
+% \begin{note}
+%   See the note in the previous section about some issues in
+%   specific languages.
+% \end{note}
+
+The main purpose of |\babelfont| is to define at once the fonts
+required by the different languages, with their corresponding language
+systems (script and language). So, if you load, say, 4 languages,
+|\babelfont{rm}{FreeSerif}| defines 4 fonts (with their variants, of
+course), which are switched with the language by \babel. It is a tool
+to make things easier and transparent to the user.
+
+Here \textit{font-family} is |rm|, |sf| or |tt| (or newly defined
+ones, as explained below), and \textit{font-name} is the same as in
+\textsf{fontspec} and the like.
+
+If no language is given, then it is considered the default font for the
+family, activated when a language is selected. On the other hand, if
+there is one or more languages in the optional argument, the font will
+be assigned to them, overriding the default one. Alternatively, you may
+set a font for a script -- just precede its name (lowercase) with a
+star (eg, |*devanagari|).
+
+With the optional argument, the font is \textit{not} yet loaded, but
+just predeclared. This means you may define as many fonts as you want
+‘just in case’, because if the language is never selected, the
+corresponding |\babelfont| declaration is just ignored.
+
+\Babel{} takes care of the font language and the font script when
+languages are selected (as well as the writing direction). In most
+cases, you will not need \textit{font-options}, which is the same as in
+\textsf{fontspec}, but you may add further key/value pairs if
+necessary.
+
+|\babelfont| can be used to implicitly define a new font family. Just
+write its name instead of |rm|, |sf| or |tt|. This is the preferred way
+to select fonts in addition to the three basic families.
+
+\begin{example}
+  Usage in most cases is very simple. Let us assume you are setting up
+  a document in Swedish, with some words in Hebrew, with a font suited
+  for both languages. Here the option |bidi=default| activates a simple
+  (or, rather, simplistic) bidirectional mode.
+  \begingroup
+% If you are looking at the code to see how it has been written, you
+% will be disappointed :-). The following example is built ad hoc to
+% emulate the final result to avoid dependencies, and therefore it's
+% not "real" code.
+\catcode`@=13
+\def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TLT \else
+\bgroup\textdir TRT \fontspec[Scale=.87,Script=Hebrew]{Liberation
+Mono} \fi}
+\setengine{luatex/xetex}
+\begin{verbatim}
+\documentclass{article}
+
+\usepackage[swedish, bidi=default]{babel}
+
+\babelprovide[import]{hebrew}
+
+_\babelfont{rm}{FreeSerif}_
+
+\begin{document}
+
+Svenska \foreignlanguage{hebrew}{@2עִבְרִית@0} svenska.
+
+\end{document}
+\end{verbatim}
+\endgroup
+
+If on the other hand you have to resort to different fonts, you can
+replace the red line above with, say:
+\setengine{luatex/xetex}
+\begin{verbatim}
+\babelfont{rm}{Iwona}
+\babelfont[hebrew]{rm}{FreeSerif}
+\end{verbatim}
+\end{example}
+
+\begin{example}
+Thanks to this high level interface to |fontenc|, the roman fonts for
+all secondary languages in the Cyrillic and Greek scripts can be set
+at once with the following single line:
+\setengine{luatex/xetex}
+\begin{verbatim}
+\babelfont[_*cyrillic, *greek_]{rm}{NewComputerModern10}
+\end{verbatim}
+With some scripts, the \textsf{Harfbuzz} renderer is preferred:
+\begin{verbatim}
+  \babelfont[_*arabic, *devanagari_]{rm}[_Renderer=Harfbuzz_]{FreeSerif}
+\end{verbatim}
+\Babel{} does the rest for you.
+\end{example}
+
+\begin{example}
+  Here is how to declare a new family:
+\setengine{luatex/xetex}
+\begin{verbatim}
+\babelfont{kai}{FandolKai}
+\end{verbatim}
+  Now, |\kaifamily| and |\kaidefault|, as well as |\textkai| are at
+  your disposal.
+\end{example}
+
+\begin{note}
+  You may load \textsf{fontspec} explicitly. For example:
+\setengine{luatex/xetex}
+\begin{verbatim}
+\usepackage{fontspec}
+\newfontscript{Devanagari}{deva}
+\babelfont[hindi]{rm}{Shobhika}
+\end{verbatim}
+  This makes sure the OpenType script for Devanagari is |deva| and not
+  |dev2|, in case it is not detected correctly.
+%   You may also pass some
+%   options to \textsf{fontspec}: with |silent|, the warnings about
+%   unavailable scripts or languages are not shown (they are only really
+%   useful when the document format is being set up).
+\end{note}
+
+\begin{note}
+  |\fontspec| is not touched at all, only the preset font families
+  (|rm|, |sf|, |tt|, and the like). If a language is switched when an
+  \textit{ad hoc} font is active, or you select the font with this
+  command, neither the script nor the language is passed. You must
+  add them by hand. This is by design, for several reasons —for
+  example, each font has its own set of features and a generic setting
+  for several of them can be problematic, and also preserving a
+  “lower-level” font selection is useful.
+\end{note}
+
+\begin{note}
+  Directionality is a property affecting margins, indentation, column
+  order, etc., not just text. Therefore, it is under the direct control
+  of the language, which applies both the script and the direction to
+  the text. As a consequence, there is no need to set \texttt{Script}
+  when declaring a font with |\babelfont| (nor \texttt{Language}). In
+  fact, it is even discouraged.
+\end{note}
+
+\begin{note}
+  The keys |Language| and |Script| just pass these values to the
+  \textit{font}, and do \textit{not} set the script for the
+  \textit{language} (and therefore the writing direction). In other
+  words, the |ini| file or |\babelprovide| provides default values for
+  |\babelfont| if omitted, but the opposite is not true. See the note
+  above for the reasons of this behavior.
+\end{note}
+
+\begin{note}
+  |\babelfont| is a high level interface to \textsf{fontspec}, and
+  therefore in \xetex{} you can apply |Mapping|s. For example, there is
+  a set of 
+  \href{https://github.com/davidmjones/brahmic-maps}{transliterations
+  for Brahmic scripts} by Davis M. Jones. After installing
+  them in you distribution, just set the map as you would do with
+  \textsf{fontspec}.
+\end{note}
+
+\begin{warning}
+  Using |\set|\textit{xxxx}|font| and |\babelfont| at the same time is
+  discouraged, but very often works as expected. However, be aware with
+  |\set|\textit{xxxx}|font| the language system will not be set by
+  \babel{} and should be set with |fontspec| if necessary.
+\end{warning}
+
+\begin{troubleshooting}
+  \trouble{Package fontspec Info: Language '<lang>' not explicitly
+  supported within font '<font>' with script '<script>'.}
+  \textit{Package fontspec Info: Language '<lang>' not explicitly
+  supported within font '<font>' with script '<script>'.}.
+
+  \textbf{This is \textit{not} and error.} This info is shown by
+  \textsf{fontspec}, not by \babel. If everything is okay in your
+  document (and almost always it is), the best thing you can do is just
+  to ignore it altogether.
+
+  In some forums you can find the advice to set, more or less
+  mechanically, |Language=Default|. \textit{Do not follow it}, because
+  font features for the language will not be applied, which can be
+  relevant for many languages, like Urdu and Turkish. Set the
+  |Language| explicitly only if there is a reason to do it. If you
+  really want to conceal this message, use instead:
+\begin{verbatim}
+\PassOptionsToPackage{silent}{fontspec}
+\end{verbatim}
+\end{troubleshooting}
+
+\begin{troubleshooting}
+  \trouble{Package babel Info: The following fonts are not babel
+  standard families} \textit{Package babel Info: The following fonts
+  are not babel standard families}.
+
+  \textbf{This is \textit{not} an error.} \babel{} assumes that if you
+  are using |\babelfont| for a family, very likely you want to define
+  the rest of them. If you don't, you can find some inconsistencies
+  between families. This checking is done at the beginning of the
+  document, at a point where we cannot know which families will be
+  used.
+
+  Actually, there is no real need to use |\babelfont| in a monolingual
+  document, if you set the language system in |\setmainfont| (or not,
+  depending on what you want).
+
+  As the message explains, \textit{there is nothing intrinsically
+  wrong} with not defining all the families. In fact, there is nothing
+  intrinsically wrong with not using |\babelfont| at all. But you must
+  be aware that this may lead to some problems.
+\end{troubleshooting}
+
+\subsection{Basic language selectors}
+
+This section describes the commands to be used in the document to
+switch the language in multilingual documents. In most cases, only the
+two basic macros |\selectlanguage| and |\foreignlanguage| are
+necessary. The environments |otherlanguage|, |otherlanguage*| are
+auxiliary, and described in the next section.
+
+The main language is selected automatically when the |document|
+environment begins.
+
+\Describe{\selectlanguage}{\marg{language}}
+\DescribeOther{\begin\menv{selectlanguage}}%
+   {\marg{language}\Eenv{selectlanguage}}
+
+When a user wants to switch from one language to another he can do so
+using the macro |\selectlanguage|. It is meant for blocks of texts, and
+therefore should be used mainly in vertical mode, although it also
+works in horizontal mode.
+\begin{verbatim}
+\selectlanguage{german}
+\end{verbatim}
+
+This command can be used as environment, too, in case there are
+relatively short texts and you do not want to reset the language with a
+hardcode value.
+
+\begin{note}
+  Bear in mind |\selectlanguage| can be automatically executed, in some
+  cases, in the auxiliary files, at heads and foots, and after the
+  environment |otherlanguage*|.
+\end{note}
+
+\begin{warning}
+  If used inside braces or a group there might be some non-local
+  changes, as it would be roughly equivalent to:
+\begin{verbatim}
+\bgroup
+\selectlanguage{<inner-language>}
+...
+\egroup
+\selectlanguage{<outer-language>}
+\end{verbatim}
+  If you want a change which is really local, you must enclose this
+  code with an additional grouping level. The same applies to the
+  environment version.
+\end{warning}
+
+\begin{warning}
+  There are a couple of issues related to the way the language
+  information is written to the auxiliary files:
+\begin{itemize}
+  \item |\selectlanguage| should not be used inside some boxed environments
+    (like floats or |minipage|) to switch the language if you need the
+    information written to the |aux| be correctly synchronized. This
+    rarely happens, but if it were the case, you must use the
+    environment version or |otherlanguage| instead.
+  \item In addition, this macro inserts a |\write| in vertical mode,
+    which may break the vertical spacing in some cases (for example,
+    between lists or at the beginning of a table cell). \New{3.64} The
+    behavior can be adjusted with
+    |\babeladjust{select.write=<mode>}|, where \m{mode} is |shift|
+    (which shifts the skips down and adds a |\penalty|); |keep| (the
+    default -- with it the |\write| and the skips are kept in the order
+    they are written), and |omit| (which may seem a too drastic
+    solution, because nothing is written, but more often than not this
+    command is applied to more or less shorts texts with no sectioning
+    or similar commands, and therefore no language synchronization is
+    necessary). In a table cell, a |\leavevmode| just before the
+    selector may be enough.
+\end{itemize}
+\end{warning}
+
+\Describe{\foreignlanguage}{\oarg{option-list}\marg{language}\marg{text}}
+
+It takes two mandatory arguments; the second argument is a phrase to be
+typeset according to the rules of the language named in its first one.
+
+This command (1) only switches the extra definitions and the
+hyphenation rules for the language, \emph{not} the names and dates, (2)
+does not send information about the language to auxiliary files (i.e.,
+the surrounding language is still in force), and (3) it works even if
+the language has not been set as package option (but in such a case it
+only sets the hyphenation patterns and a warning is shown). With the
+|bidi| option, it also enters in horizontal mode (this is not done
+always for backwards compatibility), and since it is meant for phrases
+only the text direction (and not the paragraph one) is set.
+
+\New{3.44} As already said, captions and dates are not switched.
+However, with the optional argument you can switch them, too. So, you
+can write:
+\begin{verbatim}
+\foreignlanguage[date]{polish}{\today}
+\end{verbatim}
+In addition, captions can be switched with |captions| (or both, of
+course, with |date,| |captions|). Until 3.43 you had to write something
+like |{\selectlanguage{..} ..}|, which was not always the most
+convenient way.
+
+\begin{note}
+  |\bibitem| is out of sync with |\selectlanguage| in the \file{.aux}
+  file. The reason is |\bibitem| uses |\immediate| (and others, in
+  fact), while |\selectlanguage| doesn't. There is a similar issue with
+  floats, too. There is no known workaround, but it’s not usually a
+  real issue.
+\end{note}
+
+\subsection{Auxiliary language selectors}
+
+\Describe{\begin\menv{otherlanguage}}{\marg{language}\Eenv{otherlanguage}}
+
+Same as |selectlanguage| as environment, except spaces after the
+|\begin| and |\end| commands are ignored. (Very likely, and because of
+the limitations of many old editors with bidi text, the idea was
+\cs{end}\texttt{\{otherlanguage\}} had to be a line by itself.) The
+warning above about the internal |\write| also applies here. The
+current mode (vertical or horizontal) also remains unchanged.
+
+\Describe{\begin\menv{otherlanguage*}}%
+{\oarg{option-list}\marg{language}\Eenv{otherlanguage*}}
+
+Same as |\foreignlanguage| but as environment. Spaces are \textit{not}
+ignored.
+
+This environment was originally devised for intermixing left-to-right
+typesetting with right-to-left typesetting in engines not supporting a
+change in the writing direction inside a line. However, by default it
+never complied with the documented behavior and it is just a version as
+environment of |\foreignlanguage|, except when the package option
+|bidi| is set -- in this case, |\foreignlanguage| emits a
+|\leavevmode|, while |otherlanguage*| does not. Like |\foreignlanguage|
+is a \textit{text} command, and therefore it doesn’t change the
+paragraph direction.
+
+\subsection{Plain}
+
+In e-Plain and pdf-Plain, load languages styles with |\input| and then use
+|\begindocument| (the latter is defined by \babel):
+\begin{verbatim}
+\input estonian.sty
+\begindocument
+\end{verbatim}
+
+\begin{warning}
+  Not all languages provide a |sty| file and some of them are not
+  compatible with those formats. Please, refer to
+  \href{https://latex3.github.io/babel/guides/using-babel-with-plain.html}%
+   {Using babel with Plain} for further details.
+\end{warning}
+
+\section{More on language loading and selection}
+
+\subsection{A couple of tools}
+
+\Describe{\babeltags}{\char`\{\m{tag1} \texttt{=} \m{language1}, \m{tag2}
+\texttt{=} \m{language2}, \dots\char`\}}
+
+\New{3.9i} In multilingual documents with many language-switches the
+commands above can be cumbersome. With this tool shorter names can be
+defined. It adds nothing really new -- it is just syntactical sugar.
+
+It defines |\text<tag1>{<text>}| to be
+|\foreignlanguage{<language1>}{<text>}|, and |\begin{<tag1>}|
+to be |\begin{otherlanguage*}{<language1>}|, and so on. Note
+|\<tag1>| is also allowed, but remember to set it locally inside a
+group.
+
+\begin{warning}
+  There is a clear drawback to this feature, namely, the ‘prefix’
+  |\text...| is heavily overloaded in \LaTeX{} and conflicts with
+  existing macros may arise (|\textlatin|, |\textbar|, |\textit|,
+  |\textcolor| and many others). The same applies to environments,
+  because |arabic| conflicts with |\arabic|. Furthermore, and because of
+  this overloading, detecting the language of a chunk of text by
+  external tools can become unfeasible (is |\textga| the locale for the
+  African language Gã or something else?). Except if there is a reason for
+  this ‘syntactical sugar’, the best option is to stick to the default
+  selectors or even to define your own alternatives.
+\end{warning}
+
+\begin{example}
+With
+\begin{verbatim}
+\babeltags{de = german}
+\end{verbatim}
+you can write
+\begin{verbatim}
+text \textde{German text} text
+\end{verbatim}
+and
+\begin{verbatim}
+text
+\begin{de}
+  German text
+\end{de}
+text
+\end{verbatim}
+\end{example}
+
+\begin{note}
+  Something like \verb|\babeltags{finnish = finnish}| is legitimate --
+  it defines |\textfinnish| and |\finnish| (and, of course,
+  |\begin{finnish}|).
+\end{note}
+
+\Describe{\babelensure}{|[include=|\m{commands}|,exclude=|\m{commands}%
+  |,fontenc=|\m{encoding}|]|\marg{language}}
+
+\New{3.9i} Except in a few languages, like \textsf{russian},
+captions and dates are just strings, and do not switch the
+language. That means you should set it explicitly if you want to use
+them, or hyphenation (and in some cases the text itself) will be
+wrong. For example:
+\begin{verbatim}
+\foreignlanguage{russian}{text \foreignlanguage{polish}{\seename} text}
+\end{verbatim}
+
+Of course, \TeX{} can do it for you. To avoid switching the language
+all the while, |\babelensure| redefines the captions for a given
+language to wrap them with a selector:
+\begin{verbatim}
+\babelensure{polish}
+\end{verbatim}
+By default only the basic captions and |\today| are redefined, but you
+can add further macros with the key |include| in the optional argument
+(without commas). Macros not to be modified are listed in
+|exclude|. You can also enforce a font encoding with the option
+|fontenc|.\footnote{With it, encoded strings may not work as expected.}
+A couple of examples:
+\begin{verbatim}
+\babelensure[include=\Today]{spanish}
+\babelensure[fontenc=T5]{vietnamese}
+\end{verbatim}
+
+They are activated when the language is selected (at the |afterextras|
+event), and it makes some assumptions which could not be fulfilled in
+some languages. Note also you should include only macros defined by
+the language, not global macros (eg, |\TeX| of |\dag|).
+
+With |ini| files (see below), captions are ensured by default.
+
+\subsection{Accessing language info}
+
+\Describe{\localename}{}
+\DescribeOther{\mainlocalename}{}
+\DescribeOther{\languagename}{}
+
+\New{24.10} The control sequence |\localename| contains the name of the current
+locale. This is now the recommended way to retrieve the current
+language. In addtion, |\mainlocalename| contains the main language.
+
+|\languagename| is still used internally, but it is now discouraged at
+the user level.
+
+\begin{warning}
+  Due to a bug, which lead to some internal inconsistencies in
+  catcodes, |\languagename| should \textit{not} be used to test which
+  is the current language. Rely on |\localename| or, if you still need
+  |\languagename| for some reason, on \textsf{iflang}, by Heiko Oberdiek.
+\end{warning}
+
+\Describe{\iflanguage}{\marg{language}\marg{true}\marg{false}}
+
+Here ``language'' is used in the \TeX{} sense, as a set of hyphenation
+patterns, and \textit{not} as its \textsf{babel} name. The first
+argument is the name of a language.
+
+\Describe{\localeinfo}{%
+ \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}{\marg{field}}}
+
+\New{3.38} If an |ini| file has been loaded for the current language,
+you may access the information stored in it. This macro is fully
+expandable, and the available fields are:
+\begin{description}
+\itemsep=-\parskip
+\item[|name.english|] as provided by the Unicode CLDR.
+\item[|tag.ini|] is the tag of the |ini| file (the way this
+  file is identified in its name).
+\item[|tag.bcp47|] is the full BCP 47 tag (see the warning below). This
+  is the value to be used for the ‘real' provided tag (\babel{} may
+  fill other fields if they are considered necessary).
+\item[|language.tag.bcp47|] is the BCP 47 language tag.
+\item[|tag.opentype|] is the tag used by OpenType (usually, but not
+  always, the same as BCP 47).
+\item[|script.name|], as provided by the Unicode CLDR.
+\item[|script.tag.bcp47|] is the BCP 47 tag of the script
+  used by this locale. This is a required field for the fonts to be
+  correctly set up, and therefore it should be always defined.
+\item[|script.tag.opentype|] is the tag used by OpenType (usually,
+  but not always, the same as BCP 47).
+\item[|region.tag.bcp47|] is the BCP 47 tag of the region or territory.
+  Defined only if the locale loaded actually contains it (eg, |es-MX|
+  does, but |es| doesn’t), which is how locales behave in the CLDR.
+  \New{3.75}
+\item[|variant.tag.bcp47|] is the BCP 47 tag of the variant (in the BCP 47
+  sense, like |1901| for German). \New{3.75}
+\item[|extension.|\m{s}|.tag.bcp47|] is the BCP 47 value of the
+  extension whose singleton is \m{s} (currently the recognized
+  singletons are |x|, |t| and |u|). The internal syntax can be somewhat
+  complex, and this feature is still somewhat tentative. An example is
+  \textsf{classicallatin} which sets |extension.x.tag.bcp47| to |classic|.
+  \New{3.75}
+\end{description}
+
+\begin{note}
+  Currently, |x| is used for two separate functions, namely,
+  identifying a \babel{} locale without a BCP47 tag and setting an
+  alternative set of rules for casing.
+\end{note}
+
+\begin{warning}
+  \New{3.46} As of version 3.46 |tag.bcp47| returns the full BCP 47
+  tag. Formerly it returned just the language subtag, which was clearly
+  counterintuitive.
+\end{warning}
+
+\New{3.75} Sometimes, it comes in handy to be able to use |\localeinfo|
+in an expandable way even if something went wrong (for example, the
+locale currently active is undefined). For these cases, |localeinfo*|
+just returns an empty string instead of raising an error. Bear in mind
+that \babel{}, following the CLDR, may leave the region unset, which
+means |\getlocaleproperty*|, described below, is the preferred
+command, so that the existence of a field can be checked before. This
+also means building a string with the language and the region with
+|\localeinfo*{language.tab.bcp47}|\allowbreak |-|\allowbreak
+|\localeinfo*{region.tab.bcp47}| is not usually a good idea (because of
+the hyphen).
+
+\Describe{\getlocaleproperty}{%
+  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
+  \marg{macro}\marg{locale}\marg{property}}
+
+\New{3.42} The value of any locale property as set by the |ini| files
+(or added/modified with |\babelprovide|) can be retrieved and stored in
+a macro with this command. For example, after:
+\begin{verbatim}
+  \getlocaleproperty\hechap{hebrew}{captions/chapter}
+\end{verbatim}
+the macro |\hechap| will contain the string
+{\fontspec[Scale=.87,Script=Hebrew]{Liberation Mono}\textdir TRT פרק}.
+
+If the key does not exist, the macro is set to |\relax| and an error is
+raised. \New{3.47} With the starred version no error is raised, so that
+you can take your own actions with undefined properties.
+
+\Describe{\localeid}{}
+Each language in the \babel{} sense has its own unique numeric
+identifier, which can be retrieved with |\localeid|.
+
+The |\localeid| is not the same as the |\language| identifier, which
+refers to a set of hyphenation patterns (which, in turn, is just a
+component of the line breaking algorithm described in the next
+section). The data about preloaded patterns are store in an internal
+macro named |\bbl@languages| (see the code for further details), but
+note several locales may share a single |\language|, so they are
+separated concepts. In \luatex, the |\localeid| is saved in each node
+(when it makes sense) as an attribute, too.
+
+\Describe{\ShowLocaleProperties}{\marg{language}}
+\New{3.98} Prints to the |log| file all the loaded key/value pairs from
+the |ini| locale file for \meta{language}. 
+
+\Describe{\LocaleForEach}{\marg{code}}
+\Babel{} remembers which |ini| files have been loaded. There is a loop
+named |\LocaleForEach| to traverse the list, where |#1| is the name of
+the current item, so that |\LocaleForEach{\message{ **#1** }}| just
+shows the loaded |ini|’s. 
+
+\Describe{ensureinfo=off}{}
+\New{3.75} Previously, |ini| files were loaded only with |\babelprovide|
+and also when languages are selected if there is a |\babelfont| or they
+have not been explicitly declared. Now the |ini| files are loaded (and
+therefore the corresponding data) even if these two conditions are not
+met (in previous versions you had to enable it with |\BabelEnsureInfo|
+in the preamble). Because of the way this feature works, problems are
+very unlikely, but there is switch as a package option to turn the new
+behavior off (|ensureinfo=off|).
+
+\subsection{Package options}
+
+\New{3.9a}
+These package options are processed before language options, so
+that they are taken into account irrespective of its order. The first
+three options have been available in previous versions.
+
+\Describe{KeepShorthandsActive}{}
+Tells \babel{} not to deactivate shorthands after loading a language
+file, so that they are also available in the preamble.
+
+\Describe{config=}{\meta{file}} Load \meta{file}\texttt{.cfg} instead
+of the default config file |bblopts.cfg| (the file is loaded even
+with |noconfigs|).
+
+\Describe{main=}{\meta{language}} Forces the main languages, but this
+option should not be used except if there a need to do it. If the
+language is not given as such as package or global option, it is added
+to the list of requested languages. For example:
+\begin{verbatim}
+\documentclass{article}
+\usepackage[_main=english_,dutch]{babel}
+\end{verbatim}
+Some classes load \babel{} with a hardcoded language option. Sometimes,
+the main language can be overridden with something like that before
+|\documentclass|:
+\begin{verbatim}
+\PassOptionsToPackage{main=english}{babel}
+\end{verbatim}
+
+\Describe{headfoot=}{\meta{language}} By default, headlines and
+footlines are not touched (only marks), and if they contain
+language-dependent macros (which is not usual) there may be unexpected
+results. With this option you may set the language in heads and foots.
+An alternative is to set the language explicitly when heads and foots
+are redefined.
+
+\Describe{noconfigs}{} Global and language default config files are
+not loaded, so you can make sure your document is not spoilt by an
+unexpected \texttt{.cfg} file. However, if the key |config| is set,
+this file is loaded.
+
+\Describe{showlanguages}{} Prints to the log the list of languages
+loaded when the format was created: number (remember dialects can
+share it), name, hyphenation file and exceptions file.
+
+% \Describe{nocase}{} \New{3.9l} Language settings for uppercase and
+% lowercase mapping (as set by |\SetCase|) are ignored. Use only if there
+% are incompatibilities with other packages.
+
+\Describe{silent}{} \New{3.9l} No warnings and no \textit{infos} are
+written to the log file.\footnote{You can use alternatively the
+package \textsf{silence}.}
+
+\Describe{hyphenmap=}{\texttt{off} $\string|$ \texttt{first}
+$\string|$ \texttt{select} $\string|$ \texttt{other} $\string|$
+\texttt{other*}}
+
+\New{3.9g} Sets the behavior of case mapping for hyphenation,
+provided the language defines it.\footnote{Turned off in plain.} It
+can take the following values:
+\begin{description}
+\renewcommand\makelabel[1]{%
+  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
+\itemsep=-\parskip
+\item[off] deactivates this feature and no case mapping is applied;
+\item[first] sets it at the first switching commands in the
+  current or parent scope (typically, when the aux file is first read
+  and at |\begin{document}|, but also the first |\selectlanguage| in
+    the preamble), and it's the default if a single
+    language option has been stated;\footnote{Duplicated options count
+    as several ones.}
+\item[select] sets it only at |\selectlanguage|;
+\item[other] also sets it at |otherlanguage|;
+\item[other*] also sets it at |otherlanguage*| as well as in heads and
+  foots (if the option |headfoot| is used) and in auxiliary files (ie,
+  at |\select@language|), and it's the default if several language
+  options have been stated. The option |first| can be regarded as an
+  optimized version of \texttt{other*} for monolingual
+  documents.\footnote{Providing |foreign| is pointless, because the
+  case mapping applied is that at the end of the paragraph, but if either
+  \xetex{} or \luatex{} change this behavior it might be added. On
+  the other hand, |other| is provided even if I [JBL] think it isn't
+  really useful, but who knows.}
+\end{description}
+
+\Describe{bidi=}{\texttt{default} $\string|$ \texttt{basic}
+  $\string|$ \texttt{basic-r} $\string|$ \texttt{bidi-l} $\string|$
+  \texttt{bidi-r}}
+
+\New{3.14} Selects the bidi algorithm to be used in \luatex{} and
+\xetex{}. See sec.~\ref{bidi}.
+
+\Describe{layout=}{}
+
+\New{3.16} Selects which layout elements are adapted in bidi
+documents. See sec.~\ref{bidi}.
+
+\Describe{provide=}{\texttt{*}}
+\New{3.49} An alternative to |\babelprovide| for languages passed as
+options. See section~\ref{inifiles}, which describes also the variants
+|provide+=| and |provide*=|.
+
+\subsection{The \texttt{base} option}
+
+With this package option \babel{} just loads some basic macros (mainly
+the selectors), defines |\AfterBabelLanguage| and exits. It also
+selects the hyphenation patterns for the last language passed as option
+(by its name in |language.dat|). There are two main uses: classes and
+packages, and as a last resort in case there are, for some reason,
+incompatible languages. It can be used if you just want to select the
+hyphenation patterns of a single language, too.
+
+\Describe\AfterBabelLanguage{\marg{option-name}\marg{code}}
+
+This command is currently the only provided by |base|. Executes
+\meta{code} when the file loaded by the corresponding package option
+is finished (at |\ldf@finish|). The setting is global. So
+\begin{verbatim}
+\AfterBabelLanguage{french}{...}
+\end{verbatim}
+does ... at the end of |french.ldf|. It can be used in |ldf| files,
+too, but in such a case the code is executed only if
+\meta{option-name} is the same as |\CurrentOption| (which could not
+be the same as the option name as set in |\usepackage|!).
+
+\begin{example}
+  Consider two languages \textsf{foo} and \textsf{bar} defining the
+  same |\macro| with |\newcommand|. An error is raised if you attempt
+  to load both. Here is a way to overcome this problem:
+\begin{verbatim}
+\usepackage[base]{babel}
+\AfterBabelLanguage{foo}{%
+  \let\macroFoo\macro
+  \let\macro\relax}
+\usepackage[foo,bar]{babel}
+\end{verbatim}
+\end{example}
+
+\begin{note}
+  With a recent version of \LaTeX, an alternative method to execute
+  some code just after an |ldf| file is loaded is with |\AddToHook| and
+  the hook |file/<language>.ldf/after|. \Babel{} does not predeclare
+  it, and you have to do it yourself with |\ActivateGenericHook|.
+\end{note}
+
+\begin{warning}
+  Currently this option is not compatible with languages loaded on the
+  fly.
+\end{warning}
+
+\subsection{\texttt{provide} and \cs{babelprovide} – \texttt{ini} files}
+\label{inifiles}
+
+An alternative approach to define a language (or, more precisely, a
+\textit{locale}) is by means of an \texttt{ini} file. Currently
+\babel{} provides about 380 of these files containing the basic data
+required for a locale, covering about 300 languages, plus basic
+templates for about 400 locales.
+
+|ini| files are not meant only for \babel, and they has been devised as
+a resource for other packages. To easy interoperability between \TeX{}
+and other systems, they are identified with the BCP 47 codes as
+preferred by the Unicode Common Locale Data Repository, which was
+used as source for most of the data provided by these files, too (the
+main exception being the |\...name| strings).
+
+Most of them set the date, and many also the captions (Unicode and
+LICR). They will be evolving with the time to add more features
+(something to keep in mind if backward compatibility is important). The
+following section shows how to make use of them by means of
+|\babelprovide|. In other words, |\babelprovide| is mainly meant as
+alternative when the |ldf| does not exists or does not work as
+expected, and for secondary tasks.
+
+\begin{example}
+  There is an example of how to use an |ini| template file
+  \href{https://github.com/latex3/babel/issues/176#issuecomment-1080846575}{here},
+  for Phoenician (although currently this locale is bundled with
+  \babel).
+\end{example}
+
+\New{3.49} Alternatively, you can tell \babel{} to load all or some
+languages passed as options with |\babelprovide| and not from the |ldf|
+file in a few few typical cases. Thus, |provide=*| means ‘load the main
+language with the |\babelprovide| mechanism instead of the |ldf| file’
+applying the basic features, which in this case means |import,| |main|.
+There are (currently) three options:
+\begin{itemize}
+\item |provide=*| is the option just explained, for the main language;
+\item |provide+=*| is the same for additional languages (the main
+  language is still the |ldf| file);
+\item |provide*=*| is the same for all languages, ie, main and
+  additional.
+\end{itemize}
+
+\begin{note}
+  The \texttt{ini} files just define and set some parameters, but the
+  corresponding behavior is not always implemented. Also, there are
+  some limitations in the engines. A few remarks follow (which could no
+  longer be valid when you read this manual, if the packages involved
+  have been updated). The Harfbuzz renderer still has some issues, so as
+  a rule of thumb prefer the default renderer, and resort to Harfbuzz
+  only if the former does not work for you. Fortunately, fonts can be
+  loaded twice with different renderers; for example:
+\begin{verbatim}
+\babelfont[spanish]{rm}{FreeSerif}
+\babelfont[hindi]{rm}[Renderer=Harfbuzz]{FreeSerif}
+\end{verbatim}
+\begin{description}
+\itemsep=-\parskip
+\item[Arabic] Monolingual documents mostly work in \luatex, but it must
+  be fine tuned, particularly math and graphical elements like
+  |picture|. In \xetex{} \babel{} resorts to the \textsf{bidi} package,
+  which seems to work.
+\item[Hebrew] Niqqud marks seem to work in both engines, but depending 
+  on the font cantillation marks might be misplaced (\xetex{} or
+  \luatex{} with Harfbuzz seems better).
+\item[Devanagari] In \luatex{} and the default renderer many fonts
+work, but some others do not, the main issue being the ‘ra’. You may
+need to set explicitly the script to either |deva| or |dev2|, eg:
+\begin{verbatim}
+\newfontscript{Devanagari}{deva}
+\end{verbatim}
+  Other Indic scripts are still under development in the default
+  \luatex{} renderer, but should work with |Renderer=Harfbuzz|. They
+  also work with \xetex{}, although unlike with \luatex{} fine tuning
+  the font behavior is not always possible.
+\item[Southeast scripts] Thai works in both \luatex{} and \xetex{}, but
+  line breaking differs (rules are hard-coded in \xetex, but they can
+  be modified in \luatex). Lao seems to work, too, but there are no
+  patterns for the latter in \luatex{}. Khemer clusters are rendered
+  wrongly with the default renderer. The comment about Indic scripts
+  and \textsf{lualatex} also applies here. Some quick patterns can
+  help, with something similar to:
+\begin{verbatim}
+\babelprovide[import, hyphenrules=+]{lao}
+\babelpatterns[lao]{1ດ 1ມ 1ອ 1ງ 1ກ 1າ} % Random
+\end{verbatim}
+\item[East Asia scripts] Settings for either Simplified of Traditional
+  should work out of the box, with basic line breaking with any
+  renderer. Although for a few words and shorts texts the |ini| files
+  should be fine, CJK texts are best set with a dedicated framework
+  (\textsf{CJK}, \textsf{luatexja}, \textsf{kotex}, \textsf{CTeX},
+  etc.). This is what the class |ltjbook| does with \luatex, which can
+  be used in conjunction with the |ldf| for |japanese|, because the
+  following piece of code loads \textsf{luatexja}:
+\begin{verbatim}
+\documentclass[japanese]{ltjbook}
+\usepackage{babel}
+\end{verbatim}
+\item[Latin, Greek, Cyrillic] Combining chars with the default
+ \luatex{} font renderer might be wrong; on then other hand, with the
+ Harfbuzz renderer diacritics are stacked correctly, but many
+ hyphenations points are discarded (this bug is related to kerning,
+ so it depends on the font). With \xetex{} both combining characters
+ and hyphenation work as expected (not quite, but in most cases it
+ works; the problem here are font clusters).
+\end{description}
+\end{note}
+
+\begin{note}
+  Wikipedia defines a \textit{locale} as follows: “In computing, a
+  locale is a set of parameters that defines the user’s language,
+  region and any special variant preferences that the user wants to see
+  in their user interface. Usually a locale identifier consists of at
+  least a language code and a country/region code.” \Babel{} is moving
+  gradually from the old and fuzzy concept of \textit{language} to the
+  more modern of \textit{locale}. Note each locale is by itself a
+  separate “language”, which explains why there are so many files. This
+  is on purpose, so that possible variants can be created and/or
+  redefined easily.
+\end{note}
+
+% \begin{example}
+%   Let's assume you need only the basic features of `spanish`, so that
+%   the |ini| file is enough, and also a variant with your own
+%   hyphenation with
+% \end{example}
+
+\subsection{Selection based on BCP 47 tags}
+\label{bcp47}
+
+\New{3.43} The recommended way to select languages is that described at
+the beginning of this document. However, BCP 47 tags are becoming
+customary, particularly in documents (or parts of documents) generated
+by external sources, and therefore \babel{} will provide a set of tools
+to select the locales in different situations, adapted to the
+particular needs of each case. Currently, \babel{} provides autoloading
+of locales as described in this section. In these contexts autoloading
+is particularly important because we may not know on beforehand which
+languages will be requested.
+
+It must be activated explicitly, because it is primarily meant for
+special tasks. Mapping from BCP 47 codes to locale names are not
+hardcoded in \babel. Instead the data is taken from the \texttt{ini}
+files, which means currently about 350 tags are already recognized.
+\Babel{} performs a simple lookup in the following way: |fr-Latn-FR| $\to$
+|fr-Latn| $\to$ |fr-FR| $\to$ |fr|. Languages with the same resolved
+name are considered the same. Case is normalized before, so that
+|fr-latn-fr| $\to$ |fr-Latn-FR|. If a tag and a name overlap, the tag
+takes precedence.
+
+Here is a minimal example:
+\begin{verbatim}
+\documentclass{article}
+
+\usepackage[danish]{babel}
+
+_\babeladjust{_
+_  autoload.bcp47 = on,_
+_  autoload.bcp47.options = import_
+_}_
+
+\begin{document}
+
+Chapter in Danish: \chaptername.
+
+_\selectlanguage{de-AT}_
+
+\localedate{2020}{1}{30}
+
+\end{document}
+\end{verbatim}
+
+Currently the locales loaded are based on the \texttt{ini} files and
+decoupled from the main \texttt{ldf} files. This is by design, to
+ensure code generated externally produces the same result regardless of
+the languages requested in the document, but an option to use the
+\texttt{ldf} instead will be added in a future release, because both
+options make sense depending on the particular needs of each document
+(there will be some restrictions, however).
+
+The behavior is adjusted with |\babeladjust| with the following parameters:
+\begin{description}
+\item \texttt{autoload.bcp47} with values |on| and |off|.
+\item \texttt{autoload.bcp47.options}, which are passed to
+  |\babelprovide|; empty by default, but you may add \texttt{import}
+  (features defined in the corresponding |babel-...tex| file might not
+  be available).
+\item \texttt{autoload.bcp47.prefix}. Although the public name used in
+  selectors is the tag, the internal name will be different and
+  generated by prepending a prefix, which by default is
+  \texttt{bcp47-}. You may change it with this key.
+\end{description}
+
+\New{3.46} If an |ldf| file has been loaded, you can enable the
+corresponding language tags as selector names with:
+\begin{verbatim}
+\babeladjust{ bcp47.toname = on }
+\end{verbatim}
+(You can deactivate it with |off|.) So, if |dutch| is one of the
+package (or class) options, you can write |\selectlanguage{nl}|. Note
+the language name does not change (in this example is still |dutch|),
+but you can get it with |\localeinfo| or |\getlocaleproperty|. It
+must be turned on explicitly for similar reasons to those explained
+above.
+
+\section{Tailoring, customizing and modifying a language}
 
 Modifying the behavior of a language (say, the chapter
-“caption”), is sometimes necessary, but not always trivial. In the case
-of caption names a specific macro is provided, because this is perhaps
-the most frequent change:
+“caption”), is sometimes necessary, but not always trivial.
+
+Several language definition files use their own methods to set
+options. For example, \textsf{french} uses |\frenchsetup|,
+\textsf{magyar} (1.5) uses |\magyarOptions|; modifiers provided by
+|spanish| have no attribute counterparts. Macros setting
+options are also used (eg, |\ProsodicMarksOn| in \textsf{latin}).
+
+\subsection{Captions}
+
+In the case of caption names a\textit{} specific macro is provided,
+because this is perhaps the most frequent change:
 
 \Describe{\setlocalecaption}{%
   \marg{language-name}\marg{caption-name}\marg{string}}
@@ -2686,6 +2558,48 @@ hyphenation. The rest of the language definitions are not touched.
 Without the optional argument it just loads some additional tools if
 provided by the |ini| file, like extra counters.
 
+\subsection{Modifiers}
+
+\New{3.9c} The basic behavior of some languages can be modified when
+loading \babel{} by means of \textit{modifiers}. They are set after
+the language name, and are prefixed with a dot (only when the language
+is set as package option -- neither global options nor the |main| key
+accepts them). An example is (spaces are not significant and they can
+be added or removed):\footnote{No predefined ``axis'' for modifiers
+are provided because languages and their scripts have quite different
+needs.}
+\begin{verbatim}
+\usepackage[latin_.medieval_, spanish_.notilde.lcroman_, danish]{babel}
+\end{verbatim}
+
+Attributes (described below) are considered modifiers, ie, you can
+set an attribute by including it in the list of modifiers.
+
+\New{3.89} Alternatively, modifiers can be set with a separate option,
+with the keyword |modifiers| followed by a dot and the language name
+(note the language is not selected or loaded with this option). It is
+useful to activate some feature when the language is declared as a
+class option:
+\begin{verbatim}
+\documentclass[spanish]{report}
+\usepackage[_modifiers.spanish = notilde.lcroman_]{babel}
+\end{verbatim}
+
+\subsection{Language attributes}
+
+\Describe{\languageattribute}{\marg{language}}
+
+This is a user-level command, to be used in the preamble of a
+document (after |\usepackage[...]{babel}|), that declares which
+attributes are to be used for a given language. It takes two
+arguments: the first is the name of the language; the second,
+a (list of) attribute(s) to be used. Attributes must be set in the
+preamble and only once -- they cannot be turned on and off.
+The command checks whether the language is known in this document
+and whether the attribute(s) are known for this language.
+
+\subsection{Casing}
+
 \Describe{\BabelUppercaseMapping}
   {\marg{locale-name}\marg{codepoint}\marg{output}}
 \DescribeOther{\BabelLowercaseMapping}
@@ -2716,7 +2630,168 @@ be still assigned to that language.
   tag. These issues are expected be sorted out in future releases.
 \end{note}
 
-\subsection{Creating a language}
+\subsection{Modifying and adding values to \texttt{ini} files}
+
+\New{3.39} There is a way to modify the values of |ini| files when they
+are imported with |\babelprovide| or |provide=|. To set, say,
+|digits.native| in the |numbers| section, use something like
+|numbers/digits.native=abcdefghij|. Keys may be added, too. Without
+|import| you may modify the identification keys.
+
+This can be used to create private variants easily. All you need is to
+import the same |ini| file with a different locale name and different
+parameters. 
+
+\subsection{Hooks}
+
+\New{3.9a} A hook is a piece of code to be executed at certain
+events. Some hooks are predefined when \luatex{} and \xetex{} are
+used.
+
+\New{3.64} This is not the only way to inject code at those points. The
+events listed below can be used as a hook name in |\AddToHook| in the
+form |babel/<language-name>/<event-name>| (with |*| it’s applied to
+all languages), but there is a limitation, because the parameters
+passed with the \babel{} mechanism are not allowed. The |\AddToHook|
+mechanism does \textit{not} replace the current one in `babel`. Its
+main advantage is you can reconfigure `babel` even before loading it.
+See the example below.
+
+\Describe{\AddBabelHook}{\oarg{language}\marg{name}\marg{event}\marg{code}}
+
+The same name can be applied to several events. Hooks with a certain
+\marg{name} may be enabled and disabled for all defined events with
+|\EnableBabelHook|\marg{name}, |\DisableBabelHook|\marg{name}. Names
+containing the string |babel| are reserved (they are used, for example,
+by |\useshortands*| to add a hook for the event |afterextras|).
+\New{3.33} They may be also applied to a specific language with the
+optional argument; language-specific settings are executed after global
+ones.
+
+Current events are the following; in some of them you can use one to
+three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
+\begin{description}
+\renewcommand\makelabel[1]{%
+  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
+\itemsep=-\parskip
+\item[adddialect] (language name, dialect name) Used by
+  \file{luababel.def} to load the patterns if not preloaded.
+\item[patterns] (language name, language with encoding) Executed just
+  after the |\language| has been set. The second argument has the
+  patterns name actually selected (in the form of either |lang:ENC| or
+  |lang|).
+\item[hyphenation] (language name, language with encoding) Executed
+  locally just before exceptions given in |\babelhyphenation| are
+  actually set.
+\item[defaultcommands] Used (locally) in |\StartBabelCommands|.
+\item[encodedcommands] (input, font encodings) Used (locally) in
+  |\StartBabelCommands|. Both \xetex{} and \luatex{} make sure the
+  encoded text is read correctly.
+\item[stopcommands] Used to reset the above, if necessary.
+\item[write] This event comes just after the switching commands are
+  written to the |aux| file.
+\item[beforeextras] Just before executing |\extras<language>|. This
+  event and the next one should not contain language-dependent code
+  (for that, add it to |\extras<language>|).
+\item[afterextras] Just after executing |\extras<language>|. For
+  example, the following deactivates shorthands in all languages:
+\begin{verbatim}
+\AddBabelHook{noshort}{afterextras}{\languageshorthands{none}}
+\end{verbatim}
+\item[stringprocess] Instead of a parameter, you can manipulate the
+  macro |\BabelString| containing the string to be defined with
+  |\SetString|. For example, to use an expanded version of the string
+  in the definition, write:
+\begin{verbatim}
+\AddBabelHook{myhook}{stringprocess}{%
+  \protected@edef\BabelString{\BabelString}}
+\end{verbatim}
+\item[initiateactive] (char as active, char as other, original char)
+  \New{3.9i} Executed just after a shorthand has been `initiated'. The three
+  parameters are the same character with different catcodes: active,
+  other (|\string|'ed) and the original one.
+\item[afterreset] \New{3.9i} Executed when selecting a language just after
+  |\originalTeX| is run and reset to its base value, before executing
+  |\captions<language>| and |\date<language>|.
+\item[begindocument] \New{3.88} Executed before the code written by
+  |ldf| files with |\AtBeginDocument|. The optional argument with the
+  language in this particular case is the language that wrote the code.
+  The special value |/| means ‘return to the core \babel{} definitions’
+  (in other words, what follows hasn’t been written by any language).
+\item[foreign] \New{24.8} Executed by |\foreignlanguage| after the
+  language has been set up and just before typesetting the text from the
+  second argument. Its main purpose it to wrap the text with some
+  code, with the help of |\BabelWrapText|. For example, with:
+\begin{verbatim}
+\AddBabelHook{one}{foreign}{\BabelWrapText{\textit{##1}}
+\AddBabelHook{two}{foreign}{\BabelWrapText{\parse{##1}}
+\end{verbatim}
+the text becomes |\textit{\parse{<text>}}|. 
+
+\end{description}
+
+Four events are used in \file{hyphen.cfg}, which are handled in a
+quite different way for efficiency reasons -- unlike the precedent
+ones, they only have a single hook and replace a default definition.
+\begin{description}
+\renewcommand\makelabel[1]{%
+  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
+\itemsep=-\parskip
+\item[everylanguage] (language) Executed before every language patterns
+  are loaded.
+\item[loadkernel] (file) By default just defines a few basic commands.
+  It can be used to define different versions of them or to load a file.
+\item[loadpatterns] (patterns file) Loads the patterns file. Used by
+  \file{luababel.def}.
+\item[loadexceptions] (exceptions file) Loads the exceptions
+  file. Used by \file{luababel.def}.
+\end{description}
+
+\begin{example}
+The generic unlocalized \LaTeX{} hooks are predefined, so that you can
+write:
+\begin{verbatim}
+\AddToHook{babel/*/afterextras}{\frenchspacing} 
+\end{verbatim}
+which is executed always after the extras for the language being
+selected (and just before the non-localized hooks defined with
+|\AddBabelHook|).
+
+In addition, locale-specific hooks in the form
+|babel/<language-name>/<event-name>| are \textit{recognized}
+(executed just before the localized \babel{} hooks), but they are
+\textit{not predefined}. You have to do it yourself. For example, to
+set |\frenchspacing| only in |bengali|:
+\begin{verbatim}
+\ActivateGenericHook{babel/bengali/afterextras}
+\AddToHook{babel/bengali/afterextras}{\frenchspacing}
+\end{verbatim}
+\end{example}
+
+\subsection{Manage auxiliary files}
+
+\Describe{\BabelContentsFiles}{}
+\New{3.9a} This macro contains a list of ``toc'' types
+requiring a command to switch the language. Its default value is
+|toc,lof,lot|, but you may redefine it with |\renewcommand| (it's up
+to you to make sure no toc type is duplicated).
+
+\subsection{Code based on the selector}
+
+\Describe{\IfBabelSelectorTF}{\marg{selectors}\marg{true}\marg{false}}
+
+\New{3.67} Sometimes a different setup is desired depending on the
+selector used. Values allowed in \m{selectors} are |select|, |other|,
+|foreign|, |other*| (and also |foreign*| for the tentative starred
+version), and it can consist of a comma-separated list. For example:
+\begin{verbatim}
+\IfBabelSelectorTF{other, other*}{A}{B}
+\end{verbatim}
+is true with any of these two environment selectors.
+
+Its natural place of use is in hooks or in |\extras<language>|.
+
+\section{Creating a language}
 
 \New{3.10} And what if there is no style for your language or none fits
 your needs? You may then define quickly a language with the help of the
@@ -2781,7 +2856,7 @@ Blah \foreignlanguage{ipa}{ɔːlˈðəʊ} Blah.
   Locales with names based on BCP 47 codes can be created with
   something like:
 \begin{verbatim}
-  \babelprovide[import=en-US]{enUS}
+  \babelprovide[import=en-US]{en-US}
 \end{verbatim}
   Note, however, mixing ways to identify locales can lead to problems.
   For example, is \verb|yi| the name of the language spoken by the Yi
@@ -2912,9 +2987,10 @@ languages. The first ones are predefined by \LaTeX{} (see
   \item[Greek] |iota| converts the \textit{ypogegrammeni} (subscript muted
     iota) to capital iota when uppercasing.
   \item[Latin] |nouv| in |classicallatin| and |medievallatin| reverts
-    the default rules, which maps u ↔ V; |uv| in |ecclesianticallatin|
-    and the basic |latin| locale applies the map u ↔ V (by default it’s
-    u ↔ U and v ↔ V).
+    the default rules, which maps u $\leftrightarrow$ V; |uv| in
+    |ecclesianticallatin| and the basic |latin| locale applies the map
+    u $\leftrightarrow$ V (by default it’s u $\leftrightarrow$ U and v
+    $\leftrightarrow$ V).
 \end{description}
 
 \begin{example} For the latter:
@@ -2973,20 +3049,251 @@ one whose script is Latin.
   be still necessary.
 \end{note}
 
-\Describe{intraspace=}{\meta{base} \meta{shrink} \meta{stretch}}
-Sets the interword space for the writing system of the language, in em
-units (so, |0 .1 0| is |0em plus .1em|). Like |\spaceskip|, the em unit
-applied is that of the current text (more precisely, the previous 
-glyph). Currently used only in Southeast Asian scripts, like Thai, and
-CJK.
-
-\Describe{intrapenalty=}{\meta{penalty}}
-Sets the interword penalty for the writing system of this language.
-Currently used only in Southeast Asian scripts, like Thai. Ignored if 0
-(which is the default value).
-
 \Describe{transforms=}{\meta{transform-list}}
 See section~\ref{transforms}.
+
+\begin{note}
+  (1) If you need shorthands, you can define them with |\useshorthands|
+  and |\defineshorthand| as described above. (2) Captions and |\today|
+  are ``ensured'' with |\babelensure| (this is the default in
+  |ini|-based languages).
+\end{note}
+
+\begin{example} When creating a locale from another locale, you may want
+to reset some properties, like the BCP-47 tags. Here is an example of
+how to do it:
+\begin{verbatim}
+\babelprovide{spanish}      % import=es by default
+\babelprovide[
+    import=es,
+    _identification/tag.bcp47 = es-x-medieval_,
+    _identification/extension.x.tag.bcp47 = medieval_]
+  {medievalspanish}
+\end{verbatim}
+\end{example}
+
+\section{Locale features}
+
+\subsection{Hyphenation and line breaking – 1. Commands}
+
+\Babel{} deals with three kinds of line breaking rules: Western,
+typically the LGC group, South East Asian, like Thai, and CJK, but
+support depends on the engine: \textsf{pdftex} only deals with the
+former, \xetex{} also with the second one (although in a limited way),
+while \luatex{} provides basic rules for the latter, too. With \luatex{}
+there are also tools for non-standard hyphenation rules, explained in
+the next section.
+
+\Describe{\babelhyphenation}{\texttt{[}\langlist\texttt{]}%
+    \marg{exceptions}}
+
+\New{3.9a} Sets hyphenation exceptions for the languages given
+or, without the optional argument, for \textit{all} languages (eg,
+proper nouns or common loan words, and of course monolingual
+documents). Multiple declarations work much like |\hyphenation| (last
+wins), but language exceptions take precedence over global ones.
+
+It can be used only in the preamble, and exceptions are set when the
+language is first selected, thus taking into account changes of
+|\lccodes|'s done in |\extras<language>| as well as the language-specific
+encoding (not set in the preamble by default). Multiple
+|\babelhyphenation|'s are allowed. For example:
+\begin{verbatim}
+\babelhyphenation{Wal-hal-la Dar-bhan-ga}
+\end{verbatim}
+
+Listed words are saved expanded and therefore it relies on the
+LICR. Of course, it also works without the LICR if the input and the
+font encodings are the same, like in Unicode based engines.
+
+\begin{note}
+  Using |\babelhyphenation| with Southeast Asian scripts is mostly
+  pointless. But with |\babelpatterns| (below) you may fine-tune line
+  breaking (only \luatex). For example:
+\begingroup
+\catcode`@=13
+\def@#1@{{\fontspec{Loma}#1}}
+\begin{verbatim}
+\babelpatterns[thai]{@ศึก@2@ษา@}
+\end{verbatim}
+\endgroup
+  Even if there are no patterns for the language, you can add at least
+  some typical cases.
+\end{note}
+
+\begin{note}
+  Use |\babelhyphenation| instead of |\hyphenation| to set hyphenation
+  exceptions in the preamble before any language is explicitly set with
+  a selector. In the preamble the hyphenation rules are not always
+  fully set up and an error can be raised.
+\end{note}
+
+\Describe{\babelpatterns}{\texttt{[}\langlist\texttt{]}%
+    \marg{patterns}}
+
+\New{3.9m} \textit{In \textsf{luatex} only},\footnote{With
+\textsf{luatex} exceptions and patterns can be modified almost
+freely. However, this is very likely a task for a separate package
+and \texttt{babel} only provides the most basic tools.} adds or
+replaces patterns for the languages given or, without the optional
+argument, for \textit{all} languages. If a pattern for a certain
+combination already exists, it gets replaced by the new one.
+
+It can be used only in the preamble, and patterns are added when the
+language is first selected, thus taking into account changes of
+|\lccodes|'s done in |\extras<language>| as well as the language-specific
+encoding (not set in the preamble by default). Multiple
+|\babelpatterns|'s are allowed.
+
+Listed patterns are saved expanded and therefore it relies on the
+LICR. Of course, it also works without the LICR if the input and the
+font encodings are the same, like in Unicode based engines.
+
+\New{3.31} (Only \luatex.) With |\babelprovide| and |import|ed CJK
+languages, a simple generic line breaking algorithm (push-out-first) is
+applied, based on a selection of the Unicode rules (\New{3.32} it is
+disabled in verbatim mode, or more precisely when the hyphenrules
+are set to |nohyphenation|). It can be activated alternatively by
+setting explicitly the |intraspace|.
+
+\New{3.27} Interword spacing for Thai, Lao and Khemer is activated
+automatically if a language with one of those scripts are loaded with
+|\babelprovide|. See the sample on the \babel{} repository. With both
+Unicode engines, spacing is based on the ``current'' em unit (the size
+of the previous char in \luatex, and the font size set by the last
+|\selectfont| in \xetex).
+
+\begin{note}
+  With Unicode engines, a line break can happen just before an explicit
+  combining char (eg, \textit{\~{g}}, used in Guarani and Filipino, is
+  not included as a combined char and it’s represented in Unicode as
+  |U+0067|~|U+0303|. This issue is not directly related to \babel, but
+  to the hyphenation patterns and/or the font renderer. However, at
+  least with \luatex{} there is a workaround (change the language name
+  to what you are using):
+\begin{verbatim}
+\babelposthyphenation{guarani}{ | [{0300}-{036F}] }{ remove, {} }
+\end{verbatim}
+The Lua pattern means ‘a discretionary followed by a character in the
+range |U+0300|--|U+0367| (which contains combining chars)’. An
+alternative to a transform is |\babelpatterns|.
+\end{note}
+
+\Describe{\babelhyphenmins}{%
+  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
+  \texttt{[}\langlist\texttt{]}%
+  \marg{left}\marg{right}\oarg{hyphenationmin}}
+
+\New{24.10} See the news page for the rationale for this commands. It
+sets the corresponding values for the given languages (all languages
+without the optional argument). With the star, the values are also
+applied immediately (the optional argument and the star are currently
+incompatible). The optional argument is available only in \luatex.
+\begin{example}
+You are typesetting a book with wide lines and want to limit the
+number of hyphens in all languages:
+\begin{verbatim}
+  \babelhyphenmins{3}{4}
+\end{verbatim}
+But there are also some 3-column text and you want to be more flexible:
+\begin{verbatim}
+  \begin{multicols}{3}
+  \babelhyphenmins*{2}{3}
+  ...
+  \end{multicols}
+\end{verbatim}
+\end{example}
+
+\Describe{\babelhyphen}{%
+  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}\marg{type}}
+\DescribeOther{\babelhyphen}{%
+  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}\marg{text}}
+
+\New{3.9a} It is customary to classify hyphens in two types: (1)
+\textit{explicit} or \textit{hard hyphens}, which in \TeX\ are
+entered as \verb|-|, and (2) \textit{optional} or \textit{soft
+hyphens}, which are entered as \verb|\-|. Strictly, a \textit{soft
+hyphen} is not a hyphen, but just a breaking opportunity or, in
+\TeX\ terms, a ``discretionary''; a \textit{hard hyphen} is a hyphen
+with a breaking opportunity after it. A further type is a
+\textit{non-breaking hyphen}, a hyphen without a breaking
+opportunity.
+
+In \TeX, \verb|-| and \verb|\-| forbid further breaking opportunities
+in the word. This is the desired behavior very often, but not always,
+and therefore many languages provide shorthands for these
+cases. Unfortunately, this has not been done consistently: for
+example, \verb|"-| in Dutch, Portuguese, Catalan or Danish is a hard
+hyphen, while in German, Spanish, Norwegian, Slovak or Russian is a
+soft hyphen. Furthermore, some of them even redefine |\-|, so that you
+cannot insert a soft hyphen without breaking opportunities in the rest
+of the word.
+
+Therefore, some macros are provided with a set of basic ``hyphens''
+which can be used by themselves, to define a user shorthand, or even
+in language files.
+\begin{itemize}
+\item |\babelhyphen{soft}| and |\babelhyphen{hard}| are self
+  explanatory.
+\item |\babelhyphen{repeat}| inserts a hard hyphen which is repeated
+  at the beginning of the next line, as done in languages like
+  Polish, Portuguese and Spanish.
+\item |\babelhyphen{nobreak}| inserts a hard hyphen without a break
+  after it (even if a space follows).
+\item |\babelhyphen{empty}| inserts a break opportunity without
+  a hyphen at all.
+\item |\babelhyphen|\marg{text} is a hard ``hyphen'' using \m{text}
+  instead. A typical case is |\babelhyphen{/}|.
+\end{itemize}
+With all of them, hyphenation in the rest of the word is enabled. If
+you don't want to enable it, there is a starred counterpart:
+|\babelhyphen*{soft}| (which in most cases is equivalent to the
+original |\-|), |\babelhyphen*{hard}|, etc.
+
+Note |hard| is also good for isolated prefixes (eg, \textit{anti-})
+and |nobreak| for isolated suffixes (eg, \textit{-ism}), but in both
+cases |\babelhyphen*{nobreak}| is usually better.
+
+There are also some differences with \LaTeX: (1) the character used is
+that set for the current font, while in \LaTeX{} it is hardwired to
+|-| (a typical value); (2) the hyphen to be used in fonts with a
+negative |\hyphenchar| is  |-|, like in \LaTeX, but it can be changed to
+another value by redefining |\babelnullhyphen|; (3) a break after the
+hyphen is forbidden if preceded by a glue ${>}0$~pt (at the beginning
+of a word, provided it is not immediately preceded by, say, a
+parenthesis).
+
+\Describe{\begin\menv{hyphenrules}}{\marg{language}\Eenv{hyphenrules}}
+
+The environment \Lenv{hyphenrules} can be used to select \emph{only} the
+hyphenation rules to be used (it can be used as command, too). This can
+for instance be used to select ‘nohyphenation’, provided that in
+\file{language.dat} the ‘language’ \textsf{nohyphenation} is defined by
+loading \file{zerohyph.tex}. It deactivates language shorthands, too
+(but not user shorthands).
+
+Except for these simple uses, |hyphenrules| is deprecated and
+|otherlanguage*| (the starred version) is preferred, because the former
+does not take into account possible changes in encodings of characters
+like, say, |'| done by some languages (eg, \textsf{italian},
+\textsf{french}, \textsf{ukrainian}).
+
+\begin{note}
+  For the hyphenation to work correctly, lccodes cannot change, because
+  \TeX{} only takes into account the values when the paragraph is
+  hyphenated, i.e., when it has been finished.\footnote{This explains
+  why \LaTeX{} assumes the lowercase mapping of T1 and does not provide
+  a tool for multiple mappings. Unfortunately, \cs{savinghyphcodes} is
+  not a solution either, because lccodes for hyphenation are frozen in
+  the format and cannot be changed.} So, if you write a chunk of French
+  text with |\foreignlanguage|, the apostrophes might not be taken into
+  account. This is a limitation of \TeX, not of \babel. Alternatively,
+  you may use |\useshorthands| to activate |'| and |\defineshorthand|,
+  or redefine |\textquoteright| (the latter is called by the non-ASCII
+  right quote).
+\end{note}
+
+\subsection{Hyphenation and line breaking – 2. ‘Provide’ options}
 
 \Describe{justification=}{\texttt{unhyphenated} $\string|$
 \texttt{kashida} $\string|$ \texttt{elongated} $\string|$
@@ -2995,14 +3302,14 @@ See section~\ref{transforms}.
 dependent, so that they will not be applied to other languages.
 
 The first one (|unhyphenated|) activates a line breaking mode that
-allows spaces to be stretched to arbitrary amounts. Although for
-European standards the result may look odd, in some writing systems,
-like Malayalam and other Indic scripts, this has been the customary
-(although not always the desired) practice. Because of that, no locale
-sets currently this mode by default (Amharic is an exception). Unlike
-|\sloppy|, the |\hfuzz| and the |\vfuzz| are not changed, because this
-line breaking mode is not really ‘sloppy’ (in other words, overfull
-boxes are reported as usual).
+allows breaks only at spaces, which can be stretched to arbitrary
+amounts. Although for European standards the result may look odd, in
+some writing systems, like Malayalam and other Indic scripts, this has
+been the customary (although not always the desired) practice. Because
+of that, no locale sets currently this mode by default (Amharic is an
+exception). Unlike |\sloppy|, the |\hfuzz| and the |\vfuzz| are not
+changed, because this line breaking mode is not really ‘sloppy’ (in
+other words, overfull boxes are reported as usual).
 
 The second and the third are for the Arabic script. It sets the
 linebreaking and justification method, which can be based on the
@@ -3021,12 +3328,321 @@ It’s still somewhat experimental. Again, there is an explanation in the
 \New{3.59} Just a synonymous for \texttt{justification}. Depending on
 the language, this name can make more sense.
 
-\begin{note}
-  (1) If you need shorthands, you can define them with |\useshorthands|
-  and |\defineshorthand| as described above. (2) Captions and |\today|
-  are ``ensured'' with |\babelensure| (this is the default in
-  |ini|-based languages).
+\Describe{intraspace=}{\meta{base} \meta{shrink} \meta{stretch}}
+Sets the interword space for the writing system of the language, in em
+units (so, |0 .1 0| is |0em plus .1em|). Like |\spaceskip|, the em unit
+applied is that of the current text (more precisely, the previous 
+glyph). Currently used only in Southeast Asian scripts, like Thai, and
+CJK.
+
+\Describe{intrapenalty=}{\meta{penalty}}
+Sets the interword penalty for the writing system of this language.
+Currently used only in Southeast Asian scripts, like Thai. If 0, which
+is the default value, no penalty is inserted.
+
+\subsection{Shorthands – 1. Commands}
+
+A \textit{shorthand} is a sequence of one or two characters that
+expands to arbitrary \TeX{} code.
+
+Shorthands can be used for different kinds of things; for example:
+(1) in some languages shorthands such as |"a| are defined to be able
+to hyphenate the word if the encoding is |OT1|; (2) in some languages
+shorthands such as |!| are used to insert the right amount of white
+space; (3) several kinds of discretionaries and breaks can be inserted
+easily with |"-|, |"=|, etc.
+
+The package \textsf{inputenc} as well as \xetex{} and \luatex{} have
+alleviated entering non-ASCII characters, but minority languages and
+some kinds of text can still require characters not directly available
+on the keyboards (and sometimes not even as separated or precomposed
+Unicode characters). As to the point 2, now \textsf{pdfTeX} provides
+|\knbccode|, and \luatex{} can manipulate the glyph list. Tools for
+point 3 can be still very useful in general.
+
+There are four levels of shorthands: \textit{user}, \textit{language},
+\textit{system}, and \textit{language user} (by order of precedence).
+In most cases, you will use only shorthands provided by languages.
+
+\begin{note} Keep in mind the following:
+\begin{enumerate}
+\item Activated chars used for two-char shorthands cannot be followed
+  by a closing brace |}| and the spaces following are gobbled.  With
+  one-char shorthands (eg,~|:|), they are preserved.
+\item If on a certain level (system, language, user, language user)
+  there is a one-char shorthand, two-char ones starting with that char
+  and on the same level are ignored.
+\item Since they are active, a shorthand cannot contain the same
+  character in its definition (except if deactivated with, eg,
+  |\string|).
+\end{enumerate}
 \end{note}
+
+\begin{troubleshooting}
+\trouble{Argument of \textbackslash language@active@arg"
+has an extra \textbraceright}
+A typical error when using shorthands is the following:
+\begin{verbatim}
+! Argument of \language@active@arg" has an extra }.
+\end{verbatim}
+It means there is a closing brace just after a shorthand, which is not
+allowed (eg,~|"}|). Just add |{}| after (eg,~|"{}}|).
+\end{troubleshooting}
+
+\Describe{\shorthandon}{\marg{shorthands-list}}
+\DescribeOther{\shorthandoff}{%
+\colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
+\marg{shorthands-list}}
+It is sometimes necessary to switch a shorthand
+character off temporarily, because it must be used in an
+entirely different way. For this purpose, the user commands
+|\shorthandoff| and |\shorthandon| are provided. They each take a
+list of characters as their arguments.
+
+The command |\shorthandoff| sets the |\catcode| for each of the
+characters in its argument to other (12); the command |\shorthandon|
+sets the |\catcode| to active (13). Both commands only work on `known'
+shorthand characters, and an error will be raised otherwise. You can
+check if a character is a shorthand with |\ifbabelshorthand| (see
+below).
+
+\New{3.9a} However, |\shorthandoff| does not behave as
+you would expect with characters like |~| or |^|, because they
+usually are not ``other''. For them |\shorthandoff*| is provided,
+so that with
+\begin{verbatim}
+\shorthandoff*{~^}
+\end{verbatim}
+|~| is still active, very likely with the meaning of a non-breaking
+space, and |^| is the superscript character. The catcodes used are
+those when the shorthands are defined, usually when language files are
+loaded.
+
+If you do not need shorthands, or prefer an alternative approach of
+your own, you may want to switch them off with the package option
+|shorthands=off|, as described below.
+
+\begin{warning}
+  It is worth emphasizing these macros are meant for temporary changes.
+  Whenever possible shorthands must be always enabled or disabled.
+\end{warning}
+
+\Describe{\useshorthands}{%
+\colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
+\marg{char}}
+
+It initiates the definition of user-defined
+shorthand sequences. It has one argument, the character that starts
+these personal shorthands.
+
+\New{3.9a} User shorthands are not always alive, as they may
+be deactivated by languages (for example, if you use |"| for your user
+shorthands and switch from \textsf{german} to \textsf{french}, they
+stop working). Therefore, a starred version
+|\useshorthands*|\marg{char} is provided, which makes sure shorthands
+are always activated.
+
+If the package option |shorthands| is used, you must include any
+character to be activated with |\useshorthands|.
+
+\Describe\defineshorthand{\texttt{[}\langlist\texttt{]}%
+     \marg{shorthand}\marg{code}}
+
+It takes two arguments: the first is
+a one- or two-character shorthand sequence, and the second is the
+code the shorthand should expand to.
+
+\New{3.9a} An optional argument allows to (re)define language and
+system shorthands (some languages do not activate shorthands, so you
+may want to add |\languageshorthands|\marg{language} to the corresponding
+|\extras<language>|, as explained below). By default, user shorthands
+are (re)defined.
+
+User shorthands override language ones, which in turn override system
+shorthands. Language-dependent user shorthands take precedence over
+``normal'' user shorthands.
+
+\begin{example}
+  Let's assume you want a unified set of shorthand for discretionaries
+  (languages do not define shorthands consistently, and |"-|, |\-|,
+  |"=| have different meanings).  You can start with, say:
+\begin{verbatim}
+\useshorthands*{"}
+\defineshorthand{"*}{\babelhyphen{soft}}
+\defineshorthand{"-}{\babelhyphen{hard}}
+\end{verbatim}
+  However, the behavior of hyphens is language-dependent. For example, in
+  languages like Polish and Portuguese, a hard hyphen inside compound
+  words are repeated at the beginning of the next line. You can then
+  set:
+\begin{verbatim}
+\defineshorthand[*polish,*portuguese]{"-}{\babelhyphen{repeat}}
+\end{verbatim}
+  Here, options with |*| set a language-dependent user shorthand,
+  which means the generic one above only applies for the rest of
+  languages; without |*| they would (re)define the language shorthands
+  instead, which are overridden by user ones.
+
+  Now, you have a single unified shorthand (|"-|), with a
+  content-based meaning (`compound word hyphen') whose visual behavior
+  is that expected in each context.
+\end{example}
+
+\Describe{\languageshorthands}{\marg{language}}
+
+Used to switch the shorthands on the
+language level. It takes one argument, the name of a language or
+|none| (the latter does what its name suggests).\footnote{Actually,
+any name not corresponding to a language group does the same as
+\texttt{none}. However, follow this convention because it might be
+enforced in future releases of \babel{} to catch possible errors.}
+Note that for this to work the language should have been specified as
+an option when loading the \babel\ package.  For example, you can use
+in \textsf{english} the shorthands defined by \textsf{ngerman} with
+\begin{verbatim}
+\addto\extrasenglish{\languageshorthands{ngerman}}
+\end{verbatim}
+(You may also need to activate them as user shorthands in the preamble
+with, for example, |\useshorthands| or |\useshorthands*|.)
+
+\begin{example}
+  Very often, this is a more convenient way to deactivate shorthands
+  than |\shorthandoff|, for example if you want to define a macro
+  to easy typing phonetic characters with \textsf{tipa}:
+\begin{verbatim}
+\newcommand{\myipa}[1]{{_\languageshorthands{none}_\tipaencoding#1}}
+\end{verbatim}
+\end{example}
+
+\Describe{\babelshorthand}{\marg{shorthand}}
+With this command you can use a shorthand even if (1) not activated in
+\texttt{shorthands} (in this case only shorthands for the current
+language are taken into account, ie, not user shorthands), (2) turned
+off with |\shorthandoff| or (3) deactivated with the internal
+|\bbl@deactivate|; for example, \verb|\babelshorthand{"u}| or
+\verb|\babelshorthand{:}|.  (You can conveniently define your own
+macros, or even your own user shorthands provided they do not overlap.)
+
+\begin{example}
+  Since by default shorthands are not activated until
+  |\begin{document}|, you may use this macro when defining the |\title|
+  in the preamble:
+\begin{verbatim}
+\title{Documento científico_\babelshorthand{"-}_técnico}
+\end{verbatim}
+\end{example}
+
+\bigskip
+
+For your records, here is a list of shorthands, but you must double
+check them, as they may change:\footnote{Thanks to Enrico Gregorio}
+
+\begin{description}
+\itemsep=-\parskip
+\item[Languages with no shorthands] Croatian, English (any variety),
+  Indonesian, Hebrew, Interlingua, Irish, Lower Sorbian, Malaysian,
+  North Sami, Romanian, Scottish, Welsh
+\item[Languages with only \texttt{"} as defined shorthand character]
+  Albanian, Bulgarian, Danish, Dutch, Finnish, German (old and new
+  orthography, also Austrian), Icelandic, Italian, Norwegian, Polish,
+  Portuguese (also Brazilian), Russian, Serbian (with Latin script),
+  Slovene, Swedish, Ukrainian, Upper Sorbian
+\item[Basque] |" ' ~|
+\item[Breton] |: ; ? !|
+\item[Catalan] |" ' `|
+\item[Czech] |" -|
+\item[Esperanto] |^|
+\item[Estonian] |" ~|
+\item[French] (all varieties) |: ; ? !|
+\item[Galician] |" . ' ~ < >|
+\item[Greek] (ancient, polutoniko, only 8-bit \TeX) |~|, (optional, see
+the manual for Greek) |;|
+\item[Hungarian] |`|
+\item[Kurmanji] |^|
+\item[Latin] |" ^ =|
+\item[Slovak] |" ^ ' -|
+\item[Spanish] |" . < > ' ~|
+\item[Turkish] |: ! =|
+\end{description}
+In addition, the \babel{} core declares |~| as a one-char shorthand
+which is let, like the standard |~|, to a non breaking
+space.\footnote{This declaration serves to nothing, but it is
+preserved for backward compatibility.}
+
+\Describe\ifbabelshorthand{\marg{character}\marg{true}\marg{false}}
+
+\New{3.23} Tests if a character has been made a shorthand.
+
+\begin{note}
+  \catcode`\|=12\relax Both \textsf{ltxdoc} and \textsf{babel} use
+  \verb|\AtBeginDocument| to change some catcodes, and \babel{} reloads
+  \textsf{hhline} to make sure \verb|:| has the right one, so if you
+  want to change the catcode of \verb/|/ it has to be done using the
+  same method at the proper place, with
+\begin{verbatim}
+\AtBeginDocument{\DeleteShortVerb{\|}}
+\end{verbatim}
+  \textit{before} loading \babel. This way, when the document begins
+  the sequence is (1) make \verb/|/ active (\textsf{ltxdoc}); (2) make
+  it inactive (your settings); (3) make \babel{} shorthands active
+  (\textsf{babel}); (4) reload \textsf{hhline} (\textsf{babel}, now
+  with the correct catcodes for \verb/|/ and
+  \verb|:|).\catcode`\|=\active
+\end{note}
+
+\begin{note}
+Using a character mathematically active (ie, with math code |"8000|) as
+a shorthand can make \TeX{} enter in an infinite loop in some rare
+cases. (There is a partial solution.)
+\end{note}
+
+\subsection{Shorthands – 2. Package options}
+
+\Describe{activeacute}{}
+\DescribeOther{activegrave}{}
+
+For some languages \babel\ supports these options to set |'| and |`|,
+respectively, as a shorthand in case it is not done by default.
+
+
+\Describe{shorthands=}{\meta{char}\meta{char}...
+$\string|$ \texttt{off}}
+The only language shorthands activated
+are those given, like, eg:
+\begin{verbatim}
+\usepackage[esperanto,french,_shorthands=:;!?_]{babel}
+\end{verbatim}
+If \verb|'| is included, \texttt{activeacute} is set; if \verb|`| is
+included, \texttt{activegrave} is set.  Active characters (like
+\verb|~|) should be preceded by \verb|\string| (otherwise they will be
+expanded by \LaTeX{} before they are passed to the package and
+therefore they will not be recognized); however, |t| is provided for
+the common case of |~| (as well as |c| for not so common case of the
+comma).
+
+With |shorthands=off| no language shorthands are defined,
+As some languages use this mechanism for tools not available
+otherwise, a macro \verb|\babelshorthand| is defined, which allows
+using them; see above.
+
+\Describe{safe=}{\texttt{none} $\string|$ \texttt{ref} $\string|$
+\texttt{bib}} Some \LaTeX{} macros are redefined so that using
+shorthands is safe. With \texttt{safe=bib} only |\nocite|, |\bibcite|
+and |\bibitem| are redefined. With |safe=ref| only |\newlabel|, |\ref|
+and |\pageref| are redefined (as well as a few macros from
+\textsf{varioref} and \textsf{ifthen}).
+
+With |safe=none| no macro is redefined. This option is strongly
+recommended, because a good deal of incompatibilities and errors are
+related to these redefinitions. As of \New{3.34}, in $\epsilon$\TeX{}
+based engines (ie, almost every engine except the oldest ones)
+shorthands can be used in these macros (formerly you could not).
+
+\Describe{math=}{\texttt{active} $\string|$ \texttt{normal}}
+Shorthands are mainly intended for text, not for math. By setting this
+option with the value |normal| they are deactivated in math mode
+(default is |active|) and things like |${a'}$| (a closing brace after
+a shorthand) are not a source of trouble anymore.
 
 \subsection{Digits and counters}
 
@@ -3042,9 +3658,9 @@ well dates do not rely on |\arabic|.)
 
 For example:
 \begin{verbatim}
-\babelprovide[import]{telugu}
-  % Or also, if you want:
-  % \babelprovide[import, maparabic]{telugu}
+\usepackage[telugu, provide=*]{babel}
+  % Or also, if you want, with:
+  % provide={ maparabic }
 \babelfont{rm}{Gautami} % With luatex, better with Harfbuzz
 \begin{document}
 _\telugudigits{1234}_
@@ -3054,6 +3670,7 @@ _\telugucounter{section}_
 
 Languages providing native digits in all or some variants are:
 \begin{multicols}{5}
+\parindent0pt
 Arabic\\ 
 Assamese\\
 Bangla\\ 
@@ -3107,7 +3724,7 @@ is applied to the typeset text (not math, PDF bookmarks, etc.) before
 bidi and fonts are processed (ie, to the node list as generated by the
 \TeX{} code). This means the local digits have the correct
 bidirectional behavior (unlike |Numbers=Arabic| in \textsf{fontspec},
-which is deprecated).
+which is deprecated). Another option is the transform |digits.native|.
 
 \begin{note}
   With \xetex{} you can use the option |Mapping| when defining a
@@ -3286,347 +3903,6 @@ The optional argument converts the given date, in the form
 calendars accept only a restricted range of years. Please, refer to the
 page on the news for 3.76 in the \babel{} site for further details.
 
-\subsection{Accessing language info}
-
-\Describe{\localename}{}
-\DescribeOther{\mainlocalename}{}
-\DescribeOther{\languagename}{}
-
-\New{24.10} The control sequence |\localename| contains the name of the current
-locale. This is now the recommended way to retrieve the current
-language. In addtion, |\mainlocalename| contains the main language.
-
-|\languagename| is still used internally, but it is now discouraged at
-the user level.
-
-\begin{warning}
-  Due to a bug, which lead to some internal inconsistencies in
-  catcodes, |\languagename| should \textit{not} be used to test which
-  is the current language. Rely on |\localename| or, if you still need
-  |\languagename| for some reason, on \textsf{iflang}, by Heiko Oberdiek.
-\end{warning}
-
-\Describe{\iflanguage}{\marg{language}\marg{true}\marg{false}}
-
-Here ``language'' is used in the \TeX{} sense, as a set of hyphenation
-patterns, and \textit{not} as its \textsf{babel} name. The first
-argument is the name of a language.
-
-\Describe{\localeinfo}{%
- \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}{\marg{field}}}
-
-\New{3.38} If an |ini| file has been loaded for the current language,
-you may access the information stored in it. This macro is fully
-expandable, and the available fields are:
-\begin{description}
-\itemsep=-\parskip
-\item[|name.english|] as provided by the Unicode CLDR.
-\item[|tag.ini|] is the tag of the |ini| file (the way this
-  file is identified in its name).
-\item[|tag.bcp47|] is the full BCP 47 tag (see the warning below). This
-  is the value to be used for the ‘real' provided tag (\babel{} may
-  fill other fields if they are considered necessary).
-\item[|language.tag.bcp47|] is the BCP 47 language tag.
-\item[|tag.opentype|] is the tag used by OpenType (usually, but not
-  always, the same as BCP 47).
-\item[|script.name|], as provided by the Unicode CLDR.
-\item[|script.tag.bcp47|] is the BCP 47 tag of the script
-  used by this locale. This is a required field for the fonts to be
-  correctly set up, and therefore it should be always defined.
-\item[|script.tag.opentype|] is the tag used by OpenType (usually,
-  but not always, the same as BCP 47).
-\item[|region.tag.bcp47|] is the BCP 47 tag of the region or territory.
-  Defined only if the locale loaded actually contains it (eg, |es-MX|
-  does, but |es| doesn’t), which is how locales behave in the CLDR.
-  \New{3.75}
-\item[|variant.tag.bcp47|] is the BCP 47 tag of the variant (in the BCP 47
-  sense, like |1901| for German). \New{3.75}
-\item[|extension.|\m{s}|.tag.bcp47|] is the BCP 47 value of the
-  extension whose singleton is \m{s} (currently the recognized
-  singletons are |x|, |t| and |u|). The internal syntax can be somewhat
-  complex, and this feature is still somewhat tentative. An example is
-  \textsf{classicallatin} which sets |extension.x.tag.bcp47| to |classic|.
-  \New{3.75}
-\end{description}
-
-\begin{note}
-  Currently, |x| is used for two separate functions, namely,
-  identifying a \babel{} locale without a BCP47 tag and setting an
-  alternative set of rules for casing.
-\end{note}
-
-\begin{warning}
-  \New{3.46} As of version 3.46 |tag.bcp47| returns the full BCP 47
-  tag. Formerly it returned just the language subtag, which was clearly
-  counterintuitive.
-\end{warning}
-
-\New{3.75} Sometimes, it comes in handy to be able to use |\localeinfo|
-in an expandable way even if something went wrong (for example, the
-locale currently active is undefined). For these cases, |localeinfo*|
-just returns an empty string instead of raising an error. Bear in mind
-that \babel{}, following the CLDR, may leave the region unset, which
-means |\getlocaleproperty*|, described below, is the preferred
-command, so that the existence of a field can be checked before. This
-also means building a string with the language and the region with
-|\localeinfo*{language.tab.bcp47}|\allowbreak |-|\allowbreak
-|\localeinfo*{region.tab.bcp47}| is not usually a good idea (because of
-the hyphen).
-
-\Describe{\getlocaleproperty}{%
-  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
-  \marg{macro}\marg{locale}\marg{property}}
-
-\New{3.42} The value of any locale property as set by the |ini| files
-(or added/modified with |\babelprovide|) can be retrieved and stored in
-a macro with this command. For example, after:
-\begin{verbatim}
-  \getlocaleproperty\hechap{hebrew}{captions/chapter}
-\end{verbatim}
-the macro |\hechap| will contain the string
-{\fontspec[Scale=.87,Script=Hebrew]{Liberation Mono}\textdir TRT פרק}.
-
-If the key does not exist, the macro is set to |\relax| and an error is
-raised. \New{3.47} With the starred version no error is raised, so that
-you can take your own actions with undefined properties.
-
-\Describe{\localeid}{}
-Each language in the \babel{} sense has its own unique numeric
-identifier, which can be retrieved with |\localeid|.
-
-The |\localeid| is not the same as the |\language| identifier, which
-refers to a set of hyphenation patterns (which, in turn, is just a
-component of the line breaking algorithm described in the next
-section). The data about preloaded patterns are store in an internal
-macro named |\bbl@languages| (see the code for further details), but
-note several locales may share a single |\language|, so they are
-separated concepts. In \luatex, the |\localeid| is saved in each node
-(when it makes sense) as an attribute, too.
-
-\Describe{\ShowLocaleProperties}{\marg{language}}
-\New{3.98} Prints to the |log| file all the loaded key/value pairs from
-the |ini| locale file for \meta{language}. 
-
-\Describe{\LocaleForEach}{\marg{code}}
-\Babel{} remembers which |ini| files have been loaded. There is a loop
-named |\LocaleForEach| to traverse the list, where |#1| is the name of
-the current item, so that |\LocaleForEach{\message{ **#1** }}| just
-shows the loaded |ini|’s. 
-
-\Describe{ensureinfo=off}{}
-\New{3.75} Previously, |ini| files were loaded only with |\babelprovide|
-and also when languages are selected if there is a |\babelfont| or they
-have not been explicitly declared. Now the |ini| files are loaded (and
-therefore the corresponding data) even if these two conditions are not
-met (in previous versions you had to enable it with |\BabelEnsureInfo|
-in the preamble). Because of the way this feature works, problems are
-very unlikely, but there is switch as a package option to turn the new
-behavior off (|ensureinfo=off|).
-
-\subsection{Hyphenation and line breaking}
-
-\Babel{} deals with three kinds of line breaking rules: Western,
-typically the LGC group, South East Asian, like Thai, and CJK, but
-support depends on the engine: \textsf{pdftex} only deals with the
-former, \xetex{} also with the second one (although in a limited way),
-while \luatex{} provides basic rules for the latter, too. With \luatex{}
-there are also tools for non-standard hyphenation rules, explained in
-the next section.
-
-\Describe{\babelhyphen}{%
-  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}\marg{type}}
-\DescribeOther\babelhyphen{%
-  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}\marg{text}}
-
-\New{3.9a} It is customary to classify hyphens in two types: (1)
-\textit{explicit} or \textit{hard hyphens}, which in \TeX\ are
-entered as \verb|-|, and (2) \textit{optional} or \textit{soft
-hyphens}, which are entered as \verb|\-|. Strictly, a \textit{soft
-hyphen} is not a hyphen, but just a breaking opportunity or, in
-\TeX\ terms, a ``discretionary''; a \textit{hard hyphen} is a hyphen
-with a breaking opportunity after it. A further type is a
-\textit{non-breaking hyphen}, a hyphen without a breaking
-opportunity.
-
-In \TeX, \verb|-| and \verb|\-| forbid further breaking opportunities
-in the word. This is the desired behavior very often, but not always,
-and therefore many languages provide shorthands for these
-cases. Unfortunately, this has not been done consistently: for
-example, \verb|"-| in Dutch, Portuguese, Catalan or Danish is a hard
-hyphen, while in German, Spanish, Norwegian, Slovak or Russian is a
-soft hyphen. Furthermore, some of them even redefine |\-|, so that you
-cannot insert a soft hyphen without breaking opportunities in the rest
-of the word.
-
-Therefore, some macros are provided with a set of basic ``hyphens''
-which can be used by themselves, to define a user shorthand, or even
-in language files.
-\begin{itemize}
-\item |\babelhyphen{soft}| and |\babelhyphen{hard}| are self
-  explanatory.
-\item |\babelhyphen{repeat}| inserts a hard hyphen which is repeated
-  at the beginning of the next line, as done in languages like
-  Polish, Portuguese and Spanish.
-\item |\babelhyphen{nobreak}| inserts a hard hyphen without a break
-  after it (even if a space follows).
-\item |\babelhyphen{empty}| inserts a break opportunity without
-  a hyphen at all.
-\item |\babelhyphen|\marg{text} is a hard ``hyphen'' using \m{text}
-  instead. A typical case is |\babelhyphen{/}|.
-\end{itemize}
-With all of them, hyphenation in the rest of the word is enabled. If
-you don't want to enable it, there is a starred counterpart:
-|\babelhyphen*{soft}| (which in most cases is equivalent to the
-original |\-|), |\babelhyphen*{hard}|, etc.
-
-Note |hard| is also good for isolated prefixes (eg, \textit{anti-})
-and |nobreak| for isolated suffixes (eg, \textit{-ism}), but in both
-cases |\babelhyphen*{nobreak}| is usually better.
-
-There are also some differences with \LaTeX: (1) the character used is
-that set for the current font, while in \LaTeX{} it is hardwired to
-|-| (a typical value); (2) the hyphen to be used in fonts with a
-negative |\hyphenchar| is  |-|, like in \LaTeX, but it can be changed to
-another value by redefining |\babelnullhyphen|; (3) a break after the
-hyphen is forbidden if preceded by a glue ${>}0$~pt (at the beginning
-of a word, provided it is not immediately preceded by, say, a
-parenthesis).
-
-\Describe\babelhyphenation{\texttt{[}\langlist\texttt{]}%
-    \marg{exceptions}}
-
-\New{3.9a} Sets hyphenation exceptions for the languages given
-or, without the optional argument, for \textit{all} languages (eg,
-proper nouns or common loan words, and of course monolingual
-documents). Multiple declarations work much like |\hyphenation| (last
-wins), but language exceptions take precedence over global ones.
-
-It can be used only in the preamble, and exceptions are set when the
-language is first selected, thus taking into account changes of
-|\lccodes|'s done in |\extras<language>| as well as the language-specific
-encoding (not set in the preamble by default). Multiple
-|\babelhyphenation|'s are allowed. For example:
-\begin{verbatim}
-\babelhyphenation{Wal-hal-la Dar-bhan-ga}
-\end{verbatim}
-
-Listed words are saved expanded and therefore it relies on the
-LICR. Of course, it also works without the LICR if the input and the
-font encodings are the same, like in Unicode based engines.
-
-\begin{note}
-  Using |\babelhyphenation| with Southeast Asian scripts is mostly
-  pointless. But with |\babelpatterns| (below) you may fine-tune line
-  breaking (only \luatex). For example:
-\begingroup
-\catcode`@=13
-\def@#1@{{\fontspec{Loma}#1}}
-\begin{verbatim}
-\babelpatterns[thai]{@ศึก@2@ษา@}
-\end{verbatim}
-\endgroup
-  Even if there are no patterns for the language, you can add at least
-  some typical cases.
-\end{note}
-
-\begin{note}
-  Use |\babelhyphenation| instead of |\hyphenation| to set hyphenation
-  exceptions in the preamble before any language is explicitly set with
-  a selector. In the preamble the hyphenation rules are not always
-  fully set up and an error can be raised.
-\end{note}
-
-\Describe{\babelpatterns}{\texttt{[}\langlist\texttt{]}%
-    \marg{patterns}}
-
-\New{3.9m} \textit{In \textsf{luatex} only},\footnote{With
-\textsf{luatex} exceptions and patterns can be modified almost
-freely. However, this is very likely a task for a separate package
-and \texttt{babel} only provides the most basic tools.} adds or
-replaces patterns for the languages given or, without the optional
-argument, for \textit{all} languages. If a pattern for a certain
-combination already exists, it gets replaced by the new one.
-
-It can be used only in the preamble, and patterns are added when the
-language is first selected, thus taking into account changes of
-|\lccodes|'s done in |\extras<language>| as well as the language-specific
-encoding (not set in the preamble by default). Multiple
-|\babelpatterns|'s are allowed.
-
-Listed patterns are saved expanded and therefore it relies on the
-LICR. Of course, it also works without the LICR if the input and the
-font encodings are the same, like in Unicode based engines.
-
-\New{3.31} (Only \luatex.) With |\babelprovide| and |import|ed CJK
-languages, a simple generic line breaking algorithm (push-out-first) is
-applied, based on a selection of the Unicode rules (\New{3.32} it is
-disabled in verbatim mode, or more precisely when the hyphenrules
-are set to |nohyphenation|). It can be activated alternatively by
-setting explicitly the |intraspace|.
-
-\New{3.27} Interword spacing for Thai, Lao and Khemer is activated
-automatically if a language with one of those scripts are loaded with
-|\babelprovide|. See the sample on the \babel{} repository. With both
-Unicode engines, spacing is based on the ``current'' em unit (the size
-of the previous char in \luatex, and the font size set by the last
-|\selectfont| in \xetex).
-
-\begin{note}
-  With Unicode engines, a line break can happen just before an explicit
-  combining char (eg, \textit{\~{g}}, used in Guarani and Filipino, is
-  not included as a combined char and it’s represented in Unicode as
-  |U+0067|~|U+0303|. This issue is not directly related to \babel, but
-  to the hyphenation patterns and/or the font renderer. However, at
-  least with \luatex{} there is a workaround (change the language name
-  to what you are using):
-\begin{verbatim}
-\babelposthyphenation{guarani}{ | [{0300}-{036F}] }{ remove, {} }
-\end{verbatim}
-The Lua pattern means ‘a discretionary followed by a character in the
-range |U+0300|--|U+0367| (which contains combining chars)’. An
-alternative to a transform is |\babelpatterns|.
-\end{note}
-
-\Describe{\babelhyphenmins}{%
-  \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
-  \texttt{[}\langlist\texttt{]}%
-  \marg{left}\marg{right}\oarg{hyphenationmin}}
-
-\New{24.10} See the news page for the rationale for this commands. It
-sets the corresponding values for the given languages (all languages
-without the optional argument). With the star, the values are also
-applied immediately (the optional argument and the star are currently
-incompatible). The optional argument is available only in \luatex.
-\begin{example}
-You are typesetting a book with wide lines and want to limit the
-number of hyphens in all languages:
-\begin{verbatim}
-  \babelhyphenmins{3}{4}
-\end{verbatim}
-But there are also some 3-column text and you want to be more flexible:
-\begin{verbatim}
-  \begin{multicols}{3}
-  \babelhyphenmins*{2}{3}
-  ...
-  \end{multicols}
-\end{verbatim}
-\end{example}
-
-\Describe{\begin\menv{hyphenrules}}{\marg{language}\Eenv{hyphenrules}}
-
-The environment \Lenv{hyphenrules} can be used to select \emph{only} the
-hyphenation rules to be used (it can be used as command, too). This can
-for instance be used to select ‘nohyphenation’, provided that in
-\file{language.dat} the ‘language’ \textsf{nohyphenation} is defined by
-loading \file{zerohyph.tex}. It deactivates language shorthands, too
-(but not user shorthands).
-
-Except for these simple uses, |hyphenrules| is deprecated and
-|otherlanguage*| (the starred version) is preferred, because the former
-does not take into account possible changes in encodings of characters
-like, say, |'| done by some languages (eg, \textsf{italian},
-\textsf{french}, \textsf{ukrainian}).
-
 \subsection{Transforms}
 \label{transforms}
 
@@ -3671,7 +3947,7 @@ some fine-tuning. More to follow in future releases.)
   \parbox[t]{4.0cm}{\strut\ttfamily#2}%
   \hspace{2mm}%
   \parbox[t]{6.6cm}{\strut#3}\par}
-\bigskip\hrule\nobreak\vspace{.5mm}
+\bigskip\hrule\nobreak\vspace{.5mm}\parindent0pt
 
 \trans{}{digits.native}{\New{24.9} An alternative to |mapdigits|,
 available in the same locales. This transform is applied before the
@@ -3989,7 +4265,7 @@ the ‘provided’ locale. Currently the following |interchar|’s are defined:
   \parbox[t]{4.0cm}{\strut\ttfamily#2}%
   \hspace{2mm}%
   \parbox[t]{6.6cm}{\strut#3}\par}
-\bigskip\hrule\nobreak\vspace{.5mm}
+\bigskip\hrule\nobreak\vspace{.5mm}\parindent0pt
 
 \trans{Cantonese, Chinese, Japanese,
 Korean}{linebreak.basic}{\New{24.4} Basic settings for CJK
@@ -4010,85 +4286,7 @@ characters \textit{;:!?«»} are applied.}
   relevant key for the current engine is taken into account.
 \end{note}
 
-\subsection{Selection based on BCP 47 tags}
-\label{bcp47}
-
-\New{3.43} The recommended way to select languages is that described at
-the beginning of this document. However, BCP 47 tags are becoming
-customary, particularly in documents (or parts of documents) generated
-by external sources, and therefore \babel{} will provide a set of tools
-to select the locales in different situations, adapted to the
-particular needs of each case. Currently, \babel{} provides autoloading
-of locales as described in this section. In these contexts autoloading
-is particularly important because we may not know on beforehand which
-languages will be requested.
-
-It must be activated explicitly, because it is primarily meant for
-special tasks. Mapping from BCP 47 codes to locale names are not
-hardcoded in \babel. Instead the data is taken from the \texttt{ini}
-files, which means currently about 250 tags are already recognized.
-\Babel{} performs a simple lookup in the following way: |fr-Latn-FR| $\to$
-|fr-Latn| $\to$ |fr-FR| $\to$ |fr|. Languages with the same resolved
-name are considered the same. Case is normalized before, so that
-|fr-latn-fr| $\to$ |fr-Latn-FR|. If a tag and a name overlap, the tag
-takes precedence.
-
-Here is a minimal example:
-\begin{verbatim}
-\documentclass{article}
-
-\usepackage[danish]{babel}
-
-_\babeladjust{_
-_  autoload.bcp47 = on,_
-_  autoload.bcp47.options = import_
-_}_
-
-\begin{document}
-
-Chapter in Danish: \chaptername.
-
-_\selectlanguage{de-AT}_
-
-\localedate{2020}{1}{30}
-
-\end{document}
-\end{verbatim}
-
-Currently the locales loaded are based on the \texttt{ini} files and
-decoupled from the main \texttt{ldf} files. This is by design, to
-ensure code generated externally produces the same result regardless of
-the languages requested in the document, but an option to use the
-\texttt{ldf} instead will be added in a future release, because both
-options make sense depending on the particular needs of each document
-(there will be some restrictions, however).
-
-The behaviour is adjusted with |\babeladjust| with the following parameters:
-\begin{description}
-\item \texttt{autoload.bcp47} with values |on| and |off|.
-\item \texttt{autoload.bcp47.options}, which are passed to
-  |\babelprovide|; empty by default, but you may add \texttt{import}
-  (features defined in the corresponding |babel-...tex| file might not
-  be available).
-\item \texttt{autoload.bcp47.prefix}. Although the public name used in
-  selectors is the tag, the internal name will be different and
-  generated by prepending a prefix, which by default is
-  \texttt{bcp47-}. You may change it with this key.
-\end{description}
-
-\New{3.46} If an |ldf| file has been loaded, you can enable the
-corresponding language tags as selector names with:
-\begin{verbatim}
-\babeladjust{ bcp47.toname = on }
-\end{verbatim}
-(You can deactivate it with |off|.) So, if |dutch| is one of the
-package (or class) options, you can write |\selectlanguage{nl}|. Note
-the language name does not change (in this example is still |dutch|),
-but you can get it with |\localeinfo| or |\getlocaleproperty|. It
-must be turned on explicitly for similar reasons to those explained
-above.
-
-\subsection{Selecting scripts}
+\subsection{Scripts}
 
 Currently \babel{} provides no standard interface to select
 scripts, because they are best selected with either |\fontencoding|
@@ -4134,7 +4332,7 @@ most of the cases. No assumption is made on characters above
 127, which may not follow the LICR conventions -- the goal is just
 to ensure most of the ASCII letters and symbols are the right ones.
 
-\subsection{Selecting directions}
+\subsection{Bidirectional and right-to-left text}
 \label{bidi}
 
 No macros to select the writing direction are provided, either --
@@ -4221,11 +4419,9 @@ See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
 \bgroup\textdir TRT \pardir TRT \fi}
 \setengine{luatex}
 \begin{verbatim}
-\documentclass{article}
+\documentclass[arabic]{article}
 
-\usepackage[_bidi=basic_]{babel}
-
-_\babelprovide[import, main]{arabic}_
+\usepackage[_bidi=basic_, provide=*]{babel}
 
 \babelfont{rm}{FreeSerif}
 
@@ -4462,18 +4658,18 @@ necessary (but note then tocs and marks are not touched).
 
 \New{3.17} Something like:
 \begin{verbatim}
-\BabelFootnote{\parsfootnote}{\languagename}{(}{)}
+\BabelFootnote{\parsfootnote}{\localename}{(}{)}
 \end{verbatim}
 defines |\parsfootnote| so that |\parsfootnote{note}| is equivalent to:
 \begin{verbatim}
-\footnote{(\foreignlanguage{\languagename}{note})}
+\footnote{(\foreignlanguage{\localename}{note})}
 \end{verbatim}
 but the footnote itself is typeset in the main language (to unify its
 direction). In addition, |\parsfootnotetext| is defined. The option
 |footnotes| just does the following:
 \begin{verbatim}
-\BabelFootnote{\footnote}{\languagename}{}{}%
-\BabelFootnote{\localfootnote}{\languagename}{}{}%
+\BabelFootnote{\footnote}{\localename}{}{}%
+\BabelFootnote{\localfootnote}{\localename}{}{}%
 \BabelFootnote{\mainfootnote}{}{}{}
 \end{verbatim}
 (which also redefine |\footnotetext| and define |\localfootnotetext|
@@ -4492,159 +4688,6 @@ command is available always in bidi documents, even without
   at the left in the last line. This means the dot the end of the
   footnote text should be omitted.
 \end{example}
-
-\subsection{Language attributes}
-
-\DescribeMacro{\languageattribute}
-
-This is a user-level command, to be used in the preamble of a
-document (after |\usepackage[...]{babel}|), that declares which
-attributes are to be used for a given language. It takes two
-arguments: the first is the name of the language; the second,
-a (list of) attribute(s) to be used. Attributes must be set in the
-preamble and only once -- they cannot be turned on and off.
-The command checks whether the language is known in this document
-and whether the attribute(s) are known for this language.
-
-Very often, using a \textit{modifier} in a package option is better.
-
-Several language definition files use their own methods to set
-options. For example, \textsf{french} uses |\frenchsetup|,
-\textsf{magyar} (1.5) uses |\magyarOptions|; modifiers provided by
-|spanish| have no attribute counterparts. Macros setting
-options are also used (eg, |\ProsodicMarksOn| in \textsf{latin}).
-
-\subsection{Hooks}
-
-\New{3.9a} A hook is a piece of code to be executed at certain
-events. Some hooks are predefined when \luatex{} and \xetex{} are
-used.
-
-\New{3.64} This is not the only way to inject code at those points. The
-events listed below can be used as a hook name in |\AddToHook| in the
-form |babel/<language-name>/<event-name>| (with |*| it’s applied to
-all languages), but there is a limitation, because the parameters
-passed with the \babel{} mechanism are not allowed. The |\AddToHook|
-mechanism does \textit{not} replace the current one in `babel`. Its
-main advantage is you can reconfigure `babel` even before loading it.
-See the example below.
-
-\Describe{\AddBabelHook}{\oarg{language}\marg{name}\marg{event}\marg{code}}
-
-The same name can be applied to several events. Hooks with a certain
-\marg{name} may be enabled and disabled for all defined events with
-|\EnableBabelHook|\marg{name}, |\DisableBabelHook|\marg{name}. Names
-containing the string |babel| are reserved (they are used, for example,
-by |\useshortands*| to add a hook for the event |afterextras|).
-\New{3.33} They may be also applied to a specific language with the
-optional argument; language-specific settings are executed after global
-ones.
-
-Current events are the following; in some of them you can use one to
-three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
-\begin{description}
-\renewcommand\makelabel[1]{%
-  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
-\itemsep=-\parskip
-\item[adddialect] (language name, dialect name) Used by
-  \file{luababel.def} to load the patterns if not preloaded.
-\item[patterns] (language name, language with encoding) Executed just
-  after the |\language| has been set. The second argument has the
-  patterns name actually selected (in the form of either |lang:ENC| or
-  |lang|).
-\item[hyphenation] (language name, language with encoding) Executed
-  locally just before exceptions given in |\babelhyphenation| are
-  actually set.
-\item[defaultcommands] Used (locally) in |\StartBabelCommands|.
-\item[encodedcommands] (input, font encodings) Used (locally) in
-  |\StartBabelCommands|. Both \xetex{} and \luatex{} make sure the
-  encoded text is read correctly.
-\item[stopcommands] Used to reset the above, if necessary.
-\item[write] This event comes just after the switching commands are
-  written to the |aux| file.
-\item[beforeextras] Just before executing |\extras<language>|. This
-  event and the next one should not contain language-dependent code
-  (for that, add it to |\extras<language>|).
-\item[afterextras] Just after executing |\extras<language>|. For
-  example, the following deactivates shorthands in all languages:
-\begin{verbatim}
-\AddBabelHook{noshort}{afterextras}{\languageshorthands{none}}
-\end{verbatim}
-\item[stringprocess] Instead of a parameter, you can manipulate the
-  macro |\BabelString| containing the string to be defined with
-  |\SetString|. For example, to use an expanded version of the string
-  in the definition, write:
-\begin{verbatim}
-\AddBabelHook{myhook}{stringprocess}{%
-  \protected@edef\BabelString{\BabelString}}
-\end{verbatim}
-\item[initiateactive] (char as active, char as other, original char)
-  \New{3.9i} Executed just after a shorthand has been `initiated'. The three
-  parameters are the same character with different catcodes: active,
-  other (|\string|'ed) and the original one.
-\item[afterreset] \New{3.9i} Executed when selecting a language just after
-  |\originalTeX| is run and reset to its base value, before executing
-  |\captions<language>| and |\date<language>|.
-\item[begindocument] \New{3.88} Executed before the code written by
-  |ldf| files with |\AtBeginDocument|. The optional argument with the
-  language in this particular case is the language that wrote the code.
-  The special value |/| means ‘return to the core \babel{} definitions’
-  (in other words, what follows hasn’t been written by any language).
-\item[foreign] \New{24.8} Executed by |\foreignlanguage| after the
-  language has been set up and just before typesetting the text from the
-  second argument. Its main purpose it to wrap the text with some
-  code, with the help of |\BabelWrapText|. For example, with:
-\begin{verbatim}
-\AddBabelHook{one}{foreign}{\BabelWrapText{\textit{##1}}
-\AddBabelHook{two}{foreign}{\BabelWrapText{\parse{##1}}
-\end{verbatim}
-the text becomes |\textit{\parse{<text>}}|. 
-
-\end{description}
-
-Four events are used in \file{hyphen.cfg}, which are handled in a
-quite different way for efficiency reasons -- unlike the precedent
-ones, they only have a single hook and replace a default definition.
-\begin{description}
-\renewcommand\makelabel[1]{%
-  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
-\itemsep=-\parskip
-\item[everylanguage] (language) Executed before every language patterns
-  are loaded.
-\item[loadkernel] (file) By default just defines a few basic commands.
-  It can be used to define different versions of them or to load a file.
-\item[loadpatterns] (patterns file) Loads the patterns file. Used by
-  \file{luababel.def}.
-\item[loadexceptions] (exceptions file) Loads the exceptions
-  file. Used by \file{luababel.def}.
-\end{description}
-
-\begin{example}
-The generic unlocalized \LaTeX{} hooks are predefined, so that you can
-write:
-\begin{verbatim}
-\AddToHook{babel/*/afterextras}{\frenchspacing} 
-\end{verbatim}
-which is executed always after the extras for the language being
-selected (and just before the non-localized hooks defined with
-|\AddBabelHook|).
-
-In addition, locale-specific hooks in the form
-|babel/<language-name>/<event-name>| are \textit{recognized}
-(executed just before the localized \babel{} hooks), but they are
-\textit{not predefined}. You have to do it yourself. For example, to
-set |\frenchspacing| only in |bengali|:
-\begin{verbatim}
-\ActivateGenericHook{babel/bengali/afterextras}
-\AddToHook{babel/bengali/afterextras}{\frenchspacing}
-\end{verbatim}
-\end{example}
-
-\Describe{\BabelContentsFiles}{}
-\New{3.9a} This macro contains a list of ``toc'' types
-requiring a command to switch the language. Its default value is
-|toc,lof,lot|, but you may redefine it with |\renewcommand| (it's up
-to you to make sure no toc type is duplicated).
 
 \subsection{Unicode character properties in \luatex}
 
@@ -4683,7 +4726,7 @@ empty, removes them. The last argument is the locale name:
 \babelcharproperty{`,}{locale}{english}
 \end{verbatim}
 
-\subsection{Tweaking some features}
+\subsection{Tweaking some \babel{} features}
 
 \Describe{\babeladjust}{\marg{key-value-list}}
 
@@ -4735,9 +4778,12 @@ an alternative algorithm or with large sections not requiring it. Use
 with care, because these options do not deactivate other related
 options (like paragraph direction with |bidi.text|).
 
-\section{Compatibility with other packages}
+\section{Relation with other packages}
+
+There are compatibility issues with the following packages.
 
 \begingroup
+\parindent0pt
 \def\trans#1#2{%
   \vspace{1.5mm}%
   \parbox[t]{3.0cm}{\strut\sffamily#1}%
@@ -4745,10 +4791,12 @@ options (like paragraph direction with |bidi.text|).
   \parbox[t]{10cm}{\strut#2}\par}
 \bigskip\hrule\nobreak\vspace{.5mm}
 
-\trans{polyglossia}{This package is not compatible with \babel{} and
-must not be used together. Macros are different and even those with the
-same name doesn’t behave in the same way. Also, languages are organized
-quite differently.}
+\trans{polyglossia}{This package is an alternative way to deal with
+localized documents, and it is not compatible at all with \babel.
+They should never be used together, because macros are different, and
+even those with the same name doesn’t behave in the same way. Also,
+languages are organized quite differently (\babel{} treats all locales
+on an equal footing).}
 
 \trans{tikz/pgf}{There are some issues with shorthands, which are
 usually solved with \texttt{\string\usetikzlibrary\{babel\}}.}
@@ -4756,37 +4804,11 @@ usually solved with \texttt{\string\usetikzlibrary\{babel\}}.}
 \trans{cleveref}{Because of a long standing bug in this package, some
 languages can raise and error (particularly |spanish| and |greek|).}
 
-\vspace{2mm}\hrule\nobreak
+\vspace{2mm}\hrule\nobreak\bigskip
 \endgroup
 
-\subsection{Tips, workarounds, known issues and notes}
-
-\begin{itemize}
- \item For the hyphenation to work correctly, lccodes cannot change,
-   because \TeX{} only takes into account the values when the
-   paragraph is hyphenated, i.e., when it has been
-   finished.\footnote{This explains why \LaTeX{} assumes the lowercase
-   mapping of T1 and does not provide a tool for multiple
-   mappings. Unfortunately, \cs{savinghyphcodes} is not a solution
-   either, because lccodes for hyphenation are frozen in the format
-   and cannot be changed.} So, if you write a chunk of French text
-   with |\foreignlanguage|, the apostrophes might not be taken into
-   account. This is a limitation of \TeX, not of
-   \babel. Alternatively, you may use |\useshorthands| to activate |'|
-   and |\defineshorthand|, or redefine |\textquoteright| (the latter
-   is called by the non-ASCII right quote).
-\item Babel does not take into account |\normalsfcodes| and
-  (non-)French spacing is not always properly (un)set by
-  languages. However, problems are unlikely to happen and therefore
-  this part remains untouched (but it is in the `to do' list).
-\item Using a character mathematically active (ie, with math code
-  |"8000|) as a shorthand can make \TeX{} enter in an infinite loop in
-  some rare cases. (Another issue in the ‘to do’ list, although there
-  is a partial solution.)
-\end{itemize}
-
-The following packages can be useful, too (the list is still
-far from complete):
+The following packages can be useful in multilingual contexts (the list
+is far from complete):
 \begin{description}
 \itemsep=-\parskip
 \item[csquotes] Logical markup for quotes.
@@ -4813,7 +4835,7 @@ some languages (kerning and spacing). Ligatures can be disabled.
 See the code section for |\foreignlanguage*| (a new starred
 version of |\foreignlanguage|).
 
-For old an deprecated functions, see the \babel{} site.
+For old and deprecated functions, see the \babel{} site.
 
 \medskip
 \textbf{Options for locales loaded on the fly}
@@ -4833,12 +4855,12 @@ counters are used to define them. It is still somewhat tentative
 because it is far from trivial -- see the \babel{} site for further
 details.
 
-\section{Loading languages with \file{language.dat}}
+\section{Loading language hyphenation rules with \file{language.dat}}
 
 \TeX{} and most engines based on it (pdf\TeX, \xetex, $\epsilon$-\TeX,
 the main exception being \luatex) require hyphenation patterns to be
-preloaded when a format is created (eg, \LaTeX, Xe\LaTeX,
-pdf\LaTeX). \babel{} provides a tool which has become standard in many
+preloaded when a format is created (eg, \LaTeX, Xe\LaTeX, pdf\LaTeX).
+\babel{} provides a tool which has become standard in many
 distributions and based on a ``configuration file'' named
 \file{language.dat}. The exact way this file is used depends on the
 distribution, so please, read the documentation for the latter (note
@@ -4846,19 +4868,11 @@ also some distributions generate the file with some tool).
 
 \New{3.9q} With \luatex, however, patterns are loaded on the fly when
 requested by the language (except the ``0th'' language, typically
-\textsf{english}, which is preloaded always).\footnote{This feature
-was added to 3.9o, but it was buggy. Both 3.9o and 3.9p are
-deprecated.} Until 3.9n, this task was delegated to the package
-\textsf{luatex-hyphen}, by Khaled Hosny, \'Elie Roux, and Manuel
-P\'egouri\'e-Gonnard, and required an extra file named
-|language.dat.lua|, but now a new mechanism has been devised based
-solely on |language.dat|. \textbf{You must rebuild the formats} if
-upgrading from a previous version.  You may want to have a local
-|language.dat| for a particular project (for example, a book on
-Chemistry).\footnote{The loader for lua(e)tex is slightly different as
-it's not based on \babel{} but on \texttt{etex.src}. Until 3.9p it
-just didn't work, but thanks to the new code it works by reloading the
-data in the \babel{} way, i.e., with \texttt{language.dat}.}
+\textsf{english}, which is preloaded always). You may want to have a
+local |language.dat| for a particular project (for example, a book on
+Chemistry). The loader for lua(e)tex is slightly different as it's not
+based on \babel{}, but on \texttt{etex.src}; however, \babel{} reloads
+the data so that it works as expected.
 
 \subsection{Format}
 
@@ -5210,20 +5224,20 @@ In quite a number of language definition files, active characters are
 introduced. To facilitate this, some support macros are provided.
 
 \DescribeMacro{\initiate@active@char}
-The internal macro |\initiate@active@char| is used in language
+Used in language
 definition files to instruct \LaTeX\ to give a character the category
 code `active'. When a character has been made active it will remain
 that way until the end of the document. Its definition may vary.
 
 \DescribeMacro{\bbl@activate}
 \DescribeMacro{\bbl@deactivate}
-The command |\bbl@activate| is used to change the way an active
+Used to change the way an active
 character expands. |\bbl@activate| `switches on' the active behavior
 of the character. |\bbl@deactivate| lets the active character expand
 to its former (mostly) non-active self.
 
 \DescribeMacro{\declare@shorthand}
-The macro |\declare@shorthand| is used to define the various
+Used to define the various
 shorthands. It takes three arguments: the name for the collection of
 shorthands this definition belongs to; the character (sequence) that
 makes up the shorthand, i.e.\ |~| or |"a|; and the code to be executed
@@ -5320,8 +5334,15 @@ spacefactor.
 
 \DescribeMacro{\bbl@frenchspacing}
 \DescribeMacro{\bbl@nonfrenchspacing}
-The commands |\bbl@frenchspacing| and |\bbl@nonfrenchspacing| can be
+Those commands can be
 used to properly switch French spacing on and off.
+
+\begin{note}
+ With |lfd| files, \babel does not take into account |\normalsfcodes|
+ and (non-)French spacing is not always properly (un)set by languages
+ However, problems are unlikely to happen and therefore this part
+ remains untouched. With |ini| files, this issue has been addressed.
+\end{note}
 
 \subsection{Encoding-dependent strings}
 \label{s:strings}
@@ -5528,21 +5549,6 @@ by both \luatex{} and \xetex{}):
   assignment is wrong, fix it directly.
 \end{note}
 
-\subsection{Executing code based on the selector}
-
-\Describe{\IfBabelSelectorTF}{\marg{selectors}\marg{true}\marg{false}}
-
-\New{3.67} Sometimes a different setup is desired depending on the
-selector used. Values allowed in \m{selectors} are |select|, |other|,
-|foreign|, |other*| (and also |foreign*| for the tentative starred
-version), and it can consist of a comma-separated list. For example:
-\begin{verbatim}
-\IfBabelSelectorTF{other, other*}{A}{B}
-\end{verbatim}
-is true with any of these two environment selectors.
-
-Its natural place of use is in hooks or in |\extras<language>|.
-
 \else
 
 \DocInput{babel.dtx}
@@ -5667,8 +5673,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.10.63051>>
-%<<date=2024/09/21>>
+%<<version=24.10.63275>>
+%<<date=2024/09/23>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8168,7 +8174,7 @@ wouldn’t exist.
 %
 %
 % \macro{\active@prefix}
-% The command |\active@prefix| which is used in the expansion of active
+% Used in the expansion of active
 % characters has a function similar to |\OT1-cmd| in that it
 % |\protect|s the active character whenever |\protect| is \emph{not}
 % |\@typeset@protect|. The |\@gobble| is needed to remove a token such
@@ -8272,7 +8278,7 @@ wouldn’t exist.
 %
 %
 % \macro{\declare@shorthand}
-% The command |\declare@shorthand| is used to declare a shorthand
+% Used to declare a shorthand
 % on a certain level. It takes three arguments:
 % \begin{enumerate}
 % \item a name for the collection of shorthands, i.e. `system', or
@@ -9832,7 +9838,7 @@ wouldn’t exist.
 %
 %
 % \macro{\lower@umlaut}
-% The command |\lower@umlaut| is used to position the |\"| closer to
+% Used to position the |\"| closer to
 % the letter. We want the umlaut character lowered, nearer to the
 % letter. To do this we need an extra \meta{dimen} register.
 %
