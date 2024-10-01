@@ -86,9 +86,8 @@ definitions just to avoid errors or simplified versions.
 ## Languages
 
 Here is a document which runs with no error messages in pdfTeX and
-ePlain, but with an error in `latin` in TeX. Note two points: all of
-them use the Latin script, and there is only a set of hyphenation
-patterns (English):
+ePlain, but with an error in `latin` in TeX. Note there is only a set
+of hyphenation patterns (English):
 ```tex
 \input afrikaans.sty
 \input albanian.sty

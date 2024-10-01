@@ -32,11 +32,12 @@ The second method is:
 \usepackage[thai, provide=*]{babel}
 ```
 This will load data from an `ini` file. This is usually the correct
-method for languages written in **non-European scripts**, like Thai,
-Hindi, Sanskrit, Marathi, Malayalam, Lao, Khemer, Bengali, Gujarati,
-Telugu, Kannada, Sinhala, Tamil, Amharic, or Burmese. In short **simple
-CJK** texts, this is also the preferred method, but in more complex
-ones you should resort to some CKJ framework like
+method for languages written in some of the 30-something **non-European
+scripts**, currently supported by `babel`, like Thai, Hindi, Sanskrit,
+Marathi, Malayalam, Lao, Khemer, Bengali, Gujarati, Telugu, Kannada,
+Sinhala, Tamil, Amharic, or Burmese. In short **simple CJK** texts,
+this is also the preferred method, but in more complex ones you should
+resort to some CKJ framework like
 [luatexja](https://ctan.org/pkg/luatexja),
 [xeCJK](https://ctan.org/pkg/xecjk), [CTeX](https://ctan.org/pkg/ctex),
 [kotex](https://mirrors.ctan.org/language/korean/kotex-utf/doc/kotex-utf-doc.pdf),

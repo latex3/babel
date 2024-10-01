@@ -53,6 +53,23 @@ given encoding. This `.fd` file will instruct LaTeX to use a font from
 the second family when a font from the first family in the given
 encoding seems to be needed.
 
+## `ensureinfo=off`
+
+\New{3.75} Previous to 3.75, `ini` files were loaded only with
+`\babelprovide` and also when languages are selected if there is a
+`\babelfont` or they have not been explicitly declared. Now the `ini`
+files are loaded (and therefore the corresponding data) even if these
+two conditions are not met (in previous versions you had to enable it
+with `\BabelEnsureInfo` in the preamble). Because of the way this
+feature works, problems are very unlikely, but there is switch as a
+package option to turn the new behavior off (`ensureinfo=off`).
+
+## `captions=`
+
+This option was introduced long ago to deal with `ldf` files with LICR
+strings, which where not fully supported in Unicode engines. Now it’s
+unnecessary.
+
 ## Fonts
 
 A couple of tentative macros were provided by `babel` <3.9g with a
