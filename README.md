@@ -1,4 +1,4 @@
-## Babel 24.10.63744
+## Babel 24.10.64171
 
 (dev)
 
@@ -48,6 +48,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
+24.11  (dev)
+       * Start a thorough review of the manual.
+       * (lua) Transform variables (lua).
+       
 24.10  2024-09-18
        * \localename replaces the buggy \languagename. Added
          \mainlocalename.

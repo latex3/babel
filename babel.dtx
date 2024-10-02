@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/09/28 v24.10.63744 The Babel package]
+\ProvidesFile{babel.dtx}[2024/10/02 v24.10.64171 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -558,6 +558,13 @@ Loading directly |sty| files in \LaTeX{} (ie,
 \end{verbatim}
 \end{troubleshooting}
 
+\begin{note}
+  You will see an ‘info’ in the log file stating some data is being
+  loaded from an |ini| file. It includes standardized names for
+  language and script used by |\babelfont|, and the BCP-47 tag, required in
+  some cases by |\Make<Xxxxx>case|.
+\end{note}
+
 \subsection{Monolingual documents: the ‘modern’ way}
 
 When, for whatever reason, the ‘classical’ way with the |ldf| is not
@@ -600,7 +607,7 @@ And with a global option:
   This option actually loads the language with |\babelprovide| and the
   |import| option, described below. Instead of an asterisk, you may
   provide a list of options for |\babelprovide| enclosed in braces
-  (|import| is always included).
+  (|import| is included by default).
 \end{note}
 
 \begin{example}
@@ -618,17 +625,20 @@ with an option (explained below) in |provide|. For example:
 \end{verbatim}
 \end{example}
 
-\subsection{Mostly monolingual documents}
+\subsection{Mostly monolingual documents: lazy loading}
 \label{mostlymono}
 
 \New{3.39} Very often, multilingual documents consist of a main
 language with small pieces of text in another languages (words, idioms,
 short sentences). Typically, all you need is to set the line breaking
-rules and, perhaps, the font. In such a case, \babel{} does not
-require declaring these secondary languages explicitly, because the
-basic settings are loaded on the fly when the language is selected.
+rules and, perhaps, the font. In such a case, there is no need to
+clutter the preamble (particularly the class and package options)
+because \babel{} does not require declaring these secondary languages
+explicitly — the basic settings are loaded on the fly when the language
+is first selected.
 
-This is particularly useful, too, when there are short texts of this
+This is particularly useful in documents with many
+languages, and also when there are short texts of this
 kind coming from an external source whose contents are not known on
 beforehand (for example, titles in a bibliography). At this regard, it
 is worth remembering that |\babelfont| does \textit{not} load any font
@@ -804,6 +814,7 @@ encoding files, a preprocessor or even a complete framework (like
 
 \bigskip
 
+\textit{This list is still under revision.}\\
 Recommended names are set in \textcolor{thered}{red}.\\
 Additional languages are set in \textcolor[gray]{.4}{gray}.\\
 Discouraged and deprecated names are not included.\\
@@ -852,7 +863,7 @@ the names in the block \textsf{ngerman}.}
 \subtagalt{swissgerman}{}
 \note{Swiss High German}
 \tag{greek}{}
-\subtagalt{polutonicogreek}{}
+% \subtagalt{polutonicogreek}{}
 \subtagmin{ibycus}{}
 \subtagmin{bgreek}{}
 \tag{hebrew}{}
@@ -867,9 +878,9 @@ the names in the block \textsf{ngerman}.}
 \tag{japanese}{}
 \tag{kurmanji}{}
 \tag{latin}{}
-\subtagalt{classiclatin}{}
-\subtagalt{medievallatin}{}
-\subtagalt{ecclesiasticlatin}{}
+% \subtagalt{classiclatin}{}
+% \subtagalt{medievallatin}{}
+% \subtagalt{ecclesiasticlatin}{}
 \tag{latvian}{}
 \tag{lithuanian}{}
 \tag{lowersorbian}{}
@@ -902,7 +913,7 @@ the names in the block \textsf{ngerman}.}
 \note{Cyrillic script}
 \tag{slovak}{}
 \tag{slovene}{}
-\tag{slovenian}{}  %%%%%% <- y con ini
+\tag{slovenian}{}  %%%%%% <- and ini
 \tag{spanglish}{}
 \tag{spanish}{}
 \tag{swedish}{}
@@ -1575,9 +1586,10 @@ the default one. Alternatively, you may set a font for a script -- just
 precede its name (lowercase) with a star (eg, |*devanagari|).
 
 With the optional argument, the font is \textit{not} yet loaded, but
-just predeclared. This means you may define as many fonts as you want
-‘just in case’, because if the language is never selected, the
-corresponding |\babelfont| declaration is just ignored.
+just predeclared. In other words, font loading is lazy, which means you
+may define as many fonts as you want ‘just in case’, because if the
+language is never selected, the corresponding |\babelfont| declaration
+is just ignored.
 
 \Babel{} takes care of the font language and the font script when
 languages are selected (as well as the writing direction). In most
@@ -5729,8 +5741,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.10.63744>>
-%<<date=2024/09/28>>
+%<<version=24.10.64171>>
+%<<date=2024/10/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6844,9 +6856,9 @@ wouldn’t exist.
      \edef\bbl@id@last{\the\count@}%
      \ifcase\bbl@engine\or
        \directlua{
-         Babel.locale_props = Babel.locale_props or {}
          Babel.locale_props[\bbl@id@last] = {}
          Babel.locale_props[\bbl@id@last].name = '\languagename'
+         Babel.locale_props[\bbl@id@last].vars = {}
         }%
       \fi}%
     {}%
@@ -12190,11 +12202,10 @@ wouldn’t exist.
 %
 % \macro{\substitutefontfamily}
 %
-% \textit{Deprecated.} Use the tools provided by \LaTeX\ 
-% (|\DeclareFontFamilySubstitution|). The command
-% |\substitutefontfamily| creates an \file{.fd} file on the fly. The
+% \textit{Deprecated.} It creates an \file{.fd} file on the fly. The
 % first argument is an encoding mnemonic, the second and third
-% arguments are font family names.
+% arguments are font family names. Use the tools provided by \LaTeX\ 
+% (|\DeclareFontFamilySubstitution|). 
 %
 %    \begin{macrocode}
 \def\substitutefontfamily#1#2#3{%
@@ -14186,7 +14197,7 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 %<*luatex>
-\directlua{ Babel = Babel or {} }
+\directlua{ Babel = Babel or {} } % DL2
 \ifx\AddBabelHook\@undefined % When plain.def, babel.sty starts
 \bbl@trace{Read language.dat}
 \ifx\bbl@readstream\@undefined
@@ -14359,12 +14370,13 @@ wouldn’t exist.
 % read the 2nd time it's loaded. First, global declarations for lua.
 %
 %    \begin{macrocode}
-\begingroup  % TODO - to a lua file
+\begingroup  % TODO - to a lua file % DL3
 \catcode`\%=12
 \catcode`\'=12
 \catcode`\"=12
 \catcode`\:=12
 \directlua{
+  Babel.locale_props = Babel.locale_props or {}
   function Babel.lua_error(e, a)
     tex.print([[\noexpand\csname bbl@error\endcsname{]] .. 
       e .. '}{' .. (a or '') .. '}{}{}')
@@ -14461,7 +14473,7 @@ end
 }
 \endgroup
 \ifx\newattribute\@undefined\else % Test for plain
-  \newattribute\bbl@attr@locale
+  \newattribute\bbl@attr@locale % DL4
   \directlua{ Babel.attr_locale = luatexbase.registernumber'bbl@attr@locale' }
   \AddBabelHook{luatex}{beforeextras}{%
     \setattribute\bbl@attr@locale\localeid}
@@ -14563,7 +14575,7 @@ end
 %
 %    \begin{macrocode}
 % TODO - to a lua file -- or a logical place
-\directlua{
+\directlua{% DL5
   Babel.linebreaking = Babel.linebreaking or {}
   Babel.linebreaking.before = {}
   Babel.linebreaking.after = {}
@@ -15091,7 +15103,7 @@ end
 %
 %    \begin{macrocode}
 % TODO - to a lua file
-\directlua{
+\directlua{% DL6
 Babel.script_blocks = {
   ['dflt'] = {},
   ['Arab'] = {{0x0600, 0x06FF}, {0x08A0, 0x08FF}, {0x0750, 0x077F},
@@ -15272,7 +15284,7 @@ end
 % still slow). The Lua code is below.
 %
 %    \begin{macrocode}
-\directlua{
+\directlua{% DL7
   Babel.nohyphenation = \the\l@nohyphenation
 }
 %    \end{macrocode}
@@ -15317,23 +15329,27 @@ end
         {\bbl@add@list\babeltempb{nil}}&%
         {\directlua{
            local rep = [=[##1]=]
+           local three_args =
+           '%s*=%s*([%-%d%.%a{}|]+)%s+([%-%d%.%a{}|]+)%s+([%-%d%.%a{}|]+)'
+           &% Numeric passes directly: kern, penalty...
            rep = rep:gsub('^%s*(remove)%s*$', 'remove = true')
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
            rep = rep:gsub('^%s*(after)%s*,', 'after = true, ')
            rep = rep:gsub('(string)%s*=%s*([^%s,]*)', Babel.capture_func)
            rep = rep:gsub('node%s*=%s*(%a+)%s*(%a*)', Babel.capture_node)
-           rep = rep:gsub(&%
-             '(norule)%s*=%s*([%-%d%.]+)%s+([%-%d%.]+)%s+([%-%d%.]+)',
-             'norule = {' .. '%2, %3, %4' .. '}')
+           rep = rep:gsub( '(norule)' .. three_args,
+               'norule = {' .. '%2, %3, %4' .. '}')
            if #1 == 0 or #1 == 2 then
-             rep = rep:gsub(&%
-               '(space)%s*=%s*([%-%d%.]+)%s+([%-%d%.]+)%s+([%-%d%.]+)',
+             rep = rep:gsub( '(space)' .. three_args,
                'space = {' .. '%2, %3, %4' .. '}')
-             rep = rep:gsub(&%
-               '(spacefactor)%s*=%s*([%-%d%.]+)%s+([%-%d%.]+)%s+([%-%d%.]+)',
-               'spacefactor = {' .. '%2, %3, %4' .. '}')
+             rep = rep:gsub( '(spacefactor)' .. three_args,
+               'spacefactor = {' .. '%2, %3, %4' .. '}')           
              rep = rep:gsub('(kashida)%s*=%s*([^%s,]*)', Babel.capture_kashida)
-           else
+             &% Transform values
+             rep, n = rep:gsub( '{([%a%-]+)|([%-%d%.]+)}',
+              '{\the\csname bbl@id@@#3\endcsname,"%1",%2}')
+           end
+           if #1 == 1 then
              rep = rep:gsub(    '(no)%s*=%s*([^%s,]*)', Babel.capture_func)
              rep = rep:gsub(   '(pre)%s*=%s*([^%s,]*)', Babel.capture_func)
              rep = rep:gsub(  '(post)%s*=%s*([^%s,]*)', Babel.capture_func)
@@ -15469,6 +15485,10 @@ end
     require('babel-transforms.lua')
     Babel.linebreaking.add_before(Babel.pre_hyphenate_replace)
   }}
+\newcommand\SetTransformValue[3]{%
+  \directlua{
+    Babel.locale_props[\the\csname bbl@id@@#1\endcsname].vars["#2"] = #3
+  }}
 %    \end{macrocode}
 %
 % The following experimental (and unfinished) macro applies the
@@ -15552,7 +15572,7 @@ end
       table.insert(Babel.ranges, {0xF0000,  0xFFFFD, 'on'})
       table.insert(Babel.ranges, {0x100000, 0x10FFFD, 'on'})
     \fi}
-  \newattribute\bbl@attr@dir
+  \newattribute\bbl@attr@dir 
   \directlua{ Babel.attr_dir = luatexbase.registernumber'bbl@attr@dir' }
   \bbl@exp{\output{\bodydir\pagedir\the\output}}
 \fi
@@ -16198,8 +16218,8 @@ Babel.linebreaking.replacements[0] = {}  -- pre
 Babel.linebreaking.replacements[1] = {}  -- post
 
 function Babel.tovalue(v)
-  if type(v) == 'string' then
-    return loadstring('return ' .. v)()
+  if type(v) == 'table' then
+    return Babel.locale_props[v[1]].vars[v[2]] or v[3]
   else
     return v
   end
@@ -16355,6 +16375,7 @@ Babel.us_char = string.char(31)
 function Babel.hyphenate_replace(head, mode)
   local u = unicode.utf8
   local lbkr = Babel.linebreaking.replacements[mode]
+  local tovalue = Babel.tovalue
 
   local word_head = head
 
@@ -16558,9 +16579,9 @@ function Babel.hyphenate_replace(head, mode)
             d.replace = Babel.str_to_nodes(crep.no, matches, item_base)
             d.attr = item_base.attr
             if crep.pre == nil then  -- TeXbook p96
-              d.penalty = crep.penalty or tex.hyphenpenalty
+              d.penalty = tovalue(crep.penalty) or tex.hyphenpenalty
             else
-              d.penalty = crep.penalty or tex.exhyphenpenalty
+              d.penalty = tovalue(crep.penalty) or tex.exhyphenpenalty
             end
             placeholder = '|'
             head, new = node.insert_before(head, item, d)
@@ -16571,16 +16592,16 @@ function Babel.hyphenate_replace(head, mode)
           elseif crep and crep.penalty then
             d = node.new(14, 0)   -- (penalty, userpenalty)
             d.attr = item_base.attr
-            d.penalty = crep.penalty
+            d.penalty = tovalue(crep.penalty)
             head, new = node.insert_before(head, item, d)
 
           elseif crep and crep.space then
             -- 655360 = 10 pt = 10 * 65536 sp
             d = node.new(12, 13)      -- (glue, spaceskip)
             local quad = font.getfont(item_base.font).size or 655360
-            node.setglue(d, crep.space[1] * quad,
-                            crep.space[2] * quad,
-                            crep.space[3] * quad)
+            node.setglue(d, tovalue(crep.space[1]) * quad,
+                            tovalue(crep.space[2]) * quad,
+                            tovalue(crep.space[3]) * quad)
             if mode == 0 then
               placeholder = ' '
             end
@@ -16590,18 +16611,18 @@ function Babel.hyphenate_replace(head, mode)
             -- 655360 = 10 pt = 10 * 65536 sp
             d = node.new(2, 3)      -- (rule, empty) = \no*rule
             local quad = font.getfont(item_base.font).size or 655360
-            d.width   = crep.norule[1] * quad
-            d.height  = crep.norule[2] * quad
-            d.depth   = crep.norule[3] * quad
+            d.width   = tovalue(crep.norule[1]) * quad
+            d.height  = tovalue(crep.norule[2]) * quad
+            d.depth   = tovalue(crep.norule[3]) * quad
             head, new = node.insert_before(head, item, d)
 
           elseif crep and crep.spacefactor then
             d = node.new(12, 13)      -- (glue, spaceskip)
             local base_font = font.getfont(item_base.font)
             node.setglue(d,
-              crep.spacefactor[1] * base_font.parameters['space'],
-              crep.spacefactor[2] * base_font.parameters['space_stretch'],
-              crep.spacefactor[3] * base_font.parameters['space_shrink'])
+              tovalue(crep.spacefactor[1]) * base_font.parameters['space'],
+              tovalue(crep.spacefactor[2]) * base_font.parameters['space_stretch'],
+              tovalue(crep.spacefactor[3]) * base_font.parameters['space_shrink'])
             if mode == 0 then
               placeholder = ' '
             end
@@ -16614,7 +16635,7 @@ function Babel.hyphenate_replace(head, mode)
             d = node.new(13, 1)      -- (kern, user)
             local quad = font.getfont(item_base.font).size or 655360
             d.attr = item_base.attr
-            d.kern = crep.kern * quad
+            d.kern = tovalue(crep.kern) * quad
             head, new = node.insert_before(head, item, d)
 
           elseif crep and crep.node then
