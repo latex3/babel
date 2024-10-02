@@ -53,6 +53,8 @@ given encoding. This `.fd` file will instruct LaTeX to use a font from
 the second family when a font from the first family in the given
 encoding seems to be needed.
 
+Use `\DeclareFontFamilySubstitution` instead.
+
 ## `ensureinfo=off`
 
 \New{3.75} Previous to 3.75, `ini` files were loaded only with
@@ -67,7 +69,7 @@ package option to turn the new behavior off (`ensureinfo=off`).
 ## `captions=`
 
 This option was introduced long ago to deal with `ldf` files with LICR
-strings, which where not fully supported in Unicode engines. Now it’s
+strings, which were not fully supported in Unicode engines. Now it’s
 unnecessary.
 
 ## Fonts
@@ -77,7 +79,7 @@ partial solution for “Unicode” fonts. Shortly after, with the
 introduction of `\babelfont`, they were deprecated, and now, finally,
 have been removed. A short description follows, for reference:
 * `\babelFSstore{babel-language}` sets the current three   basic families (rm, sf, tt) as the default for the language given.
-* `\babelFSdefault{babel-language}{fontspec-features}` patches `\fontspec` so that the given features are always passed as   the optional argument or added to it (not an ideal solution).
+* `\babelFSdefault{babel-language}{fontspec-features}` patches `\fontspec` so that the given features are always passed as the optional argument or added to it (not an ideal solution).
 ```tex
 \setmainfont[Language=Turkish]{Minion Pro}
 \babelFSstore{turkish}
