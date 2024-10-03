@@ -8,24 +8,25 @@ This is the home page for Babel, the multilingual environment for
 [LaTeX](https://www.latex-project.org/) (and sometimes Plain) with the
 three basic engines (pdfTeX, LuaTeX and XeTeX). Its aim is to provide a
 localization framework for different languages, scripts, and cultures
-based on the latest advances in [Unicode](https://home.unicode.org/)
-(including the [CLDR](http://cldr.unicode.org/)), the
+based on the **latest advances in
+[Unicode](https://home.unicode.org/)** (including the
+[CLDR](http://cldr.unicode.org/)), the
 [W3C](https://www.w3.org/groups/wg/i18n-core/publications) (where
-applicable) and other technologies, as well as on international
-standards for better compatibility and consistency.
+applicable) and other technologies, as well as on **international
+standards** for better compatibility and consistency.
 
-Babel currently supports approximately 300 languages (with various
-levels of coverage) across about 45 scripts, including complex and RTL
-scripts like Arabic, Chinese, Tibetan and Devanagari. Its high-level
-interface with `fontspec` allows for seamless integration with OpenType
-technologies in `xetex` and `luatex`, enabling effortless use of
-advanced typographic features, and fine-grained control and
+Babel currently supports approximately **300 languages** (with various
+levels of coverage) across about **45 scripts, including complex and
+RTL** ones like Arabic, Chinese, Tibetan and Devanagari. Its high-level
+interface with `fontspec` allows for seamless integration with
+**OpenType** technologies in `xetex` and `luatex`, enabling effortless
+use of advanced typographic features, and fine-grained control and
 customization. Additionally, lazy locale and font loading facilitate
-integration into automated document generation workflows, and makes it
-adept at handling complex documents with multiple languages.
+integration into **automated document generation workflows**, and makes
+it adept at handling complex documents with **multiple languages**.
 
-Many locales in Babel are built on a modern core that utilizes
-descriptive `ini` files. This design simplifies the customization of
+Many locales in Babel are built on a **modern core** that utilizes
+descriptive `ini` files. This design **simplifies the customization** of
 hyphenation and line breaking, captions, date formats (across various
 calendars), spacing and other language-specific typographical rules,
 and so on.
