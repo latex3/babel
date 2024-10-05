@@ -13,23 +13,34 @@ based on the **latest advances in
 [CLDR](http://cldr.unicode.org/)), the
 [W3C](https://www.w3.org/groups/wg/i18n-core/publications) (where
 applicable) and other technologies, as well as on **international
-standards** for better compatibility and consistency.
+standards** for better compatibility and consistency. Find the [PDF manual
+here](http://mirrors.ctan.org/macros/latex/required/babel/base/babel.pdf).
 
 Babel currently supports approximately **300 languages** (with various
 levels of coverage) across about **45 scripts, including complex and
-RTL** ones like Arabic, Chinese, Tibetan and Devanagari. Its high-level
-interface with `fontspec` allows for seamless integration with
-**OpenType** technologies in `xetex` and `luatex`, enabling effortless
-use of advanced typographic features, and fine-grained control and
-customization. Additionally, lazy locale and font loading facilitate
-integration into **automated document generation workflows**, and makes
-it adept at handling complex documents with **multiple languages**.
+RTL** ones like
+[Arabic](https://latex3.github.io/babel/guides/locale-arabic.html),
+[Chinese](https://latex3.github.io/babel/guides/locale-chinese.html),
+[Tibetan](https://latex3.github.io/babel/news/whats-new-in-babel-3.81.html)
+and
+[Devanagari](https://latex3.github.io/babel/guides/locale-hindi.html).
+Its high-level interface with
+[`fontspec`](https://ctan.org/pkg/fontspec?lang=en) allows for seamless
+integration with **OpenType** technologies in `xetex` and `luatex`,
+enabling effortless use of advanced typographic features, and
+fine-grained control and customization. Additionally, lazy locale and
+font loading facilitate integration into **automated document
+generation workflows**, and makes it adept at handling complex
+documents with **multiple languages**.
 
 Many locales in Babel are built on a **modern core** that utilizes
-descriptive `ini` files. This design **simplifies the customization** of
-hyphenation and line breaking, captions, date formats (across various
-calendars), spacing and other language-specific typographical rules,
-and so on.
+descriptive `ini` files. This design [simplifies the tailoring and
+customization](guides/using-babelprovide-to-modify-or-extend-locales.html)
+of languages, thanks to tools that provide highly precise control over
+[hyphenation and line
+breaking](guides/non-standard-hyphenation-with-luatex.html), captions,
+date formats (across various calendars), spacing, and other
+locale-specific typographical rules.
 
 -----------------------
 
@@ -52,10 +63,6 @@ case, it's advisable to install TeXLive.)
 
 * [Which method for which language](guides/which-method-for-which-language.html)
   When to use the old good language files and when `\babelprovide` or `provide=*`.
-* [Non-standard hyphenation with  luatex](guides/non-standard-hyphenation-with-luatex.html)
-  Explains how to define special hyphenation rules like `ff` → `ff-f`
-* [Using \babelprovide to modify or extend locales](guides/using-babelprovide-to-modify-or-extend-locales.html)
-  Hints on how to tailor your language to your needs in some frequent cases.
 * [Useful links to tex.strackexchange](guides/useful-links-to-tex.stackexchange.html)
   Examples for many languages: Chinese, Arabic, Sanskrit, etc.
 
@@ -65,6 +72,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [24.11](news/whats-new-in-babel-24.11.html) | Manual revised. Transform variables. |
 | [24.10](news/whats-new-in-babel-24.10.html) | `\localename`, `\mainlocalename`, `\babelhyphenmins` |
 | [24.9](news/whats-new-in-babel-24.9.html) | Transforms: `digits.native`, CJK spacing (tentative). |
 | [24.8](news/whats-new-in-babel-24.8.html) | `\BabelWrapText` and hook `foreign`. |
@@ -140,13 +148,6 @@ case, it's advisable to install TeXLive.)
 | [3.37](news/whats-new-in-babel-3.37.html) | Non-standard hyphenation, like `f-f` → `ff-f` (lua). |
 | [3.36](news/whats-new-in-babel-3.36.html) | Polytonic Greek. Improvements in Chinese. |
 | [3.35](news/whats-new-in-babel-3.35.html) | Shorthands work in bibs and refs even with `safe=none`. |
-
-## More
-
-* [Keys in ini files](guides/keys-in-ini-files.html)
-* [List of locale templates](guides/list-of-locale-templates.html)
-* [Old and deprecated functions](guides/old-and-deprecated-functions.html)
-* [Using babel with plain](guides/using-babel-with-plain.html)
 
 ## External links
 

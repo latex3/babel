@@ -1,29 +1,40 @@
 # What's new in babel 24.11
 
-**Draft**
+2024-10-05
 
 ## Manual thoroughly revised
 
-It’s a work in progress, but a good deal of obsolete comments have been
-updated, sections have been reorganized, and some explanations have been
-extended. There are also more examples.
+The manual is still being refined, but many outdated comments have been
+revised or directly deleted, sections restructured, and certain
+explanations expanded. Additionally, a greater number of examples have
+been included.
 
-The layout is also somewhat different — macro and environment names are not
-set in the margin anymore.
+The design has also changed slightly — names of macros and environments
+are no longer placed in the margins.
 
 ## Transform variables
 
-Values in some transforms are hardcoded in the `ini` files and cannot
-be modified. Now a new feature in introduced to readjust them. No `ini`
-has been modified yet, but CJK languages (for proper margin alignment),
-French (spaces with punctuation) and Tibetan (for traditional
-justification) will be extended soon.
+Previously, values for some transforms were fixed in the `ini` files
+and unchangeable. A new feature has now been introduced to allow
+adjustments (specifically numeric parameters in prehyphenation). While
+no `ini` file has been altered yet, updates for Chinese languages (to
+align margins correctly), Japanese (also small kana), French (spacing
+with punctuation), and Tibetan (for traditional text justification) are
+planned for the near future.
 
-Only numeric parameters in prehyphenation.
+This applies solely to numeric parameters in prehyphenation.
 
-`{variable|default}`: uses the variable as defined by
-\SetTransformValue{<locale-name>}{<variable-name>}{<value>}. If the
-variable is not defined (or its value is `nil`), use the default value.
+In the transforms section of `ìni` files, a value of
+`{<variable-name>|<default>}` employs the variable as set by
+`\SetTransformValue{<locale-name>}{<variable-name>}{<value>}`. If the
+variable is undefined (or its value is `nil`), the `default` is used
+instead.
+
+## Other changes
+
+Updated the internal list of RTL scripts to add Garay, Todhri, Elymaic,
+Yazidi, and a few more.
+
 
 
 
