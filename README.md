@@ -1,8 +1,8 @@
-## Babel 24.10.64171
+## Babel 24.11
 
-(dev)
+2024-10-05
 
-`babel` is the multilingual framework for localizing documents in
+`babel` is the multilingual framework to localize documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
 typographical (and other) rules for about 170 to 300 languages,
 depending on the engine, with several levels of coverage. A few
@@ -10,9 +10,9 @@ languages even work with Plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.10 are described in:
+Changes in version 24.11 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.10.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.11.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,15 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.11  (dev)
+24.11  2024-10-05
        * Start a thorough review of the manual.
-       * (lua) Transform variables (lua).
-       
-24.10  2024-09-18
-       * \localename replaces the buggy \languagename. Added
-         \mainlocalename.
-       * \babelhyphenmins for better control of those parameters and,
-         in lualatex, \hyphenationmin.
+       * (lua) Transform variables.
 ```
 
 ### Previous changes

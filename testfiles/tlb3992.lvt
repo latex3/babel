@@ -1,37 +1,28 @@
-\input{test2e}\InputIfFileExists{test2eb}{}{}
+\input{test2e}\input{test2eb}
 \documentclass{article}
 \START
 \FORMAT{}
 \CLASS{article}
-\OMIT
-% Some fonts in hebrew have to be downloaded separately, because they
-% are not currently part of some distributions (it was formerly,
-% perhaps until 2005, more or less). Since bug 3992 is not related to
-% the font, we define one. However this is an issue to be adressed,
-% perhaps as a bug on its own.
-\expandafter\font\csname LHE/cmr/m/n/10\endcsname=cmr10
-\ifx\directlua\undefined
-  \PassOptionsToPackage{%
-    belarusian, % Bad interaction
-    bulgarian,  %
-    hebrew,     % With xet-tex bidi commands
-    macedonian, % Missing licr chars
-    mongolian}{babel}
-\fi
-\usepackage[
+\PACKAGE[
   acadian,
   albanian,
   afrikaans,
   american,
   australian,
   austrian,
-  bosnian,
+  bahasa,
   indonesian,
+  indon,
+  bahasai,
   malay,
+  meyalu,
+  bahasam,
   basque,
+  brazil,
   brazilian,
   breton,
   british,
+  bulgarian,
   canadian,
   catalan,
   croatian,
@@ -43,134 +34,184 @@
   estonian,
   finnish,
   french,
-  friulian,
   galician,
   german,
   greek,
   polutonikogreek,
+  hebrew,
   hungarian,
   icelandic,
   interlingua,
   irish,
   italian,
-  kurmanji,
   latin,
-  latvian,
-  lithuanian,
   lowersorbian,
   magyar,
   naustrian,
   newzealand,
   ngerman,
   norsk,
-  norwegian,
-  northernsami,
+  samin,
   nynorsk,
-  occitan,
-  piedmontese,
   polish,
+  portuges,
   portuguese,
   romanian,
-  romansh,
   russian,
-  scottishgaelic,
+  scottish,
   serbian,
-  serbianc,
   slovak,
   slovene,
   spanish,
   swedish,
   turkish,
-  turkmen,
   ukrainian,
   uppersorbian,
-  vietnamese,
   welsh,
   UKenglish,
   USenglish,
-  provide*=*
+]{babel}
+\OMIT
+% Some fonts in hebrew have to be downloaded separately, because they
+% are not currently part of some distributions (it was formerly,
+% perhaps until 2005, more or less). Since bug 3992 is not related to
+% the font, we define one. However this is an issue to be adressed,
+% perhaps as a bug on its own.
+\expandafter\font\csname LHE/cmr/m/n/10\endcsname=cmr10
+\usepackage[
+  acadian,
+  albanian,
+  afrikaans,
+  american,
+  australian,
+  austrian,
+  bahasa,
+  indonesian,
+  indon,
+  bahasai,
+  malay,
+  meyalu,
+  bahasam,
+  basque,
+  brazil,
+  brazilian,
+  breton,
+  british,
+  bulgarian,
+  canadian,
+  catalan,
+  croatian,
+  czech,
+  danish,
+  dutch,
+  english,
+  esperanto,
+  estonian,
+  finnish,
+  french,
+  galician,
+  german,
+  greek,
+  polutonikogreek,
+  hebrew,
+  hungarian,
+  icelandic,
+  interlingua,
+  irish,
+  italian,
+  latin,
+  lowersorbian,
+  magyar,
+  naustrian,
+  newzealand,
+  ngerman,
+  norsk,
+  samin,
+  nynorsk,
+  polish,
+  portuges,
+  portuguese,
+  romanian,
+  russian,
+  scottish,
+  serbian,
+  slovak,
+  slovene,
+  spanish,
+  swedish,
+  turkish,
+  ukrainian,
+  uppersorbian,
+  welsh,
+  UKenglish,
+  USenglish,
 ]{babel}
 \nofiles
-\ifx\directlua\undefined\else
-  \usepackage{fontspec}
-  \setmainfont{FreeSerif}
-  \babeladjust{ autoload.options = import }
-\fi
 \begin{document}\TIMO
-\def\testlanguage#1{%
-  #1: ({\selectlanguage{#1}\chaptername)(\indexname)\par}}
-\testlanguage{acadian}
-\testlanguage{albanian}
-\testlanguage{afrikaans}
-\testlanguage{american}
-\testlanguage{australian}
-\testlanguage{austrian}
-\testlanguage{belarusian}
-\testlanguage{bosnian}
-\testlanguage{indonesian}
-\testlanguage{malay}
-\testlanguage{basque}
-\testlanguage{brazilian}
-\testlanguage{breton}
-\testlanguage{british}
-\testlanguage{bulgarian}
-\testlanguage{canadian}
-\testlanguage{catalan}
-\testlanguage{croatian}
-\testlanguage{czech}
-\testlanguage{danish}
-\testlanguage{dutch}
-\testlanguage{english}
-\testlanguage{esperanto}
-\testlanguage{estonian}
-\testlanguage{finnish}
-\testlanguage{french}
-\testlanguage{friulian}
-\testlanguage{galician}
-\testlanguage{german}
-\testlanguage{greek}
-\testlanguage{polutonikogreek}
-\testlanguage{hebrew}
-\testlanguage{hungarian}
-\testlanguage{icelandic}
-\testlanguage{interlingua}
-\testlanguage{irish}
-\testlanguage{italian}
-\testlanguage{kurmanji}
-\testlanguage{latin}
-\testlanguage{latvian}
-\testlanguage{lithuanian}
-\testlanguage{lowersorbian}
-\testlanguage{macedonian}
-\testlanguage{magyar}
-\testlanguage{mongolian}
-\testlanguage{naustrian}
-\testlanguage{newzealand}
-\testlanguage{ngerman}
-\testlanguage{norsk}
-\testlanguage{norwegian}
-\testlanguage{northernsami}
-\testlanguage{nynorsk}
-\testlanguage{occitan}
-\testlanguage{piedmontese}
-\testlanguage{polish}
-\testlanguage{portuguese}
-\testlanguage{romanian}
-\testlanguage{romansh}
-\testlanguage{russian}
-\testlanguage{scottishgaelic}
-\testlanguage{serbian}
-\testlanguage{serbianc}
-\testlanguage{slovak}
-\testlanguage{slovene}
-\testlanguage{spanish}
-\testlanguage{swedish}
-\testlanguage{turkish}
-\testlanguage{turkmen}
-\testlanguage{ukrainian}
-\testlanguage{uppersorbian}
-\testlanguage{vietnamese}
-\testlanguage{welsh}
-\testlanguage{UKenglish}
-\testlanguage{USenglish}
+\selectlanguage{acadian}
+\selectlanguage{albanian}
+\selectlanguage{afrikaans}
+\selectlanguage{american}
+\selectlanguage{australian}
+\selectlanguage{austrian}
+\selectlanguage{bahasa}
+\selectlanguage{indonesian}
+\selectlanguage{indon}
+\selectlanguage{bahasai}
+\selectlanguage{malay}
+\selectlanguage{meyalu}
+\selectlanguage{bahasam}
+\selectlanguage{basque}
+\selectlanguage{brazil}
+\selectlanguage{brazilian}
+\selectlanguage{breton}
+\selectlanguage{british}
+\selectlanguage{bulgarian}
+\selectlanguage{canadian}
+\selectlanguage{catalan}
+\selectlanguage{croatian}
+\selectlanguage{czech}
+\selectlanguage{danish}
+\selectlanguage{dutch}
+\selectlanguage{english}
+\selectlanguage{esperanto}
+\selectlanguage{estonian}
+\selectlanguage{finnish}
+\selectlanguage{french}
+\selectlanguage{galician}
+\selectlanguage{german}
+\selectlanguage{greek}
+\selectlanguage{polutonikogreek}
+\selectlanguage{hebrew}
+\selectlanguage{hungarian}
+\selectlanguage{icelandic}
+\selectlanguage{interlingua}
+\selectlanguage{irish}
+\selectlanguage{italian}
+\selectlanguage{latin}
+\selectlanguage{lowersorbian}
+\selectlanguage{magyar}
+\selectlanguage{naustrian}
+\selectlanguage{newzealand}
+\selectlanguage{ngerman}
+\selectlanguage{norsk}
+\selectlanguage{samin}
+\selectlanguage{nynorsk}
+\selectlanguage{polish}
+\selectlanguage{portuges}
+\selectlanguage{portuguese}
+\selectlanguage{romanian}
+\selectlanguage{russian}
+\selectlanguage{scottish}
+\selectlanguage{serbian}
+\selectlanguage{slovak}
+\selectlanguage{slovene}
+\selectlanguage{spanish}
+\selectlanguage{swedish}
+\selectlanguage{turkish}
+\selectlanguage{ukrainian}
+\selectlanguage{uppersorbian}
+\selectlanguage{welsh}
+\selectlanguage{UKenglish}
+\selectlanguage{USenglish}
 \end{document}

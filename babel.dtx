@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/10/02 v24.10.64171 The Babel package]
+\ProvidesFile{babel.dtx}[2024/10/05 v24.11 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -637,20 +637,19 @@ because \babel{} does not require declaring these secondary languages
 explicitly — the basic settings are loaded on the fly when the language
 is first selected.
 
-This is particularly useful in documents with many
-languages, and also when there are short texts of this
-kind coming from an external source whose contents are not known on
-beforehand (for example, titles in a bibliography). At this regard, it
-is worth remembering that |\babelfont| does \textit{not} load any font
-until required, so that it can be used just in case.
+This is particularly useful in documents with many languages, and also
+when there are short texts of this kind coming from an external source
+whose contents are not known on beforehand (for example, titles in a
+bibliography). At this regard, it is worth remembering that
+|\babelfont| does \textit{not} load any font until required, so that it
+can be used just in case.
 
 \New{3.84} With \pdftex, when a language is loaded on the fly
-(actually, with |\babelprovide|, because this is the macro used
-internally to load it) selectors now set the font encoding based on the
-list provided when loading |fontenc|. Not all scripts have an
-associated encoding, so this feature works only with Latin, Cyrillic,
-Greek, Arabic, Hebrew, Cherokee, Armenian, and Georgian, provided a
-suitable font is found.
+(internally it's loaded with |\babelprovide|) selectors now set the
+font encoding based on the list provided when loading |fontenc|. Not
+all scripts have an associated encoding, so this feature works only
+with Latin, Cyrillic, Greek, Arabic, Hebrew, Cherokee, Armenian, and
+Georgian, provided a suitable font is found.
 
 \begin{example}
   A trivial document with the default font in English and Spanish, and
@@ -1654,7 +1653,8 @@ With some scripts, the \textsf{Harfbuzz} renderer is preferred:
 \begin{verbatim}
   \babelfont[_*arabic, *devanagari_]{rm}[_Renderer=Harfbuzz_]{FreeSerif}
 \end{verbatim}
-\Babel{} does the rest for you.
+\Babel{} does the rest for you, including setting the font language and
+script.
 \end{example}
 
 \begin{example}
@@ -1901,7 +1901,7 @@ never complied with the documented behavior and it is just a version as
 environment of |\foreignlanguage|, except when the package option
 |bidi| is set -- in this case, |\foreignlanguage| emits a
 |\leavevmode|, while |otherlanguage*| does not. Like |\foreignlanguage|
-is a \textit{text} command, and therefore it doesn’t change the
+it is a \textit{text} command, and therefore it doesn’t change the
 paragraph direction.
 
 \subsection{Plain}
@@ -1924,6 +1924,7 @@ In e-Plain and pdf-Plain, load languages styles with |\input| and then use
 
 \subsection{A couple of tools}
 
+% Also Plain
 \Describe{\babeltags}{\char`\{\m{tag1} \texttt{=} \m{language1}, \m{tag2}
 \texttt{=} \m{language2}, \dots\char`\}}
 
@@ -1975,6 +1976,7 @@ text
   |\begin{finnish}|).
 \end{note}
 
+% Also Plain
 \Describe{\babelensure}{|[include=|\m{commands}|,exclude=|\m{commands}%
   |,fontenc=|\m{encoding}|]|\marg{language}}
 
@@ -2013,6 +2015,7 @@ With |ini| files (see below), captions are ensured by default.
 
 \subsection{Accessing language info}
 
+% Also Plain
 \Describe{\localename}{}
 \DescribeOther{\mainlocalename}{}
 \DescribeOther{\languagename}{}
@@ -2083,8 +2086,8 @@ The available fields are:
   \New{3.75}
 \end{description}
 
-All of these kays can be preceded by |main.| (eg, |main.tag.ini|),
-which retrieves the values of the main locale.
+% All of these keys can be preceded by |main.| (eg, |main.tag.ini|),
+% which retrieves the values of the main locale.
 
 \begin{note}
   Currently, |x| is used for two separate functions, namely,
@@ -2507,7 +2510,7 @@ above.
 \section{Tailoring, customizing and modifying a language}
 
 Modifying the behavior of a language (say, the chapter
-“caption”), is sometimes necessary, but not always trivial.
+“caption”) is sometimes necessary.
 
 Several language definition files use their own methods to set
 options. For example, \textsf{french} uses |\frenchsetup|,
@@ -2515,10 +2518,12 @@ options. For example, \textsf{french} uses |\frenchsetup|,
 |spanish| have no attribute counterparts. Macros setting
 options are also used (eg, |\ProsodicMarksOn| in \textsf{latin}).
 
+This section describes the general tools provided by the \babel{} core.
+
 \subsection{Captions}
 
-In the case of caption names a\textit{} specific macro is provided,
-because this is perhaps the most frequent change:
+In the case of caption names a specific macro is provided,
+because this is perhaps the most frequent change.
 
 \Describe{\setlocalecaption}{%
   \marg{language-name}\marg{caption-name}\marg{string}}
@@ -2538,15 +2543,15 @@ redefined behave with the ‘new way’ described in the following note.
   There are a few alternative methods:
   \begin{itemize}
 \item With data |import|’ed from |ini| files, you can modify the values
-  of specific keys, like:
+  of specific keys when loaded, like:
 \begin{verbatim}
 \babelprovide[import, _captions/listtable = Lista de tablas_]{spanish}
 \end{verbatim}
   (In this particular case, instead of the |captions| group you may need
   to modify the |captions.licr| one.)
 
-\item The ‘old way’, still valid for many languages, to redefine a
-    caption is the following:
+\item The ‘old way’ to redefine a caption, still valid for many
+languages but discouraged in general, is the following:
 \begin{verbatim}
 \addto\captionsenglish{%
   \renewcommand\contentsname{Foo}%
@@ -2675,15 +2680,67 @@ be still assigned to that language.
 
 \subsection{Modifying and adding values to \texttt{ini} files}
 
-\New{3.39} There is a way to modify the values of |ini| files when they
-are imported with |\babelprovide| or |provide=|. To set, say,
-|digits.native| in the |numbers| section, use something like
-|numbers/digits.native=abcdefghij|. Keys may be added, too. Without
-|import| you may modify the identification keys.
+\New{3.39} There is a way to modify or even add values of |ini| files
+when they are imported with |\babelprovide| or |provide=|. This can be
+used to create private variants easily. All you need is to import the
+same |ini| file with a different locale name and different parameters.
+Without |import| you may still modify the identification keys.
 
-This can be used to create private variants easily. All you need is to
-import the same |ini| file with a different locale name and different
-parameters. 
+Examples of the fine-grained control you have at your disposal are the
+following. All of them assume |\usepackage[english]{babel}|.
+
+\begin{example}
+  Here is how to change the hyphenation rules because there are several
+  criteria, or you must follow and editorial style. The following
+  example just uses the default Spanish rules in English:
+\begin{verbatim}
+\babelprovide[hyphenrules=spanish]{english}
+\end{verbatim}
+\end{example}
+
+\begin{example}
+  The required native digits are already defined in the corresponding
+  |ini| files, but they can be modified and even added as shown:
+\begin{verbatim}
+\babelprovide[numbers/digits.native=abcdefghij]{english}
+\end{verbatim}
+This example is somewhat absurd, but now |\englishdigits{264}| will
+print ‘cge’. (It doesn't work with \pdftex.)
+\end{example}
+
+\begin{example}
+  Currently date format they can be changed only with imported data, but
+  with its high level interface it’s quite straightforward:
+\begin{verbatim}
+\babelprovide[
+    import,
+    date.gregorian/date.long = {[d] ([MMMM]) [y]}]
+  {english}
+\end{verbatim}
+  Here |[d]| is the day number, |[MMMM]| the month name and |[y]| the
+  years. It will print something like ‘5 (October) 2024’.
+\end{example}
+
+\begin{example}
+  To set the hyphen to ‘none’ (only \luatex).
+\begin{verbatim}
+\babelprovide[typography/prehyphenchar = 0]{english}
+\end{verbatim}
+This setting \textit{may} work with `xetex`, but getting rid of the
+hyphen char in this engine is not trivial, because you must rely on the
+font, and not all fonts behave the same.
+\end{example}
+
+\begin{example}
+You can define new counters freely, and assign them to |\alph|: 
+\begin{verbatim}
+\babelprovide[
+    counters/acute = á é í ó ú, % Define a counter named `acute`
+    alph = acute                % Assign it to \alph
+  ]{english}
+\end{verbatim}
+You can choose the name, and instead of `alphabetic` it can be another one.
+\end{example}
 
 \subsection{Hooks}
 
@@ -2933,13 +2990,11 @@ such a case, you can set its value.
 \end{verbatim}
 \end{example}
 
-
-
 Besides |\today|, this option defines an additional command for dates:
 |\<language>date|, which takes three arguments, namely, year, month and
 day numbers. In fact, |\today| calls |\<language>today|, which in turn
 calls |\<language>date{\the\year}{\the\month}{\the\day}|. \New{3.44}
-More convenient is usually |\localedate|, with prints the date for the
+More convenient is usually |\localedate|, which prints the date for the
 current locale.
 
 \Describe{hyphenrules=}{\meta{language-list}} With this option, with a
@@ -5633,7 +5688,7 @@ Oostrum and many others have been used. Paul Wackers and Werenfried
 Spit helped find and repair bugs.
 
 More recently, there are significant contributions by Salim Bou, Ulrike
-Fischer and Udi Fogiel.
+Fischer, Loren Davis and Udi Fogiel.
 
 There are also many contributors for specific languages, which are
 mentioned in the respective files. Without them, \babel{} just
@@ -5741,8 +5796,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.10.64171>>
-%<<date=2024/10/02>>
+%<<version=24.11>>
+%<<date=2024/10/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6667,8 +6722,6 @@ wouldn’t exist.
 \let\bbl@initoload\relax
 %</package|core>
 %<*package>
-\newif\ifbbl@bcpallowed
-\bbl@bcpallowedfalse
 \def\bbl@provide@locale{%
   \ifx\babelprovide\@undefined
     \bbl@error{base-on-the-fly}{}{}{}%
@@ -6921,6 +6974,9 @@ wouldn’t exist.
 %
 \let\bbl@restorelastskip\relax
 \let\bbl@savelastskip\relax
+%
+\newif\ifbbl@bcpallowed
+\bbl@bcpallowedfalse
 %
 \def\select@language#1{% from set@, babel@aux, babel@toc
   \ifx\bbl@selectorname\@empty
@@ -7388,118 +7444,6 @@ wouldn’t exist.
 \let\languagetext\setlocale
 %    \end{macrocode}
 %
-% \macro{\babelensure}
-%
-% The user command just parses the optional argument and creates a
-% new macro named |\bbl@e@<language>|. We register a hook at the
-% |afterextras| event which just executes this macro in a
-% ``complete'' selection (which, if undefined, is |\relax| and does
-% nothing). This part is somewhat involved because we have to make
-% sure things are expanded the correct number of times.
-%
-% The macro |\bbl@e@<language>| contains
-% |\bbl@ensure|\marg{include}\marg{exclude}\marg{fontenc}, which in in
-% turn loops over the macros names in |\bbl@captionslist|, excluding
-% (with the help of |\in@|) those in the |exclude| list. If the
-% |fontenc| is given (and not |\relax|), the |\fontencoding| is also
-% added. Then we loop over the |include| list, but if the macro
-% already contains |\foreignlanguage|, nothing is done.  Note this
-% macro (1) is not restricted to the preamble, and (2) changes are
-% local.
-%
-%    \begin{macrocode}
-\bbl@trace{Defining babelensure}
-\newcommand\babelensure[2][]{%
-  \AddBabelHook{babel-ensure}{afterextras}{%
-    \ifcase\bbl@select@type
-      \bbl@cl{e}%
-    \fi}%
-  \begingroup
-    \let\bbl@ens@include\@empty
-    \let\bbl@ens@exclude\@empty
-    \def\bbl@ens@fontenc{\relax}%
-    \def\bbl@tempb##1{%
-      \ifx\@empty##1\else\noexpand##1\expandafter\bbl@tempb\fi}%
-    \edef\bbl@tempa{\bbl@tempb#1\@empty}%
-    \def\bbl@tempb##1=##2\@@{\@namedef{bbl@ens@##1}{##2}}%
-    \bbl@foreach\bbl@tempa{\bbl@tempb##1\@@}%
-    \def\bbl@tempc{\bbl@ensure}%
-    \expandafter\bbl@add\expandafter\bbl@tempc\expandafter{%
-      \expandafter{\bbl@ens@include}}%
-    \expandafter\bbl@add\expandafter\bbl@tempc\expandafter{%
-      \expandafter{\bbl@ens@exclude}}%
-    \toks@\expandafter{\bbl@tempc}%
-    \bbl@exp{%
-  \endgroup
-  \def\<bbl@e@#2>{\the\toks@{\bbl@ens@fontenc}}}}
-\def\bbl@ensure#1#2#3{% 1: include 2: exclude 3: fontenc
-  \def\bbl@tempb##1{% elt for (excluding) \bbl@captionslist list
-    \ifx##1\@undefined % 3.32 - Don't assume the macro exists
-      \edef##1{\noexpand\bbl@nocaption
-        {\bbl@stripslash##1}{\languagename\bbl@stripslash##1}}%
-    \fi
-    \ifx##1\@empty\else
-      \in@{##1}{#2}%
-      \ifin@\else
-        \bbl@ifunset{bbl@ensure@\languagename}%
-          {\bbl@exp{%
-            \\\DeclareRobustCommand\<bbl@ensure@\languagename>[1]{%
-              \\\foreignlanguage{\languagename}%
-              {\ifx\relax#3\else
-                \\\fontencoding{#3}\\\selectfont
-               \fi
-               ########1}}}}%
-          {}%
-        \toks@\expandafter{##1}%
-        \edef##1{%
-           \bbl@csarg\noexpand{ensure@\languagename}%
-           {\the\toks@}}%
-      \fi
-      \expandafter\bbl@tempb
-    \fi}%
-  \expandafter\bbl@tempb\bbl@captionslist\today\@empty
-  \def\bbl@tempa##1{% elt for include list
-    \ifx##1\@empty\else
-      \bbl@csarg\in@{ensure@\languagename\expandafter}\expandafter{##1}%
-      \ifin@\else
-        \bbl@tempb##1\@empty
-      \fi
-      \expandafter\bbl@tempa
-    \fi}%
-  \bbl@tempa#1\@empty}
-\def\bbl@captionslist{%
-  \prefacename\refname\abstractname\bibname\chaptername\appendixname
-  \contentsname\listfigurename\listtablename\indexname\figurename
-  \tablename\partname\enclname\ccname\headtoname\pagename\seename
-  \alsoname\proofname\glossaryname}
-%    \end{macrocode}
-%
-% \subsection{Short tags}
-%
-% \macro{\babeltags}
-% This macro is straightforward. After zapping spaces, we
-% loop over the list and define the macros |\text<tag>| and
-% |\<tag>|. Definitions are first expanded so that they don't
-% contain |\csname| but the actual macro.
-%
-%   \begin{macrocode}
-\bbl@trace{Short tags}
-\def\babeltags#1{%
-  \edef\bbl@tempa{\zap@space#1 \@empty}%
-  \def\bbl@tempb##1=##2\@@{%
-    \edef\bbl@tempc{%
-      \noexpand\newcommand
-      \expandafter\noexpand\csname ##1\endcsname{%
-        \noexpand\protect
-        \expandafter\noexpand\csname otherlanguage*\endcsname{##2}}
-      \noexpand\newcommand
-      \expandafter\noexpand\csname text##1\endcsname{%
-        \noexpand\foreignlanguage{##2}}}
-    \bbl@tempc}%
-  \bbl@for\bbl@tempa\bbl@tempa{%
-    \expandafter\bbl@tempb\bbl@tempa\@@}}
-%    \end{macrocode}
-%
 % \subsection{Errors}
 %
 % \macro{\@nolanerr}
@@ -7727,6 +7671,92 @@ wouldn’t exist.
   \def\bbl@tempa#1=#2\@@{\NewHook{babel/#1}}
   \bbl@foreach\bbl@evargs{\bbl@tempa#1\@@}
 \fi
+%    \end{macrocode}
+%
+% \macro{\babelensure}
+%
+% The user command just parses the optional argument and creates a
+% new macro named |\bbl@e@<language>|. We register a hook at the
+% |afterextras| event which just executes this macro in a
+% ``complete'' selection (which, if undefined, is |\relax| and does
+% nothing). This part is somewhat involved because we have to make
+% sure things are expanded the correct number of times.
+%
+% The macro |\bbl@e@<language>| contains
+% |\bbl@ensure|\marg{include}\marg{exclude}\marg{fontenc}, which in in
+% turn loops over the macros names in |\bbl@captionslist|, excluding
+% (with the help of |\in@|) those in the |exclude| list. If the
+% |fontenc| is given (and not |\relax|), the |\fontencoding| is also
+% added. Then we loop over the |include| list, but if the macro
+% already contains |\foreignlanguage|, nothing is done.  Note this
+% macro (1) is not restricted to the preamble, and (2) changes are
+% local.
+%
+%    \begin{macrocode}
+\bbl@trace{Defining babelensure}
+\newcommand\babelensure[2][]{%
+  \AddBabelHook{babel-ensure}{afterextras}{%
+    \ifcase\bbl@select@type
+      \bbl@cl{e}%
+    \fi}%
+  \begingroup
+    \let\bbl@ens@include\@empty
+    \let\bbl@ens@exclude\@empty
+    \def\bbl@ens@fontenc{\relax}%
+    \def\bbl@tempb##1{%
+      \ifx\@empty##1\else\noexpand##1\expandafter\bbl@tempb\fi}%
+    \edef\bbl@tempa{\bbl@tempb#1\@empty}%
+    \def\bbl@tempb##1=##2\@@{\@namedef{bbl@ens@##1}{##2}}%
+    \bbl@foreach\bbl@tempa{\bbl@tempb##1\@@}%
+    \def\bbl@tempc{\bbl@ensure}%
+    \expandafter\bbl@add\expandafter\bbl@tempc\expandafter{%
+      \expandafter{\bbl@ens@include}}%
+    \expandafter\bbl@add\expandafter\bbl@tempc\expandafter{%
+      \expandafter{\bbl@ens@exclude}}%
+    \toks@\expandafter{\bbl@tempc}%
+    \bbl@exp{%
+  \endgroup
+  \def\<bbl@e@#2>{\the\toks@{\bbl@ens@fontenc}}}}
+\def\bbl@ensure#1#2#3{% 1: include 2: exclude 3: fontenc
+  \def\bbl@tempb##1{% elt for (excluding) \bbl@captionslist list
+    \ifx##1\@undefined % 3.32 - Don't assume the macro exists
+      \edef##1{\noexpand\bbl@nocaption
+        {\bbl@stripslash##1}{\languagename\bbl@stripslash##1}}%
+    \fi
+    \ifx##1\@empty\else
+      \in@{##1}{#2}%
+      \ifin@\else
+        \bbl@ifunset{bbl@ensure@\languagename}%
+          {\bbl@exp{%
+            \\\DeclareRobustCommand\<bbl@ensure@\languagename>[1]{%
+              \\\foreignlanguage{\languagename}%
+              {\ifx\relax#3\else
+                \\\fontencoding{#3}\\\selectfont
+               \fi
+               ########1}}}}%
+          {}%
+        \toks@\expandafter{##1}%
+        \edef##1{%
+           \bbl@csarg\noexpand{ensure@\languagename}%
+           {\the\toks@}}%
+      \fi
+      \expandafter\bbl@tempb
+    \fi}%
+  \expandafter\bbl@tempb\bbl@captionslist\today\@empty
+  \def\bbl@tempa##1{% elt for include list
+    \ifx##1\@empty\else
+      \bbl@csarg\in@{ensure@\languagename\expandafter}\expandafter{##1}%
+      \ifin@\else
+        \bbl@tempb##1\@empty
+      \fi
+      \expandafter\bbl@tempa
+    \fi}%
+  \bbl@tempa#1\@empty}
+\def\bbl@captionslist{%
+  \prefacename\refname\abstractname\bibname\chaptername\appendixname
+  \contentsname\listfigurename\listtablename\indexname\figurename
+  \tablename\partname\enclname\ccname\headtoname\pagename\seename
+  \alsoname\proofname\glossaryname}
 %    \end{macrocode}
 %
 % \subsection{Setting up language files}
@@ -8922,6 +8952,32 @@ wouldn’t exist.
       \fi}%
     \bbl@fs@chars
   \fi\fi\fi}
+%    \end{macrocode}
+%
+% \subsection{Short tags}
+%
+% \macro{\babeltags}
+% This macro is straightforward. After zapping spaces, we
+% loop over the list and define the macros |\text<tag>| and
+% |\<tag>|. Definitions are first expanded so that they don't
+% contain |\csname| but the actual macro.
+%
+%   \begin{macrocode}
+\bbl@trace{Short tags}
+\def\babeltags#1{%
+  \edef\bbl@tempa{\zap@space#1 \@empty}%
+  \def\bbl@tempb##1=##2\@@{%
+    \edef\bbl@tempc{%
+      \noexpand\newcommand
+      \expandafter\noexpand\csname ##1\endcsname{%
+        \noexpand\protect
+        \expandafter\noexpand\csname otherlanguage*\endcsname{##2}}
+      \noexpand\newcommand
+      \expandafter\noexpand\csname text##1\endcsname{%
+        \noexpand\foreignlanguage{##2}}}
+    \bbl@tempc}%
+  \bbl@for\bbl@tempa\bbl@tempa{%
+    \expandafter\bbl@tempb\bbl@tempa\@@}}
 %    \end{macrocode}
 %
 % \subsection{Hyphens}
@@ -12452,12 +12508,12 @@ wouldn’t exist.
 \bbl@trace{Macros to switch the text direction}
 \def\bbl@alscripts{,Arabic,Syriac,Thaana,}
 \def\bbl@rscripts{% 
-  ,Imperial Aramaic,Avestan,Cypriot,Hatran,Hebrew,%
-  Old Hungarian,Lydian,Mandaean,Manichaean,%
-  Meroitic Cursive,Meroitic,Old North Arabian,%
-  Nabataean,N'Ko,Orkhon,Palmyrene,Inscriptional Pahlavi,%
-  Psalter Pahlavi,Phoenician,Inscriptional Parthian,Samaritan,%
-  Old South Arabian,}%
+  ,Garay,Todhri,Imperial Aramaic,Avestan,Cypriot,Elymaic,Hatran,Hebrew,%
+  Old Hungarian,Kharoshthi,Lydian,Mandaean,Manichaean,Mende Kikakui,%
+  Meroitic Cursive,Meroitic,Old North Arabian,Nabataean,N'Ko,%
+  Old Turkic,Orkhon,Palmyrene,Inscriptional Pahlavi,Psalter Pahlavi,%
+  Phoenician,Inscriptional Parthian,Hanifi,Samaritan,Old Sogdian,%
+  Old South Arabian,Yezidi,}%
 \def\bbl@provide@dirs#1{%
   \bbl@xin@{\csname bbl@sname@#1\endcsname}{\bbl@alscripts\bbl@rscripts}%
   \ifin@
@@ -12869,7 +12925,7 @@ wouldn’t exist.
 %</package>
 %    \end{macrocode}
 %
-% \section{The kernel of Babel (\texttt{babel.def}, common)}
+% \section{The kernel of Babel}
 %
 % The kernel of the \babel\ system is currently stored in
 % \file{babel.def}. The file \file{babel.def} contains most of the
@@ -15329,8 +15385,7 @@ end
         {\bbl@add@list\babeltempb{nil}}&%
         {\directlua{
            local rep = [=[##1]=]
-           local three_args =
-           '%s*=%s*([%-%d%.%a{}|]+)%s+([%-%d%.%a{}|]+)%s+([%-%d%.%a{}|]+)'
+           local three_args = '%s*=%s*([%-%d%.%a{}|]+)%s+([%-%d%.%a{}|]+)%s+([%-%d%.%a{}|]+)'
            &% Numeric passes directly: kern, penalty...
            rep = rep:gsub('^%s*(remove)%s*$', 'remove = true')
            rep = rep:gsub('^%s*(insert)%s*,', 'insert = true, ')
