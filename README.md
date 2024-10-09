@@ -1,6 +1,6 @@
-## Babel 24.11
+## Babel 24.11.64876
 
-2024-10-05
+(dev)
 
 `babel` is the multilingual framework to localize documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -48,9 +48,11 @@ respective authors.
 
 ### Summary of latest changes
 ```
+24.12  (dev)
+
 24.11  2024-10-05
        * Start a thorough review of the manual.
-       * (lua) Transform variables.
+       * (lua) Transforms variables.
 ```
 
 ### Previous changes

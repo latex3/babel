@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/10/05 v24.11 The Babel package]
+\ProvidesFile{babel.dtx}[2024/10/09 v24.11.64876 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -396,12 +396,11 @@ document encoding is UTF-8). Other scripts require loading
 (see |\babelfont| below). 
 
 \begin{example}
-  Here is a simple full example for “traditional” \TeX{} engines
-  (see below for \xetex{} and \luatex{}). The packages |fontenc| and
-  |inputenc| do not belong to \babel, but they are included in the
-  example because typically you will need them. It assumes UTF-8, the
-  default encoding:
-\setengine{pdftex}
+  Here is a simple full example for “traditional” \TeX{} engines (see
+  below for \xetex{} and \luatex{}). The package |fontenc| does not
+  belong to \babel, but it is included in the example because typically
+  you will need it. It assumes UTF-8, the default encoding:
+  \setengine{pdftex}
 \begin{verbatim}
 \documentclass{article}
 
@@ -506,9 +505,7 @@ even better, make sure the encoding in your editor is set to UTF-8.
 \end{troubleshooting}
 
 \begin{troubleshooting}
-Another typical error when using \babel{} is the
-  following:\footnote{In old versions the error read ``You haven't
-  loaded the language LANG yet''.}
+Another typical error when using \babel{} is the following:
 \trouble{Unknown language `LANG'}
 \begin{verbatim}
 ! Package babel Error: Unknown language `#1'. Either you have
@@ -546,11 +543,10 @@ Package babel Warning: No hyphenation patterns were preloaded for
 
 \begin{troubleshooting}
 \textit{You are loading directly a language style.}
-Loading directly |sty| files in \LaTeX{} (ie,
-    |\usepackage{<language>}|) was deprecated many years ago and you will get the
-    error:\footnote{In old versions the error read ``You have used an
-    old interface to call babel'', not very helpful.}
-  \trouble{You are loading directly a language style}
+Loading directly
+|sty| files in \LaTeX{} (ie, |\usepackage{<language>}|) was deprecated
+many years ago and you will get the error: \trouble{You are loading
+directly a language style}
 \begin{verbatim}
 ! Package babel Error: You are loading directly a language style.
 (babel)                This syntax is deprecated and you must use
@@ -1653,8 +1649,20 @@ With some scripts, the \textsf{Harfbuzz} renderer is preferred:
 \begin{verbatim}
   \babelfont[_*arabic, *devanagari_]{rm}[_Renderer=Harfbuzz_]{FreeSerif}
 \end{verbatim}
-\Babel{} does the rest for you, including setting the font language and
-script.
+\Babel{} does the rest for you, including setting the font script
+\textit{and} language.
+\end{example}
+
+\begin{example}
+  Since each locale is a separate ‘language’, they can be assigned
+  different fonts. In this example, we set Simplified and Tradicional
+  Chinese:
+\begin{verbatim}
+\babelfont[chinese-_simplified_]{rm}{Noto Serif CJK _SC_}
+\babelfont[chinese-_simplified_]{sf}{Noto Sans CJK _SC_}
+\babelfont[chinese-_traditional_]{rm}{Noto Serif CJK _TC_}
+\babelfont[chinese-_traditional_]{sf}{Noto Sans CJK _TC_}
+\end{verbatim}
 \end{example}
 
 \begin{example}
@@ -1904,6 +1912,66 @@ environment of |\foreignlanguage|, except when the package option
 it is a \textit{text} command, and therefore it doesn’t change the
 paragraph direction.
 
+\begin{example}
+Here is a document putting in practice some the techniques described,
+which shows how to deal neatly with complex multilingual documents
+in \xetex{} and \luatex, with the help of logical markup. You are
+writing a book on Indic literature with many extracts in several
+languages, which fits in the category of ‘mostly monolingual’. Loading
+of locales and fonts is lazy, which greatly simplifies the preamble.
+\catcode`@=13 \def@#1@{{\fontspec[Script=Devanagari]{FreeSans}#1}}
+\begin{verbatim}
+\documentclass{article}
+
+_\usepackage[english]{babel}_
+
+_\babelfont[*devanagari]{rm}[Renderer=Harfbuzz]{FreeSans}_
+
+\newenvironment{excerpt}[1]
+  {\begin{quote}_\begin{otherlanguage*}{#1}_}
+  {_\end{otherlanguage*}_\end{quote}}
+
+\begin{document}
+
+\section{Sanskrit literature}
+
+Here is an excerpt:
+\begin{excerpt}{sanskrit}
+  @संस्कृतम्@
+\end{excerpt}
+
+\section{Hindi literature}
+
+Here is an excerpt:
+\begin{excerpt}{hindi}
+  @हिन्दी@
+\end{excerpt}
+
+\section{Marathi literature}
+
+Here is an excerpt:
+\begin{excerpt}{marathi}
+  @मराठी@
+\end{excerpt}
+
+\section{Nepali literature}
+
+Here is an excerpt:
+\begin{excerpt}{nepali}
+  @नेपाली@
+\end{excerpt}
+
+\section{Rajasthani literature}
+
+Here is an excerpt:
+\begin{excerpt}{rajasthani}
+  @संस्कृतम्@
+\end{excerpt}
+
+\end{document}
+\end{verbatim}
+\end{example}
+
 \subsection{Plain}
 
 In e-Plain and pdf-Plain, load languages styles with |\input| and then use
@@ -1999,7 +2067,7 @@ By default only the basic captions and |\today| are redefined, but you
 can add further macros with the key |include| in the optional argument
 (without commas). Macros not to be modified are listed in
 |exclude|. You can also enforce a font encoding with the option
-|fontenc|.\footnote{With it, encoded strings may not work as expected.}
+|fontenc| (with it, encoded strings may not work as expected).
 A couple of examples:
 \begin{verbatim}
 \babelensure[include=\Today]{spanish}
@@ -2350,10 +2418,18 @@ There are (currently) three options:
   corresponding behavior is not always implemented. Also, there are
   some limitations in the engines. A few remarks follow (which could no
   longer be valid when you read this manual, if the packages involved
-  have been updated). The Harfbuzz renderer still has some issues, so as
-  a rule of thumb prefer the default renderer, and resort to Harfbuzz
-  only if the former does not work for you. Fortunately, fonts can be
-  loaded twice with different renderers; for example:
+  have been updated). The Harfbuzz renderer still has some issues, so
+  as a rule of thumb:
+\begin{itemize}
+\item prefer the default renderer in alphabetic scripts (like Latin,
+  Greek and Cyrillic);
+\item resort to Harfbuzz in complex scripts with heavy contextual
+  analysis (like Arabic and Devanagari).
+\end{itemize}
+  See
+  \href{https://github.com/latex3/luaotfload/wiki/Comparing-the-modes}{Comparing
+  the modes} for further info. Fortunately, fonts can be loaded twice
+  with different renderers; for example:
 \begin{verbatim}
 \babelfont[spanish]{rm}{FreeSerif}
 \babelfont[hindi]{rm}[Renderer=Harfbuzz]{FreeSerif}
@@ -3649,9 +3725,9 @@ the manual for Greek) |;|
 \item[Turkish] |: ! =|
 \end{description}
 In addition, the \babel{} core declares |~| as a one-char shorthand
-which is let, like the standard |~|, to a non breaking
-space.\footnote{This declaration serves to nothing, but it is
-preserved for backward compatibility.}
+which is let, like the standard |~|, to a non breaking space. Actually,
+this declaration serves to nothing, but it is preserved for backward
+compatibility.
 
 \Describe\ifbabelshorthand{\marg{character}\marg{true}\marg{false}}
 
@@ -4388,8 +4464,8 @@ Some languages sharing the same script define macros to switch it (eg,
 certain default. Even the \babel{} core defined |\textlatin|, but is
 was somewhat buggy because in some cases it messed up encodings and
 fonts (for example, if the main Latin encoding was |LY1|), and
-therefore it has been deprecated.\footnote{But still defined for
-backwards compatibility.}
+therefore it has been deprecated (but still defined for
+backwards compatibility).
 
 The locales currently available cover the following scripts:
 \begin{multicols}{4}
@@ -5017,11 +5093,11 @@ the data so that it works as expected.
 
 In that file the person who maintains a \TeX\ environment has to record
 for which languages he has hyphenation patterns \emph{and} in which
-files these are stored\footnote{This is because different operating
-systems sometimes use \emph{very} different file-naming
-conventions.}. When hyphenation exceptions are stored in a separate
-file this can be indicated by naming that file \emph{after} the file
-with the hyphenation patterns.
+files these are stored (this was because different operating systems
+sometimes used \emph{very} different file-naming conventions, but this
+issue is not currently so serious as before). When hyphenation
+exceptions are stored in a separate file this can be indicated by
+naming that file \emph{after} the file with the hyphenation patterns.
 
 The file can contain empty lines and comments, as well as lines which
 start with an equals (\texttt{=}) sign. Such a line will instruct
@@ -5038,9 +5114,8 @@ german hyphen.ger
 \end{verbatim}
 
 You may also set the font encoding the patterns are intended for by
-following the language name by a colon and the encoding
-code.\footnote{This is not a new feature, but in former versions it
-didn't work correctly.} For example:
+following the language name by a colon and the encoding code. For
+example:
 \begin{verbatim}
 german:T1 hyphenT1.ger
 german hyphen.ger
@@ -5117,8 +5192,8 @@ Some recommendations:
 \item Do not switch scripts. If you want to make sure a set of glyphs
   is used, switch either the font encoding (low-level) or the language
   (high-level, which in turn may switch the font encoding). Usage of things
-  like |\latintext| is deprecated.\footnote{But not removed, for backward
-  compatibility.}
+  like |\latintext| is deprecated (but not removed, for backward
+  compatibility).
 \item Please, for ``private'' internal macros do not use the |\bbl@|
   prefix. It is used by \babel{} and it can lead to incompatibilities.
 \end{itemize}
@@ -5611,9 +5686,7 @@ as package option (which is now deprecated), then the default for the
 engine is used. This is not done by default to prevent backward
 incompatibilities, but if you are creating a new language this version
 is better. It's up to the maintainers of the current languages to
-decide if using it is appropriate.\footnote{This replaces in 3.9g a
-short-lived \texttt{\string\UseStrings} which has been removed because
-it did not work.}
+decide if using it is appropriate.
 
 \Describe{\EndBabelCommands}{}
 Marks the end of the series of blocks.
@@ -5796,8 +5869,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.11>>
-%<<date=2024/10/05>>
+%<<version=24.11.64876>>
+%<<date=2024/10/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6466,7 +6539,6 @@ wouldn’t exist.
       \def\bbl@opt@provide{#2}%
     \fi}
 \fi
-%
 %    \end{macrocode}
 %
 % If there is no |shorthands=<chars>|, the original \textsf{babel}
@@ -6585,6 +6657,8 @@ wouldn’t exist.
 % interlude, because the actual code is below, tagged as
 % \textit{Emulate LaTeX}.
 %
+% First, exit immediately if previouly loaded.
+%
 %    \begin{macrocode}
 %<*core>
 \ifx\ldf@quit\@undefined\else
@@ -6595,14 +6669,11 @@ wouldn’t exist.
   <@Emulate LaTeX@>
 \fi
 <@Basic macros@>
+%</core>
 %    \end{macrocode}
 %
 % That is all for the moment. Now follows some common stuff, for both
 % Plain and \LaTeX{}. After it, we will resume the \LaTeX-only stuff.
-%
-%    \begin{macrocode}
-%</core>
-%    \end{macrocode}
 %
 % \section{\texttt{babel.sty} and \texttt{babel.def} (common)}
 %
@@ -6720,38 +6791,6 @@ wouldn’t exist.
     \fi
   \fi\fi}
 \let\bbl@initoload\relax
-%</package|core>
-%<*package>
-\def\bbl@provide@locale{%
-  \ifx\babelprovide\@undefined
-    \bbl@error{base-on-the-fly}{}{}{}%
-  \fi
-  \let\bbl@auxname\languagename % Still necessary.
-  \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
-    {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}}%
-  \ifbbl@bcpallowed
-    \expandafter\ifx\csname date\languagename\endcsname\relax
-      \expandafter
-      \bbl@bcplookup\languagename-\@empty-\@empty-\@empty\@@
-      \ifx\bbl@bcp\relax\else  % Returned by \bbl@bcplookup
-        \edef\languagename{\bbl@bcp@prefix\bbl@bcp}%
-        \edef\localename{\bbl@bcp@prefix\bbl@bcp}%
-        \expandafter\ifx\csname date\languagename\endcsname\relax
-          \let\bbl@initoload\bbl@bcp
-          \bbl@exp{\\\babelprovide[\bbl@autoload@bcpoptions]{\languagename}}%
-          \let\bbl@initoload\relax
-        \fi
-        \bbl@csarg\xdef{bcp@map@\bbl@bcp}{\localename}%
-      \fi
-    \fi
-  \fi
-  \expandafter\ifx\csname date\languagename\endcsname\relax
-    \IfFileExists{babel-\languagename.tex}%
-      {\bbl@exp{\\\babelprovide[\bbl@autoload@options]{\languagename}}}%
-      {}%
-  \fi}
-%</package>
-%<*package|core>
 %    \end{macrocode}
 %
 % \macro{\iflanguage}
@@ -6974,9 +7013,6 @@ wouldn’t exist.
 %
 \let\bbl@restorelastskip\relax
 \let\bbl@savelastskip\relax
-%
-\newif\ifbbl@bcpallowed
-\bbl@bcpallowedfalse
 %
 \def\select@language#1{% from set@, babel@aux, babel@toc
   \ifx\bbl@selectorname\@empty
@@ -7500,178 +7536,17 @@ wouldn’t exist.
      rebuild the format. Now I will use the patterns\\%
      preloaded for \bbl@nulllanguage\space instead}}
 \let\bbl@usehooks\@gobbletwo
+%    \end{macrocode}
+%
+% Here ended the now discarded |switch.def|.
+%
+% Here also (currently) ends the \textsf{base} option.
+%
+%    \begin{macrocode}
 \ifx\bbl@onlyswitch\@empty\endinput\fi
-  % Here ended switch.def
 %    \end{macrocode}
 %
-% Here ended the now discarded |switch.def|. Here also (currently) ends
-% the \textsf{base} option.
-%
-%    \begin{macrocode}
-\ifx\directlua\@undefined\else
-  \ifx\bbl@luapatterns\@undefined
-    \input luababel.def
-  \fi
-\fi
-\bbl@trace{Compatibility with language.def}
-\ifx\bbl@languages\@undefined
-  \ifx\directlua\@undefined
-    \openin1 = language.def % TODO. Remove hardcoded number
-    \ifeof1
-      \closein1
-      \message{I couldn't find the file language.def}
-    \else
-      \closein1
-      \begingroup
-        \def\addlanguage#1#2#3#4#5{%
-          \expandafter\ifx\csname lang@#1\endcsname\relax\else
-            \global\expandafter\let\csname l@#1\expandafter\endcsname
-              \csname lang@#1\endcsname
-          \fi}%
-        \def\uselanguage#1{}%
-        \input language.def
-      \endgroup
-    \fi
-  \fi
-  \chardef\l@english\z@
-\fi
-%    \end{macrocode}
-%
-% \macro{\addto}
-% It takes two arguments, a \meta{control sequence} and \TeX-code to
-% be added to the \meta{control sequence}.
-%
-% If the \meta{control sequence} has not been defined before it is
-% defined now.  The control sequence could also expand to |\relax|,
-% in which case a circular definition results. The net result is a
-% stack overflow.  Note there is an inconsistency, because the
-% assignment in the last branch is global. 
-%
-%    \begin{macrocode}
-\def\addto#1#2{%
-  \ifx#1\@undefined
-    \def#1{#2}%
-  \else
-    \ifx#1\relax
-      \def#1{#2}%
-    \else
-      {\toks@\expandafter{#1#2}%
-       \xdef#1{\the\toks@}}%
-    \fi
-  \fi}
-%    \end{macrocode}
-%
-% The macro |\initiate@active@char| below takes all the necessary
-% actions to make its argument a shorthand character. The real work
-% is performed once for each character. But first we define a little
-% tool.
-%
-%    \begin{macrocode}
-\def\bbl@withactive#1#2{%
-  \begingroup
-    \lccode`~=`#2\relax
-    \lowercase{\endgroup#1~}}
-%    \end{macrocode}
-%
-% \macro{\bbl@redefine}
-%
-% To redefine a command, we save the old meaning of the macro. Then
-% we redefine it to call the original macro with the `sanitized'
-% argument. The reason why we do it this way is that we don't want
-% to redefine the \LaTeX\ macros completely in case their
-% definitions change (they have changed in the past). A macro named
-% |\macro| will be saved new control sequences named |\org@macro|.
-%
-%    \begin{macrocode}
-\def\bbl@redefine#1{%
-  \edef\bbl@tempa{\bbl@stripslash#1}%
-  \expandafter\let\csname org@\bbl@tempa\endcsname#1%
-  \expandafter\def\csname\bbl@tempa\endcsname}
-\@onlypreamble\bbl@redefine
-%    \end{macrocode}
-%
-% \macro{\bbl@redefine@long}
-% This version of |\babel@redefine| can be used to redefine |\long|
-% commands such as |\ifthenelse|.
-%
-%    \begin{macrocode}
-\def\bbl@redefine@long#1{%
-  \edef\bbl@tempa{\bbl@stripslash#1}%
-  \expandafter\let\csname org@\bbl@tempa\endcsname#1%
-  \long\expandafter\def\csname\bbl@tempa\endcsname}
-\@onlypreamble\bbl@redefine@long
-%    \end{macrocode}
-%
-% \macro{\bbl@redefinerobust}
-% For commands that are redefined, but which \textit{might} be
-% robust we need a slightly more intelligent macro. A robust
-% command |foo| is defined to expand to |\protect|\verb*|\foo |. So
-% it is necessary to check whether \verb*|\foo | exists. The result
-% is that the command that is being redefined is always robust
-% afterwards.  Therefore all we need to do now is define \verb*|\foo |.
-%
-%    \begin{macrocode}
-\def\bbl@redefinerobust#1{%
-  \edef\bbl@tempa{\bbl@stripslash#1}%
-  \bbl@ifunset{\bbl@tempa\space}%
-    {\expandafter\let\csname org@\bbl@tempa\endcsname#1%
-     \bbl@exp{\def\\#1{\\\protect\<\bbl@tempa\space>}}}%
-    {\bbl@exp{\let\<org@\bbl@tempa>\<\bbl@tempa\space>}}%
-    \@namedef{\bbl@tempa\space}}
-\@onlypreamble\bbl@redefinerobust
-%    \end{macrocode}
-%
-% \subsection{Hooks}
-%
-% Admittedly, the current implementation is a somewhat simplistic and
-% does very little to catch errors, but it is meant for developers,
-% after all. |\bbl@usehooks| is the commands used by \babel{} to execute
-% hooks defined for an event.
-%
-%    \begin{macrocode}
-\bbl@trace{Hooks}
-\newcommand\AddBabelHook[3][]{%
-  \bbl@ifunset{bbl@hk@#2}{\EnableBabelHook{#2}}{}%
-  \def\bbl@tempa##1,#3=##2,##3\@empty{\def\bbl@tempb{##2}}%
-  \expandafter\bbl@tempa\bbl@evargs,#3=,\@empty
-  \bbl@ifunset{bbl@ev@#2@#3@#1}%
-    {\bbl@csarg\bbl@add{ev@#3@#1}{\bbl@elth{#2}}}%
-    {\bbl@csarg\let{ev@#2@#3@#1}\relax}%
-  \bbl@csarg\newcommand{ev@#2@#3@#1}[\bbl@tempb]}
-\newcommand\EnableBabelHook[1]{\bbl@csarg\let{hk@#1}\@firstofone}
-\newcommand\DisableBabelHook[1]{\bbl@csarg\let{hk@#1}\@gobble}
-\def\bbl@usehooks{\bbl@usehooks@lang\languagename}
-\def\bbl@usehooks@lang#1#2#3{% Test for Plain
-  \ifx\UseHook\@undefined\else\UseHook{babel/*/#2}\fi
-  \def\bbl@elth##1{%
-    \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#2@}#3}}%
-  \bbl@cs{ev@#2@}%
-  \ifx\languagename\@undefined\else % Test required for Plain (?)
-    \ifx\UseHook\@undefined\else\UseHook{babel/#1/#2}\fi
-    \def\bbl@elth##1{%
-      \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#2@#1}#3}}%
-    \bbl@cs{ev@#2@#1}%
-  \fi}
-%    \end{macrocode}
-%
-% To ensure forward compatibility, arguments in hooks are set
-% implicitly. So, if a further argument is added in the future,
-% there is no need to change the existing code. Note events
-% intended for \textsf{hyphen.cfg} are also loaded (just in
-% case you need them for some reason).
-%
-%    \begin{macrocode}
-\def\bbl@evargs{,% <- don't delete this comma
-  everylanguage=1,loadkernel=1,loadpatterns=1,loadexceptions=1,%
-  adddialect=2,patterns=2,defaultcommands=0,encodedcommands=2,write=0,%
-  beforeextras=0,afterextras=0,stopcommands=0,stringprocess=0,%
-  hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0,%
-  beforestart=0,languagename=2,begindocument=1}
-\ifx\NewHook\@undefined\else % Test for Plain (?)
-  \def\bbl@tempa#1=#2\@@{\NewHook{babel/#1}}
-  \bbl@foreach\bbl@evargs{\bbl@tempa#1\@@}
-\fi
-%    \end{macrocode}
+% \subsection{More on selection}
 %
 % \macro{\babelensure}
 %
@@ -7757,6 +7632,143 @@ wouldn’t exist.
   \contentsname\listfigurename\listtablename\indexname\figurename
   \tablename\partname\enclname\ccname\headtoname\pagename\seename
   \alsoname\proofname\glossaryname}
+%    \end{macrocode}
+%
+% \subsection{Short tags}
+%
+% \macro{\babeltags}
+% This macro is straightforward. After zapping spaces, we
+% loop over the list and define the macros |\text<tag>| and
+% |\<tag>|. Definitions are first expanded so that they don't
+% contain |\csname| but the actual macro.
+%
+%   \begin{macrocode}
+\bbl@trace{Short tags}
+\newcommand\babeltags[1]{%
+  \edef\bbl@tempa{\zap@space#1 \@empty}%
+  \def\bbl@tempb##1=##2\@@{%
+    \edef\bbl@tempc{%
+      \noexpand\newcommand
+      \expandafter\noexpand\csname ##1\endcsname{%
+        \noexpand\protect
+        \expandafter\noexpand\csname otherlanguage*\endcsname{##2}}
+      \noexpand\newcommand
+      \expandafter\noexpand\csname text##1\endcsname{%
+        \noexpand\foreignlanguage{##2}}}
+    \bbl@tempc}%
+  \bbl@for\bbl@tempa\bbl@tempa{%
+    \expandafter\bbl@tempb\bbl@tempa\@@}}
+%    \end{macrocode}
+%
+% \subsection{Compatibility with language.def}
+%
+% Plain e-\TeX{} doesn’t rely on language.dat, but babel can be made
+% compatible with this format easily.
+%
+%    \begin{macrocode}
+\bbl@trace{Compatibility with language.def}
+\ifx\directlua\@undefined\else
+  \ifx\bbl@luapatterns\@undefined
+    \input luababel.def
+  \fi
+\fi
+\ifx\bbl@languages\@undefined
+  \ifx\directlua\@undefined
+    \openin1 = language.def % TODO. Remove hardcoded number
+    \ifeof1
+      \closein1
+      \message{I couldn't find the file language.def}
+    \else
+      \closein1
+      \begingroup
+        \def\addlanguage#1#2#3#4#5{%
+          \expandafter\ifx\csname lang@#1\endcsname\relax\else
+            \global\expandafter\let\csname l@#1\expandafter\endcsname
+              \csname lang@#1\endcsname
+          \fi}%
+        \def\uselanguage#1{}%
+        \input language.def
+      \endgroup
+    \fi
+  \fi
+  \chardef\l@english\z@
+\fi
+%    \end{macrocode}
+%
+% \macro{\addto}
+% It takes two arguments, a \meta{control sequence} and \TeX-code to
+% be added to the \meta{control sequence}.
+%
+% If the \meta{control sequence} has not been defined before it is
+% defined now.  The control sequence could also expand to |\relax|,
+% in which case a circular definition results. The net result is a
+% stack overflow.  Note there is an inconsistency, because the
+% assignment in the last branch is global. 
+%
+%    \begin{macrocode}
+\def\addto#1#2{%
+  \ifx#1\@undefined
+    \def#1{#2}%
+  \else
+    \ifx#1\relax
+      \def#1{#2}%
+    \else
+      {\toks@\expandafter{#1#2}%
+       \xdef#1{\the\toks@}}%
+    \fi
+  \fi}
+%    \end{macrocode}
+%
+% \subsection{Hooks}
+%
+% Admittedly, the current implementation is a somewhat simplistic and
+% does very little to catch errors, but it is meant for developers,
+% after all. |\bbl@usehooks| is the commands used by \babel{} to execute
+% hooks defined for an event.
+%
+%    \begin{macrocode}
+\bbl@trace{Hooks}
+\newcommand\AddBabelHook[3][]{%
+  \bbl@ifunset{bbl@hk@#2}{\EnableBabelHook{#2}}{}%
+  \def\bbl@tempa##1,#3=##2,##3\@empty{\def\bbl@tempb{##2}}%
+  \expandafter\bbl@tempa\bbl@evargs,#3=,\@empty
+  \bbl@ifunset{bbl@ev@#2@#3@#1}%
+    {\bbl@csarg\bbl@add{ev@#3@#1}{\bbl@elth{#2}}}%
+    {\bbl@csarg\let{ev@#2@#3@#1}\relax}%
+  \bbl@csarg\newcommand{ev@#2@#3@#1}[\bbl@tempb]}
+\newcommand\EnableBabelHook[1]{\bbl@csarg\let{hk@#1}\@firstofone}
+\newcommand\DisableBabelHook[1]{\bbl@csarg\let{hk@#1}\@gobble}
+\def\bbl@usehooks{\bbl@usehooks@lang\languagename}
+\def\bbl@usehooks@lang#1#2#3{% Test for Plain
+  \ifx\UseHook\@undefined\else\UseHook{babel/*/#2}\fi
+  \def\bbl@elth##1{%
+    \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#2@}#3}}%
+  \bbl@cs{ev@#2@}%
+  \ifx\languagename\@undefined\else % Test required for Plain (?)
+    \ifx\UseHook\@undefined\else\UseHook{babel/#1/#2}\fi
+    \def\bbl@elth##1{%
+      \bbl@cs{hk@##1}{\bbl@cs{ev@##1@#2@#1}#3}}%
+    \bbl@cs{ev@#2@#1}%
+  \fi}
+%    \end{macrocode}
+%
+% To ensure forward compatibility, arguments in hooks are set
+% implicitly. So, if a further argument is added in the future,
+% there is no need to change the existing code. Note events
+% intended for \textsf{hyphen.cfg} are also loaded (just in
+% case you need them for some reason).
+%
+%    \begin{macrocode}
+\def\bbl@evargs{,% <- don't delete this comma
+  everylanguage=1,loadkernel=1,loadpatterns=1,loadexceptions=1,%
+  adddialect=2,patterns=2,defaultcommands=0,encodedcommands=2,write=0,%
+  beforeextras=0,afterextras=0,stopcommands=0,stringprocess=0,%
+  hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0,%
+  beforestart=0,languagename=2,begindocument=1}
+\ifx\NewHook\@undefined\else % Test for Plain (?)
+  \def\bbl@tempa#1=#2\@@{\NewHook{babel/#1}}
+  \bbl@foreach\bbl@evargs{\bbl@tempa#1\@@}
+\fi
 %    \end{macrocode}
 %
 % \subsection{Setting up language files}
@@ -7911,31 +7923,12 @@ wouldn’t exist.
     \immediate\write\@mainaux{\string\@nameuse{bbl@beforestart}}%
   \fi
   \expandafter\selectlanguage\expandafter{\bbl@main@language}%
-%</package|core>
-%<*package>
-  \ifx\bbl@normalsf\@empty
-    \ifnum\sfcode`\.=\@m
-      \let\normalsfcodes\frenchspacing
-    \else
-      \let\normalsfcodes\nonfrenchspacing
-    \fi
-  \else
-    \let\normalsfcodes\bbl@normalsf
-  \fi
-%</package>
-%<*package|core>
   \ifbbl@single  % must go after the line above.
     \renewcommand\selectlanguage[1]{}%
     \renewcommand\foreignlanguage[2]{#2}%
     \global\let\babel@aux\@gobbletwo  % Also as flag
   \fi}
-%</package|core>
-%<*package>
-\AddToHook{begindocument/before}{%
-  \let\bbl@normalsf\normalsfcodes
-  \let\normalsfcodes\relax} % Hack, to delay the setting
-%</package>%
-%<*package|core>
+%
 \ifcase\bbl@engine\or
   \AtBeginDocument{\pagedir\bodydir}
 \fi
@@ -7955,6 +7948,19 @@ wouldn’t exist.
 %
 % \subsection{Shorthands}
 %
+% The macro |\initiate@active@char| below takes all the necessary
+% actions to make its argument a shorthand character. The real work
+% is performed once for each character. But first we define a little
+% tool.
+%
+%    \begin{macrocode}
+\bbl@trace{Shorhands}
+\def\bbl@withactive#1#2{%
+  \begingroup
+    \lccode`~=`#2\relax
+    \lowercase{\endgroup#1~}}
+%    \end{macrocode}
+%
 % \macro{\bbl@add@special}
 % The macro |\bbl@add@special| is used to add a new character (or
 % single character control sequence) to the macro |\dospecials| (and
@@ -7968,7 +7974,6 @@ wouldn’t exist.
 % done with |\nfss@catcodes|, added in 3.10.
 %
 %    \begin{macrocode}
-\bbl@trace{Shorhands}
 \def\bbl@add@special#1{% 1:a macro like \", \?, etc.
   \bbl@add\dospecials{\do#1}% test @sanitize = \relax, for back. compat.
   \bbl@ifunset{@sanitize}{}{\bbl@add\@sanitize{\@makeother#1}}%
@@ -8844,7 +8849,7 @@ wouldn’t exist.
 \AtBeginDocument{\bbl@clear@ttribs}
 %    \end{macrocode}
 %
-% \subsection{Support for saving macro definitions}
+% \subsection{Support for saving and redefining macros}
 %
 % To save the meaning of control sequences using |\babel@save|, we use
 % temporary control sequences. To save hash table entries for these
@@ -8876,15 +8881,14 @@ wouldn’t exist.
 % \macro{\babel@savevariable}
 %
 % The macro |\babel@save|\meta{csname} saves the current meaning of the
-% control sequence \meta{csname} to
-% |\originalTeX|\footnote{\cs{originalTeX} has to be expandable,
-% i.\,e.\ you shouldn't let it to \cs{relax}.}. To do this, we let the
-% current meaning to a temporary control sequence, the restore commands
-% are appended to |\originalTeX| and the counter is incremented. The
-% macro |\babel@savevariable|\meta{variable} saves the value of the
-% variable. \meta{variable} can be anything allowed after the |\the|
-% primitive. To avoid messing saved definitions up, they are saved only
-% the very first time.
+% control sequence \meta{csname} to |\originalTeX| (which has to be
+% expandable, i.\,e.\ you shouldn't let it to \cs{relax}). To do this,
+% we let the current meaning to a temporary control sequence, the
+% restore commands are appended to |\originalTeX| and the counter is
+% incremented. The macro |\babel@savevariable|\meta{variable} saves the
+% value of the variable. \meta{variable} can be anything allowed after
+% the |\the| primitive. To avoid messing saved definitions up, they are
+% saved only the very first time.
 %
 %    \begin{macrocode}
 \def\babel@save#1{%
@@ -8905,15 +8909,62 @@ wouldn’t exist.
   \bbl@exp{\def\\\originalTeX{\the\toks@\the#1\relax}}}
 %    \end{macrocode}
 %
+% \macro{\bbl@redefine}
+%
+% To redefine a command, we save the old meaning of the macro. Then
+% we redefine it to call the original macro with the `sanitized'
+% argument. The reason why we do it this way is that we don't want
+% to redefine the \LaTeX\ macros completely in case their
+% definitions change (they have changed in the past). A macro named
+% |\macro| will be saved new control sequences named |\org@macro|.
+%
+%    \begin{macrocode}
+\def\bbl@redefine#1{%
+  \edef\bbl@tempa{\bbl@stripslash#1}%
+  \expandafter\let\csname org@\bbl@tempa\endcsname#1%
+  \expandafter\def\csname\bbl@tempa\endcsname}
+\@onlypreamble\bbl@redefine
+%    \end{macrocode}
+%
+% \macro{\bbl@redefine@long}
+% This version of |\babel@redefine| can be used to redefine |\long|
+% commands such as |\ifthenelse|.
+%
+%    \begin{macrocode}
+\def\bbl@redefine@long#1{%
+  \edef\bbl@tempa{\bbl@stripslash#1}%
+  \expandafter\let\csname org@\bbl@tempa\endcsname#1%
+  \long\expandafter\def\csname\bbl@tempa\endcsname}
+\@onlypreamble\bbl@redefine@long
+%    \end{macrocode}
+%
+% \macro{\bbl@redefinerobust}
+% For commands that are redefined, but which \textit{might} be
+% robust we need a slightly more intelligent macro. A robust
+% command |foo| is defined to expand to |\protect|\verb*|\foo |. So
+% it is necessary to check whether \verb*|\foo | exists. The result
+% is that the command that is being redefined is always robust
+% afterwards.  Therefore all we need to do now is define \verb*|\foo |.
+%
+%    \begin{macrocode}
+\def\bbl@redefinerobust#1{%
+  \edef\bbl@tempa{\bbl@stripslash#1}%
+  \bbl@ifunset{\bbl@tempa\space}%
+    {\expandafter\let\csname org@\bbl@tempa\endcsname#1%
+     \bbl@exp{\def\\#1{\\\protect\<\bbl@tempa\space>}}}%
+    {\bbl@exp{\let\<org@\bbl@tempa>\<\bbl@tempa\space>}}%
+    \@namedef{\bbl@tempa\space}}
+\@onlypreamble\bbl@redefinerobust
+%    \end{macrocode}
+%
+% \subsection{French spacing}
+%
 % \macro{\bbl@frenchspacing}
 % \macro{\bbl@nonfrenchspacing}
 % Some languages need to have |\frenchspacing| in effect. Others
 % don't want that. The command |\bbl@frenchspacing| switches it on
 % when it isn't already in effect and |\bbl@nonfrenchspacing|
-% switches it off if necessary. A more refined way to switch the
-% catcodes is done with |ini| files. Here an auxiliary macro is
-% defined, but the main part is in |\babelprovide|. This new method
-% should be ideally the default one.
+% switches it off if necessary. 
 %
 %    \begin{macrocode}
 \def\bbl@frenchspacing{%
@@ -8924,6 +8975,13 @@ wouldn’t exist.
     \let\bbl@nonfrenchspacing\nonfrenchspacing
   \fi}
 \let\bbl@nonfrenchspacing\nonfrenchspacing
+%    \end{macrocode}
+%
+% A more refined way to switch the catcodes is done with |ini| files.
+% Here an auxiliary macro is defined, but the main part is in
+% |\babelprovide|. This new method should be ideally the default one.
+%
+%    \begin{macrocode}
 \let\bbl@elt\relax
 \edef\bbl@fs@chars{%
   \bbl@elt{\string.}\@m{3000}\bbl@elt{\string?}\@m{3000}%
@@ -8952,32 +9010,6 @@ wouldn’t exist.
       \fi}%
     \bbl@fs@chars
   \fi\fi\fi}
-%    \end{macrocode}
-%
-% \subsection{Short tags}
-%
-% \macro{\babeltags}
-% This macro is straightforward. After zapping spaces, we
-% loop over the list and define the macros |\text<tag>| and
-% |\<tag>|. Definitions are first expanded so that they don't
-% contain |\csname| but the actual macro.
-%
-%   \begin{macrocode}
-\bbl@trace{Short tags}
-\def\babeltags#1{%
-  \edef\bbl@tempa{\zap@space#1 \@empty}%
-  \def\bbl@tempb##1=##2\@@{%
-    \edef\bbl@tempc{%
-      \noexpand\newcommand
-      \expandafter\noexpand\csname ##1\endcsname{%
-        \noexpand\protect
-        \expandafter\noexpand\csname otherlanguage*\endcsname{##2}}
-      \noexpand\newcommand
-      \expandafter\noexpand\csname text##1\endcsname{%
-        \noexpand\foreignlanguage{##2}}}
-    \bbl@tempc}%
-  \bbl@for\bbl@tempa\bbl@tempa{%
-    \expandafter\bbl@tempb\bbl@tempa\@@}}
 %    \end{macrocode}
 %
 % \subsection{Hyphens}
@@ -9045,10 +9077,10 @@ wouldn’t exist.
 %
 % \macro{\bbl@allowhyphens}
 %
-% This macro makes hyphenation possible. Basically its definition
-% is nothing more than |\nobreak| |\hskip| \texttt{0pt plus
-% 0pt}\footnote{\TeX\ begins and ends a word for hyphenation at a
-% glue node. The penalty prevents a linebreak at this glue node.}.
+% This macro makes hyphenation possible. Basically its definition is
+% nothing more than |\nobreak| |\hskip| \texttt{0pt plus 0pt}. \TeX\
+% begins and ends a word for hyphenation at a glue node. The penalty
+% prevents a linebreak at this glue node.
 %
 %    \begin{macrocode}
 \def\bbl@allowhyphens{\ifvmode\else\nobreak\hskip\z@skip\fi}
@@ -9989,43 +10021,6 @@ wouldn’t exist.
 %    \begin{macrocode}
 \bbl@trace{Bidi layout}
 \providecommand\IfBabelLayout[3]{#3}%
-%</package|core>
-%<*package>
-\newcommand\BabelPatchSection[1]{%
-  \@ifundefined{#1}{}{%
-    \bbl@exp{\let\<bbl@ss@#1>\<#1>}%
-    \@namedef{#1}{%
-      \@ifstar{\bbl@presec@s{#1}}%
-              {\@dblarg{\bbl@presec@x{#1}}}}}}
-\def\bbl@presec@x#1[#2]#3{%
-  \bbl@exp{%
-    \\\select@language@x{\bbl@main@language}%
-    \\\bbl@cs{sspre@#1}%
-    \\\bbl@cs{ss@#1}%
-      [\\\foreignlanguage{\languagename}{\unexpanded{#2}}]%
-      {\\\foreignlanguage{\languagename}{\unexpanded{#3}}}%
-    \\\select@language@x{\languagename}}}
-\def\bbl@presec@s#1#2{%
-  \bbl@exp{%
-    \\\select@language@x{\bbl@main@language}%
-    \\\bbl@cs{sspre@#1}%
-    \\\bbl@cs{ss@#1}*%
-      {\\\foreignlanguage{\languagename}{\unexpanded{#2}}}%
-    \\\select@language@x{\languagename}}}
-\IfBabelLayout{sectioning}%
-  {\BabelPatchSection{part}%
-   \BabelPatchSection{chapter}%
-   \BabelPatchSection{section}%
-   \BabelPatchSection{subsection}%
-   \BabelPatchSection{subsubsection}%
-   \BabelPatchSection{paragraph}%
-   \BabelPatchSection{subparagraph}%
-   \def\babel@toc#1{%
-     \select@language@x{\bbl@main@language}}}{}
-\IfBabelLayout{captions}%
-  {\BabelPatchSection{caption}}{}
-%</package>
-%<*package|core>
 %    \end{macrocode}
 %
 % \subsection{Load engine specific macros}
@@ -10198,121 +10193,12 @@ wouldn’t exist.
       {\directlua{
          Babel.set_chranges_b('\bbl@cl{sbcp}', '\bbl@cl{chrng}') }}%
   \fi
-   % == onchar ==
-  \ifx\bbl@KVP@onchar\@nnil\else
-    \bbl@luahyphenate
-    \bbl@exp{%
-      \\\AddToHook{env/document/before}{{\\\select@language{#2}{}}}}%
-    \directlua{
-      if Babel.locale_mapped == nil then
-        Babel.locale_mapped = true
-        Babel.linebreaking.add_before(Babel.locale_map, 1)
-        Babel.loc_to_scr = {}
-        Babel.chr_to_loc = Babel.chr_to_loc or {}
-      end
-      Babel.locale_props[\the\localeid].letters = false
-    }%
-    \bbl@xin@{ letters }{ \bbl@KVP@onchar\space}%
-    \ifin@
-      \directlua{
-        Babel.locale_props[\the\localeid].letters = true
-      }%
-    \fi
-    \bbl@xin@{ ids }{ \bbl@KVP@onchar\space}%
-    \ifin@
-      \ifx\bbl@starthyphens\@undefined % Needed if no explicit selection
-        \AddBabelHook{babel-onchar}{beforestart}{{\bbl@starthyphens}}%
-      \fi
-      \bbl@exp{\\\bbl@add\\\bbl@starthyphens
-        {\\\bbl@patterns@lua{\languagename}}}%
-      \directlua{
-        if Babel.script_blocks['\bbl@cl{sbcp}'] then
-          Babel.loc_to_scr[\the\localeid] = Babel.script_blocks['\bbl@cl{sbcp}']
-          Babel.locale_props[\the\localeid].lg = \the\@nameuse{l@\languagename}\space
-        end
-      }%
-    \fi
-    \bbl@xin@{ fonts }{ \bbl@KVP@onchar\space}%
-    \ifin@
-      \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
-      \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
-      \directlua{
-        if Babel.script_blocks['\bbl@cl{sbcp}'] then
-          Babel.loc_to_scr[\the\localeid] =
-            Babel.script_blocks['\bbl@cl{sbcp}']
-        end}%
-      \ifx\bbl@mapselect\@undefined  % TODO. almost the same as mapfont
-        \AtBeginDocument{%
-          \bbl@patchfont{{\bbl@mapselect}}%
-          {\selectfont}}%
-        \def\bbl@mapselect{%
-          \let\bbl@mapselect\relax
-          \edef\bbl@prefontid{\fontid\font}}%
-        \def\bbl@mapdir##1{%
-          \begingroup
-            \setbox\z@\hbox{% Force text mode
-              \def\languagename{##1}%
-              \let\bbl@ifrestoring\@firstoftwo % To avoid font warning
-              \bbl@switchfont
-              \ifnum\fontid\font>\z@ % A hack, for the pgf nullfont hack
-                \directlua{
-                  Babel.locale_props[\the\csname bbl@id@@##1\endcsname]%
-                          ['/\bbl@prefontid'] = \fontid\font\space}%
-              \fi}%
-          \endgroup}%
-      \fi
-      \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
-    \fi
-    % TODO - catch non-valid values
-  \fi
-  % == mapfont ==
-  % For bidi texts, to switch the font based on direction
-  \ifx\bbl@KVP@mapfont\@nnil\else
-    \bbl@ifsamestring{\bbl@KVP@mapfont}{direction}{}%
-      {\bbl@error{unknown-mapfont}{}{}{}}%
-    \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
-    \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
-    \ifx\bbl@mapselect\@undefined % TODO. See onchar.
-      \AtBeginDocument{%
-        \bbl@patchfont{{\bbl@mapselect}}%
-        {\selectfont}}%
-      \def\bbl@mapselect{%
-        \let\bbl@mapselect\relax
-        \edef\bbl@prefontid{\fontid\font}}%
-      \def\bbl@mapdir##1{%
-        {\def\languagename{##1}%
-         \let\bbl@ifrestoring\@firstoftwo % avoid font warning
-         \bbl@switchfont
-         \directlua{Babel.fontmap
-           [\the\csname bbl@wdir@##1\endcsname]%
-           [\bbl@prefontid]=\fontid\font}}}%
-    \fi
-    \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
-  \fi
   % == Line breaking: intraspace, intrapenalty ==
   % For CJK, East Asian, Southeast Asian, if interspace in ini
   \ifx\bbl@KVP@intraspace\@nnil\else % We can override the ini or set
     \bbl@csarg\edef{intsp@#2}{\bbl@KVP@intraspace}%
   \fi
   \bbl@provide@intraspace
-  % == Line breaking: CJK quotes ==
-  \ifcase\bbl@engine\or
-    \bbl@xin@{/c}{/\bbl@cl{lnbrk}}%
-    \ifin@
-      \bbl@ifunset{bbl@quote@\languagename}{}%
-        {\directlua{
-           Babel.locale_props[\the\localeid].cjk_quotes = {}
-           local cs = 'op'
-           for c in string.utfvalues(%
-               [[\csname bbl@quote@\languagename\endcsname]]) do
-             if Babel.cjk_characters[c].c == 'qu' then
-               Babel.locale_props[\the\localeid].cjk_quotes[c] = cs
-             end
-             cs = ( cs == 'op') and 'cl' or 'op'
-           end
-        }}%
-    \fi
-  \fi
   % == Line breaking: justification ==
   \ifx\bbl@KVP@justification\@nnil\else
      \let\bbl@KVP@linebreaking\bbl@KVP@justification
@@ -10328,6 +10214,7 @@ wouldn’t exist.
   \bbl@xin@{/e}{/\bbl@cl{lnbrk}}%
   \ifin@\else\bbl@xin@{/k}{/\bbl@cl{lnbrk}}\fi
   \ifin@\bbl@arabicjust\fi
+  % WIP
   \bbl@xin@{/p}{/\bbl@cl{lnbrk}}%
   \ifin@\AtBeginDocument{\@nameuse{bbl@tibetanjust}}\fi
   % == Line breaking: hyphenate.other.(locale|script) ==
@@ -11219,6 +11106,27 @@ wouldn’t exist.
       {}}}
 %    \end{macrocode}
 %
+% \subsection{French spacing (again)}
+% 
+% For the following declarations, see issue \#240. |\nonfrenchspacing|
+% is set by |document| too early, so it’s a hack.
+%
+%    \begin{macrocode}
+\AddToHook{begindocument/before}{%
+  \let\bbl@normalsf\normalsfcodes
+  \let\normalsfcodes\relax}
+\AtBeginDocument{%
+  \ifx\bbl@normalsf\@empty
+    \ifnum\sfcode`\.=\@m
+      \let\normalsfcodes\frenchspacing
+    \else
+      \let\normalsfcodes\nonfrenchspacing
+    \fi
+  \else
+    \let\normalsfcodes\bbl@normalsf
+  \fi}
+%    \end{macrocode}
+%
 % \textbf{Dates} will require some macros for the basic formatting.
 % They may be redefined by language, so ``semi-public'' names (camel
 % case) are used. Oddly enough, the CLDR places particles like “de”
@@ -11512,6 +11420,11 @@ wouldn’t exist.
 % The parser for |casing| and |casing.|\meta{variant}. 
 %
 %    \begin{macrocode}
+\ifcase\bbl@engine % Converts utf8 to its code (expandable)
+  \def\bbl@utftocode#1{\the\numexpr\decode@UTFviii#1\relax}
+\else
+  \def\bbl@utftocode#1{\expandafter`\string#1}
+\fi
 \def\bbl@casemapping#1#2#3{% 1:variant
   \def\bbl@tempa##1 ##2{% Loop
     \bbl@casemapping@i{##1}%
@@ -11584,36 +11497,6 @@ wouldn’t exist.
 \@namedef{bbl@info@extension.x.tag.bcp47}{extx}
 %    \end{macrocode}
 %
-% \LaTeX{} needs to know the BCP 47 codes for some features. For that,
-% it expects |\BCPdata| to be defined. While |language|, |region|,
-% |script|, and |variant| are recognized, |extension.<s>| for
-% singletons may change.
-%
-%    \begin{macrocode}
-\ifcase\bbl@engine % Converts utf8 to its code (expandable)
-  \def\bbl@utftocode#1{\the\numexpr\decode@UTFviii#1\relax}
-\else
-  \def\bbl@utftocode#1{\expandafter`\string#1}
-\fi
-% Still somewhat hackish. WIP. Note |\str_if_eq:nnTF| is fully
-% expandable (|\bbl@ifsamestring| isn’t). The argument is the prefix to
-% tag.bcp47. Can be prece
-\providecommand\BCPdata{}
-\ifx\renewcommand\@undefined\else % For plain. TODO. It’s a quick fix
-  \renewcommand\BCPdata[1]{\bbl@bcpdata@i#1\@empty}
-  \def\bbl@bcpdata@i#1#2#3#4#5#6\@empty{%
-    \@nameuse{str_if_eq:nnTF}{#1#2#3#4#5}{main.}%
-      {\bbl@bcpdata@ii{#6}\bbl@main@language}%
-      {\bbl@bcpdata@ii{#1#2#3#4#5#6}\languagename}}%
-  \def\bbl@bcpdata@ii#1#2{%
-    \bbl@ifunset{bbl@info@#1.tag.bcp47}%
-      {\bbl@error{unknown-ini-field}{#1}{}{}}%
-      {\bbl@ifunset{bbl@\csname bbl@info@#1.tag.bcp47\endcsname @#2}{}%
-        {\bbl@cs{\csname bbl@info@#1.tag.bcp47\endcsname @#2}}}}
-\fi
-\@namedef{bbl@info@casing.tag.bcp47}{casing}
-%    \end{macrocode}
-%
 % With version 3.75 |\BabelEnsureInfo| is executed always, but there is
 % an option to disable it.
 %
@@ -11665,6 +11548,67 @@ wouldn’t exist.
   \def\bbl@elt##1##2##3{\typeout{##1/##2 = ##3}}%
   \@nameuse{bbl@inidata@#1}%
   \typeout{*******}}
+%    \end{macrocode}
+%
+% \subsection{BCP-47 related commands}
+%
+%    \begin{macrocode}
+\newif\ifbbl@bcpallowed
+\bbl@bcpallowedfalse
+\def\bbl@provide@locale{%
+  \ifx\babelprovide\@undefined
+    \bbl@error{base-on-the-fly}{}{}{}%
+  \fi
+  \let\bbl@auxname\languagename % Still necessary.
+  \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
+    {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}}%
+  \ifbbl@bcpallowed
+    \expandafter\ifx\csname date\languagename\endcsname\relax
+      \expandafter
+      \bbl@bcplookup\languagename-\@empty-\@empty-\@empty\@@
+      \ifx\bbl@bcp\relax\else  % Returned by \bbl@bcplookup
+        \edef\languagename{\bbl@bcp@prefix\bbl@bcp}%
+        \edef\localename{\bbl@bcp@prefix\bbl@bcp}%
+        \expandafter\ifx\csname date\languagename\endcsname\relax
+          \let\bbl@initoload\bbl@bcp
+          \bbl@exp{\\\babelprovide[\bbl@autoload@bcpoptions]{\languagename}}%
+          \let\bbl@initoload\relax
+        \fi
+        \bbl@csarg\xdef{bcp@map@\bbl@bcp}{\localename}%
+      \fi
+    \fi
+  \fi
+  \expandafter\ifx\csname date\languagename\endcsname\relax
+    \IfFileExists{babel-\languagename.tex}%
+      {\bbl@exp{\\\babelprovide[\bbl@autoload@options]{\languagename}}}%
+      {}%
+  \fi}
+%    \end{macrocode}
+%
+% \LaTeX{} needs to know the BCP 47 codes for some features. For that,
+% it expects |\BCPdata| to be defined. While |language|, |region|,
+% |script|, and |variant| are recognized, |extension.<s>| for
+% singletons may change.
+%
+% Still somewhat hackish. WIP. Note |\str_if_eq:nnTF| is fully
+% expandable (|\bbl@ifsamestring| isn’t). The argument is the prefix to
+% tag.bcp47. Can be prece
+%
+%    \begin{macrocode}
+\providecommand\BCPdata{}
+\ifx\renewcommand\@undefined\else % For plain. TODO. It’s a quick fix
+  \renewcommand\BCPdata[1]{\bbl@bcpdata@i#1\@empty}
+  \def\bbl@bcpdata@i#1#2#3#4#5#6\@empty{%
+    \@nameuse{str_if_eq:nnTF}{#1#2#3#4#5}{main.}%
+      {\bbl@bcpdata@ii{#6}\bbl@main@language}%
+      {\bbl@bcpdata@ii{#1#2#3#4#5#6}\languagename}}%
+  \def\bbl@bcpdata@ii#1#2{%
+    \bbl@ifunset{bbl@info@#1.tag.bcp47}%
+      {\bbl@error{unknown-ini-field}{#1}{}{}}%
+      {\bbl@ifunset{bbl@\csname bbl@info@#1.tag.bcp47\endcsname @#2}{}%
+        {\bbl@cs{\csname bbl@info@#1.tag.bcp47\endcsname @#2}}}}
+\fi
+\@namedef{bbl@info@casing.tag.bcp47}{casing}
 %    \end{macrocode}
 %
 % \section{Adjusting the Babel behavior}
@@ -11952,11 +11896,6 @@ wouldn’t exist.
 % when |\begin{document}| is executed, so we need to postpone the
 % different redefinition.
 %
-%    \begin{macrocode}
-  \AtBeginDocument{%
-    \@ifpackageloaded{natbib}{%
-%    \end{macrocode}
-%
 % Notice that we use |\def| here instead of |\bbl@redefine| because
 % |\org@@citex| is already defined and we don't want to overwrite
 % that definition (it would result in parameter stack overflow
@@ -11966,6 +11905,8 @@ wouldn’t exist.
 % doesn't seem fixable in a simple way. Just load \pkg{natbib} before.)
 %
 %    \begin{macrocode}
+  \AtBeginDocument{%
+    \@ifpackageloaded{natbib}{%
     \def\@citex[#1][#2]#3{%
       \@safe@activestrue\edef\bbl@tempa{#3}\@safe@activesfalse
       \org@@citex[#1][#2]{\bbl@tempa}}%
@@ -12060,6 +12001,44 @@ wouldn’t exist.
   \let\org@bibcite\bibcite
   \let\org@@bibitem\@bibitem
 \fi
+%    \end{macrocode}
+%
+% \subsection{Layout}
+%
+%    \begin{macrocode}
+\newcommand\BabelPatchSection[1]{%
+  \@ifundefined{#1}{}{%
+    \bbl@exp{\let\<bbl@ss@#1>\<#1>}%
+    \@namedef{#1}{%
+      \@ifstar{\bbl@presec@s{#1}}%
+              {\@dblarg{\bbl@presec@x{#1}}}}}}
+\def\bbl@presec@x#1[#2]#3{%
+  \bbl@exp{%
+    \\\select@language@x{\bbl@main@language}%
+    \\\bbl@cs{sspre@#1}%
+    \\\bbl@cs{ss@#1}%
+      [\\\foreignlanguage{\languagename}{\unexpanded{#2}}]%
+      {\\\foreignlanguage{\languagename}{\unexpanded{#3}}}%
+    \\\select@language@x{\languagename}}}
+\def\bbl@presec@s#1#2{%
+  \bbl@exp{%
+    \\\select@language@x{\bbl@main@language}%
+    \\\bbl@cs{sspre@#1}%
+    \\\bbl@cs{ss@#1}*%
+      {\\\foreignlanguage{\languagename}{\unexpanded{#2}}}%
+    \\\select@language@x{\languagename}}}
+\IfBabelLayout{sectioning}%
+  {\BabelPatchSection{part}%
+   \BabelPatchSection{chapter}%
+   \BabelPatchSection{section}%
+   \BabelPatchSection{subsection}%
+   \BabelPatchSection{subsubsection}%
+   \BabelPatchSection{paragraph}%
+   \BabelPatchSection{subparagraph}%
+   \def\babel@toc#1{%
+     \select@language@x{\bbl@main@language}}}{}
+\IfBabelLayout{captions}%
+  {\BabelPatchSection{caption}}{}
 %    \end{macrocode}
 %
 % \subsection{Marks}
@@ -12740,6 +12719,8 @@ wouldn’t exist.
 % load |<name>.cfg| instead.
 %
 %    \begin{macrocode}
+\NewHook{babel/config}
+\UseHook{babel/config}
 \ifx\bbl@opt@config\@nnil
   \@ifpackagewith{babel}{noconfigs}{}%
     {\InputIfFileExists{bblopts.cfg}%
@@ -13514,7 +13495,8 @@ wouldn’t exist.
 %
 % Add the bidi handler just before luaoftload, which is loaded by default
 % by LaTeX. Just in case, consider the possibility it has not been
-% loaded. First, a couple of definitions related to bidi [misplaced].
+% loaded. First, a couple of definitions related to bidi (although
+% |default| also applies to \pdftex).
 %
 %    \begin{macrocode}
 %<<*More package options>>
@@ -13761,7 +13743,7 @@ wouldn’t exist.
 %
 % \macro{\BabelFootnote}
 %
-% Footnotes
+% Footnotes.
 %
 %    \begin{macrocode}
 %<<*Footnote changes>>
@@ -13890,7 +13872,7 @@ wouldn’t exist.
 \def\bbl@provide@extra#1{}
 %    \end{macrocode}
 %
-% \section{Support for interchar}
+% \subsection{Support for interchar}
 %
 % \xetex{} reserves some values for CJK (although they are not set in
 % \textsc{xelatex}), so we make sure they are skipped. Define some user
@@ -14457,6 +14439,22 @@ wouldn’t exist.
       callback.register('process_input_buffer',Babel.callback)
     end
   end
+  Babel.linebreaking = Babel.linebreaking or {}
+  Babel.linebreaking.before = {}
+  Babel.linebreaking.after = {}
+  Babel.locale = {}
+  function Babel.linebreaking.add_before(func, pos)
+    tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
+    if pos == nil then
+      table.insert(Babel.linebreaking.before, func)
+    else
+      table.insert(Babel.linebreaking.before, pos, func)
+    end
+  end
+  function Babel.linebreaking.add_after(func)
+    tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
+    table.insert(Babel.linebreaking.after, func)
+  end
   function Babel.addpatterns(pp, lg)
     local lg = lang.new(lg)
     local pats = lang.patterns(lg) or ''
@@ -14523,9 +14521,9 @@ wouldn’t exist.
          str:find( [[\string\babelsublr]] ) then
      str = str:gsub( [[\string\babelsublr%s*(%b{})]],
                      function(m) return m:sub(2,-2) end )
-   end
-   return str 
-end
+     end
+     return str 
+  end
 }
 \endgroup
 \ifx\newattribute\@undefined\else % Test for plain
@@ -14630,25 +14628,6 @@ end
 % not touched. See Unicode UAX 14.
 %
 %    \begin{macrocode}
-% TODO - to a lua file -- or a logical place
-\directlua{% DL5
-  Babel.linebreaking = Babel.linebreaking or {}
-  Babel.linebreaking.before = {}
-  Babel.linebreaking.after = {}
-  Babel.locale = {} % Free to use, indexed by \localeid
-  function Babel.linebreaking.add_before(func, pos)
-    tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
-    if pos == nil then
-      table.insert(Babel.linebreaking.before, func)
-    else
-      table.insert(Babel.linebreaking.before, pos, func)
-    end
-  end
-  function Babel.linebreaking.add_after(func)
-    tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
-    table.insert(Babel.linebreaking.after, func)
-  end
-}
 \def\bbl@intraspace#1 #2 #3\@@{%
   \directlua{
     Babel.intraspaces = Babel.intraspaces or {}
@@ -15901,6 +15880,115 @@ end
     \fi\fi}
 \fi
 \def\bbl@provide@extra#1{%
+   % == onchar ==
+  \ifx\bbl@KVP@onchar\@nnil\else
+    \bbl@luahyphenate
+    \bbl@exp{%
+      \\\AddToHook{env/document/before}{{\\\select@language{#1}{}}}}%
+    \directlua{
+      if Babel.locale_mapped == nil then
+        Babel.locale_mapped = true
+        Babel.linebreaking.add_before(Babel.locale_map, 1)
+        Babel.loc_to_scr = {}
+        Babel.chr_to_loc = Babel.chr_to_loc or {}
+      end
+      Babel.locale_props[\the\localeid].letters = false
+    }%
+    \bbl@xin@{ letters }{ \bbl@KVP@onchar\space}%
+    \ifin@
+      \directlua{
+        Babel.locale_props[\the\localeid].letters = true
+      }%
+    \fi
+    \bbl@xin@{ ids }{ \bbl@KVP@onchar\space}%
+    \ifin@
+      \ifx\bbl@starthyphens\@undefined % Needed if no explicit selection
+        \AddBabelHook{babel-onchar}{beforestart}{{\bbl@starthyphens}}%
+      \fi
+      \bbl@exp{\\\bbl@add\\\bbl@starthyphens
+        {\\\bbl@patterns@lua{\languagename}}}%
+      \directlua{
+        if Babel.script_blocks['\bbl@cl{sbcp}'] then
+          Babel.loc_to_scr[\the\localeid] = Babel.script_blocks['\bbl@cl{sbcp}']
+          Babel.locale_props[\the\localeid].lg = \the\@nameuse{l@\languagename}\space
+        end
+      }%
+    \fi
+    \bbl@xin@{ fonts }{ \bbl@KVP@onchar\space}%
+    \ifin@
+      \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
+      \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
+      \directlua{
+        if Babel.script_blocks['\bbl@cl{sbcp}'] then
+          Babel.loc_to_scr[\the\localeid] =
+            Babel.script_blocks['\bbl@cl{sbcp}']
+        end}%
+      \ifx\bbl@mapselect\@undefined  % TODO. almost the same as mapfont
+        \AtBeginDocument{%
+          \bbl@patchfont{{\bbl@mapselect}}%
+          {\selectfont}}%
+        \def\bbl@mapselect{%
+          \let\bbl@mapselect\relax
+          \edef\bbl@prefontid{\fontid\font}}%
+        \def\bbl@mapdir##1{%
+          \begingroup
+            \setbox\z@\hbox{% Force text mode
+              \def\languagename{##1}%
+              \let\bbl@ifrestoring\@firstoftwo % To avoid font warning
+              \bbl@switchfont
+              \ifnum\fontid\font>\z@ % A hack, for the pgf nullfont hack
+                \directlua{
+                  Babel.locale_props[\the\csname bbl@id@@##1\endcsname]%
+                          ['/\bbl@prefontid'] = \fontid\font\space}%
+              \fi}%
+          \endgroup}%
+      \fi
+      \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
+    \fi
+    % TODO - catch non-valid values
+  \fi
+  % == mapfont ==
+  % For bidi texts, to switch the font based on direction
+  \ifx\bbl@KVP@mapfont\@nnil\else
+    \bbl@ifsamestring{\bbl@KVP@mapfont}{direction}{}%
+      {\bbl@error{unknown-mapfont}{}{}{}}%
+    \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
+    \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
+    \ifx\bbl@mapselect\@undefined % TODO. See onchar.
+      \AtBeginDocument{%
+        \bbl@patchfont{{\bbl@mapselect}}%
+        {\selectfont}}%
+      \def\bbl@mapselect{%
+        \let\bbl@mapselect\relax
+        \edef\bbl@prefontid{\fontid\font}}%
+      \def\bbl@mapdir##1{%
+        {\def\languagename{##1}%
+         \let\bbl@ifrestoring\@firstoftwo % avoid font warning
+         \bbl@switchfont
+         \directlua{Babel.fontmap
+           [\the\csname bbl@wdir@##1\endcsname]%
+           [\bbl@prefontid]=\fontid\font}}}%
+    \fi
+    \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
+  \fi
+  % == Line breaking: CJK quotes ==
+  \ifcase\bbl@engine\or
+    \bbl@xin@{/c}{/\bbl@cl{lnbrk}}%
+    \ifin@
+      \bbl@ifunset{bbl@quote@\languagename}{}%
+        {\directlua{
+           Babel.locale_props[\the\localeid].cjk_quotes = {}
+           local cs = 'op'
+           for c in string.utfvalues(%
+               [[\csname bbl@quote@\languagename\endcsname]]) do
+             if Babel.cjk_characters[c].c == 'qu' then
+               Babel.locale_props[\the\localeid].cjk_quotes[c] = cs
+             end
+             cs = ( cs == 'op') and 'cl' or 'op'
+           end
+        }}%
+    \fi
+  \fi
   % == Counters: mapdigits ==
   % Native digits
   \ifx\bbl@KVP@mapdigits\@nnil\else
