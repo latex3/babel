@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/10/09 v24.11.64876 The Babel package]
+\ProvidesFile{babel.dtx}[2024/10/14 v24.11.65368 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -773,6 +773,37 @@ Vietnamese: \prefacename, \alsoname, \today.
 \addto\extrasrussian{\inputencoding{koi8-r}}
 \end{verbatim}
 \end{note}
+
+\subsection{Multilingual documents: the ‘modern’ way}
+
+If lazy loading is not enough for your purposes, you can still tell
+which languages should be loaded as either class or package options.
+However, there are three options to set which method you want, which
+cover the most typical cases:
+\begin{itemize}
+\item |provide=*| is the option explained above for monolingual
+  documents. If there are more languages, it applies only to the main
+  language, while the rest will be loaded in the ‘classical’ way.
+\item |provide+=*| loads the main language in the ‘classical’ way,
+  and the rest in the ‘modern’ one.
+\item |provide*=*| is the same for all languages, ie, main and
+  secondary  ones are loaded in the ‘modern’ way.
+\end{itemize}
+
+\begin{example}
+Your document is written in Thai with large chunks in Dutch and German,
+and you want the |ldf| files in the latter because, for example, you
+need their shorthands. The font is Norasi, which covers the three
+languages:
+\setengine{luatex/xetex}
+\begin{verbatim}
+\usepackage[dutch,ngerman,thai,provide=*]{babel}
+\babelfont{rm}{Norasi}
+\end{verbatim}
+\end{example}
+
+More complex combinations can be handled with |\babelprovide|,
+explained below.
 
 \subsection{Languages supported by \babel{} in the ‘classical’ mode}
 
@@ -2355,10 +2386,10 @@ be the same as the option name as set in |\usepackage|!).
 \end{example}
 
 \begin{note}
-  With a recent version of \LaTeX, an alternative method to execute
-  some code just after an |ldf| file is loaded is with |\AddToHook| and
-  the hook |file/<language>.ldf/after|. \Babel{} does not predeclare
-  it, and you have to do it yourself with |\ActivateGenericHook|.
+  An alternative method to execute some code just after an |ldf| file
+  is loaded is with |\AddToHook| and the hook
+  |file/<language>.ldf/after|. You can also execute some code before
+  with |file/<language>.ldf/before|.
 \end{note}
 
 \begin{warning}
@@ -2398,20 +2429,6 @@ lack of suitability of some features.
   for Phoenician (although currently this locale is bundled with
   \babel).
 \end{example}
-
-\New{3.49} Alternatively, you can tell \babel{} to load all or some
-languages passed as options with |\babelprovide| and not from the |ldf|
-file in a few few typical cases. Thus, |provide=*| means ‘load the main
-language with the |\babelprovide| mechanism instead of the |ldf| file’
-applying the basic features, which in this case means |import| and |main|.
-There are (currently) three options:
-\begin{itemize}
-\item |provide=*| is the option just explained, for the main language;
-\item |provide+=*| is the same for additional languages (the main
-  language is still the |ldf| file);
-\item |provide*=*| is the same for all languages, ie, main and
-  additional.
-\end{itemize}
 
 \begin{note}
   The \texttt{ini} files just define and set some parameters, but the
@@ -4994,6 +5011,8 @@ options (like paragraph direction with |bidi.text|).
 
 \section{Relation with other packages}
 
+\subsection{Compatibility}
+
 There are compatibility issues with the following packages.
 
 \begingroup
@@ -5017,8 +5036,17 @@ usually solved with \texttt{\string\usetikzlibrary\{babel\}}.}
 \trans{cleveref}{Because of a long standing bug in this package, some
 languages can raise and error (particularly |spanish| and |greek|).}
 
+\trans{natbib}{Load it before \babel.}
+
+\trans{bidi}{\Babel\ relies on \textsc{bidi} with \xetex{} and
+|bidi=bidi|, which has a multitude of incompatibilities. Please, refer
+to its manual, and remember for short and simple texts you can rely on
+|bidi=default| instead.}
+
 \vspace{2mm}\hrule\nobreak\bigskip
 \endgroup
+
+\subsection{Related packages}
 
 The following packages can be useful in multilingual contexts (the list
 is far from complete):
@@ -5034,7 +5062,7 @@ is far from complete):
 \item[bicaption] Bilingual captions.
 \item[babelbib] Multilingual bibliographies.
 \item[microtype] Adjusts the typesetting according to
-some languages (kerning and spacing). Ligatures can be disabled.
+  some languages (kerning and spacing). Ligatures can be disabled.
 \item[substitutefont] Combines fonts in several encodings.
 \item[mkpattern] Generates hyphenation patterns.
 \item[tracklang] Tracks which languages have been requested.
@@ -5043,7 +5071,10 @@ some languages (kerning and spacing). Ligatures can be disabled.
 \item[zhspacing] Spacing for CJK documents in \xetex.
 \end{description}
 
-For multilingual indexing, see \textsf{upmendex} and \textsf{xindex}.
+\subsection{Indexing}
+
+For multilingual indexing, see \textsf{upmendex} and \textsf{xindex},
+currently preferred to \textit{xindy}.
 
 \section{Tentative and experimental code}
 
@@ -5869,8 +5900,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.11.64876>>
-%<<date=2024/10/09>>
+%<<version=24.11.65368>>
+%<<date=2024/10/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12719,8 +12750,8 @@ wouldn’t exist.
 % load |<name>.cfg| instead.
 %
 %    \begin{macrocode}
-\NewHook{babel/config}
-\UseHook{babel/config}
+\NewHook{babel/presets}
+\UseHook{babel/presets}
 \ifx\bbl@opt@config\@nnil
   \@ifpackagewith{babel}{noconfigs}{}%
     {\InputIfFileExists{bblopts.cfg}%
@@ -12744,16 +12775,26 @@ wouldn’t exist.
 % above, the names of the option and the file are the same. We first
 % pre-process the class and package options to determine the main
 % language, which is processed in the third ‘main’ pass,
-% \textit{except} if all files are \texttt{ldf} \textit{and} there is no |main|
-% key. In the latter case (|\bbl@opt@main| is still |\@nnil|), the
-% traditional way to set the main language is kept — the last loaded is
-% the main language.
+% \textit{except} if all files are \texttt{ldf} \textit{and} there is
+% no |main| key. In the latter case (|\bbl@opt@main| is still
+% |\@nnil|), the traditional way to set the main language is kept — the
+% last loaded is the main language.
+%
+% For efficiency, first preprocess the class options to remove those
+% with |=|, which are becoming increasingly frequent (no language
+% should contain this character).
 %
 %    \begin{macrocode}
+\def\bbl@tempf{,}
+\bbl@foreach\@raw@classoptionslist{%
+  \in@{=}{#1}%
+  \ifin@\else
+    \edef\bbl@tempf{\bbl@tempf\zap@space#1 \@empty,}%
+  \fi}
 \ifx\bbl@opt@main\@nnil
   \ifnum\bbl@iniflag>\z@  % if all ldf's: set implicitly, no main pass
     \let\bbl@tempb\@empty
-    \edef\bbl@tempa{\@classoptionslist,\bbl@language@opts}%
+    \edef\bbl@tempa{\bbl@tempf,\bbl@language@opts}%
     \bbl@foreach\bbl@tempa{\edef\bbl@tempb{#1,\bbl@tempb}}%
     \bbl@foreach\bbl@tempb{%    \bbl@tempb is a reversed list
       \ifx\bbl@opt@main\@nnil % ie, if not yet assigned
@@ -12801,7 +12842,7 @@ wouldn’t exist.
         \bbl@afterldf{}}%
     \fi
   \fi}
-\bbl@foreach\@classoptionslist{%
+\bbl@foreach\bbl@tempf{%
   \def\bbl@tempa{#1}%
   \ifx\bbl@tempa\bbl@opt@main\else
     \ifnum\bbl@iniflag<\tw@    % 0 ø (other = ldf)
@@ -12848,7 +12889,7 @@ wouldn’t exist.
 %    \begin{macrocode}
 \bbl@trace{Option 'main'}
 \ifx\bbl@opt@main\@nnil
-  \edef\bbl@tempa{\@classoptionslist,\bbl@language@opts}
+  \edef\bbl@tempa{\bbl@tempf,\bbl@language@opts}
   \let\bbl@tempc\@empty
   \edef\bbl@templ{,\bbl@loaded,}
   \edef\bbl@templ{\expandafter\strip@prefix\meaning\bbl@templ}

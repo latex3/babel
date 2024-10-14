@@ -1,4 +1,4 @@
-## Babel 24.11.64876
+## Babel 24.11.65368
 
 (dev)
 
@@ -49,6 +49,8 @@ respective authors.
 ### Summary of latest changes
 ```
 24.12  (dev)
+       * Fixes.
+       * New LaTeX hook: presets.
 
 24.11  2024-10-05
        * Start a thorough review of the manual.
