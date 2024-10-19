@@ -27,10 +27,10 @@ and
 Its high-level interface with
 [`fontspec`](https://ctan.org/pkg/fontspec?lang=en) allows for seamless
 integration with **OpenType** technologies in `xetex` and `luatex`,
-enabling effortless use of advanced typographic features, and
-fine-grained control and customization. Additionally, lazy locale and
-font loading facilitate integration into **automated document
-generation workflows**, and makes it adept at handling complex
+enabling effortless, robust and flexible use of advanced typographic
+features, and fine-grained control and customization. Additionally,
+lazy locale and font loading facilitate integration into **automated
+document generation workflows**, and makes it adept at handling complex
 documents with **multiple languages**.
 
 Many locales in Babel are built on a **modern core** that utilizes
@@ -72,6 +72,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [24.12](news/whats-new-in-babel-24.12.html) | (dev) Manual revised. `\PassOptionsToLocale` |
 | [24.11](news/whats-new-in-babel-24.11.html) | Manual revised. Transform variables. |
 | [24.10](news/whats-new-in-babel-24.10.html) | `\localename`, `\mainlocalename`, `\babelhyphenmins` |
 | [24.9](news/whats-new-in-babel-24.9.html) | Transforms: `digits.native`, CJK spacing (tentative). |
