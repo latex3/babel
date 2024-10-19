@@ -1,4 +1,4 @@
-## Babel 24.11.65368
+## Babel 24.11.65837
 
 (dev)
 
@@ -49,8 +49,13 @@ respective authors.
 ### Summary of latest changes
 ```
 24.12  (dev)
-       * Fixes.
-       * New LaTeX hook: presets.
+       * Fixes: 
+         - Date sometimes missing with lazy loading.
+         - Wrong sigma in some Greek numerals.
+         - Wrong handling of ‘complex’ class options.
+       * More tools for automated document generation workflows:
+         - New LaTeX hook: presets.
+         - New command: \PassOptionsToLocale
 
 24.11  2024-10-05
        * Start a thorough review of the manual.

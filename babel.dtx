@@ -32,7 +32,7 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/10/14 v24.11.65368 The Babel package]
+\ProvidesFile{babel.dtx}[2024/10/19 v24.11.65838 The Babel package]
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -1015,7 +1015,6 @@ they are ‘bare minimum locales’. They are set in
 \bigskip\hrule\nobreak
 
 \makeatletter
-\def\tag#1{\par\@hangfrom{\makebox[1em][l]{#1}}\ignorespaces}
 \def\tag#1#2#3{\par
   \hspace{-2em}\textcolor{thered}{\texttt{#1}}#2\enspace
   \mbox{\footnotesize(#3)}}
@@ -1105,6 +1104,7 @@ language from \texttt{greek}.}
 \tag{baluchi}{}{bal}
 \tag{bambara}{}{bm}
 \tag{bangla}{\hascapu}{bn}
+\subtag{bengali}{\hascapu}{bn}
 \tag{basaa}{}{bas}
 \tagmin{bashkir}{}{ba}
 \tag{basque}{\hascapu\hascapl}{eu}
@@ -1113,7 +1113,6 @@ language from \texttt{greek}.}
 \tag{belarusian}{\hascapu\hascapl}{be}
 \tag{bemba}{}{bem}
 \tag{bena}{}{bez}
-\tag{bengali}{\hascapu}{bn}
 \tag{bhojpuri}{}{bho}
 \tag{blin}{}{byn}
 \tag{bodo}{}{brx}
@@ -1131,6 +1130,7 @@ language from \texttt{greek}.}
 \tag{cebuano}{}{ceb}
 \tag{centralatlastamazight}{}{tzm}
 \tag{centralkurdish}{\hascapu}{ckb}
+\subtag{sorani}{\hascapu}{ckb}
 \subtag{centralkurdish-latin}{\hascapu}{ckb-Latn}
 \subtag{centralkurdish-latn}{\hascapu}{ckb-Latn}
 \tag{chakma}{}{ccp}
@@ -1203,7 +1203,6 @@ Egypt, with tag \texttt{ar-EG}.}
 \tag{ewe}{}{ee}
 \tag{ewondo}{}{ewo}
 \tag{faroese}{}{fo}
-\tag{farsi}{\hascapu}{fa}
 \tag{filipino}{}{fil}
 \tag{finnish}{\hascapu\hascapl}{fi}
 \tag{french}{\hascapu\hascapl}{fr}
@@ -1288,7 +1287,6 @@ with tag \texttt{gsw} is a different language.}
 \subtag{korean-hani}{\hascapu}{ko-Hani}
 \tag{koyraborosenni}{}{ses}
 \tag{koyrachiini}{}{khq}
-\tag{kurmanji}{\hascapu\hascapl}{kmr}
 \tag{kwasio}{}{nmg}
 \tag{kyrgyz}{}{ky}
 \tagmin{ladino}{}{lad}
@@ -1361,10 +1359,12 @@ with tag \texttt{gsw} is a different language.}
 \tag{nko}{}{nqo}
 \tag{northernfrisian}{}{frr}
 \tag{northernkurdish}{\hascapu\hascapl}{kmr}
+\subtag{kurmanji}{\hascapu\hascapl}{kmr}
 \subtag{northernkurdish-arab}{\hascapu}{kmr-Arab}
 \subtag{northernkurdish-arabic}{\hascapu}{kmr-Arab}
 \tag{northernluri}{}{lrc}
 \tag{northernsami}{\hascapu\hascapl}{se}
+\subtag{samin}{\hascapu\hascapl}{se}
 \tag{northernsotho}{}{nso}
 \tag{northndebele}{}{nd}
 \tag{norwegian}{\hascapu\hascapl}{no}
@@ -1420,7 +1420,6 @@ with tag \texttt{gsw} is a different language.}
 \tag{sakha}{}{sah}
 \tagmin{samaritan}{}{smp}
 \tag{samburu}{}{saq}
-\tag{samin}{\hascapu\hascapl}{se}
 \tag{sango}{}{sg}
 \tag{sangu}{}{sbp}
 \tag{sanskrit}{}{sa}
@@ -1478,11 +1477,10 @@ with tag \texttt{gsw} is a different language.}
 \tag{sinhala}{\hascapu}{si}
 \tagmin{sinteromani}{}{rmo}
 \tag{slovak}{\hascapu\hascapl}{sk}
-\tag{slovene}{\hascapu\hascapl}{sl}
 \tag{slovenian}{\hascapu\hascapl}{sl}
+\subtag{slovene}{\hascapu\hascapl}{sl}
 \tag{soga}{}{xog}
 \tag{somali}{}{so}
-\tag{sorani}{\hascapu}{ckb}
 \tagmin{southernaltai}{}{alt}
 \tag{southernsotho}{}{st}
 \tag{southndebele}{}{nr}
@@ -1586,13 +1584,18 @@ There is no need to load \textsf{fontspec} explicitly – \babel{} does
 it for you with the first |\babelfont|. (See also the package
 \textsf{combofont} for a complementary approach.)
 
+\begin{note}
+  There is a list of fonts in
+  \href{https://latex3.github.io/babel/guides/which-method-for-which-language.html}{Which
+  method for which language}. If you know the codepoint of a character
+  in the script you need, you can find fonts containing it with the
+  commands line, with \textsf{albatross} (requires Java) or with
+  something like \texttt{fc-list :charset=1033C family} (in this case,
+  a Gothic character, the script required by the |gothic| language).
+\end{note}
+
 \Describe\babelfont{\oarg{language-list}\marg{font-family}%
   \oarg{font-options}\marg{font-name}}
-
-% \begin{note}
-%   See the note in the previous section about some issues in
-%   specific languages.
-% \end{note}
 
 The main purpose of |\babelfont| is to define at once the fonts
 required by the different languages, with their corresponding language
@@ -1618,10 +1621,11 @@ language is never selected, the corresponding |\babelfont| declaration
 is just ignored.
 
 \Babel{} takes care of the font language and the font script when
-languages are selected (as well as the writing direction). In most
-cases, you will not need \textit{font-options}, which is the same as in
-\textsf{fontspec}, but you may add further key/value pairs if
-necessary.
+languages are selected (as well as the writing direction). In other
+words, there is usually no need to set the |Language| and the |Script|
+explicitly; in fact, it’s even discouraged. In most cases, you will not
+need \textit{font-options}, which is the same as in \textsf{fontspec},
+but you may add further key/value pairs if necessary.
 
 |\babelfont| can be used to implicitly define a new font family. Just
 write its name instead of |rm|, |sf| or |tt|. This is the preferred way
@@ -2615,8 +2619,8 @@ This section describes the general tools provided by the \babel{} core.
 
 \subsection{Captions}
 
-In the case of caption names a specific macro is provided,
-because this is perhaps the most frequent change.
+This is perhaps the most frequent change, so a specific macro is
+provided.
 
 \Describe{\setlocalecaption}{%
   \marg{language-name}\marg{caption-name}\marg{string}}
@@ -2643,8 +2647,8 @@ redefined behave with the ‘new way’ described in the following note.
   (In this particular case, instead of the |captions| group you may need
   to modify the |captions.licr| one.)
 
-\item The ‘old way’ to redefine a caption, still valid for many
-languages but discouraged in general, is the following:
+\item The low-level ‘old way’ to redefine a caption, still valid for
+many languages but discouraged in general, is the following:
 \begin{verbatim}
 \addto\captionsenglish{%
   \renewcommand\contentsname{Foo}%
@@ -2657,7 +2661,7 @@ languages but discouraged in general, is the following:
 \item The ‘new way’, which is found in |bulgarian|, |azerbaijani|,
     |spanish|, |french|, |turkish|, |icelandic|, |vietnamese| and a few
     more, as well as in languages created with |\babelprovide| and its
-    key |import|, is:
+    key |import|, or with the package option |provide=|, is:
 \begin{verbatim}
 \renewcommand\spanishchaptername{Foo}
 \end{verbatim}
@@ -3027,7 +3031,7 @@ languages loaded on the fly are not yet available in the preamble.
 \babelprovide{arhinish}
 \setlocalecaption{arhinish}{chapter}{Chapitula}
 \setlocalecaption{arhinish}{refname}{Refirenke}
-\renewcommand\arhinishhyphenmins{22}
+\babelhyphenmins[arhinish]{2}{2}
 \end{verbatim}
 \end{example}
 
@@ -5052,22 +5056,23 @@ The following packages can be useful in multilingual contexts (the list
 is far from complete):
 \begin{description}
 \itemsep=-\parskip
-\item[csquotes] Logical markup for quotes.
-\item[iflang] Tests correctly the current language.
-\item[hyphsubst] Selects a different set of patterns for a language.
-\item[translator] An open platform for packages that need to be
-  localized.
-\item[siunitx] Typesetting of numbers and physical quantities.
+\item[babelbib] Multilingual bibliographies.
 \item[biblatex] Programmable bibliographies and citations.
 \item[bicaption] Bilingual captions.
-\item[babelbib] Multilingual bibliographies.
+\item[csquotes] Logical markup for quotes.
+\item[hyphsubst] Selects a different set of patterns for a language.
+\item[iflang] Tests correctly the current language.
 \item[microtype] Adjusts the typesetting according to
   some languages (kerning and spacing). Ligatures can be disabled.
-\item[substitutefont] Combines fonts in several encodings.
+  Search in its manual for |babel| and |DeclareMicrotypeBabelHook|.
 \item[mkpattern] Generates hyphenation patterns.
+\item[siunitx] Typesetting of numbers and physical quantities.
+\item[substitutefont] Combines fonts in several encodings.
 \item[tracklang] Tracks which languages have been requested.
+\item[translator] An open platform for packages that need to be
+  localized.
 \item[ucharclasses] (\xetex) Switches fonts when you switch from one
-  Unicode block to another.
+  Unicode block to another. Note it doesn’t work with RTL scripts.
 \item[zhspacing] Spacing for CJK documents in \xetex.
 \end{description}
 
@@ -5309,7 +5314,8 @@ two parameters. For example:
 \renewcommand\spanishhyphenmins{34}
 \end{verbatim}
 (Assigning |\lefthyphenmin| and |\righthyphenmin| directly in
-|\extras<language>| has no effect.)
+|\extras<language>| has no effect.) This is a low-level setting. In
+documents you should rely on |\babelhyphenmins|.
 
 \DescribeMacro{\providehyphenmins}
 The macro |\providehyphenmins| should be used in the language
@@ -5900,8 +5906,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.11.65368>>
-%<<date=2024/10/14>>
+%<<version=24.11.65838>>
+%<<date=2024/10/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7800,6 +7806,13 @@ wouldn’t exist.
   \def\bbl@tempa#1=#2\@@{\NewHook{babel/#1}}
   \bbl@foreach\bbl@evargs{\bbl@tempa#1\@@}
 \fi
+%    \end{macrocode}
+%
+% Since the following command is meant for a hook (although a \LaTeX
+% one), it’s placed here:
+%    \begin{macrocode}
+\providecommand\PassOptionsToLocale[2]{%
+  \@namedef{bbl@passto@#2}{#1}}
 %    \end{macrocode}
 %
 % \subsection{Setting up language files}
@@ -10101,7 +10114,7 @@ wouldn’t exist.
   \bbl@vforeach{captions,date,import,main,script,language,%
       hyphenrules,linebreaking,justification,mapfont,maparabic,%
       mapdigits,intraspace,intrapenalty,onchar,transforms,alph,%
-      Alph,labels,labels*,calendar,date,casing,interchar}%
+      Alph,labels,labels*,calendar,date,casing,interchar,@import}%
     {\bbl@csarg\let{KVP@##1}\@nnil}%
   \global\let\bbl@release@transforms\@empty
   \global\let\bbl@release@casing\@empty
@@ -10110,7 +10123,10 @@ wouldn’t exist.
   \global\let\bbl@extend@ini\@gobble
   \global\let\bbl@included@inis\@empty
   \gdef\bbl@key@list{;}%
-  \bbl@forkv{#1}{%
+  \bbl@ifunset{bbl@passto@#2}%
+    {\def\bbl@tempa{#1}}%
+    {\bbl@exp{\def\\\bbl@tempa{\[bbl@passto@#2],\unexpanded{#1}}}}%
+  \expandafter\bbl@forkv\expandafter{\bbl@tempa}{%
     \in@{/}{##1}% With /, (re)sets a value in the ini
     \ifin@ 
       \global\let\bbl@extend@ini\bbl@extend@ini@aux
@@ -10127,6 +10143,10 @@ wouldn’t exist.
   \ifx\bbl@screset\@undefined
     \bbl@ldfinit
   \fi
+  % ==
+  \ifx\bbl@KVP@@import\@nnil\else \ifx\bbl@KVP@import\@nnil
+    \def\bbl@KVP@import{\@empty}%
+  \fi\fi
   % == date (as option) ==
   % \ifx\bbl@KVP@date\@nnil\else
   % \fi
@@ -11124,17 +11144,19 @@ wouldn’t exist.
        \ifx\bbl@savetoday\@empty
          \bbl@exp{% TODO. Move to a better place.
            \\\AfterBabelCommands{%
-             \def\<\languagename date>{\\\protect\<\languagename date >}%
-             \\\newcommand\<\languagename date >[4][]{%
-               \\\bbl@usedategrouptrue
-               \<bbl@ensure@\languagename>{%
-                 \\\localedate[####1]{####2}{####3}{####4}}}}%
+             \gdef\<\languagename date>{\\\protect\<\languagename date >}%
+             \gdef\<\languagename date >{\\\bbl@printdate{\languagename}}}%
            \def\\\bbl@savetoday{%
              \\\SetString\\\today{%
                \<\languagename date>[convert]%
                   {\\\the\year}{\\\the\month}{\\\the\day}}}}%
        \fi}%
       {}}}
+\def\bbl@printdate#1{%
+  \@ifnextchar[{\bbl@printdate@i{#1}}{\bbl@printdate@i{#1}[]}}
+\def\bbl@printdate@i#1[#2]#3#4#5{%
+  \bbl@usedategrouptrue
+  \@nameuse{bbl@ensure@#1}{\localedate[#2]{#3}{#4}{#5}}}
 %    \end{macrocode}
 %
 % \subsection{French spacing (again)}
@@ -12734,6 +12756,7 @@ wouldn’t exist.
   \bbl@load@language{hebrew}}
 \DeclareOption{hungarian}{\bbl@try@load@lang{}{magyar}{}}
 \DeclareOption{lowersorbian}{\bbl@try@load@lang{}{lsorbian}{}}
+% \DeclareOption{northernkurdish}{\bbl@try@load@lang{}{kurmanji}{}}
 \DeclareOption{polutonikogreek}{%
   \bbl@try@load@lang{}{greek}{\languageattribute{greek}{polutoniko}}}
 \DeclareOption{russian}{\bbl@try@load@lang{}{russianb}{}}
@@ -12750,8 +12773,6 @@ wouldn’t exist.
 % load |<name>.cfg| instead.
 %
 %    \begin{macrocode}
-\NewHook{babel/presets}
-\UseHook{babel/presets}
 \ifx\bbl@opt@config\@nnil
   \@ifpackagewith{babel}{noconfigs}{}%
     {\InputIfFileExists{bblopts.cfg}%
@@ -12838,7 +12859,7 @@ wouldn’t exist.
     \else                      % + * (other = ini)
       \DeclareOption{#1}{%
         \bbl@ldfinit
-        \babelprovide[import]{#1}%
+        \babelprovide[@import]{#1}% %%%%%
         \bbl@afterldf{}}%
     \fi
   \fi}
@@ -12855,21 +12876,24 @@ wouldn’t exist.
        \IfFileExists{babel-#1.tex}%
          {\DeclareOption{#1}{%
             \bbl@ldfinit
-            \babelprovide[import]{#1}%
+            \babelprovide[@import]{#1}%  %%%%%%
             \bbl@afterldf{}}}%
          {}%
      \fi
   \fi}
 %    \end{macrocode}
 %
-% And we are done, because all options for this pass has been
-% declared. Those already processed in the first pass are just
-% ignored.
+% And we are done, because all options for this pass has been declared.
+% Those already processed in the first pass are just ignored. There is
+% still room for last minute changes with a \LaTeX{} hook (not a
+% \Babel{} one).
 %
 % The options have to be processed in the order in which the user
 % specified them (but remember class options are processes before):
 %
 %    \begin{macrocode}
+\NewHook{babel/presets}
+\UseHook{babel/presets}
 \def\AfterBabelLanguage#1{%
   \bbl@ifsamestring\CurrentOption{#1}{\global\bbl@add\bbl@afterlang}{}}
 \DeclareOption*{}
@@ -12913,7 +12937,9 @@ wouldn’t exist.
     \bbl@ldfinit
     \let\CurrentOption\bbl@opt@main
     \bbl@exp{%  \bbl@opt@provide = empty if *
-       \\\babelprovide[\bbl@opt@provide,import,main]{\bbl@opt@main}}%
+       \\\babelprovide
+         [\bbl@opt@provide,@import,main]%  %%%%%
+         {\bbl@opt@main}}%
     \bbl@afterldf{}
     \DeclareOption{\bbl@opt@main}{}
   \else % case 0,2 (main is ldf)
