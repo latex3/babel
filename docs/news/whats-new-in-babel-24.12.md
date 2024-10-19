@@ -27,12 +27,14 @@ files, but it’s executed later and there is no need to a separate file.
 `\PassOptionsToLocale` was devised for this hook and its purpose is
 what its name suggests. For example, you can write in a class (with
 `luatex`).
+{% raw  %}
 ```tex
 \AddToHook{babel/presets}{%
   \PassOptionsToLocale{mapdigits}{sanskrit}%
   \PassOptionsToLocale{transforms=punctuation.space}{french}%
 }
 ```
+{% endraw %}
 
 Other candidates for `babel/presets` are `\AfterBabelLanguage` and
 `\DeclareOption` (although the latter can be somewhat dangerous).
