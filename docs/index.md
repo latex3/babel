@@ -72,7 +72,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [24.12](news/whats-new-in-babel-24.12.html) | (dev) Manual revised. `\PassOptionsToLocale` |
+| [24.12](news/whats-new-in-babel-24.12.html) | Manual revised. `\PassOptionsToLocale` |
 | [24.11](news/whats-new-in-babel-24.11.html) | Manual revised. Transform variables. |
 | [24.10](news/whats-new-in-babel-24.10.html) | `\localename`, `\mainlocalename`, `\babelhyphenmins` |
 | [24.9](news/whats-new-in-babel-24.9.html) | Transforms: `digits.native`, CJK spacing (tentative). |
