@@ -32,7 +32,9 @@
 %
 % \iffalse
 %<*filedriver>
-\ProvidesFile{babel.dtx}[2024/10/19 v24.11.65838 The Babel package]
+\ProvidesFile{babel.dtx}%
+  [2024/10/20 v24.12
+   The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -2988,6 +2990,55 @@ is true with any of these two environment selectors.
 
 Its natural place of use is in hooks or in |\extras<language>|.
 
+\subsection{Presets}
+
+\New{24.12} Apart from configuration files, which are loaded before the
+locale files, you can preset some options even before loading \babel.
+One on the aims of this feature is to ease the integration with
+automated document generation or conversion workflows.
+
+\Describe{\AddToHook\{babel/presets\}}{\marg{settings}}
+
+This \LaTeX{} hook is executed just before locale files (either
+\texttt{ini} or \texttt{ldf}) are loaded. It’s in fact, similar to the
+config files, but it’s executed a little later and there is no need to
+a separate file. The following command has been devised for this hook,
+but other candidates are |\AfterBabelLanguage| and |\DeclareOption|
+(although the latter can be somewhat dangerous).
+
+Note these declarations are valid ‘just in case’. If \babel{} is not
+loaded, they are ignored.
+
+\Describe{\PassOptionsToLocale}{\marg{option-list}\marg{locale-name}}
+
+Its purpose is what its name suggests, and it was devised to be used
+with the previous hook.
+
+\begin{example}
+  You are writing a class and expect lazy loading of secondary
+  languages. You also want to make sure |french|, if used, activates
+  its rules for punctuation spacing, and |malayalam|, if used, maps
+  digits to the native ones (with \luatex):
+\setengine{luatex}
+\begin{verbatim}
+\AddToHook{babel/presets}{%
+  \PassOptionsToLocale{transforms=punctuation.space}{french}%
+  \PassOptionsToLocale{mapdigits}{malayalam}}
+\end{verbatim}
+  If you want to take a step further and force \babel{} to use always
+  |ini| files in all secondary languages, you can resort to the \LaTeX{}
+  mechanism to pass options to packages:
+\begin{verbatim}
+  \PassOptionsToPackage{provide+=*}{babel}
+\end{verbatim}
+\end{example}
+
+\begin{note}
+  Remember localized fonts are preset, too, with lazy loading. In
+  the previous example you can set, for example,
+  |\babelfont[malayalam]{rm}{FreeSerif}|.
+\end{note}
+
 \section{Creating a language}
 
 \New{3.10} And what if there is no style for your language or none fits
@@ -5053,27 +5104,27 @@ to its manual, and remember for short and simple texts you can rely on
 \subsection{Related packages}
 
 The following packages can be useful in multilingual contexts (the list
-is far from complete):
+is far from exhaustive):
 \begin{description}
 \itemsep=-\parskip
-\item[babelbib] Multilingual bibliographies.
-\item[biblatex] Programmable bibliographies and citations.
-\item[bicaption] Bilingual captions.
-\item[csquotes] Logical markup for quotes.
-\item[hyphsubst] Selects a different set of patterns for a language.
-\item[iflang] Tests correctly the current language.
-\item[microtype] Adjusts the typesetting according to
+\item[\sffamily babelbib] Multilingual bibliographies.
+\item[\sffamily biblatex] Programmable bibliographies and citations.
+\item[\sffamily bicaption] Bilingual captions.
+\item[\sffamily csquotes] Logical markup for quotes.
+\item[\sffamily hyphsubst] Selects a different set of patterns for a language.
+\item[\sffamily iflang] Tests correctly the current language.
+\item[\sffamily microtype] Adjusts the typesetting according to
   some languages (kerning and spacing). Ligatures can be disabled.
   Search in its manual for |babel| and |DeclareMicrotypeBabelHook|.
-\item[mkpattern] Generates hyphenation patterns.
-\item[siunitx] Typesetting of numbers and physical quantities.
-\item[substitutefont] Combines fonts in several encodings.
-\item[tracklang] Tracks which languages have been requested.
-\item[translator] An open platform for packages that need to be
+\item[\sffamily mkpattern] Generates hyphenation patterns.
+\item[\sffamily siunitx] Typesetting of numbers and physical quantities.
+\item[\sffamily substitutefont] Combines fonts in several encodings.
+\item[\sffamily tracklang] Tracks which languages have been requested.
+\item[\sffamily translator] An open platform for packages that need to be
   localized.
-\item[ucharclasses] (\xetex) Switches fonts when you switch from one
+\item[\sffamily ucharclasses] (\xetex) Switches fonts when you switch from one
   Unicode block to another. Note it doesn’t work with RTL scripts.
-\item[zhspacing] Spacing for CJK documents in \xetex.
+\item[\sffamily zhspacing] Spacing for CJK documents in \xetex.
 \end{description}
 
 \subsection{Indexing}
@@ -5906,8 +5957,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.11.65838>>
-%<<date=2024/10/19>>
+%<<version=24.12>>
+%<<date=2024/10/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6310,8 +6361,10 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 %<*package>
-\NeedsTeXFormat{LaTeX2e}[2005/12/01]
-\ProvidesPackage{babel}[<@date@> v<@version@> The Babel package]
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{babel}%
+  [<@date@> v<@version@>
+   The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX]
 %    \end{macrocode}
 %
 % Start with some “private” debugging tools, and then define macros for
@@ -7809,10 +7862,11 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % Since the following command is meant for a hook (although a \LaTeX
-% one), it’s placed here:
+% one), it’s placed here.
+%
 %    \begin{macrocode}
 \providecommand\PassOptionsToLocale[2]{%
-  \@namedef{bbl@passto@#2}{#1}}
+  \bbl@csarg\bbl@add@list{passto@#2}{#1}}
 %    \end{macrocode}
 %
 % \subsection{Setting up language files}

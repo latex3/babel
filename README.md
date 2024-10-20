@@ -1,6 +1,6 @@
-## Babel 24.11.65837
+## Babel 24.12
 
-(dev)
+2024-10-20
 
 `babel` is the multilingual framework to localize documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -10,9 +10,9 @@ languages even work with Plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.11 are described in:
+Changes in version 24.12 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.11.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.12.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,18 +48,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.12  (dev)
+24.12  2024-10-20
        * Fixes: 
          - Date sometimes missing with lazy loading.
-         - Wrong sigma in some Greek numerals.
+         - Wrong stigma in some Greek numerals.
          - Wrong handling of ‘complex’ class options.
        * More tools for automated document generation workflows:
          - New LaTeX hook: presets.
-         - New command: \PassOptionsToLocale
-
-24.11  2024-10-05
-       * Start a thorough review of the manual.
-       * (lua) Transforms variables.
+         - New command: \PassOptionsToLocale.
 ```
 
 ### Previous changes
