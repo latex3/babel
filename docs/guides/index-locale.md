@@ -1,7 +1,5 @@
 # Index of locale guides
 
-<div style="column-count:3">
-
 * [afar](https://latex3.github.io/babel/guides/locale-afar.html)
 
 * [abkhazian](https://latex3.github.io/babel/guides/locale-abkhazian.html)
@@ -563,5 +561,3 @@
 * [standardmoroccantamazight](https://latex3.github.io/babel/guides/locale-standardmoroccantamazight.html)
 
 * [zulu](https://latex3.github.io/babel/guides/locale-zulu.html)
-
-</div>
