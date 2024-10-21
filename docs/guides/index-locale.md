@@ -2,566 +2,566 @@
 
 <div style="column-count:3">
 
-[afar](locale-afar.html)
+[afar](https://latex3.github.io/babel/guides/locale-afar.html)
 
-[abkhazian](locale-abkhazian.html)
+[abkhazian](https://latex3.github.io/babel/guides/locale-abkhazian.html)
 
-[avestan](locale-avestan.html)
+[avestan](https://latex3.github.io/babel/guides/locale-avestan.html)
 
-[afrikaans](locale-afrikaans.html)
+[afrikaans](https://latex3.github.io/babel/guides/locale-afrikaans.html)
 
-[aghem](locale-aghem.html)
+[aghem](https://latex3.github.io/babel/guides/locale-aghem.html)
 
-[akan](locale-akan.html)
+[akan](https://latex3.github.io/babel/guides/locale-akan.html)
 
-[akkadian](locale-akkadian.html)
+[akkadian](https://latex3.github.io/babel/guides/locale-akkadian.html)
 
-[southernaltai](locale-southernaltai.html)
+[southernaltai](https://latex3.github.io/babel/guides/locale-southernaltai.html)
 
-[amharic](locale-amharic.html)
+[amharic](https://latex3.github.io/babel/guides/locale-amharic.html)
 
-[aramaic](locale-aramaic.html)
+[aramaic](https://latex3.github.io/babel/guides/locale-aramaic.html)
 
-[egyptianarabic](locale-egyptianarabic.html)
+[egyptianarabic](https://latex3.github.io/babel/guides/locale-egyptianarabic.html)
 
-[assamese](locale-assamese.html)
+[assamese](https://latex3.github.io/babel/guides/locale-assamese.html)
 
-[asu](locale-asu.html)
+[asu](https://latex3.github.io/babel/guides/locale-asu.html)
 
-[asturian](locale-asturian.html)
+[asturian](https://latex3.github.io/babel/guides/locale-asturian.html)
 
-[awadhi](locale-awadhi.html)
+[awadhi](https://latex3.github.io/babel/guides/locale-awadhi.html)
 
-[aymara](locale-aymara.html)
+[aymara](https://latex3.github.io/babel/guides/locale-aymara.html)
 
-[azerbaijani](locale-azerbaijani.html)
+[azerbaijani](https://latex3.github.io/babel/guides/locale-azerbaijani.html)
 
-[bashkir](locale-bashkir.html)
+[bashkir](https://latex3.github.io/babel/guides/locale-bashkir.html)
 
-[baluchi](locale-baluchi.html)
+[baluchi](https://latex3.github.io/babel/guides/locale-baluchi.html)
 
-[balinese](locale-balinese.html)
+[balinese](https://latex3.github.io/babel/guides/locale-balinese.html)
 
-[bavarian](locale-bavarian.html)
+[bavarian](https://latex3.github.io/babel/guides/locale-bavarian.html)
 
-[basaa](locale-basaa.html)
+[basaa](https://latex3.github.io/babel/guides/locale-basaa.html)
 
-[bataktoba](locale-bataktoba.html)
+[bataktoba](https://latex3.github.io/babel/guides/locale-bataktoba.html)
 
-[belarusian](locale-belarusian.html)
+[belarusian](https://latex3.github.io/babel/guides/locale-belarusian.html)
 
-[bemba](locale-bemba.html)
+[bemba](https://latex3.github.io/babel/guides/locale-bemba.html)
 
-[bena](locale-bena.html)
+[bena](https://latex3.github.io/babel/guides/locale-bena.html)
 
-[bulgarian](locale-bulgarian.html)
+[bulgarian](https://latex3.github.io/babel/guides/locale-bulgarian.html)
 
-[haryanvi](locale-haryanvi.html)
+[haryanvi](https://latex3.github.io/babel/guides/locale-haryanvi.html)
 
-[bhojpuri](locale-bhojpuri.html)
+[bhojpuri](https://latex3.github.io/babel/guides/locale-bhojpuri.html)
 
-[bambara](locale-bambara.html)
+[bambara](https://latex3.github.io/babel/guides/locale-bambara.html)
 
-[tibetan](locale-tibetan.html)
+[tibetan](https://latex3.github.io/babel/guides/locale-tibetan.html)
 
-[breton](locale-breton.html)
+[breton](https://latex3.github.io/babel/guides/locale-breton.html)
 
-[bodo](locale-bodo.html)
+[bodo](https://latex3.github.io/babel/guides/locale-bodo.html)
 
-[bosnian](locale-bosnian.html)
+[bosnian](https://latex3.github.io/babel/guides/locale-bosnian.html)
 
-[buriat](locale-buriat.html)
+[buriat](https://latex3.github.io/babel/guides/locale-buriat.html)
 
-[blin](locale-blin.html)
+[blin](https://latex3.github.io/babel/guides/locale-blin.html)
 
-[catalan](locale-catalan.html)
+[catalan](https://latex3.github.io/babel/guides/locale-catalan.html)
 
-[atsam](locale-atsam.html)
+[atsam](https://latex3.github.io/babel/guides/locale-atsam.html)
 
-[chakma](locale-chakma.html)
+[chakma](https://latex3.github.io/babel/guides/locale-chakma.html)
 
-[chechen](locale-chechen.html)
+[chechen](https://latex3.github.io/babel/guides/locale-chechen.html)
 
-[cebuano](locale-cebuano.html)
+[cebuano](https://latex3.github.io/babel/guides/locale-cebuano.html)
 
-[chiga](locale-chiga.html)
+[chiga](https://latex3.github.io/babel/guides/locale-chiga.html)
 
-[cherokee](locale-cherokee.html)
+[cherokee](https://latex3.github.io/babel/guides/locale-cherokee.html)
 
-[centralkurdish](locale-centralkurdish.html)
+[centralkurdish](https://latex3.github.io/babel/guides/locale-centralkurdish.html)
 
-[corsican](locale-corsican.html)
+[corsican](https://latex3.github.io/babel/guides/locale-corsican.html)
 
-[coptic](locale-coptic.html)
+[coptic](https://latex3.github.io/babel/guides/locale-coptic.html)
 
-[churchslavic](locale-churchslavic.html)
+[churchslavic](https://latex3.github.io/babel/guides/locale-churchslavic.html)
 
-[chuvash](locale-chuvash.html)
+[chuvash](https://latex3.github.io/babel/guides/locale-chuvash.html)
 
-[welsh](locale-welsh.html)
+[welsh](https://latex3.github.io/babel/guides/locale-welsh.html)
 
-[danish](locale-danish.html)
+[danish](https://latex3.github.io/babel/guides/locale-danish.html)
 
-[taita](locale-taita.html)
+[taita](https://latex3.github.io/babel/guides/locale-taita.html)
 
-[german](locale-german.html)
+[german](https://latex3.github.io/babel/guides/locale-german.html)
 
-[zarma](locale-zarma.html)
+[zarma](https://latex3.github.io/babel/guides/locale-zarma.html)
 
-[dogri](locale-dogri.html)
+[dogri](https://latex3.github.io/babel/guides/locale-dogri.html)
 
-[lowersorbian](locale-lowersorbian.html)
+[lowersorbian](https://latex3.github.io/babel/guides/locale-lowersorbian.html)
 
-[duala](locale-duala.html)
+[duala](https://latex3.github.io/babel/guides/locale-duala.html)
 
-[divehi](locale-divehi.html)
+[divehi](https://latex3.github.io/babel/guides/locale-divehi.html)
 
-[jolafonyi](locale-jolafonyi.html)
+[jolafonyi](https://latex3.github.io/babel/guides/locale-jolafonyi.html)
 
-[dzongkha](locale-dzongkha.html)
+[dzongkha](https://latex3.github.io/babel/guides/locale-dzongkha.html)
 
-[embu](locale-embu.html)
+[embu](https://latex3.github.io/babel/guides/locale-embu.html)
 
-[ewe](locale-ewe.html)
+[ewe](https://latex3.github.io/babel/guides/locale-ewe.html)
 
-[ancientegyptian](locale-ancientegyptian.html)
+[ancientegyptian](https://latex3.github.io/babel/guides/locale-ancientegyptian.html)
 
-[monotonicgreek](locale-monotonicgreek.html)
+[monotonicgreek](https://latex3.github.io/babel/guides/locale-monotonicgreek.html)
 
-[english](locale-english.html)
+[english](https://latex3.github.io/babel/guides/locale-english.html)
 
-[esperanto](locale-esperanto.html)
+[esperanto](https://latex3.github.io/babel/guides/locale-esperanto.html)
 
-[spanish](locale-spanish.html)
+[spanish](https://latex3.github.io/babel/guides/locale-spanish.html)
 
-[estonian](locale-estonian.html)
+[estonian](https://latex3.github.io/babel/guides/locale-estonian.html)
 
-[basque](locale-basque.html)
+[basque](https://latex3.github.io/babel/guides/locale-basque.html)
 
-[ewondo](locale-ewondo.html)
+[ewondo](https://latex3.github.io/babel/guides/locale-ewondo.html)
 
-[persian](locale-persian.html)
+[persian](https://latex3.github.io/babel/guides/locale-persian.html)
 
-[fulah](locale-fulah.html)
+[fulah](https://latex3.github.io/babel/guides/locale-fulah.html)
 
-[finnish](locale-finnish.html)
+[finnish](https://latex3.github.io/babel/guides/locale-finnish.html)
 
-[filipino](locale-filipino.html)
+[filipino](https://latex3.github.io/babel/guides/locale-filipino.html)
 
-[faroese](locale-faroese.html)
+[faroese](https://latex3.github.io/babel/guides/locale-faroese.html)
 
-[northernfrisian](locale-northernfrisian.html)
+[northernfrisian](https://latex3.github.io/babel/guides/locale-northernfrisian.html)
 
-[friulian](locale-friulian.html)
+[friulian](https://latex3.github.io/babel/guides/locale-friulian.html)
 
-[westernfrisian](locale-westernfrisian.html)
+[westernfrisian](https://latex3.github.io/babel/guides/locale-westernfrisian.html)
 
-[irish](locale-irish.html)
+[irish](https://latex3.github.io/babel/guides/locale-irish.html)
 
-[ga](locale-ga.html)
+[ga](https://latex3.github.io/babel/guides/locale-ga.html)
 
-[scottishgaelic](locale-scottishgaelic.html)
+[scottishgaelic](https://latex3.github.io/babel/guides/locale-scottishgaelic.html)
 
-[geez](locale-geez.html)
+[geez](https://latex3.github.io/babel/guides/locale-geez.html)
 
-[galician](locale-galician.html)
+[galician](https://latex3.github.io/babel/guides/locale-galician.html)
 
-[guarani](locale-guarani.html)
+[guarani](https://latex3.github.io/babel/guides/locale-guarani.html)
 
-[gothic](locale-gothic.html)
+[gothic](https://latex3.github.io/babel/guides/locale-gothic.html)
 
-[swissgerman](locale-swissgerman.html)
+[swissgerman](https://latex3.github.io/babel/guides/locale-swissgerman.html)
 
-[gujarati](locale-gujarati.html)
+[gujarati](https://latex3.github.io/babel/guides/locale-gujarati.html)
 
-[gusii](locale-gusii.html)
+[gusii](https://latex3.github.io/babel/guides/locale-gusii.html)
 
-[manx](locale-manx.html)
+[manx](https://latex3.github.io/babel/guides/locale-manx.html)
 
-[hausa](locale-hausa.html)
+[hausa](https://latex3.github.io/babel/guides/locale-hausa.html)
 
-[hawaiian](locale-hawaiian.html)
+[hawaiian](https://latex3.github.io/babel/guides/locale-hawaiian.html)
 
-[hmongnjua](locale-hmongnjua.html)
+[hmongnjua](https://latex3.github.io/babel/guides/locale-hmongnjua.html)
 
-[croatian](locale-croatian.html)
+[croatian](https://latex3.github.io/babel/guides/locale-croatian.html)
 
-[uppersorbian](locale-uppersorbian.html)
+[uppersorbian](https://latex3.github.io/babel/guides/locale-uppersorbian.html)
 
-[hungarian](locale-hungarian.html)
+[hungarian](https://latex3.github.io/babel/guides/locale-hungarian.html)
 
-[armenian](locale-armenian.html)
+[armenian](https://latex3.github.io/babel/guides/locale-armenian.html)
 
-[interlingua](locale-interlingua.html)
+[interlingua](https://latex3.github.io/babel/guides/locale-interlingua.html)
 
-[indonesian](locale-indonesian.html)
+[indonesian](https://latex3.github.io/babel/guides/locale-indonesian.html)
 
-[igbo](locale-igbo.html)
+[igbo](https://latex3.github.io/babel/guides/locale-igbo.html)
 
-[sichuanyi](locale-sichuanyi.html)
+[sichuanyi](https://latex3.github.io/babel/guides/locale-sichuanyi.html)
 
-[ingush](locale-ingush.html)
+[ingush](https://latex3.github.io/babel/guides/locale-ingush.html)
 
-[icelandic](locale-icelandic.html)
+[icelandic](https://latex3.github.io/babel/guides/locale-icelandic.html)
 
-[italian](locale-italian.html)
+[italian](https://latex3.github.io/babel/guides/locale-italian.html)
 
-[inuktitut](locale-inuktitut.html)
+[inuktitut](https://latex3.github.io/babel/guides/locale-inuktitut.html)
 
-[japanese](locale-japanese.html)
+[japanese](https://latex3.github.io/babel/guides/locale-japanese.html)
 
-[ngomba](locale-ngomba.html)
+[ngomba](https://latex3.github.io/babel/guides/locale-ngomba.html)
 
-[machame](locale-machame.html)
+[machame](https://latex3.github.io/babel/guides/locale-machame.html)
 
-[javanese](locale-javanese.html)
+[javanese](https://latex3.github.io/babel/guides/locale-javanese.html)
 
-[georgian](locale-georgian.html)
+[georgian](https://latex3.github.io/babel/guides/locale-georgian.html)
 
-[kabyle](locale-kabyle.html)
+[kabyle](https://latex3.github.io/babel/guides/locale-kabyle.html)
 
-[jju](locale-jju.html)
+[jju](https://latex3.github.io/babel/guides/locale-jju.html)
 
-[kamba](locale-kamba.html)
+[kamba](https://latex3.github.io/babel/guides/locale-kamba.html)
 
-[tyap](locale-tyap.html)
+[tyap](https://latex3.github.io/babel/guides/locale-tyap.html)
 
-[makonde](locale-makonde.html)
+[makonde](https://latex3.github.io/babel/guides/locale-makonde.html)
 
-[kabuverdianu](locale-kabuverdianu.html)
+[kabuverdianu](https://latex3.github.io/babel/guides/locale-kabuverdianu.html)
 
-[kaingang](locale-kaingang.html)
+[kaingang](https://latex3.github.io/babel/guides/locale-kaingang.html)
 
-[lu](locale-lu.html)
+[lu](https://latex3.github.io/babel/guides/locale-lu.html)
 
-[koyrachiini](locale-koyrachiini.html)
+[koyrachiini](https://latex3.github.io/babel/guides/locale-koyrachiini.html)
 
-[kikuyu](locale-kikuyu.html)
+[kikuyu](https://latex3.github.io/babel/guides/locale-kikuyu.html)
 
-[kazakh](locale-kazakh.html)
+[kazakh](https://latex3.github.io/babel/guides/locale-kazakh.html)
 
-[kako](locale-kako.html)
+[kako](https://latex3.github.io/babel/guides/locale-kako.html)
 
-[kalaallisut](locale-kalaallisut.html)
+[kalaallisut](https://latex3.github.io/babel/guides/locale-kalaallisut.html)
 
-[kalenjin](locale-kalenjin.html)
+[kalenjin](https://latex3.github.io/babel/guides/locale-kalenjin.html)
 
-[khmer](locale-khmer.html)
+[khmer](https://latex3.github.io/babel/guides/locale-khmer.html)
 
-[northernkurdish](locale-northernkurdish.html)
+[northernkurdish](https://latex3.github.io/babel/guides/locale-northernkurdish.html)
 
-[kannada](locale-kannada.html)
+[kannada](https://latex3.github.io/babel/guides/locale-kannada.html)
 
-[korean](locale-korean.html)
+[korean](https://latex3.github.io/babel/guides/locale-korean.html)
 
-[konkani](locale-konkani.html)
+[konkani](https://latex3.github.io/babel/guides/locale-konkani.html)
 
-[kashmiri](locale-kashmiri.html)
+[kashmiri](https://latex3.github.io/babel/guides/locale-kashmiri.html)
 
-[shambala](locale-shambala.html)
+[shambala](https://latex3.github.io/babel/guides/locale-shambala.html)
 
-[bafia](locale-bafia.html)
+[bafia](https://latex3.github.io/babel/guides/locale-bafia.html)
 
-[colognian](locale-colognian.html)
+[colognian](https://latex3.github.io/babel/guides/locale-colognian.html)
 
-[komi](locale-komi.html)
+[komi](https://latex3.github.io/babel/guides/locale-komi.html)
 
-[cornish](locale-cornish.html)
+[cornish](https://latex3.github.io/babel/guides/locale-cornish.html)
 
-[kyrgyz](locale-kyrgyz.html)
+[kyrgyz](https://latex3.github.io/babel/guides/locale-kyrgyz.html)
 
-[latin](locale-latin.html)
+[latin](https://latex3.github.io/babel/guides/locale-latin.html)
 
-[lineara](locale-lineara.html)
+[lineara](https://latex3.github.io/babel/guides/locale-lineara.html)
 
-[ladino](locale-ladino.html)
+[ladino](https://latex3.github.io/babel/guides/locale-ladino.html)
 
-[langi](locale-langi.html)
+[langi](https://latex3.github.io/babel/guides/locale-langi.html)
 
-[luxembourgish](locale-luxembourgish.html)
+[luxembourgish](https://latex3.github.io/babel/guides/locale-luxembourgish.html)
 
-[lepcha](locale-lepcha.html)
+[lepcha](https://latex3.github.io/babel/guides/locale-lepcha.html)
 
-[ganda](locale-ganda.html)
+[ganda](https://latex3.github.io/babel/guides/locale-ganda.html)
 
-[limbu](locale-limbu.html)
+[limbu](https://latex3.github.io/babel/guides/locale-limbu.html)
 
-[ligurian](locale-ligurian.html)
+[ligurian](https://latex3.github.io/babel/guides/locale-ligurian.html)
 
-[lakota](locale-lakota.html)
+[lakota](https://latex3.github.io/babel/guides/locale-lakota.html)
 
-[lombard](locale-lombard.html)
+[lombard](https://latex3.github.io/babel/guides/locale-lombard.html)
 
-[lingala](locale-lingala.html)
+[lingala](https://latex3.github.io/babel/guides/locale-lingala.html)
 
-[lao](locale-lao.html)
+[lao](https://latex3.github.io/babel/guides/locale-lao.html)
 
-[lithuanian](locale-lithuanian.html)
+[lithuanian](https://latex3.github.io/babel/guides/locale-lithuanian.html)
 
-[lubakatanga](locale-lubakatanga.html)
+[lubakatanga](https://latex3.github.io/babel/guides/locale-lubakatanga.html)
 
-[luo](locale-luo.html)
+[luo](https://latex3.github.io/babel/guides/locale-luo.html)
 
-[luyia](locale-luyia.html)
+[luyia](https://latex3.github.io/babel/guides/locale-luyia.html)
 
-[latvian](locale-latvian.html)
+[latvian](https://latex3.github.io/babel/guides/locale-latvian.html)
 
-[maithili](locale-maithili.html)
+[maithili](https://latex3.github.io/babel/guides/locale-maithili.html)
 
-[makasar](locale-makasar.html)
+[makasar](https://latex3.github.io/babel/guides/locale-makasar.html)
 
-[masai](locale-masai.html)
+[masai](https://latex3.github.io/babel/guides/locale-masai.html)
 
-[meru](locale-meru.html)
+[meru](https://latex3.github.io/babel/guides/locale-meru.html)
 
-[morisyen](locale-morisyen.html)
+[morisyen](https://latex3.github.io/babel/guides/locale-morisyen.html)
 
-[malagasy](locale-malagasy.html)
+[malagasy](https://latex3.github.io/babel/guides/locale-malagasy.html)
 
-[makhuwameetto](locale-makhuwameetto.html)
+[makhuwameetto](https://latex3.github.io/babel/guides/locale-makhuwameetto.html)
 
-[meta](locale-meta.html)
+[meta](https://latex3.github.io/babel/guides/locale-meta.html)
 
-[maori](locale-maori.html)
+[maori](https://latex3.github.io/babel/guides/locale-maori.html)
 
-[macedonian](locale-macedonian.html)
+[macedonian](https://latex3.github.io/babel/guides/locale-macedonian.html)
 
-[malayalam](locale-malayalam.html)
+[malayalam](https://latex3.github.io/babel/guides/locale-malayalam.html)
 
-[mongolian](locale-mongolian.html)
+[mongolian](https://latex3.github.io/babel/guides/locale-mongolian.html)
 
-[manipuri](locale-manipuri.html)
+[manipuri](https://latex3.github.io/babel/guides/locale-manipuri.html)
 
-[marathi](locale-marathi.html)
+[marathi](https://latex3.github.io/babel/guides/locale-marathi.html)
 
-[malay](locale-malay.html)
+[malay](https://latex3.github.io/babel/guides/locale-malay.html)
 
-[maltese](locale-maltese.html)
+[maltese](https://latex3.github.io/babel/guides/locale-maltese.html)
 
-[mundang](locale-mundang.html)
+[mundang](https://latex3.github.io/babel/guides/locale-mundang.html)
 
-[muscogee](locale-muscogee.html)
+[muscogee](https://latex3.github.io/babel/guides/locale-muscogee.html)
 
-[burmese](locale-burmese.html)
+[burmese](https://latex3.github.io/babel/guides/locale-burmese.html)
 
-[erzya](locale-erzya.html)
+[erzya](https://latex3.github.io/babel/guides/locale-erzya.html)
 
-[classicalmandaic](locale-classicalmandaic.html)
+[classicalmandaic](https://latex3.github.io/babel/guides/locale-classicalmandaic.html)
 
-[nama](locale-nama.html)
+[nama](https://latex3.github.io/babel/guides/locale-nama.html)
 
-[northndebele](locale-northndebele.html)
+[northndebele](https://latex3.github.io/babel/guides/locale-northndebele.html)
 
-[lowgerman](locale-lowgerman.html)
+[lowgerman](https://latex3.github.io/babel/guides/locale-lowgerman.html)
 
-[nepali](locale-nepali.html)
+[nepali](https://latex3.github.io/babel/guides/locale-nepali.html)
 
-[newari](locale-newari.html)
+[newari](https://latex3.github.io/babel/guides/locale-newari.html)
 
-[dutch](locale-dutch.html)
+[dutch](https://latex3.github.io/babel/guides/locale-dutch.html)
 
-[kwasio](locale-kwasio.html)
+[kwasio](https://latex3.github.io/babel/guides/locale-kwasio.html)
 
-[ngiemboon](locale-ngiemboon.html)
+[ngiemboon](https://latex3.github.io/babel/guides/locale-ngiemboon.html)
 
-[oldnorse](locale-oldnorse.html)
+[oldnorse](https://latex3.github.io/babel/guides/locale-oldnorse.html)
 
-[nko](locale-nko.html)
+[nko](https://latex3.github.io/babel/guides/locale-nko.html)
 
-[southndebele](locale-southndebele.html)
+[southndebele](https://latex3.github.io/babel/guides/locale-southndebele.html)
 
-[northernsotho](locale-northernsotho.html)
+[northernsotho](https://latex3.github.io/babel/guides/locale-northernsotho.html)
 
-[nuer](locale-nuer.html)
+[nuer](https://latex3.github.io/babel/guides/locale-nuer.html)
 
-[navajo](locale-navajo.html)
+[navajo](https://latex3.github.io/babel/guides/locale-navajo.html)
 
-[nyanja](locale-nyanja.html)
+[nyanja](https://latex3.github.io/babel/guides/locale-nyanja.html)
 
-[nyankole](locale-nyankole.html)
+[nyankole](https://latex3.github.io/babel/guides/locale-nyankole.html)
 
-[occitan](locale-occitan.html)
+[occitan](https://latex3.github.io/babel/guides/locale-occitan.html)
 
-[oromo](locale-oromo.html)
+[oromo](https://latex3.github.io/babel/guides/locale-oromo.html)
 
-[odia](locale-odia.html)
+[odia](https://latex3.github.io/babel/guides/locale-odia.html)
 
-[ossetic](locale-ossetic.html)
+[ossetic](https://latex3.github.io/babel/guides/locale-ossetic.html)
 
-[punjabi](locale-punjabi.html)
+[punjabi](https://latex3.github.io/babel/guides/locale-punjabi.html)
 
-[papiamento](locale-papiamento.html)
+[papiamento](https://latex3.github.io/babel/guides/locale-papiamento.html)
 
-[nigerianpidgin](locale-nigerianpidgin.html)
+[nigerianpidgin](https://latex3.github.io/babel/guides/locale-nigerianpidgin.html)
 
-[phoenician](locale-phoenician.html)
+[phoenician](https://latex3.github.io/babel/guides/locale-phoenician.html)
 
-[polish](locale-polish.html)
+[polish](https://latex3.github.io/babel/guides/locale-polish.html)
 
-[piedmontese](locale-piedmontese.html)
+[piedmontese](https://latex3.github.io/babel/guides/locale-piedmontese.html)
 
-[prussian](locale-prussian.html)
+[prussian](https://latex3.github.io/babel/guides/locale-prussian.html)
 
-[portuguese](locale-portuguese.html)
+[portuguese](https://latex3.github.io/babel/guides/locale-portuguese.html)
 
-[quechua](locale-quechua.html)
+[quechua](https://latex3.github.io/babel/guides/locale-quechua.html)
 
-[rajasthani](locale-rajasthani.html)
+[rajasthani](https://latex3.github.io/babel/guides/locale-rajasthani.html)
 
-[romansh](locale-romansh.html)
+[romansh](https://latex3.github.io/babel/guides/locale-romansh.html)
 
-[sinteromani](locale-sinteromani.html)
+[sinteromani](https://latex3.github.io/babel/guides/locale-sinteromani.html)
 
-[rundi](locale-rundi.html)
+[rundi](https://latex3.github.io/babel/guides/locale-rundi.html)
 
-[romanian](locale-romanian.html)
+[romanian](https://latex3.github.io/babel/guides/locale-romanian.html)
 
-[rombo](locale-rombo.html)
+[rombo](https://latex3.github.io/babel/guides/locale-rombo.html)
 
-[russian](locale-russian.html)
+[russian](https://latex3.github.io/babel/guides/locale-russian.html)
 
-[kinyarwanda](locale-kinyarwanda.html)
+[kinyarwanda](https://latex3.github.io/babel/guides/locale-kinyarwanda.html)
 
-[rwa](locale-rwa.html)
+[rwa](https://latex3.github.io/babel/guides/locale-rwa.html)
 
-[sanskrit](locale-sanskrit.html)
+[sanskrit](https://latex3.github.io/babel/guides/locale-sanskrit.html)
 
-[sakha](locale-sakha.html)
+[sakha](https://latex3.github.io/babel/guides/locale-sakha.html)
 
-[samburu](locale-samburu.html)
+[samburu](https://latex3.github.io/babel/guides/locale-samburu.html)
 
-[santali](locale-santali.html)
+[santali](https://latex3.github.io/babel/guides/locale-santali.html)
 
-[sangu](locale-sangu.html)
+[sangu](https://latex3.github.io/babel/guides/locale-sangu.html)
 
-[sardinian](locale-sardinian.html)
+[sardinian](https://latex3.github.io/babel/guides/locale-sardinian.html)
 
-[sicilian](locale-sicilian.html)
+[sicilian](https://latex3.github.io/babel/guides/locale-sicilian.html)
 
-[sindhi](locale-sindhi.html)
+[sindhi](https://latex3.github.io/babel/guides/locale-sindhi.html)
 
-[northernsami](locale-northernsami.html)
+[northernsami](https://latex3.github.io/babel/guides/locale-northernsami.html)
 
-[sena](locale-sena.html)
+[sena](https://latex3.github.io/babel/guides/locale-sena.html)
 
-[koyraborosenni](locale-koyraborosenni.html)
+[koyraborosenni](https://latex3.github.io/babel/guides/locale-koyraborosenni.html)
 
-[sango](locale-sango.html)
+[sango](https://latex3.github.io/babel/guides/locale-sango.html)
 
-[tachelhit](locale-tachelhit.html)
+[tachelhit](https://latex3.github.io/babel/guides/locale-tachelhit.html)
 
-[sinhala](locale-sinhala.html)
+[sinhala](https://latex3.github.io/babel/guides/locale-sinhala.html)
 
-[slovak](locale-slovak.html)
+[slovak](https://latex3.github.io/babel/guides/locale-slovak.html)
 
-[saraiki](locale-saraiki.html)
+[saraiki](https://latex3.github.io/babel/guides/locale-saraiki.html)
 
-[slovenian](locale-slovenian.html)
+[slovenian](https://latex3.github.io/babel/guides/locale-slovenian.html)
 
-[inarisami](locale-inarisami.html)
+[inarisami](https://latex3.github.io/babel/guides/locale-inarisami.html)
 
-[samaritan](locale-samaritan.html)
+[samaritan](https://latex3.github.io/babel/guides/locale-samaritan.html)
 
-[shona](locale-shona.html)
+[shona](https://latex3.github.io/babel/guides/locale-shona.html)
 
-[somali](locale-somali.html)
+[somali](https://latex3.github.io/babel/guides/locale-somali.html)
 
-[albanian](locale-albanian.html)
+[albanian](https://latex3.github.io/babel/guides/locale-albanian.html)
 
-[serbian](locale-serbian.html)
+[serbian](https://latex3.github.io/babel/guides/locale-serbian.html)
 
-[swati](locale-swati.html)
+[swati](https://latex3.github.io/babel/guides/locale-swati.html)
 
-[saho](locale-saho.html)
+[saho](https://latex3.github.io/babel/guides/locale-saho.html)
 
-[southernsotho](locale-southernsotho.html)
+[southernsotho](https://latex3.github.io/babel/guides/locale-southernsotho.html)
 
-[sundanese](locale-sundanese.html)
+[sundanese](https://latex3.github.io/babel/guides/locale-sundanese.html)
 
-[swedish](locale-swedish.html)
+[swedish](https://latex3.github.io/babel/guides/locale-swedish.html)
 
-[swahili](locale-swahili.html)
+[swahili](https://latex3.github.io/babel/guides/locale-swahili.html)
 
-[syriac](locale-syriac.html)
+[syriac](https://latex3.github.io/babel/guides/locale-syriac.html)
 
-[silesian](locale-silesian.html)
+[silesian](https://latex3.github.io/babel/guides/locale-silesian.html)
 
-[tamil](locale-tamil.html)
+[tamil](https://latex3.github.io/babel/guides/locale-tamil.html)
 
-[tainua](locale-tainua.html)
+[tainua](https://latex3.github.io/babel/guides/locale-tainua.html)
 
-[telugu](locale-telugu.html)
+[telugu](https://latex3.github.io/babel/guides/locale-telugu.html)
 
-[teso](locale-teso.html)
+[teso](https://latex3.github.io/babel/guides/locale-teso.html)
 
-[tajik](locale-tajik.html)
+[tajik](https://latex3.github.io/babel/guides/locale-tajik.html)
 
-[tigrinya](locale-tigrinya.html)
+[tigrinya](https://latex3.github.io/babel/guides/locale-tigrinya.html)
 
-[tigre](locale-tigre.html)
+[tigre](https://latex3.github.io/babel/guides/locale-tigre.html)
 
-[turkmen](locale-turkmen.html)
+[turkmen](https://latex3.github.io/babel/guides/locale-turkmen.html)
 
-[tswana](locale-tswana.html)
+[tswana](https://latex3.github.io/babel/guides/locale-tswana.html)
 
-[tongan](locale-tongan.html)
+[tongan](https://latex3.github.io/babel/guides/locale-tongan.html)
 
-[tokpisin](locale-tokpisin.html)
+[tokpisin](https://latex3.github.io/babel/guides/locale-tokpisin.html)
 
-[turkish](locale-turkish.html)
+[turkish](https://latex3.github.io/babel/guides/locale-turkish.html)
 
-[taroko](locale-taroko.html)
+[taroko](https://latex3.github.io/babel/guides/locale-taroko.html)
 
-[tsonga](locale-tsonga.html)
+[tsonga](https://latex3.github.io/babel/guides/locale-tsonga.html)
 
-[tatar](locale-tatar.html)
+[tatar](https://latex3.github.io/babel/guides/locale-tatar.html)
 
-[tasawaq](locale-tasawaq.html)
+[tasawaq](https://latex3.github.io/babel/guides/locale-tasawaq.html)
 
-[tangut](locale-tangut.html)
+[tangut](https://latex3.github.io/babel/guides/locale-tangut.html)
 
-[centralatlastamazight](locale-centralatlastamazight.html)
+[centralatlastamazight](https://latex3.github.io/babel/guides/locale-centralatlastamazight.html)
 
-[ukrainian](locale-ukrainian.html)
+[ukrainian](https://latex3.github.io/babel/guides/locale-ukrainian.html)
 
-[urdu](locale-urdu.html)
+[urdu](https://latex3.github.io/babel/guides/locale-urdu.html)
 
-[uzbek](locale-uzbek.html)
+[uzbek](https://latex3.github.io/babel/guides/locale-uzbek.html)
 
-[vai](locale-vai.html)
+[vai](https://latex3.github.io/babel/guides/locale-vai.html)
 
-[venda](locale-venda.html)
+[venda](https://latex3.github.io/babel/guides/locale-venda.html)
 
-[vietnamese](locale-vietnamese.html)
+[vietnamese](https://latex3.github.io/babel/guides/locale-vietnamese.html)
 
-[volapuk](locale-volapuk.html)
+[volapuk](https://latex3.github.io/babel/guides/locale-volapuk.html)
 
-[vunjo](locale-vunjo.html)
+[vunjo](https://latex3.github.io/babel/guides/locale-vunjo.html)
 
-[walser](locale-walser.html)
+[walser](https://latex3.github.io/babel/guides/locale-walser.html)
 
-[wolaytta](locale-wolaytta.html)
+[wolaytta](https://latex3.github.io/babel/guides/locale-wolaytta.html)
 
-[waray](locale-waray.html)
+[waray](https://latex3.github.io/babel/guides/locale-waray.html)
 
-[wolof](locale-wolof.html)
+[wolof](https://latex3.github.io/babel/guides/locale-wolof.html)
 
-[xhosa](locale-xhosa.html)
+[xhosa](https://latex3.github.io/babel/guides/locale-xhosa.html)
 
-[soga](locale-soga.html)
+[soga](https://latex3.github.io/babel/guides/locale-soga.html)
 
-[yangben](locale-yangben.html)
+[yangben](https://latex3.github.io/babel/guides/locale-yangben.html)
 
-[yiddish](locale-yiddish.html)
+[yiddish](https://latex3.github.io/babel/guides/locale-yiddish.html)
 
-[yoruba](locale-yoruba.html)
+[yoruba](https://latex3.github.io/babel/guides/locale-yoruba.html)
 
-[nheengatu](locale-nheengatu.html)
+[nheengatu](https://latex3.github.io/babel/guides/locale-nheengatu.html)
 
-[cantonese](locale-cantonese.html)
+[cantonese](https://latex3.github.io/babel/guides/locale-cantonese.html)
 
-[standardmoroccantamazight](locale-standardmoroccantamazight.html)
+[standardmoroccantamazight](https://latex3.github.io/babel/guides/locale-standardmoroccantamazight.html)
 
-[zulu](locale-zulu.html)
+[zulu](https://latex3.github.io/babel/guides/locale-zulu.html)
 
 </div>
