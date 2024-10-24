@@ -33,7 +33,7 @@
 % \iffalse
 %<*filedriver>
 \ProvidesFile{babel.dtx}%
-  [2024/10/20 v24.12
+  [2024/10/24 v24.12.66368
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -826,7 +826,6 @@ encoding files, a preprocessor or even a complete framework (like
 \bigskip\hrule\nobreak
 
 \makeatletter
-\def\tag#1{\par\@hangfrom{\makebox[10em][l]{#1}}\ignorespaces}
 \def\tag#1#2{\par
   \hspace{-2em}\textcolor{thered}{\texttt{#1}}#2\enspace}
 \def\subtag#1#2{\par
@@ -5957,8 +5956,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.12>>
-%<<date=2024/10/20>>
+%<<version=24.12.66368>>
+%<<date=2024/10/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14560,6 +14559,24 @@ wouldn’t exist.
       callback.register('process_input_buffer',Babel.callback)
     end
   end
+  function Babel.str_to_nodes(fn, matches, base)
+    local n, head, last
+    if fn == nil then return nil end
+    for s in string.utfvalues(fn(matches)) do
+      if base.id == 7 then 
+        base = base.replace
+      end
+      n = node.copy(base)
+      n.char    = s
+      if not head then
+        head = n
+      else
+        last.next = n
+      end
+      last = n
+    end 
+    return head
+  end
   Babel.linebreaking = Babel.linebreaking or {}
   Babel.linebreaking.before = {}
   Babel.linebreaking.after = {}
@@ -16487,26 +16504,6 @@ function Babel.tovalue(v)
   else
     return v
   end
-end
-
--- Discretionaries contain strings as nodes
-function Babel.str_to_nodes(fn, matches, base)
-  local n, head, last
-  if fn == nil then return nil end
-  for s in string.utfvalues(fn(matches)) do
-    if base.id == 7 then 
-      base = base.replace
-    end
-    n = node.copy(base)
-    n.char    = s
-    if not head then
-      head = n
-    else
-      last.next = n
-    end
-    last = n
-  end 
-  return head
 end
 
 Babel.fetch_subtext = {}

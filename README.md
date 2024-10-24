@@ -1,4 +1,4 @@
-## Babel 24.12
+## Babel 24.12.66368
 
 2024-10-20
 
@@ -48,6 +48,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+24.13  (dev)
+       * Fix: Uyghur hyphenation mechanism stopped working.
+       
 24.12  2024-10-20
        * Fixes: 
          - Date sometimes missing with lazy loading.
