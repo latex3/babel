@@ -72,6 +72,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [24.13](news/whats-new-in-babel-24.13.html) | (dev) Transform variables for French. |
 | [24.12](news/whats-new-in-babel-24.12.html) | Manual revised. `\PassOptionsToLocale` |
 | [24.11](news/whats-new-in-babel-24.11.html) | Manual revised. Transform variables. |
 | [24.10](news/whats-new-in-babel-24.10.html) | `\localename`, `\mainlocalename`, `\babelhyphenmins` |
