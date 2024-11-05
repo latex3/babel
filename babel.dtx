@@ -32,8 +32,12 @@
 %
 % \iffalse
 %<*filedriver>
+\DocumentMetadata{ 
+  % testphase  = {sec,toc,text}, 
+  lang       = en-001,
+}
 \ProvidesFile{babel.dtx}%
-  [2024/10/24 v24.12.66368
+  [2024/11/05 v24.12.67573
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -188,6 +192,7 @@
   \colorbox{thegrey}{\ttfamily\hskip-.2em*\hskip-.2em}%
   \kern1pt}
 \def\trouble#1{\addcontentsline{tsh}{trouble}{#1}}
+\def\toclevel@trouble{0}
 \def\listoftroubles{\section*{Troubleshoooting}\@starttoc{tsh}}
 \let\l@trouble\l@figure
 \let\saved@check@percent\check@percent
@@ -212,18 +217,31 @@
      $\langle$\pm@module#2#3>$\rangle$%
      \ifx*#2\ $\equiv$\fi}
 \endgroup
+\def\toc@usehook#1#2#3{%
+  \UseHookWithArguments{contentsline/#1}{4}%
+    {\toclevel@section}%
+    {#2}{#3}{\@contentsline@destination}}
 \renewcommand*\l@section[2]{%
-  \ifnum \c@tocdepth >\z@
+  \ifnum\c@tocdepth>\z@
     \addpenalty\@secpenalty
-    \addvspace{1.0em \@plus\p@}%
+    \addvspace{1.0em\@plus\p@}%
     \setlength\@tempdima{2em}%
     \begingroup
-      \parindent \z@ \rightskip \@pnumwidth
-      \parfillskip -\@pnumwidth
-      \leavevmode \bfseries
+      \parindent\z@ \rightskip\@pnumwidth
+      \parfillskip-\@pnumwidth
+      \leavevmode\bfseries 
       \advance\leftskip\@tempdima
-      \hskip -\leftskip
-      #1\nobreak\hfil \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+      \hskip-\leftskip
+      \toc@usehook{text/before}{#1}{#2}%
+      \csname contentsline@text@1@format\endcsname{#1}
+      \toc@usehook{text/after}{#1}{#2}%
+      \nobreak\hfil\nobreak \hb@xt@\@pnumwidth
+        {\hss
+         \toc@usehook{page/before}{#1}{#2}%
+         #2%
+         \toc@usehook{page/after}{#1}{#2}%
+         \kern-\p@\kern\p@}%
+      \par
     \endgroup
   \fi}
 \renewcommand*\l@subsection{\@dottedtocline{2}{2em}{3em}}
@@ -302,6 +320,8 @@ Xe\largetex
 
 \ifx\babelcode\undefined
 
+\makeatletter
+
 \begin{description}
 \item[\sffamily\color{messages}What is this document about?] This user
 guide focuses on internationalization and localization with \LaTeX{}
@@ -327,14 +347,13 @@ are some notes for the latest versions in
 recent features can be still unstable. Remember version 24.1 follows
 3.99, because of a new numbering scheme.
 
-\item[\sffamily\color{messages}Can I help?] Sure! If you are interested
-in the \TeX{} multilingual support, please join the
-\href{http://tug.org/mailman/listinfo/kadingira}{kadingira mail list}.
-You can follow the development of \babel{} in
-\href{https://github.com/latex3/babel}{GitHub} and make suggestions; feel
-free to fork it and make pull requests. If you are the author of a
-package, send to me a few test files which I'll add to mine, so that
-possible issues can be caught in the development phase.
+\item[\sffamily\color{messages}Can I help?] Sure! You can follow the
+development of \babel{} in
+\href{https://github.com/latex3/babel}{GitHub} and make suggestions,
+including requirements for some language or script. Feel free to fork
+it and make pull requests. If you are the author of a package, send to
+me a few test files which I'll add to mine, so that possible issues can
+be caught in the development phase.
 
 \item[\sffamily\color{messages}It doesn't work for me!] You can ask for
 help in some forums like \textsf{tex.stackexchange}, but if you have
@@ -813,9 +832,10 @@ explained below.
 by \babel{} with an |.ldf| file are listed, together with the names of
 the option which you can load \babel\ with for each language. Note this
 list is open and the current options may be different. It does not
-include |ini| files (see below). Except in a few cases (eg, |ngerman|,
-|serbianc|, |acadian|) names are those of the Unicode CLDR (or based on
-them).
+include |ini| files (see below).
+
+Except in a few cases (eg, |ngerman|, |serbianc|, |acadian|) names are
+those of the Unicode CLDR (or based on them).
 
 Most of them work out of the box, but some may require extra fonts,
 encoding files, a preprocessor or even a complete framework (like
@@ -854,6 +874,7 @@ There are some notes in a few languages.
 \tag{afrikaans}{}
 \tag{albanian}{}
 \tag{arabic}{}
+\note{Requires \textsf{arabi}.}
 \tag{azerbaijani}{}
 \tag{basque}{}
 \tag{belarusian}{}
@@ -877,6 +898,7 @@ There are some notes in a few languages.
 \tag{estonian}{}
 \tagmin{ethiop}{} %%%%%%
 \tag{farsi}{}
+\note{Requires \textsf{arabi}.}
 \tag{finnish}{}
 \tag{french}{}
 \subtagalt{acadian}{}
@@ -895,6 +917,7 @@ the names in the block \textsf{ngerman}.}
 \subtagmin{bgreek}{}
 \tag{hebrew}{}
 \tag{hindi}{}
+\note{Requires \textsf{velthuis}.}
 \tag{hungarian}{}
 \subtag{magyar}{}
 \tag{icelandic}{}
@@ -933,11 +956,11 @@ the names in the block \textsf{ngerman}.}
 \tag{romansh}{}
 \tag{russian}{}
 \tag{scottishgaelic}{}
-\note{Preferred to \texttt{scottish}}
-\tag{serbian}{}
-\note{Latin script}
-\subtagalt{serbianc}{}
+\subtag{scottish}{}
+\tag{serbianc}{}
 \note{Cyrillic script}
+\subtagalt{serbian}{}
+\note{Latin script}
 \tag{slovak}{}
 \tag{slovene}{}
 \tag{slovenian}{}  %%%%%% <- and ini
@@ -1004,13 +1027,6 @@ languages). So, they are included in the default \babel{} distribution.
 This can serve to encourage contributions, too. A warning will remember
 they are ‘bare minimum locales’. They are set in
 \textcolor[gray]{.4}{gray} in the following list.
-
-\begin{note}
-  Although the names of the corresponding |lfd| files match those in
-  this list, there are some exceptions, particularly in German and
-  Serbian. So, |ngerman| is called here |german|, which is the name in
-  the CLDR and, actually, the most logical.
-\end{note}
 
 \begingroup
 \bigskip\hrule\nobreak
@@ -3318,10 +3334,11 @@ how to do it:
 \Babel{} deals with three kinds of line breaking rules: Western,
 typically the LGC group, South East Asian, like Thai, and CJK, but
 support depends on the engine: \textsf{pdftex} only deals with the
-former, \xetex{} also with the second one (although in a limited way),
-while \luatex{} provides basic rules for the latter, too. With \luatex{}
-there are also tools for non-standard hyphenation rules, explained in
-the next section.
+former, \xetex{} also with the second one (although in a limited way)
+and CJK, while \luatex{} provides basic rules for all of them, as well
+as additional rules (like Uyghur and Tibetan). With \luatex{} there are
+also tools for non-standard hyphenation and line breaking rules,
+explained in the next section.
 
 \Describe{\babelhyphenation}{\texttt{[}\langlist\texttt{]}%
     \marg{exceptions}}
@@ -3335,8 +3352,7 @@ wins), but language exceptions take precedence over global ones.
 It can be used only in the preamble, and exceptions are set when the
 language is first selected, thus taking into account changes of
 |\lccodes|'s done in |\extras<language>| as well as the language-specific
-encoding (not set in the preamble by default). Multiple
-|\babelhyphenation|'s are allowed. For example:
+encoding (not set in the preamble by default). For example:
 \begin{verbatim}
 \babelhyphenation{Wal-hal-la Dar-bhan-ga}
 \end{verbatim}
@@ -5956,8 +5972,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.12.66368>>
-%<<date=2024/10/24>>
+%<<version=24.12.67573>>
+%<<date=2024/11/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15518,7 +15534,7 @@ end
                'spacefactor = {' .. '%2, %3, %4' .. '}')           
              rep = rep:gsub('(kashida)%s*=%s*([^%s,]*)', Babel.capture_kashida)
              &% Transform values
-             rep, n = rep:gsub( '{([%a%-]+)|([%-%d%.]+)}',
+             rep, n = rep:gsub( '{([%a%-%.]+)|([%-%d%.]+)}',
               '{\the\csname bbl@id@@#3\endcsname,"%1",%2}')
            end
            if #1 == 1 then
@@ -24647,7 +24663,7 @@ Babel.cjk_breaks = {
   #2=\bbl@cntcommon}
 \def\bbl@hebrdayspriormonths#1#2#3{%
   {\countdef\tmpf= 14
-   #3=\ifcase #1\relax
+   #3=\ifcase #1
           0 \or
           0 \or
          30 \or

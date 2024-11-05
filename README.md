@@ -1,4 +1,4 @@
-## Babel 24.12.66368
+## Babel 24.12.67573
 
 2024-10-20
 
@@ -49,7 +49,11 @@ respective authors.
 ### Summary of latest changes
 ```
 24.13  (dev)
-       * Fix: Uyghur hyphenation mechanism stopped working.
+       * Fixes:
+         - Uyghur hyphenation mechanism stopped working.
+         - Pashto raised an error.
+         - The Hebrew calendar converter raised an error.
+       * Added ‘transform values’ for punctuation.space in French.
        
 24.12  2024-10-20
        * Fixes: 
