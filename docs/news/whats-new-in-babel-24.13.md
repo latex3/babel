@@ -2,17 +2,20 @@
 
 **Draft**
 
-There is an important notice related to the LaTeX kernel, which affects
+There are important news related to the LaTeX kernel, which affects
 how to deal with languages. Now, according to [Engine news from the
 LaTeX Project](https://www.texdev.net/2024/11/05/engine-news-from-the-latex-project),
 “LuaTeX is the recommended engine for all new documents”. Furthermore,
 “it is time to move away from XeTeX: certainly for new documents, and
 even for existing ones”.
 
-There is some work in progress to provide short examples in many languages.
+[Here](migrating-xetex-luatex.html) is a document (still a draft) with
+some hints on how to migrate from `xetex` to `luatex`.
+
+Work is underway to provide short examples in many languages.
 See [Index of locale guides](https://latex3.github.io/babel/guides/index-locale.html)
 
-## Transform variables fo French
+## French: Transform variables
 
 When the `ini` file is used, you can now configure the spacing with
 punctuation, with the new transform variables. See [What’s new in
@@ -30,7 +33,7 @@ With, for example:
 spacing with the colon is slightly smaller (default is `.5`). Units
 are the current ordinary space.
 
-## Pashto Persian and Islamic calendar
+## Pashto: Persian and Islamic calendars
 
 Added strings for the those calendars in the locale for Pashto. Since
 the default calendar was Persian, an error was even raised (which is
