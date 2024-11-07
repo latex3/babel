@@ -6,30 +6,34 @@ In many languages and scripts, particularly Latin, Greek and Cyrillic,
 a document written for `xetex` should work with `luatex` without
 changes.
 
+See also the companion guide [Migrating from pdfTeX to
+LuaTeX](https://latex3.github.io/babel/guides/migrating-pdftex-luatex.html)
+if you are migrating from pdfTeX.
+
 ## Fonts
 
 By default, the font renderer in `xetex` is Harfbuzz (the only
 available). With `luatex` the default renderer is `Node`, which is not
-suited for some Asian scripts (Indic, South Asian). So, you may need to
+suited for many Asian scripts (Indic, South Asian). So, you may need to
 replace something like
 ```tex
 \babelfont{rm}{FreeSerif}
 ```
 with
-```
+```tex
 \babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}
 ```
 
 ## RTL scripts
 
-The `xetex` and `luatex` models are quite different. Actually, `xetex`
-lacked a true RTL model. The main change is to replace the package
+The `xetex` and `luatex` models are quite different (actually, `xetex`
+lacks a true RTL model). The main change is to replace the package
 option `bidi=bidi` with `bidi=basic`. If you were using `bidi=default`,
 no change is necessary.
 
-Note `xetex` only ‘reverses’ the text, while `luatex` ‘reverses’ but
-also margins, columns, and so on, so with these elements expect
-different results.
+Note `xetex` only ‘reverses’ the text, while `luatex` ‘reverses’ also
+margins, columns, and so on, so with these elements expect different
+results.
 
 ## `Mapping`
 

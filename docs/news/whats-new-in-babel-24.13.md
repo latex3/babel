@@ -9,7 +9,7 @@ LaTeX Project](https://www.texdev.net/2024/11/05/engine-news-from-the-latex-proj
 “it is time to move away from XeTeX: certainly for new documents, and
 even for existing ones”.
 
-[Here](migrating-xetex-luatex.html) is a document (still a draft) with
+[Here](https://latex3.github.io/babel/guides/migrating-xetex-luatex.html) is a document (still a draft) with
 some hints on how to migrate from `xetex` to `luatex`.
 
 Work is underway to provide short examples in many languages.
@@ -30,8 +30,8 @@ With, for example:
 ```tex
 \SetTransformValue{french}{colon.natural}{.4}
 ```
-spacing with the colon is slightly smaller (default is `.5`). Units
-are the current ordinary space.
+spacing with the colon is slightly smaller (default is `.5`). Unit
+is the current ordinary space.
 
 ## Pashto: Persian and Islamic calendars
 
