@@ -1,6 +1,6 @@
-## Babel 24.12.67573
+## Babel 24.13
 
-2024-10-20
+2024-11-08
 
 `babel` is the multilingual framework to localize documents in
 LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
@@ -10,9 +10,9 @@ languages even work with Plain formats.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.12 are described in:
+Changes in version 24.13 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.12.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.13.html
 
 Apart from the manual, you can find information on some aspects of babel at:
 
@@ -48,21 +48,13 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.13  (dev)
+24.13  2024-11-08
+       * French: Added ‘transform values’ for punctuation.space.
+       * Pashto: Persian and Islamic calendar (which fixes an error,
+         too).
        * Fixes:
          - Uyghur hyphenation mechanism stopped working.
-         - Pashto raised an error.
          - The Hebrew calendar converter raised an error.
-       * Added ‘transform values’ for punctuation.space in French.
-       
-24.12  2024-10-20
-       * Fixes: 
-         - Date sometimes missing with lazy loading.
-         - Wrong stigma in some Greek numerals.
-         - Wrong handling of ‘complex’ class options.
-       * More tools for automated document generation workflows:
-         - New LaTeX hook: presets.
-         - New command: \PassOptionsToLocale.
 ```
 
 ### Previous changes

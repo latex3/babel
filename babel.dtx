@@ -33,11 +33,11 @@
 % \iffalse
 %<*filedriver>
 \DocumentMetadata{ 
-  % testphase  = {sec,toc,text}, 
+  % testphase  = {sec,toc,text},
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2024/11/05 v24.12.67573
+  [2024/11/08 v24.13
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -320,12 +320,10 @@ Xe\largetex
 
 \ifx\babelcode\undefined
 
-\makeatletter
-
 \begin{description}
 \item[\sffamily\color{messages}What is this document about?] This user
 guide focuses on internationalization and localization with \LaTeX{}
-and \pdftex, \xetex{} and \luatex{} with the \babel{} package. There
+and \pdftex, \luatex{} and \xetex{} with the \babel{} package. There
 are also some notes on its use with e-Plain and pdf-Plain \TeX.
 
 \item[\sffamily\color{messages}I only need learn the most basic
@@ -390,8 +388,8 @@ Basically, what you need is typically:
 \begin{itemize}
 \bfseries
 \item Tell \babel{} which language or languages are required.
-\item With non-Latin scripts and Unicode engines, select a suitable
-font (sec.~\ref{fonts})
+\item With non-Latin scripts and Unicode engines (\luatex is the
+preferred one), select a suitable font (sec.~\ref{fonts})
 \item In multilingual documents, switch the language in the text body
 (sec.~\ref{selectors}).
 \end{itemize}
@@ -409,7 +407,7 @@ for an option – in this case a language – to be recognized by several
 packages (in other words, \babel{} doesn’t set the languages, it just
 recognizes the options passed to the class or the package).
 
-Many languages are compatible with \textsf{xetex} and \textsf{luatex},
+Many languages are compatible with \textsf{luatex} and \textsf{xetex},
 but a few only work with \pdftex. When these engines are used, the
 Latin script is covered by default in current \LaTeX{} (provided the
 document encoding is UTF-8). Other scripts require loading
@@ -418,7 +416,7 @@ document encoding is UTF-8). Other scripts require loading
 
 \begin{example}
   Here is a simple full example for “traditional” \TeX{} engines (see
-  below for \xetex{} and \luatex{}). The package |fontenc| does not
+  below for \luatex{} and \xetex{}). The package |fontenc| does not
   belong to \babel, but it is included in the example because typically
   you will need it. It assumes UTF-8, the default encoding:
   \setengine{pdftex}
@@ -448,7 +446,7 @@ the option |french| and will be able to use it.
 
 \begin{example}
 Now a simple monolingual document in Russian (text from the Wikipedia)
-with \xetex{} or \luatex{}. Note neither \textsf{fontenc} nor
+with \luatex{} or \xetex{}. Note neither \textsf{fontenc} nor
 \textsf{inputenc} are necessary, and a so-called Unicode font must be
 loaded (in this example with the help of |\babelfont|, described below).
 
@@ -475,8 +473,8 @@ _\babelfont{rm}{DejaVu Serif}_
   Because of the way \babel{} has evolved, ``language'' can refer to
   (1) a set of hyphenation patterns as preloaded into the format, (2) a
   package option, (3) an |ldf| file, and (4) a name used in the
-  document to select a language or dialect. Please, read the
-  documentation for specific languages for further info.
+  document to select a language. Please, read the documentation for
+  specific languages for further info.
 \end{note}
 
 \begin{note}
@@ -747,7 +745,7 @@ _\foreignlanguage{french}{français}_.
 \end{example}
 
 \begin{example}
-  With \xetex{} and \luatex, the following bilingual, single script
+  With \luatex{} and \xetex, the following bilingual, single script
   document in UTF-8 encoding just prints a couple of ‘captions’ and
   |\today| in Danish and Vietnamese. No additional packages are
   required, because the default font supports both languages.
@@ -1591,7 +1589,7 @@ in Switzerland.}
 \end{note}
 
 \New{3.15} \Babel{} has native support for Unicode fonts (OpenType and
-TrueType) in \xetex{} and \luatex{} by means of a high level interface
+TrueType) in \luatex{} and \xetex{} by means of a high level interface
 on top of |fontspec|. This makes it easier to handle a wide range of
 languages and scripts, and simplifies the process of typesetting
 multilingual documents. As described below, with \luatex{} the font can
@@ -1967,7 +1965,7 @@ paragraph direction.
 \begin{example}
 Here is a document putting in practice some the techniques described,
 which shows how to deal neatly with complex multilingual documents
-in \xetex{} and \luatex, with the help of logical markup. You are
+in \luatex{} and \xetex, with the help of logical markup. You are
 writing a book on Indic literature with many extracts in several
 languages, which fits in the category of ‘mostly monolingual’. Loading
 of locales and fonts is lazy, which greatly simplifies the preamble.
@@ -2333,7 +2331,7 @@ can take the following values:
   optimized version of \texttt{other*} for monolingual
   documents.\footnote{Providing |foreign| is pointless, because the
   case mapping applied is that at the end of the paragraph, but if either
-  \xetex{} or \luatex{} change this behavior it might be added. On
+  \luatex{} or \xetex{} change this behavior it might be added. On
   the other hand, |other| is provided even if I [JBL] think it isn't
   really useful, but who knows.}
 \end{description}
@@ -2899,7 +2897,7 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
   actually set.
 \item[defaultcommands] Used (locally) in |\StartBabelCommands|.
 \item[encodedcommands] (input, font encodings) Used (locally) in
-  |\StartBabelCommands|. Both \xetex{} and \luatex{} make sure the
+  |\StartBabelCommands|. Both \luatex{} and \xetex{} make sure the
   encoded text is read correctly.
 \item[stopcommands] Used to reset the above, if necessary.
 \item[write] This event comes just after the switching commands are
@@ -3189,7 +3187,7 @@ alternative to |justification=unhyphenated|.
 \Describe{main}{} This valueless option makes the language the main one
 (thus overriding that set when \babel\ is loaded).
 \begin{example}
-  Let's assume your document (\xetex{} or \luatex{}) is mainly in
+  Let's assume your document (\luatex{} or \xetex{}) is mainly in
   Polytonic Greek with but with some sections in Italian. Then, the
   first attempt should be:
 \begin{verbatim}
@@ -3604,7 +3602,7 @@ shorthands such as |!| are used to insert the right amount of white
 space; (3) several kinds of discretionaries and breaks can be inserted
 easily with |"-|, |"=|, etc.
 
-The package \textsf{inputenc} as well as \xetex{} and \luatex{} have
+The package \textsf{inputenc} as well as \luatex{} and \xetex{} have
 alleviated entering non-ASCII characters, but minority languages and
 some kinds of text can still require characters not directly available
 on the keyboards (and sometimes not even as separated or precomposed
@@ -3894,8 +3892,8 @@ a shorthand) are not a source of trouble anymore.
 
 \New{3.20} About thirty |ini| files define a field named
 |digits.native|. When it is present, two macros are created:
-|\<language>digits| and |\<language>counter| (only \xetex{} and
-\luatex{}). With the first, a string of ‘Latin’ digits are converted to
+|\<language>digits| and |\<language>counter| (only \luatex{} and
+\xetex{}). With the first, a string of ‘Latin’ digits are converted to
 the native digits of that language; the second takes a counter name as
 argument. With the option |maparabic| in |\babelprovide|, |\arabic| is
 redefined to produce the native digits (this is done \textit{globally},
@@ -3982,7 +3980,7 @@ which is deprecated). Another option is the transform |digits.native|.
 
 \New{3.41} Many `ini` locale files provide information
 about non-positional numerical systems, based on those predefined in
-CSS. They only work with \xetex{} and \luatex{} and are fully
+CSS. They only work with \luatex{} and \xetex{} and are fully
 expandable (even inside an unprotected |\edef|). Currently, they are
 limited to numbers below 10000.
 
@@ -5255,7 +5253,7 @@ The following assumptions are made:
   last two may be left empty); where \langvar\ is either the name of
   the language definition file or the name of the \LaTeX\ option that
   is to be used. These macros and their functions are discussed
-  below. You must define all or none for a language (or a dialect);
+  below. You must define all or none for a language;
   defining, say, |\date|\langvar\ but not |\captions|\langvar\ does
   not raise an error but can lead to unexpected results.
 \item When a language definition file is loaded, it can define
@@ -5362,14 +5360,15 @@ The macro |\addlanguage| is a non-outer version of the macro
 patterns.
 
 \DescribeMacro{\adddialect}
-The macro |\adddialect| can be used when two languages can (or
-must) use the same hyphenation patterns. This can also be useful
-for languages for which no patterns are preloaded in the
-format. In such cases the default behavior of the \babel{}
-system is to define this language as a `dialect' of the language
-for which the patterns were loaded as |\language0|.  Here
-``language'' is used in the \TeX{} sense of set of hyphenation
-patterns.
+The macro |\adddialect| can be used when two languages can (or must)
+use the same hyphenation patterns. This can also be useful for
+languages for which no patterns are preloaded in the format. In such
+cases the default behavior of the \babel{} system is to define this
+language as a ‘dialect’ of the language for which the patterns were
+loaded as |\language0|. Here ``language'' is used in the \TeX{} sense
+of set of hyphenation patterns, while “dialect”, which is misnomer,
+refers just to a language with the same hyphenation patterns as another
+(there is no relation with its linguistic meaning).
 
 \DescribeMacro{\<lang>hyphenmins}
 The macro |\|\langvar|hyphenmins| is used to store the values of
@@ -5681,7 +5680,7 @@ and clearer.
 
 A ``selector'' selects a group of definition are to be used, optionally
 followed by extra info about the encodings to be used. The name
-|unicode| must be used for \xetex{} and \luatex{}. Without a selector,
+|unicode| must be used for \luatex{} and \xetex{}. Without a selector,
 the LICR representation (ie, with macros like |\~{n}| instead of |ñ|)
 is assumed.
 
@@ -5845,7 +5844,7 @@ by both \luatex{} and \xetex{}):
 
 \begin{note}
   This macro is not intended to fix wrong mappings done by Unicode
-  (which are the default in both \xetex{} and \luatex{}) -- if an
+  (which are the default in both \luatex{} and \xetex{}) -- if an
   assignment is wrong, fix it directly.
 \end{note}
 
@@ -5972,8 +5971,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.12.67573>>
-%<<date=2024/11/05>>
+%<<version=24.13>>
+%<<date=2024/11/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13627,7 +13626,7 @@ wouldn’t exist.
 %
 % Here the code for ini\TeX\ ends.
 %
-% \section{\xetex{} + \luatex{}: common stuff}
+% \section{\luatex{} + \xetex{}: common stuff}
 %
 % Add the bidi handler just before luaoftload, which is loaded by default
 % by LaTeX. Just in case, consider the possibility it has not been
