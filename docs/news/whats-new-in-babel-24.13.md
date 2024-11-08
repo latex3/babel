@@ -1,6 +1,6 @@
 # What's new in babel 24.13
 
-**Draft**
+2024-11-08
 
 There are important news related to the LaTeX kernel, which affects
 how to deal with languages. Now, according to [Engine news from the

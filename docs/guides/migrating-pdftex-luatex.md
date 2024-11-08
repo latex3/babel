@@ -13,29 +13,19 @@ With languages in non-Latin encodings, you should assign them a font.
 A typical modification would be from:
 ```tex
 \documentclass[bulgarian]{article}
-
 \usepackage[T2A]{fontenc}
-
 \usepackage{babel}
-
 \begin{document}
-
 ...
-
 \end{document}
 ```
 to:
 ```tex
 \documentclass[bulgarian]{article}
-
 \usepackage{babel}
-
 \babelfont{rm}{NewComputerModern10}
-
 \begin{document}
-
 ...
-
 \end{document}
 ```
 
