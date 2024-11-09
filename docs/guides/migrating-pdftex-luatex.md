@@ -7,7 +7,10 @@ Documents shuld be encoded in UTF-8.
 ## Fonts
 
 The package `fontenc` must be removed (as well as `inputenc`). With
-this single change, languages in the Latin script should work. 
+this single change, languages in the Latin script should work if the
+font is the default one. If you are using a package to set the font,
+you may need to replace it by `fontspec` calls. There is no rule – some
+of these packages are compatible and some are not.
 
 With languages in non-Latin encodings, you should assign them a font.
 A typical modification would be from:
