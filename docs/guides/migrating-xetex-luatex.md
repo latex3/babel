@@ -2,6 +2,8 @@
 
 **Draft**
 
+> *Improve this page! Feel free to draft a pull request [on GitHub](https://github.com/latex3/babel/tree/docs/docs)*.
+
 In many languages and scripts, particularly Latin, Greek and Cyrillic,
 a document written for `xetex` should work with `luatex` without
 changes.

@@ -24,7 +24,7 @@ See the following section for an example.
 ## Spacing in French
 
 Firstly, remember `ini` files are not necessarily a replacement for
-`ldf' files. For a complete localization for French, prefer default the
+`ldf` files. For a complete localization for French, prefer default the
 style by Daniel Flipo. The `ini` locale is mainly intended for French
 as a secondary language (although it can also be used as the primary
 language, if you like).

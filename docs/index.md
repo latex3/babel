@@ -65,6 +65,10 @@ case, it's advisable to install TeXLive.)
   When to use the old good language files and when `\babelprovide` or `provide=*`.
 * [Useful links to tex.strackexchange](guides/useful-links-to-tex.stackexchange.html)
   Examples for many languages: Chinese, Arabic, Sanskrit, etc.
+* [Migrating from XeTeX to
+  LuaTeX](https://latex3.github.io/babel/guides/migrating-xetex-luatex.html).
+* [Migrating from pdfTeX to
+  LuaTeX](https://latex3.github.io/babel/guides/migrating-pdftex-luatex.html).
 
 ---------------------------
 
