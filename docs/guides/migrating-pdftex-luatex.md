@@ -2,7 +2,7 @@
 
 **Draft** 
 
-> *Improve this page! Feel free to draft a pull request [on GitHib](https://github.com/latex3/babel/tree/docs/docs)*.
+> *Improve this page! Feel free to draft a pull request [on GitHub](https://github.com/latex3/babel/tree/docs/docs)*.
 
 Now the recommended engine is `luatex`, here are some hints on how to
 migrate a LaTeX document from `pdftex` to `luatex`.

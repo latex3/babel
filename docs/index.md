@@ -13,8 +13,7 @@ based on the **latest advances in
 [CLDR](http://cldr.unicode.org/)), the
 [W3C](https://www.w3.org/groups/wg/i18n-core/publications) (where
 applicable) and other technologies, as well as on **international
-standards** for better compatibility and consistency. Find the [PDF manual
-here](http://mirrors.ctan.org/macros/latex/required/babel/base/babel.pdf).
+standards** for better compatibility and consistency.
 
 Babel currently supports approximately **300 languages** (with various
 levels of coverage) across about **45 scripts, including complex and
@@ -41,6 +40,16 @@ of languages, thanks to tools that provide highly precise control over
 breaking](guides/non-standard-hyphenation-with-luatex.html), captions,
 date formats (across various calendars), spacing, and other
 locale-specific typographical rules.
+
+-----------------------
+
+## Documentation
+
+Find the [PDF manual
+here](http://mirrors.ctan.org/macros/latex/required/babel/base/babel.pdf).
+
+This site contains additional information and examples in many languages
+(see the menu above). It’s open source – feel free to draft a pull request [here](https://github.com/latex3/babel/tree/docs/docs).
 
 -----------------------
 

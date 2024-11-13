@@ -28,9 +28,9 @@ Variables are:
 
 With, for example:
 ```tex
-\SetTransformValue{french}{colon.natural}{.4}
+\SetTransformValue{french}{colon.natural}{.8}
 ```
-spacing with the colon is slightly smaller (default is `.5`). Unit
+spacing with the colon is slightly smaller (default is `1`). Unit
 is the current ordinary space.
 
 ## Pashto: Persian and Islamic calendars
