@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2024/11/24 v24.13.69442
+  [2024/11/24 v24.13.69468
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6021,7 +6021,7 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.13.69442>>
+%<<version=24.13.69468>>
 %<<date=2024/11/24>>
 %    \end{macrocode}
 %
@@ -13855,8 +13855,36 @@ wouldn’t exist.
 % correct font, but sometimes points to |b/n|, even if |b/sc| exists.
 % So, some substitutions are redefined (in a somewhat hackish way, by
 % inspecting if the variant declaration contains |>ssub*|).
+% 
+% But first, a couple of auxiliary macros to set the renderer according
+% to the script. This is done by patching temporarily the low-level
+% \textsf{fontspec} macro containing the current features set with
+% |\defaultfontfeatures| (which admittedly is somewhat dangerous).
 %
 %    \begin{macrocode}
+\ifodd\bbl@engine
+  \def\bbl@scr@node@list{%
+   ,Armenian,Coptic,Cyrillic,Georgian,,Glagolitic,Gothic,%
+   ,Greek,Latin,Old Church Slavonic Cyrillic,}
+  \ifnum\bbl@bidimode=102 % bidi-r
+     \bbl@add\bbl@scr@node@list{Arabic,Hebrew,Syriac}
+  \fi 
+  \def\bbl@set@renderer{%
+    \bbl@xin@{\bbl@cl{sname}}{\bbl@scr@node@list}%
+    \ifin@
+      \let\bbl@unset@renderer\relax
+    \else
+      \bbl@exp{%
+         \def\\\bbl@unset@renderer{%
+           \def\<g__fontspec_default_fontopts_clist>{%
+             \[g__fontspec_default_fontopts_clist]}}%
+         \def\<g__fontspec_default_fontopts_clist>{%
+           Renderer=Harfbuzz,\[g__fontspec_default_fontopts_clist]}}%
+    \fi}
+\else
+  \let\bbl@set@renderer\relax
+  \let\bbl@unset@renderer\relax
+\fi
 \def\bbl@font@set#1#2#3{% eg \bbl@rmdflt@lang \rmdefault \rmfamily
   \bbl@xin@{<>}{#1}%
   \ifin@
@@ -13869,8 +13897,12 @@ wouldn’t exist.
        \\\bbl@ifsamestring{\f@series}{\bfdefault}{\\\bfseries}{}%
        \let\\\bbl@tempa\relax}%
       {}}}
-%     TODO - next should be global?, but even local does its job. I'm
-%     still not sure -- must investigate:
+%    \end{macrocode}
+%
+% Loaded locally, which does its job, but very must be global. The
+% problem is how.
+%
+%    \begin{macrocode}
 \def\bbl@fontspec@set#1#2#3#4{% eg \bbl@rmdflt@lang fnt-opt fnt-nme \xxfamily
   \let\bbl@tempe\bbl@mapselect
   \edef\bbl@tempb{\bbl@stripslash#4/}% Catcodes hack (better pass it).
@@ -13878,6 +13910,7 @@ wouldn’t exist.
   \let\bbl@mapselect\relax
   \let\bbl@temp@fam#4%       eg, '\rmfamily', to be restored below
   \let#4\@empty      %       Make sure \renewfontfamily is valid
+  \bbl@set@renderer
   \bbl@exp{%
     \let\\\bbl@temp@pfam\<\bbl@stripslash#4\space>% eg, '\rmfamily '
     \<keys_if_exist:nnF>{fontspec-opentype}{Script/\bbl@cl{sname}}%
@@ -13888,6 +13921,7 @@ wouldn’t exist.
       [\bbl@cl{lsys},% xetex removes unknown features :-(
        \ifcase\bbl@engine\or RawFeature={family=\bbl@tempb},\fi
        #2]}{#3}% ie \bbl@exp{..}{#3}
+  \bbl@unset@renderer
   \begingroup
      #4%
      \xdef#1{\f@family}%     eg, \bbl@rmdflt@lang{FreeSerif(0)}

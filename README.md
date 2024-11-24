@@ -1,9 +1,10 @@
-## Babel 24.13.69442
+## Babel 24.13.69468
 
 (dev)
 
-`Babel` is the multilingual framework to localize documents in LaTeX,
-LuaLaTeX, XeLaTeX. A few languages even work with Plain formats.
+`Babel` is the multilingual framework to localize documents. It fully
+supports LaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
+languages even work with Plain formats.
 
 Its aim is to provide a localization framework for different languages,
 scripts, and cultures based on the latest advances in Unicode
@@ -15,7 +16,7 @@ Babel supports approximately from 170 to 300 languages, depending on
 the engine (with various levels of coverage), across about 45 scripts,
 including complex and RTL ones. Its high-level interface with
 `fontscpec` allows for seamless integration with OpenType technologies
-in `xetex` and `luatex`, enabling the use of advanced typographic
+in LuaLaTeX and XeLaTeX, enabling the use of advanced typographic
 features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
