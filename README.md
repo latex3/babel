@@ -1,20 +1,30 @@
-## Babel 24.13
+## Babel 24.13.69442
 
-2024-11-08
+(dev)
 
-`babel` is the multilingual framework to localize documents in
-LaTeX, LuaLaTeX, XeLaTeX. It manages culturally-determined
-typographical (and other) rules for about 170 to 300 languages,
-depending on the engine, with several levels of coverage. A few
-languages even work with Plain formats.
+`Babel` is the multilingual framework to localize documents in LaTeX,
+LuaLaTeX, XeLaTeX. A few languages even work with Plain formats.
+
+Its aim is to provide a localization framework for different languages,
+scripts, and cultures based on the latest advances in Unicode
+(including the CLDR, Common Language Repository Data), the W3C (where
+applicable) and other technologies, as well as on international
+standards.
+
+Babel supports approximately from 170 to 300 languages, depending on
+the engine (with various levels of coverage), across about 45 scripts,
+including complex and RTL ones. Its high-level interface with
+`fontscpec` allows for seamless integration with OpenType technologies
+in `xetex` and `luatex`, enabling the use of advanced typographic
+features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.13 are described in:
+Changes in version 24.14 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-24.13.html
+https://latex3.github.io/babel/news/whats-new-in-babel-24.14.html
 
-Apart from the manual, you can find information on some aspects of babel at:
+Apart from the manual, you can find information and examples in:
 
 https://latex3.github.io/babel/
 
@@ -43,11 +53,16 @@ You may also report them to the current maintainer more informally on:
 
    https://latex3.github.io/babel/contact.html
 
-Bugs related to specific languages are best reported to theirs
+Bugs related to specific languages are best reported to their
 respective authors.
 
 ### Summary of latest changes
 ```
+24.14  (dev)
+       * [not yet] Harfbuzz in the default renderer with \babelfont in many (but
+         not all) scripts (lua).
+       * Now lazy locale loading sets 'import'.
+       
 24.13  2024-11-08
        * French: Added ‘transform values’ for punctuation.space.
        * Pashto: Persian and Islamic calendar (which fixes an error,

@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2024/11/08 v24.13
+  [2024/11/24 v24.13.69442
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -388,11 +388,16 @@ Basically, what you need is typically:
 \begin{itemize}
 \bfseries
 \item Tell \babel{} which language or languages are required.
-\item With non-Latin scripts and Unicode engines (\luatex is the
+\item With non-Latin scripts and Unicode engines (\luatex{} is the
 preferred one), select a suitable font (sec.~\ref{fonts})
 \item In multilingual documents, switch the language in the text body
 (sec.~\ref{selectors}).
 \end{itemize}
+
+You can find basic info and minimal \luatex{} example files for about
+300 locales in the
+\href{https://latex3.github.io/babel/guides/index-locale.html}{GitHub
+repository}.
 
 \subsection{Monolingual documents: the ‘classical’ way}
 
@@ -797,8 +802,9 @@ Vietnamese: \prefacename, \alsoname, \today.
 
 If lazy loading is not enough for your purposes, you can still tell
 which languages should be loaded as either class or package options.
-However, there are three options to set which method you want, which
-cover the most typical cases:
+You can combine the ‘classical’ and the ‘modern’ ways with three
+options to set which method you want, which cover the most typical
+cases:
 \begin{itemize}
 \item |provide=*| is the option explained above for monolingual
   documents. If there are more languages, it applies only to the main
@@ -806,8 +812,10 @@ cover the most typical cases:
 \item |provide+=*| loads the main language in the ‘classical’ way,
   and the rest in the ‘modern’ one.
 \item |provide*=*| is the same for all languages, ie, main and
-  secondary  ones are loaded in the ‘modern’ way.
+  secondary ones are all loaded in the ‘modern’ way.
 \end{itemize}
+More complex combinations can be handled with |\babelprovide|,
+explained below.
 
 \begin{example}
 Your document is written in Thai with large chunks in Dutch and German,
@@ -816,13 +824,25 @@ need their shorthands. The font is Norasi, which covers the three
 languages:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\usepackage[dutch,ngerman,thai,provide=*]{babel}
+\usepackage[dutch,ngerman,thai,_provide=*_]{babel}
 \babelfont{rm}{Norasi}
 \end{verbatim}
+This will load |dutch| and |ngerman| in the classical |ldf| mode, but
+|thai| in the modern |ini| mode. Other options are:
+\begin{verbatim}
+  \usepackage[dutch,ngerman,thai]{babel}
+\end{verbatim}
+which will use the classical mode for in languages (as decribed in the
+previous section, but note |thai.ldf| is not supported in Unicode
+engines), and:
+\begin{verbatim}
+  \usepackage[dutch,german,thai,_provide*=*_]{babel}
+\end{verbatim}
+which will use the modern mode in all languages (note the correct name
+here is |german|. (The option
+|\usepackage||[dutch,ngerman,thai,provide+=*]||{babel}| doesn’t make
+much sense in this case.)
 \end{example}
-
-More complex combinations can be handled with |\babelprovide|,
-explained below.
 
 \subsection{Languages supported by \babel{} in the ‘classical’ mode}
 
@@ -1018,6 +1038,10 @@ files, with |\babelprovide| (or |provide=|). With these languages,
 \textsf{ldf} file). These are also the names recognized by
 |\babelprovide| with a valueless |import|, which will load the |ini|
 file with the tag given in parenthesis.
+
+Following the current common practice (for example, the Unicode CLDR),
+all locales are organized in a flat structure. This eases their
+identification and customization.
 
 Many locale are quite usable, provided captions and dates are
 not required (which is a very frequent case, particularly in ancient
@@ -1645,6 +1669,15 @@ but you may add further key/value pairs if necessary.
 |\babelfont| can be used to implicitly define a new font family. Just
 write its name instead of |rm|, |sf| or |tt|. This is the preferred way
 to select fonts in addition to the three basic families.
+
+\begin{note}
+  As \babel{} sets the font language system, the following setup is
+  redundant, so avoid it and use only the first line:
+\begin{verbatim}
+\babelfont{rm}{DejaVu Serif}
+\babelfont[armenian]{rm}[Script=Armenian, Language=Armenian]{DejaVu Serif} 
+\end{verbatim}
+\end{note}
 
 \begin{example}
   Usage in most cases is very simple. Let us assume you are setting up
@@ -2646,10 +2679,27 @@ stylistic choice, is:
 \begin{verbatim}
 \setlocalecaption{english}{contents}{Table of Contents}
 \end{verbatim}
-This works not only with existing caption names, because it also serves to
-define new ones by setting the \textit{caption-name} to the name of
+This works not only with existing caption names, because it also serves
+to define new ones by setting the \textit{caption-name} to the name of
 your choice (|name| will be postpended). Captions so defined or
 redefined behave with the ‘new way’ described in the following note.
+
+Note the string should not contain a language selector or changes in
+the text direction, which is done by \babel{} when necessary. With
+|arabic|, all you need is:
+\begingroup
+% If you are looking at the code to see how it has been written, you
+% will be disappointed :-). The following example is built ad hoc to
+% emulate the final result to avoid dependencies, and therefore it's
+% not "real" code.
+\setmonofont[Scale=.86, FakeStretch=.97,Script=Arabic]{DejaVu Sans Mono}
+\catcode`@=13
+\def@#1{\ifcase#1\relax \egroup \or \bgroup\textdir TLT \else
+\bgroup\textdir TRT \pardir TRT \fi}
+\begin{verbatim}
+\setlocalecaption{arabic}{part}{@2القسم@0}
+\end{verbatim}
+\endgroup
 
 \begin{note}
   There are a few alternative methods:
@@ -2680,7 +2730,7 @@ many languages but discouraged in general, is the following:
 \begin{verbatim}
 \renewcommand\spanishchaptername{Foo}
 \end{verbatim}
-This redefinition is immediate.
+This redefinition is immediate. 
 \end{itemize}
 \end{note}
 
@@ -5971,8 +6021,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.13>>
-%<<date=2024/11/08>>
+%<<version=24.13.69442>>
+%<<date=2024/11/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6567,12 +6617,9 @@ wouldn’t exist.
 \DeclareOption{silent}{}
 \DeclareOption{shorthands=off}{\bbl@tempa shorthands=\bbl@tempa}
 \chardef\bbl@iniflag\z@
-\DeclareOption{provide=*}{\chardef\bbl@iniflag\@ne}    % main -> +1
+\DeclareOption{provide=*}{\chardef\bbl@iniflag\@ne}    % main = 1
 \DeclareOption{provide+=*}{\chardef\bbl@iniflag\tw@}   % second = 2
 \DeclareOption{provide*=*}{\chardef\bbl@iniflag\thr@@} % second + main
-% A separate option
-\let\bbl@autoload@options\@empty
-\DeclareOption{provide@=*}{\def\bbl@autoload@options{import}}
 % Don't use. Experimental. TODO.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
@@ -11676,6 +11723,7 @@ wouldn’t exist.
 %    \begin{macrocode}
 \newif\ifbbl@bcpallowed
 \bbl@bcpallowedfalse
+\def\bbl@autoload@options{import}
 \def\bbl@provide@locale{%
   \ifx\babelprovide\@undefined
     \bbl@error{base-on-the-fly}{}{}{}%
@@ -13859,9 +13907,9 @@ wouldn’t exist.
   \let\bbl@mapselect\bbl@tempe}%
 %    \end{macrocode}
 %
-% font@rst and famrst are only used when there is no global settings,
-% to save and restore de previous families. Not really necessary, but
-% done for optimization.
+% |font@rst| and |famrst| are only used when there are no global
+% settings, to save and restore de previous families. Not really
+% necessary, but done for optimization.
 %
 %    \begin{macrocode}
 \def\bbl@font@rst#1#2#3#4{%
@@ -16405,7 +16453,8 @@ end
      {\AddToHook{cmd/diagbox@pict/before}{\let\bbl@pictsetdir\@gobble}%
       \ifx\pgfpicture\@undefined\else % TODO. Allow deactivate?
         \AddToHook{env/pgfpicture/begin}{\bbl@pictsetdir\@ne}%
-        \bbl@add\pgfinterruptpicture{\bbl@pictresetdir}%
+        \bbl@add\pgfinterruptpicture{%
+          \bbl@ifsamestring{\@currenvir}{axis}{}\bbl@pictresetdir}%
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\z@}%
       \fi
       \ifx\tikzpicture\@undefined\else
