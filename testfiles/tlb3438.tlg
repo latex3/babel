@@ -5,10 +5,9 @@ Author: Robin Fairbairns <[e-mail hidden]>
 Main Class: article
 Package: babel
     Options: english
-(../babel-french.tex
-Package babel Info: Importing basic data for french
+(../babel-french.tex)
+Package babel Info: Importing data for french
 (babel)             from babel-fr.ini. Reported on input line ....
-)
 > \box...=
 \hbox(9.47221+0.0)x36.38898
 .\OT1/cmr/m/n/10 H
