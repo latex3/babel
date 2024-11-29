@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2024/11/29 v24.13.69941
+  [2024/11/29 v24.13.69951
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6021,7 +6021,7 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.13.69941>>
+%<<version=24.13.69951>>
 %<<date=2024/11/29>>
 %    \end{macrocode}
 %
@@ -15617,7 +15617,7 @@ end
                'spacefactor = {' .. '%2, %3, %4' .. '}')           
              rep = rep:gsub('(kashida)%s*=%s*([^%s,]*)', Babel.capture_kashida)
              &% Transform values
-             rep, n = rep:gsub( '{([%a%-%.]+)|([%a%-%.]+)}',
+             rep, n = rep:gsub( '{([%a%-%.]+)|([%a%_%.]+)}',
                function(v,d)
                  return string.format (
                    '{\the\csname bbl@id@@#3\endcsname,"%s",%s}',
@@ -16499,14 +16499,14 @@ end
      {\AddToHook{cmd/diagbox@pict/before}{\let\bbl@pictsetdir\@gobble}%
       \ifx\pgfpicture\@undefined\else % TODO. Allow deactivate?
         \AddToHook{env/pgfpicture/begin}{\bbl@pictsetdir\@ne}%
-        \bbl@add\pgfinterruptpicture{%
-          \bbl@ifsamestring{\@currenvir}{axis}{}\bbl@pictresetdir}%
+        \bbl@add\pgfinterruptpicture{\bbl@pictresetdir}%
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\z@}%
       \fi
       \ifx\tikzpicture\@undefined\else
         \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\tw@}%
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
         \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
+        \bbl@sreplace\tikzpicture{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
       \fi
       \ifx\tcolorbox\@undefined\else
         \def\tcb@drawing@env@begin{%

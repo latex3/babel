@@ -1,4 +1,4 @@
-## Babel 24.13.69941
+## Babel 24.13.69951
 
 (dev)
 
@@ -60,9 +60,13 @@ respective authors.
 ### Summary of latest changes
 ```
 24.14  (dev)
-       * [not yet] Harfbuzz in the default renderer with \babelfont in many (but
+       * Harfbuzz in the default renderer with \babelfont in many (but
          not all) scripts (lua).
        * Now lazy locale loading sets 'import'.
+       * Improvements in French (thanks to Daniel Flipo) and Japanese
+         ini locale files.
+       * Fix issue with axis (tikz) in RTL (lua, #318). Thanks to Salim
+         Bou.
        
 24.13  2024-11-08
        * French: Added ‘transform values’ for punctuation.space.
