@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2024/11/24 v24.13.69468
+  [2024/11/29 v24.13.69941
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6021,8 +6021,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.13.69468>>
-%<<date=2024/11/24>>
+%<<version=24.13.69941>>
+%<<date=2024/11/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13859,7 +13859,9 @@ wouldn’t exist.
 % But first, a couple of auxiliary macros to set the renderer according
 % to the script. This is done by patching temporarily the low-level
 % \textsf{fontspec} macro containing the current features set with
-% |\defaultfontfeatures| (which admittedly is somewhat dangerous).
+% |\defaultfontfeatures|. Admittedly this is somewhat dangerous, but
+% that way the latter command still works as expected, because the
+% renderer is set just before other settings.
 %
 %    \begin{macrocode}
 \ifodd\bbl@engine
@@ -15615,6 +15617,16 @@ end
                'spacefactor = {' .. '%2, %3, %4' .. '}')           
              rep = rep:gsub('(kashida)%s*=%s*([^%s,]*)', Babel.capture_kashida)
              &% Transform values
+             rep, n = rep:gsub( '{([%a%-%.]+)|([%a%-%.]+)}',
+               function(v,d)
+                 return string.format (
+                   '{\the\csname bbl@id@@#3\endcsname,"%s",%s}',
+                   v,
+                   load( 'return Babel.locale_props'..
+                         '[\the\csname bbl@id@@#3\endcsname].' .. d)() )
+               end )
+             texio.write( '+++++' )
+             texio.write( _VERSION )
              rep, n = rep:gsub( '{([%a%-%.]+)|([%-%d%.]+)}',
               '{\the\csname bbl@id@@#3\endcsname,"%1",%2}')
            end
