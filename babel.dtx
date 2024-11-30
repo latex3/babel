@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2024/11/29 v24.13.69951
+  [2024/11/30 v24.14
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -323,8 +323,8 @@ Xe\largetex
 \begin{description}
 \item[\sffamily\color{messages}What is this document about?] This user
 guide focuses on internationalization and localization with \LaTeX{}
-and \pdftex, \luatex{} and \xetex{} with the \babel{} package. There
-are also some notes on its use with e-Plain and pdf-Plain \TeX.
+and \pdftex, \luatex{} and \xetex{}. There are also some notes on its
+use with e-Plain and pdf-Plain \TeX.
 
 \item[\sffamily\color{messages}I only need learn the most basic
 features.] The first subsections (1.1-1.6) describe the ways
@@ -596,7 +596,8 @@ option |provide=*| (in monolingual documents).
   Although Georgian has its own \texttt{ldf} file, here is how to
   declare this language in Unicode engines. Here, as in a previous
   example, we resort to |\babelfont| to set the font for this language
-  (with the |Harfbuzz| renderer).
+  (with the |Harfbuzz| renderer, just to show how to set it, because
+  here the |Node| renderer should be fine).
 \setengine{luatex/xetex}
 \begin{verbatim}
 \documentclass{book}
@@ -1623,16 +1624,6 @@ There is no need to load \textsf{fontspec} explicitly – \babel{} does
 it for you with the first |\babelfont|. (See also the package
 \textsf{combofont} for a complementary approach.)
 
-\begin{note}
-  There is a list of fonts in
-  \href{https://latex3.github.io/babel/guides/which-method-for-which-language.html}{Which
-  method for which language}. If you know the codepoint of a character
-  in the script you need, you can find fonts containing it with the
-  commands line, with \textsf{albatross} (requires Java) or with
-  something like \texttt{fc-list :charset=1033C family} (in this case,
-  a Gothic character, the script required by the |gothic| language).
-\end{note}
-
 \Describe\babelfont{\oarg{language-list}\marg{font-family}%
   \oarg{font-options}\marg{font-name}}
 
@@ -1669,6 +1660,34 @@ but you may add further key/value pairs if necessary.
 |\babelfont| can be used to implicitly define a new font family. Just
 write its name instead of |rm|, |sf| or |tt|. This is the preferred way
 to select fonts in addition to the three basic families.
+
+\New{24.14} With \luatex, \Babel\ selects the renderer in the following
+way:
+\begin{itemize}
+\item The default renderer in alphabetic scripts, so that the tools
+  provided by \textsf{luaotfload} for ligatures, kerning and the like,
+  which are essential typographical features in these scripts, are
+  directly available: Armenian, Coptic, Cyrillic, Georgian, Glagolitic,
+  Gothic, Greek, Latin, Old Church Slavonic Cyrillic.
+\item Harfbuzz in the rest of scripts, particularly complex scripts with
+  heavy contextual analysis (like Arabic and Devanagari).
+\end{itemize}
+You can still select a different renderer with the \textsf{fontspec}
+key |Renderer|. Note also the same font can be loaded with different
+renderers. See
+\href{https://github.com/latex3/luaotfload/wiki/Comparing-the-modes}{Comparing
+the modes} for further info.
+
+\begin{note}
+  There is a list of fonts in
+  \href{https://latex3.github.io/babel/guides/which-method-for-which-language.html}{Which
+  method for which language}. If you know the codepoint of a character
+  in the script you need, you can find fonts containing it with
+  \textsf{albatross} (requires Java) or with something like
+  \texttt{fc-list :charset=1033C family} in the commands line (in this
+  case, a Gothic character, the script required by the |gothic|
+  language).
+\end{note}
 
 \begin{note}
   As \babel{} sets the font language system, the following setup is
@@ -1728,9 +1747,9 @@ at once with the following single line:
 \begin{verbatim}
 \babelfont[_*cyrillic, *greek_]{rm}{NewComputerModern10}
 \end{verbatim}
-With some scripts, the \textsf{Harfbuzz} renderer is preferred:
+And if you need, say, Arabic and Devanagari:
 \begin{verbatim}
-  \babelfont[_*arabic, *devanagari_]{rm}[_Renderer=Harfbuzz_]{FreeSerif}
+  \babelfont[_*arabic, *devanagari_]{rm}{FreeSerif}
 \end{verbatim}
 \Babel{} does the rest for you, including setting the font script
 \textit{and} language.
@@ -1763,11 +1782,11 @@ With some scripts, the \textsf{Harfbuzz} renderer is preferred:
 \setengine{luatex/xetex}
 \begin{verbatim}
 \usepackage{fontspec}
-\newfontscript{Devanagari}{deva}
+\newfontscript{Devanagari}{dev2}
 \babelfont[hindi]{rm}{Shobhika}
 \end{verbatim}
   This makes sure the OpenType script for Devanagari is |deva| and not
-  |dev2|, in case it is not detected correctly.
+  |dev2|, in case you need it.
 \end{note}
 
 \begin{note}
@@ -2008,7 +2027,7 @@ of locales and fonts is lazy, which greatly simplifies the preamble.
 
 _\usepackage[english]{babel}_
 
-_\babelfont[*devanagari]{rm}[Renderer=Harfbuzz]{FreeSans}_
+_\babelfont[*devanagari]{rm}{FreeSans}_
 
 \newenvironment{excerpt}[1]
   {\begin{quote}_\begin{otherlanguage*}{#1}_}
@@ -2211,7 +2230,7 @@ The available fields are:
 \item[|name.english|] as provided by the Unicode CLDR.
 \item[|tag.ini|] is the tag of the |ini| file (the way this
   file is identified in its name).
-\item[|tag.bcp47|] is the full BCP 47 tag (see the warning below). This
+\item[|tag.bcp47|] is the full BCP 47 tag. This
   is the value to be used for the ‘real' provided tag (\babel{} may
   fill other fields if they are considered necessary).
 \item[|language.tag.bcp47|] is the BCP 47 language tag.
@@ -2487,47 +2506,16 @@ lack of suitability of some features.
   corresponding behavior is not always implemented. Also, there are
   some limitations in the engines. A few remarks follow (which could no
   longer be valid when you read this manual, if the packages involved
-  have been updated). The Harfbuzz renderer still has some issues, so
-  as a rule of thumb:
-\begin{itemize}
-\item prefer the default renderer in alphabetic scripts (like Latin,
-  Greek and Cyrillic);
-\item resort to Harfbuzz in complex scripts with heavy contextual
-  analysis (like Arabic and Devanagari).
-\end{itemize}
-  See
-  \href{https://github.com/latex3/luaotfload/wiki/Comparing-the-modes}{Comparing
-  the modes} for further info. Fortunately, fonts can be loaded twice
-  with different renderers; for example:
-\begin{verbatim}
-\babelfont[spanish]{rm}{FreeSerif}
-\babelfont[hindi]{rm}[Renderer=Harfbuzz]{FreeSerif}
-\end{verbatim}
+  have been updated). 
 \begin{description}
 \itemsep=-\parskip
-\item[Arabic] Monolingual documents mostly work in \luatex, but it must
-  be fine tuned, particularly math and graphical elements like
-  |picture|. In \xetex{} \babel{} resorts to the \textsf{bidi} package,
-  which seems to work.
-\item[Hebrew] Niqqud marks seem to work in both engines, but depending 
-  on the font cantillation marks might be misplaced (\xetex{} or
-  \luatex{} with Harfbuzz seems better).
-\item[Devanagari] In \luatex{} and the default renderer many fonts
-work, but some others do not, the main issue being the ‘ra’. You may
-need to set explicitly the script to either |deva| or |dev2|, eg:
-\begin{verbatim}
-\newfontscript{Devanagari}{deva}
-\end{verbatim}
-  Other Indic scripts are still under development in the default
-  \luatex{} renderer, but should work with |Renderer=Harfbuzz|. They
-  also work with \xetex{}, although unlike with \luatex{} fine tuning
-  the font behavior is not always possible.
+\item[Arabic] Math and graphical elements like |picture| are complex
+  and requires some additional fine tuning. In \xetex{} \babel{}
+  resorts to the \textsf{bidi} package, which seems to work.
 \item[Southeast scripts] Thai works in both \luatex{} and \xetex{}, but
   line breaking differs (rules are hard-coded in \xetex, but they can
   be modified in \luatex). Lao seems to work, too, but there are no
-  patterns for the latter in \luatex{}. Khemer clusters are rendered
-  wrongly with the default renderer. The comment about Indic scripts
-  and \textsf{lualatex} also applies here. Some quick patterns can
+  patterns for the latter in \luatex{}. Some quick patterns can
   help, with something similar to:
 \begin{verbatim}
 \babelprovide[import, hyphenrules=+]{lao}
@@ -2546,12 +2534,12 @@ need to set explicitly the script to either |deva| or |dev2|, eg:
 \usepackage{babel}
 \end{verbatim}
 \item[Latin, Greek, Cyrillic] Combining chars with the default
- \luatex{} font renderer might be wrong; on then other hand, with the
- Harfbuzz renderer diacritics are stacked correctly, but many
- hyphenations points are discarded (this bug is related to kerning,
- so it depends on the font). With \xetex{} both combining characters
- and hyphenation work as expected (not quite, but in most cases it
- works; the problem here are font clusters).
+  \luatex{} font renderer might be wrong in some cases; on the other
+  hand, with the Harfbuzz renderer diacritics are stacked correctly,
+  but many hyphenations points are discarded (this bug is related to
+  kerning, so it depends on the font). With \xetex{} both combining
+  characters and hyphenation work as expected (not quite, but in most
+  cases it works; the problem here are font clusters).
 \end{description}
 \end{note}
 
@@ -2604,8 +2592,7 @@ Here is a minimal example:
 \usepackage[danish]{babel}
 
 _\babeladjust{_
-_  autoload.bcp47 = on,_
-_  autoload.bcp47.options = import_
+_  autoload.bcp47 = on_
 _}_
 
 \begin{document}
@@ -2631,9 +2618,9 @@ The behavior is adjusted with |\babeladjust| with the following parameters:
 \begin{description}
 \item \texttt{autoload.bcp47} with values |on| and |off|.
 \item \texttt{autoload.bcp47.options}, which are passed to
-  |\babelprovide|; empty by default, but you may add \texttt{import}
-  (features defined in the corresponding |babel-...tex| file might not
-  be available).
+  |\babelprovide|; \New{24.14} |import| by default (features defined in
+  the corresponding |babel-...tex| file might not be available), but
+  you can set it to another value (even empty).
 \item \texttt{autoload.bcp47.prefix}. Although the public name used in
   selectors is the tag, the internal name will be different and
   generated by prepending a prefix, which by default is
@@ -2899,6 +2886,7 @@ You can define new counters freely, and assign them to |\alph|:
 \babelprovide[
     counters/acute = á é í ó ú, % Define a counter named `acute`
     alph = acute                % Assign it to \alph
+    alph = acute                % Assign it to \alph
   ]{english}
 \end{verbatim}
 You can choose the name, and instead of `alphabetic` it can be another one.
@@ -3119,7 +3107,7 @@ set to 2 and 3. In either case, caption, date and language system are
 not defined.
 
 If no |ini| file is imported with |import|, \m{language-name} is still
-relevant because in such a case the hyphenation and like breaking rules
+relevant because in such a case the hyphenation and breaking rules
 (including those for South East Asian and CJK) are based on it as
 provided in the |ini| file corresponding to that name; the same applies
 to OpenType language and script.
@@ -3955,7 +3943,7 @@ For example:
 \usepackage[telugu, provide=*]{babel}
   % Or also, if you want, with:
   % provide={ maparabic }
-\babelfont{rm}{Gautami} % With luatex, better with Harfbuzz
+\babelfont{rm}{Gautami}
 \begin{document}
 _\telugudigits{1234}_
 _\telugucounter{section}_
@@ -5206,10 +5194,10 @@ For old and deprecated functions, see the \babel{} site.
 \textbf{Options for locales loaded on the fly}
 
 \New{3.51} |\babeladjust{ autoload.options = ... }| sets the options
-when a language is loaded on the fly (by default, no options). A
-typical value would be |import|, which defines captions, date,
-numerals, etc., but ignores the code in the |tex| file (for example,
-extended numerals in Greek).
+when a language is loaded on the fly. \New{24.14} By default, it is
+|import|, which defines captions, date, numerals, etc., but ignores the
+code in the |tex| file (for example, extended numerals in Greek). It
+can be set to empty.
 
 \medskip
 \textbf{Labels}
@@ -6021,8 +6009,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.13.69951>>
-%<<date=2024/11/29>>
+%<<version=24.14>>
+%<<date=2024/11/30>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11863,7 +11851,7 @@ wouldn’t exist.
 \def\bbl@bcp@prefix{bcp47-}
 \@namedef{bbl@ADJ@autoload.options}#1{%
   \def\bbl@autoload@options{#1}}
-\let\bbl@autoload@bcpoptions\@empty
+\def\bbl@autoload@bcpoptions{import}
 \@namedef{bbl@ADJ@autoload.bcp47.options}#1{%
   \def\bbl@autoload@bcpoptions{#1}}
 \newif\ifbbl@bcptoname
@@ -13855,38 +13843,8 @@ wouldn’t exist.
 % correct font, but sometimes points to |b/n|, even if |b/sc| exists.
 % So, some substitutions are redefined (in a somewhat hackish way, by
 % inspecting if the variant declaration contains |>ssub*|).
-% 
-% But first, a couple of auxiliary macros to set the renderer according
-% to the script. This is done by patching temporarily the low-level
-% \textsf{fontspec} macro containing the current features set with
-% |\defaultfontfeatures|. Admittedly this is somewhat dangerous, but
-% that way the latter command still works as expected, because the
-% renderer is set just before other settings.
 %
 %    \begin{macrocode}
-\ifodd\bbl@engine
-  \def\bbl@scr@node@list{%
-   ,Armenian,Coptic,Cyrillic,Georgian,,Glagolitic,Gothic,%
-   ,Greek,Latin,Old Church Slavonic Cyrillic,}
-  \ifnum\bbl@bidimode=102 % bidi-r
-     \bbl@add\bbl@scr@node@list{Arabic,Hebrew,Syriac}
-  \fi 
-  \def\bbl@set@renderer{%
-    \bbl@xin@{\bbl@cl{sname}}{\bbl@scr@node@list}%
-    \ifin@
-      \let\bbl@unset@renderer\relax
-    \else
-      \bbl@exp{%
-         \def\\\bbl@unset@renderer{%
-           \def\<g__fontspec_default_fontopts_clist>{%
-             \[g__fontspec_default_fontopts_clist]}}%
-         \def\<g__fontspec_default_fontopts_clist>{%
-           Renderer=Harfbuzz,\[g__fontspec_default_fontopts_clist]}}%
-    \fi}
-\else
-  \let\bbl@set@renderer\relax
-  \let\bbl@unset@renderer\relax
-\fi
 \def\bbl@font@set#1#2#3{% eg \bbl@rmdflt@lang \rmdefault \rmfamily
   \bbl@xin@{<>}{#1}%
   \ifin@
@@ -14087,6 +14045,8 @@ wouldn’t exist.
       \fi}%
   \fi}
 \ifx\DisableBabelHook\@undefined\endinput\fi %%%% TODO: why
+\let\bbl@set@renderer\relax
+\let\bbl@unset@renderer\relax
 <@Font selection@>
 \def\bbl@provide@extra#1{}
 %    \end{macrocode}
@@ -15354,7 +15314,33 @@ end
 %
 % \subsection{Common stuff}
 %
+% First, a couple of auxiliary macros to set the renderer according
+% to the script. This is done by patching temporarily the low-level
+% \textsf{fontspec} macro containing the current features set with
+% |\defaultfontfeatures|. Admittedly this is somewhat dangerous, but
+% that way the latter command still works as expected, because the
+% renderer is set just before other settings. In \xetex\ they are set
+% to |\relax|.
+%
 %    \begin{macrocode}
+\def\bbl@scr@node@list{%
+ ,Armenian,Coptic,Cyrillic,Georgian,,Glagolitic,Gothic,%
+ ,Greek,Latin,Old Church Slavonic Cyrillic,}
+\ifnum\bbl@bidimode=102 % bidi-r
+   \bbl@add\bbl@scr@node@list{Arabic,Hebrew,Syriac}
+\fi 
+\def\bbl@set@renderer{%
+  \bbl@xin@{\bbl@cl{sname}}{\bbl@scr@node@list}%
+  \ifin@
+    \let\bbl@unset@renderer\relax
+  \else
+    \bbl@exp{%
+       \def\\\bbl@unset@renderer{%
+         \def\<g__fontspec_default_fontopts_clist>{%
+           \[g__fontspec_default_fontopts_clist]}}%
+       \def\<g__fontspec_default_fontopts_clist>{%
+         Renderer=Harfbuzz,\[g__fontspec_default_fontopts_clist]}}%
+  \fi}
 <@Font selection@>
 %    \end{macrocode}
 %

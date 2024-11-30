@@ -1,6 +1,6 @@
-## Babel 24.13.69951
+## Babel 24.14
 
-(dev)
+2024-11-30
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports LaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,22 +59,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
-24.14  (dev)
-       * Harfbuzz in the default renderer with \babelfont in many (but
-         not all) scripts (lua).
+24.14  2024-11-30
+       * Now Harfbuzz is the default renderer with \babelfont in many
+         (but not all) scripts (lua).
        * Now lazy locale loading sets 'import'.
        * Improvements in French (thanks to Daniel Flipo) and Japanese
-         ini locale files.
+         ini locale files (lua).
        * Fix issue with axis (tikz) in RTL (lua, #318). Thanks to Salim
          Bou.
-       
-24.13  2024-11-08
-       * French: Added ‘transform values’ for punctuation.space.
-       * Pashto: Persian and Islamic calendar (which fixes an error,
-         too).
-       * Fixes:
-         - Uyghur hyphenation mechanism stopped working.
-         - The Hebrew calendar converter raised an error.
 ```
 
 ### Previous changes
