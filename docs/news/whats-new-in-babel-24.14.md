@@ -65,6 +65,10 @@ to font encodings, but they were lifted a few months ago.
 Remember this behavior can be adjusted with `autoload.options` and
 `autoload.bcp47.options` in `\babeladjust`.
 
+**Note.** Just after uploading it to CTAN I discovered a bug — in some
+  cases, `import` is not honored and it behaves in the old fashion. To
+  be fixed in the next release.
+
 ## Changes in locale files
 
 * **French.** Fix spacing with `punctuation.space` and successive ‘!’ and
