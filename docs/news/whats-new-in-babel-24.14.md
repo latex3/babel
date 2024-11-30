@@ -9,14 +9,14 @@ The revision of the documentation continues.
 
 ## Default renderer with `\babelfont`
 
-`Harfbuzz` is now the default renderer in most scripts, except those of
-the ‘Greek family’, including Latin, Cyrillic, Armenian and Georgian.
-In the rest of scripts, if there is any change in the result it should
-be for the better. This is particularly true for the Indic scripts,
-like Devanagari, Malayalam, Bangla, Tibetan, etc., but also for RTL
-ones, like Arabic. (CJK is under study.) [There is an exception. For
-compatibity issues, Arabic, Hebrew and Syriac with `bidi-r` are still
-`Node`.]
+**LuaLaTeX.** `Harfbuzz` is now the default renderer in most scripts,
+except those of the ‘Greek family’, including Latin, Cyrillic,
+Armenian and Georgian. In the rest of scripts, if there is any change
+in the result it should be for the better. This is particularly true
+for the Indic scripts, like Devanagari, Malayalam, Bangla, Tibetan,
+etc., but also for RTL ones, like Arabic. (CJK is under study.)
+[There is an exception. For compatibity issues, Arabic, Hebrew and
+Syriac with `bidi-r` are still `Node`.]
 
 There are two reasons to keep the default `Node` renderer in
 those alphabetic scripts:
