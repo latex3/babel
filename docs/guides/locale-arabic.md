@@ -11,7 +11,7 @@ the source code):
 \documentclass{article}
 
 \usepackage[arabic, provide=*, bidi=basic, layout=counters.tabular]{babel}
-\babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}
+\babelfont{rm}{FreeSerif}
 
 \begin{document}
 
@@ -23,6 +23,9 @@ the source code):
 ```
 
 ![](https://user-images.githubusercontent.com/1314536/97981471-a6943300-1dd2-11eb-8f13-3fb5c20dc355.png)
+
+(In versions <24.14 you should activate explicitly the Harfbuzz
+renderer.)
 
 There is a complete example (with tables, columns, a figure, a
 description, etc.) in the repository

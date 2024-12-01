@@ -6,7 +6,7 @@ is recommended. Here is a minimal example:
 \documentclass{article}
 
 \usepackage[hindi, provide=*]{babel}
-\babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}
+\babelfont{rm}{FreeSerif}
 
 \begin{document}
 
@@ -15,6 +15,9 @@ is recommended. Here is a minimal example:
 \end{document}
 ```
 ![](../media/hindi-sample-luatex.png)
+
+(In versions <24.14 you should activate explicitly the Harfbuzz
+renderer.)
 
 It works with `xetex`, too, with a similar output, but with this engine
 there is no need the set the renderer (it’s always Harfbuzz).
@@ -35,7 +38,7 @@ To perform this conversión, use the following preamble:
 ```tex
 \usepackage[hindi, provide=*]{babel}
 \babelprovide[mapdigits]{hindi}  % or alternatively maparabic
-\babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}
+\babelfont{rm}{FreeSerif}
 ```
 
 There is an additional counter:
