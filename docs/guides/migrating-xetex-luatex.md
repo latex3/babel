@@ -15,8 +15,11 @@ if you are migrating from pdfTeX.
 ## Fonts
 
 By default, the font renderer in `xetex` is Harfbuzz (the only
-available). With `luatex` the default renderer is `Node`, which is not
-suited for many Asian scripts (Indic, South Asian). So, you may need to
+available). With `luatex` the default renderer was `Node`, but in
+version
+[≥24.14](https://latex3.github.io/babel/news/whats-new-in-babel-24.14.html)
+is Harfbuzz, except scripts of the ‘Greek family’ (including Latin and
+Cyrillic). So, in versions ≤24.13 you may need to
 replace something like
 ```tex
 \babelfont{rm}{FreeSerif}
