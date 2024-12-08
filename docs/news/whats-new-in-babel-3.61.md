@@ -10,8 +10,8 @@ In Indic scripts danda and doble danda must be kept with the preceding
 text even if a space is inserted. The ‘transform’ `danda.nobreak`
 prevents this break.
 
-This transform is available for Assamese, Bengali, Gujarati, Hindi,
-Kannada, Malayalam, Marathi, Oriya, Tamil, Telugu.
+This transform is available for Assamese, Bangla (Bengali), Gujarati, Hindi,
+Kannada, Malayalam, Marathi, Odia (Oriya), Tamil, Telugu.
 
 ## Improvements in Arabic justification
 

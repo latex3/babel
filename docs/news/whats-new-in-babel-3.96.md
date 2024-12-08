@@ -24,7 +24,7 @@ target scripts are different.
 
 ## Improved locales
 
-* **Oriya.** Captions has been defined, a few months have been fixed and there are a
+* **Odia (Oriya).** Captions has been defined, a few months have been fixed and there are a
 couple of alphabetic counters, namely, `alphabetic` and `akshar`.
 Thanks to ଅଶୋକ ଦାସ୍ and [ଅଭିଷେକ ଜେନା](https://github.com/avisekjena).
 

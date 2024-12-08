@@ -1,5 +1,12 @@
 # Norwegian
 
+<blockquote>
+  <p><em>Improve this page! Feel free to draft a pull request <a
+  href="https://github.com/latex3/babel/tree/docs/docs">on GitHub</a>.<br>
+  <a
+  href="https://www.google.com/search?q=site%3Alatex3.github.io%2Fbabel+Norwegian">Search this site for more on Norwegian</a>.</em></p>
+</blockquote>
+
 The Norwegian language is available for `pdftex`, `xetex`, and `luatex`. An example
 for `pdftex` with the UTF-8 encoding is:
 ```tex

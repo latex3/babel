@@ -1,8 +1,13 @@
 # Chinese
 
-The Chinese language is available for `xetex` and `luatex`. With the latter, both
-renderers (the default and Harfbuzz) are fine, but with huge fonts the
-latter is more reliable.
+<blockquote> <p><em>Improve this page! Feel free to draft a pull
+request <a href="https://github.com/latex3/babel/tree/docs/docs">on
+GitHub</a>.<br> <a
+href="https://www.google.com/search?q=site%3Alatex3.github.io%2Fbabel+Chinese">Search
+this site for more on Chinese.</em></a></blockquote>
+
+The Chinese language is available for `luatex` and `xetex`. With the
+former, both renderers (Node and Harfbuzz) are fine.
 
 Note the best option is usually to resort to a dedicated framework like
 [CTeX](https://ctan.org/pkg/ctex), [CJK](https://ctan.org/pkg/cjk) or

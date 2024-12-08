@@ -1,5 +1,11 @@
 # Arabic
 
+<blockquote> <p><em>Improve this page! Feel free to draft a pull
+request <a href="https://github.com/latex3/babel/tree/docs/docs">on
+GitHub</a>.<br> <a
+href="https://www.google.com/search?q=site%3Alatex3.github.io%2Fbabel+Arabic">Search
+this site for more on Arabic.</em></a></blockquote>
+
 The Arabic language is available for `pdftex`, `xetex`, and `luatex`, but the
 preferred engine is the latter, because of its unique features for
 bidirectional texts, not requiring explicit mark up.

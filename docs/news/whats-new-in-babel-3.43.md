@@ -54,7 +54,7 @@ The behaviour is adjusted with `\babeladjust` with the following parameters:
 * **Assamese**: Captions (#58, by Navanath Saharia)
 * **Finnish**: Fixed `contents` (#61, by Teemu Likonen).
 * **Marathi**: A couple of corrections (from polyglossia #409, by NiranjanTambe), and `alphabetic` counter.
-* **Bengali**: `alphabetic` counter. 
+* **Bangla (Bengali)**: `alphabetic` counter. 
 * **Luxembourgish**: Much expanded (thanks by Sam Mersch).
 * **Armenian**: Fixed counter names (see the [news for 3.42](whats-new-in-babel-3.42.md)).
 

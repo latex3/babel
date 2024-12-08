@@ -29,7 +29,7 @@ for a previous attempt).
 
 ## Other fixes
 
-* The prehyphenchar for Bengali, Assamese and Gujarati was set to
+* The prehyphenchar for Bangla (Bengali), Assamese and Gujarati was set to
   empty, but in these languages the hyphen must be shown, so now the
   default character is used.
 

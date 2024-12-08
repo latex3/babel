@@ -1,5 +1,12 @@
 # Greek
 
+<blockquote>
+  <p><em>Improve this page! Feel free to draft a pull request <a
+  href="https://github.com/latex3/babel/tree/docs/docs">on GitHub</a>.<br>
+  <a
+  href="https://www.google.com/search?q=site%3Alatex3.github.io%2Fbabel+TGreek">Search this site for more on Greek</a>.</em></p>
+</blockquote>
+
 The Greek language is available for `pdftex`, `xetex`, and `luatex`.
 Depending on your needs you may prefer the `ldf` file, currently
 supported by Günter Milde, or the `ini` files.

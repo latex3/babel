@@ -33,10 +33,10 @@ In addition, locale-specific hooks in the form
 `babel/language-name/hook-name` are *recognized* (executed just before
 the localized `babel` hooks), but they are *not predefined*. You have
 to do it yourself. For example, to set `\frenchspacing` only in
-`bengali`:
+`bangla` (Bangla or Bengali):
 ```tex
-\ActivateGenericHook{babel/bengali/afterextras}
-\AddToHook{babel/bengali/afterextras}{\frenchspacing}
+\ActivateGenericHook{babel/bangla/afterextras}
+\AddToHook{babel/bangla/afterextras}{\frenchspacing}
 ```
 
 This mechanism does *not* replace the current one in `babel`. Its main

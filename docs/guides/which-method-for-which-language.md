@@ -34,7 +34,7 @@ The second method is:
 This will load data from an `ini` file. This is usually the correct
 method for languages written in some of the 30-something **non-European
 scripts**, currently supported by `babel`, like Thai, Hindi, Sanskrit,
-Marathi, Malayalam, Lao, Khemer, Bengali, Gujarati, Telugu, Kannada,
+Marathi, Malayalam, Lao, Khemer, Bangla (Bengali), Gujarati, Telugu, Kannada,
 Sinhala, Tamil, Amharic, or Burmese. In short **simple CJK** texts,
 this is also the preferred method, but in more complex ones you should
 resort to some CKJ framework like
@@ -74,7 +74,7 @@ Here are some basic fonts included in TeXLive. This section is not meant as a fo
 | Amiri | Arabic | |
 | ALM Fixed | Arabic | A CM-like monospaced font.
 | CMU Serif, CMU Sans Serif, CMU Typewriter Text | Cyrillic, Greek | A CM-like family.
-| NewCM | Cyrillic, Greek, Hebrew, Cherokee | Another, more modern, CM-like family.
+| NewCM | Cyrillic, Greek, Hebrew, Cherokee | Another, more modern, CM-like family. It doesn’t support African orthographies. 
 | Padauk | Myanmar | |
 | FandolSong, FandolHei, FandolKai, FandolFang | Yi, Chinese | |
 | DejaVu Sans | Greek, Cyrillic, Armenian, Hebrew, Arabic, Lao, Georgian | Also Canadian Aboriginal, Ogham.
