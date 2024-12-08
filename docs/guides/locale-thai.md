@@ -1,10 +1,10 @@
 # Thai
 
-<blockquote> <p><em>Improve this page! Feel free to draft a pull
-request <a href="https://github.com/latex3/babel/tree/docs/docs">on
-GitHub</a>.<br> <a
-href="https://www.google.com/search?q=site%3Alatex3.github.io%2Fbabel+Thai">Search
-this site for more on Thai.</em></a></blockquote>
+<blockquote>
+  <p><em>Improve this page! Feel free to draft a pull request <a href="https://github.com/latex3/babel/tree/docs/docs">on GitHub</a>.<br>
+  <a
+  href="https://www.google.com/search?q=site%3Alatex3.github.io%2Fbabel+Thai">Search this site for more on Thai</a>.</em></p>
+</blockquote>
 
 The Thai language is available for `xetex` and `luatex`, but the
 preferred engine is the latter. With `luatex`, it should work with the
