@@ -1,6 +1,6 @@
-## Babel 24.14
+## Babel 24.14.71672
 
-2024-11-30
+(dev)
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports LaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,6 +59,12 @@ respective authors.
 
 ### Summary of latest changes
 ```
+25.15  (dev)
+       * Fix: import was not honored with lazy loading in some cases.
+       * Fix: Transforms where applied twice with \unhbox, which can
+         even raise a cryptic lua error.
+       * Improvements in the manual thanks to Barbara Beeton.
+
 24.14  2024-11-30
        * Now Harfbuzz is the default renderer with \babelfont in many
          (but not all) scripts (lua).
