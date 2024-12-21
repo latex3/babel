@@ -13,7 +13,7 @@ orthography. It recently got an ISO code (`isv`).
 
 ## Fixes
 
-* (lua) Boxed text were processed by transforms twice when unboxed
+* (lua) Boxed text was processed by transforms twice when unboxed
   with `\unhbox` and the like, which could even lead to a cryptic lua
   error.
 
