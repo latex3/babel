@@ -1,9 +1,9 @@
-## Babel 24.14.71672
+## Babel 24.15
 
-(dev)
+2024-12-21
 
 `Babel` is the multilingual framework to localize documents. It fully
-supports LaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
+supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
 languages even work with Plain formats.
 
 Its aim is to provide a localization framework for different languages,
@@ -21,7 +21,7 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 24.14 are described in:
+Changes in version 24.15 are described in:
 
 https://latex3.github.io/babel/news/whats-new-in-babel-24.14.html
 
@@ -59,20 +59,12 @@ respective authors.
 
 ### Summary of latest changes
 ```
-25.15  (dev)
-       * Fix: import was not honored with lazy loading in some cases.
-       * Fix: Transforms where applied twice with \unhbox, which can
+25.15  2024-12-21
+       * New: Locale for Interslavic, thanks to Adiee5.
+       * Fix: Import was not honored with lazy loading in some cases.
+       * Fix: Transforms where applied twice with unboxing, which could
          even raise a cryptic lua error.
        * Improvements in the manual thanks to Barbara Beeton.
-
-24.14  2024-11-30
-       * Now Harfbuzz is the default renderer with \babelfont in many
-         (but not all) scripts (lua).
-       * Now lazy locale loading sets 'import'.
-       * Improvements in French (thanks to Daniel Flipo) and Japanese
-         ini locale files (lua).
-       * Fix issue with axis (tikz) in RTL (lua, #318). Thanks to Salim
-         Bou.
 ```
 
 ### Previous changes

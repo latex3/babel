@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2024/12/16 v24.14.71672
+  [2024/12/21 v24.15
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -79,7 +79,7 @@
 \newcommand*\Lenv[1]{\texttt{#1}}
 \newcommand*\menv[1]{\char`\{#1\char`\}}
 \newcommand*\Eenv[1]{%
-  \quad\ldots\quad
+  \quad...\quad
   \texttt{\color{thered}\string\end\menv{#1}}}
 \newcommand*\file[1]{\texttt{#1}}
 \newcommand*\cls[1]{\texttt{#1}}
@@ -530,9 +530,9 @@ even better, make sure the encoding in your editor is set to UTF-8.
 
 \begin{troubleshooting}
 Another typical error when using \babel{} is the following:
-\trouble{Unknown language `LANG'}
+\trouble{Unknown language 'LANG'}
 \begin{verbatim}
-! Package babel Error: Unknown language `#1'. Either you have
+! Package babel Error: Unknown language 'LANG'. Either you have
 (babel)                misspelled its name, it has not been installed,
 (babel)                or you requested it in a previous run. Fix its name,
 (babel)                install it or just rerun the file, respectively. In
@@ -550,7 +550,7 @@ Another typical error when using \babel{} is the following:
   The following warning is about hyphenation patterns, which are
   not under the direct control of \babel:
 \trouble{No hyphenation patterns were preloaded for (babel) the
-  language `LANG' into the format}
+  language 'LANG' into the format}
 \begin{verbatim}
 Package babel Warning: No hyphenation patterns were preloaded for
 (babel)                the language `LANG' into the format.
@@ -2371,9 +2371,9 @@ can take the following values:
 \item[first] sets it at the first switching commands in the
   current or parent scope (typically, when the |aux| file is first read
   and at |\begin{document}|, but also the first |\selectlanguage| in
-    the preamble), and it's the default if a single
-    language option has been stated;\footnote{Duplicated options count
-    as several ones.}
+  the preamble), and it's the default if a single language option has
+  been stated. If a language option is repeated (e.g., |malay, malay|),
+  it counts as several ones, even if there is only a language.
 \item[select] sets it only at |\selectlanguage|;
 \item[other] also sets it at |otherlanguage|;
 \item[other*] also sets it at |otherlanguage*| as well as in heads and
@@ -2902,8 +2902,8 @@ events listed below can be used as a hook name in |\AddToHook| in the
 form |babel/<language-name>/<event-name>| (with |*| it’s applied to
 all languages), but there is a limitation, because the parameters
 passed with the \babel{} mechanism are not allowed. The |\AddToHook|
-mechanism does \textit{not} replace the current one in `babel`. Its
-main advantage is you can reconfigure `babel` even before loading it.
+mechanism does \textit{not} replace the current one in \babel. Its
+main advantage is you can reconfigure \babel\ even before loading it.
 See the example below.
 
 \Describe{\AddBabelHook}{\oarg{language}\marg{name}\marg{event}\marg{code}}
@@ -3020,10 +3020,12 @@ set |\frenchspacing| only in |bengali|:
 \subsection{Manage auxiliary files}
 
 \Describe{\BabelContentsFiles}{}
-\New{3.9a} This macro contains a list of ``toc'' types
-requiring a command to switch the language. Its default value is
-|toc,lof,lot|, but you may redefine it with |\renewcommand| (it's up
-to you to make sure no toc type is duplicated).
+\New{3.9a} This macro contains a list of ``toc'' types requiring a
+command to switch the language. Its default value is |toc,lof,lot|, but
+you may redefine it with |\renewcommand| to add further types in case
+you need or there is a package enabling additional files, e.g., for
+theorems, algorithms, notation (it's up to you to make sure no toc type
+is duplicated).
 
 \subsection{Code based on the selector}
 
@@ -3593,7 +3595,7 @@ allows breaks only at spaces, which can be stretched to arbitrary
 amounts. Although for European standards the result may look odd, in
 some writing systems, like Malayalam and other Indic scripts, this has
 been the customary (although not always the desired) practice. Because
-of that, no locale sets currently this mode by default (Amharic is an
+of that, no locale enables currently this mode by default (Amharic is an
 exception). Unlike |\sloppy|, the |\hfuzz| and the |\vfuzz| are not
 changed, because this line breaking mode is not really ‘sloppy’ (in
 other words, overfull boxes are reported as usual).
@@ -3760,10 +3762,11 @@ shorthands. Language-dependent user shorthands take precedence over
 \begin{verbatim}
 \defineshorthand[*polish,*portuguese]{"-}{\babelhyphen{repeat}}
 \end{verbatim}
-  Here, options with |*| set a language-dependent user shorthand,
-  which means the generic one above only applies for the rest of
-  languages; without |*| they would (re)define the language shorthands
-  instead, which are overridden by user ones.
+  Here, options with |*| set a language-dependent user shorthand, which
+  means the generic declarations above for |"-| apply to all languages
+  \textit{except} |polish| and |portuguese|; without |*| they would
+  (re)define the language shorthands instead, which are overridden by
+  user ones.
 
   Now, you have a single unified shorthand (|"-|), with a
   content-based meaning (`compound word hyphen') whose visual behavior
@@ -6010,8 +6013,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.14.71672>>
-%<<date=2024/12/16>>
+%<<version=24.15>>
+%<<date=2024/12/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13517,7 +13520,7 @@ wouldn’t exist.
     \righthyphenmin##2\relax}%
   \def\selectlanguage{%
     \errhelp{Selecting a language requires a package supporting it}%
-    \errmessage{Not loaded}}%
+    \errmessage{No multilingual package has been loaded}}%
   \let\foreignlanguage\selectlanguage
   \let\otherlanguage\selectlanguage
   \expandafter\let\csname otherlanguage*\endcsname\selectlanguage
@@ -14988,6 +14991,9 @@ wouldn’t exist.
         for k, func in ipairs(Babel.linebreaking.after)  do
           func(head)
         end
+      end
+      if Babel.set_hboxed then 
+        Babel.set_hboxed(head)
       end
       if Babel.sea_enabled then
         Babel.sea_disc_to_space(head)
@@ -16604,15 +16610,11 @@ end
 Babel.attr_hboxed = luatexbase.registernumber'bbl@attr@hboxed'
 
 function Babel.set_hboxed(head, gc)
-  if gc ~= 'hbox' and gc ~= 'adjusted_hbox' then return head end
   for item in node.traverse(head) do
     node.set_attribute(item, Babel.attr_hboxed, 1)
   end
   return head
 end
-
-luatexbase.add_to_callback(
-  'hpack_filter', Babel.set_hboxed, 'Babel.set_hboxed')
 
 Babel.fetch_subtext = {}
 
