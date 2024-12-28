@@ -39,6 +39,8 @@ description, etc.) in the repository
 [pdf](https://github.com/latex3/babel/blob/main/samples/lua-arabic.pdf)).
 It uses the tentative algorithm for justification with kashida.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0S11nSRxgww?si=TGelRpaL8pmzSOZP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## Counters
 
 Numerals are best entered directly in the desired
