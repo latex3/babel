@@ -5,17 +5,12 @@
 
 \usepackage[bidi=default]{babel}
 
-% As of 3.39, no explicit loading with \babelprovide is required, as
-% languages are loaded on the fly with the most basic settings, which
-% here are enough.
+% FreeSerif does not contain CJK, so we use a couple of alternative
+% fonts, also in TeXLive.
 
-% With luahbtex we must add Renderer=Harfbuzz, which is just ignored by
-% other engines. FreeSerif does not contain CJK, so we use a couple of
-% alternative fonts, also in TeXLive.
-
-\babelfont{rm}[Renderer=Harfbuzz]{FreeSerif}
-\babelfont[japanese]{rm}[Renderer=Harfbuzz]{IPAexMincho}
-\babelfont[korean]{rm}[Renderer=Harfbuzz]{Baekmuk Gulim}
+\babelfont{rm}{FreeSerif}
+\babelfont[japanese]{rm}{IPAexMincho}
+\babelfont[korean]{rm}{Baekmuk Gulim}
 
 \setlength{\parindent}{0pt}
 
@@ -25,7 +20,7 @@
 
 \begin{document}
 
-Typeset with \texttt{lualatex} and \texttt{babel} 3.95.
+Typeset with \texttt{lualatex}.
 
 \startlocale{arabic}
 
@@ -36,8 +31,6 @@ Typeset with \texttt{lualatex} and \texttt{babel} 3.95.
 Բոլոր մարդիկ ծնվում են ազատ ու հավասար՝ իրենց արժանապատվությամբ և իրավունքներով: Նրանք օժտված են բանականությամբ ու խղճով և պարտավոր են միմյանց վերաբերվել եղբայրության ոգով:
 
 \startlocale{bengali}
-
-Works only with \textsf{xetex} or \textsf{luahbtex}.
 
 সমস্ত মানুষ স্বাধীনভাবে সমান মর্যাদা এবং অধিকার নিয়ে জন্মগ্রহণ করে। তাঁদের বিবেক এবং বুদ্ধি আছে; সুতরাং সকলেরই একে অপরের প্রতি ভ্রাতৃত্বসুলভ মনোভাব নিয়ে আচরণ করা উচিৎ।
 

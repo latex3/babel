@@ -1,6 +1,6 @@
-## Babel 24.15
+## Babel 24.15.72974
 
-2024-12-21
+(dev)
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,10 +59,14 @@ respective authors.
 
 ### Summary of latest changes
 ```
-25.15  2024-12-21
+25.1   (dev) 
+       * Fix: Wrong \localeid with lazy loading in some cases.
+       * Fix: Direction nodes misplaced (between a penalty and a glue).
+       
+24.15  2024-12-21
        * New: Locale for Interslavic, thanks to Adiee5.
        * Fix: Import was not honored with lazy loading in some cases.
-       * Fix: Transforms where applied twice with unboxing, which could
+       * Fix: Transforms were applied twice with unboxing, which could
          even raise a cryptic lua error.
        * Improvements in the manual thanks to Barbara Beeton.
 ```

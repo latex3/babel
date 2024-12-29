@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2024/12/21 v24.15
+  [2024/12/29 v24.15.72974
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -195,6 +195,7 @@
 \def\toclevel@trouble{0}
 \def\listoftroubles{\section*{Troubleshoooting}\@starttoc{tsh}}
 \let\l@trouble\l@figure
+\def\@tocrmarg{3.5em plus 1000em}
 \let\saved@check@percent\check@percent
 \let\check@percent\relax
 % Changes to doc.sty (add <<...>> syntax)
@@ -2235,13 +2236,15 @@ The available fields are:
   fill other fields if they are considered necessary).
 \item[|language.tag.bcp47|] is the BCP 47 language tag.
 \item[|tag.opentype|] is the tag used by OpenType (usually, but not
-  always, the same as BCP 47).
+  always, the same as BCP 47). It can be useful when customizing fonts
+  with \textsf{luaotfload}.
 \item[|script.name|], as provided by the Unicode CLDR.
 \item[|script.tag.bcp47|] is the BCP 47 tag of the script
   used by this locale. This is a required field for the fonts to be
   correctly set up, and therefore it should always be defined.
 \item[|script.tag.opentype|] is the tag used by OpenType (usually,
-  but not always, the same as BCP 47).
+  but not always, the same as BCP 47). It can be useful when
+  customizing fonts with \textsf{luaotfload}.
 \item[|region.tag.bcp47|] is the BCP 47 tag of the region or territory.
   Defined only if the locale loaded actually contains it (e.g., |es-MX|
   does, but |es| doesn’t), which is how locales behave in the CLDR.
@@ -3301,20 +3304,31 @@ cases.
 
 \Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}
   $\string|$ \texttt{letters}}
+  
 \New{3.38} This option is much like an ‘event’ called when a character
 belonging to the script of this locale is found (as its name implies,
-it acts on characters, not on spaces). There are currently two
-‘actions’, which can be used at the same time (separated by a space):
-with |ids| the |\language| and the |\localeid| are set to the values of
-this locale; with |fonts|, the fonts are changed to those of this
-locale (as set with |\babelfont|). Characters can be added or modified with
-|\babelcharproperty|.
+it acts on characters, not on spaces).
 
-\New{3.81} Option |letters| restricts the ‘actions’ to letters, in the
-\TeX{} sense (i.e., with catcode 11). Digits and punctuation are then
-considered part of current locale (as set by a selector). This option
-is useful when the main script in non-Latin and there is a secondary
-one whose script is Latin.
+This option is particularly useful in pure Unicode multilingual text,
+because you can intermingle with no explicit markup differents scripts,
+each of which with its own hyphenation rules and font, and even its
+characteristic writing direction.
+
+There are currently 3 ‘actions’, which can be used at the same time
+(separated by spaces):
+\begin{itemize}
+\item With |ids|, both |\language| and |\localeid| are set to the values
+  associated with this locale, affecting the hyphenation rules, as well
+  as any transforms declared for it.
+\item With |fonts|, the fonts are switched to those specified for this
+  locale (as set with |\babelfont|). Characters assigned to a locale can
+  be customized with |\babelcharproperty|. 
+\item \New{3.81} Option |letters| restricts the ‘actions’ to letters, in
+  the \TeX{} sense (i.e., with catcode 11). Digits and punctuation are
+  then considered part of current locale (as set by a selector). This
+  option is useful when the main script is non-Latin and there is a
+  secondary one whose script is Latin.
+\end{itemize}
 
 \begin{note}
   An alternative approach with \luatex{} and Harfbuzz is the font
@@ -4309,7 +4323,7 @@ Gujarati, Hindi, Kannada, Malayalam, Marathi, Odia, Tamil, Telugu.}
 \textit{u}, \textit{V}.}
 
 \trans{Sanskrit}{transliteration.iast}{The IAST system to
-romanize Devanagari.\footnote{Thanks to Maximilian Mehner}}
+romanize Devanagari (thanks to Maximilian Mehner).}
 
 \trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
 files refers to the Cyrillic script, which is here the target.) The
@@ -4573,24 +4587,27 @@ characters \textit{;:!?«»} are applied.}
 
 \subsection{Scripts}
 
-Currently \babel{} provides no standard interface to select
-scripts, because they are best selected with either |\fontencoding|
-(low-level) or a language name (high-level). Even the Latin script may
-require different encodings (i.e., sets of glyphs) depending on the
-language, and therefore such a switch would be in a sense
-incomplete.\footnote{The so-called Unicode fonts do not improve the
+\Babel{} provides no standard interface to select scripts, because they
+are best selected with languages tied to them. In \pdftex, scripts are
+indirectly managed by means of the low-level |\fontencoding|, whose
+direct use is discouraged — even the Latin script may require different
+encodings (i.e., sets of glyphs) depending on the language, and
+therefore such a switch would be in a sense incomplete. Note the
+so-called Unicode fonts (in \luatex\ and \xetex) do not improve the
 situation either. So, a font suited for Vietnamese is not necessarily
 suited for, say, the romanization of Indic languages, and the fact it
 contains glyphs for Modern Greek does not mean it includes them for
-Classic Greek.}
+Classic Greek.
 
-Some languages sharing the same script define macros to switch it (e.g.,
-|\textcyrillic|), but be aware they may also set the language to a
-certain default. Even the \babel{} core defined |\textlatin|, but is
-was somewhat buggy because in some cases it messed up encodings and
-fonts (for example, if the main Latin encoding was |LY1|), and
-therefore it has been deprecated (but still defined for
-backwards compatibility).
+\begin{note}
+  Some languages sharing the same script define macros to switch it
+  (e.g., |\textcyrillic|), but be aware they may also set the language
+  to a certain default. Even the \babel{} core defined |\textlatin|,
+  but it was somewhat buggy because in some cases it messed up
+  encodings and fonts (for example, if the main Latin encoding was
+  |LY1|), and therefore it has been deprecated (but still defined for
+  backwards compatibility).
+\end{note}
 
 The locales currently available cover the following scripts:
 \begin{multicols}{4}
@@ -6013,8 +6030,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.15>>
-%<<date=2024/12/21>>
+%<<version=24.15.72974>>
+%<<date=2024/12/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7087,7 +7104,7 @@ wouldn’t exist.
   \bbl@ifunset{bbl@id@@\languagename}%
     {\count@\bbl@id@last\relax
      \advance\count@\@ne
-     \bbl@csarg\chardef{id@@\languagename}\count@
+     \global\bbl@csarg\chardef{id@@\languagename}\count@
      \edef\bbl@id@last{\the\count@}%
      \ifcase\bbl@engine\or
        \directlua{
@@ -15039,7 +15056,7 @@ wouldn’t exist.
 %
 % WIP. |\bbl@arabicjust| is executed with both elongated an kashida.
 % This must be fine tuned. The attribute kashida is set by transforms
-% with |kashida|-
+% with |kashida|.
 %
 %    \begin{macrocode}
 \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200
@@ -24033,11 +24050,26 @@ function Babel.bidi(head, ispar, hdir)
       end
     end
   end
+  
+  -------------- FIX PENALTIES --------------
+  
+  for item in node.traverse_id(10, head) do
+    local p = item
+    local flag = false
+    while p.prev and p.prev.id == 14 do
+      flag = true
+      p = p.prev
+    end
+    if flag then
+      node.insert_before(head, p, node.copy(item))
+      node.remove(head,item)
+    end
+  end
 
   return head
 end
 -- Make sure anything is marked as 'bidi done' (including nodes inserted
--- after the babel algorithm).
+-- after the babel algorithm). 128 = 1000 0000.
 function Babel.unset_atdir(head)
   local ATDIR = Babel.attr_dir
   for item in node.traverse(head) do
