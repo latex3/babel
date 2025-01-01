@@ -1,7 +1,7 @@
 % \iffalse
 % This document requires lualatex
 %%
-%% Copyright (C) 2012-2024 Javier Bezos and Johannes L. Braams.
+%% Copyright (C) 2012-2025 Javier Bezos and Johannes L. Braams.
 %% Copyright (C) 1989-2012 Johannes L. Braams and
 %%           any individual authors listed elsewhere in this file.
 %% All rights reserved.
@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2024/12/29 v24.15.72974
+  [2025/01/01 v25.1
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6030,8 +6030,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=24.15.72974>>
-%<<date=2024/12/29>>
+%<<version=25.1>>
+%<<date=2025/01/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -24022,9 +24022,16 @@ function Babel.bidi(head, ispar, hdir)
   end
 
   head = node.prev(head) or head
-
-  -------------- FIX HYPERLINKS ----------------
-
+% \end{macrocode}
+% 
+% Now direction nodes has been distributed with relation to characters
+% and spaces, we need to take into account \TeX\-specific elements in
+% the node list, to move them at an appropriate place. Firstly, with
+% hyperlinks. Secondly, we avoid them between penalties and spaces, so
+% that the latter are still discardable.
+% 
+% \begin{macrocode}
+  --- FIXES ---
   if has_hyperlink then
     local flag, linking = 0, 0
     for item in node.traverse(head) do
@@ -24050,9 +24057,7 @@ function Babel.bidi(head, ispar, hdir)
       end
     end
   end
-  
-  -------------- FIX PENALTIES --------------
-  
+
   for item in node.traverse_id(10, head) do
     local p = item
     local flag = false
