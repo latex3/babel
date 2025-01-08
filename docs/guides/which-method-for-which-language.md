@@ -33,9 +33,23 @@ The second method is:
 ```
 This will load data from an `ini` file. This is usually the correct
 method for languages written in some of the 30-something **non-European
-scripts**, currently supported by `babel`, like Thai, Hindi, Sanskrit,
-Marathi, Malayalam, Lao, Khemer, Bangla (Bengali), Gujarati, Telugu, Kannada,
-Sinhala, Tamil, Amharic, or Burmese. In short **simple CJK** texts,
+scripts**, currently supported by `babel`, like
+[Thai](https://latex3.github.io/babel/guides/locale-thai.html),
+[Hindi](https://latex3.github.io/babel/guides/locale-hindi.html),
+[Sanskrit](https://latex3.github.io/babel/guides/locale-sanskrit.html),
+[Marathi](https://latex3.github.io/babel/guides/locale-marathi.html),
+[Malayalam](https://latex3.github.io/babel/guides/locale-malayalam.html),
+[Lao](https://latex3.github.io/babel/guides/locale-lao.html),
+[Khmer](https://latex3.github.io/babel/guides/locale-khmer.html),
+[Bangla (Bengali)](https://latex3.github.io/babel/guides/locale-bangla.html),
+[Gujarati](https://latex3.github.io/babel/guides/locale-gujarati.html),
+[Telugu](https://latex3.github.io/babel/guides/locale-telugu.html),
+[Kannada](https://latex3.github.io/babel/guides/locale-kannada.html),
+[Sinhala](https://latex3.github.io/babel/guides/locale-sinhala.html),
+[Tamil](https://latex3.github.io/babel/guides/locale-tamil.html),
+[Amharic](https://latex3.github.io/babel/guides/locale-amharic.html),
+or [Burmese](https://latex3.github.io/babel/guides/locale-burmese.html).
+In short **simple CJK** texts,
 this is also the preferred method, but in more complex ones you should
 resort to some CKJ framework like
 [luatexja](https://ctan.org/pkg/luatexja),
@@ -43,8 +57,10 @@ resort to some CKJ framework like
 [kotex](https://mirrors.ctan.org/language/korean/kotex-utf/doc/kotex-utf-doc.pdf),
 and the like.
 
-Some languages may require additional options. Examples are Arabic,
-Hebrew and Syriac. So, with LuaTeX:
+Some languages may require additional options. Examples are
+[Arabic](https://latex3.github.io/babel/guides/locale-arabic.html),
+[Hebrew](https://latex3.github.io/babel/guides/locale-hebrew.html),
+and [Syriac](https://latex3.github.io/babel/guides/locale-syriac.html). So, with LuaTeX:
 ```tex
 \usepackage[arabic, bidi=basic, provide=*]{babel}
 ```
