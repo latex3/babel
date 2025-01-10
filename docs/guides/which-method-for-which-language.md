@@ -1,13 +1,16 @@
 # Which method for which language
 
+> *Improve this page! Feel free to draft a pull request [on GitHub](https://github.com/latex3/babel/tree/docs/docs)*.
+
 Since currently there are two methods to load a language, here is a short
 explanation on how to do it, with info about basic fonts, so that you
 can setup quickly a document. There are also pages on specific locales
-in the menu above
+in the menu above and
+[here](https://latex3.github.io/babel/guides/index-locale.html).
 
 See also the [examples
 here](https://github.com/latex3/babel/tree/main/samples) for languages
-like Arabic, Thai, Hebrew, Polytonic Greek, Japanese, and Malayalam,
+like Arabic, Thai, Hebrew, Polytonic Greek, Japanese, Syriac and Malayalam,
 among others.
 
 _I'd like to thank Loren Davis for his help in preparing this page,
@@ -72,11 +75,19 @@ With XeTeX:
 --------------
 ## Fonts
 
-With non-Latin scripts, you need to select another font, which can be done with `\babelfont`.
+With non-Latin scripts, you need to select another font, which can be
+done with `\babelfont`.
 
-If compatibility is not a concern, remember currently the most important systems (Windows, Mac, Linux) come with many fonts. Even if they are not installed by default, there are options in the system settings to do it. 
+If compatibility is not a concern, remember currently the most
+important systems (Windows, Mac, Linux) come with many fonts. Even if
+they are not installed by default, there are options in the system
+settings to do it.
 
-With `luatex` stick to the default renderer in Latin, Cyrillic and Greek scripts wherever possible. On the other hand, Southeast Asian scripts are best rendered with Harfbuzz, as well as Arabic. CKJ is usually fine with either renderer.
+With `luatex` and in versions
+≥[24.14](https://latex3.github.io/babel/news/whats-new-in-babel-24.14.html),
+the default renderer in `\babelfont` is the default one in Latin,
+Cyrillic, Greek and scripts of the same family. In the rest of scripts,
+like Southeast Asian ones and Arabic, the default renderer is Harfbuzz.
 
 #### TeXLive
 
@@ -86,15 +97,18 @@ Here are some basic fonts included in TeXLive. This section is not meant as a fo
 | --- | --- | --- |
 | IPAexMincho, IPAexGothic | Japanese | |
 | Baekmuk Gulim, Baekmuk Batang, Baekmuk Dotum | Korean | |
-| FreeSerif | Multilingual, including Greek, Cyrillic, Coptic, Arabic, Hebrew, many (but not all) Brahmi scripts (Thai, Devanagari, Bengali, Tamil, Malayalam, etc.), Amharic, Georgian, Cherokee, Armenian. | |
+| FreeSerif | Multilingual, including Greek, Cyrillic, Coptic, Arabic, Hebrew, many (but not all) Brahmi scripts (Thai, Devanagari, Bengali, Tamil, Malayalam, etc.), Amharic, Georgian, Cherokee, Armenian. | A comprehensive Times-like, although with some oddities. |
 | Amiri | Arabic | |
 | ALM Fixed | Arabic | A CM-like monospaced font.
 | CMU Serif, CMU Sans Serif, CMU Typewriter Text | Cyrillic, Greek | A CM-like family.
-| NewCM | Cyrillic, Greek, Hebrew, Cherokee | Another, more modern, CM-like family. It doesn’t support African orthographies. 
+| NewComputerModern | Cyrillic, Greek, Hebrew, Cherokee | Another, more modern, CM-like family. It doesn’t support African orthographies. 
 | Padauk | Myanmar | |
+| Shobhika | Devanagari | With an excellent coverage of Vedic accents, Latin transliteration for Sanskrit, mathematical and technical symbols, and Cyrillic.
+| Rachana | Malayalam | It was the first Unicode font to support traditional orthography. This is the version by smc.org.in. There are several other fonts floating around under the name “Rachana,” and some of them do not work.  Manjari is another popular font suitable for these body text, designed on the same theoretical principles as Inconsolata.
 | FandolSong, FandolHei, FandolKai, FandolFang | Yi, Chinese | |
+| David CLM, Miriam CLM, Miriam Mono CLM | Hebrew | Free implementations of the most common Hebrew serif, sans-serif and monospace fonts.  If you need cantillation marks for liturgical texts, Culmus also has a Taamey David.  There are many different versions of font faces.
 | DejaVu Sans | Greek, Cyrillic, Armenian, Hebrew, Arabic, Lao, Georgian | Also Canadian Aboriginal, Ogham.
-| Noto | Greek, Cyrillic | A large family, but TeX Live includes only the fonts for these two scripts (and emojis).
+| Noto | Greek, Cyrillic | A large family, but TeXLive includes only the fonts for these two scripts (and emojis).
 | Junicode | Runic | Also Medieval and Ancient Latin script.
 
 ### Additional fonts
@@ -103,14 +117,15 @@ There are also some fine fonts out there, but you must install them because they
 
 | Font(s) | Languages / Scripts | Notes |
 | --- | --- | --- |
-| Noto | Multilingual | This family has a very comprehensive coverage and come in many variations of weight and width to match your other fonts.
-| David CLM, Miriam CLM, Miriam Mono CLM | Hebrew | Free implementations of the most common Hebrew serif, sans-serif and monospace fonts.  If you need cantillation marks for liturgical texts, Culmus also has a Taamey David.  There are many different versions of font faces.
+| Noto | Multilingual | This family has a very comprehensive coverage and come in many variations of weight and width to match your other fonts. You can see how to combine Noto fonts at the end of the video [LaTeX – Multilingual Unicode strings](https://www.youtube.com/watch?v=jWGmYZsNiYA).
 | Babelstone Han | Chinese | It supports both Simplified and Traditional Chinese and has an especially comprehensive selection of traditional Chinese characters.
-| Rachana | Malayalam | It was the first Unicode font to support traditional orthography. This is the version by smc.org.in. There are several other fonts floating around under the name “Rachana,” and some of them do not work.  Manjari is another popular font suitable for these body text, designed on the same theoretical principles as Inconsolata.
 | Abyssinica SIL | Abyssinica SIL |
-| Shobhika | Sanskrikt | With an excellent coverage of Vedic accents, Latin transliteration, mathematical and technical symbols, and Cyrillic.
+| Nirmala UI | Indic scripts | A Windows font with 14 scripts: Telugu, Kannada, Bangla, Odia, Sinhala, Devanagari...
+| Segoe UI Historic | Ancient scripts | A Windows font with 25 scripts: Imperial Aramaic, Brahmi, Egyptian hieroglyphs, Syriac, Akkadian Cuneiform, Runic...
 
-You may also want to have a look at some articles on tex.textackexchange on [Arabic](https://tex.stackexchange.com/questions/314202/overview-of-arabic-fonts-available-for-latex-xetex)
+You may also want to have a look at some articles on tex.textackexchange
+on
+[Arabic](https://tex.stackexchange.com/questions/314202/overview-of-arabic-fonts-available-for-latex-xetex). On Windows, Nirmala UI supports meny Indic scripts, while Segoe UI Historic provides some ancient scripts, like Syriac, Old Uyghur
 
 -------------------------
 
@@ -118,7 +133,7 @@ You may also want to have a look at some articles on tex.textackexchange on [Ara
 
 | Language | Method | Font | Additional package options (lua) | xe | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Arabic | provide | Renderer=Harfbuzz | bidi=basic, layout=counters.tabular | bidi=bidi-r | |
+| Arabic | provide | Renderer=Harfbuzz | bidi=basic, layout=counters tabular | bidi=bidi-r | |
 | German | | | | | |
 | Hebrew | provide | Renderer=Harfbuzz | bidi=basic, layout=tabular | bidi=bidi-r | |
 | Hindi | provide | Renderer=Harfbuzz | | |
