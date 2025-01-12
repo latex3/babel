@@ -51,6 +51,9 @@ here](http://mirrors.ctan.org/macros/latex/required/babel/base/babel.pdf).
 This site contains additional information and examples in many languages
 (see the menu above). It’s open source – feel free to draft a pull request [here](https://github.com/latex3/babel/tree/docs/docs).
 
+You can also take a look at the videos on
+[Youtube](https://www.youtube.com/watch?v=jWGmYZsNiYA&list=PLVc2cHCI6zpJcaa1x-yK9iRjqtE3Ct2Ja&index=4).
+
 -----------------------
 
 ## Installation
