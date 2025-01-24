@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/01/01 v25.1
+  [2025/01/24 v25.1.75575
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -1301,6 +1301,7 @@ with tag \texttt{gsw} is a different language.}
 \tag{indonesian}{\hascapu\hascapl}{id}
 \tagmin{ingush}{}{inh}
 \tag{interlingua}{\hascapu\hascapl}{ia}
+\tag{interslavic}{\hascapu\hascapl}{isv}
 \tag{inuktitut}{}{iu}
 \tag{irish}{\hascapu\hascapl}{ga}
 \tag{italian}{\hascapu\hascapl}{it}
@@ -1422,6 +1423,7 @@ with tag \texttt{gsw} is a different language.}
 \tag{occitan}{\hascapu\hascapl}{oc}
 \tag{odia}{\hascapu}{or}
 \tagmin{oldnorse}{}{non}
+\tagmin{olduighur}{}{oui}
 % \tag{oriya}{\hascapu}{or}
 \tag{oromo}{}{om}
 \tag{ossetic}{}{os}
@@ -6030,8 +6032,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.1>>
-%<<date=2025/01/01>>
+%<<version=25.1.75575>>
+%<<date=2025/01/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11775,7 +11777,7 @@ wouldn’t exist.
 %    \begin{macrocode}
 \providecommand\BCPdata{}
 \ifx\renewcommand\@undefined\else % For plain. TODO. It’s a quick fix
-  \renewcommand\BCPdata[1]{\bbl@bcpdata@i#1\@empty}
+  \renewcommand\BCPdata[1]{\bbl@bcpdata@i#1\@empty\@empty\@empty}
   \def\bbl@bcpdata@i#1#2#3#4#5#6\@empty{%
     \@nameuse{str_if_eq:nnTF}{#1#2#3#4#5}{main.}%
       {\bbl@bcpdata@ii{#6}\bbl@main@language}%
@@ -11787,6 +11789,7 @@ wouldn’t exist.
         {\bbl@cs{\csname bbl@info@#1.tag.bcp47\endcsname @#2}}}}
 \fi
 \@namedef{bbl@info@casing.tag.bcp47}{casing}
+\@namedef{bbl@info@tag.tag.bcp47}{tbcp} % For \BCPdata
 %    \end{macrocode}
 %
 % \section{Adjusting the Babel behavior}
@@ -12663,14 +12666,17 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \bbl@trace{Macros to switch the text direction}
-\def\bbl@alscripts{,Arabic,Syriac,Thaana,}
+\def\bbl@alscripts{%
+  ,Arabic,Syriac,Thaana,Hanifi Rohingya,Hanifi,Sogdian,}
 \def\bbl@rscripts{% 
-  ,Garay,Todhri,Imperial Aramaic,Avestan,Cypriot,Elymaic,Hatran,Hebrew,%
-  Old Hungarian,Kharoshthi,Lydian,Mandaean,Manichaean,Mende Kikakui,%
-  Meroitic Cursive,Meroitic,Old North Arabian,Nabataean,N'Ko,%
-  Old Turkic,Orkhon,Palmyrene,Inscriptional Pahlavi,Psalter Pahlavi,%
-  Phoenician,Inscriptional Parthian,Hanifi,Samaritan,Old Sogdian,%
-  Old South Arabian,Yezidi,}%
+  Adlam,Avestan,Chorasmian,Cypriot,Elymaic,Garay,%
+  Hatran,Hebrew,Imperial Aramaic,Inscriptional Pahlavi,%
+  Inscriptional Parthian,Kharoshthi,Lydian,Mandaic,Manichaean,%
+  Mende Kikakui,Meroitic Cursive,Meroitic Hieroglyphs,Nabataean,%
+  Nko,Old Hungarian,Old North Arabian,Old Sogdian,%
+  Old South Arabian,Old Turkic,Old Uyghur,Palmyrene,Phoenician,%
+  Psalter Pahlavi,Samaritan,Yezidi,Mandaean,%
+  Meroitic,N'Ko,Orkhon,Todhri}
 \def\bbl@provide@dirs#1{%
   \bbl@xin@{\csname bbl@sname@#1\endcsname}{\bbl@alscripts\bbl@rscripts}%
   \ifin@
@@ -15873,6 +15879,8 @@ end
       tex.sprint('0')
     elseif tex.#1dir == 'TRT' then
       tex.sprint('1')
+    else
+      tex.sprint('0')
     end}}
 \def\bbl@setluadir#1#2#3{% 1=text/par.. 2=\textdir.. 3=0 lr/1 rl
   \ifcase#3\relax
@@ -17233,9 +17241,15 @@ Babel.ranges = {
  {0xFB1D, 0xFB4F, 'r'},
  {0xFB50, 0xFDFF, 'al'},
  {0xFE70, 0xFEFF, 'al'},
- {0x10800, 0x10C4F, 'r'},
- {0x1E800, 0x1E8DF, 'r'},
- {0x1E900, 0x1E95F, 'r'},
+ {0x10800, 0x10CFF, 'r'},
+ {0x10D00, 0x10D3F, 'al'},
+ {0x10D40, 0x10EBF, 'r'}, 
+ {0x10EC0, 0x10EFF, 'al'},
+ {0x10F00, 0x10F2F, 'r'},
+ {0x10F30, 0x10F6F, 'al'},
+ {0x10F70, 0x10FFF, 'r'}, 
+ {0x1E800, 0x1E95F, 'r'},
+ {0x1EE00, 0x1EEFF, 'al'},
  {0x1F300, 0x1F9FF, 'on'}
 }
 
@@ -22002,114 +22016,6 @@ Babel.characters = {
  [0x10B3D]={d='on'},
  [0x10B3E]={d='on'},
  [0x10B3F]={d='on'},
- [0x10C80]={d='r'},
- [0x10C81]={d='r'},
- [0x10C82]={d='r'},
- [0x10C83]={d='r'},
- [0x10C84]={d='r'},
- [0x10C85]={d='r'},
- [0x10C86]={d='r'},
- [0x10C87]={d='r'},
- [0x10C88]={d='r'},
- [0x10C89]={d='r'},
- [0x10C8A]={d='r'},
- [0x10C8B]={d='r'},
- [0x10C8C]={d='r'},
- [0x10C8D]={d='r'},
- [0x10C8E]={d='r'},
- [0x10C8F]={d='r'},
- [0x10C90]={d='r'},
- [0x10C91]={d='r'},
- [0x10C92]={d='r'},
- [0x10C93]={d='r'},
- [0x10C94]={d='r'},
- [0x10C95]={d='r'},
- [0x10C96]={d='r'},
- [0x10C97]={d='r'},
- [0x10C98]={d='r'},
- [0x10C99]={d='r'},
- [0x10C9A]={d='r'},
- [0x10C9B]={d='r'},
- [0x10C9C]={d='r'},
- [0x10C9D]={d='r'},
- [0x10C9E]={d='r'},
- [0x10C9F]={d='r'},
- [0x10CA0]={d='r'},
- [0x10CA1]={d='r'},
- [0x10CA2]={d='r'},
- [0x10CA3]={d='r'},
- [0x10CA4]={d='r'},
- [0x10CA5]={d='r'},
- [0x10CA6]={d='r'},
- [0x10CA7]={d='r'},
- [0x10CA8]={d='r'},
- [0x10CA9]={d='r'},
- [0x10CAA]={d='r'},
- [0x10CAB]={d='r'},
- [0x10CAC]={d='r'},
- [0x10CAD]={d='r'},
- [0x10CAE]={d='r'},
- [0x10CAF]={d='r'},
- [0x10CB0]={d='r'},
- [0x10CB1]={d='r'},
- [0x10CB2]={d='r'},
- [0x10CC0]={d='r'},
- [0x10CC1]={d='r'},
- [0x10CC2]={d='r'},
- [0x10CC3]={d='r'},
- [0x10CC4]={d='r'},
- [0x10CC5]={d='r'},
- [0x10CC6]={d='r'},
- [0x10CC7]={d='r'},
- [0x10CC8]={d='r'},
- [0x10CC9]={d='r'},
- [0x10CCA]={d='r'},
- [0x10CCB]={d='r'},
- [0x10CCC]={d='r'},
- [0x10CCD]={d='r'},
- [0x10CCE]={d='r'},
- [0x10CCF]={d='r'},
- [0x10CD0]={d='r'},
- [0x10CD1]={d='r'},
- [0x10CD2]={d='r'},
- [0x10CD3]={d='r'},
- [0x10CD4]={d='r'},
- [0x10CD5]={d='r'},
- [0x10CD6]={d='r'},
- [0x10CD7]={d='r'},
- [0x10CD8]={d='r'},
- [0x10CD9]={d='r'},
- [0x10CDA]={d='r'},
- [0x10CDB]={d='r'},
- [0x10CDC]={d='r'},
- [0x10CDD]={d='r'},
- [0x10CDE]={d='r'},
- [0x10CDF]={d='r'},
- [0x10CE0]={d='r'},
- [0x10CE1]={d='r'},
- [0x10CE2]={d='r'},
- [0x10CE3]={d='r'},
- [0x10CE4]={d='r'},
- [0x10CE5]={d='r'},
- [0x10CE6]={d='r'},
- [0x10CE7]={d='r'},
- [0x10CE8]={d='r'},
- [0x10CE9]={d='r'},
- [0x10CEA]={d='r'},
- [0x10CEB]={d='r'},
- [0x10CEC]={d='r'},
- [0x10CED]={d='r'},
- [0x10CEE]={d='r'},
- [0x10CEF]={d='r'},
- [0x10CF0]={d='r'},
- [0x10CF1]={d='r'},
- [0x10CF2]={d='r'},
- [0x10CFA]={d='r'},
- [0x10CFB]={d='r'},
- [0x10CFC]={d='r'},
- [0x10CFD]={d='r'},
- [0x10CFE]={d='r'},
- [0x10CFF]={d='r'},
  [0x10E60]={d='an'},
  [0x10E61]={d='an'},
  [0x10E62]={d='an'},
@@ -22816,147 +22722,6 @@ Babel.characters = {
  [0x1E948]={d='nsm'},
  [0x1E949]={d='nsm'},
  [0x1E94A]={d='nsm'},
- [0x1EE00]={d='al'},
- [0x1EE01]={d='al'},
- [0x1EE02]={d='al'},
- [0x1EE03]={d='al'},
- [0x1EE05]={d='al'},
- [0x1EE06]={d='al'},
- [0x1EE07]={d='al'},
- [0x1EE08]={d='al'},
- [0x1EE09]={d='al'},
- [0x1EE0A]={d='al'},
- [0x1EE0B]={d='al'},
- [0x1EE0C]={d='al'},
- [0x1EE0D]={d='al'},
- [0x1EE0E]={d='al'},
- [0x1EE0F]={d='al'},
- [0x1EE10]={d='al'},
- [0x1EE11]={d='al'},
- [0x1EE12]={d='al'},
- [0x1EE13]={d='al'},
- [0x1EE14]={d='al'},
- [0x1EE15]={d='al'},
- [0x1EE16]={d='al'},
- [0x1EE17]={d='al'},
- [0x1EE18]={d='al'},
- [0x1EE19]={d='al'},
- [0x1EE1A]={d='al'},
- [0x1EE1B]={d='al'},
- [0x1EE1C]={d='al'},
- [0x1EE1D]={d='al'},
- [0x1EE1E]={d='al'},
- [0x1EE1F]={d='al'},
- [0x1EE21]={d='al'},
- [0x1EE22]={d='al'},
- [0x1EE24]={d='al'},
- [0x1EE27]={d='al'},
- [0x1EE29]={d='al'},
- [0x1EE2A]={d='al'},
- [0x1EE2B]={d='al'},
- [0x1EE2C]={d='al'},
- [0x1EE2D]={d='al'},
- [0x1EE2E]={d='al'},
- [0x1EE2F]={d='al'},
- [0x1EE30]={d='al'},
- [0x1EE31]={d='al'},
- [0x1EE32]={d='al'},
- [0x1EE34]={d='al'},
- [0x1EE35]={d='al'},
- [0x1EE36]={d='al'},
- [0x1EE37]={d='al'},
- [0x1EE39]={d='al'},
- [0x1EE3B]={d='al'},
- [0x1EE42]={d='al'},
- [0x1EE47]={d='al'},
- [0x1EE49]={d='al'},
- [0x1EE4B]={d='al'},
- [0x1EE4D]={d='al'},
- [0x1EE4E]={d='al'},
- [0x1EE4F]={d='al'},
- [0x1EE51]={d='al'},
- [0x1EE52]={d='al'},
- [0x1EE54]={d='al'},
- [0x1EE57]={d='al'},
- [0x1EE59]={d='al'},
- [0x1EE5B]={d='al'},
- [0x1EE5D]={d='al'},
- [0x1EE5F]={d='al'},
- [0x1EE61]={d='al'},
- [0x1EE62]={d='al'},
- [0x1EE64]={d='al'},
- [0x1EE67]={d='al'},
- [0x1EE68]={d='al'},
- [0x1EE69]={d='al'},
- [0x1EE6A]={d='al'},
- [0x1EE6C]={d='al'},
- [0x1EE6D]={d='al'},
- [0x1EE6E]={d='al'},
- [0x1EE6F]={d='al'},
- [0x1EE70]={d='al'},
- [0x1EE71]={d='al'},
- [0x1EE72]={d='al'},
- [0x1EE74]={d='al'},
- [0x1EE75]={d='al'},
- [0x1EE76]={d='al'},
- [0x1EE77]={d='al'},
- [0x1EE79]={d='al'},
- [0x1EE7A]={d='al'},
- [0x1EE7B]={d='al'},
- [0x1EE7C]={d='al'},
- [0x1EE7E]={d='al'},
- [0x1EE80]={d='al'},
- [0x1EE81]={d='al'},
- [0x1EE82]={d='al'},
- [0x1EE83]={d='al'},
- [0x1EE84]={d='al'},
- [0x1EE85]={d='al'},
- [0x1EE86]={d='al'},
- [0x1EE87]={d='al'},
- [0x1EE88]={d='al'},
- [0x1EE89]={d='al'},
- [0x1EE8B]={d='al'},
- [0x1EE8C]={d='al'},
- [0x1EE8D]={d='al'},
- [0x1EE8E]={d='al'},
- [0x1EE8F]={d='al'},
- [0x1EE90]={d='al'},
- [0x1EE91]={d='al'},
- [0x1EE92]={d='al'},
- [0x1EE93]={d='al'},
- [0x1EE94]={d='al'},
- [0x1EE95]={d='al'},
- [0x1EE96]={d='al'},
- [0x1EE97]={d='al'},
- [0x1EE98]={d='al'},
- [0x1EE99]={d='al'},
- [0x1EE9A]={d='al'},
- [0x1EE9B]={d='al'},
- [0x1EEA1]={d='al'},
- [0x1EEA2]={d='al'},
- [0x1EEA3]={d='al'},
- [0x1EEA5]={d='al'},
- [0x1EEA6]={d='al'},
- [0x1EEA7]={d='al'},
- [0x1EEA8]={d='al'},
- [0x1EEA9]={d='al'},
- [0x1EEAB]={d='al'},
- [0x1EEAC]={d='al'},
- [0x1EEAD]={d='al'},
- [0x1EEAE]={d='al'},
- [0x1EEAF]={d='al'},
- [0x1EEB0]={d='al'},
- [0x1EEB1]={d='al'},
- [0x1EEB2]={d='al'},
- [0x1EEB3]={d='al'},
- [0x1EEB4]={d='al'},
- [0x1EEB5]={d='al'},
- [0x1EEB6]={d='al'},
- [0x1EEB7]={d='al'},
- [0x1EEB8]={d='al'},
- [0x1EEB9]={d='al'},
- [0x1EEBA]={d='al'},
- [0x1EEBB]={d='al'},
  [0x1EEF0]={d='on'},
  [0x1EEF1]={d='on'},
  [0x1F000]={d='on'},
