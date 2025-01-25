@@ -23,7 +23,7 @@ The list of RTL scripts has been updated:
   Turkic, Old Uyghur, Palmyrene, Phoenician, Psalter Pahlavi,
   Samaritan, Yezidi, Mandaean, Meroitic, N'Ko, Orkhon, Todhri.
 
-Note some scripts has duplicated names, because sources don’t agree.
+Note some scripts have duplicated names, because sources don’t agree.
 This won’t hurt.
 
 ## Locales
