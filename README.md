@@ -1,6 +1,6 @@
-## Babel 25.1.75575
+## Babel 25.2
 
-(dev)
+2025-01-25
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,13 +59,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
-25.2   (dev)
-       * Fixes
-       * Old Uighur, Algerian Arabic
-       
-25.1   2025-01-01
-       * Fix: Wrong \localeid with lazy loading in some cases.
-       * Fix: Direction nodes misplaced (between a penalty and a glue).
+25.2   2025-01-25
+       * Fixes in Welsh and \BCPdata.
+       * Locales: Old Uighur, Algerian Arabic.
 ```
 
 ### Previous changes
