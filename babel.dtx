@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/01/25 v25.2
+  [2025/01/26 v25.2.75770
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -113,12 +113,12 @@
        \ifnum\bbltempa>2 \ifnum\bbltempb>34
          \href{https://latex3.github.io/babel/news/%
                whats-new-in-babel-\bbltempa.\bbltempb.html}%
-              {\raisebox{.15ex}{$\oplus$}}%
+              {\scriptsize ※}%
        \fi\fi
        \ifnum\bbltempa>23
          \href{https://latex3.github.io/babel/news/%
                whats-new-in-babel-\bbltempa.\bbltempb.html}%
-              {\raisebox{.15ex}{$\oplus$}}%
+              {\scriptsize ※}%
        \fi}}}\enspace\ignorespaces}
 \ExplSyntaxOff
 \definecolor{thered}{rgb}{0.65,0.04,0.07}
@@ -340,7 +340,7 @@ of loading a language, which is usually all you need.
 \item[\sffamily\color{messages}What if I’m interested only in the
 latest changes?] Changes and new features with relation to version 3.8
 are highlighted with \New{X.XX}\hspace{-.5em}
-(\raisebox{.15ex}{$\oplus$} is a link to the \babel{} site), and there
+({\scriptsize ※} is a link to the \babel{} site), and there
 are some notes for the latest versions in
 \href{https://latex3.github.io/babel/}{the \babel{} site}. The most
 recent features can still be unstable. Remember version 24.1 follows
@@ -1045,8 +1045,8 @@ Following the current common practice (for example, the Unicode CLDR),
 all locales are organized in a flat structure. This eases their
 identification and customization.
 
-Many locale are quite usable, provided captions and dates are
-not required (which is a very frequent case, particularly in ancient
+Many locale are quite usable, provided captions and dates are not
+required (which is a very frequent case, particularly in ancient
 languages). So, they are included in the default \babel{} distribution.
 This can serve to encourage contributions, too. A warning will remember
 they are ‘bare minimum locales’. They are set in
@@ -1058,7 +1058,8 @@ they are ‘bare minimum locales’. They are set in
 \makeatletter
 \def\tag#1#2#3{\par
   \hspace{-2em}\textcolor{thered}{\texttt{#1}}#2\enspace
-  \mbox{\footnotesize(#3)}}
+  \mbox{\footnotesize(#3)}\enspace
+  \href{https://latex3.github.io/babel/guides/locale-#1.html}{\scriptsize ※}}
 \def\subtag#1#2#3{\par
   \hspace{-1em}\texttt{#1}#2\enspace
   \mbox{\footnotesize(#3)}}
@@ -1067,7 +1068,8 @@ they are ‘bare minimum locales’. They are set in
   \mbox{\footnotesize(#3)}}
 \def\tagmin#1#2#3{\par
   \hspace{-2em}\textcolor[gray]{.4}{\texttt{#1}}#2\enspace
-  \mbox{\footnotesize(#3)}}
+  \mbox{\footnotesize(#3)}\enspace
+  \href{https://latex3.github.io/babel/guides/locale-#1.html}{\scriptsize ※}}
 \def\subtagmin#1#2#3{\par
   \hspace{-1em}\textcolor[gray]{.4}{\texttt{#1}}#2\enspace
   \mbox{\footnotesize(#3)}}
@@ -1084,7 +1086,8 @@ highlighted), prefer the full forms.\\
 Bare minimum locales are set in \textcolor[gray]{.4}{gray}.\\
 Discouraged and deprecated names are not included.\\
 \hascapu{} means Unicode captions; \hascapl{} means LICR captions.\\
-There are some notes in a few locales.
+There are some notes in a few locales.\\
+The reference mark ({\scriptsize ※}) is a link to the \babel{} site.
 
 \bigskip\hrule\nobreak
 
@@ -1225,10 +1228,12 @@ Egypt, with tag \texttt{ar-EG}.}
 \tag{english}{\hascapu\hascapl}{en}
 \subtagalt{american}{\hascapu\hascapl}{en-US}
 \subtag{americanenglish}{\hascapu\hascapl}{en-US}
+\subtag{usenglish}{\hascapu\hascapl}{en-US}
 \subtagalt{australian}{\hascapu\hascapl}{en-AU}
 \subtag{australianenglish}{\hascapu\hascapl}{en-AU}
 \subtagalt{british}{\hascapu\hascapl}{en-GB}
 \subtag{britishenglish}{\hascapu\hascapl}{en-GB}
+\subtag{ukenglish}{\hascapu\hascapl}{en-GB}
 \subtagalt{canadian}{\hascapu\hascapl}{en-CA}
 \subtag{canadianenglish}{\hascapu\hascapl}{en-CA}
 \subtag{english-australia}{\hascapu\hascapl}{en-AU}
@@ -1238,6 +1243,7 @@ Egypt, with tag \texttt{ar-EG}.}
 \subtag{english-unitedkingdom}{\hascapu\hascapl}{en-GB}
 \subtag{english-gb}{\hascapu\hascapl}{en-GB}
 \subtag{english-newzealand}{\hascapu\hascapl}{en-NZ}
+\subtag{newzealand}{\hascapu\hascapl}{en-NZ}
 \subtag{english-unitedstates}{\hascapu\hascapl}{en-US}
 \subtag{english-nz}{\hascapu\hascapl}{en-NZ}
 \subtag{english-us}{\hascapu\hascapl}{en-US}
@@ -1297,7 +1303,8 @@ with tag \texttt{gsw} is a different language.}
 \tag{hebrew}{\hascapu\hascapl}{he}
 \tag{hindi}{\hascapu}{hi}
 \tag{hmongnjua}{}{hnj}
-\tag{hungarian}{\hascapu\hascapl\hascapl\hascapl}{hu}
+\tag{hungarian}{\hascapu\hascapl}{hu}
+\subtag{magyar}{\hascapu\hascapl}{hu}
 \tag{icelandic}{\hascapu\hascapl}{is}
 \tag{igbo}{}{ig}
 \tag{inarisami}{}{smn}
@@ -1362,7 +1369,6 @@ with tag \texttt{gsw} is a different language.}
 \tag{luyia}{}{luy}
 \tag{macedonian}{\hascapu\hascapl}{mk}
 \tag{machame}{}{jmc}
-\tag{magyar}{\hascapu\hascapl\hascapl\hascapl}{hu}
 \tag{maithili}{}{mai}
 \tagmin{makasar}{}{mak}
 \subtagmin{makasar-bugi}{}{mak-Bugi}
@@ -1395,7 +1401,6 @@ with tag \texttt{gsw} is a different language.}
 \tagmin{navajo}{}{nv}
 \tag{nepali}{}{ne}
 \tagmin{newari}{}{new}
-\tag{newzealand}{\hascapu\hascapl}{en-NZ}
 % \tag{ngerman}{\hascapu\hascapl}{de}
 \tag{ngiemboon}{}{nnh}
 \tag{ngomba}{}{jgo}
@@ -1417,7 +1422,6 @@ with tag \texttt{gsw} is a different language.}
 \note{In the CLDR, \texttt{norwegianbokmal} (nb) just inherites from
 \texttt{norwegian}, so use the latter.}
 % \tag{norwegianbokmal}{\hascapu\hascapl}{nb}
-\tag{nswissgerman}{\hascapu\hascapl}{de-CH}
 \tag{nuer}{}{nus}
 \tag{nyanja}{}{ny}
 \tag{nyankole}{}{nyn}
@@ -1570,12 +1574,9 @@ in Switzerland.}
 \tag{turkish}{\hascapu\hascapl}{tr}
 \tag{turkmen}{\hascapu\hascapl}{tk}
 \tag{tyap}{}{kcg}
-\tag{ukenglish}{\hascapu\hascapl}{en-GB}
 \tag{ukrainian}{\hascapu\hascapl}{uk}
 \tag{uppersorbian}{\hascapu\hascapl}{hsb}
 \tag{urdu}{\hascapu}{ur}
-\tag{usenglish}{\hascapu\hascapl}{en-US}
-\tag{usorbian}{\hascapu\hascapl}{hsb}
 \tag{uyghur}{\hascapu}{ug}
 \tag{uzbek}{}{uz}
 \subtag{uzbek-arabic}{}{uz-Arab}
@@ -6035,8 +6036,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.2>>
-%<<date=2025/01/25>>
+%<<version=25.2.75770>>
+%<<date=2025/01/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
