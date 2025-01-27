@@ -1,4 +1,4 @@
-## Babel 25.2.75770
+## Babel 25.2.75874
 
 (dev)
 
@@ -59,6 +59,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+25.3   (dev)
+       * Fix error raised with amsbook + CJK + onchar.
+
 25.2   2025-01-25
        * Fixes in Welsh and \BCPdata.
        * Locales: Old Uighur, Algerian Arabic.

@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/01/26 v25.2.75770
+  [2025/01/27 v25.2.75874
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6036,8 +6036,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.2.75770>>
-%<<date=2025/01/26>>
+%<<version=25.2.75874>>
+%<<date=2025/01/27>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -14952,7 +14952,7 @@ wouldn’t exist.
 
           local LOCALE = node.get_attribute(item,
                 Babel.attr_locale)
-          local props = Babel.locale_props[LOCALE]
+          local props = Babel.locale_props[LOCALE] or {}
 
           local class = Babel.cjk_class[item.char].c
 
