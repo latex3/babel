@@ -33,19 +33,19 @@ Note the string can be slightly diferent depending on the locale.
 
 ## New locale files
 
-* `javanese` (Latin script)
-* `nigerianpidgin`
-* `maithiri`
-* `wolof`
+* [`javanese`](https://latex3.github.io/babel/guides/locale-javanese.html) (Latin script)
+* [`nigerianpidgin`](https://latex3.github.io/babel/guides/locale-nigerianpidgin.html)
+* [`maithili`](https://latex3.github.io/babel/guides/locale-maithili.html)
+* [`wolof`](https://latex3.github.io/babel/guides/locale-wolof.html)
 
 There are a few new ‘bare minimum locales’ (see [What’s new in babel 3.93](https://latex3.github.io/babel/news/whats-new-in-babel-3.93.html#new-locale-files)):
 
-* `akkadian`
-* `balinese`
-* `ladino` (Hebrew script)
-* `lombard`
-* `navajo`
-* `oldnorse`
+* [`akkadian`](https://latex3.github.io/babel/guides/locale-akkadian.html)
+* [`balinese`](https://latex3.github.io/babel/guides/locale-balinese.html)
+* [`ladino`](https://latex3.github.io/babel/guides/locale-ladino.html) (Hebrew script)
+* [`lombard`](https://latex3.github.io/babel/guides/locale-lombard.html)
+* [`navajo`](https://latex3.github.io/babel/guides/locale-navajo.html)
+* [`oldnorse`](https://latex3.github.io/babel/guides/locale-oldnorse.html)
 
 # Hebrew
 

@@ -53,14 +53,14 @@ distribution. This can serve to encourage contributions, too. A warning
 will remember they are ‘bare minumum locales’. The locales added in
 this release are:
 
-* `southernaltai`
-* `divehi`
-* `ancientegyptian`
-* `egyptianarabic` (aka Masri or Colloquial Egyptian, with tag `arz`,
+* [`southernaltai`](https://latex3.github.io/babel/guides/locale-southernaltai.html)
+* [`divehi`](https://latex3.github.io/babel/guides/locale-divehi.html)
+* [`ancientegyptian`](https://latex3.github.io/babel/guides/locale-ancientegyptian.html)
+* [`egyptianarabic`](https://latex3.github.io/babel/guides/locale-egyptianarabic.html) (aka Masri or Colloquial Egyptian, with tag `arz`,
   not to be confused with the Standard Arabic as spoken in Egypt, with
   tag `ar-EG`).
-* `phoenician` (note it’s an RTL language)
-* `newari`
+* [`phoenician`](https://latex3.github.io/babel/guides/locale-phoenician.html) (note it’s an RTL language)
+* [`newari`](https://latex3.github.io/babel/guides/locale-newari.html)
 
 Note some of these language are not targeted (at least currently) by
 the Unicode CLDR, which is focused on written modern languages. This is

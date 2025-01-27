@@ -9,29 +9,31 @@ in 3.98.
 
 ## New locales
 
-There are two new locales: `chakma` and `lowgerman`.
+There are two new locales:
+[`chakma`](https://latex3.github.io/babel/guides/locale-chakma.html) and
+[`lowgerman`](https://latex3.github.io/babel/guides/locale-lowgerman.html).
 
 In addition, the following bare minimum locales have been added:
 
-* `aramaic`
-* `avestan`
-* `aymara`
-* `bashkir`
-* `bataktoba`
-* `bavarian`
-* `classicalmandaic`
-* `ingush`
-* `komi`
-* `lepcha`
-* `limbu`
-* `lineara`
-* `lu`
-* `makasar`
-* `samaritan`
-* `sinteromani`
-* `tainua`
-* `tangut`
-* `waray`
+* [`aramaic`](https://latex3.github.io/babel/guides/locale-aramaic.html)
+* [`avestan`](https://latex3.github.io/babel/guides/locale-avestan.html)
+* [`aymara`](https://latex3.github.io/babel/guides/locale-aymara.html)
+* [`bashkir`](https://latex3.github.io/babel/guides/locale-bashkir.html)
+* [`bataktoba`](https://latex3.github.io/babel/guides/locale-bataktoba.html)
+* [`bavarian`](https://latex3.github.io/babel/guides/locale-bavarian.html)
+* [`classicalmandaic`](https://latex3.github.io/babel/guides/locale-classicalmandaic.html)
+* [`ingush`](https://latex3.github.io/babel/guides/locale-ingush.html)
+* [`komi`](https://latex3.github.io/babel/guides/locale-komi.html)
+* [`lepcha`](https://latex3.github.io/babel/guides/locale-lepcha.html)
+* [`limbu`](https://latex3.github.io/babel/guides/locale-limbu.html)
+* [`lineara`](https://latex3.github.io/babel/guides/locale-lineara.html)
+* [`lu`](https://latex3.github.io/babel/guides/locale-lu.html)
+* [`makasar`](https://latex3.github.io/babel/guides/locale-makasar.html)
+* [`samaritan`](https://latex3.github.io/babel/guides/locale-samaritan.html)
+* [`sinteromani`](https://latex3.github.io/babel/guides/locale-sinteromani.html)
+* [`tainua`](https://latex3.github.io/babel/guides/locale-tainua.html)
+* [`tangut`](https://latex3.github.io/babel/guides/locale-tangut.html)
+* [`waray`](https://latex3.github.io/babel/guides/locale-waray.html)
 
 Most scripts in the Unicode basic plane are now covered with, at
 least, a minimal locale.
