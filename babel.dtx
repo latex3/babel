@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/01/27 v25.2.75874
+  [2025/01/31 v25.2.76270
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -5206,7 +5206,7 @@ is far from exhaustive):
 \subsection{Indexing}
 
 For multilingual indexing, see \textsf{upmendex} and \textsf{xindex},
-currently preferred to \textit{xindy}.
+currently preferred to \textsf{xindy}.
 
 \section{Tentative and experimental code}
 
@@ -6036,8 +6036,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.2.75874>>
-%<<date=2025/01/27>>
+%<<version=25.2.76270>>
+%<<date=2025/01/31>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9275,9 +9275,9 @@ wouldn’t exist.
 \def\bbl@hyphen{%
   \@ifstar{\bbl@hyphen@i @}{\bbl@hyphen@i\@empty}}
 \def\bbl@hyphen@i#1#2{%
-  \bbl@ifunset{bbl@hy@#1#2\@empty}%
+  \lowercase{\bbl@ifunset{bbl@hy@#1#2\@empty}}%
     {\csname bbl@#1usehyphen\endcsname{\discretionary{#2}{}{#2}}}%
-    {\csname bbl@hy@#1#2\@empty\endcsname}}
+    {\lowercase{\csname bbl@hy@#1#2\@empty\endcsname}}}
 %    \end{macrocode}
 %
 % The following two commands are used to wrap the ``hyphen'' and
@@ -11230,8 +11230,8 @@ wouldn’t exist.
     \edef\bbl@tempe{%
       \bbl@ifunset{bbl@calpr@\languagename}{}{\bbl@cl{calpr}},%
       #1}%
+    \bbl@exp{\lowercase{\edef\\\bbl@tempe{\bbl@tempe}}}%
     \bbl@replace\bbl@tempe{ }{}%
-    \bbl@replace\bbl@tempe{CONVERT}{convert=}% Hackish
     \bbl@replace\bbl@tempe{convert}{convert=}%
     \let\bbl@ld@calendar\@empty
     \let\bbl@ld@variant\@empty
