@@ -1,4 +1,4 @@
-## Babel 25.2.76270
+## Babel 25.2.76332
 
 (dev)
 
@@ -61,9 +61,10 @@ respective authors.
 ```
 25.3   (dev)
        * Fix error raised with amsbook + CJK + onchar.
-       * Fix \babelhyphen not working inside \MakeUppercase.
-       * Manual: direct links to the basic guides in the babel site
-         (https://latex3.github.io/babel/guides/index-locale.html).
+       * Fixes with \MakeUpppercase: \babelhyphen not working and
+         optional arguments in \localedate not recognized.
+       * Manual: direct links to the basic guides in the babel site and
+         to languages on CTAN.
 
 25.2   2025-01-25
        * Fixes in Welsh and \BCPdata.

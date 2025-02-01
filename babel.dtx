@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/01/31 v25.2.76270
+  [2025/02/01 v25.2.76332
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -866,8 +866,15 @@ encoding files, a preprocessor or even a complete framework (like
 \bigskip\hrule\nobreak
 
 \makeatletter
-\def\tag#1#2{\par
-  \hspace{-2em}\textcolor{thered}{\texttt{#1}}#2\enspace}
+\newcommand\tag[3][?]{\par
+  \hspace{-2em}\textcolor{thered}{\texttt{#2}}#3\enspace
+  \ifx\relax#1\relax\else
+    \ifx?#1%
+      \href{https://ctan.org/pkg/babel-#2}{\scriptsize ※}%
+    \else
+      \href{https://ctan.org/pkg/#1}{\scriptsize ※}%
+    \fi
+  \fi}
 \def\subtag#1#2{\par
   \hspace{-1em}\texttt{#1}#2\enspace}
 \def\subtagalt#1#2{\par
@@ -885,15 +892,16 @@ encoding files, a preprocessor or even a complete framework (like
 Recommended names are set in \textcolor{thered}{red}.\\
 Additional languages are set in \textcolor[gray]{.4}{gray}.\\
 Discouraged and deprecated names are not included.\\
-There are some notes in a few languages.
+There are some notes in a few languages.\\
+The reference mark ({\scriptsize ※}) is a link to CTAN.
 
 \bigskip\hrule\nobreak
 
 \begin{multicols}{2}
 \leftskip2em\parindent0pt
-\tag{afrikaans}{}
+\tag[babel-dutch]{afrikaans}{}
 \tag{albanian}{}
-\tag{arabic}{}
+\tag[arabi]{arabic}{}
 \note{Requires \textsf{arabi}.}
 \tag{azerbaijani}{}
 \tag{basque}{}
@@ -917,12 +925,12 @@ There are some notes in a few languages.
 \tag{esperanto}{}
 \tag{estonian}{}
 \tagmin{ethiop}{} %%%%%%
-\tag{farsi}{}
+\tag[arabi]{farsi}{}
 \note{Requires \textsf{arabi}.}
 \tag{finnish}{}
 \tag{french}{}
 \subtagalt{acadian}{}
-\tag{friulian}{}
+\tag[babel-friulan]{friulian}{}
 \tag{galician}{}
 \tag{georgian}{}
 \tag{german}{}
@@ -936,7 +944,7 @@ the names in the block \textsf{ngerman}.}
 \subtagmin{ibycus}{}
 \subtagmin{bgreek}{}
 \tag{hebrew}{}
-\tag{hindi}{}
+\tag[devanagari]{hindi}{}
 \note{Requires \textsf{velthuis}.}
 \tag{hungarian}{}
 \subtag{magyar}{}
@@ -953,36 +961,36 @@ the names in the block \textsf{ngerman}.}
 % \subtagalt{ecclesiasticlatin}{}
 \tag{latvian}{}
 \tag{lithuanian}{}
-\tag{lowersorbian}{}
+\tag[babel-sorbian]{lowersorbian}{}
 \tag{macedonian}{}
 \tag{malay}{}
-\tag{mongolian}{}
-\tag{ngerman}{}
+\tag[mongolian-babel]{mongolian}{}
+\tag[babel-german]{ngerman}{}
 \note{This block refers to the new ortography.}
 \subtagalt{naustrian}{}
 \subtagalt{nswissgerman}{}
 \note{Swiss High German}
-\tag{northernsami}{}
-\tag{norwegian}{}
+\tag[babel-samin]{northernsami}{}
+\tag[babel-norsk]{norwegian}{}
 \subtag{norsk}{}
-\tag{nynorsk}{}
+\tag[babel-norsk]{nynorsk}{}
 \tag{occitan}{}
 \tag{piedmontese}{}
 \tagmin{pinyin}{}
 \tag{polish}{}
-\tag{portuguese}{}
+\tag[babel-portuges]{portuguese}{}
 \subtagalt{brazilian}{}
 \tag{romanian}{}
 \tag{romansh}{}
 \tag{russian}{}
-\tag{scottishgaelic}{}
+\tag[babel-scottish]{scottishgaelic}{}
 \subtag{scottish}{}
 \tag{serbianc}{}
 \note{Cyrillic script}
 \subtagalt{serbian}{}
 \note{Latin script}
 \tag{slovak}{}
-\tag{slovene}{}
+\tag[]{slovene}{}
 \tag{slovenian}{}  %%%%%% <- and ini
 \tag{spanglish}{}
 \tag{spanish}{}
@@ -990,9 +998,9 @@ the names in the block \textsf{ngerman}.}
 \tag{thai}{}
 \subtagmin{thaicjk}{}
 \tag{turkish}{}
-\tag{turkmen}{}
+\tag[turkmen]{turkmen}{}
 \tag{ukrainian}{}
-\tag{uppersorbian}{}
+\tag[sorbian]{uppersorbian}{}
 \tag{vietnamese}{}
 \tag{welsh}{}
 \end{multicols}
@@ -6036,8 +6044,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.2.76270>>
-%<<date=2025/01/31>>
+%<<version=25.2.76332>>
+%<<date=2025/02/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
