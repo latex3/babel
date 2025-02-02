@@ -88,7 +88,8 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [25.2](news/whats-new-in-babel-25.2.html) | Minor fixes and updates. Old Uyghur, Algerian Arabic.
+| [25.3](news/whats-new-in-babel-25.3.html) | Fixes. 6 new locales. Links in manual. |
+| [25.2](news/whats-new-in-babel-25.2.html) | Minor fixes and updates. Old Uyghur, Algerian Arabic. |
 | [25.1](news/whats-new-in-babel-25.1.html) | Mainly fixes. |
 | [24.15](news/whats-new-in-babel-24.15.html) | Fixes. New locale for Interslavic. |
 | [24.14](news/whats-new-in-babel-24.14.html) | Harfbuzz is the default renderer in most scripts. |
