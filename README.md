@@ -1,6 +1,6 @@
-## Babel 25.2.76332
+## Babel 25.3
 
-(dev)
+2025-02-02
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.2 are described in:
+Changes in version 25.3 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.2.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.3.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,16 +59,13 @@ respective authors.
 
 ### Summary of latest changes
 ```
-25.3   (dev)
+25.3   2025-02-02
        * Fix error raised with amsbook + CJK + onchar.
        * Fixes with \MakeUpppercase: \babelhyphen not working and
          optional arguments in \localedate not recognized.
        * Manual: direct links to the basic guides in the babel site and
          to languages on CTAN.
-
-25.2   2025-01-25
-       * Fixes in Welsh and \BCPdata.
-       * Locales: Old Uighur, Algerian Arabic.
+       * New locales: Betawi, Kangri, Makhuwa, Osage, Venetian, Zhuang.
 ```
 
 ### Previous changes

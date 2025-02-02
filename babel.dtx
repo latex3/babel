@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/02/01 v25.2.76332
+  [2025/02/02 v25.3
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -1008,21 +1008,6 @@ the names in the block \textsf{ngerman}.}
 \hrule
 \bigskip
 
-% \begin{note}
-%   There are also some deprecated names (a few has been even removed):
-%   \textsf{frenchb} or \textsf{francais}, as well as \textsf{canadien}
-%   (\textsf{french}), \textsf{germanb} (\textsf{german}),
-%   \textsf{bahasa}, \textsf{indon} or \textsf{bahasai}
-%   (\textsf{indonesian}), \textsf{lsorbian} (\textsf{lowersorbian}),
-%   \textsf{bahasam} (\textsf{malay}), \textsf{portuges}
-%   (\textsf{portuguese}), \textsf{brazil} (\textsf{brazilian}),
-%   \textsf{russianb} (\textsf{russian}), \textsf{usorbian}
-%   (\textsf{uppersorbian}), \textsf{vietnam} (\textsf{vietnamese}),
-%   \textsf{samin} (\textsf{northernsami}), \textsf{ukraineb}
-%   (\textsf{ukrainian}). Deprecated names come in many cases from the
-%   times when they had to be shortened to 8 characters. 
-% \end{note}
-
 \begin{example}
   An example of a language requiring a preprocessor and a separate
   package is \texttt{hindi}. If you have got the
@@ -1168,6 +1153,7 @@ language from \texttt{greek}.}
 \tag{belarusian}{\hascapu\hascapl}{be}
 \tag{bemba}{}{bem}
 \tag{bena}{}{bez}
+\tag{betawi}{}{bew}
 \tag{bhojpuri}{}{bho}
 \tag{blin}{}{byn}
 \tag{bodo}{}{brx}
@@ -1334,6 +1320,7 @@ with tag \texttt{gsw} is a different language.}
 \tag{kalaallisut}{}{kl}
 \tag{kalenjin}{}{kln}
 \tag{kamba}{}{kam}
+\tag{kangri}{}{xnr}
 \tag{kannada}{\hascapu}{kn}
 \tag{kashmiri}{}{ks}
 \tag{kazakh}{}{kk}
@@ -1381,6 +1368,7 @@ with tag \texttt{gsw} is a different language.}
 \tagmin{makasar}{}{mak}
 \subtagmin{makasar-bugi}{}{mak-Bugi}
 \subtagmin{makasar-buginese}{}{mak-Bugi}
+\tag{makhuwa}{}{vmw}
 \tag{makhuwameetto}{}{mgh}
 \tag{makonde}{}{kde}
 \tag{malagasy}{}{mg}
@@ -1441,6 +1429,7 @@ with tag \texttt{gsw} is a different language.}
 \tagmin{olduighur}{}{oui}
 % \tag{oriya}{\hascapu}{or}
 \tag{oromo}{}{om}
+\tag{osage}{}{osa}
 \tag{ossetic}{}{os}
 \tag{papiamento}{}{pap}
 \tag{pashto}{}{ps}
@@ -1599,6 +1588,7 @@ in Switzerland.}
 \subtag{vai-vai}{}{vai-Vaii}
 \subtag{vai-vaii}{}{vai-Vaii}
 \tag{venda}{}{ve}
+\tag{venetian}{}{vec}
 \tag{vietnamese}{\hascapu\hascapl}{vi}
 \tag{volapuk}{}{vo}
 \tag{vunjo}{}{vun}
@@ -1613,6 +1603,7 @@ in Switzerland.}
 \tag{yiddish}{}{yi}
 \tag{yoruba}{}{yo}
 \tag{zarma}{}{dje}
+\tag{zhuang}{}{za}
 \tag{zulu}{}{zu}
 \end{multicols}
 \endgroup
@@ -1755,7 +1746,7 @@ replace the red line above with, say:
 \end{example}
 
 \begin{example}
-Thanks to this high level interface to |fontenc|, the roman fonts for
+Thanks to this high level interface to |fontspec|, the roman fonts for
 all secondary languages in the Cyrillic and Greek scripts can be set
 at once with the following single line:
 \setengine{luatex/xetex}
@@ -6044,8 +6035,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.2.76332>>
-%<<date=2025/02/01>>
+%<<version=25.3>>
+%<<date=2025/02/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
