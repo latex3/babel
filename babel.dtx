@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/02/02 v25.3
+  [2025/02/14 v25.4
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -370,6 +370,12 @@ language?] See section \ref{contribute} for contributing a language.
 \item[\sffamily\color{messages}Where is the code?]
   Run |lualatex --jobname=babel-code \let\babelcode\relax\input{babel.dtx}|.
 \end{description}
+
+\begin{note}
+  Now that the recommend engine for \LaTeX\ is \luatex, you can read
+  \href{https://latex3.github.io/babel/guides/migrating-pdftex-luatex.html}{Migrating
+  from pdfTeX to LuaTeX}.
+\end{note}
 
 \section{The basic user interface}\label{U-I}
 
@@ -1167,6 +1173,7 @@ language from \texttt{greek}.}
 \tag{buriat}{\hascapu\hascapl}{bua}
 \tag{burmese}{}{my}
 \tag{cantonese}{}{yue}
+\tagmin{carian}{}{xcr}
 \tag{catalan}{\hascapu\hascapl}{ca}
 \tag{cebuano}{}{ceb}
 \tag{centralatlastamazight}{}{tzm}
@@ -1244,6 +1251,7 @@ Egypt, with tag \texttt{ar-EG}.}
 \tag{erzya}{}{myv}
 \tag{esperanto}{\hascapu\hascapl}{eo}
 \tag{estonian}{\hascapu\hascapl}{et}
+\tagmin{etruscan}{}{ett}
 \tag{ewe}{}{ee}
 \tag{ewondo}{}{ewo}
 \tag{faroese}{}{fo}
@@ -1358,6 +1366,8 @@ with tag \texttt{gsw} is a different language.}
 \tag{lowgerman}{}{nds}
 % \tag{lsorbian}{\hascapu\hascapl}{dsb}
 \tagmin{lu}{}{khb}
+\tagmin{lycian}{}{xlc}
+\tagmin{lydian}{}{xld}
 \tag{lubakatanga}{}{lu}
 \tag{luo}{}{luo}
 \tag{luxembourgish}{\hascapu\hascapl}{lb}
@@ -1425,7 +1435,10 @@ with tag \texttt{gsw} is a different language.}
 \subtag{norwegiannynorsk}{\hascapu\hascapl}{nn}
 \tag{occitan}{\hascapu\hascapl}{oc}
 \tag{odia}{\hascapu}{or}
+\note{Preferred to \texttt{oriya}.}
+\tagmin{oldirish}{}{sga}
 \tagmin{oldnorse}{}{non}
+\tagmin{oldpersian}{}{peo}
 \tagmin{olduighur}{}{oui}
 % \tag{oriya}{\hascapu}{or}
 \tag{oromo}{}{om}
@@ -1463,6 +1476,7 @@ with tag \texttt{gsw} is a different language.}
 \tag{rundi}{}{rn}
 \tag{russian}{\hascapu\hascapl}{ru}
 \tag{rwa}{}{rwk}
+\tagmin{sabaean}{}{xsa}
 \tag{saho}{}{ssy}
 \tag{sakha}{}{sah}
 \tagmin{samaritan}{}{smp}
@@ -1571,6 +1585,7 @@ in Switzerland.}
 \tag{turkish}{\hascapu\hascapl}{tr}
 \tag{turkmen}{\hascapu\hascapl}{tk}
 \tag{tyap}{}{kcg}
+\tagmin{ugaritic}{}{uga}
 \tag{ukrainian}{\hascapu\hascapl}{uk}
 \tag{uppersorbian}{\hascapu\hascapl}{hsb}
 \tag{urdu}{\hascapu}{ur}
@@ -6035,8 +6050,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.3>>
-%<<date=2025/02/02>>
+%<<version=25.4>>
+%<<date=2025/02/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10896,6 +10911,14 @@ wouldn’t exist.
 % many other sources do (as a \textit{private use extension}). For
 % consistency with other single-letter subtags or ‘singletons’, here
 % is considered an extension, too.
+%
+% The identification section is used internally by \babel\ in the
+% following places [to be completed]: BCP 47 script tag in the Unicode
+% ranges, which is in turn used by |onchar|; the language system is set
+% with the names, and then \textsf{fontspec} maps them to the opentype
+% tags, but if the latter package doesn’t define them, then \babel\
+% does it; |encodings| are used in \pdftex{} to select a font encoding
+% valid (and preloaded) for a language loaded on the fly.
 %
 %    \begin{macrocode}
 \def\bbl@iniwarning#1{%
