@@ -1,7 +1,5 @@
 # Old Persian
 
-(Development.)
-
 <blockquote>
   <p><em>Improve this page! Feel free to draft a pull request <a href="https://github.com/latex3/babel/tree/docs/docs">on GitHub</a>.</em></p>
 </blockquote>
