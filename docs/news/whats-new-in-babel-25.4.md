@@ -21,7 +21,7 @@ Now there are some more:
 * [Sabaean](https://latex3.github.io/babel/guides/locale-sabaean.html)
 * [Ugaritic](https://latex3.github.io/babel/guides/locale-ugaritic.html)
 
-They all are treated as 'bare minimum’ locales’, which means they define
+They all are treated as ‘bare minimum locales’, which means they define
 neither captions not date. But the minimal required to use them in a
 document (OpenType language system, Unicode character ranges) are
 included.

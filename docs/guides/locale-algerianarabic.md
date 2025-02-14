@@ -7,6 +7,9 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 Algerian Arabic language using the Arabic script.
 
+Darija or Lahja Djazairia, with tag `arq`, different
+from Standard Arabic as spoken in Alger, with tag `ar-DZ`.
+
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `algerianarabic` as the main language
