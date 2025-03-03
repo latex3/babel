@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/03/03 v25.4.79373
+  [2025/03/03 v25.4.79384
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6052,7 +6052,7 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.4.79373>>
+%<<version=25.4.79384>>
 %<<date=2025/03/03>>
 %    \end{macrocode}
 %
@@ -13782,11 +13782,12 @@ wouldn’t exist.
   \bbl@exp{%
     \\\newcommand\<#1default>{}% Just define it
     \\\bbl@add@list\\\bbl@font@fams{#1}%
+    \\\NewHook{#1family}%
     \\\DeclareRobustCommand\<#1family>{%
       \\\not@math@alphabet\<#1family>\relax
       % \\\prepare@family@series@update{#1}\<#1default>% TODO. Fails
       \\\fontfamily\<#1default>%
-      \<ifx>\\\UseHooks\\\@undefined\<else>\\\UseHook{#1family}\<fi>%
+      \\\UseHook{#1family}%
       \\\selectfont}%
     \\\DeclareTextFontCommand{\<text#1>}{\<#1family>}}}
 %    \end{macrocode}

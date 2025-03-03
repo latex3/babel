@@ -1,4 +1,4 @@
-## Babel 25.4.79373
+## Babel 25.4.79384
 
 (dev)
 
@@ -61,6 +61,7 @@ respective authors.
 ```
 25.5   (dev)
        * Fix some wrong bidi text in \hbox.
+       * Fix LaTeX hook for newly defined font families.
 
 25.4   2025-02-14
        New locales for ancient languages: Etruscan, Old Persian,
