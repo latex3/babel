@@ -7,6 +7,10 @@
 Now the recommended engine is `luatex`, here are some hints on how to
 migrate a LaTeX document from `pdftex` to `luatex`.
 
+See also the companion guide [Migrating from XeTeX to
+LuaTeX](https://latex3.github.io/babel/guides/migrating-xetex-luatex.html)
+if you are migrating from XeTeX.
+
 ## Input encoding
 
 Documents should be encoded in UTF-8. The package `luainputenc` can
