@@ -1,6 +1,6 @@
-## Babel 25.4
+## Babel 25.4.79373
 
-2025-02-14
+(dev)
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,6 +59,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+25.5   (dev)
+       * Fix some wrong bidi text in \hbox.
+
 25.4   2025-02-14
        New locales for ancient languages: Etruscan, Old Persian,
        Old Irish, Ugaritic, Carian, Lycian, Lydian, Sabaean.

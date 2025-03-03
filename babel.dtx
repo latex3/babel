@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/02/14 v25.4
+  [2025/03/03 v25.4.79373
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -373,8 +373,10 @@ language?] See section \ref{contribute} for contributing a language.
 
 \begin{note}
   Now that the recommend engine for \LaTeX\ is \luatex, you can read
-  \href{https://latex3.github.io/babel/guides/migrating-pdftex-luatex.html}{Migrating
-  from pdfTeX to LuaTeX}.
+  \href{https://latex3.github.io/babel/guides/migrating-pdftex-luatex.html}%
+  {Migrating from pdfTeX to LuaTeX} and
+  \href{https://latex3.github.io/babel/guides/migrating-xetex-luatex.html}%
+  {Migrating from XeTeX to LuaTeX}.
 \end{note}
 
 \section{The basic user interface}\label{U-I}
@@ -6050,8 +6052,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.4>>
-%<<date=2025/02/14>>
+%<<version=25.4.79373>>
+%<<date=2025/03/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11277,6 +11279,11 @@ wouldn’t exist.
       {\@nameuse{bbl@date@\languagename @\bbl@calendar}%
          \bbl@they\bbl@them\bbl@thed}%
   \endgroup}
+\def\bbl@printdate#1{%
+  \@ifnextchar[{\bbl@printdate@i{#1}}{\bbl@printdate@i{#1}[]}}
+\def\bbl@printdate@i#1[#2]#3#4#5{%
+  \bbl@usedategrouptrue
+  \@nameuse{bbl@ensure@#1}{\localedate[#2]{#3}{#4}{#5}}}
 % e.g.: 1=months, 2=wide, 3=1, 4=dummy, 5=value, 6=calendar
 \def\bbl@inidate#1.#2.#3.#4\relax#5#6{% TODO - ignore with 'captions'
   \bbl@trim@def\bbl@tempa{#1.#2}%
@@ -11304,32 +11311,6 @@ wouldn’t exist.
                   {\\\the\year}{\\\the\month}{\\\the\day}}}}%
        \fi}%
       {}}}
-\def\bbl@printdate#1{%
-  \@ifnextchar[{\bbl@printdate@i{#1}}{\bbl@printdate@i{#1}[]}}
-\def\bbl@printdate@i#1[#2]#3#4#5{%
-  \bbl@usedategrouptrue
-  \@nameuse{bbl@ensure@#1}{\localedate[#2]{#3}{#4}{#5}}}
-%    \end{macrocode}
-%
-% \subsection{French spacing (again)}
-% 
-% For the following declarations, see issue \#240. |\nonfrenchspacing|
-% is set by |document| too early, so it’s a hack.
-%
-%    \begin{macrocode}
-\AddToHook{begindocument/before}{%
-  \let\bbl@normalsf\normalsfcodes
-  \let\normalsfcodes\relax}
-\AtBeginDocument{%
-  \ifx\bbl@normalsf\@empty
-    \ifnum\sfcode`\.=\@m
-      \let\normalsfcodes\frenchspacing
-    \else
-      \let\normalsfcodes\nonfrenchspacing
-    \fi
-  \else
-    \let\normalsfcodes\bbl@normalsf
-  \fi}
 %    \end{macrocode}
 %
 % \textbf{Dates} will require some macros for the basic formatting.
@@ -11384,6 +11365,27 @@ wouldn’t exist.
   \bbl@replace@finish@iii\bbl@toreplace}
 \def\bbl@datecntr{\expandafter\bbl@xdatecntr\expandafter}
 \def\bbl@xdatecntr[#1|#2]{\localenumeral{#2}{#1}}
+%    \end{macrocode}
+%
+% \subsection{French spacing (again)}
+% 
+% For the following declarations, see issue \#240. |\nonfrenchspacing|
+% is set by |document| too early, so it’s a hack.
+%
+%    \begin{macrocode}
+\AddToHook{begindocument/before}{%
+  \let\bbl@normalsf\normalsfcodes
+  \let\normalsfcodes\relax}
+\AtBeginDocument{%
+  \ifx\bbl@normalsf\@empty
+    \ifnum\sfcode`\.=\@m
+      \let\normalsfcodes\frenchspacing
+    \else
+      \let\normalsfcodes\nonfrenchspacing
+    \fi
+  \else
+    \let\normalsfcodes\bbl@normalsf
+  \fi}
 %    \end{macrocode}
 %
 % \textbf{Transforms.}
@@ -13907,7 +13909,13 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % Loaded locally, which does its job, but very must be global. The
-% problem is how.
+% problem is how. This actually defines a font predeclared with
+% |\babelfont|, making sure |Script| and |Language| names are defined.
+% If they are not, the corresponding data in the ini file is used. The
+% font is actually set temporarily to get the family name
+% (|\f@family|). There is also a hack because by default some
+% replacements related to the bold series are sometimes assigned to the
+% wrong font (see issue \#92).
 %
 %    \begin{macrocode}
 \def\bbl@fontspec@set#1#2#3#4{% eg \bbl@rmdflt@lang fnt-opt fnt-nme \xxfamily
@@ -14263,8 +14271,6 @@ wouldn’t exist.
 %<*xetex|texxet>
 \providecommand\bbl@provide@intraspace{}
 \bbl@trace{Redefinitions for bidi layout}
-\def\bbl@sspre@caption{%  TODO: Unused!
-  \bbl@exp{\everyhbox{\\\bbl@textdir\bbl@cs{wdir@\bbl@main@language}}}}
 \ifx\bbl@opt@layout\@nnil\else % if layout=.. 
 \def\bbl@startskip{\ifcase\bbl@thepardir\leftskip\else\rightskip\fi}
 \def\bbl@endskip{\ifcase\bbl@thepardir\rightskip\else\leftskip\fi}
@@ -15230,6 +15236,7 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
   local GLYPH = node.id'glyph'
   local KASHIDA = Babel.attr_kashida
   local LOCALE = Babel.attr_locale
+  local first_pass
 
   if line == nil then
     line = {}
@@ -15260,7 +15267,9 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
         end
       end
 
-      % Tatwil
+      % Tatwil. First create a list of nodes marked with kashida. The
+      % rest of nodes can be ignored. The list of used weigths is build
+      % when transforms with the key kashida= are declared.
       if Babel.kashida_wts then
         local k_wt = node.get_attribute(n, KASHIDA)
         if k_wt > 0 then % todo. parameter for multi inserts
@@ -15295,6 +15304,11 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
     end
 
     % == Tatwil ==
+    % Traverse the kashida node list so many times as required, until
+    % the line if filled. The first pass adds a tatweel after each
+    % node with kashida in the line, the second pass adds another one,
+    % and so on. In each pass, add first the kashida with the highest
+    % weight, then with lower weight and so on.
     if #k_list == 0 then goto next_line end
 
     width = node.dimensions(line.head)    % The 'natural' width
@@ -15378,7 +15392,7 @@ end
  ,Greek,Latin,Old Church Slavonic Cyrillic,}
 \ifnum\bbl@bidimode=102 % bidi-r
    \bbl@add\bbl@scr@node@list{Arabic,Hebrew,Syriac}
-\fi 
+\fi
 \def\bbl@set@renderer{%
   \bbl@xin@{\bbl@cl{sname}}{\bbl@scr@node@list}%
   \ifin@
@@ -16092,7 +16106,7 @@ end
             \let\@eqnnum\bbl@eqnum
           \fi
         \fi}
-      % Hack. YA luatex bug?:
+      % Hack for wrong vertical spacing with \[ \]. YA luatex bug?:
       \expandafter\bbl@sreplace\csname] \endcsname{$$}{\eqno\kern.001pt$$}%
     \else % amstex
       \bbl@exp{% Hack to hide maybe undefined conditionals:
@@ -16237,7 +16251,7 @@ end
     % TODO - catch non-valid values
   \fi
   % == mapfont ==
-  % For bidi texts, to switch the font based on direction
+  % For bidi texts, to switch the font based on direction. Old.
   \ifx\bbl@KVP@mapfont\@nnil\else
     \bbl@ifsamestring{\bbl@KVP@mapfont}{direction}{}%
       {\bbl@error{unknown-mapfont}{}{}{}}%
@@ -16260,7 +16274,7 @@ end
     \fi
     \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
   \fi
-  % == Line breaking: CJK quotes ==
+  % == Line breaking: CJK quotes == 
   \ifcase\bbl@engine\or
     \bbl@xin@{/c}{/\bbl@cl{lnbrk}}%
     \ifin@
@@ -23490,25 +23504,23 @@ function Babel.bidi(head, ispar, hdir)
   local has_hyperlink = false
 
   local ATDIR = Babel.attr_dir
-  local attr_d
+  local attr_d, temp
+  local locale_d
 
   local save_outer
-  local temp = node.get_attribute(head, ATDIR)
-  if temp then
-    temp = temp & 0x3
-    save_outer = (temp == 0 and 'l') or
-                 (temp == 1 and 'r') or
-                 (temp == 2 and 'al')
-  elseif ispar then            -- Or error? Shouldn't happen
-    save_outer = ('TRT' == tex.pardir) and 'r' or 'l'
-  else                         -- Or error? Shouldn't happen
-    save_outer = ('TRT' == hdir) and 'r' or 'l'
-  end
+  local locale_d = node.get_attribute(head, ATDIR)
+  if locale_d then
+    locale_d = locale_d & 0x3
+    save_outer = (locale_d == 0 and 'l') or
+                 (locale_d == 1 and 'r') or
+                 (locale_d == 2 and 'al')
+  elseif ispar then       -- Or error? Shouldn't happen
     -- when the callback is called, we are just _after_ the box,
     -- and the textdir is that of the surrounding text
-  -- if not ispar and hdir ~= tex.textdir then 
-  --   save_outer = ('TRT' == hdir) and 'r' or 'l'
-  -- end
+    save_outer = ('TRT' == tex.pardir) and 'r' or 'l'
+  else                    -- Empty box 
+    save_outer = ('TRT' == hdir) and 'r' or 'l'
+  end
   local outer = save_outer
   local last = outer
   -- 'al' is only taken into account in the first, current loop
@@ -23517,15 +23529,18 @@ function Babel.bidi(head, ispar, hdir)
   local fontmap = Babel.fontmap
 
   for item in node.traverse(head) do
-
+    
+    -- Mask: DxxxPPTT (Done, Pardir [0-2], Textdir [0-2])
+    locale_d = node.get_attribute(item, ATDIR)
+    node.set_attribute(item, ATDIR, 0x80)
+    
     -- In what follows, #node is the last (previous) node, because the
     -- current one is not added until we start processing the neutrals.
-
     -- three cases: glyph, dir, otherwise
     if glyph_not_symbol_font(item)
        or (item.id == 7 and item.subtype == 2) then
 
-      if node.get_attribute(item, ATDIR) == 128 then goto nextnode end
+      if locale_d == 0x80 then goto nextnode end
 
       local d_font = nil
       local item_r
@@ -23552,6 +23567,7 @@ function Babel.bidi(head, ispar, hdir)
       d = d or 'l'
 
       -- A short 'pause' in bidi for mapfont
+      -- %%%% TODO. move if fontmap here
       d_font = d_font or d
       d_font = (d_font == 'l' and 0) or
                (d_font == 'nsm' and 0) or
@@ -23567,8 +23583,7 @@ function Babel.bidi(head, ispar, hdir)
         if inmath then
           attr_d = 0
         else
-          attr_d = node.get_attribute(item, ATDIR)
-          attr_d = attr_d & 0x3
+          attr_d = locale_d & 0x3
         end
         if attr_d == 1 then
           outer_first = 'r'
@@ -23596,8 +23611,7 @@ function Babel.bidi(head, ispar, hdir)
 
     elseif item.id == DIR then
       d = nil
-
-      if head ~= item then new_d = true end
+      new_d = true
 
     elseif item.id == node.id'glue' and item.subtype == 13 then
       glue_d = d
@@ -23678,7 +23692,6 @@ function Babel.bidi(head, ispar, hdir)
       table.insert(nodes, {item, d, outer_first})
     end
 
-    node.set_attribute(item, ATDIR, 128)
     outer_first = nil
 
     ::nextnode::
@@ -23864,12 +23877,13 @@ function Babel.bidi(head, ispar, hdir)
 
   return head
 end
--- Make sure anything is marked as 'bidi done' (including nodes inserted
--- after the babel algorithm). 128 = 1000 0000.
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
 function Babel.unset_atdir(head)
   local ATDIR = Babel.attr_dir
   for item in node.traverse(head) do
-    node.set_attribute(item, ATDIR, 128)
+    node.set_attribute(item, ATDIR, 0x80)
   end
   return head
 end
