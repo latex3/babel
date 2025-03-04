@@ -48,6 +48,52 @@ advantageously with
 already some transforms to transliterate a few languages. Native digits
 are already handled by `babel` out of the box.
 
+In some cases, a better option are font features, but there aren’t
+available with `Harfbuzz`. As a reference, here are some basic patterns
+taken from `luaotfload` (lowercase means ‘from’ and uppercase ‘to’;
+note the `ligature` type is, in some sense, ‘reversed’):
+```lua
+fonts.handlers.otf.addfeature {
+    name = "stest",
+    type = "substitution",
+    data = {
+        a = "X",
+        b = "P",
+    }
+}
+fonts.handlers.otf.addfeature {
+    name = "atest",
+    type = "alternate",
+    data = {
+        a = { "X", "Y" },
+        b = { "P", "Q" },
+    }
+}
+fonts.handlers.otf.addfeature {
+    name = "mtest",
+    type = "multiple",
+    data = {
+        a = { "X", "Y" },
+        b = { "P", "Q" },
+    }
+}
+fonts.handlers.otf.addfeature {
+    name = "ltest",
+    type = "ligature",
+    data = {
+        X = { "a", "b" },
+        Y = { "d", "a" },
+    }
+}
+fonts.handlers.otf.addfeature {
+    name = "ktest",
+    type = "kern",
+    data = {
+        a = { b = -500 },
+    }
+}
+```
+
 ## ‘Interchar’ mechanism
 
 It can be replaced with transforms, too.
