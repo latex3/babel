@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/03/03 v25.4.79384
+  [2025/03/04 v25.4.79472
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4504,7 +4504,8 @@ This feature is activated with the first |\babelposthyphenation| or
 \DescribeOther{\disablelocaletransform}{\marg{label}}
 
 \New{3.85} Enables and disables the transform with the given label in
-the current language.
+the current language. Font dependent transforms are always enabled and
+cannot be disabled.
 
 \subsection{Support for \xetex{} interchar}
 \label{interchar}
@@ -6052,8 +6053,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.4.79384>>
-%<<date=2025/03/03>>
+%<<version=25.4.79472>>
+%<<date=2025/03/04>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6298,7 +6299,8 @@ wouldn’t exist.
         \def\bbl@tempc{%     Expanded an executed below as 'uplevel'
            \\\makeatletter % "internal" macros with @ are assumed
            \\\scantokens{%
-             \bbl@tempa\\\@namedef{\bbl@stripslash#1}\bbl@tempb{\bbl@tempe}}%
+             \bbl@tempa\\\@namedef{\bbl@stripslash#1}\bbl@tempb{\bbl@tempe}%
+             \noexpand\noexpand}%
            \catcode64=\the\catcode64\relax}%  Restore @
       \else
         \let\bbl@tempc\@empty  % Not \relax
@@ -11213,7 +11215,7 @@ wouldn’t exist.
     \global\let\bbl@patchchapter\relax
     \gdef\bbl@chfmt{%
       \bbl@ifunset{bbl@\bbl@chaptype fmt@\languagename}%
-        {\@chapapp\space\thechapter}
+        {\@chapapp\space\thechapter}%
         {\@nameuse{bbl@\bbl@chaptype fmt@\languagename}}}
     \bbl@add\appendix{\def\bbl@chaptype{appendix}}% Not harmful, I hope
     \bbl@sreplace\ps@headings{\@chapapp\ \thechapter}{\bbl@chfmt}%
@@ -11232,8 +11234,8 @@ wouldn’t exist.
     \global\let\bbl@patchpart\relax
     \gdef\bbl@partformat{%
       \bbl@ifunset{bbl@partfmt@\languagename}%
-        {\partname\nobreakspace\thepart}
-        {\@nameuse{bbl@partfmt@\languagename}}}
+        {\partname\nobreakspace\thepart}%
+        {\@nameuse{bbl@partfmt@\languagename}}}%
     \bbl@sreplace\@part{\partname\nobreakspace\thepart}{\bbl@partformat}%
     \bbl@toglobal\@part}
 \fi
@@ -15056,8 +15058,7 @@ wouldn’t exist.
       end
     end,
     'Babel.hyphenate')
-  }
-}
+  }}
 \endgroup
 \def\bbl@provide@intraspace{%
   \bbl@ifunset{bbl@intsp@\languagename}{}%
