@@ -1,4 +1,4 @@
-## Babel 25.4.79472
+## Babel 25.4.79675
 
 (dev)
 
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.4 are described in:
+Changes in version 25.5 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.4.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.5.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -60,6 +60,7 @@ respective authors.
 ### Summary of latest changes
 ```
 25.5   (dev)
+       * Dutch: new transform diaeresis.hyphen.
        * Fixes:
          - Some wrong bidi text in \hbox.
          - Extra space with CJK and lazy loading. 

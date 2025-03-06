@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/03/04 v25.4.79472
+  [2025/03/06 v25.4.79675
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -1964,15 +1964,18 @@ hardcode value.
     which may break the vertical spacing in some cases (for example,
     between lists or at the beginning of a table cell). \New{3.64} The
     behavior can be adjusted with
-    |\babeladjust{select.write=<mode>}|, where \m{mode} is |shift|
-    (which shifts the skips down and adds a |\penalty|); |keep| (the
-    default -- with it the |\write| and the skips are kept in the order
-    they are written), and |omit| (which may seem a too drastic
-    solution, because nothing is written, but more often than not this
-    command is applied to more or less shorts texts with no sectioning
-    or similar commands, and therefore no language synchronization is
-    necessary). In a table cell, a |\leavevmode| just before the
-    selector may be enough.
+    |\babeladjust{select.write=<mode>}|, where \m{mode} is:
+   \begin{itemize} 
+    \item |keep|, the default – with it the |\write| and the skips are
+    kept in the order they are written);
+    \item |shift|, which shifts the skips down and adds a |\penalty|;
+    \item |omit|, which may seem a too drastic solution, because
+    nothing is written, but more often than not this command is applied
+    to more or less shorts texts with no sectioning or similar
+    commands, and therefore no language synchronization is necessary.
+    In a table cell, a |\leavevmode| just before the selector may be
+    enough.
+   \end{itemize}
 \end{itemize}
 \end{warning}
 
@@ -4294,6 +4297,9 @@ Spanish}{hyphen.repeat}{Explicit hyphens behave like
 \trans{Czech, Polish, Slovak}{oneletter.nobreak}{Converts a space after
 a non-syllabic preposition or conjunction into a non-breaking space.}
 
+\trans{Dutch}{diaeresis.hyphen}{Removes the diaeresis above a vowel if
+hyphenated just before.}
+
 \trans{Finnish}{prehyphen.nobreak}{Line breaks just after hyphens
 prepended to words are prevented, as in “pakastekaapit ja -arkut”.}
 
@@ -6053,8 +6059,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.4.79472>>
-%<<date=2025/03/04>>
+%<<version=25.4.79675>>
+%<<date=2025/03/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6250,6 +6256,18 @@ wouldn’t exist.
   \fi}
 \def\bbl@foreach#1{\expandafter\bbl@vforeach\expandafter{#1}}
 %    \end{macrocode}
+%
+% Some code should be executed once. The first argument is a flag.
+%
+%    \begin{macrocode}
+\global\let\bbl@done\@empty
+\def\bbl@once#1#2{%
+  \bbl@xin@{,#1,}{,\bbl@done,}%
+  \ifin@\else
+    #2%
+    \xdef\bbl@done{\bbl@done,#1,}%
+  \fi}
+%    \end{macrode}
 %
 % \macro{\bbl@replace}
 %
@@ -8697,7 +8715,11 @@ wouldn’t exist.
 % change in casing to fix it in the same way languages names are fixed.
 %
 %    \begin{macrocode}
-\def\languageshorthands#1{\def\language@group{#1}}
+\def\languageshorthands#1{%
+  \bbl@ifsamestring{none}{#1}{}{%
+    \bbl@once{short-\localename-#1}{%
+      \bbl@info{'\localename' activates '#1' shorthands.\\Reported }}}%
+  \def\language@group{#1}}
 %    \end{macrocode}
 %
 % \macro{\aliasshorthand}
