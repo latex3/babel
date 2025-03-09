@@ -14,7 +14,7 @@ vowel if hyphenated just before.
 The new transform `longs.unifraktur` implements the basic heuristic
 rules for the long s (ſ) from those in Unifraktur Maguntia (which are
 also used in Yannis Fraktur Regular), excluding a large set specific to
-this font. These fonts define them with the help of font contextual
+this font. These fonts define them with the help of contextual
 substitutions, but with this transform you can apply them to fonts
 lacking native long s features.
 
@@ -26,7 +26,28 @@ They are available in all German locales, even if they don’t make much
 sense in some of them. Note the historical usage of the long s extends
 beyond the Fraktur typeface.
 
-(To be extented with examples.)
+An example follows (from Einstein). The font has been picked somewhat
+randomly. It defines no substitutions, although includes some ligatures
+in non-standard positions (‘ck’ in ‘<’, ‘ſt’ in ‘¥’, and so on), which I
+haven’t fixed (it can be done partially with transforms).
+
+```tex
+\documentclass{article}
+
+\usepackage[german]{babel}
+\babelprovide[transforms=longs.unifraktur]{german}
+\babelfont{rm}{Kabinett-Fraktur}
+
+\begin{document}
+
+Das Schönste, was wir erleben können, ist das Geheimnisvolle. Es ist
+das Grundgefühl, das an der Wiege von wahrer Kunst und Wissenschaft
+steht. Wer es nicht kennt und sich nicht wundern, nicht mehr staunen
+kann, der ist sozusagen tot und sein Auge erloschen.
+
+\end{document}
+```
+![](../media/fraktur-einstein.png)
 
 According to Unicode: “Such stylistic distinctions [Fraktur and Gaelic]
 are ignored in the Unicode Standard, which treats them as presentation
@@ -40,12 +61,12 @@ language. A few, however, use a different name. Now, when a
 `\languageshorthands` is found, it prints (only once) to the log file
 something like this:
 ```
-Package babel Info: 'uppersorbian' activates 'usorbian' shortands.
+Package babel Info: 'uppersorbian' activates 'usorbian' shorthands.
 (babel)             Reported  on input line 8.
 ```
 
 ## Fixes
 
-* Some wrong bidi text in \hbox.
+* Some wrong bidi text in `\hbox`.
 * Extra space with pre/postpart and pre/postchapter captions and lazy loading. 
 * LaTeX hook for newly defined font families.
