@@ -40,6 +40,12 @@ first item in the list, the second letter with the second item and so
 on. (This is not strictly true, because the replace list is filled with
 nil’s if shorter.)
 
+With `\babelposthyphenation`, the string `beginning (middle) end.` is
+segmented at spaces, and patterns are matched against the following
+three strings: `be|gin|ning`, `(mid|dle)` and `end.`. Note they may
+contain punctuation marks, and that discretionaries are marked with
+`|`.
+
 ## Replacement list
 
 The items in the replacement list are the following:
