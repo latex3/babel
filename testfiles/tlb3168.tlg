@@ -19,6 +19,8 @@ Package: babel
 <to be read again> 
                    \relax 
 l. ...\setbox0\hbox{english}\showbox0\relax
+Package babel Info: 'polutonikogreek' activates 'greek' shorthands.
+(babel)             Reported  on input line ....
 > \box...=
 \hbox(6.94275+2.49939)x46.09985
 .\LGR/cmr/m/n/10 ^ (ligature >')

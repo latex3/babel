@@ -10,6 +10,8 @@ Package: babel
 Package babel Info: Importing font and identification data for french
 (babel)             from babel-fr.ini. Reported on input line ....
 )
+Package babel Info: 'french' activates 'french' shorthands.
+(babel)             Reported  on input line ....
 > \box...=
 \hbox(7.38097+0.0)x37.99127
 .\OT1/cmr/m/n/12 t

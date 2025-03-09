@@ -7,6 +7,8 @@ Package: fontenc
     Options: T1
 Package: babel
     Options: testl,french
+Package babel Info: 'testl' activates 'testl' shorthands.
+(babel)             Reported  on input line ....
 > \box...=
 \vbox(6.8872+0.0)x345.0
 .\hbox(6.8872+0.0)x345.0, glue set 270.43121fil

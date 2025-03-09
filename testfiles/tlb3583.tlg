@@ -8,6 +8,8 @@ Package: fontenc
     Options: LGR,T1
 Package: babel
     Options: polutonikogreek,english
+Package babel Info: 'polutonikogreek' activates 'greek' shorthands.
+(babel)             Reported  on input line ....
 > \box...=
 \vbox(22.8313+3.33252)x390.0
 .\write1{\babel@aux{polutonikogreek}{}}

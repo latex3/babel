@@ -18,7 +18,7 @@ Package: fontenc
 ..\T1/cmtt/m/n/10 U
 ..\T1/cmtt/m/n/10 }
 ..\glue 3.33333 plus 1.66666 minus 1.11111
-..\setlanguage20 (hyphenmin 2,3)
+..\setlanguage19 (hyphenmin 2,3)
 ..\OT1/cmr/m/n/10 y
 ..\OT1/cmr/m/n/10 i
 ..\OT1/cmr/m/n/10 e
@@ -41,7 +41,7 @@ Package: fontenc
 ..\T1/cmtt/m/n/10 U
 ..\T1/cmtt/m/n/10 }
 ..\glue 3.33333 plus 1.66666 minus 1.11111
-..\setlanguage20 (hyphenmin 2,3)
+..\setlanguage19 (hyphenmin 2,3)
 ..\OT1/cmr/m/n/10 y
 ..\OT1/cmr/m/n/10 i
 ..\OT1/cmr/m/n/10 e
@@ -62,7 +62,7 @@ Package: fontenc
 ..\T1/cmtt/m/n/10 u
 ..\T1/cmtt/m/n/10 }
 ..\glue 3.33333 plus 1.66666 minus 1.11111
-..\setlanguage20 (hyphenmin 2,3)
+..\setlanguage19 (hyphenmin 2,3)
 ..\OT1/cmr/m/n/10 y
 ..\OT1/cmr/m/n/10 i
 ..\OT1/cmr/m/n/10 e
@@ -84,7 +84,7 @@ Package: fontenc
 ..\T1/cmtt/m/n/10 u
 ..\T1/cmtt/m/n/10 }
 ..\glue 3.33333 plus 1.66666 minus 1.11111
-..\setlanguage20 (hyphenmin 2,3)
+..\setlanguage19 (hyphenmin 2,3)
 ..\OT1/cmr/m/n/10 y
 ..\OT1/cmr/m/n/10 i
 ..\OT1/cmr/m/n/10 e
@@ -109,7 +109,7 @@ l. ...\showbox0
 ..\T1/cmtt/m/n/10 U
 ..\T1/cmtt/m/n/10 }
 ..\glue 3.33252 plus 1.66626 minus 1.11084
-..\setlanguage20 (hyphenmin 2,3)
+..\setlanguage19 (hyphenmin 2,3)
 ..\T1/cmr/m/n/10 y
 ..\T1/cmr/m/n/10 i
 ..\T1/cmr/m/n/10 e
@@ -128,7 +128,7 @@ l. ...\showbox0
 ..\T1/cmtt/m/n/10 U
 ..\T1/cmtt/m/n/10 }
 ..\glue 3.33252 plus 1.66626 minus 1.11084
-..\setlanguage20 (hyphenmin 2,3)
+..\setlanguage19 (hyphenmin 2,3)
 ..\T1/cmr/m/n/10 y
 ..\T1/cmr/m/n/10 i
 ..\T1/cmr/m/n/10 e
@@ -152,7 +152,7 @@ l. ...\showbox0
 ..\T1/cmtt/m/n/10 u
 ..\T1/cmtt/m/n/10 }
 ..\glue 3.33252 plus 1.66626 minus 1.11084
-..\setlanguage20 (hyphenmin 2,3)
+..\setlanguage19 (hyphenmin 2,3)
 ..\T1/cmr/m/n/10 y
 ..\T1/cmr/m/n/10 i
 ..\T1/cmr/m/n/10 e
@@ -171,7 +171,7 @@ l. ...\showbox0
 ..\T1/cmtt/m/n/10 u
 ..\T1/cmtt/m/n/10 }
 ..\glue 3.33252 plus 1.66626 minus 1.11084
-..\setlanguage20 (hyphenmin 2,3)
+..\setlanguage19 (hyphenmin 2,3)
 ..\T1/cmr/m/n/10 y
 ..\T1/cmr/m/n/10 i
 ..\T1/cmr/m/n/10 e

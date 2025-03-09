@@ -8,6 +8,8 @@ Package: babel
     Options: frenchb,polutonikogreek,german
 Package: fontenc
     Options: T1
+Package babel Info: 'polutonikogreek' activates 'greek' shorthands.
+(babel)             Reported  on input line ....
 > \box...=
 \hbox(6.94275+2.49939)x85.67352
 .\LGR/cmr/m/n/10 ^^e2 (ligature >e)
@@ -43,6 +45,8 @@ l. ...\testit{Ah!}
 Package babel Info: Importing font and identification data for french
 (babel)             from babel-fr.ini. Reported on input line ....
 )
+Package babel Info: 'french' activates 'french' shorthands.
+(babel)             Reported  on input line ....
 > \box...=
 \hbox(6.8872+0.0)x17.49573
 .\T1/cmr/m/n/10 A

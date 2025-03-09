@@ -5,6 +5,8 @@ Author: [e-mail hidden] (Olaf Kummer)
 Main Class: article
 Package: babel
     Options: german,english
+Package babel Info: 'german' activates 'german' shorthands.
+(babel)             Reported  on input line ....
 > \box...=
 \hbox(6.94444+0.0)x20.00002
 .\write1{\babel@aux{german}{}}

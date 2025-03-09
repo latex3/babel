@@ -4,6 +4,8 @@ Format: LaTeX2e<1996/12/01>
 Main Class: report
 Package: babel
     Options: german,greek
+Package babel Info: 'german' activates 'german' shorthands.
+(babel)             Reported  on input line ....
 > \box...=
 \hbox(6.94444+2.49939)x290.8258
 .\LGR/cmr/m/n/10 a

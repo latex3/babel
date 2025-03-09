@@ -6,6 +6,8 @@ Main Class: article
 Package: babel
     Options: german,greek
 Author: [e-mail hidden]
+Package babel Info: 'german' activates 'german' shorthands.
+(babel)             Reported  on input line ....
 > \box...=
 \hbox(7.60416+2.12917)x39.56853
 .\OT1/cmr/m/n/10.95 A

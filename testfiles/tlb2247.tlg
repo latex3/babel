@@ -7,6 +7,8 @@ Package: fontenc
     Options: T2A
 Package: babel
     Options: german,russian
+Package babel Info: 'german' activates 'german' shorthands.
+(babel)             Reported  on input line ....
 {\cyrillictext \CYRG \cyrl \cyra \cyrv \cyra } 1.
 > \box...=
 \vbox(177.0+0.0)x345.0
