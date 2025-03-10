@@ -88,7 +88,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
-| [25.5](news/whats-new-in-babel-25.5.html) | (dev) Transforms for Dutch and German. |
+| [25.5](news/whats-new-in-babel-25.5.html) | Transforms for Dutch (diaeresis) and German (long s). |
 | [25.4](news/whats-new-in-babel-25.4.html) | 8 new locales for ancient languages. |
 | [25.3](news/whats-new-in-babel-25.3.html) | Fixes. 6 new locales. Links in manual. |
 | [25.2](news/whats-new-in-babel-25.2.html) | Minor fixes and updates. Old Uyghur, Algerian Arabic. |

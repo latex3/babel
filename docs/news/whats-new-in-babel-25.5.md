@@ -1,6 +1,6 @@
 # What's new in babel 25.5
 
-**Draft** 
+2025-03-10
 
 ## Transforms
 
@@ -12,11 +12,12 @@ vowel if hyphenated just before.
 ### German ###
 
 The new transform `longs.unifraktur` implements the basic heuristic
-rules for the long s (ſ) from those in Unifraktur Maguntia (which are
-also used in Yannis Fraktur Regular), excluding a large set specific to
-this font. These fonts define them with the help of contextual
-substitutions, but with this transform you can apply them to fonts
-lacking native long s features.
+rules for the long s (ſ) from those in [Unifraktur
+Maguntia](https://unifraktur.sourceforge.net/) (which are also used in
+[Yannis Fraktur Regular](https://ctan.org/pkg/yfonts-otf)), excluding a
+large set specific to this font. These fonts define them with the help
+of contextual substitutions, but with this transform you can apply them
+to fonts lacking native long s features.
 
 Although discretionaries aren’t taken into account, the transform is
 declared in the posthyphenation group, to ease if necessary fine tuning
@@ -24,7 +25,7 @@ the rules for, e.g., prefixes and compound words.
 
 They are available in all German locales, even if they don’t make much
 sense in some of them. Note the historical usage of the long s extends
-beyond the Fraktur typeface.
+beyond the Fraktur typeface, and can be also found in Antiqua styles.
 
 An example follows (from Einstein). The font has been picked somewhat
 randomly. It defines no substitutions, although includes some ligatures
@@ -52,7 +53,9 @@ kann, der ist sozusagen tot und sein Auge erloschen.
 According to Unicode: “Such stylistic distinctions [Fraktur and Gaelic]
 are ignored in the Unicode Standard, which treats them as presentation
 styles of the Latin script”. The reason is the scripts tags `Latf` and
-`Latg` are aimed primarily at book cataloging. 
+`Latg` are aimed primarily at book cataloging. They are also not treated
+as separate scripts in OpenType, which rely on ‘historical’ or ‘stylistic
+set’ font features.
 
 ## Shorthand groups
 
