@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/03/06 v25.4.79675
+  [2025/03/10 v25.5
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4306,6 +4306,13 @@ prepended to words are prevented, as in “pakastekaapit ja -arkut”.}
 \trans{French}{punctuation.space}{Rules for proper spacing with
 characters \textit{;:!?«»} are applied.}
 
+\trans{German}{longs.unifraktur}{Implements the basic heuristic rules
+for the long s (ſ) from those in Unifraktur Maguntia. Although
+discretionaries aren’t taken into account, the transform is declared in
+the posthyphenation group, to ease if necessary fine tuning the rules
+for, e.g., prefixes and compound words. They are available in all
+German locales. See \New{25.5} for further details and an example.}
+
 \trans{Greek}{diaeresis.hyphen}{Removes the diaeresis above iota and
 upsilon if hyphenated just before. It works with the three variants.}
 
@@ -4328,8 +4335,8 @@ are not converted, and the furtive patah is not shifted.}
 \trans{Hindi, Sanskrit}{transliteration.hk}{The Harvard-Kyoto system to
 romanize Devanagari.}
 
-\trans{Hindi, Sanskrit}{punctuation.space}{Inserts a space before the following
-four characters: \textit{!?:;}\,.}
+\trans{Hindi, Sanskrit}{punctuation.space}{Inserts a space before the
+following four characters: \textit{!?:;}\,.}
 
 \trans{Hungarian}{digraphs.hyphen}{Hyphenates the long digraphs
 \textit{ccs}, \textit{ddz}, \textit{ggy}, \textit{lly}, \textit{nny},
@@ -4339,6 +4346,9 @@ four characters: \textit{!?:;}\,.}
 \trans{Indic scripts}{danda.nobreak}{Prevents a line break before a
 danda or double danda if there is a space. For Assamese, Bengali,
 Gujarati, Hindi, Kannada, Malayalam, Marathi, Odia, Tamil, Telugu.}
+
+\trans{Japanese}{linebreak.strict}{Prevents line breaks before small
+kana variants.}
 
 \trans{Latin}{digraphs.ligatures}{Replaces the groups \textit{ae},
 \textit{AE}, \textit{oe}, \textit{OE} with \textit{æ}, \textit{Æ},
@@ -6059,8 +6069,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.4.79675>>
-%<<date=2025/03/06>>
+%<<version=25.5>>
+%<<date=2025/03/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11238,7 +11248,7 @@ wouldn’t exist.
     \gdef\bbl@chfmt{%
       \bbl@ifunset{bbl@\bbl@chaptype fmt@\languagename}%
         {\@chapapp\space\thechapter}%
-        {\@nameuse{bbl@\bbl@chaptype fmt@\languagename}}}
+        {\@nameuse{bbl@\bbl@chaptype fmt@\languagename}}}%
     \bbl@add\appendix{\def\bbl@chaptype{appendix}}% Not harmful, I hope
     \bbl@sreplace\ps@headings{\@chapapp\ \thechapter}{\bbl@chfmt}%
     \bbl@sreplace\chaptermark{\@chapapp\ \thechapter}{\bbl@chfmt}%
@@ -15260,7 +15270,6 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
   local GLYPH = node.id'glyph'
   local KASHIDA = Babel.attr_kashida
   local LOCALE = Babel.attr_locale
-  local first_pass
 
   if line == nil then
     line = {}
