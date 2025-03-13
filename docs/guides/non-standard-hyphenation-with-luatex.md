@@ -140,7 +140,7 @@ With this rule, the string ‘verylongpattern’ is replaced with
 ‘veryLOOONGpattern’. The combination '... () ... () ...` behaves much
 like a regex with a lookbehind (before the first `()`; ‘backtrack’ in
 OpenType) and a lookahead (after the second `()`). You should provide
-both, but they can be empty. Remember
+both, but they can be empty.
 
 Lua patterns with dots, characters classes (with `%`, but see below for
 an alternative TeX-friendly syntax) and char-sets (with `[]`, including

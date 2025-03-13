@@ -29,7 +29,7 @@ beyond the Fraktur typeface, and can be also found in Antiqua styles.
 
 An example follows (from Einstein). The font has been picked somewhat
 randomly. It defines no substitutions, although includes some ligatures
-in non-standard positions (‘ck’ in ‘<’, ‘ſt’ in ‘¥’, and so on), which I
+in non-standard positions (‘ch’ in ‘<’, ‘ſt’ in ‘¥’, and so on), which I
 haven’t fixed (it can be done partially with transforms).
 
 ```tex
