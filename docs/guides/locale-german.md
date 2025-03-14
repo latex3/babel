@@ -10,8 +10,8 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 German language using the Latin script.
 
-Please, bear in mind the ‘traditional’ styles for German based on
-‘ldf’ files doesn’t currently conform the `babel` [naming
+Please, bear in mind the ‘traditional’ styles for German based on ‘ldf’
+files don’t currently conform the `babel` [naming
 conventions](locale-naming.md). Oddly, the name `german` refers to the
 pre-1996 orthography, while the current one is selected with `ngerman`
 (`n` comes from ‘new’, which was certainly the case about 30 years
@@ -30,13 +30,13 @@ language (with tag `gsw`). To summarize:
 ## Support with the traditional way (`ldf`)
 
 The German language is supported in `babel` in the ‘classical’ way
-based on a `ldf` file.See [babel-german](https://ctan.org/pkg/babel-german) for further details.
+based on a `ldf` file. See
+[babel-german](https://ctan.org/pkg/babel-german) for further details.
 
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `german` as the main language
-(assuming `luatex`, which is the recommended engine, and `babel` ≥24.14,
-although it may work with previous versions).
+(assuming `luatex`, which is the recommended engine).
 
 ```tex
 \documentclass[german]{article}

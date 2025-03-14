@@ -120,12 +120,13 @@ There are also some fine fonts out there, but you must install them because they
 | [Noto](https://notofonts.github.io/) | Multilingual | This family has a very comprehensive coverage and come in many variations of weight and width to match your other fonts. However, many fonts doesn’t cover the ASCII range. You can see how to combine Noto fonts at the end of the video [LaTeX – Multilingual Unicode strings](https://www.youtube.com/watch?v=jWGmYZsNiYA).
 | Babelstone Han | Chinese | It supports both Simplified and Traditional Chinese and has an especially comprehensive selection of traditional Chinese characters.
 | Abyssinica SIL | Abyssinica SIL |
-| Nirmala UI | Indic scripts | A Windows font with 14 scripts: Telugu, Kannada, Bangla, Odia, Sinhala, Devanagari...
-| Segoe UI Historic | Ancient scripts | A Windows font with 25 scripts: Imperial Aramaic, Brahmi, Egyptian hieroglyphs, Syriac, Akkadian Cuneiform, Runic...
+| Nirmala UI | Indic scripts | A Windows font with 14 scripts: Bangla, Chakma, Devanagari, Gujarati, Gurmukhi, Kannada, Malayalam, Meitei Mayek, Ol Chiki, Odia, Sinhala, Sora Sompeng, Tamil, Telugu.
+| Segoe UI Historic | Ancient scripts | A Windows font with 25 scripts: Imperial Aramaic, Brahmi, Carian, Cypriot, Egyptian hieroglyphs, Glagolitic, Gothic, Old Italic, Kharoshthi, Lycian, Lydian, Meroitic Cursive, Ogham, Orkhon, Inscriptional Pahlavi, Phoenician, Inscriptional Parthian, Runic, Old South Arabian, Shavian, Syriac, Ugaritic, Old Persian, Sumero- Akkadian Cuneiform.
+| Lohit | Indic scripts | A set of Linux fonts covering Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam, Marathi, Oriya, Punjabi, Tamil, and Telugu.
 
 You may also want to have a look at some articles on tex.textackexchange
 on
-[Arabic](https://tex.stackexchange.com/questions/314202/overview-of-arabic-fonts-available-for-latex-xetex). On Windows, Nirmala UI supports meny Indic scripts, while Segoe UI Historic provides some ancient scripts, like Syriac, Old Uyghur
+[Arabic](https://tex.stackexchange.com/questions/314202/overview-of-arabic-fonts-available-for-latex-xetex).
 
 -------------------------
 

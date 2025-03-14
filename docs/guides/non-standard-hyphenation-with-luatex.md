@@ -78,6 +78,11 @@ the `minus`. Here, you may need `data`, too. With `spacefactor` the
 unit is the ordinary space of the current font (with the latter, you
 may need a `data=` pointing to a specific glyph).
 6. **Penalties** are declared with `penalty`.
+7. **Kerns** With a numeral argument in em units (e.g., `kern= -.5`).
+8. **No rules** The equivalent of `\norule`, which takes three
+arguments with the width, height and depth of the empty (invisible)
+rule to be added, again in em units. See [What's new in babel
+24.6](whats-new-in-babel-24.6.md).
 
 Some keys can be used in conjunction with `insert`, which must be the
 very first one in the replacement. With it the item is not replaced,
@@ -90,6 +95,9 @@ group ‘ff’:
     {}
   }
 ```
+In some cases (particularly if the last replacement can be applied to
+the last node in the list), you may need to insert a node after the
+*next* one. A new key `after`, similar to `insert`, does the job.
 
 In the replacement list, there is an extended syntax which allows to
 **map the captured characters** (see below). For example, `{2|ΐΰῒῢ|ίύὶὺ}`
