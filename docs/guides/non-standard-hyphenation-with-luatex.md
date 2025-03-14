@@ -82,7 +82,7 @@ may need a `data=` pointing to a specific glyph).
 8. **No rules** The equivalent of `\norule`, which takes three
 arguments with the width, height and depth of the empty (invisible)
 rule to be added, again in em units. See [What's new in babel
-24.6](whats-new-in-babel-24.6.html).
+24.6](https://latex3.github.io/babel/news/whats-new-in-babel-24.6.html).
 
 Some keys can be used in conjunction with `insert`, which must be the
 very first one in the replacement. With it the item is not replaced,
