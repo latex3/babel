@@ -8,16 +8,39 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 Japanese language using the Japanese script.
 
+If you are creating documents primarily or exclusively in Japanese,
+requiring advanced typesetting features, such as fine-grained control
+over line breaking, font features, or vertical writing, it’s advisable
+to use a framework like
+[luatexja](https://ctan.org/pkg/luatexja?lang=en). But if you need to
+create multilingual documents with frequent language switching or your
+Japanese typesetting needs are relatively basic, `babel` can often be
+enough.
+
 ## Support with the traditional way (`ldf`)
 
 The Japanese language is supported in `babel` in the ‘classical’ way
-based on a `ldf` file.See [babel-japanese](https://ctan.org/pkg/babel-japanese) for further details.
+based on a `ldf` file. See
+[babel-japanese](https://ctan.org/pkg/babel-japanese) for further
+details.
 
 ## Support with `ini` locale file
 
+In `luatex` (the recommended engine), two transforms control line
+breaking: `spacing.basic` and `linebreak.strict`. See [What’s new in
+babel
+24.9](https://latex3.github.io/babel/news/whats-new-in-babel-24.9.html).
+Spacing between characters is set with the ‘provide’ key `intraspace`.
+
+In `xetex` (which is currently discouraged), you can use the
+‘interchar’ `linebreak.basic`.
+
+See the manual for further details. See also [List of
+counters](https://latex3.github.io/babel/guides/list-of-counters.html)
+for the available Japanese counters
+
 Here is a minimal sample file with `japanese` as the main language
-(assuming `luatex`, which is the recommended engine, and `babel` ≥24.14,
-although it may work with previous versions).
+(assuming `luatex`).
 
 ```tex
 \documentclass[japanese]{article}
