@@ -18,11 +18,7 @@ although it may work with previous versions).
 
 \usepackage[provide=*,bidi=basic]{babel}
 
-\babelfont{rm}{Noto Serif OldUyghur}
-
-% The next 2 lines make sure the Latin script is displayed.
-\babelprovide[onchar=fonts letters]{english}
-\babelfont[english]{rm}{NewComputerModern10}
+\babelfont{rm}{Noto Serif Historical}
 
 \begin{document}
 
@@ -32,7 +28,6 @@ Local name $=$ 𐽳𐽸𐽹𐽰𐽷
 ```
 
 ![](../media/locale-olduighur.png)
-
 You may need download the font or replace it with another one in your
 system.
 
