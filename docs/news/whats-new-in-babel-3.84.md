@@ -2,10 +2,12 @@
 
 2022-12-26
 
-<span style="color:red;">⚠</span> There are some issues with the
-new `\MakeUppercase` and `\MakeLowercase`. For further details, see:
+[Fixed:] <del><span style="color:red;">⚠</span> There are some issues with the
+new `\MakeUppercase` and `\MakeLowercase`. For further details,
+see:</del>
 
-[Localization of \MakeUppercase and \MakeLowercase broken](https://github.com/latex3/babel/issues/189)
+<del>[Localization of \MakeUppercase and \MakeLowercase
+broken](https://github.com/latex3/babel/issues/189)</del>
 
 ## Encodings with pdftex and `\babelprovide`
 

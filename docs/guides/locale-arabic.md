@@ -10,13 +10,17 @@ The Arabic language is available for `pdftex`, `xetex`, and `luatex`, but the
 preferred engine is the latter, because of its unique features for
 bidirectional texts, not requiring explicit mark up.
 
+Using the package `arabtex` is currently discouraged. For an
+alternative to both `babel` and `arabtex` with `luatex`, you may take a
+look at [`arabluatex`](https://www.ekdosis.org/arabluatex.html).
+
 The recommended basic settings for a monolingual Arabic document in
 `luatex` is (please, note your browser might not be rendering correctly
 the source code):
 ```tex
 \documentclass{article}
 
-\usepackage[arabic, provide=*, bidi=basic, layout=counters.tabular]{babel}
+\usepackage[arabic, provide=*, bidi=basic, layout=counters tabular]{babel}
 \babelfont{rm}{FreeSerif}
 
 \begin{document}
@@ -52,6 +56,10 @@ latter to the locale numerals, passed as option to `\babelprovide`:
   with `xetex`, too.
 * `mapdigits` does it at the engine level. This is
   usually the preferred method.
+  
+Since `\thepage` is (indirectly) redefined by the layout option
+`counters`, `makeindex` will reject many entries as invalid. With
+`counters*` babel attempts to remove the conflicting macros.
   
 ## Calendars
 
@@ -128,6 +136,7 @@ numerals). Sadly, with this procedure text cannot be copy-pasted (and
  
 ## Useful links
 
+* [Some arabic words in beamer](https://tex.stackexchange.com/a/698562/5735)
 * [Automatic enumerate list using eastern Arabic letters in beamer](https://tex.stackexchange.com/a/599846/5735)
 * [Itemize environment in Arabic](https://tex.stackexchange.com/a/528562/5735)
 * [Index not generated in an Arabic document](https://tex.stackexchange.com/a/506482/5735)

@@ -9,7 +9,7 @@ migrate a LaTeX document from `pdftex` to `luatex`.
 
 See also the companion guide [Migrating from XeTeX to
 LuaTeX](https://latex3.github.io/babel/guides/migrating-xetex-luatex.html)
-if you are migrating from XeTeX.
+if you are switching from XeTeX.
 
 ## Input encoding
 

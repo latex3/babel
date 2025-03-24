@@ -10,7 +10,7 @@ changes.
 
 See also the companion guide [Migrating from pdfTeX to
 LuaTeX](https://latex3.github.io/babel/guides/migrating-pdftex-luatex.html)
-if you are migrating from pdfTeX.
+if you are switching from pdfTeX.
 
 It is worth noting that, contrary to what is sometimes assumed, the use
 of `luatex` does not require any programming knowledge in Lua (only

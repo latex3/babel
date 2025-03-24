@@ -37,7 +37,7 @@ In `xetex` (which is currently discouraged), you can use the
 
 See the manual for further details. See also [List of
 counters](https://latex3.github.io/babel/guides/list-of-counters.html)
-for the available Japanese counters
+for the available Japanese counters.
 
 Here is a minimal sample file with `japanese` as the main language
 (assuming `luatex`).
