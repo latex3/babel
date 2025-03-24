@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/03/10 v25.5
+  [2025/03/24 v25.5.81466
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -2903,7 +2903,7 @@ print ‘cge’. (It doesn't work with \pdftex.)
 \begin{verbatim}
 \babelprovide[typography/prehyphenchar = 0]{english}
 \end{verbatim}
-This setting \textit{may} work with `xetex`, but getting rid of the
+This setting \textit{may} work with |xetex|, but getting rid of the
 hyphen char in this engine is not trivial, because you must rely on the
 font, and not all fonts behave the same.
 \end{example}
@@ -2916,7 +2916,7 @@ You can define new counters freely, and assign them to |\alph|:
     alph = acute                % Assign it to \alph
   ]{english}
 \end{verbatim}
-You can choose the name, and instead of `alphabetic` it can be another one.
+You can choose the name, and instead of |acute| it can be another one.
 \end{example}
 
 \subsection{Hooks}
@@ -2984,7 +2984,7 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
   \protected@edef\BabelString{\BabelString}}
 \end{verbatim}
 \item[initiateactive] (char as active, char as other, original char)
-  \New{3.9i} Executed just after a shorthand has been `initiated'. The three
+  \New{3.9i} Executed just after a shorthand has been ‘initiated’. The three
   parameters are the same character with different catcodes: active,
   other (|\string|'ed) and the original one.
 \item[afterreset] \New{3.9i} Executed when selecting a language just after
@@ -4283,6 +4283,9 @@ explicitly in |ini| files. Instead, it’s defined by |babel| if the key
 \trans{Arabic}{transliteration.dad}{Applies the transliteration system
 devised by Yannis Haralambous for \textsf{dad} (simple and
 \TeX-friendly). Not yet complete, but sufficient for most texts.}
+
+\trans{Chinese, Japanese}{input.nospaces}{With it, and just for
+convenience, spaces (and new lines) in the input are ignored.}
 
 \trans{Croatian}{digraphs.ligatures}{Ligatures \textit{DŽ}, \textit{Dž},
 \textit{dž}, \textit{LJ}, \textit{Lj}, \textit{lj}, \textit{NJ},
@@ -6069,8 +6072,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.5>>
-%<<date=2025/03/10>>
+%<<version=25.5.81466>>
+%<<date=2025/03/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10752,15 +10755,17 @@ wouldn’t exist.
 \def\bbl@inistore#1=#2\@@{%      full (default)
   \bbl@trim@def\bbl@tempa{#1}%
   \bbl@trim\toks@{#2}%
-  \bbl@xin@{;\bbl@section/\bbl@tempa;}{\bbl@key@list}%
-  \ifin@\else
-    \bbl@xin@{,identification/include.}%
-             {,\bbl@section/\bbl@tempa}%
-    \ifin@\xdef\bbl@included@inis{\the\toks@}\fi
-    \bbl@exp{%
-      \\\g@addto@macro\\\bbl@inidata{%
-        \\\bbl@elt{\bbl@section}{\bbl@tempa}{\the\toks@}}}%
-  \fi}
+  \bbl@ifsamestring{\bbl@tempa}{@include}%
+    {\bbl@read@subini{\the\toks@}}%
+    {\bbl@xin@{;\bbl@section/\bbl@tempa;}{\bbl@key@list}%
+     \ifin@\else
+       \bbl@xin@{,identification/include.}%
+                {,\bbl@section/\bbl@tempa}%
+       \ifin@\xdef\bbl@included@inis{\the\toks@}\fi
+       \bbl@exp{%
+         \\\g@addto@macro\\\bbl@inidata{%
+           \\\bbl@elt{\bbl@section}{\bbl@tempa}{\the\toks@}}}%
+     \fi}}
 \def\bbl@inistore@min#1=#2\@@{%  minimal (maybe set in \bbl@read@ini)
   \bbl@trim@def\bbl@tempa{#1}%
   \bbl@trim\toks@{#2}%
@@ -10784,19 +10789,28 @@ wouldn’t exist.
 % |\babelprovide| it's either 1 or 2.
 %
 %    \begin{macrocode}
-\def\bbl@loop@ini{%
+\def\bbl@loop@ini#1{%
   \loop
-    \if T\ifeof\bbl@readstream F\fi T\relax % Trick, because inside \loop
+    \if T\ifeof#1 F\fi T\relax % Trick, because inside \loop
       \endlinechar\m@ne
-      \read\bbl@readstream to \bbl@line
+      \read#1 to \bbl@line
       \endlinechar`\^^M
       \ifx\bbl@line\@empty\else
         \expandafter\bbl@iniline\bbl@line\bbl@iniline
       \fi
     \repeat}
+\def\bbl@read@subini#1{%
+  \openin\bbl@readsubstream=babel-#1.ini
+  \ifeof\bbl@readsubstream
+    \bbl@error{no-ini-file}{#1}{}{}%
+  \else
+    {\bbl@loop@ini\bbl@readsubstream}%
+  \fi
+  \closein\bbl@readsubstream}
 \ifx\bbl@readstream\@undefined
   \csname newread\endcsname\bbl@readstream
 \fi
+\newread\bbl@readsubstream
 \def\bbl@read@ini#1#2{%
   \global\let\bbl@extend@ini\@gobble
   \openin\bbl@readstream=babel-#1.ini
@@ -10817,7 +10831,7 @@ wouldn’t exist.
     \def\bbl@section{identification}%
     \bbl@exp{\\\bbl@inistore tag.ini=#1\\\@@}%
     \bbl@inistore load.level=#2\@@
-    \bbl@loop@ini
+    \bbl@loop@ini\bbl@readstream
     % == Process stored data ==
     \bbl@csarg\xdef{lini@\languagename}{#1}%
     \bbl@read@ini@aux
@@ -17002,7 +17016,11 @@ function Babel.hyphenate_replace(head, mode)
             dummy_node = nil
           end
 
-          if (not enabled) or (crep and next(crep) == nil) then -- = {}
+          if not enabled then
+            last_match = save_last
+            goto next
+          
+          elseif crep and next(crep) == nil then -- = {}
             if step == 0 then
               last_match = save_last    -- Optimization
             else
