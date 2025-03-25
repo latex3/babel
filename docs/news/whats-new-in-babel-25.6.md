@@ -1,25 +1,30 @@
-# What's new in babel 25.5
+# What's new in babel 25.6
 
 **Draft.**
 
 ## Transforms
 
-The experimental transform `spacing.basic` in Chinese and Japanese has
-been thoroughly revised an can be considered essentially stable. As its
-name suggest, its a basic and general purpose set of rules giving a more or
-less reasonable result on average with many fonts.
+The experimental transform `spacing.basic` for Chinese and Japanese has
+undergone thorough revision and is now considered essentially stable.
+As its name suggests, it provides a basic, general-purpose set of rules
+that deliver on average a reasonably result across various fonts.
 
-One of the problems is the design can be different in some characters,
-particularly the quotation, question and exclamation marks. The new
-transform settings has been tested in about 80 CJK fonts. Also the
-full-width colon and semicolon may have different visual appearance.
-This transforms assumes:
+One issue is the design of certain characters, such as quotation
+marks, question marks, and exclamation marks, can vary. The new
+transform settings have been tested on approximately 80 CJK fonts.
+Additionally, the full-width colon and semicolon may exhibit different
+visual appearances. These transforms assume:
 
-* Full-width question and exclamation marks, no matter its design
-  (which can be left-aligned, narrow centered, and wide centered).
-  Lines ending with ?, ! can look slightly short in some fonts (for
-  example, Noto).
-
+* Left-aligned periods and commas (e.g., 、。).
+* Full-width question and exclamation marks. However, these marks may
+  vary in design, appearing as left-aligned, narrow centered, or wide
+  centered. Lines ending with ? or ! can appear slightly short in
+  certain fonts (e.g., Noto). To address this, the `microtype` package
+  can be used; for example:
+```tex
+\usepackage[protrusion=true, expansion=false]{microtype}
+\SetProtrusion{ encoding = TU }{？={,100}}
+```
 * Full-width quotation marks. Proportional marks can be ‘converted’
 to full width with:
 ```tex
@@ -32,9 +37,9 @@ to full width with:
   {}
 }
 ```
-* Centered colon and semicolon. With left-align designs, lines can look
-  slightly short. An option is to ‘covert’ them to centered designs
-  with:
+* Centered colon and semicolon. For left-aligned designs, lines may
+  appear slightly short. These marks can be ‘converted’ to centered
+  designs with:
 ```tex
 \babelposthyphenation{japanese}{ [：；] }{
   { insert, norule = .25 0 0},
