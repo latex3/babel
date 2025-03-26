@@ -11,9 +11,9 @@ that deliver on average a reasonably result across various fonts.
 
 One issue is the design of certain characters, such as quotation
 marks, question marks, and exclamation marks, can vary. The new
-transform settings have been tested on approximately 80 CJK fonts.
+transform settings have been tested on approximately 70 CJK fonts.
 Additionally, the full-width colon and semicolon may exhibit different
-visual appearances. These transforms assume:
+visual appearances. This transform assumes:
 
 * Left-aligned periods and commas (e.g., 、。).
 * Full-width question and exclamation marks. However, these marks may
@@ -38,7 +38,7 @@ to full width with:
 }
 ```
 * Centered colon and semicolon. For left-aligned designs, lines may
-  appear slightly short. These marks can be ‘converted’ to centered
+  appear slightly short. An option is to ‘convert’ them to centered
   designs with:
 ```tex
 \babelposthyphenation{japanese}{ [：；] }{
@@ -47,12 +47,15 @@ to full width with:
   {}
 }
 ```
+Sadly, `microtype` is of no help in the latter case, because
+the line ends with a kern, not with a glyph (there are hacks, but,
+well, they are hacks).
 
 ## Directive `@include` 
 
 To reduce many duplicated declarations (and simplify maintenance), an
-`@include` directive has been added to the ini mechanism. When
+`@include` directive has been added to the `ini` mechanism. When
 `@include = <name>` is encountered, `babel` reads the file
-`babel-<name>.ini`. The <name> must not resemble that of a `ini` locale
+`babel-<name>.ini`. The `<name>` must not resemble that of an  `ini` locale
 file. It has been devised mainly for transforms. See the locale files
-for Japanese<del>, Arabic and Devanagari</del> scripts for examples.
+for Japanese, Arabic and Sanskrit for examples.
