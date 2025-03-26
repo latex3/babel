@@ -7,13 +7,13 @@
 The experimental transform `spacing.basic` for Chinese and Japanese has
 undergone thorough revision and is now considered essentially stable.
 As its name suggests, it provides a basic, general-purpose set of rules
-that deliver on average a reasonably result across various fonts.
+that deliver on average a reasonably result across various fonts. The
+new transform settings have been tested on approximately 80 CJK fonts.
 
-One issue is the design of certain characters, such as quotation
-marks, question marks, and exclamation marks, can vary. The new
-transform settings have been tested on approximately 70 CJK fonts.
-Additionally, the full-width colon and semicolon may exhibit different
-visual appearances. This transform assumes:
+One issue is the design of certain characters, such as quotation marks,
+question marks, and exclamation marks, can vary. Additionally, the
+full-width colon and semicolon may exhibit different visual
+appearances. This transform assumes:
 
 * Left-aligned periods and commas (e.g., 、。).
 * Full-width question and exclamation marks. However, these marks may

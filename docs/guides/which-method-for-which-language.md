@@ -117,7 +117,7 @@ There are also some fine fonts out there, but you must install them because they
 
 | Font(s) | Languages / Scripts | Notes |
 | --- | --- | --- |
-| [Noto](https://notofonts.github.io/) | Multilingual | This family has a very comprehensive coverage and come in many variations of weight and width to match your other fonts. However, many fonts don’t cover the ASCII range. You can see how to combine Noto fonts at the end of the video [LaTeX – Multilingual Unicode strings](https://www.youtube.com/watch?v=jWGmYZsNiYA).
+| [Noto](https://notofonts.github.io/) | Multilingual | This family has a very comprehensive coverage and come in many variations of weight and width to match your other fonts. However, some fonts don’t cover the ASCII range. You can see how to combine Noto fonts at the end of the video [LaTeX – Multilingual Unicode strings](https://www.youtube.com/watch?v=jWGmYZsNiYA).
 | Babelstone Han | Chinese | It supports both Simplified and Traditional Chinese and has an especially comprehensive selection of traditional Chinese characters.
 | Abyssinica SIL | Abyssinica SIL |
 | Nirmala UI | Indic scripts | A Windows font with 14 scripts: Bangla, Chakma, Devanagari, Gujarati, Gurmukhi, Kannada, Malayalam, Meitei Mayek, Ol Chiki, Odia, Sinhala, Sora Sompeng, Tamil, Telugu.
