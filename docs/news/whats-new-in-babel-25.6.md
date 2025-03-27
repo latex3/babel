@@ -1,14 +1,18 @@
 # What's new in babel 25.6
 
-**Draft.**
+2025-03-27
 
 ## Transforms
 
-The experimental transform `spacing.basic` for Chinese and Japanese has
-undergone thorough revision and is now considered essentially stable.
-As its name suggests, it provides a basic, general-purpose set of rules
-that deliver on average a reasonably result across various fonts. The
-new transform settings have been tested on approximately 80 CJK fonts.
+The `input.nospaces` transform provides a convenient way to input text
+by removing spaces and line breaks between two CJK characters (but not
+between a Latin, Cyrillic, etc., character and a CJK one).
+
+The transform `spacing.basic` for Chinese and Japanese has undergone
+thorough revision and is now considered essentially stable. As its name
+suggests, it provides a basic, general-purpose set of rules that
+deliver on average a reasonably result across various fonts. The new
+transform settings have been tested on approximately 80 CJK fonts.
 
 One issue is the design of certain characters, such as quotation marks,
 question marks, and exclamation marks, can vary. Additionally, the
