@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/03/24 v25.5.81466
+  [2025/03/27 v25.6
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4287,6 +4287,9 @@ devised by Yannis Haralambous for \textsf{dad} (simple and
 \trans{Chinese, Japanese}{input.nospaces}{With it, and just for
 convenience, spaces (and new lines) in the input are ignored.}
 
+\trans{Chinese, Japanese}{spacing.basic}{Basic rules for readjusting
+spacing. See \New{25.6} for further details.}
+
 \trans{Croatian}{digraphs.ligatures}{Ligatures \textit{DŽ}, \textit{Dž},
 \textit{dž}, \textit{LJ}, \textit{Lj}, \textit{lj}, \textit{NJ},
 \textit{Nj}, \textit{nj}. It assumes they exist. This is not the
@@ -4335,11 +4338,14 @@ does it. To prevent the conversion (an abbreviation, for example), write
 based on that devised by Christian Justen for `cjhebrew`. Final letters
 are not converted, and the furtive patah is not shifted.}
 
+\trans{Hindi, Sanskrit}{punctuation.space}{Inserts a space before the
+following four characters: \textit{!?:;}\,.}
+
 \trans{Hindi, Sanskrit}{transliteration.hk}{The Harvard-Kyoto system to
 romanize Devanagari.}
 
-\trans{Hindi, Sanskrit}{punctuation.space}{Inserts a space before the
-following four characters: \textit{!?:;}\,.}
+\trans{Hindi, Sanskrit}{transliteration.iast}{The IAST system to
+romanize Devanagari (thanks to Maximilian Mehner).}
 
 \trans{Hungarian}{digraphs.hyphen}{Hyphenates the long digraphs
 \textit{ccs}, \textit{ddz}, \textit{ggy}, \textit{lly}, \textit{nny},
@@ -4363,8 +4369,6 @@ kana variants.}
 \trans{Latin}{letters.uv}{Replaces \textit{v}, \textit{U} with
 \textit{u}, \textit{V}.}
 
-\trans{Sanskrit}{transliteration.iast}{The IAST system to
-romanize Devanagari (thanks to Maximilian Mehner).}
 
 \trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
 files refers to the Cyrillic script, which is here the target.) The
@@ -6072,8 +6076,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.5.81466>>
-%<<date=2025/03/24>>
+%<<version=25.6>>
+%<<date=2025/03/27>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10778,15 +10782,20 @@ wouldn’t exist.
 %
 % \subsection{Main loop in ‘provide’}
 %
-% Now, the ‘main loop’, which \textbf{**must be executed inside a
-% group**}. At this point, |\bbl@inidata| may contain data declared in
-% |\babelprovide|, with ‘slashed’ keys. There are 3 steps: first read
-% the ini file and store it; then traverse the stored values, and
-% process some groups if required (date, captions, labels, counters);
-% finally, ‘export’ some values by defining global macros
+% Now, the ‘main loop’, |\bbl@read@ini|, which \textbf{**must be
+% executed inside a group**}. At this point, |\bbl@inidata| may contain
+% data declared in |\babelprovide|, with ‘slashed’ keys. There are 3
+% steps: first read the ini file and store it; then traverse the stored
+% values, and process some groups if required (date, captions, labels,
+% counters); finally, ‘export’ some values by defining global macros
 % (identification, typography, characters, numbers). The second
 % argument is 0 when called to read the minimal data for fonts; with
 % |\babelprovide| it's either 1 or 2.
+%
+% |\bbl@loop@ini| is the reader, line by line (1: stream), and calls
+% |\bbl@iniline| to save the key/value pairs. If |\bbl@inistore| finds
+% the |@include| directive, the input stream is switched temporarily and
+% |\bbl@read@subini| is called.
 %
 %    \begin{macrocode}
 \def\bbl@loop@ini#1{%
@@ -10800,6 +10809,9 @@ wouldn’t exist.
       \fi
     \repeat}
 \def\bbl@read@subini#1{%
+  \ifx\bbl@readsubstream\@undefined
+    \csname newread\endcsname\bbl@readsubstream
+  \fi
   \openin\bbl@readsubstream=babel-#1.ini
   \ifeof\bbl@readsubstream
     \bbl@error{no-ini-file}{#1}{}{}%
@@ -10810,7 +10822,6 @@ wouldn’t exist.
 \ifx\bbl@readstream\@undefined
   \csname newread\endcsname\bbl@readstream
 \fi
-\newread\bbl@readsubstream
 \def\bbl@read@ini#1#2{%
   \global\let\bbl@extend@ini\@gobble
   \openin\bbl@readstream=babel-#1.ini
@@ -15021,32 +15032,24 @@ wouldn’t exist.
       local quad = 655360      % 10 pt = 655360 = 10 * 65536
       local last_class = nil
       local last_lang = nil
-
       for item in node.traverse(head) do
         if item.id == GLYPH then
-
           local lang = item.lang
-
           local LOCALE = node.get_attribute(item,
                 Babel.attr_locale)
           local props = Babel.locale_props[LOCALE] or {}
-
           local class = Babel.cjk_class[item.char].c
-
           if props.cjk_quotes and props.cjk_quotes[item.char] then
             class = props.cjk_quotes[item.char]
           end
-
           if class == 'cp' then class = 'cl' % )] as CL
           elseif class == 'id' then class = 'I'
           elseif class == 'cj' then class = 'I' % loose
           end
-
           local br = 0
           if class and last_class and Babel.cjk_breaks[last_class][class] then 
             br = Babel.cjk_breaks[last_class][class]
           end
-
           if br == 1 and props.linebreak == 'c' and
               lang ~= \the\l@nohyphenation\space and
               last_lang ~= \the\l@nohyphenation then
@@ -15063,7 +15066,6 @@ wouldn’t exist.
                             intraspace.m * quad)
             node.insert_before(head, item, n)
           end
-
           if font.getfont(item.font) then
             quad = font.getfont(item.font).size
           end
