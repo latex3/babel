@@ -27,10 +27,11 @@ starting point; a more detailed rule is shown below).
 }
 ```
 It consists of:
-* the language the transformation is applied to (here `german`);
-* a pattern with the string to be handled (here `ck`), which is based
-  on lua patterns (please refer to the lua site linked below);
-* a replacement with a list containing exactly the same number of
+* the **language** the transformation is applied to (here `german`);
+* a **pattern** with the string to be handled (here `ck`), which is based
+  on lua patterns (please refer to the lua site linked below), with
+  some extension;
+* a **replacement** with a list containing exactly the same number of
   elements as the pattern (except if there are inserted elements, as
   explained below).
 
@@ -145,10 +146,10 @@ empty captures, to reduce the number of items in the replacement list:
 }
 ```
 With this rule, the string ‘verylongpattern’ is replaced with
-‘veryLOOONGpattern’. The combination '... () ... () ...` behaves much
-like a regex with a lookbehind (before the first `()`; ‘backtrack’ in
-OpenType) and a lookahead (after the second `()`). You should provide
-both, but they can be empty.
+‘veryLOOONGpattern’. The combination `... () ... () ...` behaves much
+like a regex with a **lookbehind** (before the first `()`; ‘backtrack’ in
+OpenType) and a **lookahead** (after the second `()`). You should provide
+both or none; if provided, they can be empty.
 
 Lua patterns with dots, characters classes (with `%`, but see below for
 an alternative TeX-friendly syntax) and char-sets (with `[]`, including

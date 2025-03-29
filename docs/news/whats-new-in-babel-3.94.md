@@ -64,7 +64,8 @@ better (even much better) than with `kashida.plain`.
 
 It’s still a set of rules for ‘plain’ Arabic font, with no ligatures.
 Some fonts may require additional transforms to avoid the kashida at
-specific places. See [What’s new in babel 3.59](https://latex3.github.io/babel/news/whats-new-in-babel-3.59.html)
+specific places. See [What’s new in babel
+3.59](https://latex3.github.io/babel/news/whats-new-in-babel-3.59.html).
 
 ## Fixes
 
