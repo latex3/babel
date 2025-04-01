@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/03/27 v25.6
+  [2025/04/01 v25.6.82276
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -3329,7 +3329,7 @@ cases.
 
 \Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}
   $\string|$ \texttt{letters}}
-  
+
 \New{3.38} This option is much like an ‘event’ called when a character
 belonging to the script of this locale is found (as its name implies,
 it acts on characters, not on spaces).
@@ -4368,7 +4368,6 @@ kana variants.}
 
 \trans{Latin}{letters.uv}{Replaces \textit{v}, \textit{U} with
 \textit{u}, \textit{V}.}
-
 
 \trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
 files refers to the Cyrillic script, which is here the target.) The
@@ -6076,8 +6075,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.6>>
-%<<date=2025/03/27>>
+%<<version=25.6.82276>>
+%<<date=2025/04/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15851,6 +15850,12 @@ end
   \bbl@ifunset{bbl@ATR@#1@\languagename @}%
     {\bbl@error{transform-not-available-b}{#1}{}{}}%
     {\bbl@csarg\unsetattribute{ATR@#1@\languagename @}}}
+%    \end{macrocode}
+%
+% The following two macros load the Lua code for transforms, but only
+% once. The only difference is in |add_after| and |add_before|.
+%
+%    \begin{macrocode}
 \def\bbl@activateposthyphen{%
   \let\bbl@activateposthyphen\relax
   \ifx\bbl@attr@hboxed\@undefined
@@ -15873,6 +15878,22 @@ end
   \directlua{
     Babel.locale_props[\the\csname bbl@id@@#1\endcsname].vars["#2"] = #3
   }}
+%    \end{macrocode}
+%
+% The code in |babel-transforms.lua| prints at some points the current
+% string being transformed. This macro first make sure this file is
+% loaded. Then, activates temporarily this feature and typeset inside a
+% box the text in the argument.
+%        
+%    \begin{macrocode}
+\newcommand\ShowTransforms[1]{%
+  \bbl@activateprehyphen
+  \bbl@activateposthyphen
+  \begingroup 
+    \directlua{ Babel.show_transforms = true }%
+    \setbox\z@\vbox{#1}%
+    \directlua{ Babel.show_transforms = false }%
+  \endgroup}
 %    \end{macrocode}
 %
 % The following experimental (and unfinished) macro applies the
@@ -16736,6 +16757,8 @@ Babel.ignore_pre_char = function(node)
   return (node.lang == Babel.nohyphenation)
 end
 
+Babel.show_transforms = false
+
 -- Merging both functions doesn't seen feasible, because there are too
 -- many differences.
 Babel.fetch_subtext[0] = function(head)
@@ -16795,6 +16818,7 @@ Babel.fetch_subtext[0] = function(head)
   if word_string:sub(-1) == ' ' then
     word_string = word_string:sub(1,-2)
   end
+  if Babel.show_transforms then texio.write_nl(word_string) end
   word_string = unicode.utf8.gsub(word_string, Babel.us_char .. '+$', '')
   return word_string, word_nodes, item, lang
 end
@@ -16817,15 +16841,15 @@ Babel.fetch_subtext[1] = function(head)
 
     elseif item.id == 29 then
       if item.lang == lang or lang == nil then
-        if (item.char ~= 124) and (item.char ~= 61) then -- not =, not |
-          lang = lang or item.lang
-          if node.has_attribute(item, Babel.attr_hboxed) then
-            word_string = word_string .. Babel.us_char
-          else
-            word_string = word_string .. unicode.utf8.char(item.char)
-          end
-          word_nodes[#word_nodes+1] = item
+        lang = lang or item.lang
+        if node.has_attribute(item, Babel.attr_hboxed) then
+          word_string = word_string .. Babel.us_char
+        elseif (item.char == 124) or (item.char == 61) then -- not =, not |   
+          word_string = word_string .. Babel.us_char
+        else
+          word_string = word_string .. unicode.utf8.char(item.char)
         end
+        word_nodes[#word_nodes+1] = item
       else
         break
       end
@@ -16862,7 +16886,7 @@ Babel.fetch_subtext[1] = function(head)
 
     item = item.next
   end
-
+  if Babel.show_transforms then texio.write_nl(word_string) end
   word_string = unicode.utf8.gsub(word_string, Babel.us_char .. '+$', '')
   return word_string, word_nodes, item, lang
 end
@@ -16883,6 +16907,10 @@ function Babel.hyphenate_replace(head, mode)
   local tovalue = Babel.tovalue
 
   local word_head = head
+
+  if Babel.show_transforms then
+    texio.write_nl('\n==== Showing ' .. (mode == 0 and 'pre' or 'post') .. 'hyphenation ====')
+  end
 
   while true do  -- for each subtext block
 
@@ -17021,7 +17049,7 @@ function Babel.hyphenate_replace(head, mode)
           if not enabled then
             last_match = save_last
             goto next
-          
+
           elseif crep and next(crep) == nil then -- = {}
             if step == 0 then
               last_match = save_last    -- Optimization
@@ -17174,6 +17202,7 @@ function Babel.hyphenate_replace(head, mode)
 
         end  -- for each replacement
 
+        if Babel.show_transforms then texio.write_nl('>  ' .. w) end
         if Babel.debug then
             print('.....', '/')
             Babel.debug_hyph(w, w_nodes, sc, first, last, last_match)
@@ -17191,6 +17220,8 @@ function Babel.hyphenate_replace(head, mode)
     ::next::
     word_head = nw
   end  -- for substring
+
+  if Babel.show_transforms then texio.write_nl(string.rep('-', 32) .. '\n') end
   return head
 end
 
@@ -23582,11 +23613,11 @@ function Babel.bidi(head, ispar, hdir)
   local fontmap = Babel.fontmap
 
   for item in node.traverse(head) do
-    
+
     -- Mask: DxxxPPTT (Done, Pardir [0-2], Textdir [0-2])
     locale_d = node.get_attribute(item, ATDIR)
     node.set_attribute(item, ATDIR, 0x80)
-    
+
     -- In what follows, #node is the last (previous) node, because the
     -- current one is not added until we start processing the neutrals.
     -- three cases: glyph, dir, otherwise
