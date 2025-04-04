@@ -56,6 +56,36 @@ Today $=$ \today
 
 ![](../media/locale-german.png)
 
+## Long s (ſ)
+
+The transform `longs.unifraktur` implements the basic heuristic
+rules for the long s (ſ) from those in [Unifraktur
+Maguntia](https://unifraktur.sourceforge.net/) (which are also used in
+[Yannis Fraktur Regular](https://ctan.org/pkg/yfonts-otf)), excluding a
+large set specific to this font. An example follows (from Einstein).
+The font has been picked somewhat
+randomly. See [What's new in babel
+25.5](https://latex3.github.io/babel/news/whats-new-in-babel-25.5.html)
+for further details.
+
+```tex
+\documentclass{article}
+
+\usepackage[german]{babel}
+\babelprovide[transforms=longs.unifraktur]{german}
+\babelfont{rm}{Kabinett-Fraktur}
+
+\begin{document}
+
+Das Schönste, was wir erleben können, ist das Geheimnisvolle. Es ist
+das Grundgefühl, das an der Wiege von wahrer Kunst und Wissenschaft
+steht. Wer es nicht kennt und sich nicht wundern, nicht mehr staunen
+kann, der ist sozusagen tot und sein Auge erloschen.
+
+\end{document}
+```
+![](../media/fraktur-einstein.png)
+
 ## Contribute
 
 If you are a native speaker or have expertise in this language, you can

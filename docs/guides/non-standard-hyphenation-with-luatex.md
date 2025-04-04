@@ -30,7 +30,7 @@ It consists of:
 * the **language** the transformation is applied to (here `german`);
 * a **pattern** with the string to be handled (here `ck`), which is based
   on lua patterns (please refer to the lua site linked below), with
-  some extension;
+  some extensions;
 * a **replacement** with a list containing exactly the same number of
   elements as the pattern (except if there are inserted elements, as
   explained below).
@@ -80,7 +80,7 @@ unit is the ordinary space of the current font (with the latter, you
 may need a `data=` pointing to a specific glyph).
 6. **Penalties** are declared with `penalty`.
 7. **Kerns** With a numeral argument in em units (e.g., `kern= -.5`).
-8. **No rules** The equivalent of `\norule`, which takes three
+8. **No rules** The equivalent of `\nohrule` and `\novrule`, which takes three
 arguments with the width, height and depth of the empty (invisible)
 rule to be added, again in em units. See [What's new in babel
 24.6](https://latex3.github.io/babel/news/whats-new-in-babel-24.6.html).
