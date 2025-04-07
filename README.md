@@ -1,4 +1,4 @@
-## Babel 25.6.82276
+## Babel 25.6.82873
 
 (dev)
 
@@ -61,7 +61,7 @@ respective authors.
 ```
 25.7   (dev)
        * New macro: \ShowTransforms.
-       * Fix #336.
+       * Fix #336, #337, #338
 
 25.6   2025-03-27
        * Transforms for Chinese and Japanese:

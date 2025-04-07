@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/04/01 v25.6.82276
+  [2025/04/07 v25.6.82873
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4529,6 +4529,16 @@ This feature is activated with the first |\babelposthyphenation| or
 the current language. Font dependent transforms are always enabled and
 cannot be disabled.
 
+\Describe{\ShowTransforms}{\marg{string}}
+
+\New{25.7} Applies the current transforms to the string and shows in
+the `log` the transformations performed. Don’t rely on the current
+format, because it may change. In the process, penalties,
+discretionaries, etc., can be inserted, which are currently printed as
+a boxed ‘?’ a boxed ‘US’ (because it’s the ‘unit separator’) or in
+another way. With this macros you can better understand what’s going
+on, so that you can debug the transforms.
+
 \subsection{Support for \xetex{} interchar}
 \label{interchar}
 
@@ -6075,8 +6085,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.6.82276>>
-%<<date=2025/04/01>>
+%<<version=25.6.82873>>
+%<<date=2025/04/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15497,7 +15507,8 @@ Babel.script_blocks = {
               {0x20000, 0x2A6DF}, {0x2A700, 0x2B73F},
               {0x2B740, 0x2B81F}, {0x2B820, 0x2CEAF},
               {0x2CEB0, 0x2EBEF}, {0x2F800, 0x2FA1F}},
-  ['Hebr'] = {{0x0590, 0x05FF}},
+  ['Hebr'] = {{0x0590, 0x05FF},
+              {0xFB1F, 0xFB4E}}, % <- Includes some <reserved>
   ['Jpan'] = {{0x3000, 0x303F}, {0x3040, 0x309F}, {0x30A0, 0x30FF},
               {0x4E00, 0x9FAF}, {0xFF00, 0xFFEF}},
   ['Khmr'] = {{0x1780, 0x17FF}, {0x19E0, 0x19FF}},
