@@ -88,6 +88,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [25.7](news/whats-new-in-babel-25.7.html) | `\ShowBabelTransforms` |
 | [25.6](news/whats-new-in-babel-25.6.html) | Improved `spacing.basic` (Chinese, Japanese). |
 | [25.5](news/whats-new-in-babel-25.5.html) | Transforms for Dutch (diaeresis) and German (long s). |
 | [25.4](news/whats-new-in-babel-25.4.html) | 8 new locales for ancient languages. |

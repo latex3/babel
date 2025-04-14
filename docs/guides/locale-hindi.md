@@ -80,6 +80,6 @@ assign them with:
 
 ## Transliterations
 
-_Only luatex_. There is are transforms for the Harvard-Kyoto
+_Only luatex_. There are transforms for the Harvard-Kyoto
 system (`transliteration.hk`) and IAST (`transliteration.iast`)
 
