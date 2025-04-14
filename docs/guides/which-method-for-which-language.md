@@ -113,11 +113,13 @@ Here are some basic fonts included in TeXLive. This section is not meant as a fo
 
 ### Additional fonts
 
-There are also some fine fonts out there, but you must install them because they aren't bundled with TeXLive. This list, of course, is just a very small selection.
+There are also some fine fonts out there, but you must install they because they aren't bundled with TeXLive. This list, of course, is just
+a very small selection. As a complementary source, see the [Font
+Lister](https://r12a.github.io/scripts/fontlist/index.html) by the W3C.
 
 | Font(s) | Languages / Scripts | Notes |
 | --- | --- | --- |
-| [Noto](https://notofonts.github.io/) | Multilingual | This family has a very comprehensive coverage and come in many variations of weight and width to match your other fonts. However, some fonts don’t cover the ASCII range. You can see how to combine Noto fonts at the end of the video [LaTeX – Multilingual Unicode strings](https://www.youtube.com/watch?v=jWGmYZsNiYA). There are 4 huge fonts covering many languages: Noto Serif Living, Noto Sans Living, Noto Serif Historical, Noto Sans Historical (but only the Regular variant)
+| [Noto](https://notofonts.github.io/) | Multilingual | This family has a very comprehensive coverage and come in many variations of weight and width to match your other fonts. However, some fonts don’t cover the ASCII range. You can see how to combine Noto fonts at the end of the video [LaTeX – Multilingual Unicode strings](https://www.youtube.com/watch?v=jWGmYZsNiYA). There are 4 huge fonts covering many languages: Noto Serif Living, Noto Sans Living, Noto Serif Historical, Noto Sans Historical (but only the Regular variants).
 | Babelstone Han | Chinese | It supports both Simplified and Traditional Chinese and has an especially comprehensive selection of traditional Chinese characters.
 | Abyssinica SIL | Abyssinica SIL |
 | Nirmala UI | Indic scripts | A Windows font with 14 scripts: Bangla, Chakma, Devanagari, Gujarati, Gurmukhi, Kannada, Malayalam, Meitei Mayek, Ol Chiki, Odia, Sinhala, Sora Sompeng, Tamil, Telugu.
@@ -126,6 +128,7 @@ There are also some fine fonts out there, but you must install them because they
 
 You may also want to have a look at some articles on tex.textackexchange
 on
+
 [Arabic](https://tex.stackexchange.com/questions/314202/overview-of-arabic-fonts-available-for-latex-xetex).
 
 -------------------------
