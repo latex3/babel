@@ -1,6 +1,6 @@
-## Babel 25.6.82873
+## Babel 25.7
 
-(dev)
+2025-04-14
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.6 are described in:
+Changes in version 25.7 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.6.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.7.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,16 +59,13 @@ respective authors.
 
 ### Summary of latest changes
 ```
-25.7   (dev)
-       * New macro: \ShowTransforms.
-       * Fix #336, #337, #338
-
-25.6   2025-03-27
-       * Transforms for Chinese and Japanese:
-         - Improved 'spacing.basic'.
-         - New: 'input.nospaces.
-       * @include directive in ini files.
-       * Fix error with CJK in lists (tex.sx 739783).
+25.7   2025-04-14
+       * New macro: \ShowBabelTransforms.
+       * Fixes:
+       - Incorrect kashida placement (#336).
+       - Ancient Hebrew vowel characters not recognised as Hebrew text (#337).
+       - babel-cy.ini captions and captions.licr inconsistent (#338).
+       * New locale: ancienthebrew.
 ```
 
 ### Previous changes
