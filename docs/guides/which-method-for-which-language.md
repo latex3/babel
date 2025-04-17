@@ -1,4 +1,4 @@
-# Which method for which language
+# Which method and font for which language
 
 > *Improve this page! Feel free to draft a pull request [on GitHub](https://github.com/latex3/babel/tree/docs/docs)*.
 
@@ -115,7 +115,7 @@ Here are some basic fonts included in TeXLive. This section is not meant as a fo
 
 There are also some fine fonts out there, but you must install they because they aren't bundled with TeXLive. This list, of course, is just
 a very small selection. As a complementary source, see the [Font
-Lister](https://r12a.github.io/scripts/fontlist/index.html) by the W3C.
+Lister](https://r12a.github.io/scripts/fontlist/index.html).
 
 | Font(s) | Languages / Scripts | Notes |
 | --- | --- | --- |

@@ -73,7 +73,7 @@ case, it's advisable to install TeXLive.)
 
 ## Featured 
 
-* [Which method for which language](guides/which-method-for-which-language.html)
+* [Which method and font for which language](guides/which-method-for-which-language.html)
   When to use the old good language files and when `\babelprovide` or `provide=*`.
 * [Useful links to tex.strackexchange](guides/useful-links-to-tex.stackexchange.html)
   Examples for many languages: Chinese, Arabic, Sanskrit, etc.
@@ -88,6 +88,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Most relevant changes
 | --- | --- |
+| [25.8](news/whats-new-in-babel-25.8.html) | (dev) Hebrew justification |
 | [25.7](news/whats-new-in-babel-25.7.html) | `\ShowBabelTransforms` |
 | [25.6](news/whats-new-in-babel-25.6.html) | Improved `spacing.basic` (Chinese, Japanese). |
 | [25.5](news/whats-new-in-babel-25.5.html) | Transforms for Dutch (diaeresis) and German (long s). |
