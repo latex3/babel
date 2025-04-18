@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/04/14 v25.7
+  [2025/04/18 v25.7.83937
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6081,8 +6081,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.7>>
-%<<date=2025/04/14>>
+%<<version=25.7.83937>>
+%<<date=2025/04/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7163,13 +7163,11 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \chardef\localeid\z@
-\def\bbl@id@last{0}    % No real need for a new counter
+\gdef\bbl@id@last{0}    % No real need for a new counter
 \def\bbl@id@assign{%
   \bbl@ifunset{bbl@id@@\languagename}%
-    {\count@\bbl@id@last\relax
-     \advance\count@\@ne
-     \global\bbl@csarg\chardef{id@@\languagename}\count@
-     \edef\bbl@id@last{\the\count@}%
+    {\xdef\bbl@id@last{\the\numexpr\bbl@id@last+1\relax}%
+     \global\bbl@csarg\chardef{id@@\languagename}\bbl@id@last\relax
      \ifcase\bbl@engine\or
        \directlua{
          Babel.locale_props[\bbl@id@last] = {}
@@ -7298,8 +7296,6 @@ wouldn’t exist.
 \newif\ifbbl@usedategroup
 \let\bbl@savedextras\@empty
 \def\bbl@switch#1{%  from select@, foreign@
-  % make sure there is info for the language if so requested
-  \bbl@ensureinfo{#1}%
   % restore
   \originalTeX
   \expandafter\def\expandafter\originalTeX\expandafter{%
@@ -8057,6 +8053,15 @@ wouldn’t exist.
   \catcode`\@=11\relax
   \chardef\eqcatcode=\catcode`\=
   \catcode`\==12\relax
+  \@ifpackagewith{babel}{ensureinfo=off}{}%
+    {\ifx\InputIfFileExists\@undefined\else
+       \bbl@ifunset{bbl@lname@#1}%
+         {{\let\bbl@ensuring\@empty % Flag used in a couple of babel-*.tex files
+          \def\languagename{#1}%
+          \bbl@id@assign
+          \bbl@load@info{#1}}}%
+        {}%
+     \fi}%
   \expandafter\if\expandafter\@backslashchar
                  \expandafter\@car\string#2\@nil
     \ifx#2\@undefined\else
@@ -11026,9 +11031,7 @@ wouldn’t exist.
   \bbl@exportkey{extu}{identification.extension.u.tag.bcp47}{}%
   \bbl@exportkey{extx}{identification.extension.x.tag.bcp47}{}%
   % Also maps bcp47 -> languagename
-  \ifbbl@bcptoname
-    \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
-  \fi
+  \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
   \ifcase\bbl@engine\or
     \directlua{%
       Babel.locale_props[\the\bbl@cs{id@@\languagename}].script
@@ -11775,19 +11778,7 @@ wouldn’t exist.
 %<<*More package options>>
 \DeclareOption{ensureinfo=off}{}
 %<</More package options>>
-\let\bbl@ensureinfo\@gobble
-\newcommand\BabelEnsureInfo{%
-  \ifx\InputIfFileExists\@undefined\else
-    \def\bbl@ensureinfo##1{%
-      \bbl@ifunset{bbl@lname@##1}{\bbl@load@info{##1}}{}}%
-  \fi
-  \bbl@foreach\bbl@loaded{{%
-    \let\bbl@ensuring\@empty % Flag used in a couple of babel-*.tex files
-    \def\languagename{##1}%
-    \bbl@ensureinfo{##1}}}}
-\@ifpackagewith{babel}{ensureinfo=off}{}%
-  {\AtEndOfPackage{% Test for plain.
-    \ifx\@undefined\bbl@loaded\else\BabelEnsureInfo\fi}}
+\let\BabelEnsureInfo\relax
 %    \end{macrocode}
 %
 % More general, but non-expandable, is |\getlocaleproperty|. To inspect
@@ -11832,8 +11823,11 @@ wouldn’t exist.
     \bbl@error{base-on-the-fly}{}{}{}%
   \fi
   \let\bbl@auxname\languagename % Still necessary.
-  \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
-    {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}}%
+  \ifbbl@bcptoname
+    \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
+      {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}%
+      \let\localename\languagename}%
+  \fi
   \ifbbl@bcpallowed
     \expandafter\ifx\csname date\languagename\endcsname\relax
       \expandafter
@@ -11972,8 +11966,7 @@ wouldn’t exist.
   \def\bbl@autoload@bcpoptions{#1}}
 \newif\ifbbl@bcptoname
 \@namedef{bbl@ADJ@bcp47.toname@on}{%
-  \bbl@bcptonametrue
-  \BabelEnsureInfo}
+  \bbl@bcptonametrue}
 \@namedef{bbl@ADJ@bcp47.toname@off}{%
   \bbl@bcptonamefalse}
 \@namedef{bbl@ADJ@prehyphenation.disable@nohyphenation}{%
@@ -25533,7 +25526,6 @@ Babel.cjk_breaks = {
 \let\bbl@opt@shorthands\@nnil
 \def\bbl@ifshorthand#1#2#3{#2}%
 \let\bbl@language@opts\@empty
-\let\bbl@ensureinfo\@gobble
 \let\bbl@provide@locale\relax
 \ifx\babeloptionstrings\@undefined
   \let\bbl@opt@strings\@nnil

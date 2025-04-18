@@ -1,6 +1,6 @@
-## Babel 25.7
+## Babel 25.7.83937
 
-2025-04-14
+(dev)
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.7 are described in:
+Changes in version 25.8 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.7.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.8.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,6 +59,9 @@ respective authors.
 
 ### Summary of latest changes
 ```
+25.8   (dev)
+       * Hebrew justification.
+
 25.7   2025-04-14
        * New macro: \ShowBabelTransforms.
        * Fixes:
