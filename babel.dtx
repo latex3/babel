@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/04/18 v25.7.83937
+  [2025/04/19 v25.7.84045
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6081,8 +6081,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.7.83937>>
-%<<date=2025/04/18>>
+%<<version=25.7.84045>>
+%<<date=2025/04/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7166,8 +7166,10 @@ wouldn’t exist.
 \gdef\bbl@id@last{0}    % No real need for a new counter
 \def\bbl@id@assign{%
   \bbl@ifunset{bbl@id@@\languagename}%
-    {\xdef\bbl@id@last{\the\numexpr\bbl@id@last+1\relax}%
-     \global\bbl@csarg\chardef{id@@\languagename}\bbl@id@last\relax
+    {\count@\bbl@id@last\relax
+     \advance\count@\@ne
+     \global\bbl@csarg\chardef{id@@\languagename}\count@
+     \xdef\bbl@id@last{\the\count@}%
      \ifcase\bbl@engine\or
        \directlua{
          Babel.locale_props[\bbl@id@last] = {}
@@ -8012,7 +8014,7 @@ wouldn’t exist.
 %
 % At the start of processing a language definition file we always
 % check the category code of the at-sign. We make sure that it is
-% a `letter' during the processing of the file. We also save its
+% a ‘letter’ during the processing of the file. We also save its
 % name as the last called option, even if not loaded.
 %
 % Another character that needs to have the correct category code
@@ -8077,6 +8079,8 @@ wouldn’t exist.
 %
 % \macro{\ldf@quit}
 % This macro interrupts the processing of a language definition file.
+% Remember |\endinput| is not executed immediately, but delayed to
+% the end of the current line in the input file.
 %
 %    \begin{macrocode}
 \def\ldf@quit#1{%
@@ -8096,14 +8100,14 @@ wouldn’t exist.
 % code of the @-sign.
 %
 %    \begin{macrocode}
-\def\bbl@afterldf#1{%
+\def\bbl@afterldf{%
   \bbl@afterlang
   \let\bbl@afterlang\relax
   \let\BabelModifiers\relax
   \let\bbl@screset\relax}%
 \def\ldf@finish#1{%
   \loadlocalcfg{#1}%
-  \bbl@afterldf{#1}%
+  \bbl@afterldf
   \expandafter\main@language\expandafter{#1}%
   \catcode`\@=\atcatcode \let\atcatcode\relax
   \catcode`\==\eqcatcode \let\eqcatcode\relax}
@@ -11393,7 +11397,7 @@ wouldn’t exist.
 \newcommand\babelcalendar[2][\the\year-\the\month-\the\day]{%
   \@nameuse{bbl@ca@#2}#1\@@}
 \newcommand\BabelDateSpace{\nobreakspace}
-\newcommand\BabelDateDot{.\@}  % TODO. \let instead of repeating
+\newcommand\BabelDateDot{.\@}
 \newcommand\BabelDated[1]{{\number#1}}
 \newcommand\BabelDatedd[1]{{\ifnum#1<10 0\fi\number#1}}
 \newcommand\BabelDateM[1]{{\number#1}}
@@ -11457,12 +11461,20 @@ wouldn’t exist.
 %
 % \textbf{Transforms.}
 %
+% Process the transforms read from |ini| files, converts them to a from
+% close to the user interface (with |\babelprehyphenation| and
+% |\babelprehyphenation|), wrapped with |\bbl@transforms@aux| \ldots
+% |\relax|, and stores them in |\bbl@release@transforms|. However,
+% since building a list enclosed in braces isn’t trivial, the
+% replacements are added after a comma, and then |\bbl@transforms@aux|
+% adds the braces.
+%
 %    \begin{macrocode}
 \bbl@csarg\let{inikv@transforms.prehyphenation}\bbl@inikv
 \bbl@csarg\let{inikv@transforms.posthyphenation}\bbl@inikv
 \def\bbl@transforms@aux#1#2#3#4,#5\relax{%
   #1[#2]{#3}{#4}{#5}}
-\begingroup %  A hack. TODO. Don't require a specific order
+\begingroup
   \catcode`\%=12
   \catcode`\&=14
   \gdef\bbl@transforms#1#2#3{&%
@@ -11516,8 +11528,11 @@ wouldn’t exist.
 %
 % \subsection{Handle language system}
 %
-% Language and Script values to be used when defining a font or
-% setting the direction are set with the following macros.
+% The language system (i.e., |Language| and |Script|) to be used when
+% defining a font or setting the direction are set with the following
+% macros. It also deals with unhyphenated line breaking in \xetex\ 
+% (e.g., Thai and traditional Sanskrit), which is done with a hack at
+% the font level because this engine doesn’t support it.
 %
 %    \begin{macrocode}
 \def\bbl@provide@lsys#1{%
@@ -11545,26 +11560,6 @@ wouldn’t exist.
         \fi}}%
   \fi
   \bbl@csarg\bbl@toglobal{lsys@#1}}
-\def\bbl@xenohyph@d{%
-  \bbl@ifset{bbl@prehc@\languagename}%
-    {\ifnum\hyphenchar\font=\defaulthyphenchar
-       \iffontchar\font\bbl@cl{prehc}\relax
-         \hyphenchar\font\bbl@cl{prehc}\relax
-       \else\iffontchar\font"200B
-         \hyphenchar\font"200B
-       \else
-         \bbl@warning
-           {Neither 0 nor ZERO WIDTH SPACE are available\\%
-            in the current font, and therefore the hyphen\\%
-            will be printed. Try changing the fontspec's\\%
-            'HyphenChar' to another value, but be aware\\%
-            this setting is not safe (see the manual).\\%
-            Reported}%
-         \hyphenchar\font\defaulthyphenchar
-       \fi\fi
-     \fi}%
-    {\hyphenchar\font\defaulthyphenchar}}
-  % \fi}
 %    \end{macrocode}
 %
 % The following |ini| reader ignores everything but the
@@ -11671,7 +11666,7 @@ wouldn’t exist.
      \bbl@cs{cntr@#1.3@\languagename}#6%
      \bbl@cs{cntr@#1.2@\languagename}#7%
      \bbl@cs{cntr@#1.1@\languagename}#8%
-     \ifnum#6#7#8>\z@ % TODO. An ad hoc rule for Greek. Ugly.
+     \ifnum#6#7#8>\z@
        \bbl@ifunset{bbl@cntr@#1.S.321@\languagename}{}%
          {\bbl@cs{cntr@#1.S.321@\languagename}}%
      \fi}%
@@ -11772,7 +11767,8 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % With version 3.75 |\BabelEnsureInfo| is executed always, but there is
-% an option to disable it.
+% an option to disable it. Since the info in |ini| files are always
+% loaded, it has be made no-op in version 25.8.
 %
 %    \begin{macrocode} 
 %<<*More package options>>
@@ -11781,10 +11777,7 @@ wouldn’t exist.
 \let\BabelEnsureInfo\relax
 %    \end{macrocode}
 %
-% More general, but non-expandable, is |\getlocaleproperty|. To inspect
-% every possible loaded |ini|, we define |\LocaleForEach|, where
-% |\bbl@ini@loaded| is a comma-separated list of locales, built by
-% |\bbl@read@ini|.
+% More general, but non-expandable, is |\getlocaleproperty|. 
 %
 %    \begin{macrocode}
 \newcommand\getlocaleproperty{%
@@ -11802,6 +11795,13 @@ wouldn’t exist.
   \ifx#1\relax
     \bbl@error{unknown-locale-key}{#1}{#2}{#3}%
   \fi}
+%    \end{macrocode}
+%
+%  To inspect every possible loaded |ini|, we define |\LocaleForEach|,
+%  where |\bbl@ini@loaded| is a comma-separated list of locales, built
+%  by |\bbl@read@ini|.
+%
+%    \begin{macrocode}
 \let\bbl@ini@loaded\@empty
 \newcommand\LocaleForEach{\bbl@foreach\bbl@ini@loaded}
 \def\ShowLocaleProperties#1{%
@@ -11813,6 +11813,17 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % \subsection{BCP 47 related commands}
+%
+% This macro is called by language selectors when the language isn’t
+% recognized. So, it’s the core for (1) mapping from a BCP 27 tag to
+% the actual language, if |bcp47.toname| is enabled (i.e., if
+% |bbl@bcptoname| is true), and (2) lazy loading. With |autoload.bcp47|
+% enabled \textit{and} lazy loading, we must first build a name for the
+% language, with the help of |autoload.bcp47.prefix|. Then we use
+% |\provideprovide| passing the options set with
+% |autoload.bcp47.options| (by default |import|). Finally, and if the
+% locale has not been loaded before, we use |\provideprovide| with the
+% language name as passed to the selector.
 %
 %    \begin{macrocode}
 \newif\ifbbl@bcpallowed
@@ -11826,7 +11837,7 @@ wouldn’t exist.
   \ifbbl@bcptoname
     \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
       {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}%
-      \let\localename\languagename}%
+       \let\localename\languagename}%
   \fi
   \ifbbl@bcpallowed
     \expandafter\ifx\csname date\languagename\endcsname\relax
@@ -11834,7 +11845,7 @@ wouldn’t exist.
       \bbl@bcplookup\languagename-\@empty-\@empty-\@empty\@@
       \ifx\bbl@bcp\relax\else  % Returned by \bbl@bcplookup
         \edef\languagename{\bbl@bcp@prefix\bbl@bcp}%
-        \edef\localename{\bbl@bcp@prefix\bbl@bcp}%
+        \let\localename\languagename
         \expandafter\ifx\csname date\languagename\endcsname\relax
           \let\bbl@initoload\bbl@bcp
           \bbl@exp{\\\babelprovide[\bbl@autoload@bcpoptions]{\languagename}}%
@@ -13076,7 +13087,7 @@ wouldn’t exist.
       \DeclareOption{#1}{%
         \bbl@ldfinit
         \babelprovide[@import]{#1}% %%%%%
-        \bbl@afterldf{}}%
+        \bbl@afterldf}%
     \fi
   \fi}
 \bbl@foreach\bbl@tempf{%
@@ -13093,7 +13104,7 @@ wouldn’t exist.
          {\DeclareOption{#1}{%
             \bbl@ldfinit
             \babelprovide[@import]{#1}%  %%%%%%
-            \bbl@afterldf{}}}%
+            \bbl@afterldf}}%
          {}%
      \fi
   \fi}
@@ -13156,7 +13167,7 @@ wouldn’t exist.
        \\\babelprovide
          [\bbl@opt@provide,@import,main]%  %%%%%
          {\bbl@opt@main}}%
-    \bbl@afterldf{}
+    \bbl@afterldf
     \DeclareOption{\bbl@opt@main}{}
   \else % case 0,2 (main is ldf)
     \ifx\bbl@loadmain\relax
@@ -14162,6 +14173,31 @@ wouldn’t exist.
 \let\bbl@unset@renderer\relax
 <@Font selection@>
 \def\bbl@provide@extra#1{}
+%    \end{macrocode}
+%
+% Hack for unhyphenated line breaking. See |\bbl@provide@lsys| in the
+% common code.
+%
+%    \begin{macrocode}
+\def\bbl@xenohyph@d{%
+  \bbl@ifset{bbl@prehc@\languagename}%
+    {\ifnum\hyphenchar\font=\defaulthyphenchar
+       \iffontchar\font\bbl@cl{prehc}\relax
+         \hyphenchar\font\bbl@cl{prehc}\relax
+       \else\iffontchar\font"200B
+         \hyphenchar\font"200B
+       \else
+         \bbl@warning
+           {Neither 0 nor ZERO WIDTH SPACE are available\\%
+            in the current font, and therefore the hyphen\\%
+            will be printed. Try changing the fontspec's\\%
+            'HyphenChar' to another value, but be aware\\%
+            this setting is not safe (see the manual).\\%
+            Reported}%
+         \hyphenchar\font\defaulthyphenchar
+       \fi\fi
+     \fi}%
+    {\hyphenchar\font\defaulthyphenchar}}
 %    \end{macrocode}
 %
 % \subsection{Support for interchar}

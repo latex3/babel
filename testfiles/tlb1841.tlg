@@ -6,10 +6,6 @@ Main Class: article
     Options: a4paper,12pt
 Package: babel
     Options: french,english
-(../babel-french.tex
-Package babel Info: Importing font and identification data for french
-(babel)             from babel-fr.ini. Reported on input line ....
-)
 Package babel Info: 'french' activates 'french' shorthands.
 (babel)             Reported  on input line ....
 > \box...=
