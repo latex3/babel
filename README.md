@@ -1,4 +1,4 @@
-## Babel 25.7.84045
+## Babel 25.7.84143
 
 (dev)
 
@@ -60,6 +60,7 @@ respective authors.
 ### Summary of latest changes
 ```
 25.8   (dev)
+       * [Experimental: metadata].
        * Hebrew justification.
 
 25.7   2025-04-14

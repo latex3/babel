@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/04/19 v25.7.84045
+  [2025/04/20 v25.7.84143
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6081,8 +6081,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.7.84045>>
-%<<date=2025/04/19>>
+%<<version=25.7.84143>>
+%<<date=2025/04/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6525,6 +6525,9 @@ wouldn’t exist.
        Babel = Babel or {}
        Babel.debug = false }%
    \fi}
+%%%%%%%%%%%%%%%
+\DeclareOption{metadata=on}{}
+%%%%%%%%%%%%%%%
 %    \end{macrocode}
 %
 % Macros to deal with errors, warnings, etc. Errors are stored in a
@@ -10845,6 +10848,9 @@ wouldn’t exist.
     % == Store ini data in \bbl@inidata ==
     \catcode`\[=12 \catcode`\]=12 \catcode`\==12 \catcode`\&=12
     \catcode`\;=12 \catcode`\|=12 \catcode`\%=14 \catcode`\-=12
+    \ifx\bbl@metalang\@undefined\else\ifx\bbl@metalang\@empty\else
+        \edef\languagename{tag \bbl@metalang}%
+    \fi\fi       
     \bbl@info{Importing
                 \ifcase#2font and identification \or basic \fi
                  data for \languagename\\%
@@ -10858,6 +10864,17 @@ wouldn’t exist.
     \bbl@inistore load.level=#2\@@
     \bbl@loop@ini\bbl@readstream
     % == Process stored data ==
+    %%%%%%%%%%%%%%%
+    \ifx\bbl@metalang\@undefined\else\ifx\bbl@metalang\@empty\else
+      \def\bbl@tempa##1 ##2\@@{##1}% Get first name
+      \def\bbl@elt##1##2##3{%
+        \bbl@ifsamestring{identification/name.babel}{##1/##2}%
+          {\edef\languagename{\bbl@tempa##3 \@@}%
+           \bbl@id@assign}%
+          {}}%
+      \bbl@inidata
+    \fi\fi
+    %%%%%%%%%%%%%%%
     \bbl@csarg\xdef{lini@\languagename}{#1}%
     \bbl@read@ini@aux
     % == 'Export' data ==
@@ -11461,7 +11478,7 @@ wouldn’t exist.
 %
 % \textbf{Transforms.}
 %
-% Process the transforms read from |ini| files, converts them to a from
+% Process the transforms read from |ini| files, converts them to a form
 % close to the user interface (with |\babelprehyphenation| and
 % |\babelprehyphenation|), wrapped with |\bbl@transforms@aux| \ldots
 % |\relax|, and stores them in |\bbl@release@transforms|. However,
@@ -12930,7 +12947,8 @@ wouldn’t exist.
                        *}}%
         \@empty}}
 \fi
-%    \end{macrocode}%
+%    \end{macrocode}
+%
 % \subsection{Language options}
 %
 % Languages are loaded when processing the corresponding option
@@ -13000,6 +13018,29 @@ wouldn’t exist.
 % load |<name>.cfg| instead.
 %
 %    \begin{macrocode}
+%%%%%%%%%%%%%%%
+% Experimental stuff for metadata. It attempts to read the ini file here.
+% Then, use the info to add the language to the option list.
+\@ifpackagewith{babel}{metadata=on}{%
+  \ifx\GetDocumentProperties\@undefined
+     \let\bbl@metalang\@empty
+   \else
+     \edef\bbl@metalang{\GetDocumentProperties{document/lang}}%
+   \fi
+  % Redundant conditional (in case we need something else):
+  \ifx\bbl@metalang\@undefined\else\ifx\bbl@metalang\@empty\else
+    \expandafter
+    \bbl@bcplookup\bbl@metalang-\@empty-\@empty-\@empty\@@
+    \def\languagename{@@@@}% Dummy
+    \bbl@read@ini{\bbl@bcp}0%
+    \xdef\bbl@language@opts{\bbl@language@opts,\languagename}%
+    \ifx\bbl@opt@main\@nnil
+      \let\bbl@opt@main\languagename
+    \fi
+    \bbl@info{Passing \languagename\space to babel}%
+  \fi\fi
+  }{}
+%%%%%%%%%%%%%%%
 \ifx\bbl@opt@config\@nnil
   \@ifpackagewith{babel}{noconfigs}{}%
     {\InputIfFileExists{bblopts.cfg}%
@@ -13054,11 +13095,16 @@ wouldn’t exist.
       \fi}%
   \fi
 \else
-  \bbl@info{Main language set with 'main='. Except if you have\\%
-            problems, prefer the default mechanism for setting\\%
-            the main language, i.e., as the last declared.\\%
-            Reported}
+%%%%%%%%%%%%%%%
+  \ifx\bbl@metalang\@undefined\else\ifx\bbl@metalang\@empty\else
+    \bbl@afterfi\expandafter\@gobble
+  \fi\fi
+    {\bbl@info{Main language set with 'main='. Except if you have\\%
+               problems, prefer the default mechanism for setting\\%
+               the main language, i.e., as the last declared.\\%
+               Reported}}
 \fi
+%%%%%%%%%%%%%%%
 %    \end{macrocode}
 %
 % A few languages are still defined explicitly. They are stored in case
