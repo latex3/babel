@@ -2,6 +2,8 @@
 
 > *Improve this page! Feel free to draft a pull request [on GitHub](https://github.com/latex3/babel/tree/docs/docs)*.
 
+**Index** [Loading the language](#loading-the-language) • [Fonts](#fonts) 
+
 Since currently there are two methods to load a language, here is a short
 explanation on how to do it, with info about basic fonts, so that you
 can setup quickly a document. There are also pages on specific locales
@@ -15,8 +17,6 @@ among others.
 
 _I'd like to thank Loren Davis for his help in preparing this page,
 including the list of additional fonts._
-
-**Index** [Loading the language](#loading-the-language) • [Fonts](#fonts) 
 
 --------------------------
 
@@ -144,6 +144,3 @@ on
 | Portuguese | | | | |
 | Swedish | | | | |
 | Thai | provide | Renderer=Harfbuzz | | |
-
-
-
