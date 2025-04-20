@@ -27,9 +27,37 @@ are three tools:
 * `WordSpace` as a `fontspec` option. This is not a `babel` feature,
   but is mentioned because it can be useful.
 * The locale option `justification=unhyphenated`, which is a stronger
-  version of `\sloppy` .
+  version of `\sloppy`.
+  
+In addition, you can consider using `microtype`, too. 
   
 [[Add example]]
 
+## Metadata
+
+**Experimental**. For testing purposes. It has to be currently activated
+with option `metadata=on`. Basically, what it does is to convert:
+```
+\DocumentMetadata{lang=da}
+...
+\usepackage[metadata=on, english]{babel}
+```
+to
+```
+\DocumentMetadata{lang=da}
+...
+\usepackage[main=danish, metadata=on, english, danish]{babel}
+```
+The basic tag lookup explained in the `babel` manual is applied here,
+so that `fr-Latn-FR` is valid and mapped to `fr`, which is in turn
+mapped to `french`, while `en-Latn-US` is mapped to `en-US`, which is
+mapped to `american`.
+
+**This is a breaking change**. But `\DocumentMetadata` is a recent
+LaTeX feature, and problems should be minimal. Moreover, this short
+example didn’t make much sense, because settings are contradictory.
+Note also with the `lang` metadata, and if there is no other language
+declarations as class or package options, the language loaded is
+that set as metadata instead of the dummy language `nil`.
 
 

@@ -86,7 +86,7 @@ case, it's advisable to install TeXLive.)
 
 ## What's new 
 
-| Version | Date | Most relevant changes
+| Version | Release date | Most relevant changes
 | --- | --- | --- |
 | [25.8](news/whats-new-in-babel-25.8.html) | (dev) | Hebrew justification. |
 | [25.7](news/whats-new-in-babel-25.7.html) | 2025-04-14 | `\ShowBabelTransforms`. |

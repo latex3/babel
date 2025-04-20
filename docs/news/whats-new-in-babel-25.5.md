@@ -50,12 +50,15 @@ kann, der ist sozusagen tot und sein Auge erloschen.
 ```
 ![](../media/fraktur-einstein.png)
 
-According to Unicode: “Such stylistic distinctions [Fraktur and Gaelic]
-are ignored in the Unicode Standard, which treats them as presentation
-styles of the Latin script”. The reason is the scripts tags `Latf` and
-`Latg` are aimed primarily at book cataloging. They are also not treated
-as separate scripts in OpenType, which rely on ‘historical’ or ‘stylistic
-set’ font features.
+According to Unicode, on Fraktur and Gaelic:
+
+> Such stylistic distinctions are ignored in the
+> Unicode Standard, which treats them as presentation styles of the
+> Latin script.
+
+The reason is the scripts tags `Latf` and `Latg` are aimed primarily at
+book cataloging. They are also not treated as separate scripts in
+OpenType, which rely on ‘historical’ or ‘stylistic set’ font features.
 
 ## Shorthand groups
 
