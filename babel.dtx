@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/04/26 v25.7.84737
+  [2025/04/14 v25.7
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -428,6 +428,27 @@ document encoding is UTF-8). Other scripts require loading
 \textsf{fontspec}, although \babel{} provides a higher level interface
 (see |\babelfont| below). 
 
+\New{25.8} The PDF document language can also be set with
+|\DocumentMetadata| before |\documentclass|. See the liked news page
+for further info. For example, the following setting will pass
+\texttt{british} as the main language to \babel:
+\begin{verbatim}
+\DocumentMetadata{_lang=en-GB_}
+\documentclass{article}
+\usepackage{babel}
+\end{verbatim}
+The basic tag lookup explained below is applied here, so that
+\texttt{fr-Latn-FR} is valid and mapped to \texttt{fr}, which is in
+turn mapped to \texttt{french}. This eases the localization of
+automatically generated documents.
+
+\begin{warning}
+  This is a \textbf{breaking change}, because until now with this
+  example the dummy language \texttt{nil} was loaded. Tags are not
+  validated, which means mistakes like |en-UK| or wrong tags like
+  |de-AUS| or |la-x-classical| might be accepted without complaining.
+\end{warning}
+
 \begin{example}
   Here is a simple full example for “traditional” \TeX{} engines (see
   below for \luatex{} and \xetex{}). The package |fontenc| does not
@@ -513,15 +534,10 @@ _\babelfont{rm}{DejaVu Serif}_
 \begin{verbatim}
 \usepackage[_pdflang=es-MX_]{hyperref}
 \end{verbatim}
-This is not currently done by \babel{} and you must set it by hand. The
-PDF document language can also be set with |\DocumentMetadata|, before
-|\documentclass|; for example:
-\begin{verbatim}
-\DocumentMetadata{_lang=es-MX_}
-\end{verbatim}
-Tags are not validated which, means mistakes like |en-UK| or
-wrong tags like |de-AUS| or |la-x-classical| are accepted. 
+This is not currently done by \babel{} and you must set it by hand.
 \end{note}
+
+
 
 \begin{warning}
   In the preamble, \textit{no} language has been selected, except
@@ -6083,8 +6099,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.7.84737>>
-%<<date=2025/04/26>>
+%<<version=25.7>>
+%<<date=2025/04/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10873,7 +10889,7 @@ wouldn’t exist.
       \def\bbl@tempa##1 ##2\@@{##1}% Get first name
       \def\bbl@elt##1##2##3{%
         \bbl@ifsamestring{identification/name.babel}{##1/##2}%
-          {\edef\languagename{\bbl@tempa##3 \@@}%
+          {\xdef\languagename{\bbl@tempa##3 \@@}%
            \bbl@id@assign
            \def\bbl@elt####1####2####3{}}%
           {}}%
@@ -13044,8 +13060,8 @@ wouldn’t exist.
   \ifx\bbl@metalang\@empty\else
     \expandafter
     \bbl@bcplookup\bbl@metalang-\@empty-\@empty-\@empty\@@
-    \bbl@read@ini{\bbl@bcp}\m@ne
-    \xdef\bbl@language@opts{\bbl@language@opts,\languagename}%
+    {\bbl@read@ini{\bbl@bcp}\m@ne}%
+    \edef\bbl@language@opts{\bbl@language@opts,\languagename}%
     \ifx\bbl@opt@main\@nnil
       \let\bbl@opt@main\languagename
     \fi
