@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/04/20 v25.7.84143
+  [2025/04/26 v25.7.84737
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -519,6 +519,8 @@ PDF document language can also be set with |\DocumentMetadata|, before
 \begin{verbatim}
 \DocumentMetadata{_lang=es-MX_}
 \end{verbatim}
+Tags are not validated which, means mistakes like |en-UK| or
+wrong tags like |de-AUS| or |la-x-classical| are accepted. 
 \end{note}
 
 \begin{warning}
@@ -6081,8 +6083,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.7.84143>>
-%<<date=2025/04/20>>
+%<<version=25.7.84737>>
+%<<date=2025/04/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6525,9 +6527,6 @@ wouldn’t exist.
        Babel = Babel or {}
        Babel.debug = false }%
    \fi}
-%%%%%%%%%%%%%%%
-\DeclareOption{metadata=on}{}
-%%%%%%%%%%%%%%%
 %    \end{macrocode}
 %
 % Macros to deal with errors, warnings, etc. Errors are stored in a
@@ -10807,12 +10806,17 @@ wouldn’t exist.
 % counters); finally, ‘export’ some values by defining global macros
 % (identification, typography, characters, numbers). The second
 % argument is 0 when called to read the minimal data for fonts; with
-% |\babelprovide| it's either 1 or 2.
+% |\babelprovide| it's either 1 (without \texttt{import}) or 2 (which
+% |import|). The value -1 is used with |\DocumentMetadata|.
 %
 % |\bbl@loop@ini| is the reader, line by line (1: stream), and calls
 % |\bbl@iniline| to save the key/value pairs. If |\bbl@inistore| finds
 % the |@include| directive, the input stream is switched temporarily and
 % |\bbl@read@subini| is called.
+% 
+% When the language is being set based on the document metadata (\#2 in
+% |\bbl@read@ini| is $-$1), there is an interlude to get the name,
+% after the data have been collected, and before it’s processed.
 %
 %    \begin{macrocode}
 \def\bbl@loop@ini#1{%
@@ -10848,33 +10852,33 @@ wouldn’t exist.
     % == Store ini data in \bbl@inidata ==
     \catcode`\[=12 \catcode`\]=12 \catcode`\==12 \catcode`\&=12
     \catcode`\;=12 \catcode`\|=12 \catcode`\%=14 \catcode`\-=12
-    \ifx\bbl@metalang\@undefined\else\ifx\bbl@metalang\@empty\else
-        \edef\languagename{tag \bbl@metalang}%
-    \fi\fi       
+    \ifnum#2=\m@ne % Just for the info
+      \edef\languagename{tag \bbl@metalang}%
+    \fi  
     \bbl@info{Importing
                 \ifcase#2font and identification \or basic \fi
                  data for \languagename\\%
               from babel-#1.ini. Reported}%
-    \ifnum#2=\z@
+    \ifnum#2<\@ne
       \global\let\bbl@inidata\@empty
-      \let\bbl@inistore\bbl@inistore@min    % Remember it's local
+      \let\bbl@inistore\bbl@inistore@min  % Remember it's local
     \fi
     \def\bbl@section{identification}%
-    \bbl@exp{\\\bbl@inistore tag.ini=#1\\\@@}%
-    \bbl@inistore load.level=#2\@@
+    \bbl@exp{%
+      \\\bbl@inistore tag.ini=#1\\\@@
+      \\\bbl@inistore load.level=\ifnum#2<\@ne 0\else #2\fi\\\@@}%
     \bbl@loop@ini\bbl@readstream
     % == Process stored data ==
-    %%%%%%%%%%%%%%%
-    \ifx\bbl@metalang\@undefined\else\ifx\bbl@metalang\@empty\else
+    \ifnum#2=\m@ne
       \def\bbl@tempa##1 ##2\@@{##1}% Get first name
       \def\bbl@elt##1##2##3{%
         \bbl@ifsamestring{identification/name.babel}{##1/##2}%
           {\edef\languagename{\bbl@tempa##3 \@@}%
-           \bbl@id@assign}%
+           \bbl@id@assign
+           \def\bbl@elt####1####2####3{}}%
           {}}%
       \bbl@inidata
-    \fi\fi
-    %%%%%%%%%%%%%%%
+    \fi
     \bbl@csarg\xdef{lini@\languagename}{#1}%
     \bbl@read@ini@aux
     % == 'Export' data ==
@@ -11022,6 +11026,16 @@ wouldn’t exist.
 %
 \let\bbl@release@transforms\@empty
 \let\bbl@release@casing\@empty
+%    \end{macrocode}
+%
+% Relevant keys are ‘exported’, i.e., global macros with short names
+% are created with values taken from the corresponding keys. The
+% number of exported keys depends on the loading level (\#1): $-$1 and
+% 0 only info (the identificacion section), 1 also basic (like
+% linebreaking or character ranges), 2 also (re)new (with date and
+% captions).
+%
+%    \begin{macrocode}
 \def\bbl@ini@exports#1{%
   % Identification always exported
   \bbl@iniwarning{}%
@@ -11059,7 +11073,7 @@ wouldn’t exist.
         = '\bbl@cl{sbcp}'}%
   \fi
   % Conditional
-  \ifnum#1>\z@         % 0 = only info, 1, 2 = basic, (re)new
+  \ifnum#1>\z@      % -1 or 0 = only info, 1 = basic, 2 = (re)new
     \bbl@exportkey{calpr}{date.calendar.preferred}{}%
     \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
     \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
@@ -13017,30 +13031,27 @@ wouldn’t exist.
 % of the file with the package option |config=<name>|, which will
 % load |<name>.cfg| instead.
 %
+% If the language as been set as metadata, read the info from the
+% corresponding \texttt{ini} file and extract the \babel\ name. Then
+% added it a a package option at the end, so that it becomes the main
+% language. The behavior of a metatag with a global language option is
+% not well defined, so if there is not |main| option we set here
+% explicitly.
+%
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%
-% Experimental stuff for metadata. It attempts to read the ini file here.
-% Then, use the info to add the language to the option list.
-\@ifpackagewith{babel}{metadata=on}{%
-  \ifx\GetDocumentProperties\@undefined
-     \let\bbl@metalang\@empty
-   \else
-     \edef\bbl@metalang{\GetDocumentProperties{document/lang}}%
-   \fi
-  % Redundant conditional (in case we need something else):
-  \ifx\bbl@metalang\@undefined\else\ifx\bbl@metalang\@empty\else
+\ifx\GetDocumentProperties\@undefined\else
+  \edef\bbl@metalang{\GetDocumentProperties{document/lang}}%
+  \ifx\bbl@metalang\@empty\else
     \expandafter
     \bbl@bcplookup\bbl@metalang-\@empty-\@empty-\@empty\@@
-    \def\languagename{@@@@}% Dummy
-    \bbl@read@ini{\bbl@bcp}0%
+    \bbl@read@ini{\bbl@bcp}\m@ne
     \xdef\bbl@language@opts{\bbl@language@opts,\languagename}%
     \ifx\bbl@opt@main\@nnil
       \let\bbl@opt@main\languagename
     \fi
     \bbl@info{Passing \languagename\space to babel}%
-  \fi\fi
-  }{}
-%%%%%%%%%%%%%%%
+  \fi
+\fi
 \ifx\bbl@opt@config\@nnil
   \@ifpackagewith{babel}{noconfigs}{}%
     {\InputIfFileExists{bblopts.cfg}%
@@ -13095,16 +13106,14 @@ wouldn’t exist.
       \fi}%
   \fi
 \else
-%%%%%%%%%%%%%%%
   \ifx\bbl@metalang\@undefined\else\ifx\bbl@metalang\@empty\else
-    \bbl@afterfi\expandafter\@gobble
-  \fi\fi
+    \bbl@afterfi\expandafter\@gobble 
+  \fi\fi  % except if explicit lang metatag:
     {\bbl@info{Main language set with 'main='. Except if you have\\%
                problems, prefer the default mechanism for setting\\%
                the main language, i.e., as the last declared.\\%
                Reported}}
 \fi
-%%%%%%%%%%%%%%%
 %    \end{macrocode}
 %
 % A few languages are still defined explicitly. They are stored in case
