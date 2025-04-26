@@ -35,19 +35,43 @@ are three tools:
   
 In addition, you can consider using `microtype`, too. 
   
-[[Add example]]
+```tex
+\documentclass{article}
+
+\usepackage[hebrew,
+  provide={ transforms=justification.interletter }, 
+  bidi=basic]{babel}
+\babelfont{rm}[WordSpace={1,2,1}]{FreeSerif}
+
+\SetTransformValue{hebrew}{interletter.plus}{.7}
+
+\setlength{\textwidth}{4.5cm}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ׃ וְהָאָרֶץ
+הָיְתָה תֹהוּ וָבֹהוּ וְחֹשֶׁךְ עַל־פְּנֵי תְהוֹם וְרוּחַ אֱלֹהִים
+מְרַחֶפֶת עַל־פְּנֵי הַמָּיִם׃ וַיֹּאמֶר אֱלֹהִים יְהִי אוֹר וַיְהִי
+אוֹר׃ וַיַּרְא אֱלֹהִים אֶת־הָאוֹר כִּי־טוֹב וַיַּבְדֵּל אֱלֹהִים בֵּין
+הָאוֹר וּבֵין הַחֹשֶׁךְ׃ וַיִּקְרָא אֱלֹהִים לָאוֹר יוֹם וְלַחֹשֶׁךְ
+קָרָא לָיְלָה וַיְהִי־עֶרֶב וַיְהִי־בֹקֶר יוֹם אֶחָד׃
+
+\end{document}
+```
+![](../media/hebrew-interletter.png)
 
 ## Metadata
 
 `Babel` now sets the main language based on the document metadata. 
 Basically, what it does is to convert something like:
-```
+```tex
 \DocumentMetadata{lang=da}
 ...
 \usepackage[english]{babel}
 ```
 to
-```
+```tex
 \DocumentMetadata{lang=da}
 ...
 \usepackage[main=danish, english, danish]{babel}
@@ -56,12 +80,14 @@ to
 The basic tag lookup explained in the `babel` manual is applied here,
 so that `fr-Latn-FR` is valid and mapped to `fr`, which is in turn
 mapped to `french`, while `en-Latn-US` is mapped to `en-US`, which is
-mapped to `american`. Note the information in the `ini` file is kept.
-So, `lang=es-CO` is (currently) mapped to `spanish` and the field
-`tag.bcp47` is still `es`, because it’s the **resolved** locale.
-However, `\GetDocumentProperties{document/lang}` returns `es-CO`,
-because it stores, as far as `babel` is concerned, the **requested**
-locale.
+mapped to `american`. This eases the localization of automatically
+generated documents.
+
+Note the information in the `ini` file is kept. So, `lang=es-CO` is
+(currently) mapped to `spanish` and the field `tag.bcp47` is still
+`es`, because it’s the **resolved** locale. However,
+`\GetDocumentProperties{document/lang}` returns `es-CO`, because it
+stores, as far as `babel` is concerned, the **requested** locale.
 
 **This is a breaking change**. But `\DocumentMetadata` is a recent
 LaTeX feature, and problems should be minimal. Moreover, this short
