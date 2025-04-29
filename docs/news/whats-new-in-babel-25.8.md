@@ -1,6 +1,6 @@
 # What's new in babel 25.8
 
-**Draft**
+2025-04-29
 
 <span style="color:red;">⚠</span> **This release introduces a
 potentially breaking change.** Please, read the section «Metadata»
@@ -15,7 +15,8 @@ adjust the spacing between words, frequently utilizes subtle variations in
 the spacing between individual letters within words. This can be achieved
 by inserting tiny amounts of extra space between letter combinations.
 
-The transform `justification.interletter` activates this kind of
+The transform `justification.interletter` in all locales in the Hebrew
+script (Hebrew, Ancient Hebrew, Ladino, Yiddish) activates this kind of
 justification, by inserting a `\nobreak` and a zero width glue with a
 ‘plus’ of .5 times the ‘plus’ inter-word space before a letter when
 preceded by another letter or a diacritic (remember in Unicode
@@ -26,15 +27,17 @@ This interletter adjustment should be carefully controlled to avoid
 disrupting the natural flow and readability of the Hebrew script. It
 depends on several factors, like the font or the text width. There
 are three tools:
-* `\SetTransformValue{interletter.plus}{<value>}`, which sets the factor
-  for the glue ‘plus’ value. By default, `.5`.
+* `\SetTransformValue{hebrew}{interletter.plus}{<value>}`, which sets the factor
+  for the glue ‘plus’ value. By default, `.5`. (Use the corresponding
+  language name.)
 * `WordSpace` as a `fontspec` option. This is not a `babel` feature,
   but is mentioned because it can be useful.
 * The locale option `justification=unhyphenated`, which is a stronger
   version of `\sloppy`.
   
 In addition, you can consider using `microtype`, too. 
-  
+
+Here is an example:
 ```tex
 \documentclass{article}
 
@@ -97,4 +100,6 @@ declarations as class or package options, the language loaded is
 that set as metadata instead of the dummy language `nil`.
 
 As part of this change, there is some cleanup and refactoring related
-to locales tags, which is a work in progress.
+to locales tags, which is a work in progress. Also, the info in
+`ini` files is now read before the `ldf` is read. `\BabelEnsureInfo`
+is now no-op, because it’s loaded always.

@@ -88,7 +88,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
-| [25.8](news/whats-new-in-babel-25.8.html) | (dev) | Hebrew justification. |
+| [25.8](news/whats-new-in-babel-25.8.html) | 2025-04-29 | Hebrew justification. Main language based on metadata. |
 | [25.7](news/whats-new-in-babel-25.7.html) | 2025-04-14 | `\ShowBabelTransforms`. |
 | [25.6](news/whats-new-in-babel-25.6.html) | 2025-03-27 | Improved `spacing.basic` (Chinese, Japanese). |
 | [25.5](news/whats-new-in-babel-25.5.html) | 2025-03-10 | Transforms for Dutch (diaeresis) and German (long s). |
