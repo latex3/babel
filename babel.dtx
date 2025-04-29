@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/04/14 v25.7
+  [2025/04/29 v25.8
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4347,9 +4347,16 @@ convert the sigma at the end of a word (on purpose). This transform
 does it. To prevent the conversion (an abbreviation, for example), write
 |"s|.}
 
-\trans{Hebrew, Yiddish}{transliteration.cj}{A transliteration system
-based on that devised by Christian Justen for `cjhebrew`. Final letters
-are not converted, and the furtive patah is not shifted.}
+\trans{Hebrew, Yiddish, Ladino, Ancient Hebrew}{transliteration.cj}{A
+transliteration system based on that devised by Christian Justen for
+`cjhebrew`. Final letters are not converted, and the furtive patah is
+not shifted.}
+
+\trans{Hebrew, Yiddish, Ladino, Ancient
+Hebrew}{justification.interletter}{justification.interletter}{Hebrew
+justification is based on variations in the spacing between individual
+letters within words. This transform activates this justification
+method. See \New{25.8} for further details and an example.}
 
 \trans{Hindi, Sanskrit}{punctuation.space}{Inserts a space before the
 following four characters: \textit{!?:;}\,.}
@@ -6099,8 +6106,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.7>>
-%<<date=2025/04/14>>
+%<<version=25.8>>
+%<<date=2025/04/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8076,7 +8083,7 @@ wouldn’t exist.
   \@ifpackagewith{babel}{ensureinfo=off}{}%
     {\ifx\InputIfFileExists\@undefined\else
        \bbl@ifunset{bbl@lname@#1}%
-         {{\let\bbl@ensuring\@empty % Flag used in a couple of babel-*.tex files
+         {{\let\bbl@ensuring\@empty % Flag used in babel-serbianc.tex
           \def\languagename{#1}%
           \bbl@id@assign
           \bbl@load@info{#1}}}%
@@ -10823,7 +10830,7 @@ wouldn’t exist.
 % (identification, typography, characters, numbers). The second
 % argument is 0 when called to read the minimal data for fonts; with
 % |\babelprovide| it's either 1 (without \texttt{import}) or 2 (which
-% |import|). The value -1 is used with |\DocumentMetadata|.
+% |import|). The value $-$1 is used with |\DocumentMetadata|.
 %
 % |\bbl@loop@ini| is the reader, line by line (1: stream), and calls
 % |\bbl@iniline| to save the key/value pairs. If |\bbl@inistore| finds
@@ -10889,7 +10896,7 @@ wouldn’t exist.
       \def\bbl@tempa##1 ##2\@@{##1}% Get first name
       \def\bbl@elt##1##2##3{%
         \bbl@ifsamestring{identification/name.babel}{##1/##2}%
-          {\xdef\languagename{\bbl@tempa##3 \@@}%
+          {\edef\languagename{\bbl@tempa##3 \@@}%
            \bbl@id@assign
            \def\bbl@elt####1####2####3{}}%
           {}}%
@@ -13049,23 +13056,25 @@ wouldn’t exist.
 %
 % If the language as been set as metadata, read the info from the
 % corresponding \texttt{ini} file and extract the \babel\ name. Then
-% added it a a package option at the end, so that it becomes the main
+% added it as a package option at the end, so that it becomes the main
 % language. The behavior of a metatag with a global language option is
-% not well defined, so if there is not |main| option we set here
+% not well defined, so if there is not a |main| option we set here
 % explicitly.
 %
 %    \begin{macrocode}
 \ifx\GetDocumentProperties\@undefined\else
   \edef\bbl@metalang{\GetDocumentProperties{document/lang}}%
   \ifx\bbl@metalang\@empty\else
-    \expandafter
-    \bbl@bcplookup\bbl@metalang-\@empty-\@empty-\@empty\@@
-    {\bbl@read@ini{\bbl@bcp}\m@ne}%
-    \edef\bbl@language@opts{\bbl@language@opts,\languagename}%
-    \ifx\bbl@opt@main\@nnil
-      \let\bbl@opt@main\languagename
-    \fi
-    \bbl@info{Passing \languagename\space to babel}%
+    \begingroup
+      \expandafter
+      \bbl@bcplookup\bbl@metalang-\@empty-\@empty-\@empty\@@
+      \bbl@read@ini{\bbl@bcp}\m@ne
+      \xdef\bbl@language@opts{\bbl@language@opts,\languagename}%
+      \ifx\bbl@opt@main\@nnil
+        \global\let\bbl@opt@main\languagename
+      \fi
+      \bbl@info{Passing \languagename\space to babel}%
+    \endgroup
   \fi
 \fi
 \ifx\bbl@opt@config\@nnil

@@ -1,6 +1,6 @@
-## Babel 25.7
+## Babel 25.8
 
-(dev)
+2025-04-29
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,17 +59,11 @@ respective authors.
 
 ### Summary of latest changes
 ```
-25.8   (dev)
-       * [Experimental: metadata].
-       * Hebrew justification.
-
-25.7   2025-04-14
-       * New macro: \ShowBabelTransforms.
-       * Fixes:
-       - Incorrect kashida placement (#336).
-       - Ancient Hebrew vowel characters not recognised as Hebrew text (#337).
-       - babel-cy.ini captions and captions.licr inconsistent (#338).
-       * New locale: ancienthebrew.
+25.8   2025-04-29
+       * The document 'lang' metadata, if provided, is used to set the
+         main language. This is a potentially breaking change. See the
+         news page for further info.
+       * Hebrew justification with inter-letter spacing.
 ```
 
 ### Previous changes
