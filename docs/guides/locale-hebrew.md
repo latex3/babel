@@ -19,6 +19,22 @@ There is a complete example (with a table, a footnote, maths, etc.) in the repos
 
 ![](../media/lua-hebrew.jpg)
 
+## Justification
+
+Hebrew justification frequently utilizes subtle variations in
+the spacing between individual letters within words. This can be achieved
+by inserting tiny amounts of extra space between letter combinations.
+
+The transform `justification.interletter` in all locales in the Hebrew
+script (Hebrew, Ancient Hebrew, Ladino, Yiddish) activates this kind of
+justification.
+
+See [What’s new in babel 25.8](https://latex3.github.io/babel/news/whats-new-in-babel-25.8.html)
+
+
+
+## `pdflatex`
+
 For `pdftex` you may need to install separately the [`culmus`
 package](https://www.guyrutenberg.com/culmus-latex/), which is absent
 in some TeX distributions. It’s available in Overleaf and, as

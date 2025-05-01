@@ -3,7 +3,8 @@
 2025-04-29
 
 <span style="color:red;">⚠</span> **This release introduces a
-potentially breaking change.** Please, read the section «Metadata»
+potentially breaking change.** Please, read the section
+[Metadata](https://latex3.github.io/babel/news/whats-new-in-babel-25.8.html#metadata)
 below.
 
 ## Hebrew justification
@@ -92,14 +93,24 @@ Note the information in the `ini` file is kept. So, `lang=es-CO` is
 `\GetDocumentProperties{document/lang}` returns `es-CO`, because it
 stores, as far as `babel` is concerned, the **requested** locale.
 
+Tags are not validated, which means mistakes like |en-UK| or wrong tags
+like |de-AUS| or |la-x-classical| might be accepted without
+complaining.
+
 **This is a breaking change**. But `\DocumentMetadata` is a recent
-LaTeX feature, and problems should be minimal. Moreover, this short
-example didn’t make much sense, because settings are contradictory.
+LaTeX feature, and problems should be minimal. Moreover, the short
+example above didn’t make much sense, because settings are contradictory.
 Note also with the `lang` metadata, and if there are no other language
 declarations as class or package options, the language loaded is
 that set as metadata instead of the dummy language `nil`.
 
+Note also setting the `lang` metadata and a language as a class option
+at the same time is not well defined, even without `babel` (which
+explains why `main` is set explicitly in the example, even if usually
+discouraged).
+
 As part of this change, there is some cleanup and refactoring related
-to locales tags, which is a work in progress. Also, the info in
-`ini` files is now read before the `ldf` is read. `\BabelEnsureInfo`
-is now no-op, because it’s loaded always.
+to locales tags, which is a work in progress. Also, the info in `ini`
+files is now read when the `ldf` starts (instead of at the end of the
+`babel` package). `\BabelEnsureInfo` is now no-op, because it’s loaded
+always.
