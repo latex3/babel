@@ -93,8 +93,8 @@ Note the information in the `ini` file is kept. So, `lang=es-CO` is
 `\GetDocumentProperties{document/lang}` returns `es-CO`, because it
 stores, as far as `babel` is concerned, the **requested** locale.
 
-Tags are not validated, which means mistakes like |en-UK| or wrong tags
-like |de-AUS| or |la-x-classical| might be accepted without
+Tags are not validated, which means mistakes like `en-UK` or wrong tags
+like `de-AUS` or `la-x-classical` might be accepted without
 complaining.
 
 **This is a breaking change**. But `\DocumentMetadata` is a recent

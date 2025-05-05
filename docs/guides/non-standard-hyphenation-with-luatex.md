@@ -287,6 +287,17 @@ before that to be processed, which is enclosed between `() ()`.
   }
 ```
 
+## More examples
+
+* [Using Demotic Alef unicode character with Noto font package](https://tex.stackexchange.com/a/695174/5735)
+* [Replacing `` and '' with guillemets without touching the source code](https://tex.stackexchange.com/a/717176/5735)
+* [How to typeset ancient Persian scripts in LaTeX](https://tex.stackexchange.com/a/741645/5735)
+* [Add extra kerning before certain punctuation in Babel, but not for the typewriter font](https://tex.stackexchange.com/a/682190/5735)
+* [Soft hyphens with priority don't change style with their environment](https://tex.stackexchange.com/a/652757/5735)
+* [How to avoid linebreak after command and before period?](https://tex.stackexchange.com/a/570428/5735)
+* [Apply lefthyphenmin to parts of a word spelled with hyphens](https://tex.stackexchange.com/a/554788/5735)
+* [Serbian Cyrillic using LuaTeX and XeTeX](https://tex.stackexchange.com/a/742106/5735)
+
 ## Useful links
 
 * [Patterns](https://www.lua.org/pil/20.2.html), in the Lua site.
