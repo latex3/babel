@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/04/29 v25.8
+  [2025/05/06 v25.8.85770
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -180,7 +180,7 @@
     {\underline{\strut{\color{thered}\string#1}\color{black}#2}}}
 \def\DescribeOther{\addvspace{-1.5ex}\Describe}
 \AtBeginDocument{\def\DescribeMacro#1{{\ttfamily\color{thered}\string#1}}}
-\def\macro#1{% WIP
+\def\macro#1{%
   \if@noskipsec\leavevmode\vskip-1.2\baselineskip\vskip0pt\fi
   \@startsection{paragraph}{101}{\z@}%
     {3.25ex \@plus1ex \@minus.2ex}%
@@ -982,9 +982,9 @@ the names in the block \textsf{ngerman}.}
 \tag{japanese}{}
 \tag{kurmanji}{}
 \tag{latin}{}
-% \subtagalt{classiclatin}{}
-% \subtagalt{medievallatin}{}
-% \subtagalt{ecclesiasticlatin}{}
+\subtagalt{classicallatin}{}
+\subtagalt{medievallatin}{}
+\subtagalt{ecclesiasticallatin}{}
 \tag{latvian}{}
 \tag{lithuanian}{}
 \tag[babel-sorbian]{lowersorbian}{}
@@ -4826,10 +4826,11 @@ In \xetex, |bidi-r| and |bidi-l| resort to the package \textsf{bidi}
 use the latter. 
 
 \begin{warning}
-  This package patches heavily lots of macros and packages even if the
-  RL script is not the main one, which can lead to some surprising
-  results, so for short and simple texts (letters and punctuation) the
-  |default| method is more often than not much preferable.
+  The package \textsf{bidi} patches heavily lots of macros and packages
+  even if the RL script is not the main one, which can lead to some
+  surprising results, so for short and simple texts (letters and
+  punctuation) the |default| method is more often than not much
+  preferable.
 \end{warning}
 
 There are samples on GitHub, under \texttt{/required/babel/samples}.
@@ -6106,8 +6107,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.8>>
-%<<date=2025/04/29>>
+%<<version=25.8.85770>>
+%<<date=2025/05/06>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6667,7 +6668,7 @@ wouldn’t exist.
 %    \begin{macrocode}
 \bbl@trace{key=value and another general options}
 \bbl@csarg\let{tempa\expandafter}\csname opt@babel.sty\endcsname
-\def\bbl@tempb#1.#2{%  Remove trailing dot
+\def\bbl@tempb#1.#2{%  Removes trailing dot
    #1\ifx\@empty#2\else,\bbl@afterfi\bbl@tempb#2\fi}%
 \def\bbl@tempe#1=#2\@@{%
   \bbl@csarg\edef{mod@#1}{\bbl@tempb#2}}
@@ -6718,7 +6719,7 @@ wouldn’t exist.
 \DeclareOption{provide=*}{\chardef\bbl@iniflag\@ne}    % main = 1
 \DeclareOption{provide+=*}{\chardef\bbl@iniflag\tw@}   % second = 2
 \DeclareOption{provide*=*}{\chardef\bbl@iniflag\thr@@} % second + main
-% Don't use. Experimental. TODO.
+% Don't use. Experimental.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
 <@More package options@>
@@ -7516,7 +7517,7 @@ wouldn’t exist.
     \bbl@usehooks{foreign}{}%
     \BabelText{#3}% Now in horizontal mode!
   \endgroup}
-\def\bbl@foreign@s#1#2{% TODO - \shapemode, \@setpar, ?\@@par
+\def\bbl@foreign@s#1#2{%
   \begingroup
     {\par}%
     \def\bbl@selectorname{foreign*}%
@@ -7550,7 +7551,6 @@ wouldn’t exist.
   \fi
   \bbl@fixname\languagename
   \let\localename\languagename
-  % TODO. name@map here?
   \bbl@provide@locale
   \bbl@iflanguage\languagename{%
     \let\bbl@select@type\@ne
@@ -7921,7 +7921,7 @@ wouldn’t exist.
 \fi
 \ifx\bbl@languages\@undefined
   \ifx\directlua\@undefined
-    \openin1 = language.def % TODO. Remove hardcoded number
+    \openin1 = language.def
     \ifeof1
       \closein1
       \message{I couldn't find the file language.def}
@@ -8243,7 +8243,7 @@ wouldn’t exist.
 \def\bbl@add@special#1{% 1:a macro like \", \?, etc.
   \bbl@add\dospecials{\do#1}% test @sanitize = \relax, for back. compat.
   \bbl@ifunset{@sanitize}{}{\bbl@add\@sanitize{\@makeother#1}}%
-  \ifx\nfss@catcodes\@undefined\else % TODO - same for above
+  \ifx\nfss@catcodes\@undefined\else
     \begingroup
       \catcode`#1\active
       \nfss@catcodes
@@ -8534,7 +8534,7 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \begingroup
-\bbl@ifunset{ifincsname}%
+\bbl@ifunset{ifincsname}
   {\gdef\active@prefix#1{%
      \ifx\protect\@typeset@protect
      \else
@@ -10418,14 +10418,6 @@ wouldn’t exist.
       {}%  With \bbl@load@basic below
       {\bbl@provide@renew{#2}}%
   \fi
-  % == include == TODO
-  % \ifx\bbl@included@inis\@empty\else
-  %   \bbl@replace\bbl@included@inis{ }{,}%
-  %   \bbl@foreach\bbl@included@inis{%
-  %     \openin\bbl@readstream=babel-##1.ini
-  %     \bbl@extend@ini{#2}}%
-  %   \closein\bbl@readstream
-  % \fi
   % Post tasks
   % ----------
   % == subsequent calls after the first provide for a locale ==
@@ -10491,7 +10483,6 @@ wouldn’t exist.
   \bbl@xin@{/e}{/\bbl@cl{lnbrk}}%
   \ifin@\else\bbl@xin@{/k}{/\bbl@cl{lnbrk}}\fi
   \ifin@\bbl@arabicjust\fi
-  % WIP
   \bbl@xin@{/p}{/\bbl@cl{lnbrk}}%
   \ifin@\AtBeginDocument{\@nameuse{bbl@tibetanjust}}\fi
   % == Line breaking: hyphenate.other.(locale|script) ==
@@ -10722,6 +10713,24 @@ wouldn’t exist.
     {}}
 %    \end{macrocode}
 %
+% The following |ini| reader ignores everything but the
+% |identification| section. It is called when a font is defined (i.e.,
+% when the language is first selected) to know which script/language
+% must be enabled. This means we must make sure a few characters are
+% not active. The |ini| is not read directly, but with a proxy |tex|
+% file named as the language (which means any code in it must be
+% skipped, too).
+%
+%    \begin{macrocode}
+\def\bbl@load@info#1{%
+  \def\BabelBeforeIni##1##2{%
+    \begingroup
+      \bbl@read@ini{##1}0%
+      \endinput          % babel- .tex may contain onlypreamble's
+    \endgroup}%            boxed, to avoid extra spaces:
+  {\bbl@input@texini{#1}}}
+%    \end{macrocode}
+%
 % The |hyphenrules| option is handled with an auxiliary macro. This
 % macro is called in three cases: when a language is first declared
 % with |\babelprovide|, with |hyphenrules| and with |import|.
@@ -10748,7 +10757,7 @@ wouldn’t exist.
     \fi
   \fi
   \ifnum\@tempcnta=\m@ne          % if no opt or no language in opt found
-    \ifx\bbl@KVP@captions@@\@nnil % TODO. Hackish. See above.
+    \ifx\bbl@KVP@captions@@\@nnil
       \bbl@ifunset{bbl@hyphr@#1}{}% use value in ini, if exists
         {\bbl@exp{\\\bbl@ifblank{\bbl@cs{hyphr@#1}}}%
            {}%
@@ -10852,6 +10861,7 @@ wouldn’t exist.
         \expandafter\bbl@iniline\bbl@line\bbl@iniline
       \fi
     \repeat}
+%
 \def\bbl@read@subini#1{%
   \ifx\bbl@readsubstream\@undefined
     \csname newread\endcsname\bbl@readsubstream
@@ -10863,6 +10873,7 @@ wouldn’t exist.
     {\bbl@loop@ini\bbl@readsubstream}%
   \fi
   \closein\bbl@readsubstream}
+%
 \ifx\bbl@readstream\@undefined
   \csname newread\endcsname\bbl@readstream
 \fi
@@ -10962,7 +10973,7 @@ wouldn’t exist.
   \bbl@endcommands}
 %    \end{macrocode}
 %
-% A somewhat hackish tool to handle calendar sections. TODO. To be improved.
+% A somewhat hackish tool to handle calendar sections.
 %
 %    \begin{macrocode}
 \def\bbl@ini@calendar#1{%
@@ -11074,7 +11085,6 @@ wouldn’t exist.
   \bbl@exp{\\\bbl@exportkey{lname}{identification.name.opentype}%
     {\csname bbl@elname@\languagename\endcsname}}%
   \bbl@exportkey{tbcp}{identification.tag.bcp47}{}%
-  % Somewhat hackish. TODO:
   \bbl@exportkey{casing}{identification.tag.bcp47}{}%
   \bbl@exportkey{lbcp}{identification.language.tag.bcp47}{}%
   \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
@@ -11232,6 +11242,7 @@ wouldn’t exist.
         {\[fnum@\bbl@tempa]}%
         {\\\@nameuse{bbl@\bbl@tempa fmt@\\\languagename}}}}%
   \fi}
+%
 \def\bbl@ini@captions@aux#1#2{%
   \bbl@trim@def\bbl@tempa{#1}%
   \bbl@xin@{.template}{\bbl@tempa}%
@@ -11263,10 +11274,12 @@ wouldn’t exist.
   part,chapter,section,subsection,subsubsection,paragraph,%
   subparagraph,enumi,enumii,enumiii,enumiv,equation,figure,%
   table,page,footnote,mpfootnote,mpfn}
+%
 \def\bbl@map@cnt#1{%  #1:roman,etc, // #2:enumi,etc
   \bbl@ifunset{bbl@map@#1@\languagename}%
     {\@nameuse{#1}}%
     {\@nameuse{bbl@map@#1@\languagename}}}
+%
 \def\bbl@inikv@labels#1#2{%
   \in@{.map}{#1}%
   \ifin@
@@ -11281,22 +11294,25 @@ wouldn’t exist.
             {\ifin@\<#2>\else\\\localecounter{#2}\fi}}%
         \bbl@foreach\bbl@list@the{%
           \bbl@ifunset{the##1}{}%
-            {\bbl@exp{\let\\\bbl@tempd\<the##1>}%
-             \bbl@exp{%
-               \\\bbl@sreplace\<the##1>%
-                 {\<\bbl@tempc>{##1}}{\\\bbl@map@cnt{\bbl@tempc}{##1}}%
-               \\\bbl@sreplace\<the##1>%
-                 {\<\@empty @\bbl@tempc>\<c@##1>}{\\\bbl@map@cnt{\bbl@tempc}{##1}}}%
+           {\bbl@exp{\let\\\bbl@tempd\<the##1>}%
+            \bbl@exp{%
+              \\\bbl@sreplace\<the##1>%
+                {\<\bbl@tempc>{##1}}%
+                {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
+              \\\bbl@sreplace\<the##1>%
+                {\<\@empty @\bbl@tempc>\<c@##1>}%
+                {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
+              \\\bbl@sreplace\<the##1>%
+                {\\\csname @\bbl@tempc\\\endcsname\<c@##1>}%
+                {{\\\bbl@map@cnt{\bbl@tempc}{##1}}}}%
+             \expandafter\show\csname the##1\endcsname
              \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
-               \toks@\expandafter\expandafter\expandafter{%
-                 \csname the##1\endcsname}%
-               \expandafter\xdef\csname the##1\endcsname{{\the\toks@}}%
+               \bbl@exp{\gdef\<the##1>{{\[the##1]}}}%
              \fi}}%
       \fi
     \fi
-  %
+%
   \else
-    %
     % The following code is still under study. You can test it and make
     % suggestions. E.g., enumerate.2 = ([enumi]).([enumii]). It's
     % language dependent.
@@ -11309,7 +11325,6 @@ wouldn’t exist.
       \bbl@replace\bbl@toreplace{[}{\csname the}%
       \bbl@replace\bbl@toreplace{]}{\endcsname{}}%
       \toks@\expandafter{\bbl@toreplace}%
-      % TODO. Execute only once:
       \bbl@exp{%
         \\\bbl@add\<extras\languagename>{%
           \\\babel@save\<labelenum\romannumeral\bbl@tempa>%
@@ -11366,7 +11381,7 @@ wouldn’t exist.
 %
 % \textbf{Date.} Arguments (year, month, day) are \textit{not}
 % protected, on purpose. In |\today|, arguments are always gregorian,
-% and therefore always converted with other calendars. TODO. Document
+% and therefore always converted with other calendars.
 %
 %    \begin{macrocode}
 \let\bbl@calendar\@empty
@@ -11404,13 +11419,15 @@ wouldn’t exist.
       {\@nameuse{bbl@date@\languagename @\bbl@calendar}%
          \bbl@they\bbl@them\bbl@thed}%
   \endgroup}
+%
 \def\bbl@printdate#1{%
   \@ifnextchar[{\bbl@printdate@i{#1}}{\bbl@printdate@i{#1}[]}}
 \def\bbl@printdate@i#1[#2]#3#4#5{%
   \bbl@usedategrouptrue
   \@nameuse{bbl@ensure@#1}{\localedate[#2]{#3}{#4}{#5}}}
+%
 % e.g.: 1=months, 2=wide, 3=1, 4=dummy, 5=value, 6=calendar
-\def\bbl@inidate#1.#2.#3.#4\relax#5#6{% TODO - ignore with 'captions'
+\def\bbl@inidate#1.#2.#3.#4\relax#5#6{% 
   \bbl@trim@def\bbl@tempa{#1.#2}%
   \bbl@ifsamestring{\bbl@tempa}{months.wide}%      to savedate
     {\bbl@trim@def\bbl@tempa{#3}%
@@ -11426,7 +11443,7 @@ wouldn’t exist.
        \bbl@TG@@date
        \global\bbl@csarg\let{date@\languagename @\bbl@tempb}\bbl@toreplace
        \ifx\bbl@savetoday\@empty
-         \bbl@exp{% TODO. Move to a better place.
+         \bbl@exp{%
            \\\AfterBabelCommands{%
              \gdef\<\languagename date>{\\\protect\<\languagename date >}%
              \gdef\<\languagename date >{\\\bbl@printdate{\languagename}}}%
@@ -11467,7 +11484,7 @@ wouldn’t exist.
   \else
     \bbl@error{limit-two-digits}{}{}{}%
   \fi\fi\fi\fi}}
-\newcommand\BabelDateyyyy[1]{{\number#1}} % TODO - add leading 0
+\newcommand\BabelDateyyyy[1]{{\number#1}}
 \newcommand\BabelDateU[1]{{\number#1}}%
 \def\bbl@replace@finish@iii#1{%
   \bbl@exp{\def\\#1####1####2####3{\the\toks@}}}
@@ -11616,24 +11633,6 @@ wouldn’t exist.
   \bbl@csarg\bbl@toglobal{lsys@#1}}
 %    \end{macrocode}
 %
-% The following |ini| reader ignores everything but the
-% |identification| section. It is called when a font is defined (i.e.,
-% when the language is first selected) to know which script/language
-% must be enabled. This means we must make sure a few characters are
-% not active. The |ini| is not read directly, but with a proxy |tex|
-% file named as the language (which means any code in it must be
-% skipped, too).
-%
-%    \begin{macrocode}
-\def\bbl@load@info#1{%
-  \def\BabelBeforeIni##1##2{%
-    \begingroup
-      \bbl@read@ini{##1}0%
-      \endinput          % babel- .tex may contain onlypreamble's
-    \endgroup}%            boxed, to avoid extra spaces:
-  {\bbl@input@texini{#1}}}
-%    \end{macrocode}
-%
 % \subsection{Numerals}
 %
 % A tool to define the macros for native digits from the list provided 
@@ -11762,7 +11761,7 @@ wouldn’t exist.
     \@nameuse{regex_replace_all:nnN}%
       {[\x{c0}-\x{ff}][\x{80}-\x{bf}]*}{{\0}}\bbl@tempb
   \else
-    \@nameuse{regex_replace_all:nnN}{.}{{\0}}\bbl@tempb % TODO. needed?
+    \@nameuse{regex_replace_all:nnN}{.}{{\0}}\bbl@tempb
   \fi
   \expandafter\bbl@casemapping@ii\bbl@tempb\@@}
 \def\bbl@casemapping@ii#1#2#3\@@{%
@@ -11795,7 +11794,7 @@ wouldn’t exist.
     {\bbl@ifunset{bbl@\csname bbl@info@#2\endcsname @\languagename}{#1}%
       {\bbl@cs{\csname bbl@info@#2\endcsname @\languagename}}}}
 \newcommand\localeinfo[1]{%
-  \ifx*#1\@empty   % TODO. A bit hackish to make it expandable.
+  \ifx*#1\@empty
     \bbl@afterelse\bbl@localeinfo{}%
   \else
     \bbl@localeinfo
@@ -11851,9 +11850,9 @@ wouldn’t exist.
   \fi}
 %    \end{macrocode}
 %
-%  To inspect every possible loaded |ini|, we define |\LocaleForEach|,
-%  where |\bbl@ini@loaded| is a comma-separated list of locales, built
-%  by |\bbl@read@ini|.
+% To inspect every possible loaded |ini|, we define |\LocaleForEach|,
+% where |\bbl@ini@loaded| is a comma-separated list of locales, built
+% by |\bbl@read@ini|.
 %
 %    \begin{macrocode}
 \let\bbl@ini@loaded\@empty
@@ -11887,7 +11886,7 @@ wouldn’t exist.
   \ifx\babelprovide\@undefined
     \bbl@error{base-on-the-fly}{}{}{}%
   \fi
-  \let\bbl@auxname\languagename % Still necessary.
+  \let\bbl@auxname\languagename
   \ifbbl@bcptoname
     \bbl@ifunset{bbl@bcp@map@\languagename}{}% Move uplevel??
       {\edef\languagename{\@nameuse{bbl@bcp@map@\languagename}}%
@@ -11921,13 +11920,13 @@ wouldn’t exist.
 % |script|, and |variant| are recognized, |extension.<s>| for
 % singletons may change.
 %
-% Still somewhat hackish. WIP. Note |\str_if_eq:nnTF| is fully
+% Still somewhat hackish. Note |\str_if_eq:nnTF| is fully
 % expandable (|\bbl@ifsamestring| isn’t). The argument is the prefix to
 % tag.bcp47.
 %
 %    \begin{macrocode}
 \providecommand\BCPdata{}
-\ifx\renewcommand\@undefined\else % For plain. TODO. It’s a quick fix
+\ifx\renewcommand\@undefined\else
   \renewcommand\BCPdata[1]{\bbl@bcpdata@i#1\@empty\@empty\@empty}
   \def\bbl@bcpdata@i#1#2#3#4#5#6\@empty{%
     \@nameuse{str_if_eq:nnTF}{#1#2#3#4#5}{main.}%
@@ -11949,7 +11948,7 @@ wouldn’t exist.
 % and general settings.
 %
 %    \begin{macrocode}
-\newcommand\babeladjust[1]{%  TODO. Error handling.
+\newcommand\babeladjust[1]{%
   \bbl@forkv{#1}{%
     \bbl@ifunset{bbl@ADJ@##1@##2}%
       {\bbl@cs{ADJ@##1}{##2}}%
@@ -12030,10 +12029,12 @@ wouldn’t exist.
 \@namedef{bbl@ADJ@autoload.bcp47.options}#1{%
   \def\bbl@autoload@bcpoptions{#1}}
 \newif\ifbbl@bcptoname
+%
 \@namedef{bbl@ADJ@bcp47.toname@on}{%
   \bbl@bcptonametrue}
 \@namedef{bbl@ADJ@bcp47.toname@off}{%
   \bbl@bcptonamefalse}
+%
 \@namedef{bbl@ADJ@prehyphenation.disable@nohyphenation}{%
   \directlua{ Babel.ignore_pre_char = function(node)
       return (node.lang == \the\csname l@nohyphenation\endcsname)
@@ -12042,6 +12043,7 @@ wouldn’t exist.
   \directlua{ Babel.ignore_pre_char = function(node)
       return false
     end }}
+%
 \@namedef{bbl@ADJ@interchar.disable@nohyphenation}{%
   \def\bbl@ignoreinterchar{%
     \ifnum\language=\l@nohyphenation
@@ -12051,6 +12053,7 @@ wouldn’t exist.
     \fi}}
 \@namedef{bbl@ADJ@interchar.disable@off}{%
   \let\bbl@ignoreinterchar\@firstofone}
+%
 \@namedef{bbl@ADJ@select.write@shift}{%
   \let\bbl@restorelastskip\relax
   \def\bbl@savelastskip{%
@@ -12151,7 +12154,7 @@ wouldn’t exist.
 % change, |\bbl@tempa| and |\bbl@tempb| should be identical macros.
 %
 %    \begin{macrocode}
-  \def\@testdef#1#2#3{%  TODO. With @samestring?
+  \def\@testdef#1#2#3{%
     \@safe@activestrue
     \expandafter\let\expandafter\bbl@tempa\csname #1@#2\endcsname
     \def\bbl@tempb{#3}%
@@ -12358,6 +12361,7 @@ wouldn’t exist.
     \\\bbl@cs{ss@#1}*%
       {\\\foreignlanguage{\languagename}{\unexpanded{#2}}}%
     \\\select@language@x{\languagename}}}
+%
 \IfBabelLayout{sectioning}%
   {\BabelPatchSection{part}%
    \BabelPatchSection{chapter}%
@@ -12760,7 +12764,7 @@ wouldn’t exist.
 %    \begin{macrocode}
 \bbl@trace{Loading basic (internal) bidi support}
 \ifodd\bbl@engine
-\else % TODO. Move to txtbabel. Any xe+lua bidi
+\else % Any xe+lua bidi
   \ifnum\bbl@bidimode>100 \ifnum\bbl@bidimode<200
     \bbl@error{bidi-only-lua}{}{}{}%
     \let\bbl@beforeforeign\leavevmode
@@ -12793,7 +12797,6 @@ wouldn’t exist.
     \fi
   \fi
 \fi
-% TODO? Separate:
 \ifnum\bbl@bidimode=\@ne % bidi=default
   \let\bbl@beforeforeign\leavevmode
   \ifodd\bbl@engine % lua
@@ -12827,6 +12830,7 @@ wouldn’t exist.
   Old South Arabian,Old Turkic,Old Uyghur,Palmyrene,Phoenician,%
   Psalter Pahlavi,Samaritan,Yezidi,Mandaean,%
   Meroitic,N'Ko,Orkhon,Todhri}
+%
 \def\bbl@provide@dirs#1{%
   \bbl@xin@{\csname bbl@sname@#1\endcsname}{\bbl@alscripts\bbl@rscripts}%
   \ifin@
@@ -12847,12 +12851,13 @@ wouldn’t exist.
       \directlua{ Babel.locale_props[\the\localeid].textdir = 'al' }%
     \fi
   \fi}
+%
 \def\bbl@switchdir{%
   \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
   \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
   \bbl@exp{\\\bbl@setdirs\bbl@cl{wdir}}}
-\def\bbl@setdirs#1{% TODO - math
-  \ifcase\bbl@select@type % TODO - strictly, not the right test
+\def\bbl@setdirs#1{%
+  \ifcase\bbl@select@type
     \bbl@bodydir{#1}%
     \bbl@pardir{#1}% <- Must precede \bbl@textdir
   \fi
@@ -12863,8 +12868,7 @@ wouldn’t exist.
 \fi
 %    \end{macrocode}
 %
-% Now the engine-dependent macros. TODO. Must be moved to the engine
-% files.
+% Now the engine-dependent macros.
 %
 %    \begin{macrocode} 
 \ifodd\bbl@engine  % luatex=1
@@ -13723,7 +13727,7 @@ wouldn’t exist.
   \let\foreignlanguage\selectlanguage
   \let\otherlanguage\selectlanguage
   \expandafter\let\csname otherlanguage*\endcsname\selectlanguage
-  \def\bbl@usehooks##1##2{}% TODO. Temporary!!
+  \def\bbl@usehooks##1##2{}%
   \def\setlocale{%
     \errhelp{Find an armchair, sit down and wait}%
     \errmessage{(babel) Not yet available}}%
@@ -13867,7 +13871,7 @@ wouldn’t exist.
 %
 % \section{\luatex{} + \xetex{}: common stuff}
 %
-% Add the bidi handler just before luaoftload, which is loaded by default
+% Add the bidi handler just before luaotfload, which is loaded by default
 % by LaTeX. Just in case, consider the possibility it has not been
 % loaded. First, a couple of definitions related to bidi (although
 % |default| also applies to \pdftex).
@@ -13975,12 +13979,12 @@ wouldn’t exist.
             \global\let\<bbl@##1dflt@\languagename>%
                        \<bbl@##1dflt@*\bbl@tempa>}}}%
       {}}%                               1=T - language, already defined
-  \def\bbl@tempa{\bbl@nostdfont{}}%  TODO. Don't use \bbl@tempa
+  \def\bbl@tempa{\bbl@nostdfont{}}%
   \bbl@foreach\bbl@font@fams{%     don't gather with prev for
     \bbl@ifunset{bbl@##1dflt@\languagename}%
       {\bbl@cs{famrst@##1}%
        \global\bbl@csarg\let{famrst@##1}\relax}%
-      {\bbl@exp{% order is relevant. TODO: but sometimes wrong!
+      {\bbl@exp{% order is relevant.
          \\\bbl@add\\\originalTeX{%
            \\\bbl@font@rst{\bbl@cl{##1dflt}}%
                           \<##1default>\<##1family>{##1}}%
@@ -14089,7 +14093,7 @@ wouldn’t exist.
   \begingroup
      #4%
      \xdef#1{\f@family}%     e.g., \bbl@rmdflt@lang{FreeSerif(0)}
-  \endgroup % TODO. Find better tests:
+  \endgroup
   \bbl@xin@{\string>\string s\string s\string u\string b\string*}%
     {\expandafter\meaning\csname TU/#1/bx/sc\endcsname}%
   \ifin@
@@ -14231,7 +14235,6 @@ wouldn’t exist.
         \expandafter\bbl@intrapenalty\bbl@KVP@intrapenalty\@@
       \fi
       \bbl@exp{%
-        % TODO. Execute only once (but redundant):
         \\\bbl@add\<extras\languagename>{%
           \XeTeXlinebreaklocale "\bbl@cl{tbcp}"%
           \<bbl@xeisp@\languagename>%
@@ -14248,7 +14251,7 @@ wouldn’t exist.
         \AtBeginDocument{\bbl@patchfont{\bbl@ispacesize}}%
       \fi}%
   \fi}
-\ifx\DisableBabelHook\@undefined\endinput\fi %%%% TODO: why
+\ifx\DisableBabelHook\@undefined\endinput\fi
 \let\bbl@set@renderer\relax
 \let\bbl@unset@renderer\relax
 <@Font selection@>
@@ -14448,7 +14451,7 @@ wouldn’t exist.
 \ifx\bbl@opt@layout\@nnil\else % if layout=.. 
 \def\bbl@startskip{\ifcase\bbl@thepardir\leftskip\else\rightskip\fi}
 \def\bbl@endskip{\ifcase\bbl@thepardir\rightskip\else\leftskip\fi}
-\ifnum\bbl@bidimode>\z@  % TODO: always?
+\ifnum\bbl@bidimode>\z@
   \def\@hangfrom#1{%
     \setbox\@tempboxa\hbox{{#1}}%
     \hangindent\ifcase\bbl@thepardir\wd\@tempboxa\else-\wd\@tempboxa\fi
@@ -14814,7 +14817,7 @@ wouldn’t exist.
 % read the 2nd time it's loaded. First, global declarations for lua.
 %
 %    \begin{macrocode}
-\begingroup  % TODO - to a lua file % DL3
+\begingroup 
 \catcode`\%=12
 \catcode`\'=12
 \catcode`\"=12
@@ -14825,10 +14828,12 @@ wouldn’t exist.
     tex.print([[\noexpand\csname bbl@error\endcsname{]] .. 
       e .. '}{' .. (a or '') .. '}{}{}')
   end
+
   function Babel.bytes(line)
     return line:gsub("(.)",
       function (chr) return unicode.utf8.char(string.byte(chr)) end)
   end
+
   function Babel.begin_process_input()
     if luatexbase and luatexbase.add_to_callback then
       luatexbase.add_to_callback('process_input_buffer',
@@ -14845,6 +14850,7 @@ wouldn’t exist.
       callback.register('process_input_buffer',Babel.callback)
     end
   end
+
   function Babel.str_to_nodes(fn, matches, base)
     local n, head, last
     if fn == nil then return nil end
@@ -14863,6 +14869,7 @@ wouldn’t exist.
     end 
     return head
   end
+
   Babel.linebreaking = Babel.linebreaking or {}
   Babel.linebreaking.before = {}
   Babel.linebreaking.after = {}
@@ -14879,6 +14886,7 @@ wouldn’t exist.
     tex.print([[\noexpand\csname bbl@luahyphenate\endcsname]])
     table.insert(Babel.linebreaking.after, func)
   end
+
   function Babel.addpatterns(pp, lg)
     local lg = lang.new(lg)
     local pats = lang.patterns(lg) or ''
@@ -14904,6 +14912,7 @@ wouldn’t exist.
     end
     lang.patterns(lg, pats)
   end
+
   Babel.characters = Babel.characters or {}
   Babel.ranges = Babel.ranges or {}
   function Babel.hlist_has_bidi(head)
@@ -14940,6 +14949,7 @@ wouldn’t exist.
         Babel.script_blocks[script], {tonumber(s,16), tonumber(e,16)})
     end
   end
+
   function Babel.discard_sublr(str)
     if str:find( [[\string\indexentry]] ) and
          str:find( [[\string\babelsublr]] ) then
@@ -14956,6 +14966,7 @@ wouldn’t exist.
   \AddBabelHook{luatex}{beforeextras}{%
     \setattribute\bbl@attr@locale\localeid}
 \fi
+%
 \def\BabelStringsDefault{unicode}
 \let\luabbl@stop\relax
 \AddBabelHook{luatex}{encodedcommands}{%
@@ -14968,6 +14979,7 @@ wouldn’t exist.
 \AddBabelHook{luatex}{stopcommands}{%
   \luabbl@stop
   \let\luabbl@stop\relax}
+%
 \AddBabelHook{luatex}{patterns}{%
   \@ifundefined{bbl@hyphendata@\the\language}%
     {\def\bbl@elt##1##2##3##4{%
@@ -15222,6 +15234,7 @@ wouldn’t exist.
     'Babel.hyphenate')
   }}
 \endgroup
+%
 \def\bbl@provide@intraspace{%
   \bbl@ifunset{bbl@intsp@\languagename}{}%
     {\expandafter\ifx\csname bbl@intsp@\languagename\endcsname\@empty\else
@@ -15274,7 +15287,7 @@ wouldn’t exist.
   \catcode`_=11 \catcode`:=11
   \gdef\bblar@nofswarn{\gdef\msg_warning:nnx##1##2##3{}}
 \endgroup
-\gdef\bbl@arabicjust{% TODO. Allow for several locales.
+\gdef\bbl@arabicjust{%
   \let\bbl@arabicjust\relax
   \newattribute\bblar@kashida
   \directlua{ Babel.attr_kashida = luatexbase.registernumber'bblar@kashida' }%
@@ -15290,8 +15303,7 @@ wouldn’t exist.
   }}%
 %    \end{macrocode}
 %
-% Save both node lists to make replacement. TODO. Save also widths to
-% make computations.
+% Save both node lists to make replacement.
 %
 %    \begin{macrocode}
 \def\bblar@fetchjalt#1#2#3#4{%
@@ -15587,7 +15599,6 @@ end
 % and discretionaries are handled in a special way.
 %
 %    \begin{macrocode}
-% TODO - to a lua file
 \directlua{% DL6
 Babel.script_blocks = {
   ['dflt'] = {},
@@ -15739,24 +15750,28 @@ end
   \ifnum\count@<\@tempcnta
     \advance\count@\@ne
   \repeat}
+%
 \def\bbl@chprop@direction#1{%
   \directlua{
     Babel.characters[\the\count@] =  Babel.characters[\the\count@] or {}
     Babel.characters[\the\count@]['d'] = '#1'
   }}
 \let\bbl@chprop@bc\bbl@chprop@direction
+%
 \def\bbl@chprop@mirror#1{%
   \directlua{
     Babel.characters[\the\count@] =  Babel.characters[\the\count@] or {}
     Babel.characters[\the\count@]['m'] = '\number#1' 
   }}
 \let\bbl@chprop@bmg\bbl@chprop@mirror
+%
 \def\bbl@chprop@linebreak#1{%
   \directlua{
     Babel.cjk_characters[\the\count@] = Babel.cjk_characters[\the\count@] or {}
     Babel.cjk_characters[\the\count@]['c'] = '#1'
   }}
 \let\bbl@chprop@lb\bbl@chprop@linebreak
+%
 \def\bbl@chprop@locale#1{%
   \directlua{
     Babel.chr_to_loc = Babel.chr_to_loc or {}
@@ -15799,6 +15814,7 @@ end
   \@ifnextchar[{\bbl@settransform{0}}{\bbl@settransform{0}[]}}
 \gdef\babelposthyphenation{&%
   \@ifnextchar[{\bbl@settransform{1}}{\bbl@settransform{1}[]}}
+%
 \gdef\bbl@settransform#1[#2]#3#4#5{&%
   \ifcase#1
     \bbl@activateprehyphen
@@ -15859,6 +15875,7 @@ end
     \let\bbl@kv@attribute\relax
     \let\bbl@kv@label\relax
     \let\bbl@kv@fonts\@empty
+    \let\bbl@kv@prepend\relax
     \bbl@forkv{#2}{\bbl@csarg\edef{kv@##1}{##2}}&%
     \ifx\bbl@kv@fonts\@empty\else\bbl@settransfont\fi
     \ifx\bbl@kv@attribute\relax
@@ -15924,11 +15941,12 @@ end
                return u.gsub(u.char(tonumber(n, 16)), '(%p)', '%%%1')
              end)
       lbkr[id] = lbkr[id] or {}
-      table.insert(lbkr[id],
+      table.insert(lbkr[id], \ifx\bbl@kv@prepend\relax\else 1,\fi
         { label=label, attr=attr, pattern=patt, replace={\babeltempb} })
     }&%
   \endgroup}
 \endgroup
+%
 \let\bbl@transfont@list\@empty
 \def\bbl@settransfont{%
   \global\let\bbl@settransfont\relax % Execute only once
@@ -15958,6 +15976,7 @@ end
     \bbl@ifsamestring{\@nameuse{##1default}}\familydefault
       {\xdef\bbl@transfam{##1}}%
       {}}}
+%
 \DeclareRobustCommand\enablelocaletransform[1]{%
   \bbl@ifunset{bbl@ATR@#1@\languagename @}%
     {\bbl@error{transform-not-available}{#1}{}{}}%
@@ -16046,7 +16065,7 @@ end
       return head
     end
     %
-    function Babel.pre_otfload_h(head, gc, sz, pt, dir) %%% TODO
+    function Babel.pre_otfload_h(head, gc, sz, pt, dir)
       if Babel.numbers and Babel.digits_mapped then
         head = Babel.numbers(head)
       end
@@ -16097,6 +16116,7 @@ end
   \directlua{ Babel.attr_dir = luatexbase.registernumber'bbl@attr@dir' }
   \bbl@exp{\output{\bodydir\pagedir\the\output}}
 \fi
+%
 \chardef\bbl@thetextdir\z@
 \chardef\bbl@thepardir\z@
 \def\bbl@getluadir#1{%
@@ -16118,7 +16138,12 @@ end
       #2 TRT\relax
     \fi
   \fi}
-% ..00PPTT, with masks 0xC (par dir) and 0x3 (text dir)
+%    \end{macrocode}
+%
+% |\bbl@attr@dir| stores the directions with a mask: |..00PPTT|, with
+% masks 0xC (|PP| is the par dir) and 0x3 (|TT| is the text dir).
+%
+%    \begin{macrocode}
 \def\bbl@thedir{0}
 \def\bbl@textdir#1{%
   \bbl@setluadir{text}\textdir{#1}%
@@ -16259,6 +16284,7 @@ end
       \eqno\hbox{#1\glet\bbl@upset\@currentlabel}%
     \fi
     \bbl@exp{\def\\\@currentlabel{\[bbl@upset]}}}
+%
   \AtBeginDocument{%
     \ifx\bbl@noamsmath\relax\else
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
@@ -16368,6 +16394,11 @@ end
         \fi}%
     \fi\fi}
 \fi
+%    \end{macrocode}
+%
+% Declarations specific to lua, called by |\babelprovide|.
+%
+%    \begin{macrocode}
 \def\bbl@provide@extra#1{%
    % == onchar ==
   \ifx\bbl@KVP@onchar\@nnil\else
@@ -16412,7 +16443,7 @@ end
           Babel.loc_to_scr[\the\localeid] =
             Babel.script_blocks['\bbl@cl{sbcp}']
         end}%
-      \ifx\bbl@mapselect\@undefined  % TODO. almost the same as mapfont
+      \ifx\bbl@mapselect\@undefined
         \AtBeginDocument{%
           \bbl@patchfont{{\bbl@mapselect}}%
           {\selectfont}}%
@@ -16434,16 +16465,15 @@ end
       \fi
       \bbl@exp{\\\bbl@add\\\bbl@mapselect{\\\bbl@mapdir{\languagename}}}%
     \fi
-    % TODO - catch non-valid values
   \fi
   % == mapfont ==
-  % For bidi texts, to switch the font based on direction. Old.
+  % For bidi texts, to switch the font based on direction. Deprecated
   \ifx\bbl@KVP@mapfont\@nnil\else
     \bbl@ifsamestring{\bbl@KVP@mapfont}{direction}{}%
       {\bbl@error{unknown-mapfont}{}{}{}}%
     \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
     \bbl@ifunset{bbl@wdir@\languagename}{\bbl@provide@dirs{\languagename}}{}%
-    \ifx\bbl@mapselect\@undefined % TODO. See onchar.
+    \ifx\bbl@mapselect\@undefined
       \AtBeginDocument{%
         \bbl@patchfont{{\bbl@mapselect}}%
         {\selectfont}}%
@@ -16555,13 +16585,15 @@ end
   \else
     \ifnum\pardirection=\@ne\else\pardir TRT\bodydir TRT\fi
   \fi}
+%
 \IfBabelLayout{tabular}%
   {\chardef\bbl@tabular@mode\tw@}% All RTL
   {\IfBabelLayout{notabular}%
     {\chardef\bbl@tabular@mode\z@}%
     {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
+%
 \ifnum\bbl@bidimode>\@ne % Any lua bidi= except default=1
-  % Redefine: vrules mess up dirs. TODO: why?
+  % Redefine: vrules mess up dirs.
   \def\@arstrut{\relax\copy\@arstrutbox}%
   \ifcase\bbl@tabular@mode\or % 1 = Mixed - default
     \let\bbl@parabefore\relax
@@ -16658,6 +16690,7 @@ end
     \fi
     \noindent\box\@tempboxa}
 \fi
+%
 \IfBabelLayout{tabular}
   {\let\bbl@OL@@tabular\@tabular
    \bbl@replace\@tabular{$}{\bbl@nextfake$}%
@@ -16671,6 +16704,7 @@ end
        \let\bbl@NL@@tabular\@tabular
      \fi}}
    {}
+%
 \IfBabelLayout{lists}
   {\let\bbl@OL@list\list
    \bbl@sreplace\list{\parshape}{\bbl@listparshape}%
@@ -16681,6 +16715,7 @@ end
        \shapemode\tw@
      \fi}}
   {}
+%
 \IfBabelLayout{graphics}
   {\let\bbl@pictresetdir\relax
    \def\bbl@pictsetdir#1{%
@@ -16726,7 +16761,7 @@ end
          \setbox\z@\hb@xt@\z@{%
            \@defaultunitsset\@tempdimc{#1}\unitlength
            \kern\@tempdimc
-           #3\hss}% TODO: #3 executed twice (below). That’s bad.
+           #3\hss}%
          \edef\bbl@tempc{\directlua{tex.print(Babel.picture_has_bidi)}}%
        \fi
        % Do:
@@ -16739,7 +16774,7 @@ end
      \MakeRobust\put}%
    \AtBeginDocument
      {\AddToHook{cmd/diagbox@pict/before}{\let\bbl@pictsetdir\@gobble}%
-      \ifx\pgfpicture\@undefined\else % TODO. Allow deactivate?
+      \ifx\pgfpicture\@undefined\else
         \AddToHook{env/pgfpicture/begin}{\bbl@pictsetdir\@ne}%
         \bbl@add\pgfinterruptpicture{\bbl@pictresetdir}%
         \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\z@}%
@@ -16795,6 +16830,7 @@ end
       \def\labelenumii{)\theenumii(}%
       \let\bbl@OL@p@enumiii\p@enumiii
       \def\p@enumiii{\p@enumii)\theenumii(}}{}}{}
+%
 <@Footnote changes@>
 \IfBabelLayout{footnotes}%
   {\let\bbl@OL@footnote\footnote
@@ -24498,7 +24534,7 @@ Babel.cjk_breaks = {
   \bbl@elt{identification}{derivate}{no}}
 \@namedef{bbl@tbcp@nil}{und}
 \@namedef{bbl@lbcp@nil}{und}
-\@namedef{bbl@casing@nil}{und} % TODO
+\@namedef{bbl@casing@nil}{und}
 \@namedef{bbl@lotf@nil}{dflt}
 \@namedef{bbl@elname@nil}{nil}
 \@namedef{bbl@lname@nil}{nil}
