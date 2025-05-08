@@ -39,7 +39,8 @@ The language here refers to a set of hyphenation rules, ie, to
 `\language`. So, the first letter in the pattern is replaced with the
 first item in the list, the second letter with the second item and so
 on. (This is not strictly true, because the replace list is filled with
-nil’s if shorter.)
+`nil`’s if shorter. The `nil` value is equivalent to `remove`, explained
+below.)
 
 With `\babelposthyphenation`, the string `beginning (middle) end.` is
 segmented at spaces, and patterns are matched against the following
@@ -72,7 +73,8 @@ the item (in TeX jargon, the node) is removed; to insert chars, just
 use a multi-character string. The nodes created are literal copies of
 the original (the same font, language, and so on), but with the new
 characters.
-4. With `remove` the node is, well, **removed**. A synonymous is `string=`.
+4. With `remove` the node is, well, **removed**. A synonymous is
+`string=`. Trailing `remove`’s in the replacement list can be omitted.
 5. **Spaces** are declared with something like `space =.2 .1 0`. The
 values are in em units, and they are the natural width, the `plus`, and
 the `minus`. Here, you may need `data`, too. With `spacefactor` the
@@ -272,7 +274,7 @@ before that to be processed, which is enclosed between `() ()`.
 ```tex
 \babelprehyphenation{english}{ ([<>]){1} }{
   string = {1|<>|“”},
-  remove
+  remove   % ← Redundant. Can be omitted.
 }
 ```
 
