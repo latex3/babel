@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/05/06 v25.8.85770
+  [2025/05/08 v25.8.85971
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6107,8 +6107,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.8.85770>>
-%<<date=2025/05/06>>
+%<<version=25.8.85971>>
+%<<date=2025/05/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11305,7 +11305,6 @@ wouldn’t exist.
               \\\bbl@sreplace\<the##1>%
                 {\\\csname @\bbl@tempc\\\endcsname\<c@##1>}%
                 {{\\\bbl@map@cnt{\bbl@tempc}{##1}}}}%
-             \expandafter\show\csname the##1\endcsname
              \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
                \bbl@exp{\gdef\<the##1>{{\[the##1]}}}%
              \fi}}%
@@ -14448,27 +14447,38 @@ wouldn’t exist.
 %<*xetex|texxet>
 \providecommand\bbl@provide@intraspace{}
 \bbl@trace{Redefinitions for bidi layout}
+%    \end{macrocode}
+%
+% Finish here if there in no |layout|.
+%  
+%    \begin{macrocode}
+<@Footnote changes@>
 \ifx\bbl@opt@layout\@nnil\else % if layout=.. 
+\IfBabelLayout{nopars}
+  {}
+  {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
 \def\bbl@startskip{\ifcase\bbl@thepardir\leftskip\else\rightskip\fi}
 \def\bbl@endskip{\ifcase\bbl@thepardir\rightskip\else\leftskip\fi}
 \ifnum\bbl@bidimode>\z@
-  \def\@hangfrom#1{%
-    \setbox\@tempboxa\hbox{{#1}}%
-    \hangindent\ifcase\bbl@thepardir\wd\@tempboxa\else-\wd\@tempboxa\fi
-    \noindent\box\@tempboxa}
-  \def\raggedright{%
-    \let\\\@centercr
-    \bbl@startskip\z@skip
-    \@rightskip\@flushglue
-    \bbl@endskip\@rightskip
-    \parindent\z@
-    \parfillskip\bbl@startskip}
-  \def\raggedleft{%
-    \let\\\@centercr
-    \bbl@startskip\@flushglue
-    \bbl@endskip\z@skip
-    \parindent\z@
-    \parfillskip\bbl@endskip}
+\IfBabelLayout{pars}
+  {\def\@hangfrom#1{%
+     \setbox\@tempboxa\hbox{{#1}}%
+     \hangindent\ifcase\bbl@thepardir\wd\@tempboxa\else-\wd\@tempboxa\fi
+     \noindent\box\@tempboxa}
+   \def\raggedright{%
+     \let\\\@centercr
+     \bbl@startskip\z@skip
+     \@rightskip\@flushglue
+     \bbl@endskip\@rightskip
+     \parindent\z@
+     \parfillskip\bbl@startskip}
+   \def\raggedleft{%
+     \let\\\@centercr
+     \bbl@startskip\@flushglue
+     \bbl@endskip\z@skip
+     \parindent\z@
+     \parfillskip\bbl@endskip}}
+  {}
 \fi
 \IfBabelLayout{lists}
   {\bbl@sreplace\list
@@ -14505,7 +14515,6 @@ wouldn’t exist.
        \hskip\columnsep
        \hskip\columnwidth}}}%
   {}
-<@Footnote changes@>
 \IfBabelLayout{footnotes}%
   {\BabelFootnote\footnote\languagename{}{}%
    \BabelFootnote\localfootnote\languagename{}{}%
@@ -16650,16 +16659,22 @@ end
         \bodydir\pagedir\unexpanded\expandafter{\pcol@output}}}%
       {}}%
 \fi
-\ifx\bbl@opt@layout\@nnil\endinput\fi  % if no layout
+%    \end{macrocode}
+%
+% Finish here if there in no |layout|.
+%  
+%    \begin{macrocode}
+<@Footnote changes@>
+\ifx\bbl@opt@layout\@nnil\endinput\fi
 %    \end{macrocode}
 %
 % \textsc{Omega} provided a companion to |\mathdir| (|\nextfakemath|)
 % for those cases where we did not want it to be applied, so that the
 % writing direction of the main text was left unchanged.
 % |\bbl@nextfake| is an attempt to emulate it, because \luatex{} has
-% removed it without an alternative. Also, |\hangindent| does not
-% honour direction changes by default, so we need to redefine
-% |\@hangfrom|.
+% removed it without an alternative. Used in tabular, |\underline| and
+% |\LaTeX|. Also, |\hangindent| does not honour direction changes by
+% default, so we need to redefine |\@hangfrom|.
 %
 %    \begin{macrocode}
 \ifnum\bbl@bidimode>\z@ % Any bidi=
@@ -16682,13 +16697,18 @@ end
           \everyhbox{\the\everyhbox}%
           \everyvbox{\the\everyvbox}}%
       \<fi>}}%
-  \def\@hangfrom#1{%
+\IfBabelLayout{nopars}
+  {}
+  {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
+\IfBabelLayout{pars}
+  {\def\@hangfrom#1{%
     \setbox\@tempboxa\hbox{{#1}}%
     \hangindent\wd\@tempboxa
     \ifnum\bbl@getluadir{page}=\bbl@getluadir{par}\else
       \shapemode\@ne
     \fi
-    \noindent\box\@tempboxa}
+    \noindent\box\@tempboxa}}
+  {}
 \fi
 %
 \IfBabelLayout{tabular}
@@ -16831,7 +16851,6 @@ end
       \let\bbl@OL@p@enumiii\p@enumiii
       \def\p@enumiii{\p@enumii)\theenumii(}}{}}{}
 %
-<@Footnote changes@>
 \IfBabelLayout{footnotes}%
   {\let\bbl@OL@footnote\footnote
    \BabelFootnote\footnote\languagename{}{}%
