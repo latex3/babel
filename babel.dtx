@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/05/08 v25.8.85971
+  [2025/05/10 v25.8.86174
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -1016,7 +1016,7 @@ the names in the block \textsf{ngerman}.}
 \subtagalt{serbian}{}
 \note{Latin script}
 \tag{slovak}{}
-\tag[]{slovene}{}
+% \tag[]{slovene}{}
 \tag{slovenian}{}  %%%%%% <- and ini
 \tag{spanglish}{}
 \tag{spanish}{}
@@ -5098,8 +5098,9 @@ defines |\parsfootnote| so that |\parsfootnote{note}| is equivalent to:
 \footnote{(\foreignlanguage{\localename}{note})}
 \end{verbatim}
 but the footnote itself is typeset in the main language (to unify its
-direction). In addition, |\parsfootnotetext| is defined. The option
-|footnotes| just does the following:
+direction as well as the footnote mark). In addition,
+|\parsfootnotetext| is defined. The option |footnotes| just does the
+following:
 \begin{verbatim}
 \BabelFootnote{\footnote}{\localename}{}{}%
 \BabelFootnote{\localfootnote}{\localename}{}{}%
@@ -5107,9 +5108,9 @@ direction). In addition, |\parsfootnotetext| is defined. The option
 \end{verbatim}
 (which also redefine |\footnotetext| and define |\localfootnotetext|
 and |\mainfootnotetext|). If the language argument is empty, then no
-language is selected inside the argument of the footnote. Note this
-command is available always in bidi documents, even without
-|layout=footnotes|.
+language is selected inside the argument of the footnote. (\New{25.9}
+Formerly only available in bidi documents and Unicode engines, now it’s
+always available in all engines.)
 
 \begin{example}
   If you want to preserve directionality in footnotes and there are
@@ -6107,8 +6108,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.8.85971>>
-%<<date=2025/05/08>>
+%<<version=25.8.86174>>
+%<<date=2025/05/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12375,6 +12376,64 @@ wouldn’t exist.
   {\BabelPatchSection{caption}}{}
 %    \end{macrocode}
 %
+% \macro{\BabelFootnote}
+%
+% Footnotes.
+%
+%    \begin{macrocode}
+\bbl@trace{Footnotes}
+\ifnum\bbl@bidimode>\z@ % Any bidi=
+  \def\bbl@footnote#1#2#3{%
+    \@ifnextchar[%
+      {\bbl@footnote@o{#1}{#2}{#3}}%
+      {\bbl@footnote@x{#1}{#2}{#3}}}
+  \long\def\bbl@footnote@x#1#2#3#4{%
+    \bgroup
+      \select@language@x{\bbl@main@language}%
+      \bbl@fn@footnote{#2#1{\ignorespaces#4}#3}%
+    \egroup}
+  \long\def\bbl@footnote@o#1#2#3[#4]#5{%
+    \bgroup
+      \select@language@x{\bbl@main@language}%
+      \bbl@fn@footnote[#4]{#2#1{\ignorespaces#5}#3}%
+    \egroup}
+  \def\bbl@footnotetext#1#2#3{%
+    \@ifnextchar[%
+      {\bbl@footnotetext@o{#1}{#2}{#3}}%
+      {\bbl@footnotetext@x{#1}{#2}{#3}}}
+  \long\def\bbl@footnotetext@x#1#2#3#4{%
+    \bgroup
+      \select@language@x{\bbl@main@language}%
+      \bbl@fn@footnotetext{#2#1{\ignorespaces#4}#3}%
+    \egroup}
+  \long\def\bbl@footnotetext@o#1#2#3[#4]#5{%
+    \bgroup
+      \select@language@x{\bbl@main@language}%
+      \bbl@fn@footnotetext[#4]{#2#1{\ignorespaces#5}#3}%
+    \egroup}
+  \def\BabelFootnote#1#2#3#4{%
+    \ifx\bbl@fn@footnote\@undefined
+      \let\bbl@fn@footnote\footnote
+    \fi
+    \ifx\bbl@fn@footnotetext\@undefined
+      \let\bbl@fn@footnotetext\footnotetext
+    \fi
+    \bbl@ifblank{#2}%
+      {\def#1{\bbl@footnote{\@firstofone}{#3}{#4}}
+       \@namedef{\bbl@stripslash#1text}%
+         {\bbl@footnotetext{\@firstofone}{#3}{#4}}}%
+      {\def#1{\bbl@exp{\\\bbl@footnote{\\\foreignlanguage{#2}}}{#3}{#4}}%
+       \@namedef{\bbl@stripslash#1text}%
+         {\bbl@exp{\\\bbl@footnotetext{\\\foreignlanguage{#2}}}{#3}{#4}}}}
+\fi
+\IfBabelLayout{footnotes}%
+  {\let\bbl@OL@footnote\footnote
+   \BabelFootnote\footnote\languagename{}{}%
+   \BabelFootnote\localfootnote\languagename{}{}%
+   \BabelFootnote\mainfootnote{}{}{}}
+  {}
+%    \end{macrocode}
+%
 % \subsection{Marks}
 %
 % \macro{\markright}
@@ -14125,60 +14184,6 @@ wouldn’t exist.
 %<</Font selection>>
 %    \end{macrocode}
 %
-% \macro{\BabelFootnote}
-%
-% Footnotes.
-%
-%    \begin{macrocode}
-%<<*Footnote changes>>
-\bbl@trace{Bidi footnotes}
-\ifnum\bbl@bidimode>\z@ % Any bidi=
-  \def\bbl@footnote#1#2#3{%
-    \@ifnextchar[%
-      {\bbl@footnote@o{#1}{#2}{#3}}%
-      {\bbl@footnote@x{#1}{#2}{#3}}}
-  \long\def\bbl@footnote@x#1#2#3#4{%
-    \bgroup
-      \select@language@x{\bbl@main@language}%
-      \bbl@fn@footnote{#2#1{\ignorespaces#4}#3}%
-    \egroup}
-  \long\def\bbl@footnote@o#1#2#3[#4]#5{%
-    \bgroup
-      \select@language@x{\bbl@main@language}%
-      \bbl@fn@footnote[#4]{#2#1{\ignorespaces#5}#3}%
-    \egroup}
-  \def\bbl@footnotetext#1#2#3{%
-    \@ifnextchar[%
-      {\bbl@footnotetext@o{#1}{#2}{#3}}%
-      {\bbl@footnotetext@x{#1}{#2}{#3}}}
-  \long\def\bbl@footnotetext@x#1#2#3#4{%
-    \bgroup
-      \select@language@x{\bbl@main@language}%
-      \bbl@fn@footnotetext{#2#1{\ignorespaces#4}#3}%
-    \egroup}
-  \long\def\bbl@footnotetext@o#1#2#3[#4]#5{%
-    \bgroup
-      \select@language@x{\bbl@main@language}%
-      \bbl@fn@footnotetext[#4]{#2#1{\ignorespaces#5}#3}%
-    \egroup}
-  \def\BabelFootnote#1#2#3#4{%
-    \ifx\bbl@fn@footnote\@undefined
-      \let\bbl@fn@footnote\footnote
-    \fi
-    \ifx\bbl@fn@footnotetext\@undefined
-      \let\bbl@fn@footnotetext\footnotetext
-    \fi
-    \bbl@ifblank{#2}%
-      {\def#1{\bbl@footnote{\@firstofone}{#3}{#4}}
-       \@namedef{\bbl@stripslash#1text}%
-         {\bbl@footnotetext{\@firstofone}{#3}{#4}}}%
-      {\def#1{\bbl@exp{\\\bbl@footnote{\\\foreignlanguage{#2}}}{#3}{#4}}%
-       \@namedef{\bbl@stripslash#1text}%
-         {\bbl@exp{\\\bbl@footnotetext{\\\foreignlanguage{#2}}}{#3}{#4}}}}
-\fi
-%<</Footnote changes>>
-%    \end{macrocode}
-%
 % \section{Hooks for XeTeX and LuaTeX}
 %
 % \subsection{XeTeX}
@@ -14452,7 +14457,6 @@ wouldn’t exist.
 % Finish here if there in no |layout|.
 %  
 %    \begin{macrocode}
-<@Footnote changes@>
 \ifx\bbl@opt@layout\@nnil\else % if layout=.. 
 \IfBabelLayout{nopars}
   {}
@@ -14514,11 +14518,6 @@ wouldn’t exist.
        \hb@xt@\columnwidth{\box\@outputbox \hss}%
        \hskip\columnsep
        \hskip\columnwidth}}}%
-  {}
-\IfBabelLayout{footnotes}%
-  {\BabelFootnote\footnote\languagename{}{}%
-   \BabelFootnote\localfootnote\languagename{}{}%
-   \BabelFootnote\mainfootnote{}{}{}}
   {}
 %    \end{macrocode}
 %
@@ -16664,7 +16663,6 @@ end
 % Finish here if there in no |layout|.
 %  
 %    \begin{macrocode}
-<@Footnote changes@>
 \ifx\bbl@opt@layout\@nnil\endinput\fi
 %    \end{macrocode}
 %
@@ -16850,13 +16848,6 @@ end
       \def\labelenumii{)\theenumii(}%
       \let\bbl@OL@p@enumiii\p@enumiii
       \def\p@enumiii{\p@enumii)\theenumii(}}{}}{}
-%
-\IfBabelLayout{footnotes}%
-  {\let\bbl@OL@footnote\footnote
-   \BabelFootnote\footnote\languagename{}{}%
-   \BabelFootnote\localfootnote\languagename{}{}%
-   \BabelFootnote\mainfootnote{}{}{}}
-  {}
 %    \end{macrocode}
 %
 % Some \LaTeX{} macros use internally the math mode for text

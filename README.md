@@ -1,4 +1,4 @@
-## Babel 25.8.85971
+## Babel 25.8.86174
 
 (dev)
 
@@ -61,6 +61,8 @@ respective authors.
 ```
 25.9   (dev)
        * Option 'prepend' in transforms.
+       * Options 'pars' and 'nopars' in layout.
+       * \BabelFootnote always available.
 
 25.8   2025-04-29
        * The document 'lang' metadata, if provided, is used to set the
