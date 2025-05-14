@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/05/10 v25.8.86174
+  [2025/05/14 v25.9
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4245,9 +4245,13 @@ page on the news for 3.76 in the \babel{} site for further details.
 Transforms (only \luatex) provide a way to process the text on the
 typesetting level in several language-dependent ways, like non-standard
 hyphenation, special line breaking rules, script to script conversion,
-spacing conventions and so on.\footnote{They are similar in concept,
-but not the same, as those in Unicode. The main inspiration for this
-feature is the Omega transformation processes.}
+spacing conventions and so on.
+
+\begin{note}
+  They are similar in concept, but not the same, as those in Unicode.
+  Actually, the main inspiration for this feature is the Omega
+  transformation processes.
+\end{note}
 
 It currently embraces |\babelprehyphenation| and
 |\babelposthyphenation|.
@@ -4432,6 +4436,24 @@ to \textit{ύ}, so that the diaeresis is removed.
 This feature is activated with the first |\babelposthyphenation| or
 |\babelprehyphenation|.
 
+\New{3.67} With the optional argument you can associate a user-defined
+transform to an attribute, so that it’s active only when it’s set
+(currently its attribute value is ignored). With this mechanism
+transforms can be set or unset even in the middle of paragraphs, and
+applied to single words. To define, set and unset the attribute, the
+\LaTeX{} kernel provides the macros |\newattribute|, |\setattribute| and
+|\unsetattribute|. The following example shows how to use it, provided
+an attribute named |\latinnoj| has been declared:
+\begin{verbatim}
+\babelprehyphenation[attribute=\latinnoj]{latin}{ J }{ string = I }
+\end{verbatim}
+
+See the
+\href{https://latex3.github.io/babel/guides/%
+  non-standard-hyphenation-with-luatex.html}{\babel\ site} for a more
+detailed description and some examples. It also describes a few
+additional replacement types (|string|, |penalty|).
+
 \New{3.85} Another option is |label|, which takes a value similar to
 those in |\babelprovide| key |transforms| (in fact, the latter just
 applies this option). This label can be used to turn on and off
@@ -4460,30 +4482,16 @@ with a list separated with colons, like:
 transforms = _rm:sf:_transform.name
 \end{verbatim}
 
-\New{3.67} With the optional argument you can associate a user-defined
-transform to an attribute, so that it’s active only when it’s set
-(currently its attribute value is ignored). With this mechanism
-transforms can be set or unset even in the middle of paragraphs, and
-applied to single words. To define, set and unset the attribute, the
-\LaTeX{} kernel provides the macros |\newattribute|, |\setattribute| and
-|\unsetattribute|. The following example shows how to use it, provided
-an attribute named |\latinnoj| has been declared:
+Tranforms are executed in the same order they are declared. \New{25.9}
+They can be also added at the beginning with the key |prepend|, which
+is particularly useful with predefined transforms. For example:
 \begin{verbatim}
-\babelprehyphenation[attribute=\latinnoj]{latin}{ J }{ string = I }
+\babelprehyphenation[prepend]{hebrew}{-}{ string = ־ } % hyphen to maqaf
 \end{verbatim}
 
-See the
-\href{https://latex3.github.io/babel/guides/%
-  non-standard-hyphenation-with-luatex.html}{\babel\ site} for a more
-detailed description and some examples. It also describes a few
-additional replacement types (|string|, |penalty|).
-
-Although the main purpose of this command is non-standard hyphenation,
-it may actually be used for other transformations (after hyphenation is
-applied, so you must take discretionaries into account).
-
-You are limited to substitutions as done by \textsf{lua}, although a
-future implementation may alternatively accept \textsf{lpeg}.
+Although the main purpose of post-hyphenation transforms was
+non-standard hyphenation, they may actually be used for other
+transformations.
 
 \Describe{\babelprehyphenation}{\oarg{options}\marg{locale-name}%
           \marg{lua-pattern}\marg{replacement}}
@@ -4996,9 +5004,10 @@ bidirectional (with both R and L paragraphs) documents in \luatex{}.
   \textsf{multicol}).
 
 \item[footnotes] not required in monolingual documents, but it may be
-  useful in bidirectional documents (with both R and L paragraphs) in all
-  engines; you may use alternatively |\BabelFootnote| described below
-  (what this option does exactly is also explained there).
+  useful in bidirectional documents (with both R and L paragraphs) in
+  all engines, as well as in multilingual documents in general; you may
+  use alternatively |\BabelFootnote| described below (what this option
+  does exactly is also explained there).
 
 \item[captions] is similar to |sectioning|, but for |\caption|; not
   required in monolingual documents with \luatex{}, but may be
@@ -5020,6 +5029,13 @@ the same for \textsf{pgf/tikz}. Somewhat experimental. \New{3.32}.
 \item[extras] is used for miscellaneous readjustments which do not fit into
   the previous groups. Currently redefines in \luatex{} |\underline| and
   |\LaTeX2e| \New{3.19}.
+  
+\item[pars, nopars] When \texttt{layout} is used with any options
+in bidi documents, there are a few changes in |\@hangfrom| and also
+(only \xetex, as it’s unnecesary in \luatex) in |\raggedright|
+and |\raggedleft|. Using |pars| applies these adjustments even without
+other options; conversely, |nopars| prevents these adjustments even
+when other options are specified \New{25.9}.
 \end{description}
 
 \begin{example}
@@ -6108,8 +6124,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.8.86174>>
-%<<date=2025/05/10>>
+%<<version=25.9>>
+%<<date=2025/05/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12382,50 +12398,48 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \bbl@trace{Footnotes}
-\ifnum\bbl@bidimode>\z@ % Any bidi=
-  \def\bbl@footnote#1#2#3{%
-    \@ifnextchar[%
-      {\bbl@footnote@o{#1}{#2}{#3}}%
-      {\bbl@footnote@x{#1}{#2}{#3}}}
-  \long\def\bbl@footnote@x#1#2#3#4{%
-    \bgroup
-      \select@language@x{\bbl@main@language}%
-      \bbl@fn@footnote{#2#1{\ignorespaces#4}#3}%
-    \egroup}
-  \long\def\bbl@footnote@o#1#2#3[#4]#5{%
-    \bgroup
-      \select@language@x{\bbl@main@language}%
-      \bbl@fn@footnote[#4]{#2#1{\ignorespaces#5}#3}%
-    \egroup}
-  \def\bbl@footnotetext#1#2#3{%
-    \@ifnextchar[%
-      {\bbl@footnotetext@o{#1}{#2}{#3}}%
-      {\bbl@footnotetext@x{#1}{#2}{#3}}}
-  \long\def\bbl@footnotetext@x#1#2#3#4{%
-    \bgroup
-      \select@language@x{\bbl@main@language}%
-      \bbl@fn@footnotetext{#2#1{\ignorespaces#4}#3}%
-    \egroup}
-  \long\def\bbl@footnotetext@o#1#2#3[#4]#5{%
-    \bgroup
-      \select@language@x{\bbl@main@language}%
-      \bbl@fn@footnotetext[#4]{#2#1{\ignorespaces#5}#3}%
-    \egroup}
-  \def\BabelFootnote#1#2#3#4{%
-    \ifx\bbl@fn@footnote\@undefined
-      \let\bbl@fn@footnote\footnote
-    \fi
-    \ifx\bbl@fn@footnotetext\@undefined
-      \let\bbl@fn@footnotetext\footnotetext
-    \fi
-    \bbl@ifblank{#2}%
-      {\def#1{\bbl@footnote{\@firstofone}{#3}{#4}}
-       \@namedef{\bbl@stripslash#1text}%
-         {\bbl@footnotetext{\@firstofone}{#3}{#4}}}%
-      {\def#1{\bbl@exp{\\\bbl@footnote{\\\foreignlanguage{#2}}}{#3}{#4}}%
-       \@namedef{\bbl@stripslash#1text}%
-         {\bbl@exp{\\\bbl@footnotetext{\\\foreignlanguage{#2}}}{#3}{#4}}}}
-\fi
+\def\bbl@footnote#1#2#3{%
+  \@ifnextchar[%
+    {\bbl@footnote@o{#1}{#2}{#3}}%
+    {\bbl@footnote@x{#1}{#2}{#3}}}
+\long\def\bbl@footnote@x#1#2#3#4{%
+  \bgroup
+    \select@language@x{\bbl@main@language}%
+    \bbl@fn@footnote{#2#1{\ignorespaces#4}#3}%
+  \egroup}
+\long\def\bbl@footnote@o#1#2#3[#4]#5{%
+  \bgroup
+    \select@language@x{\bbl@main@language}%
+    \bbl@fn@footnote[#4]{#2#1{\ignorespaces#5}#3}%
+  \egroup}
+\def\bbl@footnotetext#1#2#3{%
+  \@ifnextchar[%
+    {\bbl@footnotetext@o{#1}{#2}{#3}}%
+    {\bbl@footnotetext@x{#1}{#2}{#3}}}
+\long\def\bbl@footnotetext@x#1#2#3#4{%
+  \bgroup
+    \select@language@x{\bbl@main@language}%
+    \bbl@fn@footnotetext{#2#1{\ignorespaces#4}#3}%
+  \egroup}
+\long\def\bbl@footnotetext@o#1#2#3[#4]#5{%
+  \bgroup
+    \select@language@x{\bbl@main@language}%
+    \bbl@fn@footnotetext[#4]{#2#1{\ignorespaces#5}#3}%
+  \egroup}
+\def\BabelFootnote#1#2#3#4{%
+  \ifx\bbl@fn@footnote\@undefined
+    \let\bbl@fn@footnote\footnote
+  \fi
+  \ifx\bbl@fn@footnotetext\@undefined
+    \let\bbl@fn@footnotetext\footnotetext
+  \fi
+  \bbl@ifblank{#2}%
+    {\def#1{\bbl@footnote{\@firstofone}{#3}{#4}}
+     \@namedef{\bbl@stripslash#1text}%
+       {\bbl@footnotetext{\@firstofone}{#3}{#4}}}%
+    {\def#1{\bbl@exp{\\\bbl@footnote{\\\foreignlanguage{#2}}}{#3}{#4}}%
+     \@namedef{\bbl@stripslash#1text}%
+       {\bbl@exp{\\\bbl@footnotetext{\\\foreignlanguage{#2}}}{#3}{#4}}}}
 \IfBabelLayout{footnotes}%
   {\let\bbl@OL@footnote\footnote
    \BabelFootnote\footnote\languagename{}{}%

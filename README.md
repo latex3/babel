@@ -1,6 +1,6 @@
-## Babel 25.8.86174
+## Babel 25.9
 
-(dev)
+2025-05-14
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.8 are described in:
+Changes in version 25.9 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.8.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.9.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,16 +59,10 @@ respective authors.
 
 ### Summary of latest changes
 ```
-25.9   (dev)
+25.9   2025-05-14
        * Option 'prepend' in transforms.
-       * Options 'pars' and 'nopars' in layout.
-       * \BabelFootnote always available.
-
-25.8   2025-04-29
-       * The document 'lang' metadata, if provided, is used to set the
-         main language. This is a potentially breaking change. See the
-         news page for further info.
-       * Hebrew justification with inter-letter spacing.
+       * Options 'pars' and 'nopars' in 'layout'.
+       * \BabelFootnote always available (which also fixes #324).
 ```
 
 ### Previous changes
