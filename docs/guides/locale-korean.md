@@ -8,6 +8,8 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 Korean language using the Korean script.
 
+You may also want to see [luatexko](https://ctan.org/pkg/luatexko).
+
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `korean` as the main language

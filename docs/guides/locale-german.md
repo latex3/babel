@@ -24,7 +24,7 @@ language (with tag `gsw`). To summarize:
 | German | `ngerman` | `german` |
 | German (Traditional German orthography) | `german` | `german-traditional` |
 | Austrian | `naustrian` | `austrian` |
-| Austrian  (Traditional German orthography) | `naustrian` | `austrian-traditional` |
+| Austrian  (Traditional German orthography) | `austrian` | `austrian-traditional` |
 | Swiss High German | `nswissgerman` | `swisshighgerman` |
 
 ## Support with the traditional way (`ldf`)

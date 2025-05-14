@@ -31,8 +31,6 @@ justification.
 
 See [What’s new in babel 25.8](https://latex3.github.io/babel/news/whats-new-in-babel-25.8.html)
 
-
-
 ## `pdflatex`
 
 For `pdftex` you may need to install separately the [`culmus`
@@ -49,4 +47,5 @@ of August 2023, included in TeXLive.
 * [Help getting started with Hebrew in babel](https://tex.stackexchange.com/questions/138992/help-getting-started-with-hebrew-in-babel/611604#611604)
 * [Why aren’t dageshes aligned in Hebrew in LuaLaTex?](https://tex.stackexchange.com/questions/605202/why-arent-dageshes-aligned-in-hebrew-in-lualatex)
 * [Writing Biblical Hebrew texts with different coloring for consonants, vowel and accent signs](https://tex.stackexchange.com/a/632620/5735)
-
+* [Dagesh ... coloured independently of the Hebrew letter in
+  LuaLaTeX](https://tex.stackexchange.com/questions/698798/dagesh-cannot-be-coloured-independently-of-the-hebrew-letter-in-lualatex/698800)
