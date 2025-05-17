@@ -2,16 +2,16 @@
 
 2025-05-14
 
-<span style="color:red;">⚠</span> **Important note about an upcoming
+<span style="color:red;">⚠</span> **Important announcement about an upcoming
 change.** Plans are underway for next fall or winter to eliminate the
 need to explicitly specify `provide=` when loading a language not
-supported as an ldf, thereby unifying the interface. Depending on the
+supported as an `ldf`, thereby unifying the interface. Depending on the
 language (and possibly the engine), `babel` will select the most
 suitable method. See [this
 post](https://tex.stackexchange.com/a/727114/5735) in
 tex.stackexchange. 
 
-## Prepending transforms®
+## Prepending transforms
 
 Until now, transforms could be only added after all the previouly defined
 ones. However, particularly with predefined transform, adding them
@@ -39,4 +39,4 @@ inherent reason to limit this feature to bidirectional texts. For
 instance, it can be useful in a Bulgarian document containing French
 citations, where the footnotes should remain in Bulgarian.
 
-This change also fixes #324.
+This change also fixes the issue [#324](https://github.com/latex3/babel/issues/324).
