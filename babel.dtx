@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/05/14 v25.9
+  [2025/05/20 v25.9.87169
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -3017,6 +3017,15 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
 \AddBabelHook{two}{foreign}{\BabelWrapText{\parse{##1}}
 \end{verbatim}
 the text becomes |\textit{\parse{<text>}}|. 
+\begin{example}
+  PDF tagging is still a work in progress, but language tags are already
+  possible in short texts with |\foreignlanguage|. Here is an example:
+\begin{verbatim}
+\AddBabelHook[indonesian]{meta}{foreign}{%
+  \BabelWrapText{\tagmcbegin{tag=Span, raw=/Lang (id)}##1\tagmcend}}
+\end{verbatim}
+Be aware the behavior related to tagging can and very likely will change.
+\end{example}
 
 \end{description}
 
@@ -4357,7 +4366,7 @@ transliteration system based on that devised by Christian Justen for
 not shifted.}
 
 \trans{Hebrew, Yiddish, Ladino, Ancient
-Hebrew}{justification.interletter}{justification.interletter}{Hebrew
+Hebrew}{justification.interletter}{\hspace*{2em}Hebrew
 justification is based on variations in the spacing between individual
 letters within words. This transform activates this justification
 method. See \New{25.8} for further details and an example.}
@@ -4941,10 +4950,12 @@ Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
                    \texttt{lists}  $\string|$
                    \texttt{contents}  $\string|$
                    \texttt{footnotes}  $\string|$
-                   \texttt{captions}  $\string|$
-                   \texttt{columns} $\string|$
-                   \texttt{graphics} $\string|$
-                   \texttt{extras}}
+                   \texttt{captions}  $\string|$}
+\DescribeOther{ }{\phantom{layout=}\texttt{columns} $\string|$
+                  \texttt{graphics} $\string|$
+                  \texttt{extras} $\string|$
+                  \texttt{pars} $\string|$
+                  \texttt{nopars}}
 
 \New{3.16} \textit{To be expanded}. Selects which layout elements are
 adapted in bidi documents, including some text elements (except with
@@ -6124,8 +6135,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.9>>
-%<<date=2025/05/14>>
+%<<version=25.9.87169>>
+%<<date=2025/05/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7013,8 +7024,10 @@ wouldn’t exist.
 % We first need a couple of macros for a simple BCP 47 look up. It also
 % makes sure, with |\bbl@bcpcase|, casing is the correct one, so that
 % sr-latn-ba becomes fr-Latn-BA. Note |#4| may contain some
-% |\@empty|'s, but they are eventually removed. |\bbl@bcplookup| either
-% returns the found |ini| or it is |\relax|.
+% |\@empty|'s, but they are eventually removed.
+% 
+% |\bbl@bcplookup| either returns the found |ini| tag or it is
+% |\relax|.
 %
 %    \begin{macrocode}
 \def\bbl@bcpcase#1#2#3#4\@@#5{%
@@ -13137,19 +13150,30 @@ wouldn’t exist.
 % not well defined, so if there is not a |main| option we set here
 % explicitly.
 %
+% Tagging PDF Span elements requires horizontal mode. With
+% |DocumentMetada| we also force it with |\foreignlanguage| (this is
+% also done in bidi texts).
+%
 %    \begin{macrocode}
 \ifx\GetDocumentProperties\@undefined\else
+  \let\bbl@beforeforeign\leavevmode
   \edef\bbl@metalang{\GetDocumentProperties{document/lang}}%
   \ifx\bbl@metalang\@empty\else
     \begingroup
       \expandafter
       \bbl@bcplookup\bbl@metalang-\@empty-\@empty-\@empty\@@
-      \bbl@read@ini{\bbl@bcp}\m@ne
-      \xdef\bbl@language@opts{\bbl@language@opts,\languagename}%
-      \ifx\bbl@opt@main\@nnil
-        \global\let\bbl@opt@main\languagename
+      \ifx\bbl@bcp\relax
+        \ifx\bbl@opt@main\@nnil
+          \bbl@error{no-locale-for-meta}{\bbl@metalang}{}{}%
+        \fi
+      \else
+        \bbl@read@ini{\bbl@bcp}\m@ne
+        \xdef\bbl@language@opts{\bbl@language@opts,\languagename}%
+        \ifx\bbl@opt@main\@nnil
+          \global\let\bbl@opt@main\languagename
+        \fi
+        \bbl@info{Passing \languagename\space to babel}%
       \fi
-      \bbl@info{Passing \languagename\space to babel}%
     \endgroup
   \fi
 \fi
@@ -13585,6 +13609,16 @@ wouldn’t exist.
 \bbl@errmessage{hyphenmins-args}
    {\string\babelhyphenmins\ accepts either the optional\\%
     argument or the star, but not both at the same time}%
+   {See the manual for further details.}
+\bbl@errmessage{no-locale-for-meta}
+   {There isn't currently a locale for the 'lang' requested\\%
+    in the PDF metadata ('#1'). To fix it, you can\\%
+    set explicitly a similar language (using the same\\%
+    script) with the key main= when loading babel. If you\\%
+    continue, I'll fallback to the 'nil' language, with\\%
+    tag 'und' and script 'Latn', but expect a bad font\\%
+    rendering with other scripts. You may also need set\\%
+    explicitly captions and date, too}%
    {See the manual for further details.}
 %</errors>
 %<*patterns>

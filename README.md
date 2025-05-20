@@ -1,6 +1,6 @@
-## Babel 25.9
+## Babel 25.9.87169
 
-2025-05-14
+(dev)
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -58,12 +58,16 @@ Bugs related to specific languages are best reported to their
 respective authors.
 
 ### Summary of latest changes
-```
-25.9   2025-05-14
-       * Option 'prepend' in transforms.
-       * Options 'pars' and 'nopars' in 'layout'.
-       * \BabelFootnote always available (which also fixes #324).
-```
+
+#### 25.10 (dev)
+
+* Fixes
+       
+#### 25.9 (2025-05-14)
+
+* Option `prepend` in transforms.
+* Options `pars` and `nopars` in `layout`.
+* `BabelFootnote` always available (which also fixes #324).
 
 ### Previous changes
 
