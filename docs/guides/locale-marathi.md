@@ -8,6 +8,9 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 Marathi language using the Devanagari script.
 
+You may be also interested in the
+[marathi](https://ctan.org/pkg/marathi) package.
+
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `marathi` as the main language

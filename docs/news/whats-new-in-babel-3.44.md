@@ -57,7 +57,8 @@ There is a good deal of alphabetic counters for Ethiopic languages in the CSS [R
 
 ### Example 1: transliteration
 
-Here is an example of what can be done currently. Consider the following definitions:
+Here is an example of what can be done currently. Consider the following
+definitions (for a trasliterated Russian):
 ```tex
 \babelprovide[import=ru]{transrussian}
 

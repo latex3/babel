@@ -16,7 +16,7 @@ recommended engine (although it also works in `xelatex`).
 \documentclass{article}
 
 \usepackage[hindi, provide=*]{babel}
-\babelfont{rm}{Shobhika}
+\babelfont{rm}{Mukta}
 
 \begin{document}
 
