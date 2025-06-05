@@ -1,4 +1,4 @@
-## Babel 25.9.87169
+## Babel 25.9.88780
 
 (dev)
 
@@ -62,6 +62,7 @@ respective authors.
 #### 25.10 (dev)
 
 * Fixes
+* New transform, for Russian: transliteration.gost779b.
        
 #### 25.9 (2025-05-14)
 

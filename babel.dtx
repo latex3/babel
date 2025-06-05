@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/05/20 v25.9.87169
+  [2025/06/05 v25.9.88780
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -2137,7 +2137,7 @@ In e-Plain and pdf-Plain, load languages styles with |\input| and then use
 
 \section{More on language loading and selection}
 
-\subsection{A couple of tools}
+\subsection{A few tools}
 
 % Also Plain
 \Describe{\babeltags}{\char`\{\m{tag1} \texttt{=} \m{language1}, \m{tag2}
@@ -2227,6 +2227,39 @@ some languages. Note also you should include only macros defined by
 the language, not global macros (e.g., |\TeX| of |\dag|).
 
 With |ini| files (see below), captions are ensured by default.
+
+\Describe\AfterBabelLanguage{\marg{option-name}\marg{code}}
+
+Executes \meta{code} when the file loaded by the corresponding package
+option is finished (at |\ldf@finish|). The setting is global. So
+\begin{verbatim}
+\AfterBabelLanguage{french}{...}
+\end{verbatim}
+does |...|\ at the end of |french.ldf|. It can be used in |ldf| files,
+too, but in such a case the code is executed only if
+\meta{option-name} is the same as |\CurrentOption| (which could not
+be the same as the option name as set in |\usepackage|!).
+
+\begin{example}
+  Consider two languages \textsf{foo} and \textsf{bar} defining the
+  same |\macro| with |\newcommand|. An error is raised if you attempt
+  to load both. Here is a way to overcome this problem, with the help
+  of the \texttt{presets} hook (which has to be set before loading
+  \babel):
+\begin{verbatim}
+\AddToHook{babel/presets}{%
+  \AfterBabelLanguage{foo}{%
+    \let\macroFoo\macro
+    \let\macro\relax}}
+\usepackage[foo, bar]{babel}
+\end{verbatim}
+\end{example}
+
+\begin{note}
+  An alternative method to execute some code just after an |ldf| file
+  is loaded is with the hook |file/<language>.ldf/after|. You can also
+  execute some code before with |file/<language>.ldf/before|.
+\end{note}
 
 \subsection{Accessing language info}
 
@@ -2472,43 +2505,7 @@ the main language can be overridden with something like that before
 With this package option \babel{} just loads some basic macros (mainly
 the selectors), defines |\AfterBabelLanguage| and exits. It also
 selects the hyphenation patterns for the last language passed as option
-(by its name in |language.dat|). There are two main uses: classes and
-packages, and as a last resort in case there are, for some reason,
-incompatible languages. It can be used if you just want to select the
-hyphenation patterns of a single language, too.
-
-\Describe\AfterBabelLanguage{\marg{option-name}\marg{code}}
-
-This command is currently the only one provided by |base|. Executes
-\meta{code} when the file loaded by the corresponding package option
-is finished (at |\ldf@finish|). The setting is global. So
-\begin{verbatim}
-\AfterBabelLanguage{french}{...}
-\end{verbatim}
-does |...|\ at the end of |french.ldf|. It can be used in |ldf| files,
-too, but in such a case the code is executed only if
-\meta{option-name} is the same as |\CurrentOption| (which could not
-be the same as the option name as set in |\usepackage|!).
-
-\begin{example}
-  Consider two languages \textsf{foo} and \textsf{bar} defining the
-  same |\macro| with |\newcommand|. An error is raised if you attempt
-  to load both. Here is a way to overcome this problem:
-\begin{verbatim}
-\usepackage[base]{babel}
-\AfterBabelLanguage{foo}{%
-  \let\macroFoo\macro
-  \let\macro\relax}
-\usepackage[foo,bar]{babel}
-\end{verbatim}
-\end{example}
-
-\begin{note}
-  An alternative method to execute some code just after an |ldf| file
-  is loaded is with |\AddToHook| and the hook
-  |file/<language>.ldf/after|. You can also execute some code before
-  with |file/<language>.ldf/before|.
-\end{note}
+(by its name in |language.dat|).
 
 \begin{warning}
   Currently this option is not compatible with languages loaded on the
@@ -6135,8 +6132,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.9.87169>>
-%<<date=2025/05/20>>
+%<<version=25.9.88780>>
+%<<date=2025/06/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13085,6 +13082,7 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \bbl@trace{Language options}
+\def\BabelDefinitionFile#1#2#3{}
 \let\bbl@afterlang\relax
 \let\BabelModifiers\relax
 \let\bbl@loaded\@empty
