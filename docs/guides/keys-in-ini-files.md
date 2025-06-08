@@ -36,7 +36,7 @@ Most of them are self explanatory.
 **script.tag.bcp47** The script part.
 
 **tag.bcp47.likely** The likely full tag. See [Likely Subtags
-(CLDR)](https://unicode-org.github.io/cldr-staging/charts/latest/supplemental/likely_subtags.html).
+(CLDR)](https://www.unicode.org/cldr/charts/47/supplemental/likely_subtags.html).
  It can be useful when exporting data to tools expecting a full BCP 47
  tag.
 
@@ -76,7 +76,7 @@ non breakable space and `[.]` is an abbreviation dot.
 
 Here are some explanations for dates:
 
-http://cldr.unicode.org/translation/date-time-names 
+https://cldr.unicode.org/translation/date-time/date-time-names
 
 For example, about `narrow`:
 
@@ -126,18 +126,18 @@ calendar, such as in English for days of the week:
 
 Under development:
 
-https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.48.md
+https://latex3.github.io/babel/news/whats-new-in-babel-3.48.html
 
 ### `characters`
 
 See the CLDR. For example [Exemplar
-Characters](http://cldr.unicode.org/translation/-core-data/exemplars),
+Characters](https://cldr.unicode.org/translation/core-data/exemplars#exemplar-characters),
 can help to recognize a language. This list and the punctuation list
 are currently not used by `babel`.
 
 ### `numbers`
 
-See [Numering systems](http://cldr.unicode.org/translation/-core-data/numbering-systems)
+See [Numering systems](https://cldr.unicode.org/translation/core-data/numbering-systems)
 
 The section about numbers may be used by some package to format
 numbers (or even `babel` itself in a future). They reflect local tradicional
@@ -150,4 +150,4 @@ See https://tex.stackexchange.com/questions/529813/how-to-define-counters-with-a
 ### `transforms`
 
 See
-[What's new in babel 3.56](https://github.com/latex3/babel/blob/master/news-guides/news/whats-new-in-babel-3.56.md#transforms-in-ini-files)
+[What's new in babel 3.56](https://latex3.github.io/babel/news/whats-new-in-babel-3.56.html#transforms-in-ini-files)

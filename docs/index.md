@@ -88,6 +88,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
+| [25.10](news/whats-new-in-babel-25.10.html) | (dev) | Transform `transliteration.gost779b` (Russian) |
 | [25.9](news/whats-new-in-babel-25.9.html) | 2025-05-14 | Option `prepend` in transforms. `\BabelFootnote`always available. |
 | [25.8](news/whats-new-in-babel-25.8.html) | 2025-04-29 | Hebrew justification. Main language based on metadata. |
 | [25.7](news/whats-new-in-babel-25.7.html) | 2025-04-14 | `\ShowBabelTransforms`. |
