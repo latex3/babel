@@ -35,11 +35,13 @@ Cyrillic languages, not yet implemented).
 By applying these principles, you can devise your own (non-standard)
 extensions For example, ‘ꙋ’ can be `` u` ``, and ‘ѡ’ can be ``
 o` ``. They must be prepended to the transform, so:
+{% raw  %}
 ```tex
 \babelprehyphenation[prepend, label = transliteration.gost00b]{russian}
   { ([UOuo])` }
   { string = {1|UOuo|ꙊѠꙋѡ} }
 ```
+{% endraw %}
 
 ## Other changes
 
