@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/06/05 v25.9.88780
+  [2025/06/10 v25.10
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4399,6 +4399,9 @@ kana variants.}
 \trans{Latin}{letters.uv}{Replaces \textit{v}, \textit{U} with
 \textit{u}, \textit{V}.}
 
+\trans{Russian}{transliteration.gost779b}{The GOST 7.79-2000 System B for
+the romanization of Russian. \New{25.10}}
+
 \trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
 files refers to the Cyrillic script, which is here the target.) The
 standard system devised by Ljudevit Gaj.}
@@ -6132,8 +6135,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.9.88780>>
-%<<date=2025/06/05>>
+%<<version=25.10>>
+%<<date=2025/06/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11886,7 +11889,7 @@ wouldn’t exist.
 \def\ShowLocaleProperties#1{%
   \typeout{}%
   \typeout{*** Properties for language '#1' ***}
-  \def\bbl@elt##1##2##3{\typeout{##1/##2 = ##3}}%
+  \def\bbl@elt##1##2##3{\typeout{##1/##2 = \unexpanded{##3}}}%
   \@nameuse{bbl@inidata@#1}%
   \typeout{*******}}
 %    \end{macrocode}
