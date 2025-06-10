@@ -4,7 +4,7 @@
 
 ## Fixes
 
-* A locale in `\DocumentMetada` not recognized by `babel` raised a
+* A locale in `\DocumentMetadata` not recognized by `babel` raised a
   cryptic error. Now a more meaningful one is shown. See the [news page
   for
   25.9](https://latex3.github.io/babel/news/whats-new-in-babel-25.9.html)
@@ -54,7 +54,7 @@ o` ``. They must be prepended to the transform, so:
 
 ## Other changes
 
-Tagging PDF Span elements requires horizontal mode. If |\DocumentMetada|
-is used we also force it with |\foreignlanguage| (it was already done
-in bidi texts).
+Tagging PDF Span elements requires horizontal mode. If
+`\DocumentMetadata` is used we also force it with `\foreignlanguage`
+(it was already done in bidi texts).
 
