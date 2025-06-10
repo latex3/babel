@@ -4,15 +4,16 @@
 
 ## Fixes
 
-* A locale not recognized by `babel` raised a crytic error. Now a more
-  meaninful one is shown. See the [news page for
+* A locale in `\DocumentMetada` not recognized by `babel` raised a
+  cryptic error. Now a more meaningful one is shown. See the [news page
+  for
   25.9](https://latex3.github.io/babel/news/whats-new-in-babel-25.9.html)
   and [issue 343](https://github.com/latex3/babel/issues/343). A new
   locale tag `und` has been added, whose purpose it to serve as
   fallback. Currently, there is only an `ini` file, but more will be
   added in the near future for several scripts.
 
-* Error with `\ShowLocaleProperties` in some locales with Unicode
+* Error with `\ShowLocaleProperties` with some locales in Unicode
   engines.
 
 ## Transliteration of Russian
@@ -20,7 +21,8 @@
 A transform is provided for the transliteration of Russian using the
 norm GOST 7.79-2000 System B, named `transliteration.gost779b`. It
 requires only ASCII characters and is reversible, which makes it
-particularly well suited for LaTeX. As explained in the norm,
+particularly well suited for LaTeX. As explained in the norm
+(translated from Russian),
 > The unambiguous reversibility [...] is ensured by the specific use of
 > the Latin letters h, y, c and the symbol `` ` ``. The letters h, y do
 > not represent any Cyrillic letters by themselves and are used only in
@@ -44,7 +46,7 @@ extensions For example, ‘ꙋ’ can be `` u` ``, and ‘ѡ’ can be ``
 o` ``. They must be prepended to the transform, so:
 {% raw  %}
 ```tex
-\babelprehyphenation[prepend, label = transliteration.gost00b]{russian}
+\babelprehyphenation[prepend, label = transliteration.gost779b]{russian}
   { ([UOuo])` }
   { string = {1|UOuo|ꙊѠꙋѡ} }
 ```
@@ -52,4 +54,7 @@ o` ``. They must be prepended to the transform, so:
 
 ## Other changes
 
-Added a locale for \[tengo que hacer el md y añadirlo al manual\].
+Tagging PDF Span elements requires horizontal mode. If |\DocumentMetada|
+is used we also force it with |\foreignlanguage| (it was already done
+in bidi texts).
+
