@@ -53,10 +53,12 @@ already some transforms to transliterate a few languages. Native digits
 are already handled by `babel` out of the box.
 
 In some cases, a better option are font features, but there aren’t
-available with `Harfbuzz`. As a reference, here are some basic patterns
-taken from `luaotfload` (lowercase means ‘from’ and uppercase ‘to’;
-note the `ligature` type is, in some sense, ‘reversed’). See sec. 15 in
-[Font
+available with `Harfbuzz`. (However,
+[‘constructors’](https://github.com/latex3/babel/discussions/346) are,
+although they can be cumbersome.) As a reference, here are some basic
+patterns taken from `luaotfload` (lowercase means ‘from’ and uppercase
+‘to’; note the `ligature` type is, in some sense, ‘reversed’). See sec.
+15 in [Font
 extensions](https://articles.contextgarden.net/journal/2017/27-76.pdf)
 for further info (focused on `context`, but pure Lua examples are valid
 in `lualatex`):

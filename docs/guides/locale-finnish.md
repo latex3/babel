@@ -36,6 +36,11 @@ Today $=$ \today
 
 ![](../media/locale-finnish.png)
 
+## Hyphens
+
+With the transform `prehyphen.nobreak`, line breaks just after hyphens
+prepended to words are prevented, as in “pakastekaapit ja -arkut”.
+
 ## Contribute
 
 If you are a native speaker or have expertise in this language, you can

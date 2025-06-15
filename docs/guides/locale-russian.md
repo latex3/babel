@@ -1,7 +1,9 @@
 # Russian
 
 <blockquote>
-  <p><em>Improve this page! Feel free to draft a pull request <a href="https://github.com/latex3/babel/tree/docs/docs">on GitHub</a>.</em></p>
+  <p><em>Improve this page! Feel free to draft a pull request <a href="https://github.com/latex3/babel/tree/docs/docs">on GitHub</a><br>
+  <a
+  href="https://www.google.com/search?q=site%3Alatex3.github.io%2Fbabel+Russian">Search this site for more on Russian</a>.</em></p>
 </blockquote>
 
 This page offers basic guidance on typesetting a LaTeX document in the
@@ -37,6 +39,14 @@ Today $=$ \today
 ```
 
 ![](../media/locale-russian.png)
+
+## Trasliteration
+
+A transform is provided for the transliteration of Russian using the
+norm GOST 7.79-2000 System B, named `transliteration.gost779b`. It
+requires only ASCII characters and is reversible. See the [news page for
+v.
+25.10](https://latex3.github.io/babel/news/whats-new-in-babel-25.10.html).
 
 ## Contribute
 
