@@ -8,5 +8,12 @@
   \stop
 \fi
 \BabelBeforeIni{mk}{%
+  \BabelDefinitionFile{0}{macedonian}{%
+    \AtBeginDocument{%
+      \def\bbl@tempa{TU}%
+      \ifx\f@encoding\bbl@tempa
+        \babelprovide[import]{macedonian}%
+        \selectlanguage{\mainlocalename}%
+      \fi}}%
 }
 \endinput

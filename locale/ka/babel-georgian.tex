@@ -8,5 +8,8 @@
   \stop
 \fi
 \BabelBeforeIni{ka}{%
+    \BabelDefinitionFile{0}{georgian}{%
+      % Bug in georgian.ldf. Temporal
+      \AtBeginDocument{\let\russian@sh@hyphen\georgian@sh@hyphen}}%
 }
 \endinput

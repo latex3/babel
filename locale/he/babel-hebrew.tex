@@ -8,6 +8,10 @@
   \stop
 \fi
 \BabelBeforeIni{he}{%
+  \BabelDefinitionFile{1}{hebrew}{%
+    \ifcase\bbl@engine
+      \input{rlbabel.def}%
+    \fi}%
 }
 
 % Contributed by Udi Fogiel (with some changes)

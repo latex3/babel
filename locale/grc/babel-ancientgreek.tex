@@ -8,6 +8,8 @@
   \stop
 \fi
 \BabelBeforeIni{grc}{%
+  \BabelDefinitionFile{0}{greek}{%
+    \AfterBabelLanguage{\CurrentOption}{\languageattribute{greek}{ancient}}}%
 }
 
 \ifcase\bbl@engine\else

@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/06/10 v25.10
+  [2025/07/03 v25.10.91567
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -925,110 +925,111 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 
 \begin{multicols}{2}
 \leftskip2em\parindent0pt
-\tag[babel-dutch]{afrikaans}{}
-\tag{albanian}{}
-\tag[arabi]{arabic}{}
+\tag[babel-dutch]{afrikaans}{}%
+\tag{albanian}{}%
+\tag[arabi]{arabic}{}%
 \note{Requires \textsf{arabi}.}
-\tag{azerbaijani}{}
-\tag{basque}{}
-\tag{belarusian}{}
-\tag{bosnian}{}
-\tag{breton}{}
-\tag{bulgarian}{}
-\tag{catalan}{}
-\tag{croatian}{}
-\tag{czech}{}
-\tag{danish}{}
-\tag{dutch}{}
-\tag{english}{}
-\subtagalt{american}{}
+\tag{azerbaijani}{}%
+\tag{basque}{}%
+\tag{belarusian}{}%
+\tag{bosnian}{}%
+\tag{breton}{}%
+\tag{bulgarian}{}%
+\tag{catalan}{}%
+\tag{croatian}{}%
+\tag{czech}{}%
+\tag{danish}{}%
+\tag{dutch}{}%
+\tag{english}{}%
+\subtagalt{american}{}%
 \subtag{USenglish}{}{}
 \subtagalt{australian}{}
-\subtagalt{british}{}
+\subtagalt{british}{}%
 \subtag{UKenglish}{}
-\subtagalt{canadian}{}
+\subtagalt{canadian}{}%
 \subtagalt{newzealand}{}
-\tag{esperanto}{}
-\tag{estonian}{}
+\tag{esperanto}{}%
+\tag{estonian}{}%
 \tagmin{ethiop}{} %%%%%%
-\tag[arabi]{farsi}{}
+\tag[arabi]{farsi}{}%
 \note{Requires \textsf{arabi}.}
-\tag{finnish}{}
-\tag{french}{}
+\tag{finnish}{}%
+\tag{french}{}%
 \subtagalt{acadian}{}
 \tag[babel-friulan]{friulian}{}
-\tag{galician}{}
-\tag{georgian}{}
-\tag{german}{}
+\tag{galician}{}%
+\tag{georgian}{}%
+\note{Requires \textsf{geotex}.}
+\tag{german}{}%
 \note{This block refers to the old ortography. For the modern one, use
 the names in the block \textsf{ngerman}.}
-\subtagalt{austrian}{}
+\subtagalt{austrian}{}%
 \subtagalt{swissgerman}{}
 \note{Swiss High German}
-\tag{greek}{}
+\tag{greek}{}%
 % \subtagalt{polutonicogreek}{}
 \subtagmin{ibycus}{}
 \subtagmin{bgreek}{}
-\tag{hebrew}{}
-\tag[devanagari]{hindi}{}
+\tag{hebrew}{}%
+\tag[devanagari]{hindi}{}%
 \note{Requires \textsf{velthuis}.}
-\tag{hungarian}{}
+\tag{hungarian}{}%
 \subtag{magyar}{}
-\tag{icelandic}{}
-\tag{indonesian}{}
-\tag{interlingua}{}
-\tag{irish}{}
-\tag{italian}{}
-\tag{japanese}{}
+\tag{icelandic}{}%
+\tag{indonesian}{}%
+\tag{interlingua}{}%
+\tag{irish}{}%
+\tag{italian}{}%
+\tag{japanese}{}%
 \tag{kurmanji}{}
-\tag{latin}{}
-\subtagalt{classicallatin}{}
-\subtagalt{medievallatin}{}
-\subtagalt{ecclesiasticallatin}{}
-\tag{latvian}{}
-\tag{lithuanian}{}
+\tag{latin}{}%
+\subtagalt{classicallatin}{}%
+\subtagalt{medievallatin}{}%
+\subtagalt{ecclesiasticallatin}{}%
+\tag{latvian}{}%
+\tag{lithuanian}{}%
 \tag[babel-sorbian]{lowersorbian}{}
-\tag{macedonian}{}
-\tag{malay}{}
-\tag[mongolian-babel]{mongolian}{}
-\tag[babel-german]{ngerman}{}
+\tag{macedonian}{}%
+\tag{malay}{}%
+\tag[mongolian-babel]{mongolian}{}%
+\tag[babel-german]{ngerman}{}%
 \note{This block refers to the new ortography.}
-\subtagalt{naustrian}{}
+\subtagalt{naustrian}{}%
 \subtagalt{nswissgerman}{}
 \note{Swiss High German}
-\tag[babel-samin]{northernsami}{}
-\tag[babel-norsk]{norwegian}{}
-\subtag{norsk}{}
-\tag[babel-norsk]{nynorsk}{}
-\tag{occitan}{}
-\tag{piedmontese}{}
+\tag[babel-samin]{northernsami}{}%
+\tag[babel-norsk]{norwegian}{}%
+\subtag{norsk}{}%
+\tag[babel-norsk]{nynorsk}{}%
+\tag{occitan}{}%
+\tag{piedmontese}{}%
 \tagmin{pinyin}{}
-\tag{polish}{}
-\tag[babel-portuges]{portuguese}{}
-\subtagalt{brazilian}{}
-\tag{romanian}{}
-\tag{romansh}{}
-\tag{russian}{}
-\tag[babel-scottish]{scottishgaelic}{}
-\subtag{scottish}{}
+\tag{polish}{}%
+\tag[babel-portuges]{portuguese}{}%
+\subtagalt{brazilian}{}%
+\tag{romanian}{}%
+\tag{romansh}{}%
+\tag{russian}{}%
+\tag[babel-scottish]{scottishgaelic}{}%
+\subtag{scottish}{}%
 \tag{serbianc}{}
 \note{Cyrillic script}
 \subtagalt{serbian}{}
 \note{Latin script}
-\tag{slovak}{}
+\tag{slovak}{}%
 % \tag[]{slovene}{}
-\tag{slovenian}{}  %%%%%% <- and ini
+\tag{slovenian}{}%  %%%%%% <- and ini
 \tag{spanglish}{}
-\tag{spanish}{}
-\tag{swedish}{}
-\tag{thai}{}
+\tag{spanish}{}%
+\tag{swedish}{}%
+\tag{thai}{}%
 \subtagmin{thaicjk}{}
-\tag{turkish}{}
-\tag[turkmen]{turkmen}{}
-\tag{ukrainian}{}
-\tag[sorbian]{uppersorbian}{}
-\tag{vietnamese}{}
-\tag{welsh}{}
+\tag{turkish}{}%
+\tag[turkmen]{turkmen}{}%
+\tag{ukrainian}{}%
+\tag[sorbian]{uppersorbian}{}%
+\tag{vietnamese}{}%
+\tag{welsh}{}%
 \end{multicols}
 \endgroup
 \hrule
@@ -4307,6 +4308,16 @@ explicitly in |ini| files. Instead, it’s defined by |babel| if the key
 devised by Yannis Haralambous for \textsf{dad} (simple and
 \TeX-friendly). Not yet complete, but sufficient for most texts.}
 
+\trans{Arabic, Persian}{kashida.base}{\New{3.94}. Much like the
+following, but with diacritics stacked in the actual base character and
+not the kashida extension. With evenly inserted tatweels results are
+better.}
+
+\trans{Arabic, Persian}{kashida.plain}{A very simple and basic
+transform for ‘plain’ Arabic fonts, which attempts to distribute the
+tatweel as evenly as possible (starting at the end of the line). See
+the news for version 3.59.}
+
 \trans{Chinese, Japanese}{input.nospaces}{With it, and just for
 convenience, spaces (and new lines) in the input are ignored.}
 
@@ -4405,16 +4416,6 @@ the romanization of Russian. \New{25.10}}
 \trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
 files refers to the Cyrillic script, which is here the target.) The
 standard system devised by Ljudevit Gaj.}
-
-\trans{Arabic, Persian}{kashida.plain}{Experimental. A very simple and
-basic transform for ‘plain’ Arabic fonts, which attempts to distribute
-the tatweel as evenly as possible (starting at the end of the line). See
-the news for version 3.59.}
-
-\trans{Arabic, Persian}{kashida.base}{Experimental \New{3.94}. Much
-like the previous one, but with diacritics stacked in the actual base
-character and not the kashida extension. With evenly inserted tatweels
-results are better.}
 
 \vspace{2mm}\hrule\nobreak
 \endgroup
@@ -6135,8 +6136,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.10>>
-%<<date=2025/06/10>>
+%<<version=25.10.91567>>
+%<<date=2025/07/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8804,7 +8805,7 @@ wouldn’t exist.
 \def\languageshorthands#1{%
   \bbl@ifsamestring{none}{#1}{}{%
     \bbl@once{short-\localename-#1}{%
-      \bbl@info{'\localename' activates '#1' shorthands.\\Reported }}}%
+      \bbl@info{'\localename' activates '#1' shorthands.\\Reported}}}%
   \def\language@group{#1}}
 %    \end{macrocode}
 %
@@ -9049,6 +9050,8 @@ wouldn’t exist.
 % associated \TeX-code.
 %
 %    \begin{macrocode}
+        \bbl@info{Activated '##1' attribute for\\%
+          '\bbl@tempc'. Reported}%
         \bbl@exp{%
           \\\bbl@add@list\\\bbl@known@attribs{\bbl@tempc-##1}}%
         \edef\bbl@tempa{\bbl@tempc-##1}%
@@ -11086,7 +11089,7 @@ wouldn’t exist.
     {\bbl@warning{%
        From babel-\bbl@cs{lini@\languagename}.ini:\\%
        \bbl@cs{@kv@identification.warning#1}\\%
-       Reported }}}
+       Reported}}}
 %
 \let\bbl@release@transforms\@empty
 \let\bbl@release@casing\@empty
@@ -11310,36 +11313,60 @@ wouldn’t exist.
     {\@nameuse{#1}}%
     {\@nameuse{bbl@map@#1@\languagename}}}
 %
+\def\bbl@map@lbl#1{%  #1:a sign, eg, .
+  \bbl@ifunset{bbl@map@@#1@@\languagename}%
+    {#1}%
+    {\@nameuse{bbl@map@@#1@@\languagename}}}
+%
 \def\bbl@inikv@labels#1#2{%
-  \in@{.map}{#1}%
+  \in@{,dot.map,}{,#1,}%
   \ifin@
-    \ifx\bbl@KVP@labels\@nnil\else
-      \bbl@xin@{ map }{ \bbl@KVP@labels\space}%
-      \ifin@
-        \def\bbl@tempc{#1}%
-        \bbl@replace\bbl@tempc{.map}{}%
-        \in@{,#2,}{,arabic,roman,Roman,alph,Alph,fnsymbol,}%
-        \bbl@exp{%
-          \gdef\<bbl@map@\bbl@tempc @\languagename>%
-            {\ifin@\<#2>\else\\\localecounter{#2}\fi}}%
-        \bbl@foreach\bbl@list@the{%
+    \global\@namedef{bbl@map@@.@@\languagename}{#2}%
+    \bbl@foreach\bbl@list@the{%
+        \bbl@ifunset{the##1}{}%
+      {{\bbl@ncarg\let\bbl@tempd{the##1}%
+       \bbl@carg\bbl@sreplace{the##1}{.}{\bbl@map@lbl{.}}%
+       \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
+         \bbl@exp{\gdef\<the##1>{{\[the##1]}}}%
+       \fi}}}%
+    \edef\bbl@tempb{enumi,enumii,enumiii,enumiv}%
+    \bbl@foreach\bbl@tempb{%
+        \bbl@ifunset{label##1}{}%
+      {{\bbl@ncarg\let\bbl@tempd{label##1}%
+       \bbl@carg\bbl@sreplace{label##1}{.}{\bbl@map@lbl{.}}%
+       \expandafter\ifx\csname label##1\endcsname\bbl@tempd\else
+         \bbl@exp{\gdef\<label##1>{{\[label##1]}}}%
+       \fi}}}%
+  \else
+    \in@{.map}{#1}%
+    \ifin@
+      \ifx\bbl@KVP@labels\@nnil\else
+        \bbl@xin@{ map }{ \bbl@KVP@labels\space}%
+        \ifin@
+          \def\bbl@tempc{#1}%
+          \bbl@replace\bbl@tempc{.map}{}%
+          \in@{,#2,}{,arabic,roman,Roman,alph,Alph,fnsymbol,}%
+          \bbl@exp{%
+            \gdef\<bbl@map@\bbl@tempc @\languagename>%
+              {\ifin@\<#2>\else\\\localecounter{#2}\fi}}%
+          \bbl@foreach\bbl@list@the{%
           \bbl@ifunset{the##1}{}%
-           {\bbl@exp{\let\\\bbl@tempd\<the##1>}%
-            \bbl@exp{%
-              \\\bbl@sreplace\<the##1>%
-                {\<\bbl@tempc>{##1}}%
-                {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
-              \\\bbl@sreplace\<the##1>%
-                {\<\@empty @\bbl@tempc>\<c@##1>}%
-                {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
-              \\\bbl@sreplace\<the##1>%
-                {\\\csname @\bbl@tempc\\\endcsname\<c@##1>}%
-                {{\\\bbl@map@cnt{\bbl@tempc}{##1}}}}%
-             \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
-               \bbl@exp{\gdef\<the##1>{{\[the##1]}}}%
-             \fi}}%
+            {\bbl@ncarg\let\bbl@tempd{the##1}%
+             \bbl@exp{%
+               \\\bbl@sreplace\<the##1>%
+                 {\<\bbl@tempc>{##1}}%
+                 {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
+               \\\bbl@sreplace\<the##1>%
+                 {\<\@empty @\bbl@tempc>\<c@##1>}%
+                 {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
+               \\\bbl@sreplace\<the##1>%
+                 {\\\csname @\bbl@tempc\\\endcsname\<c@##1>}%
+                 {{\\\bbl@map@cnt{\bbl@tempc}{##1}}}}%
+              \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
+                \bbl@exp{\gdef\<the##1>{{\[the##1]}}}%
+              \fi}}%
+        \fi
       \fi
-    \fi
 %
   \else
     % The following code is still under study. You can test it and make
@@ -11360,7 +11387,8 @@ wouldn’t exist.
           \def\<labelenum\romannumeral\bbl@tempa>{\the\toks@}}%
         \\\bbl@toglobal\<extras\languagename>}%
     \fi
-  \fi}
+  \fi
+    \fi}
 %    \end{macrocode}
 %
 % To show correctly some captions in a few languages, we need to patch
@@ -14890,6 +14918,13 @@ wouldn’t exist.
     return line:gsub("(.)",
       function (chr) return unicode.utf8.char(string.byte(chr)) end)
   end
+  
+  function Babel.priority_in_callback(name,description)
+    for i,v in ipairs(luatexbase.callback_descriptions(name)) do
+      if v == description then return i end
+    end
+    return false
+  end
 
   function Babel.begin_process_input()
     if luatexbase and luatexbase.add_to_callback then
@@ -16135,13 +16170,13 @@ end
     luatexbase.add_to_callback('pre_linebreak_filter',
       Babel.pre_otfload_v,
       'Babel.pre_otfload_v',
-      luatexbase.priority_in_callback('pre_linebreak_filter',
+      Babel.priority_in_callback('pre_linebreak_filter',
         'luaotfload.node_processor') or nil)
     %
     luatexbase.add_to_callback('hpack_filter',
       Babel.pre_otfload_h,
       'Babel.pre_otfload_h',
-      luatexbase.priority_in_callback('hpack_filter',
+      Babel.priority_in_callback('hpack_filter',
         'luaotfload.node_processor') or nil)
   }}
 %    \end{macrocode}
@@ -16157,7 +16192,6 @@ end
 \ifnum\bbl@bidimode>\@ne % Any bidi= except default (=1)
   \let\bbl@beforeforeign\leavevmode
   \AtEndOfPackage{\EnableBabelHook{babel-bidi}}
-  \RequirePackage{luatexbase}
   \bbl@activate@preotf
   \directlua{
     require('babel-data-bidi.lua')
@@ -16569,8 +16603,7 @@ end
   % Native digits
   \ifx\bbl@KVP@mapdigits\@nnil\else
     \bbl@ifunset{bbl@dgnat@\languagename}{}%
-      {\RequirePackage{luatexbase}%
-       \bbl@activate@preotf
+      {\bbl@activate@preotf
        \directlua{
          Babel.digits_mapped = true
          Babel.digits = Babel.digits or {}
