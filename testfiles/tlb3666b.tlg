@@ -31,7 +31,7 @@ Package: babel
 l. ...\testit{ :- aa:: aa} 
                           % :: should be replaced by TEST in the output
 Package babel Info: 'french' activates 'french' shorthands.
-(babel)             Reported  on input line ....
+(babel)             Reported on input line ....
 > \box...=
 \vbox(6.8872+0.0)x345.0
 .\hbox(6.8872+0.0)x345.0, glue set 267.26532fil

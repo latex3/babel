@@ -39,7 +39,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ! OK.
 l. ...\testit{\th; $\th$.}
 Package babel Info: 'russian' activates 'russian' shorthands.
-(babel)             Reported  on input line ....
+(babel)             Reported on input line ....
 ! LaTeX Error: Command \th unavailable in encoding T2A.
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.

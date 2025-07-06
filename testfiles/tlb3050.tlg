@@ -9,7 +9,7 @@ Package: inputenc
 Package: babel
     Options: german,greek
 Package babel Info: 'german' activates 'german' shorthands.
-(babel)             Reported  on input line ....
+(babel)             Reported on input line ....
 > \box...=
 \hbox(7.65605+2.86272)x104.73047
 .\OT1/cmr/m/n/10.95 h

@@ -29,7 +29,7 @@ Package: babel
 ! OK.
 l. ...\setbox0=\hbox{\tryit}\showbox0
 Package babel Info: 'german' activates 'german' shorthands.
-(babel)             Reported  on input line ....
+(babel)             Reported on input line ....
 > \box...=
 \hbox(6.83331+1.94444)x83.50018
 .\OT1/cmr/m/n/10 L
