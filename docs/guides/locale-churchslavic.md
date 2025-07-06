@@ -7,6 +7,10 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 Church Slavic language using the Cyrillic script.
 
+The [`churchslavonic` package](https://ctan.org/pkg/churchslavonic) is
+not fully compatible with `babel`, but many of its features work. Just
+try.
+
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `churchslavic` as the main language

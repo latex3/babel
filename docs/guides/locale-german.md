@@ -10,8 +10,8 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 German language using the Latin script.
 
-Please, bear in mind the ‘traditional’ styles for German based on ‘ldf’
-files don’t currently conform the `babel` [naming
+Bear in mind the ‘traditional’ styles for German based on ‘ldf’ files
+don’t currently conform the `babel` [naming
 conventions](locale-naming.md). Oddly, the name `german` refers to the
 pre-1996 orthography, while the current one is selected with `ngerman`
 (`n` comes from ‘new’, which was certainly the case about 30 years
@@ -26,6 +26,9 @@ language (with tag `gsw`). To summarize:
 | Austrian | `naustrian` | `austrian` |
 | Austrian  (Traditional German orthography) | `austrian` | `austrian-traditional` |
 | Swiss High German | `nswissgerman` | `swisshighgerman` |
+
+You may find the [autotype](https://ctan.org/pkg/autotype?lang=en)
+package of interest.
 
 ## Support with the traditional way (`ldf`)
 
