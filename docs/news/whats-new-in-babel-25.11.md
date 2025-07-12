@@ -6,13 +6,15 @@ This is a minor release, mainly with a few internal changes.
 
 ## Preparing locale files for the new loader
 
-These changes has no effect yet. They introduce a revised loading
-behavior for languages with ‘traditional’ (`ldf`) `babel` support.
-Previously, the system would first load the `ldf` file and then obtain
-information from the `babel-<name>.tex` and the `babel-<tag>.ini`. The updated loading
+The changes for the [new language
+loader](https://latex3.github.io/babel/news/whats-new-in-babel-25.9.html)
+has no effect yet. They introduce a revised loading behavior for
+languages with ‘traditional’ (`ldf`) `babel` support. Previously, the
+system would first load the `ldf` file and then obtain information from
+`babel-<name>.tex` and the `babel-<tag>.ini`. The updated loading
 process will invert this order: it will initially attempt to load
-`babel-<name>.tex`, which will then select either the `.ldf`
-file or the `.ini` data.
+`babel-<name>.tex`, which will then select either the `.ldf` file (with
+some required additional info from the `ini` file) or the `.ini` data.
 
 When making tests during the preparation of these initial changes, several
 findings emerged:

@@ -122,7 +122,14 @@ pointer. Another key available in the replacements is `step = <num>`,
 which moves this pointer forward (if positive) or backwards (if
 negative). By default it’s, of course, `0`, which leaves the pointer
 just after the last replacement. It can be set in any non-empty
-replacement (eg, `{ string = a, step = -1 }`).
+replacement (eg, `{ string = a, step = -1 }`). With `step` recursive
+rules are possible, at least in simple cases (but you have to be
+careful to avoid infinite loops):
+```tex
+\babelprehyphenation{russian}{ (['ъЬ])' }{
+  { string = {1|'ъЬ|ъЬЪ}, step = -1 }}
+```
+with the following outputs: `''` → `ъ`, `'''` → `Ь`, `''''` → `Ъ`.
 
 A further key is `kashida`, for Arabic justification. See [What's new in
 babel 3.59](whats-new-in-babel-3.59.md). 
