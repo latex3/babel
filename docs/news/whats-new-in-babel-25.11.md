@@ -1,8 +1,8 @@
 # What's new in babel 25.11
 
-**Draft**
+2025-07-13
 
-This is a minor release, mainly with a few internal changes.
+This is a minor release, mainly with some internal changes.
 
 ## Preparing locale files for the new loader
 
@@ -31,11 +31,12 @@ findings emerged:
 
 * `import` in `\PassOptionsToLocale` raised an error with lazy loading.
 
-## Changes
+## Other changes
 
 * Not really a fix, but more an ‘anti-fix’. The tags `de-AT` and
-`de-AT-1996` are now linked to `naustrian`. The real fix would be to
-rename the `babel` style, which doesn’t conform the naming scheme
-(`austrian` is assigned to `de-AT-1901`, the pre-1996 orthography).
+  `de-AT-1996` are now linked to `naustrian`. The real fix would be to
+  rename the `babel` style, which doesn’t conform the language naming
+  conventions (`austrian` is assigned to `de-AT-1901`, the pre-1996
+  orthography).
 
 

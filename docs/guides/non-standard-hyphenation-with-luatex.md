@@ -306,6 +306,7 @@ before that to be processed, which is enclosed between `() ()`.
 * [How to avoid linebreak after command and before period?](https://tex.stackexchange.com/a/570428/5735)
 * [Apply lefthyphenmin to parts of a word spelled with hyphens](https://tex.stackexchange.com/a/554788/5735)
 * [Serbian Cyrillic using LuaTeX and XeTeX](https://tex.stackexchange.com/a/742106/5735)
+* [Wrong rendering of Bengali alphabet](https://tex.stackexchange.com/a/747716/5735)
 
 ## Useful links
 
