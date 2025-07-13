@@ -1,7 +1,7 @@
 % testfile for PR 2155
 % Description of bug:
-% When using \cite{gnats:96} in the context of \usepackage[francais]{babel}
-% latex generates an error. Diagnosis: 'francais' redefines ':' in a
+% When using \cite{gnats:96} in the context of \usepackage[french]{babel}
+% latex generates an error. Diagnosis: 'french' redefines ':' in a
 % particular way and cite does not handle this case (but \label and \ref
 % do it)
 \input{test2e}\input{test2eb}
@@ -10,9 +10,9 @@
 \START
 \FORMAT{LaTeX2e<1995/12/01>}
 \CLASS{article}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 \OMIT
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 
 \begin{document}
 \TIMO

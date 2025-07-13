@@ -14,7 +14,7 @@ load the A language first).
 
 The exemple provided here is a minimal language definition file
 (testl.ldf, in a filecontents environment) which declares :: as a
-shorthand producing TESTL. If I load testl first, and then francais,
+shorthand producing TESTL. If I load testl first, and then french,
 eveything is good. If I load it the other way, it's wrong.
 
 I guess something about "declare the longest shorthand first", but I'm

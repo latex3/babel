@@ -3,24 +3,22 @@ Don't change this file in any respect.
 Format: LaTeX2e<2003/12/01>
 Author: Bnjamin BAYART ([e-mail hidden])
 Main Class: article
-    Options: francais
+    Options: french
 Package: fontenc
     Options: T1,T2A
 Package: inputenc
     Options: latin1,koi8-r
 Package: babel
-    Options: russian,francais
+    Options: russian,french
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line ....
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line ....
 > \box...=
 \vbox(6.8872+1.94444)x345.0
-.\hbox(6.8872+1.94444)x345.0, glue set 291.5039fil
+.\hbox(6.8872+1.94444)x345.0, glue set 293.17017fil
 ..\hbox(0.0+0.0)x15.0
 ..\T1/cmr/m/n/10 ^^fe
-..\penalty 10000
-..\glue 1.66626
 ..\T1/cmr/m/n/10 ;
 ..\glue 3.33252 plus 1.66626 minus 1.11084
 ..\mathon
@@ -38,8 +36,6 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ..\glue(\rightskip) 0.0
 ! OK.
 l. ...\testit{\th; $\th$.}
-Package babel Info: 'russian' activates 'russian' shorthands.
-(babel)             Reported on input line ....
 ! LaTeX Error: Command \th unavailable in encoding T2A.
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.

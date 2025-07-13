@@ -6,7 +6,7 @@ Main Class: article
     Options: 12pt,a4paper
 Package: natbib
 Package: babel
-    Options: frenchb
+    Options: french
 > \box...=
 \vbox(92.3+0.0)x390.0
 .\hbox(9.0+3.0)x390.0, glue set 296.98013fil

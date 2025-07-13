@@ -9,11 +9,11 @@
 \FORMAT{LaTeX2e<1996/06/01>}
 \CLASS{report}
 \PACKAGE{amsmath}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 
 \OMIT
 \usepackage{amsmath}
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 
 \begin{document}
 \TIMO

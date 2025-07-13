@@ -20,7 +20,7 @@ before the beginning the document.
 \FORMAT{LaTeX2e<2001/06/01>}
 \AUTHOR{[e-mail hidden] (Christian Justen)}
 \CLASS[a4paper]{article}
-\PACKAGE[frenchb,polutonikogreek,german]{babel}
+\PACKAGE[french,polutonikogreek,german]{babel}
 \PACKAGE[T1]{fontenc}
 \showboxbreadth=50
 \showboxdepth=50
@@ -28,7 +28,7 @@ before the beginning the document.
   \setbox0=\hbox{#1}\showbox0}
 \OMIT
 
-\usepackage[frenchb,polutonikogreek,german]{babel}
+\usepackage[french,polutonikogreek,german]{babel}
 \usepackage[T1]{fontenc}
 
 \begin{document}

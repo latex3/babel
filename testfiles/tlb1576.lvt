@@ -7,10 +7,10 @@
 \AUTHOR{Peter K. Schilling <[e-mail hidden]>} 
 \FORMAT{LaTeX2e<1994/06/01>}
 \CLASS{article}
-\PACKAGE[german,francais]{babel}
+\PACKAGE[german,french]{babel}
 
 \OMIT
-\usepackage[german,francais]{babel}
+\usepackage[german,french]{babel}
 \begin{document}
 \TIMO
 \newcommand{\tryit}{language : \languagename}

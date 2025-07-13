@@ -4,8 +4,9 @@ Format:
 Main Class: article
 Package: babel
     Options:  acadian, albanian, afrikaans, american, australian, austrian, bahasa, indonesian, indon, bahasai, malay, meyalu, bahasam, basque, brazil, brazilian, breton, british, bulgarian, canadian, catalan, croatian, czech, danish, dutch, english, esperanto, estonian, finnish, french, galician, german, greek, polutonikogreek, hebrew, hungarian, icelandic, interlingua, irish, italian, latin, lowersorbian, magyar, naustrian, newzealand, ngerman, norsk, samin, nynorsk, polish, portuges, portuguese, romanian, russian, scottish, serbian, slovak, slovene, spanish, swedish, turkish, ukrainian, uppersorbian, welsh, UKenglish, USenglish, 
-Package babel Info: 'acadian' activates 'french' shorthands.
-(babel)             Reported on input line ....
+(../babel-acadian.tex)
+Package babel Info: Importing data for acadian
+(babel)             from babel-fr-x-acadian.ini. Reported on input line ....
 Package babel Info: 'albanian' activates 'albanian' shorthands.
 (babel)             Reported on input line ....
 Package babel Info: 'afrikaans' activates 'dutch' shorthands.

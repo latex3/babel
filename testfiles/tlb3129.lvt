@@ -56,7 +56,7 @@ or, maybe better, redefines
 \AUTHOR{[e-mail hidden] (Antoine Chambert-Loir)}
 \CLASS{article}
 \PACKAGE[arrow,matrix]{xy}
-\PACKAGE[frenchb]{babel}
+\PACKAGE[french]{babel}
 \showboxbreadth=50
 \showboxdepth=50
 \def\testit#1{%
@@ -65,7 +65,7 @@ or, maybe better, redefines
 
 \usepackage[arrow,matrix]{xy}
 \CompileMatrices
-\usepackage[frenchb]{babel}
+\usepackage[french]{babel}
 \begin{document}
 \TIMO
 

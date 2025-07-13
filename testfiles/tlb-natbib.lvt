@@ -10,12 +10,12 @@ work together
 \FORMAT{LaTeX2e<1998/12/01>}
 \CLASS[12pt,a4paper]{article}
 \PACKAGE{natbib}
-\PACKAGE[frenchb]{babel}
+\PACKAGE[french]{babel}
 
 \OMIT
 \usepackage{natbib}
 \setcitestyle{numbers}
-\usepackage[frenchb]{babel}
+\usepackage[french]{babel}
 
 \begin{document}
 

@@ -4,7 +4,7 @@ Author: [e-mail hidden] (Benjamin BAYART)
 Format: LaTeX2e<1995/12/01>
 Main Class: report
 Package: babel
-    Options: francais
+    Options: french
 Package: array
 Package: graphicx
 LaTeX Font Info:    External font `cmex10' loaded for size

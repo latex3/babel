@@ -1,14 +1,14 @@
 \iffalse
 >Number:         3083
 >Category:       babel
->Synopsis:       loading francais: \accent@spacefactor undefined
+>Synopsis:       loading french: \accent@spacefactor undefined
 >Arrival-Date:   Tue Aug 10 11:31:10 1999
 >Originator:     [e-mail hidden] (Thomas Esser)
 >Release:        LaTeX2e <1999/06/01> patch level 1
 >Environment:
  Hyphenation: Babel <v3.6x> and hyphenation patterns for american, french, german, loaded.
 Description of bug:
-Well, loading francais does not work any more. This is very sad, because
+Well, loading french does not work any more. This is very sad, because
 french is no longer part of teTeX. The setup as included in teTeX-1.0
 has this problem and I'd really appreciate a quick fix.
 
@@ -21,9 +21,9 @@ has this problem and I'd really appreciate a quick fix.
 \AUTHOR{Thomas Esser <[e-mail hidden]>}
 \FORMAT{LaTeX2e <1999/06/01> patch level 1}
 \CLASS{minimal}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 \OMIT
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 %%\tracingmacros=3\tracingonline=1
 \begin{document}
 %\tracingmacros=0\tracingonline=0

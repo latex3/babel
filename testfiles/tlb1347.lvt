@@ -13,12 +13,12 @@
 \AUTHOR{[e-mail hidden] (Benjamin BAYART)}
 \FORMAT{LaTeX2e<1995/12/01>}
 \CLASS{report}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 \PACKAGE{array}
 \PACKAGE{graphicx}
 
 \OMIT
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 \usepackage{array}
 \usepackage{graphicx}
 

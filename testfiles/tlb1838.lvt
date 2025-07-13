@@ -9,12 +9,12 @@
 \AUTHOR{[e-mail hidden] (Jean-Francois Mertens)}
 \FORMAT{LaTeX2e<1995/12/01>}
 \CLASS{book}
-\PACKAGE[francais,english]{babel}
+\PACKAGE[french,english]{babel}
 \PACKAGE{amsmath}
 
 \OMIT
 \usepackage{amsmath}
-\usepackage[francais,english]{babel}
+\usepackage[french,english]{babel}
 \begin{document}
 
 \TIMO

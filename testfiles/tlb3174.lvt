@@ -30,11 +30,11 @@ references
 \FORMAT{LaTeX2e<1999/12/01>}
 \CLASS{article}
 \AUTHOR{[e-mail hidden] (Fabrice Pardo)}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 \PACKAGE{hyperref}
 
 \OMIT
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 \usepackage[]{hyperref}
 \begin{document}
 \TIMO

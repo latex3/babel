@@ -16,7 +16,7 @@ Completed box being shipped out [1]
 .....\glue 0.0 plus 1.0fil minus 1.0fil
 ..\glue 14.0
 ..\glue(\lineskip) 0.0
-..\vbox(584.0+0.0)x360.0, glue set 457.59003fil
+..\vbox(584.0+0.0)x360.0, glue set 455.64558fil
 ...\write1{\babel@aux{english}{}}
 ...\mark{{\@nx \shortauthors }{\@nx \shorttitle }}
 ...\glue(\topskip) 35.13889
@@ -148,7 +148,6 @@ Completed box being shipped out [1]
 ....\penalty 10000
 ....\glue(\parfillskip) 0.0 plus 1.0fil
 ....\glue(\rightskip) 0.0
-...\glue -1.94444
 ...\glue 0.0 plus 1.0fil
 ...\glue 7.0 plus 11.0
 ...\kern -0.4

@@ -6,7 +6,7 @@ Main Class: article
 Package: xy
     Options: arrow,matrix
 Package: babel
-    Options: frenchb
+    Options: french
 (tlb3129-01.xyc)
 > \box...=
 \vbox(35.0+0.0)x345.0

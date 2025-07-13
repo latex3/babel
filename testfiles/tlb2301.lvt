@@ -10,12 +10,12 @@
 \START
 \FORMAT{LaTeX2e<1996/06/01}
 \CLASS{article}
-\PACKAGE[francais,english]{babel}
+\PACKAGE[french,english]{babel}
 \PACKAGE{epsfig}
 
 \OMIT
 \pdfoutput=0
-\usepackage[francais,english]{babel}
+\usepackage[french,english]{babel}
 \usepackage{epsfig}
 \nofiles
 \begin{document}

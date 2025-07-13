@@ -5,7 +5,7 @@ Author: [e-mail hidden] (Christian Justen)
 Main Class: article
     Options: a4paper
 Package: babel
-    Options: frenchb,polutonikogreek,german
+    Options: french,polutonikogreek,german
 Package: fontenc
     Options: T1
 Package babel Info: 'polutonikogreek' activates 'greek' shorthands.

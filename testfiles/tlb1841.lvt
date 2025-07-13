@@ -3,7 +3,7 @@
 % spurious white space.
 %
 \input{test2e}\input{test2eb}
-\documentclass[francais,english,a4paper,12pt]{book}
+\documentclass[french,english,a4paper,12pt]{book}
 \START
 \AUTHOR{Johannes Braams}
 \FORMAT{LaTeX2e<1995/06/01>}

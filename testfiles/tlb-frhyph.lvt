@@ -6,13 +6,13 @@
 \CLASS{article}
 \PACKAGE[latin1]{inputenc}
 \PACKAGE[T1]{fontenc}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 \OMIT
 \usepackage[latin1]{inputenc}
 %\usepackage{t1enc}
 \usepackage[T1]{fontenc}
 
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 \nofiles
 \begin{document}
 \TIMO

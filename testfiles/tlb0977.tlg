@@ -4,7 +4,7 @@ Author: Franck Vamparys <[e-mail hidden]>
 Format: LaTeX2e<1994/06/01>
 Main Class: article
 Package: babel
-    Options: francais
+    Options: french
 > \box...=
 \hbox(6.94444+0.0)x77.30565
 .\kern -1.11111 (for accent)

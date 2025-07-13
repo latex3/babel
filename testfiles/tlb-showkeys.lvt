@@ -1,6 +1,6 @@
 \iffalse
 
-Tests that the showkeys package and babel with option francais
+Tests that the showkeys package and babel with option french
 can work together
 \fi
 
@@ -15,7 +15,7 @@ can work together
 \CLASS{article}
 \FORMAT{LaTeX2e<1998/12/01>}
 \PACKAGE{showkeys}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 \showboxbreadth=50
 \showboxdepth=50
 \def\testit#1{%
@@ -24,7 +24,7 @@ can work together
 \OMIT
 
 \usepackage{showkeys}
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 
 \makeatletter
 \def\mytag#1{\def\@currentlabel{\protect#1}}

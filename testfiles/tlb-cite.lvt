@@ -6,10 +6,10 @@
 \AUTHOR{J.L. Braams}
 \FORMAT{LaTeX2e<1998/12/01>}
 \CLASS{article}
-\PACKAGE[frenchb]{babel}
+\PACKAGE[french]{babel}
 
 \OMIT
-\usepackage[frenchb]{babel} % geeft onderstaande foutmelding
+\usepackage[french]{babel} % geeft onderstaande foutmelding
                             % (weergegeven na \end{document}
 
 %\usepackage{french}         % laadt LaTeX2.09 versie, met succes

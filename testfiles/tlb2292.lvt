@@ -3,11 +3,11 @@
 \START
 \FORMAT{LaTeX2e<1996/06/01>}
 \CLASS{article}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 \PACKAGE[french]{varioref}
 
 \OMIT
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 \usepackage[french]{varioref}
 \begin{document}
 \TIMO

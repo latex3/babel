@@ -6,10 +6,10 @@
 \AUTHOR{Laurent Decreusefond <[e-mail hidden]>} 
 \FORMAT{LaTeX2e<1994/06/01>}
 \CLASS{article}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 
 \OMIT
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 \begin{document}
 \TIMO
 \showboxbreadth=40

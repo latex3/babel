@@ -6,11 +6,11 @@
 \AUTHOR{Benjamin BAYART, [e-mail hidden]}
 \FORMAT{LaTeX2e<1996/06/01>}
 \CLASS{article}
-\PACKAGE[english,francais]{babel}
+\PACKAGE[english,french]{babel}
 \PACKAGE{hhline}
 
 \OMIT
-\usepackage[english,francais]{babel}
+\usepackage[english,french]{babel}
 \usepackage{hhline}
 \begin{document}
 \TIMO

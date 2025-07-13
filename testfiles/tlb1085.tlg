@@ -4,7 +4,7 @@ Author: Michel Goossens <[e-mail hidden]>
 Format: LaTeX2e<1994/06/01>>
 Main Class: article
 Package: babel
-    Options: francais
+    Options: french
 > \box...=
 \hbox(6.94444+0.0)x26.11118
 .\OT1/cmr/m/n/10 a

@@ -1,15 +1,15 @@
 % Test file for LaTeX2e/Babel bug report #1085
-% dotless i (\i) gave several i's when using francais
+% dotless i (\i) gave several i's when using french
 \input{test2e}\input{test2eb}
 \documentclass{article} 
 \START
 \AUTHOR{Michel Goossens <[e-mail hidden]>}
 \FORMAT{LaTeX2e<1994/06/01>>}
 \CLASS{article}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 
 \OMIT
-\usepackage[francais]{babel} 
+\usepackage[french]{babel} 
 \pagestyle{empty} 
 \begin{document}
 \showboxbreadth=10

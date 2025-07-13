@@ -6,14 +6,14 @@
 \AUTHOR{Franck Vamparys <[e-mail hidden]>} 
 \FORMAT{LaTeX2e<1994/06/01>}
 \CLASS{article}
-\PACKAGE[francais]{babel}
+\PACKAGE[french]{babel}
 
 \OMIT
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 
 \begin{document}
 
-\section{i circumflex bug in francais babel}
+\section{i circumflex bug in french babel}
 \TIMO
 \showboxbreadth=40
 \setbox0=\hbox{\^{\i}  \"{\i}  \'{\i}  \'{\i}     but \^{i} works }
