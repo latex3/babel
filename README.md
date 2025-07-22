@@ -1,4 +1,4 @@
-## Babel 25.11
+## Babel 25.11.93475
 
 2025-07-13
 
@@ -58,6 +58,10 @@ Bugs related to specific languages are best reported to their
 respective authors.
 
 ### Summary of latest changes
+
+#### 25.12 (dev)
+
+* Fix misaligned first line with kashida inside a \vbox.
 
 #### 25.11 (2025-07-13)
 

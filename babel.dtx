@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/07/13 v25.11
+  [2025/07/22 v25.11.93475
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6136,8 +6136,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.11>>
-%<<date=2025/07/13>>
+%<<version=25.11.93475>>
+%<<date=2025/07/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15480,6 +15480,8 @@ function Babel.arabic.justify(head)
   for line in node.traverse_id(node.id'hlist', head) do
     Babel.arabic.justify_hlist(head, line)
   end
+  % In case the very first item is a line (eg, in \vbox):
+  while head.prev do head = head.prev end
   return head
 end
 
