@@ -8,6 +8,11 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 Persian language using the Arabic script.
 
+Although `xetex` is not recommended anymore, you can have a look at
+[xepersian](https://ctan.org/pkg/xepersian?lang=en) and
+[arabxetex](https://ctan.org/pkg/arabxetex), too. For `luatex`, see
+[arabluatex](https://ctan.org/pkg/arabluatex).
+
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `persian` as the main language
