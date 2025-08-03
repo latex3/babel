@@ -1,6 +1,6 @@
-## Babel 25.11.93475
+## Babel 25.12
 
-2025-07-13
+2025-08-03
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.11 are described in:
+Changes in version 25.12 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.11.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.12.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,24 +59,16 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 25.12 (dev)
+#### 25.12 (2025-08-03)
 
-* Fix misaligned first line with kashida inside a \vbox.
+* New option in provide: mapdot. A default is provide for the Arabic
+  locales, mapping the dot in counters to a hyphen.
+* Fix misaligned first line with kashida inside a \vbox (tsx747027).
 
 #### 25.11 (2025-07-13)
 
 * Fix error with `import` in `\PassOptionsToLocale` and lazy loading.
 * Changes related to Austrian German.
-
-#### 25.10 (2025-06-10)
-
-* A locale in `\DocumentMetada` not recognized by `babel` raised
-  a cryptic error (see issue #343).
-* Fixed error with `\ShowLocaleProperties` with some locales with
-  Unicode engines.
-* With `\DocumentMetadata` `\foreignlanguage enters in horizontal
-  mode.
-* New transform, for Russian: `transliteration.gost779b`.
        
 ### Previous changes
 

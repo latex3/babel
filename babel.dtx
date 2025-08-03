@@ -37,7 +37,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/07/22 v25.11.93475
+  [2025/08/03 v25.12
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -71,7 +71,7 @@
 \newcommand*\luatex{\textsf{luatex}}
 \newcommand\largetex{T\kern -.1517em\lower .45ex\hbox {E}\kern -.09emX}
 \newcommand*\nb[1]{}
-\newcommand*\m[1]{\mbox{$\langle$\normalfont\itshape#1\/$\rangle$}}
+\newcommand*\m[1]{\mbox{{\fontspec{FreeSerif}〈}\normalfont\itshape#1\/}{\fontspec{FreeSerif}〉}}
 \newcommand*\langlist{%
   \meta{language}\texttt{,}\meta{language}\texttt{,}...}
 \newcommand*\langvar{\m{language}}
@@ -149,7 +149,7 @@
   \catcode`\>=13
   \catcode`\|=13
   \AtBeginDocument{%
-    \gdef|{\verb|\def<##1>{$\langle${\rmfamily\itshape##1}$\rangle$}}}
+    \gdef|{\verb|\def<##1>{{\fontspec{FreeSerif}〈}{\rmfamily\itshape##1}{\fontspec{FreeSerif}〉}}}}
 \endgroup
 \def\verbatim{%
   \fboxsep=.8em
@@ -200,7 +200,7 @@
 \let\check@percent\relax
 % Changes to doc.sty (add <<...>> syntax)
 \def\Module#1{%
-  \mod@math@codes$\langle${\color{thered}$\mathsf{#1}$}$\rangle$}
+  \mod@math@codes$\langle${\color{thered}$\mathsf{#1}$}〉}
 \begingroup 
   \catcode`\<\active
   \catcode`\>\active
@@ -3996,7 +3996,7 @@ a shorthand) are not a source of trouble anymore.
 the native digits of that language; the second takes a counter name as
 argument. With the option |maparabic| in |\babelprovide|, |\arabic| is
 redefined to produce the native digits (this is done \textit{globally},
-to avoid inconsistencies in, for example, page numbering, and note as
+to avoid inconsistencies in, for example, page numbering; note as
 well dates do not rely on |\arabic|.)
 
 For example:
@@ -4169,6 +4169,15 @@ explicitly, also |letters.plain|, |letters.gershayim|, |letters.final|)
 
 \New{3.45} In addition, native digits (in languages defining them) may
 be printed with the numeral style |digits|.
+
+\New{25.12} With |mapdot=|\m{text} as an option in ‘provide’, the
+standard counters (those starting with |\the...|) are traversed to
+replace each dot by the provided \m{text} in a locale-dependent way.
+Without a value, a default is used — currenty the only default value is
+for the Arabic (\texttt{ar}) locales, which is set to a hyphen (because
+the zero and the dot are very similar in this script). See the news
+page for further details.
+
 
 \subsection{Dates}
 
@@ -4566,6 +4575,39 @@ This feature is activated with the first |\babelposthyphenation| or
 \New{3.85} Enables and disables the transform with the given label in
 the current language. Font dependent transforms are always enabled and
 cannot be disabled.
+
+\Describe{\SetTrasformValue}{\marg{locale-name}\marg{variable-name}\marg{value}}
+
+This command allows adjustments (specifically numeric parameters in
+prehyphenation) in transform, which can be useful in those predeclared
+in \texttt{ini} files. Something like
+\verb+{<variable-name>|<default>}+
+employs the variable as set by this macro. The following variables are
+currently defined:
+\begin{itemize}
+\item For French and \texttt{punctuation.space}: \texttt{guillemet.natural},
+  \texttt{guillemet.plus}, \texttt{guillemet.minus},
+  \texttt{colon.natural}, \texttt{colon.plus}, \texttt{colon.minus},
+  \texttt{high.natural}, \texttt{high.plus}, \texttt{high.minus}. A
+  value of 1 is the current ordinary space. \New{24.13}
+\item For languages in the Hebrew script and \texttt{justification.interletter}:
+  |interletter.plus|, which sets the factor for the glue ‘plus’ value. By
+  default, .5. \New{25.8}
+\item For Japanese and \texttt{linebreak.strict}:
+  \texttt{small.natural}, \texttt{small.plus} and \texttt{small.minus}.
+  They are set when the transform is activated to the intraspace values.
+  In addition, the penalty, by default 10000, can be set with
+  \texttt{small.penalty}. \New{24.14}
+\end{itemize}
+
+\begin{example}
+  With:
+\begin{verbatim}
+\SetTransformValue{french}{colon.natural}{.8}
+\end{verbatim}
+the natural spacing with the colon is made slightly smaller (default is 1). 
+\end{example}
+
 
 \Describe{\ShowBabelTransforms}{\marg{string}}
 
@@ -6136,8 +6178,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.11.93475>>
-%<<date=2025/07/22>>
+%<<version=25.12>>
+%<<date=2025/08/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6301,9 +6343,9 @@ wouldn’t exist.
 % For each element in the comma separated <key>|=|<value> list,
 % execute <code> with |#1| and |#2| as the key and the value of
 % current item (trimmed). In addition, the item is passed verbatim as
-% |#3|. With the <key> alone, it passes |\@empty| (i.e., the macro thus
-% named, not an empty argument, which is what you get with <key>|=|
-% and no value).
+% |#3|. With the <key> alone, it passes |\@empty| as value (i.e., the
+% macro thus named, not an empty argument, which is what you get with
+% <key>|=| and no value).
 %
 %    \begin{macrocode}
 \def\bbl@forkv#1#2{%
@@ -10373,7 +10415,8 @@ wouldn’t exist.
   \bbl@vforeach{captions,date,import,main,script,language,%
       hyphenrules,linebreaking,justification,mapfont,maparabic,%
       mapdigits,intraspace,intrapenalty,onchar,transforms,alph,%
-      Alph,labels,labels*,calendar,date,casing,interchar,@import}%
+      Alph,labels,labels*,mapdot,calendar,date,casing,interchar,%
+      @import}%
     {\bbl@csarg\let{KVP@##1}\@nnil}%
   \global\let\bbl@release@transforms\@empty
   \global\let\bbl@release@casing\@empty
@@ -10388,7 +10431,6 @@ wouldn’t exist.
   \expandafter\bbl@forkv\expandafter{\bbl@tempa}{%
     \in@{/}{##1}% With /, (re)sets a value in the ini
     \ifin@ 
-      \global\let\bbl@extend@ini\bbl@extend@ini@aux
       \bbl@renewinikey##1\@@{##2}%
     \else
       \bbl@csarg\ifx{KVP@##1}\@nnil\else
@@ -10446,7 +10488,15 @@ wouldn’t exist.
   \ifx\bbl@KVP@transforms\@nnil\else
     \bbl@replace\bbl@KVP@transforms{ }{,}%
   \fi
-  % == Load ini ==
+  % ==
+  \ifx\bbl@KVP@mapdot\@nnil\else
+    \def\bbl@tempa{\@empty}%
+    \ifx\bbl@KVP@mapdot\bbl@tempa\else
+      \bbl@exp{\gdef\<bbl@map@@.@@\languagename>{\[bbl@KVP@mapdot]}}%
+    \fi
+  \fi
+  % Load ini
+  % --------
   \ifcase\bbl@howloaded
     \bbl@provide@new{#2}%
   \else
@@ -10578,6 +10628,24 @@ wouldn’t exist.
       \\\bbl@add\<bbl@preextras@\languagename>{%
         \\\babel@save\\\@Alph
         \let\\\@Alph\<bbl@cntr@\bbl@KVP@Alph @\languagename>}}%
+  \fi
+  % == Counters: mapdot ==
+  \ifx\bbl@KVP@mapdot\@nnil\else
+    \bbl@foreach\bbl@list@the{%
+        \bbl@ifunset{the##1}{}%
+      {{\bbl@ncarg\let\bbl@tempd{the##1}%
+       \bbl@carg\bbl@sreplace{the##1}{.}{\bbl@map@lbl{.}}%
+       \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
+         \bbl@exp{\gdef\<the##1>{{\[the##1]}}}%
+       \fi}}}%
+    \edef\bbl@tempb{enumi,enumii,enumiii,enumiv}%
+    \bbl@foreach\bbl@tempb{%
+        \bbl@ifunset{label##1}{}%
+      {{\bbl@ncarg\let\bbl@tempd{label##1}%
+       \bbl@carg\bbl@sreplace{label##1}{.}{\bbl@map@lbl{.}}%
+       \expandafter\ifx\csname label##1\endcsname\bbl@tempd\else
+         \bbl@exp{\gdef\<label##1>{{\[label##1]}}}%
+       \fi}}}%
   \fi
   % == Casing ==
   \bbl@release@casing
@@ -10920,6 +10988,7 @@ wouldn’t exist.
     \bbl@error{no-ini-file}{#1}{}{}%
   \else
     % == Store ini data in \bbl@inidata ==
+    \catcode`\ =10 \catcode`\"=12
     \catcode`\[=12 \catcode`\]=12 \catcode`\==12 \catcode`\&=12
     \catcode`\;=12 \catcode`\|=12 \catcode`\%=14 \catcode`\-=12
     \ifnum#2=\m@ne % Just for the info
@@ -11044,6 +11113,7 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \def\bbl@renewinikey#1/#2\@@#3{%
+  \global\let\bbl@extend@ini\bbl@extend@ini@aux
   \edef\bbl@tempa{\zap@space #1 \@empty}%   section
   \edef\bbl@tempb{\zap@space #2 \@empty}%   key
   \bbl@trim\toks@{#3}%                      value
@@ -11317,59 +11387,46 @@ wouldn’t exist.
     {\@nameuse{bbl@map@#1@\languagename}}}
 %
 \def\bbl@map@lbl#1{%  #1:a sign, eg, .
-  \bbl@ifunset{bbl@map@@#1@@\languagename}%
-    {#1}%
-    {\@nameuse{bbl@map@@#1@@\languagename}}}
+  \ifincsname#1\else
+    \bbl@ifunset{bbl@map@@#1@@\languagename}%
+      {#1}%
+      {\@nameuse{bbl@map@@#1@@\languagename}}%
+  \fi}
 %
 \def\bbl@inikv@labels#1#2{%
-  \in@{,dot.map,}{,#1,}%
+  \in@{.map}{#1}%
   \ifin@
-    \global\@namedef{bbl@map@@.@@\languagename}{#2}%
-    \bbl@foreach\bbl@list@the{%
-        \bbl@ifunset{the##1}{}%
-      {{\bbl@ncarg\let\bbl@tempd{the##1}%
-       \bbl@carg\bbl@sreplace{the##1}{.}{\bbl@map@lbl{.}}%
-       \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
-         \bbl@exp{\gdef\<the##1>{{\[the##1]}}}%
-       \fi}}}%
-    \edef\bbl@tempb{enumi,enumii,enumiii,enumiv}%
-    \bbl@foreach\bbl@tempb{%
-        \bbl@ifunset{label##1}{}%
-      {{\bbl@ncarg\let\bbl@tempd{label##1}%
-       \bbl@carg\bbl@sreplace{label##1}{.}{\bbl@map@lbl{.}}%
-       \expandafter\ifx\csname label##1\endcsname\bbl@tempd\else
-         \bbl@exp{\gdef\<label##1>{{\[label##1]}}}%
-       \fi}}}%
-  \else
-    \in@{.map}{#1}%
+    \in@{,dot.map,}{,#1,}%
     \ifin@
-      \ifx\bbl@KVP@labels\@nnil\else
-        \bbl@xin@{ map }{ \bbl@KVP@labels\space}%
-        \ifin@
-          \def\bbl@tempc{#1}%
-          \bbl@replace\bbl@tempc{.map}{}%
-          \in@{,#2,}{,arabic,roman,Roman,alph,Alph,fnsymbol,}%
-          \bbl@exp{%
-            \gdef\<bbl@map@\bbl@tempc @\languagename>%
-              {\ifin@\<#2>\else\\\localecounter{#2}\fi}}%
-          \bbl@foreach\bbl@list@the{%
+      \global\@namedef{bbl@map@@.@@\languagename}{#2}%
+    \fi
+    \ifx\bbl@KVP@labels\@nnil\else
+      \bbl@xin@{ map }{ \bbl@KVP@labels\space}%
+      \ifin@
+        \def\bbl@tempc{#1}%
+        \bbl@replace\bbl@tempc{.map}{}%
+        \in@{,#2,}{,arabic,roman,Roman,alph,Alph,fnsymbol,}%
+        \bbl@exp{%
+          \gdef\<bbl@map@\bbl@tempc @\languagename>%
+            {\ifin@\<#2>\else\\\localecounter{#2}\fi}}%
+        \bbl@foreach\bbl@list@the{%
           \bbl@ifunset{the##1}{}%
             {\bbl@ncarg\let\bbl@tempd{the##1}%
-             \bbl@exp{%
-               \\\bbl@sreplace\<the##1>%
-                 {\<\bbl@tempc>{##1}}%
-                 {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
-               \\\bbl@sreplace\<the##1>%
-                 {\<\@empty @\bbl@tempc>\<c@##1>}%
-                 {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
-               \\\bbl@sreplace\<the##1>%
-                 {\\\csname @\bbl@tempc\\\endcsname\<c@##1>}%
-                 {{\\\bbl@map@cnt{\bbl@tempc}{##1}}}}%
-              \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
-                \bbl@exp{\gdef\<the##1>{{\[the##1]}}}%
-              \fi}}%
-        \fi
+            \bbl@exp{%
+              \\\bbl@sreplace\<the##1>%
+                {\<\bbl@tempc>{##1}}%
+                {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
+              \\\bbl@sreplace\<the##1>%
+                {\<\@empty @\bbl@tempc>\<c@##1>}%
+                {\\\bbl@map@cnt{\bbl@tempc}{##1}}%
+              \\\bbl@sreplace\<the##1>%
+                {\\\csname @\bbl@tempc\\\endcsname\<c@##1>}%
+                {{\\\bbl@map@cnt{\bbl@tempc}{##1}}}}%
+             \expandafter\ifx\csname the##1\endcsname\bbl@tempd\else
+               \bbl@exp{\gdef\<the##1>{{\[the##1]}}}%
+             \fi}}%
       \fi
+    \fi
 %
   \else
     % The following code is still under study. You can test it and make
@@ -11390,8 +11447,7 @@ wouldn’t exist.
           \def\<labelenum\romannumeral\bbl@tempa>{\the\toks@}}%
         \\\bbl@toglobal\<extras\languagename>}%
     \fi
-  \fi
-    \fi}
+  \fi}
 %    \end{macrocode}
 %
 % To show correctly some captions in a few languages, we need to patch
