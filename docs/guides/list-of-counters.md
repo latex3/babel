@@ -16,7 +16,7 @@ Pull requests are welcome, but you can also send directly suggestions
 and fixes with the [contact
 form](https://latex3.github.io/babel/contact.html).
 
-## am
+## Amharic (am)
 
 These counters actually belong to different Ethiopic languages.
 They have been taken directly from CSS.
@@ -44,84 +44,202 @@ They have been taken directly from CSS.
 * `wolaita` = ሀ ለ መ ረ ሰ ሸ ቀ በ ተ ቸ ነ ኘ ሰ ገ ጠ ጨ ጰ ጸ ፀ ፈ ፐ
 * `yemsa` = ሀ ለ መ ረ ሰ ሸ ቀ በ ቨ ተ ቸ ነ ኘ ጀ ገ ጘ ጠ ጨ ጰ ፈ ፐ
 
-## ar-DZ
+## Ancient Greek (grc)
+
+The way the keraia is defined is tentative, and very likely it will change. Do *not* rely on it.
+
+* `lower.ancient.1` = α β γ δ ε ϛ ζ η θ
+* `lower.ancient.2` = ι κ λ μ ν ξ ο π ϟ
+* `lower.ancient.3` = ρ σ τ υ φ χ ψ ω ϡ
+* `lower.ancient.4` = ͵α ͵β ͵γ ͵δ ͵ε ͵Ϛ ͵ζ ͵η ͵θ
+* `lower.ancient.S.321` = ʹ
+* `upper.ancient.1` = Α Β Γ Δ Ε Ϛ Ζ Η Θ
+* `upper.ancient.2` = Ι Κ Λ Μ Ν Ξ Ο Π Ϟ
+* `upper.ancient.3` = Ρ Σ Τ Υ Φ Χ Ψ Ω Ϡ
+* `upper.ancient.4` = ͵Α ͵Β ͵Γ ͵Δ ͵Ε ͵Ϛ ͵Ζ ͵Η ͵Θ
+* `upper.ancient.S.321` = ʹ
+
+## Arabic (Algeria) (ar-DZ)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar-EG
+## Arabic (Egypt) (ar-EG)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar-IQ
+## Arabic (Iraq) (ar-IQ)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar-JO
+## Arabic (Jordan) (ar-JO)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar-LB
+## Arabic (Lebanon) (ar-LB)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar-MA
+## Arabic (Morocco) (ar-MA)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar-PS
+## Arabic (Palestinian Territories) (ar-PS)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar-SA
+## Arabic (Saudi Arabia) ar-SA
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar-SY
+## Arabic (Syria) (ar-SY)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar-TN
+## Arabic (Tunisia) (ar-TN)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## ar
+## Arabic (ar)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## be
+## Armenia (hy)
+
+* `lower.letters.1` = ա բ գ դ ե զ է ը թ
+* `lower.letters.2` = ժ ի լ խ ծ կ հ ձ ղ
+* `lower.letters.3` = ճ մ յ ն շ ո չ պ ջ
+* `lower.letters.4` = ռ ս վ տ ր ց ւ փ ք
+* `upper.letters.1` = Ա Բ Գ Դ Ե Զ Է Ը Թ
+* `upper.letters.2` = Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ
+* `upper.letters.3` = Ճ Մ Յ Ն Շ Ո Չ Պ Ջ
+* `upper.letters.4` = Ռ Ս Վ Տ Ր Ց Ւ Փ Ք
+
+## Bangla (bn)
+
+* `alphabetic` = ক খ গ ঘ ঙ চ ছ জ ঝ ঞ ট ঠ ড ঢ ণ ত থ দ ধ ন প ফ ব ভ
+
+## Belarusian (be)
 
 * `lower` = а б в г д е ё ж з і й к л м н о п р с т у ў ф х ц ч ш ы ь э ю я
 * `upper` = А Б В Г Д Е Ё Ж З І Й К Л М Н О П Р С Т У Ў Ф Х Ц Ч Ш Ы Ь Э Ю Я
 
-## bg
+## Bulgarian (bg)
 
 * `lower` = а б в г д е ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ь ю я
 * `upper` = А Б В Г Д Е Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ь Ю Я
 
-## bn
+## Chinese (zh-Hans-HK)
 
-* `alphabetic` = ক খ গ ঘ ঙ চ ছ জ ঝ ঞ ট ঠ ড ঢ ণ ত থ দ ধ ন প ফ ব ভ
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
 
-## ckb-Arab
+## Chinese (zh-Hans-MO)
 
-* `alphabetic` = ا ب پ ت ج چ ح خ د ر ڕ ز ژ س ش ع غ ف ق ک گ ل ڵ م ن و ۆ ه‍ ی ێ ئ
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
 
-## ckb
+## Chinese (zh-Hans-SG)
 
-* `alphabetic` = ا ب پ ت ج چ ح خ د ر ڕ ز ژ س ش ع غ ف ق ک گ ل ڵ م ن و ۆ ه‍ ی ێ ئ
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
 
-## cop
+## Chinese (zh-Hans)
+
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
+
+## Chinese (zh-Hant-HK)
+
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
+
+## Chinese (zh-Hant-MO)
+
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
+
+## Chinese (zh-Hant)
+
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
+
+## Chinese (zh)
+
+Also available in all `zh` locales is `date.sexagenary`, defined in
+`babel-chinese.tex` and used in the Chinese calendar.
+
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
+
+## Church Slavonic (cu-Cyrs)
+
+* `lower` = а б в г д е ж ѕ з и ї к л м н о п р с т ꙋ ф х ѿ ц ч ш щ ъ ы ь ѣ ю ѫ ѧ ѯ ѱ ѳ ѵ
+* `upper` = А Б В Г Д Є Ж Ѕ З И І К Л М Н О П Р С Т Ꙋ Ф Х Ѿ Ц Ч Ш Щ Ъ Ы Ь Ѣ Ю Ѫ Ѧ Ѯ Ѱ Ѳ Ѵ
+
+## Church Slavonic (cu-Glag)
+
+* `letters.1` = Ⰰ Ⰱ Ⰲ Ⰳ Ⰴ Ⰵ Ⰶ Ⰷ Ⰸ
+* `letters.2` = Ⰺ Ⰻ Ⰼ Ⰽ Ⰾ Ⰿ Ⱀ Ⱁ Ⱂ
+* `letters.3` = Ⱃ Ⱄ Ⱅ Ⱆ Ⱇ Ⱈ Ⱉ Ⱋ Ⱌ
+* `letters.4` = Ⱍ Ⱎ Ⱏ Ⱑ Ⱓ Ⱗ ? ? ?
+
+## Church Slavonic (cu)
+
+* `lower` = а б в г д е ж ѕ з и ї к л м н о п р с т ꙋ ф х ѿ ц ч ш щ ъ ы ь ѣ ю ѫ ѧ ѯ ѱ ѳ ѵ
+* `upper` = А Б В Г Д Є Ж Ѕ З И І К Л М Н О П Р С Т Ꙋ Ф Х Ѿ Ц Ч Ш Щ Ъ Ы Ь Ѣ Ю Ѫ Ѧ Ѯ Ѱ Ѳ Ѵ
+
+## Coptic (cop)
 
 * `epact.1` = 𐋡 𐋢 𐋣 𐋤 𐋥 𐋦 𐋧 𐋨 𐋩
 * `epact.2` = 𐋪 𐋫 𐋬 𐋭 𐋮 𐋯 𐋰 𐋱 𐋲
@@ -132,91 +250,19 @@ They have been taken directly from CSS.
 * `lower.letters.3` = ⲣ̅ ⲥ̅ ⲧ̅ ⲩ̅ ⲫ̅ ⲭ̅ ⲯ̅ ⲱ̅ ⳨
 * `lower.letters.4` = ⲁ̅̅ ⲃ̅̅ ⲅ̅̅ ⲇ̅̅ ⲉ̅̅ ⲋ̅̅ ⲍ̅̅ ⲏ̅̅ ⲑ̅̅
 
-## cu-Cyrs
-
-* `lower` = а б в г д е ж ѕ з и ї к л м н о п р с т ꙋ ф х ѿ ц ч ш щ ъ ы ь ѣ ю ѫ ѧ ѯ ѱ ѳ ѵ
-* `upper` = А Б В Г Д Є Ж Ѕ З И І К Л М Н О П Р С Т Ꙋ Ф Х Ѿ Ц Ч Ш Щ Ъ Ы Ь Ѣ Ю Ѫ Ѧ Ѯ Ѱ Ѳ Ѵ
-
-## cu-Glag
-
-* `letters.1` = Ⰰ Ⰱ Ⰲ Ⰳ Ⰴ Ⰵ Ⰶ Ⰷ Ⰸ
-* `letters.2` = Ⰺ Ⰻ Ⰼ Ⰽ Ⰾ Ⰿ Ⱀ Ⱁ Ⱂ
-* `letters.3` = Ⱃ Ⱄ Ⱅ Ⱆ Ⱇ Ⱈ Ⱉ Ⱋ Ⱌ
-* `letters.4` = Ⱍ Ⱎ Ⱏ Ⱑ Ⱓ Ⱗ ? ? ?
-
-## cu
-
-* `lower` = а б в г д е ж ѕ з и ї к л м н о п р с т ꙋ ф х ѿ ц ч ш щ ъ ы ь ѣ ю ѫ ѧ ѯ ѱ ѳ ѵ
-* `upper` = А Б В Г Д Є Ж Ѕ З И І К Л М Н О П Р С Т Ꙋ Ф Х Ѿ Ц Ч Ш Щ Ъ Ы Ь Ѣ Ю Ѫ Ѧ Ѯ Ѱ Ѳ Ѵ
-
-## el-polyton
-
-The way the keraia is defined is tentative, and very likely it will change. Do *not* rely on it.
-
-* `lower.modern.1` = α β γ δ ε στ ζ η θ
-* `lower.modern.2` = ι κ λ μ ν ξ ο π ϟ
-* `lower.modern.3` = ρ σ τ υ φ χ ψ ω ϡ
-* `lower.modern.4` = ͵α ͵β ͵γ ͵δ ͵ε ͵στ ͵ζ ͵η ͵θ
-* `lower.modern.S.321` = ʹ
-* `upper.modern.1` = Α Β Γ Δ Ε ΣΤ Ζ Η Θ
-* `upper.modern.2` = Ι Κ Λ Μ Ν Ξ Ο Π Ϟ
-* `upper.modern.3` = Ρ Σ Τ Υ Φ Χ Ψ Ω Ϡ
-* `upper.modern.4` = ͵Α ͵Β ͵Γ ͵Δ ͵Ε ͵ΣΤ ͵Ζ ͵Η ͵Θ
-* `upper.modern.S.321` = ʹ
-* `lower.ancient.1` = α β γ δ ε ϛ ζ η θ
-* `lower.ancient.2` = ι κ λ μ ν ξ ο π ϟ
-* `lower.ancient.3` = ρ σ τ υ φ χ ψ ω ϡ
-* `lower.ancient.4` = ͵α ͵β ͵γ ͵δ ͵ε ͵Ϛ ͵ζ ͵η ͵θ
-* `lower.ancient.S.321` = ʹ
-* `upper.ancient.1` = Α Β Γ Δ Ε Ϛ Ζ Η Θ
-* `upper.ancient.2` = Ι Κ Λ Μ Ν Ξ Ο Π Ϟ
-* `upper.ancient.3` = Ρ Σ Τ Υ Φ Χ Ψ Ω Ϡ
-* `upper.ancient.4` = ͵Α ͵Β ͵Γ ͵Δ ͵Ε ͵Ϛ ͵Ζ ͵Η ͵Θ
-* `upper.ancient.S.321` = ʹ
-
-## el
-
-The way the keraia is defined is tentative, and very ; likely it will change. Do *not* rely on it.
-
-* `lower.modern.1` = α β γ δ ε στ ζ η θ
-* `lower.modern.2` = ι κ λ μ ν ξ ο π ϟ
-* `lower.modern.3` = ρ σ τ υ φ χ ψ ω ϡ
-* `lower.modern.4` = ͵α ͵β ͵γ ͵δ ͵ε ͵στ ͵ζ ͵η ͵θ
-* `lower.modern.S.321` = ʹ
-* `upper.modern.1` = Α Β Γ Δ Ε ΣΤ Ζ Η Θ
-* `upper.modern.2` = Ι Κ Λ Μ Ν Ξ Ο Π Ϟ
-* `upper.modern.3` = Ρ Σ Τ Υ Φ Χ Ψ Ω Ϡ
-* `upper.modern.4` = ͵Α ͵Β ͵Γ ͵Δ ͵Ε ͵ΣΤ ͵Ζ ͵Η ͵Θ
-* `upper.modern.S.321` = ʹ
-* `lower.ancient.1` = α β γ δ ε ϛ ζ η θ
-* `lower.ancient.2` = ι κ λ μ ν ξ ο π ϟ
-* `lower.ancient.3` = ρ σ τ υ φ χ ψ ω ϡ
-* `lower.ancient.4` = ͵α ͵β ͵γ ͵δ ͵ε ͵Ϛ ͵ζ ͵η ͵θ
-* `lower.ancient.S.321` = ʹ
-* `upper.ancient.1` = Α Β Γ Δ Ε Ϛ Ζ Η Θ
-* `upper.ancient.2` = Ι Κ Λ Μ Ν Ξ Ο Π Ϟ
-* `upper.ancient.3` = Ρ Σ Τ Υ Φ Χ Ψ Ω Ϡ
-* `upper.ancient.4` = ͵Α ͵Β ͵Γ ͵Δ ͵Ε ͵Ϛ ͵Ζ ͵Η ͵Θ
-* `upper.ancient.S.321` = ʹ
-
-## fa
-
-* `abjad` = ا ب ج د ه‍ و ز ح ط ی ک ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
-* `alphabetic` = ا ب پ ت ث ج چ ح خ د ذ ر ز ژ س ش ص ض ط ظ ع غ ف ق ک گ ل م ن و ه‍ ی
-
-## fr-BE
+## French (Belgium) (fr-BE)
 
 * `date.day` = 1\textsuperscript{er} 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
 
-## fr-CA
+## French (Canada) (fr-CA)
 
 * `date.day` = 1\textsuperscript{er} 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
 
-## fr-CH
+## French (Switzerland) fr-CH
 
 * `date.day` = 1\textsuperscript{er} 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
 
-## fr-LU
+## French (Luxembourg) fr-LU
 
 * `date.day` = 1\textsuperscript{er} 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
 
@@ -224,14 +270,31 @@ The way the keraia is defined is tentative, and very ; likely it will change. Do
 
 * `date.day` = 1\textsuperscript{er} 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
 
-## fr
+## French (fr)
 
 * `date.day` = 1\textsuperscript{er} 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
 
-## grc
+## Georgian (ka)
+
+* `letters.1` = ა ბ გ დ ე ვ ზ ჱ თ
+* `letters.2` = ი კ ლ მ ნ ჲ ო პ ჟ
+* `letters.3` = რ ს ტ ჳ ფ ქ ღ ყ შ
+* `letters.4` = ჩ ც ძ წ ჭ ხ ჴ ჯ ჰ
+
+## Greek (el)
 
 The way the keraia is defined is tentative, and very likely it will change. Do *not* rely on it.
 
+* `lower.modern.1` = α β γ δ ε στ ζ η θ
+* `lower.modern.2` = ι κ λ μ ν ξ ο π ϟ
+* `lower.modern.3` = ρ σ τ υ φ χ ψ ω ϡ
+* `lower.modern.4` = ͵α ͵β ͵γ ͵δ ͵ε ͵στ ͵ζ ͵η ͵θ
+* `lower.modern.S.321` = ʹ
+* `upper.modern.1` = Α Β Γ Δ Ε ΣΤ Ζ Η Θ
+* `upper.modern.2` = Ι Κ Λ Μ Ν Ξ Ο Π Ϟ
+* `upper.modern.3` = Ρ Σ Τ Υ Φ Χ Ψ Ω Ϡ
+* `upper.modern.4` = ͵Α ͵Β ͵Γ ͵Δ ͵Ε ͵ΣΤ ͵Ζ ͵Η ͵Θ
+* `upper.modern.S.321` = ʹ
 * `lower.ancient.1` = α β γ δ ε ϛ ζ η θ
 * `lower.ancient.2` = ι κ λ μ ν ξ ο π ϟ
 * `lower.ancient.3` = ρ σ τ υ φ χ ψ ω ϡ
@@ -243,7 +306,7 @@ The way the keraia is defined is tentative, and very likely it will change. Do *
 * `upper.ancient.4` = ͵Α ͵Β ͵Γ ͵Δ ͵Ε ͵Ϛ ͵Ζ ͵Η ͵Θ
 * `upper.ancient.S.321` = ʹ
 
-## he
+## Hebrew (he)
 
 There are some additional counters defined in `babel-hebrew.tex`,
 namely `letters.long`, `letters.gershayim` and `letters.final`.
@@ -258,31 +321,20 @@ namely `letters.long`, `letters.gershayim` and `letters.final`.
 * `letters.3` = ק ר ש ת תק תר תש תת תתק
 * `letters.4` = א׳ ב׳ ג׳ ד׳ ה׳ ו׳ ז׳ ח׳ ט׳
 
-## hi
+## Hindi (hi)
 
 * `alphabetic` = क ख ग घ ङ च छ ज झ ञ ट ठ ड ढ ण त थ द ध न प फ ब भ म य र ल व श ष स ह
 
-## hu
+## Hungarian (hu)
 
 * `date.onday` = 1-jén 2-án 3-án 4-én 5-én 6-án 7-én 8-án 9-én 10-én 11-én 12-én 13-án 14-én 15-én 16-án 17-én 18-án 19-én 20-án 21-én 22-én 23-án 24-én 25-én 26-án 27-én 28-án 29-én 30-án 31-én
 
-## hy
-
-* `lower.letters.1` = ա բ գ դ ե զ է ը թ
-* `lower.letters.2` = ժ ի լ խ ծ կ հ ձ ղ
-* `lower.letters.3` = ճ մ յ ն շ ո չ պ ջ
-* `lower.letters.4` = ռ ս վ տ ր ց ւ փ ք
-* `upper.letters.1` = Ա Բ Գ Դ Ե Զ Է Ը Թ
-* `upper.letters.2` = Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ
-* `upper.letters.3` = Ճ Մ Յ Ն Շ Ո Չ Պ Ջ
-* `upper.letters.4` = Ռ Ս Վ Տ Ր Ց Ւ Փ Ք
-
-## it
+## Italian (it)
 
 * `lower.legal` = a b c d e f g h i l m n o p q r s t u v z
 * `upper.legal` = A B C D E F G H I L M N O P Q R S T U V Z
 
-## ja
+## Japanese (ja)
 
 * `hiragana` = あ い う え お か き く け こ さ し す せ そ た ち つ て と な に ぬ ね の は ひ ふ へ ほ ま み む め も や ゆ よ ら り る れ ろ わ ゐ ゑ を ん
 * `hiragana.iroha` = い ろ は に ほ へ と ち り ぬ る を わ か よ た れ そ つ ね な ら む う ゐ の お く や ま け ふ こ え て あ さ き ゆ め み し ゑ ひ も せ す
@@ -306,18 +358,11 @@ namely `letters.long`, `letters.gershayim` and `letters.final`.
 * `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
 * `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
 
-## ka
-
-* `letters.1` = ა ბ გ დ ე ვ ზ ჱ თ
-* `letters.2` = ი კ ლ მ ნ ჲ ო პ ჟ
-* `letters.3` = რ ს ტ ჳ ფ ქ ღ ყ შ
-* `letters.4` = ჩ ც ძ წ ჭ ხ ჴ ჯ ჰ
-
-## km
+## Khmer (km)
 
 * `consonant` = ក ខ គ ឃ ង ច ឆ ជ ឈ ញ ដ ឋ ឌ ឍ ណ ត ថ ទ ធ ន ប ផ ព ភ ម យ រ ល វ ស ហ ឡ អ
 
-## ko-Hani
+## Korean (ko-Hani)
 
 * `consonant` = ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ
 * `syllable` = 가 나 다 라 마 바 사 아 자 차 카 타 파 하
@@ -343,7 +388,7 @@ namely `letters.long`, `letters.gershayim` and `letters.final`.
 * `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
 * `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
 
-## ko
+## Korean (ko)
 
 * `consonant` = ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ
 * `syllable` = 가 나 다 라 마 바 사 아 자 차 카 타 파 하
@@ -369,7 +414,15 @@ namely `letters.long`, `letters.gershayim` and `letters.final`.
 * `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
 * `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
 
-## lad
+## Kurdish (ckb-Arab)
+
+* `alphabetic` = ا ب پ ت ج چ ح خ د ر ڕ ز ژ س ش ع غ ف ق ک گ ل ڵ م ن و ۆ ه‍ ی ێ ئ
+
+## Kurdish (ckb)
+
+* `alphabetic` = ا ب پ ت ج چ ح خ د ر ڕ ز ژ س ش ع غ ف ق ک گ ل ڵ م ن و ۆ ه‍ ی ێ ئ
+
+## Ladino (lad)
 
 * `letters.1` = א ב ג  ד  ה ו  ז  ח ט
 * `letters.2` = י כ ל מ נ ס ע פ צ
@@ -381,16 +434,16 @@ namely `letters.long`, `letters.gershayim` and `letters.final`.
 * `letters.3` = ק ר ש ת תק תר תש תת תתק
 * `letters.4` = א׳ ב׳ ג׳ ד׳ ה׳ ו׳ ז׳ ח׳ ט׳
 
-## mk
+## Macedonian (mk)
 
 * `lower` = а б в г д ѓ е ж з ѕ и ј к л љ м н њ о п р с т ќ у ф х ц ч џ ш
 * `upper` = А Б В Г Д Ѓ Е Ж З Ѕ И Ј К Л Љ М Н Њ О П Р С Т Ќ У Ф Х Ц Ч Џ Ш
 
-## mr
+## Marathi (mr)
 
 * `alphabetic` = क ख ग घ ङ च छ ज झ ञ ट ठ ड ढ ण त थ द ध न प फ ब भ म य र ल व श ष स ह ळ
 
-## or
+## Odia (or)
 
 Tentative.
 
@@ -398,69 +451,99 @@ Tentative.
 * `; alphabetic` = କ ଖ ଗ ଘ ଙ ଚ ଛ ଜ ଝ ଞ ଟ ଠ ଡ ଡ଼ ଢ ଢ଼ ଣ ତ ଥ ଦ ଧ ନ ପ ଫ ବ ଭ ମ ଯ ୟ ର ଲ ଳ ୱ ଶ ଷ ସ ହ
 * `akshar` = ଅ ଆ ଇ ଈ ଉ ଊ ଋ ଏ ଐ ଓ ଔ
 
-## ru
+## Persian (fa)
+
+* `abjad` = ا ب ج د ه‍ و ز ح ط ی ک ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
+* `alphabetic` = ا ب پ ت ث ج چ ح خ د ذ ر ز ژ س ش ص ض ط ظ ع غ ف ق ک گ ل م ن و ه‍ ی
+
+## Polytonic Greek (el-polyton)
+
+The way the keraia is defined is tentative, and very likely it will change. Do *not* rely on it.
+
+* `lower.modern.1` = α β γ δ ε στ ζ η θ
+* `lower.modern.2` = ι κ λ μ ν ξ ο π ϟ
+* `lower.modern.3` = ρ σ τ υ φ χ ψ ω ϡ
+* `lower.modern.4` = ͵α ͵β ͵γ ͵δ ͵ε ͵στ ͵ζ ͵η ͵θ
+* `lower.modern.S.321` = ʹ
+* `upper.modern.1` = Α Β Γ Δ Ε ΣΤ Ζ Η Θ
+* `upper.modern.2` = Ι Κ Λ Μ Ν Ξ Ο Π Ϟ
+* `upper.modern.3` = Ρ Σ Τ Υ Φ Χ Ψ Ω Ϡ
+* `upper.modern.4` = ͵Α ͵Β ͵Γ ͵Δ ͵Ε ͵ΣΤ ͵Ζ ͵Η ͵Θ
+* `upper.modern.S.321` = ʹ
+* `lower.ancient.1` = α β γ δ ε ϛ ζ η θ
+* `lower.ancient.2` = ι κ λ μ ν ξ ο π ϟ
+* `lower.ancient.3` = ρ σ τ υ φ χ ψ ω ϡ
+* `lower.ancient.4` = ͵α ͵β ͵γ ͵δ ͵ε ͵Ϛ ͵ζ ͵η ͵θ
+* `lower.ancient.S.321` = ʹ
+* `upper.ancient.1` = Α Β Γ Δ Ε Ϛ Ζ Η Θ
+* `upper.ancient.2` = Ι Κ Λ Μ Ν Ξ Ο Π Ϟ
+* `upper.ancient.3` = Ρ Σ Τ Υ Φ Χ Ψ Ω Ϡ
+* `upper.ancient.4` = ͵Α ͵Β ͵Γ ͵Δ ͵Ε ͵Ϛ ͵Ζ ͵Η ͵Θ
+* `upper.ancient.S.321` = ʹ
+
+## Russian (ru)
 
 * `lower` = а б в г д е ж з и к л м н о п р с т у ф х ц ч ш щ э ю я
 * `lower.full` = а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я
 * `upper` = А Б В Г Д Е Ж З И К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Э Ю Я
 * `upper.full` = А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я
 
-## sr-Cyrl-BA
+## Serbian (sr-Cyrl-BA)
 
 * `lower` = а б в г д ђ е ж з и ј к л љ м н њ о п р с т ћ у ф х ц ч џ ш
 * `upper` = А Б В Г Д Ђ Е Ж З И Ј К Л Љ М Н Њ О П Р С Т Ћ У Ф Х Ц Ч Џ Ш
 
-## sr-Cyrl-ME
+## Serbian (sr-Cyrl-ME)
 
 * `lower` = а б в г д ђ е ж з и ј к л љ м н њ о п р с т ћ у ф х ц ч џ ш
 * `upper` = А Б В Г Д Ђ Е Ж З И Ј К Л Љ М Н Њ О П Р С Т Ћ У Ф Х Ц Ч Џ Ш
 
-## sr-Cyrl-XK
+## Serbian (sr-Cyrl-XK)
 
 * `lower` = а б в г д ђ е ж з и ј к л љ м н њ о п р с т ћ у ф х ц ч џ ш
 * `upper` = А Б В Г Д Ђ Е Ж З И Ј К Л Љ М Н Њ О П Р С Т Ћ У Ф Х Ц Ч Џ Ш
 
-## sr-Cyrl
+## Serbian (sr-Cyrl)
 
 * `lower` = а б в г д ђ е ж з и ј к л љ м н њ о п р с т ћ у ф х ц ч џ ш
 * `upper` = А Б В Г Д Ђ Е Ж З И Ј К Л Љ М Н Њ О П Р С Т Ћ У Ф Х Ц Ч Џ Ш
 
-## sr-ijekavsk
+## Serbian (sr-ijekavsk)
 
 * `lower` = а б в г д ђ е ж з и ј к л љ м н њ о п р с т ћ у ф х ц ч џ ш
 * `upper` = А Б В Г Д Ђ Е Ж З И Ј К Л Љ М Н Њ О П Р С Т Ћ У Ф Х Ц Ч Џ Ш
 
-## sr
+## Serbian (sr)
 
 * `lower` = а б в г д ђ е ж з и ј к л љ м н њ о п р с т ћ у ф х ц ч џ ш
 * `upper` = А Б В Г Д Ђ Е Ж З И Ј К Л Љ М Н Њ О П Р С Т Ћ У Ф Х Ц Ч Џ Ш
 
-## syr
+## Syriac (syr)
 
 * `letters.1` = ܐ ܒ ܓ ܕ ܗ ܘ ܙ ܚ ܛ
 * `letters.2` = ܝ ܟ ܠ ܡ ܢ ܣ ܥ ܦ ܨ
 * `letters.3` = ܩ ܪ ܫ ܬ ܢ̇ ܣ̇ ܥ̇ ܦ̇ ܨ̇
 * `letters.4` = ܐ݈ ܒ݈ ܓ݈ ܕ݈ ܗ݈ ܘ݈ ܙ݈ ܚ݈ ܛ݈
 
-## ta
+## Tamil (ta)
 
 * `ancient.1` = ௧ ௨ ௩ ௪ ௫ ௬ ௭ ௮ ௯
 * `ancient.2` = ௰ ௨௰ ௩௰ ௪௰ ௫௰ ௬௰ ௭௰ ௮௰ ௯௰
 * `ancient.3` = ௱ ௨௱ ௩௱ ௪௱ ௫௱ ௬௱ ௭௱ ௮௱ ௯௱
 * `ancient.4` = ௲ ௨௲ ௩௲ ௪௲ ௫௲ ௬௲ ௭௲ ௮௲ ௯௲
 
-## th
+## Thai (th)
 
 * `alphabetic` = ก ข ค ง จ ฉ ช ซ ฌ ญ ฎ ฏ ฐ ฑ ฒ ณ ด ต ถ ท ธ น บ ป ผ ฝ พ ฟ ภ ม ย ร ล ว ศ ษ ส ห ฬ อ ฮ
 
-## uk
+## Ukrainian (uk)
 
 * `lower` = а б в г д е є ж з и і к л м н о п р с т у ф х ц ч ш ю я
 * `lower.full` = а б в г ґ д е є ж з и і ї й к л м н о п р с т у ф х ц ч ш щ ь ю я
 * `upper` = А Б В Г Д Е Є Ж З И І К Л М Н О П Р С Т У Ф Х Ц Ч Ш Ю Я
 * `upper.full` = А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я
 
-## yi
+## Yiddish (yi)
 
 There are some additional counters defined in `babel-hebrew.tex` and
 loaded by Yiddish, namely `letters.long`, `letters.gershayim` and `letters.final`.
@@ -474,86 +557,3 @@ loaded by Yiddish, namely `letters.long`, `letters.gershayim` and `letters.final
 * `letters.F.19` = יט
 * `letters.3` = ק ר ש ת תק תר תש תת תתק
 * `letters.4` = א׳ ב׳ ג׳ ד׳ ה׳ ו׳ ז׳ ח׳ ט׳
-
-## zh-Hans-HK
-
-* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
-* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
-* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
-* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
-
-## zh-Hans-MO
-
-* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
-* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
-* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
-* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
-
-## zh-Hans-SG
-
-* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
-* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
-* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
-* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
-
-## zh-Hans
-
-* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
-* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
-* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
-* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
-
-## zh-Hant-HK
-
-* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
-* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
-* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
-* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
-
-## zh-Hant-MO
-
-* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
-* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
-* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
-* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
-
-## zh-Hant
-
-* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
-* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
-* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
-* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
-
-## zh
-
-Also available in all `zh` locales is `date.sexagenary`, defined in
-`babel-chinese.tex` and used in the Chinese calendar.
-
-* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
-* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
-* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
-* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十

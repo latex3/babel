@@ -15,7 +15,7 @@ For example, with the default value:
 ```tex
 \usepackage[arabic, provide={mapdigits, mapdot}, bidi=basic]{babel}
 ```
-With a comma and a non-breaking space, it’s `mapdot=،~`.
+With a comma and a non-breaking space, it’s `mapdot= ،~`.
 
 This option doesn’t replace the definition of these macros by
 completely new ones. Instead, it modifies them. This replacement may
