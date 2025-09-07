@@ -2,7 +2,7 @@
 
 2025-03-27
 
-## Transforms
+## Transforms for CJK
 
 The `input.nospaces` transform provides a convenient way to input text
 by removing spaces and line breaks between two CJK characters (but not

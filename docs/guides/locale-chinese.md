@@ -59,6 +59,12 @@ For the meaning of these codes, see the [Unicode Standard Annex #14:
 Line Breaking
 Properties](https://www.unicode.org/reports/tr14/).
 
+## Spacing
+
+With the transform `spacing.basic`. See [What’s new in babel
+25.6](https://latex3.github.io/babel/news/whats-new-in-babel-25.6.html)
+for details.
+
 ## Counters
 
 With `luatex` there are two ways to map Arabic to
