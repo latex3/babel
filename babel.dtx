@@ -33,11 +33,12 @@
 % \iffalse
 %<*filedriver>
 \DocumentMetadata{ 
+  % tagging=on,
   % testphase  = {sec,toc,text},
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/08/03 v25.12
+  [2025/09/18 v25.12.99271
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -947,7 +948,7 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \subtagalt{british}{}
 \subtag{UKenglish}{}
 \subtagalt{canadian}{}
-\subtagalt{newzealand}{}
+\subtag{newzealand}{}
 \tag{esperanto}{}
 \tag{estonian}{}
 \tagmin{ethiop}{} %%%%%%
@@ -3017,12 +3018,9 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
 the text becomes |\textit{\parse{<text>}}|. 
 \begin{example}
   PDF tagging is still a work in progress, but language tags are already
-  possible in short texts with |\foreignlanguage|. Here is an example:
-\begin{verbatim}
-\AddBabelHook[indonesian]{meta}{foreign}{%
-  \BabelWrapText{\tagmcbegin{tag=Span, raw=/Lang (id)}##1\tagmcend}}
-\end{verbatim}
-Be aware the behavior related to tagging can and very likely will change.
+  possible in short texts with |\foreignlanguage|. See the
+  \href{https://github.com/latex3/babel/discussions/357}{\babel{} site}
+  for a complete explained example.
 \end{example}
 
 \end{description}
@@ -4510,7 +4508,7 @@ is particularly useful with predefined transforms. For example:
 
 Although the main purpose of post-hyphenation transforms was
 non-standard hyphenation, they may actually be used for other
-transformations.
+transformations (for example, rules for long s in German).
 
 \Describe{\babelprehyphenation}{\oarg{options}\marg{locale-name}%
           \marg{lua-pattern}\marg{replacement}}
@@ -6178,8 +6176,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.12>>
-%<<date=2025/08/03>>
+%<<version=25.12.99271>>
+%<<date=2025/09/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
