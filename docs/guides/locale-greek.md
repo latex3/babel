@@ -7,7 +7,7 @@
   href="https://www.google.com/search?q=site%3Alatex3.github.io%2Fbabel+TGreek">Search this site for more on Greek</a>.</em></p>
 </blockquote>
 
-The Greek language is available for `pdftex`, `xetex`, and `luatex`.
+The Greek language is available for `luatex`, `pdftex`, and `xetex`.
 Depending on your needs you may prefer the `ldf` file, currently
 supported by Günter Milde, or the `ini` files.
 
@@ -15,6 +15,9 @@ The support for `pdftex` is based on the non-standard `LGR` encoding,
 which may be a source of issues (see for example
 [here](https://tex.stackexchange.com/questions/548584/ascii-text-set-in-greek-script-when-using-usepackagegreekbabel)).
 It’s strongly recommended to use `xetex`  or `luatex`.
+
+For an alternative for `xetex` and `luatex`, have a look at
+[xgreek](https://ctan.org/pkg/xgreek?lang=en).
 
 ## As `ldf`
 

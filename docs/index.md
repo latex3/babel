@@ -75,12 +75,14 @@ case, it's advisable to install TeXLive.)
 
 * [Which method and font for which language](guides/which-method-for-which-language.html)
   When to use the old good language files and when `\babelprovide` or `provide=*`.
-* [Useful links to tex.strackexchange](guides/useful-links-to-tex.stackexchange.html)
-  Examples for many languages: Chinese, Arabic, Sanskrit, etc.
 * [Migrating from XeTeX to
   LuaTeX](https://latex3.github.io/babel/guides/migrating-xetex-luatex.html).
 * [Migrating from pdfTeX to
   LuaTeX](https://latex3.github.io/babel/guides/migrating-pdftex-luatex.html).
+* [Tips, tricks and
+  more](https://github.com/latex3/babel/discussions/categories/tips-tricks-and-more)
+* [Useful links to tex.strackexchange](guides/useful-links-to-tex.stackexchange.html)
+  Examples for many languages: Chinese, Arabic, Sanskrit, etc.
 
 ---------------------------
 
@@ -88,6 +90,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
+| [25.13](news/whats-new-in-babel-25.13.html) | 2025-10-01 | Minor fixes. |
 | [25.12](news/whats-new-in-babel-25.12.html) | 2025-08-03 | Option `mapdot` |
 | [25.11](news/whats-new-in-babel-25.11.html) | 2025-07-13 | Minor changes and fixes. |
 | [25.10](news/whats-new-in-babel-25.10.html) | 2025-06-10 | Transform `transliteration.gost779b` (Russian). |
