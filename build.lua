@@ -6,8 +6,7 @@
 bundle = ""
 module = "babel"
 
--- Minor modifications to file types
-installfiles = {"*.def", "*.ldf", "*.sty", "*.tex"}
+installfiles = {"*.def", "*.ldf", "*.sty", "*.tex", "*.cfg" , "*.lua"}
 sourcefiles  = {"*.dtx", "*.ins"}
 typesetfiles = {"babel.dtx"}
 

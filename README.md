@@ -1,6 +1,6 @@
-## Babel 25.12.99271
+## Babel 25.13
 
-(dev)
+2025-10-01
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.12 are described in:
+Changes in version 25.13 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.12.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.13.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,7 +59,12 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 25.13 (dev)
+#### 25.13 (2025-10-01)
+
+* A few vowels were missing in a rule for the IAST Devanagari transliteration.
+* Changed the string for `\proofname` in the Turkish `ini` locale file.
+* Fixed in the manual the example for a very basic PDF tagging, which
+  wasn’t complete. 
 
 #### 25.12 (2025-08-03)
 
@@ -67,11 +72,6 @@ respective authors.
   locales, mapping the dot in counters to a hyphen.
 * Fix misaligned first line with kashida inside a \vbox (tsx747027).
 
-#### 25.11 (2025-07-13)
-
-* Fix error with `import` in `\PassOptionsToLocale` and lazy loading.
-* Changes related to Austrian German.
-       
 ### Previous changes
 
 See https://latex3.github.io/babel/#whats-new
