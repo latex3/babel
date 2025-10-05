@@ -38,7 +38,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/10/01 v25.13
+  [2025/10/05 v25.13.100973
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6176,8 +6176,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.13>>
-%<<date=2025/10/01>>
+%<<version=25.13.100973>>
+%<<date=2025/10/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7832,7 +7832,7 @@ wouldn’t exist.
   \edef\bbl@tempa{#1}%
   \bbl@sreplace\bbl@tempa{name}{}%
   \bbl@warning{%
-    \@backslashchar#1 not set for '\languagename'. Please,\\%
+    \@backslashchar#1name not set for '\languagename'. Please,\\%
     define it after the language has been loaded\\%
     (typically in the preamble) with:\\%
     \string\setlocalecaption{\languagename}{\bbl@tempa}{..}\\%
@@ -13184,41 +13184,7 @@ wouldn’t exist.
         \csname bbl@mod@\CurrentOption\endcsname
      \bbl@exp{\\\AtBeginDocument{%
        \\\bbl@usehooks@lang{\CurrentOption}{begindocument}{{\CurrentOption}}}}}%
-    {\IfFileExists{babel-#1.tex}%
-      {\def\bbl@tempa{%
-         .\\There is a locale ini file for this language.\\%
-         If it’s the main language, try adding `provide=*'\\%
-         to the babel package options}}%
-      {\let\bbl@tempa\empty}%
-     \bbl@error{unknown-package-option}{}{}{}}}
-%    \end{macrocode}
-%
-% Now, we set a few language options whose names are different from
-% |ldf| files. These declarations are preserved for backwards
-% compatibility, but they must be eventually removed. Use proxy files
-% instead.
-%
-%    \begin{macrocode}
-\def\bbl@try@load@lang#1#2#3{%
-  \IfFileExists{\CurrentOption.ldf}%
-    {\bbl@load@language{\CurrentOption}}%
-    {#1\bbl@load@language{#2}#3}}
-%
-\DeclareOption{friulian}{\bbl@try@load@lang{}{friulan}{}}
-\DeclareOption{hebrew}{%
-  \ifcase\bbl@engine\or
-    \bbl@error{only-pdftex-lang}{hebrew}{luatex}{}%
-  \fi
-  \input{rlbabel.def}%
-  \bbl@load@language{hebrew}}
-\DeclareOption{hungarian}{\bbl@try@load@lang{}{magyar}{}}
-\DeclareOption{lowersorbian}{\bbl@try@load@lang{}{lsorbian}{}}
-% \DeclareOption{northernkurdish}{\bbl@try@load@lang{}{kurmanji}{}}
-\DeclareOption{polutonikogreek}{%
-  \bbl@try@load@lang{}{greek}{\languageattribute{greek}{polutoniko}}}
-\DeclareOption{russian}{\bbl@try@load@lang{}{russianb}{}}
-\DeclareOption{ukrainian}{\bbl@try@load@lang{}{ukraineb}{}}
-\DeclareOption{uppersorbian}{\bbl@try@load@lang{}{usorbian}{}}
+    {\bbl@error{unknown-package-option}{}{}{}}}
 %    \end{macrocode}
 %
 % Another way to extend the list of `known' options for \babel\ was
@@ -13296,157 +13262,122 @@ wouldn’t exist.
 % should contain this character).
 %
 %    \begin{macrocode}
+%%%%%%
+\def\bbl@toload{}
+\def\bbl@toload@last{}
+%%%%%%
+\def\BabelBeforeIni#1#2{%
+  \def\bbl@tempa{\@m}% <- Default if no \BDefFile
+  \let\bbl@tempb\@empty
+  #2%
+  \edef\bbl@toload{%
+    \ifx\bbl@toload\@empty\else\bbl@toload,\fi
+    \bbl@toload@last}%
+  \edef\bbl@toload@last{%
+    0/\bbl@tempa//\CurrentOption//#1/\bbl@tempb}}
+%%%%%%
+\def\BabelDefinitionFile#1#2#3{%
+  \def\bbl@tempa{#1}\def\bbl@tempb{#2}%
+  \@namedef{bbl@preldf@\CurrentOption}{#3}%
+  \endinput}%
+%%%%%%
 \def\bbl@tempf{,}
 \bbl@foreach\@raw@classoptionslist{%
   \in@{=}{#1}%
   \ifin@\else
     \edef\bbl@tempf{\bbl@tempf\zap@space#1 \@empty,}%
   \fi}
-\ifx\bbl@opt@main\@nnil
-  \ifnum\bbl@iniflag>\z@  % if all ldf's: set implicitly, no main pass
-    \let\bbl@tempb\@empty
-    \edef\bbl@tempa{\bbl@tempf,\bbl@language@opts}%
-    \bbl@foreach\bbl@tempa{\edef\bbl@tempb{#1,\bbl@tempb}}%
-    \bbl@foreach\bbl@tempb{%    \bbl@tempb is a reversed list
-      \ifx\bbl@opt@main\@nnil % i.e., if not yet assigned
-        \ifodd\bbl@iniflag % = *=
-          \IfFileExists{babel-#1.tex}{\def\bbl@opt@main{#1}}{}%
-        \else % n +=
-          \IfFileExists{#1.ldf}{\def\bbl@opt@main{#1}}{}%
-        \fi
-      \fi}%
-  \fi
-\else
-  \ifx\bbl@metalang\@undefined\else\ifx\bbl@metalang\@empty\else
-    \bbl@afterfi\expandafter\@gobble 
-  \fi\fi  % except if explicit lang metatag:
-    {\bbl@info{Main language set with 'main='. Except if you have\\%
-               problems, prefer the default mechanism for setting\\%
-               the main language, i.e., as the last declared.\\%
-               Reported}}
-\fi
-%    \end{macrocode}
-%
-% A few languages are still defined explicitly. They are stored in case
-% they are needed in the ‘main’ pass (the value can be |\relax|).
-%
-%    \begin{macrocode}
-\ifx\bbl@opt@main\@nnil\else
-  \bbl@ncarg\let\bbl@loadmain{ds@\bbl@opt@main}%
-  \expandafter\let\csname ds@\bbl@opt@main\endcsname\relax
-\fi
-%    \end{macrocode}
-%
-% Now define the corresponding loaders. With package options, assume
-% the language exists. With class options, check if the option is a
-% language by checking if the corresponding file exists.
-%
-%    \begin{macrocode}
-\bbl@foreach\bbl@language@opts{%
-  \def\bbl@tempa{#1}%
-  \ifx\bbl@tempa\bbl@opt@main\else
-    \ifnum\bbl@iniflag<\tw@    % 0 ø (other = ldf)
-      \bbl@ifunset{ds@#1}%
-        {\DeclareOption{#1}{\bbl@load@language{#1}}}%
-        {}%
-    \else                      % + * (other = ini)
-      \DeclareOption{#1}{%
-        \bbl@ldfinit
-        \babelprovide[@import]{#1}% %%%%%
-        \bbl@afterldf}%
+%%%%%% 
+\let\bbl@unkopt\relax  %% <- Ugly
+\edef\bbl@tempc{%
+  \ifx\bbl@opt@main\@nnil\else\bbl@opt@main,\fi\bbl@tempf,@@,\bbl@language@opts}
+\bbl@foreach\bbl@tempc{%
+  \in@{@@}{#1}%  <- Ugly
+  \ifin@
+    \def\bbl@unkopt{%
+      \let\bbl@tempa\@empty
+      \bbl@error{unknown-package-option}{}{}{}%
+      \edef\bbl@toload@last{0/0//\CurrentOption//und/}}%
+  \else
+    \bbl@xin@{//#1//}{\bbl@toload,\bbl@toload@last}%
+    \ifin@\else
+      \def\CurrentOption{#1}%
+      %% todo %% Me gustaría que solo fuera con XXenglish
+      \lowercase{\InputIfFileExists{babel-#1.tex}}{}{%
+        \IfFileExists{#1.ldf}%
+          {\edef\bbl@toload{%
+             \ifx\bbl@toload\@empty\else\bbl@toload,\fi
+             \bbl@toload@last}%
+           \edef\bbl@toload@last{0/0//\CurrentOption//und/#1}}%
+          {\bbl@unkopt}}%
     \fi
   \fi}
-\bbl@foreach\bbl@tempf{%
-  \def\bbl@tempa{#1}%
-  \ifx\bbl@tempa\bbl@opt@main\else
-    \ifnum\bbl@iniflag<\tw@    % 0 ø (other = ldf)
-      \bbl@ifunset{ds@#1}%
-        {\IfFileExists{#1.ldf}%
-          {\DeclareOption{#1}{\bbl@load@language{#1}}}%
-          {}}%
-        {}%
-     \else                      % + * (other = ini)
-       \IfFileExists{babel-#1.tex}%
-         {\DeclareOption{#1}{%
-            \bbl@ldfinit
-            \babelprovide[@import]{#1}%  %%%%%%
-            \bbl@afterldf}}%
-         {}%
-     \fi
+%%%%%%
+\ifx\bbl@opt@main\@nnil\else
+  \edef\bbl@toload{%
+    \ifx\bbl@toload\@empty\else\bbl@toload,\fi\bbl@toload@last}%  
+  \@nameuse{clist_pop:NN}\bbl@toload\bbl@toload@last
+\fi
+%
+\edef\bbl@tempa{\bbl@toload\bbl@toload@last}
+% \show\bbl@tempa
+\ifx\bbl@tempa\@empty
+  \def\bbl@toload{0/0//nil//und/nil}
+\else
+  \edef\bbl@toload{\bbl@toload,1\bbl@toload@last}
+\fi
+%%%%%%
+\let\bbl@tempb\@empty
+\def\bbl@tempc#1/#2//#3//#4/#5\@@{%
+  \DeclareOption{#3}{}%
+  \count@\z@ % 0 = ini, 1 = ldf
+  \ifnum#2=\@m % if no \BabelDefinitionFile
+    % TODO provide=?, provide+=?, provide*=?
+  \else
+    \ifnum#1=\z@ % not main
+      \ifnum\bbl@iniflag>\@ne\else % if ø, provide
+        \ifcase#2\count@\@ne\else\ifcase\bbl@engine\count@\@ne\fi\fi
+      \fi
+    \else % 10 = main
+      \ifodd\bbl@iniflag\else % if provide=, provide*
+        \ifcase#2\count@\@ne\else\ifcase\bbl@engine\count@\@ne\fi\fi
+      \fi
+    \fi
+  \fi
+  \ifcase\count@
+    \bbl@exp{\\\bbl@add\\\bbl@tempb{%
+      \\\@nameuse{bbl@preini@#3}%
+      \\\bbl@ldfinit
+      \def\\\CurrentOption{#3}%
+      \\\babelprovide[@import=#4,\ifnum#1=\z@\else\bbl@opt@provide,main\fi]{#3}%
+      \\\bbl@afterldf}}%
+  \else
+    \bbl@add\bbl@tempb{%
+      \def\CurrentOption{#3}%
+      \let\localename\CurrentOption
+      \let\languagename\localename
+      \def\BabelIniTag{#4}%
+      \@nameuse{bbl@preldf@#3}%
+      \begingroup
+        \bbl@id@assign
+        \bbl@read@ini{\BabelIniTag}0%
+      \endgroup
+      \bbl@load@language{#5}}%
   \fi}
-%    \end{macrocode}
-%
-% And we are done, because all options for this pass has been declared.
-% Those already processed in the first pass are just ignored. There is
-% still room for last minute changes with a \LaTeX{} hook (not a
-% \Babel{} one).
-%
-% The options have to be processed in the order in which the user
-% specified them (but remember class options are processes before):
-%
-%    \begin{macrocode}
 \NewHook{babel/presets}
 \UseHook{babel/presets}
+% \show\bbl@toload
+\bbl@foreach{\bbl@toload}{%
+  % \message{^^J*******#1}%
+  \bbl@tempc#1\@@%
+}
+%
 \def\AfterBabelLanguage#1{%
   \bbl@ifsamestring\CurrentOption{#1}{\global\bbl@add\bbl@afterlang}{}}
+\bbl@tempb
 \DeclareOption*{}
-\ProcessOptions*
-%    \end{macrocode}
-%
-% This finished the second pass. Now the third one begins, which loads
-% the main language set with the key |main|. A warning is raised if the
-% main language is not the same as the last named one, or if the value
-% of the key |main| is not a language. With some options in |provide|,
-% the package |luatexbase| is loaded (and immediately used), and
-% therefore |\babelprovide| can’t go inside a |\DeclareOption|; this
-% explains why it’s executed directly, with a dummy declaration. Then
-% all languages have been loaded, so we deactivate
-% |\AfterBabelLanguage|.
-%
-%    \begin{macrocode}
-\bbl@trace{Option 'main'}
-\ifx\bbl@opt@main\@nnil
-  \edef\bbl@tempa{\bbl@tempf,\bbl@language@opts}
-  \let\bbl@tempc\@empty
-  \edef\bbl@templ{,\bbl@loaded,}
-  \edef\bbl@templ{\expandafter\strip@prefix\meaning\bbl@templ}
-  \bbl@for\bbl@tempb\bbl@tempa{%
-    \edef\bbl@tempd{,\bbl@tempb,}%
-    \edef\bbl@tempd{\expandafter\strip@prefix\meaning\bbl@tempd}%
-    \bbl@xin@{\bbl@tempd}{\bbl@templ}%
-    \ifin@\edef\bbl@tempc{\bbl@tempb}\fi}
-  \def\bbl@tempa#1,#2\@nnil{\def\bbl@tempb{#1}}
-  \expandafter\bbl@tempa\bbl@loaded,\@nnil
-  \ifx\bbl@tempb\bbl@tempc\else
-    \bbl@warning{%
-      Last declared language option is '\bbl@tempc',\\%
-      but the last processed one was '\bbl@tempb'.\\%
-      The main language can't be set as both a global\\%
-      and a package option. Use 'main=\bbl@tempc' as\\%
-      option. Reported}
-  \fi
-\else
-  \ifodd\bbl@iniflag  % case 1,3 (main is ini)
-    \bbl@ldfinit
-    \let\CurrentOption\bbl@opt@main
-    \bbl@exp{%  \bbl@opt@provide = empty if *
-       \\\babelprovide
-         [\bbl@opt@provide,@import,main]%  %%%%%
-         {\bbl@opt@main}}%
-    \bbl@afterldf
-    \DeclareOption{\bbl@opt@main}{}
-  \else % case 0,2 (main is ldf)
-    \ifx\bbl@loadmain\relax
-      \DeclareOption{\bbl@opt@main}{\bbl@load@language{\bbl@opt@main}}
-    \else
-      \DeclareOption{\bbl@opt@main}{\bbl@loadmain}
-    \fi
-    \ExecuteOptions{\bbl@opt@main}
-    \@namedef{ds@\bbl@opt@main}{}%
-  \fi
-  \DeclareOption*{}
-  \ProcessOptions*
-\fi
+\ProcessOptions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bbl@exp{%
   \\\AtBeginDocument{\\\bbl@usehooks@lang{/}{begindocument}{{}}}}%
 \def\AfterBabelLanguage{\bbl@error{late-after-babel}{}{}{}}

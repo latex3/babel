@@ -7,21 +7,13 @@
     {Just use babel as documented.}%
   \stop
 \fi
-% Check before it’s the ldf
-\begingroup
-  \makeatletter
-  \gdef\BabelGermanIniTag{de}%
-  \ifx\bbl@inidata\@undefined
-    \def\bbl@elt#1#2#3#4{%
-      \ifnum\csname l@#1\endcsname=\l@german
-        \in@{1901}{#3}%
-        \ifin@\gdef\BabelGermanIniTag{de-1901}\fi
-        \def\bbl@elt##1##2##3#4{}%
-      \fi}%
-    \bbl@languages
-  \fi
-\endgroup
-\BabelBeforeIni{\BabelGermanIniTag}{%
-  \BabelDefinitionFile{0}{german}{}%
+\BabelBeforeIni{de}{%
+  \BabelDefinitionFile{0}{german}{%
+    \PackageWarning{babel}{%
+      The name 'german' with the 'ldf' mechanism is\MessageBreak
+      currently assigned to the old 1901 variant of German.\MessageBreak
+      For modern post-1996 German, use the name 'ngerman'.\MessageBreak
+      Reported}%
+    \def\BabelIniTag{de-1901}}%
 }
 \endinput

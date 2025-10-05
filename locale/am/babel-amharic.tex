@@ -8,5 +8,14 @@
   \stop
 \fi
 \BabelBeforeIni{am}{%
+  \BabelDefinitionFile{1}{ethiop}{%
+    \PackageWarning{babel}{%
+      Redirecting to non-standard 'ldf' name.\MessageBreak
+      Requested: amharic\MessageBreak
+      Provided: ethiop\MessageBreak
+      Reported}%
+    \AddBabelHook[amharic]{babel-amharic}{languagename}{%
+      \def\languagename{amharic}\let\localename\languagename}}%
 }
+
 \endinput

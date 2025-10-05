@@ -7,30 +7,26 @@
     {Just use babel as documented.}%
   \stop
 \fi
-\BabelBeforeIni{grc}{%
+\BabelBeforeIni{el-polyton}{%
+  \PackageWarning{babel}{%
+    Name 'polutonikogreek' is discouraged.\MessageBreak
+    Use 'polytonicgreek' instead.\MessageBreak
+    Reported}%
   \BabelDefinitionFile{0}{greek}{%
     \PackageWarning{babel}{%
       Redirecting to non-standard 'ldf' name.\MessageBreak
-      Requested: ancientgreek\MessageBreak
-      Provided: greek.ancient\MessageBreak
+      Requested: polutonikogreek\MessageBreak
+      Provided: greek.polutoniko\MessageBreak
       Reported on}%
     \def\languagename{greek}%
-    \AtEndOfPackage{\languageattribute{greek}{ancient}}%
-    \AddBabelHook[ancientgreek]{babel-greek}{languagename}{%
+    \AtEndOfPackage{\languageattribute{greek}{polutoniko}}%
+    \AddBabelHook[polutoniko]{babel-greek}{languagename}{%
         \def\languagename{greek}}%
-    \def\BabelIniTag{grc}}%
+    \def\BabelIniTag{el-polyton}}%
 }
 
 \ifcase\bbl@engine\else
 
-  % Date with Greek (Ionian) numerals
-
-  \expandafter\addto\csname date\languagename\endcsname{%
-     \babel@save\BabelDatey
-     \def\BabelDatey#1{\greeknumeral{#1}}%
-     \babel@save\BabelDated
-     \def\BabelDated#1{\greeknumeral{#1}}}
-     
   % Numerals (Ionian)
 
   \def\BabelGreekNumeralMarkerEnd#1{#1ʹ}
@@ -48,7 +44,7 @@
        \greek@num@format#1#2#3#4#5#6#7#8\else
        \greek@invalid
     \fi}
-      
+
   \def\BabelGreekNumeralMyriads#1#2#3#4{%
     \ifnum#1#2=\z@
       \ifcase#3\or ͵ρ\or ͵σ\or ͵τ\or ͵υ\or ͵φ\or ͵χ\or ͵ψ\or ͵ω\or ͵ϡ\fi
@@ -56,7 +52,7 @@
     \else
       \greek@invalid
     \fi}
-    
+
   \def\greek@num@format#1#2#3#4#5#6#7#8{%
     \BabelGreekNumeralMarker{%
       \BabelGreekNumeralMyriads#1#2#3#4%
@@ -71,11 +67,10 @@
   \def\greek@invalid{%
     \bbl@error{Greek numeral too large (>999999)}%
       {Currently this is the limit.}}
-      
+
   \expandafter\addto\csname extras\languagename\endcsname{%
     \babel@save\greeknumeral
     \def\greeknumeral#1{\expandafter\greek@num@aux\number#1 876543210\@@}}    
-    
-\fi
 
+\fi
 \endinput

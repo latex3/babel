@@ -9,9 +9,18 @@
 \fi
 \BabelBeforeIni{el-polyton}{%
   \BabelDefinitionFile{0}{greek}{%
-    \AtEndOfPackage{\languageattribute{greek}{polutoniko}}}%
+    \PackageWarning{babel}{%
+      Redirecting to non-standard 'ldf' name.\MessageBreak
+      Requested: polytonicgreek\MessageBreak
+      Provided: greek.polytonic\MessageBreak
+      Reported on}%
+    \def\languagename{greek}%
+    \AtEndOfPackage{\languageattribute{greek}{polytonic}}%
+    \AddBabelHook[polytonicgreek]{babel-greek}{languagename}{%
+        \def\languagename{greek}}%
+    \def\BabelIniTag{el-polyton}}%
 }
-
+        
 \ifcase\bbl@engine\else
 
   % Numerals (Ionian)

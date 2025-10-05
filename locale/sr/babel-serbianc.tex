@@ -7,12 +7,15 @@
     {Just use babel as documented.}%
   \stop
 \fi
+\ifx\bbl@toload\@undefined   % Temporal
 \ifx\bbl@ensuring\@empty\else
   \PackageWarning{babel}%
     {The locale 'serbianc' is provided for compatibility\MessageBreak
      with ldf files. Use 'serbian' instead.\MessageBreak
      Reported}
 \fi
+\fi
 \BabelBeforeIni{sr}{%
+   \BabelDefinitionFile{0}{serbianc}{}
 }
 \endinput

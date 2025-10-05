@@ -1,6 +1,6 @@
-## Babel 25.13
+## Babel 25.13.100973
 
-2025-10-01
+**Development unstable version**
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -58,6 +58,11 @@ Bugs related to specific languages are best reported to their
 respective authors.
 
 ### Summary of latest changes
+
+#### 25.14 (dev)
+
+This release comes with a major change. Now provide=* is not necessary
+anymore, so that you can say, for example, \usepackage[marathi]{babel}.
 
 #### 25.13 (2025-10-01)
 
