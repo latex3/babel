@@ -38,7 +38,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/10/05 v25.13.100973
+  [2025/10/12 v25.13.101634
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -928,8 +928,10 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \leftskip2em\parindent0pt
 \tag[babel-dutch]{afrikaans}{}
 \tag{albanian}{}
+\tag{amharic}{}
+\note{Calls \textsf{ethiop}}
 \tag[arabi]{arabic}{}
-\note{Requires \textsf{arabi}.}
+\note{Calls \textsf{arabi}.}
 \tag{azerbaijani}{}
 \tag{basque}{}
 \tag{belarusian}{}
@@ -953,27 +955,31 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \tag{estonian}{}
 \tagmin{ethiop}{} %%%%%%
 \tag[arabi]{farsi}{}
-\note{Requires \textsf{arabi}.}
+\note{Calls \textsf{arabi}.}
 \tag{finnish}{}
 \tag{french}{}
 \subtagalt{acadian}{}
 \tag[babel-friulan]{friulian}{}
 \tag{galician}{}
 \tag{georgian}{}
-\note{Requires \textsf{geotex}.}
+\note{Calls \textsf{geotex}.}
 \tag{german}{}
 \note{This block refers to the old ortography. For the modern one, use
-the names in the block \textsf{ngerman}.}
+the names in the block \textsf{ngerman}. \textsf{swissgerman} refers to
+the language with tag \texttt{gsw}}
 \subtagalt{austrian}{}
-\subtagalt{swissgerman}{}
-\note{Swiss High German}
+% \subtagalt{swissgerman}{} %%%%%%%%
+% \note{Swiss High German}
 \tag{greek}{}
-% \subtagalt{polutonicogreek}{}
+\subtagalt{polytonicgreek}{}
+\note{Calls \textsf{greek.polytonic}}
+\subtagalt{ancientreek}{}
+\note{Calls \textsf{greek.ancient}}
 \subtagmin{ibycus}{}
 \subtagmin{bgreek}{}
 \tag{hebrew}{}
 \tag[devanagari]{hindi}{}
-\note{Requires \textsf{velthuis}.}
+\note{Calls \textsf{velthuis}.}
 \tag{hungarian}{}
 \subtag{magyar}{}
 \tag{icelandic}{}
@@ -1023,6 +1029,8 @@ the names in the block \textsf{ngerman}.}
 \tag{spanglish}{}
 \tag{spanish}{}
 \tag{swedish}{}
+\tag{swissgerman}{}
+\note{Swiss German, with tag \textsf{gsw}}
 \tag{thai}{}
 \subtagmin{thaicjk}{}
 \tag{turkish}{}
@@ -6176,8 +6184,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.13.100973>>
-%<<date=2025/10/05>>
+%<<version=25.13.101634>>
+%<<date=2025/10/12>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6788,6 +6796,10 @@ wouldn’t exist.
 \DeclareOption{provide=*}{\chardef\bbl@iniflag\@ne}    % main = 1
 \DeclareOption{provide+=*}{\chardef\bbl@iniflag\tw@}   % second = 2
 \DeclareOption{provide*=*}{\chardef\bbl@iniflag\thr@@} % second + main
+\chardef\bbl@ldfflag\z@
+\DeclareOption{provide=!}{\chardef\bbl@ldfflag\@ne}    % main = 1
+\DeclareOption{provide+=!}{\chardef\bbl@ldfflag\tw@}   % second = 2
+\DeclareOption{provide*=!}{\chardef\bbl@ldfflag\thr@@} % second + main
 % Don't use. Experimental.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
@@ -7832,7 +7844,7 @@ wouldn’t exist.
   \edef\bbl@tempa{#1}%
   \bbl@sreplace\bbl@tempa{name}{}%
   \bbl@warning{%
-    \@backslashchar#1name not set for '\languagename'. Please,\\%
+    \@backslashchar#1 not set for '\languagename'. Please,\\%
     define it after the language has been loaded\\%
     (typically in the preamble) with:\\%
     \string\setlocalecaption{\languagename}{\bbl@tempa}{..}\\%
@@ -10992,9 +11004,11 @@ wouldn’t exist.
     \ifnum#2=\m@ne % Just for the info
       \edef\languagename{tag \bbl@metalang}%
     \fi  
-    \bbl@info{Importing
+    \bbl@info{\ifnum#2=\m@ne Fetching locale name for tag \bbl@metalang
+              \else Importing
                 \ifcase#2font and identification \or basic \fi
-                 data for \languagename\\%
+                data for \languagename
+              \fi\\%
               from babel-#1.ini. Reported}%
     \ifnum#2<\@ne
       \global\let\bbl@inidata\@empty
@@ -13263,9 +13277,6 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 %%%%%%
-\def\bbl@toload{}
-\def\bbl@toload@last{}
-%%%%%%
 \def\BabelBeforeIni#1#2{%
   \def\bbl@tempa{\@m}% <- Default if no \BDefFile
   \let\bbl@tempb\@empty
@@ -13273,8 +13284,7 @@ wouldn’t exist.
   \edef\bbl@toload{%
     \ifx\bbl@toload\@empty\else\bbl@toload,\fi
     \bbl@toload@last}%
-  \edef\bbl@toload@last{%
-    0/\bbl@tempa//\CurrentOption//#1/\bbl@tempb}}
+  \edef\bbl@toload@last{0/\bbl@tempa//\CurrentOption//#1/\bbl@tempb}}
 %%%%%%
 \def\BabelDefinitionFile#1#2#3{%
   \def\bbl@tempa{#1}\def\bbl@tempb{#2}%
@@ -13288,66 +13298,85 @@ wouldn’t exist.
     \edef\bbl@tempf{\bbl@tempf\zap@space#1 \@empty,}%
   \fi}
 %%%%%% 
-\let\bbl@unkopt\relax  %% <- Ugly
+\let\bbl@toload\@empty
+\let\bbl@toload@last\@empty
+\let\bbl@unkopt\@gobble  %% <- Ugly
 \edef\bbl@tempc{%
-  \ifx\bbl@opt@main\@nnil\else\bbl@opt@main,\fi\bbl@tempf,@@,\bbl@language@opts}
+ \bbl@tempf,@@,\bbl@language@opts
+ \ifx\bbl@opt@main\@nnil\else,\bbl@opt@main\fi}
+% \show\bbl@tempc
 \bbl@foreach\bbl@tempc{%
   \in@{@@}{#1}%  <- Ugly
   \ifin@
-    \def\bbl@unkopt{%
-      \let\bbl@tempa\@empty
-      \bbl@error{unknown-package-option}{}{}{}%
-      \edef\bbl@toload@last{0/0//\CurrentOption//und/}}%
+    \def\bbl@unkopt##1{\DeclareOption{##1}{\bbl@error{unknown-package-option}{}{}{}}}%
   \else
-    \bbl@xin@{//#1//}{\bbl@toload,\bbl@toload@last}%
+    \def\CurrentOption{#1}%
+    \bbl@xin@{//#1//}{\bbl@toload@last}% Collapse consecutive
     \ifin@\else
-      \def\CurrentOption{#1}%
-      %% todo %% Me gustaría que solo fuera con XXenglish
-      \lowercase{\InputIfFileExists{babel-#1.tex}}{}{%
-        \IfFileExists{#1.ldf}%
-          {\edef\bbl@toload{%
-             \ifx\bbl@toload\@empty\else\bbl@toload,\fi
-             \bbl@toload@last}%
-           \edef\bbl@toload@last{0/0//\CurrentOption//und/#1}}%
-          {\bbl@unkopt}}%
-    \fi
+    \lowercase{\InputIfFileExists{babel-#1.tex}}{}{%
+      \IfFileExists{#1.ldf}%
+        {\edef\bbl@toload{%
+           \ifx\bbl@toload\@empty\else\bbl@toload,\fi
+           \bbl@toload@last}%
+         \edef\bbl@toload@last{0/0//\CurrentOption//und/#1}}%
+        {\bbl@unkopt{#1}}}%
+     \fi
   \fi}
 %%%%%%
-\ifx\bbl@opt@main\@nnil\else
-  \edef\bbl@toload{%
-    \ifx\bbl@toload\@empty\else\bbl@toload,\fi\bbl@toload@last}%  
-  \@nameuse{clist_pop:NN}\bbl@toload\bbl@toload@last
-\fi
-%
-\edef\bbl@tempa{\bbl@toload\bbl@toload@last}
-% \show\bbl@tempa
-\ifx\bbl@tempa\@empty
-  \def\bbl@toload{0/0//nil//und/nil}
+% \show\bbl@toload
+% \show\bbl@toload@last
+\ifx\bbl@opt@main\@nnil
+  \ifx\bbl@toload@last\@empty
+    \def\bbl@toload@last{0/0//nil//und/nil}
+  \fi
 \else
-  \edef\bbl@toload{\bbl@toload,1\bbl@toload@last}
+  \let\bbl@tempc\@empty
+  \bbl@foreach\bbl@toload{%
+    \bbl@xin@{//\bbl@opt@main//}{#1}%
+    \ifin@\else
+      \bbl@add@list\bbl@tempc{#1}%
+    \fi}
+  \let\bbl@toload\bbl@tempc
 \fi
+\edef\bbl@toload{\bbl@toload,1\bbl@toload@last}
 %%%%%%
 \let\bbl@tempb\@empty
-\def\bbl@tempc#1/#2//#3//#4/#5\@@{%
-  \DeclareOption{#3}{}%
+\def\bbl@tempc#1/#2//#3//#4/#5\@@{% 
+  % \message{^^J*******#1/#2// #3 //#4/#5}%
   \count@\z@ % 0 = ini, 1 = ldf
   \ifnum#2=\@m % if no \BabelDefinitionFile
-    % TODO provide=?, provide+=?, provide*=?
+    \ifnum#1=\z@ % not main
+      \ifnum\bbl@ldfflag>\@ne % if provide+=!, provide*=!
+        \bbl@tempc 0/0//#3//#4/#3\@@
+      \else
+        \bbl@tempd{#1}{#2}{#3}{#4}{#5}%
+      \fi
+    \else % 10 = main
+      \ifodd\bbl@ldfflag % if provide=!, provide*=!
+        \bbl@tempc 10/0//#3//#4/#3\@@
+      \else
+        \bbl@tempd{#1}{#2}{#3}{#4}{#5}%
+      \fi
+    \fi
   \else
     \ifnum#1=\z@ % not main
       \ifnum\bbl@iniflag>\@ne\else % if ø, provide
         \ifcase#2\count@\@ne\else\ifcase\bbl@engine\count@\@ne\fi\fi
       \fi
     \else % 10 = main
-      \ifodd\bbl@iniflag\else % if provide=, provide*
+      \ifodd\bbl@iniflag\else % if provide+, provide*
         \ifcase#2\count@\@ne\else\ifcase\bbl@engine\count@\@ne\fi\fi
       \fi
     \fi
-  \fi
+    \bbl@tempd{#1}{#2}{#3}{#4}{#5}%
+  \fi}
+% 
+\def\bbl@tempd#1#2#3#4#5{%
+  \DeclareOption{#3}{}%
   \ifcase\count@
     \bbl@exp{\\\bbl@add\\\bbl@tempb{%
       \\\@nameuse{bbl@preini@#3}%
-      \\\bbl@ldfinit
+      \\\bbl@ldfinit   %% todo: prevent a second load
       \def\\\CurrentOption{#3}%
       \\\babelprovide[@import=#4,\ifnum#1=\z@\else\bbl@opt@provide,main\fi]{#3}%
       \\\bbl@afterldf}}%
@@ -13367,10 +13396,7 @@ wouldn’t exist.
 \NewHook{babel/presets}
 \UseHook{babel/presets}
 % \show\bbl@toload
-\bbl@foreach{\bbl@toload}{%
-  % \message{^^J*******#1}%
-  \bbl@tempc#1\@@%
-}
+\bbl@foreach\bbl@toload{\bbl@tempc#1\@@}
 %
 \def\AfterBabelLanguage#1{%
   \bbl@ifsamestring\CurrentOption{#1}{\global\bbl@add\bbl@afterlang}{}}
@@ -13493,9 +13519,10 @@ wouldn’t exist.
     I will ignore your instruction}%
    {You may proceed, but expect unexpected results}
 \bbl@errmessage{not-a-shorthand-b}
-   {I can't switch '\string#2' on or off--not a shorthand}%
-   {This character is not a shorthand. Maybe you made\\%
-    a typing mistake? I will ignore your instruction.}
+   {I can't switch '\string#2' on or off--not a shorthand\\%
+    This character is not a shorthand. Maybe you made\\%
+    a typing mistake?}%
+   {I will ignore your instruction.}
 \bbl@errmessage{unknown-attribute}
    {The attribute #2 is unknown for language #1.}%
    {Your command will be ignored, type <return> to proceed}
@@ -13557,21 +13584,29 @@ wouldn’t exist.
 \bbl@errmessage{bidi-only-lua}
    {The bidi method 'basic' is available only in\\%
     luatex. I'll continue with 'bidi=default', so\\%
-    expect wrong results}%
+    expect wrong results. With xetex, try bidi=bidi}%
    {See the manual for further details.}
 \bbl@errmessage{multiple-bidi}
    {Multiple bidi settings inside a group}%
    {I'll insert a new group, but expect wrong results.}
 \bbl@errmessage{unknown-package-option}
-   {Unknown option '\CurrentOption'. Either you misspelled it\\%
-    or the language definition file \CurrentOption.ldf\\%
-    was not found%
-    \bbl@tempa}
+   {Unknown option '\CurrentOption'.\\%
+    Suggested actions:\\%
+    * Make sure you haven’t misspelled it\\%
+    * Check in the babel manual that it's supported\\%
+    * If supported and it's a language, you may\\%
+    \space\space  need in some distributions a separate\\%
+    \space\space  installation\\%
+    * If installed, check there isn’t an old\\%
+    \space\space version of the required files in your system}
    {Valid options are, among others: shorthands=, KeepShorthandsActive,\\%
     activeacute, activegrave, noconfigs, safe=, main=, math=\\%
     headfoot=, strings=, config=, hyphenmap=, or a language name.}
 \bbl@errmessage{config-not-found}
-   {Local config file '\bbl@opt@config.cfg' not found}%
+   {Local config file '\bbl@opt@config.cfg' not found.\\%
+    Suggested actions:\\%
+    * Make sure you haven’t misspelled it in config=\\%
+    * Check it exists and it’s in the correct path}%
    {Perhaps you misspelled it.}
 \bbl@errmessage{late-after-babel}
    {Too late for \string\AfterBabelLanguage}%
