@@ -38,7 +38,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/10/12 v25.13.101634
+  [2025/10/13 v25.13.101767
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6184,8 +6184,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.13.101634>>
-%<<date=2025/10/12>>
+%<<version=25.13.101767>>
+%<<date=2025/10/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10775,6 +10775,7 @@ wouldn’t exist.
       {\bbl@ifunset{bbl@rgthm@#1}{3}{\bbl@cs{rgthm@#1}}}}}%
   % == hyphenrules (also in renew) == 
   \bbl@provide@hyphens{#1}%
+  % == main ==
   \ifx\bbl@KVP@main\@nnil\else
      \expandafter\main@language\expandafter{#1}%
   \fi}
@@ -10794,6 +10795,10 @@ wouldn’t exist.
   % == hyphenrules (also in new) ==
   \ifx\bbl@lbkflag\@empty
     \bbl@provide@hyphens{#1}%
+  \fi
+  % == main ==
+  \ifx\bbl@KVP@main\@nnil\else
+     \expandafter\main@language\expandafter{#1}%
   \fi}
 %    \end{macrocode}
 %
@@ -13246,13 +13251,19 @@ wouldn’t exist.
 \ifx\bbl@opt@config\@nnil
   \@ifpackagewith{babel}{noconfigs}{}%
     {\InputIfFileExists{bblopts.cfg}%
-      {\typeout{*************************************^^J%
+      {\bbl@warning{Configuration files are deprecated, as\\%
+                    they can break document portability.\\%
+                    Reported}%
+       \typeout{*************************************^^J%
                * Local config file bblopts.cfg used^^J%
                *}}%
       {}}%
 \else
   \InputIfFileExists{\bbl@opt@config.cfg}%
-    {\typeout{*************************************^^J%
+    {\bbl@warning{Configuration files are deprecated, as\\%
+                  they can break document portability.\\%
+                  Reported}%
+     \typeout{*************************************^^J%
              * Local config file \bbl@opt@config.cfg used^^J%
              *}}%
     {\bbl@error{config-not-found}{}{}{}}%
@@ -13327,7 +13338,7 @@ wouldn’t exist.
 % \show\bbl@toload@last
 \ifx\bbl@opt@main\@nnil
   \ifx\bbl@toload@last\@empty
-    \def\bbl@toload@last{0/0//nil//und/nil}
+    \def\bbl@toload@last{0/0//nil//und-x-nil/nil}
   \fi
 \else
   \let\bbl@tempc\@empty
