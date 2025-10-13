@@ -1,19 +1,19 @@
 # What's new in babel 25.14
 
-** Development. Very tentative draft.**
+**Development. Very tentative draft.**
 
 **Potentially breaking change.** Extensive tests are being
   carried out.
   
-Everything is liable to change! 
+Everything is liable to change!
 
-Due to be released in October, 20.
+Due to be released (hopefully) in October, 20.
 
 The following notes refer to the traditional `ldf` mechanism (which is
 not necessarily ‘old’).
 
-Deprecated names (`bahasai` and a few more), will show a deprecation
-warning. The extra info in `ini` files is not loaded [very likely].
+Deprecated names (`bahasai` and a few more) will show a warning. The
+extra info in `ini` files is not loaded [very likely].
 
 ## Special cases and known issues with `ldf` styles
 
@@ -68,11 +68,55 @@ Pending of sorting out.
 
 ### farsi
 
-pdf: Error con `\MakeUppercase` 
+pdftex: Error with `\MakeUppercase` 
 
 ### piedmontese
 
-Error con `"a`
+Error with `"a`
+
+## Fixes and other changes
+
+### Determining the main language
+
+There was long-standing bug which has remained unnoticed for
+decades. The documented behaviour is the last declared language is
+set as the main one. That’s true with:
+```
+\usepackage[langA,langB,langA]{babel}
+```
+But it’s not true with the following, which oddly set `langB` as the
+main language:
+```
+\documentclass[langA,langB,langA]{article}
+```
+It was partly caught by `babel`, but for another situation (as a
+warning in the log reveals), namely, a language declared as both class and
+package option, whose behavior was not well-defined (but preserved for
+compatibility). The main purpose of the `main` key was to overcome this
+problem.
+
+Note languages as class options options doesn’t mean ‘set it as main
+language’, but rather ‘pass it as option to all packages’. Admittedly,
+this can be counter-intuitive, and after all in monolingual documents
+it’s the main language, too.
+
+After more than 10 years showing a warning, it’s time to normalize the
+behavior, and now the very last language (considering all of them in
+class and package options, in this order) is the main language. What
+`main` does is just to move it at the end.
+
+### Other fixes
+
+Other fixes: 352, 354, 356.
+
+The option `main` was ignored after the first `\babelprovide` for a
+certain language. This could also solve #351.
+
+### Config files
+
+They are deprecated. They can break document portability there
+are better ways to customize the behavior of languages (for example,
+hooks and packages).
 
 
 
