@@ -38,7 +38,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/10/13 v25.13.101767
+  [2025/10/17 v25.13.102165
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -953,7 +953,8 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \subtag{newzealand}{}
 \tag{esperanto}{}
 \tag{estonian}{}
-\tagmin{ethiop}{} %%%%%%
+\tagmin{ethiop}{}
+\note{See \textsf{amharic}.}
 \tag[arabi]{farsi}{}
 \note{Calls \textsf{arabi}.}
 \tag{finnish}{}
@@ -2432,11 +2433,16 @@ are redefined.
 \Describe{noconfigs}{} Global and language default config files are
 not loaded, so you can make sure your document is not spoilt by an
 unexpected \texttt{.cfg} file. However, if the key |config| is set,
-this file is loaded.
+this file is loaded. 
 
 \Describe{config=}{\meta{file}} Load \meta{file}\texttt{.cfg} instead
 of the default config file |bblopts.cfg| (forced even with
-|noconfigs|).
+|noconfigs|). 
+
+\begin{warning}
+  \New{25.14} Configuration files are deprecated, as they can break
+  document portability.
+\end{warning}
 
 \Describe{showlanguages}{} Prints to the log the list of languages
 loaded when the format was created: number (remember dialects can
@@ -6184,8 +6190,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.13.101767>>
-%<<date=2025/10/13>>
+%<<version=25.13.102165>>
+%<<date=2025/10/17>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13275,16 +13281,22 @@ wouldn’t exist.
 % explicitly. So, package options not yet taken into account and stored
 % in |bbl@language@opts| are assumed to be languages. If not declared
 % above, the names of the option and the file are the same. We first
-% pre-process the class and package options to determine the main
-% language, which is processed in the third ‘main’ pass,
-% \textit{except} if all files are \texttt{ldf} \textit{and} there is
-% no |main| key. In the latter case (|\bbl@opt@main| is still
-% |\@nnil|), the traditional way to set the main language is kept — the
-% last loaded is the main language.
+% pre-process the class and package options to determine the available
+% locales, and which version (\texttt{ldf} or \texttt{ini} will be
+% loaded. This is done by first loading the corresponding
+% \texttt{babel-}\m{name}\texttt{.tex} file.
 %
-% For efficiency, first preprocess the class options to remove those
-% with |=|, which are becoming increasingly frequent (no language
-% should contain this character).
+% The second argument of |\BabelBeforeIni| may content a
+% |\BabelDefinitionFile| which defines |\bbl@tempa| and |\bbl@tempb|
+% and saves the third argument for the moment of the actual loading. If
+% there is no |\BabelDefinitionFile| the last element is usually empty,
+% and the \texttt{ini} file is loaded. The values are used to build a
+% list in the form ‘main-or-not’ |/| ‘ldf-or-ldfìni-flag’ |//|
+% ‘option-name’ |//| ‘bcp-tag’ |/| ‘ldf-name-or-none’. The
+% ‘main-or-not’ element is \verb|0| by default and set to \verb|10|
+% later if necessary (by prepending \verb|1|). The ‘bcp-tag’ is stored
+% here so that the corresponding \textsf{ini} file can be be loaded
+% directly (with |@import|).
 %
 %    \begin{macrocode}
 %%%%%%
@@ -13296,30 +13308,47 @@ wouldn’t exist.
     \ifx\bbl@toload\@empty\else\bbl@toload,\fi
     \bbl@toload@last}%
   \edef\bbl@toload@last{0/\bbl@tempa//\CurrentOption//#1/\bbl@tempb}}
-%%%%%%
 \def\BabelDefinitionFile#1#2#3{%
   \def\bbl@tempa{#1}\def\bbl@tempb{#2}%
   \@namedef{bbl@preldf@\CurrentOption}{#3}%
-  \endinput}%
-%%%%%%
+  \endinput}%  
+%    \end{macrocode}
+%
+% For efficiency, first preprocess the class options to remove those
+% with |=|, which are becoming increasingly frequent (no language
+% should contain this character).
+%
+%    \begin{macrocode}
 \def\bbl@tempf{,}
 \bbl@foreach\@raw@classoptionslist{%
   \in@{=}{#1}%
   \ifin@\else
     \edef\bbl@tempf{\bbl@tempf\zap@space#1 \@empty,}%
   \fi}
-%%%%%% 
+%    \end{macrocode}
+%
+% Store the class/package options in a list. If there is an explicit
+% \texttt{main}, it’s placed as the last option. Then loop it to read
+% the \texttt{tex} files, which can have a |\BabelDefinitionFile|. If
+% there is no \texttt{tex} file, we attempt loading the \textsf{ldf}
+% for the option name; if it fails, an error is raised. Note the option
+% name is surrounded by |//...//|. Class and package options are
+% separated with \texttt{@@}, because errors and info are dealt with in
+% different ways. Consecutive identical languages count as one.
+%
+%    \begin{macrocode}
 \let\bbl@toload\@empty
 \let\bbl@toload@last\@empty
 \let\bbl@unkopt\@gobble  %% <- Ugly
 \edef\bbl@tempc{%
  \bbl@tempf,@@,\bbl@language@opts
  \ifx\bbl@opt@main\@nnil\else,\bbl@opt@main\fi}
-% \show\bbl@tempc
+%
 \bbl@foreach\bbl@tempc{%
   \in@{@@}{#1}%  <- Ugly
   \ifin@
-    \def\bbl@unkopt##1{\DeclareOption{##1}{\bbl@error{unknown-package-option}{}{}{}}}%
+    \def\bbl@unkopt##1{%
+      \DeclareOption{##1}{\bbl@error{unknown-package-option}{}{}{}}}%
   \else
     \def\CurrentOption{#1}%
     \bbl@xin@{//#1//}{\bbl@toload@last}% Collapse consecutive
@@ -13333,12 +13362,21 @@ wouldn’t exist.
         {\bbl@unkopt{#1}}}%
      \fi
   \fi}
-%%%%%%
-% \show\bbl@toload
-% \show\bbl@toload@last
+%    \end{macrocode}
+%
+% We have to determine (1) if no language has be loaded (in which case
+% we fallback to ‘nil’, with a special tag), and (2) the main language.
+% With an explicit ‘main’ language, remove repeated elements.
+% The number \texttt{1} flags it as the main language (relevant in
+% \textit{ini} locales), because with \texttt{0} becomes \texttt{10}.
+%
+%    \begin{macrocode}
 \ifx\bbl@opt@main\@nnil
   \ifx\bbl@toload@last\@empty
     \def\bbl@toload@last{0/0//nil//und-x-nil/nil}
+    \bbl@info{%
+      You haven't specified a language as a class or package\\%
+      option. I'll load 'nil'. Reported}
   \fi
 \else
   \let\bbl@tempc\@empty
@@ -13350,23 +13388,28 @@ wouldn’t exist.
   \let\bbl@toload\bbl@tempc
 \fi
 \edef\bbl@toload{\bbl@toload,1\bbl@toload@last}
-%%%%%%
+%    \end{macrocode}
+%
+% Finally, load the `ini` file or the pair `ini`/`ldf` file. \Babel{}
+% resorts to its own mechanism, not the default one based on
+% |\ProcessOptions| (which is still present to make some internal
+% clean-up). First, handle |provide=!| and friends (with a recursive
+% call if they are present), and then |provide=*| and friend. |\count@|
+% is used as flag: 0 if ‘ini’, 1 if ‘ldf’.
+
+%    \begin{macrocode}
 \let\bbl@tempb\@empty
 \def\bbl@tempc#1/#2//#3//#4/#5\@@{% 
   % \message{^^J*******#1/#2// #3 //#4/#5}%
-  \count@\z@ % 0 = ini, 1 = ldf
+  \count@\z@
   \ifnum#2=\@m % if no \BabelDefinitionFile
-    \ifnum#1=\z@ % not main
-      \ifnum\bbl@ldfflag>\@ne % if provide+=!, provide*=!
-        \bbl@tempc 0/0//#3//#4/#3\@@
-      \else
-        \bbl@tempd{#1}{#2}{#3}{#4}{#5}%
+    \ifnum#1=\z@ % not main. -- % if provide+=!, provide*=!
+      \ifnum\bbl@ldfflag>\@ne\bbl@tempc 0/0//#3//#4/#3\@@ 
+      \else\bbl@tempd{#1}{#2}{#3}{#4}{#5}%   
       \fi
-    \else % 10 = main
-      \ifodd\bbl@ldfflag % if provide=!, provide*=!
-        \bbl@tempc 10/0//#3//#4/#3\@@
-      \else
-        \bbl@tempd{#1}{#2}{#3}{#4}{#5}%
+    \else % 10 = main --  % if provide=!, provide*=!
+      \ifodd\bbl@ldfflag\bbl@tempc 10/0//#3//#4/#3\@@ 
+      \else\bbl@tempd{#1}{#2}{#3}{#4}{#5}%  
       \fi
     \fi
   \else
@@ -13381,7 +13424,12 @@ wouldn’t exist.
     \fi
     \bbl@tempd{#1}{#2}{#3}{#4}{#5}%
   \fi}
-% 
+%    \end{macrocode}
+%
+% Based on the value of |\count@|, do the actual loading. If ‘ldf’,
+% we load the basic info from the ‘ini’ file before. 
+%
+%    \begin{macrocode}
 \def\bbl@tempd#1#2#3#4#5{%
   \DeclareOption{#3}{}%
   \ifcase\count@
@@ -13406,7 +13454,6 @@ wouldn’t exist.
   \fi}
 \NewHook{babel/presets}
 \UseHook{babel/presets}
-% \show\bbl@toload
 \bbl@foreach\bbl@toload{\bbl@tempc#1\@@}
 %
 \def\AfterBabelLanguage#1{%
@@ -13418,19 +13465,6 @@ wouldn’t exist.
 \bbl@exp{%
   \\\AtBeginDocument{\\\bbl@usehooks@lang{/}{begindocument}{{}}}}%
 \def\AfterBabelLanguage{\bbl@error{late-after-babel}{}{}{}}
-%    \end{macrocode}
-%
-% In order to catch the case where the user didn’t specify a
-% language we check whether |\bbl@main@language|, has become
-% defined. If not, the |nil| language is loaded.
-%
-%    \begin{macrocode}
-\ifx\bbl@main@language\@undefined
-  \bbl@info{%
-    You haven't specified a language as a class or package\\%
-    option. I'll load 'nil'. Reported}
-    \bbl@load@language{nil}
-\fi
 %</package>
 %    \end{macrocode}
 %
@@ -13519,6 +13553,12 @@ wouldn’t exist.
     Perhaps you misspelled it or your installation\\%
     is not complete}%
    {Your command will be ignored, type <return> to proceed}
+\bbl@errmessage{invalid-ini-name}
+     {'#1' not valid with the 'ini' mechanism.\MessageBreak
+      I think you want '#2' instead.\MessageBreak
+      I’ll stop immediately}%
+     {See the babel manual for the available\MessageBreak
+      locales with 'provide'}
 \bbl@errmessage{shorthand-is-off}
    {I can't declare a shorthand turned off (\string#2)}
    {Sorry, but you can't use shorthands which have been\\%
