@@ -2,8 +2,20 @@
 
 *Draft*
 
+The `babel` multilingual framework for LaTeX employs specific
+conventions for naming and referencing locale files (both the
+traditional `ldf` mechanism and the modern `ini` one), prioritizing
+**compatibility with established standards**
+([IANA/BCP 47
+registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry),
+[Unicode
+CLDR](https://www.unicode.org/cldr/charts/47/summary/en.html#f3d4397b739b287))
+across the web and international data repositories. `Babel` adheres to
+those standards for locale classification, regardless of
+possible debates about their linguistic suitability.
+
 For the naming of the locales at the user level, the following
-conventions are used. 
+conventions are used.
 
 Languages, and therefore the corresponding files, are named with the
 English name, lowercased and without spaces: `northernkurdish`.
@@ -34,6 +46,10 @@ A few locales with a region or a script have in the CLDR a more precise
 name. For example, `ro-MD` is “Moldavian”. They will be normalized in
 `babel` in the next few releases.
 
+Some others has compound names like `American English` or `Norwegian
+Nynorks`. In these cases, they might be shortened if the result is
+clear.
+
 When there are ‘short’ additional names (without hyphens), prefer
 ‘plain’ demonyms (even if vernacular) over composed names (eg,
 `british` better than `UKenglish`). This reflects the evolution of the
@@ -54,7 +70,7 @@ The following names are deprecated (use the name after the arrow):
 * `germanb` → `german`, `ngerman` (see below)
 * `lsorbian` → `lowersorbian`
 * `portuges` [*sic*] → `portuguese`
-* `samin` → `northernsami` 
+* `samin` → `northernsami`
 * `ukraineb` → `ukrainian`
 * `usorbian` → `uppersorbian`
 * `vietnam` → `vietnamese`
@@ -64,4 +80,6 @@ Therefore, they are not included in `name.babel`. Some anomalous names
 (related to `german` and `serbian`) should be fixed in the future, but
 how to deal with them is under study.
 
+Variants in the CLDR are uppercased, but in the BCP 47 registry they
+are lowercases (eg, `el-polyton`). We stick to the BCP 47 format.
 
