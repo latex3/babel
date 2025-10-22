@@ -8,6 +8,9 @@
   \stop
 \fi
 \BabelBeforeIni{gd}{%
+  \expandafter\def\csname bbl@preini@scottish\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{scottish}{scottishgaelic}{}%
+    }%
   \PackageWarning{babel}{%
     Name 'scottish' is discouraged.\MessageBreak
     Prefer 'scottishgaelic' instead.\MessageBreak

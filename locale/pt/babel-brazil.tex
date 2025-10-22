@@ -8,6 +8,9 @@
   \stop
 \fi
 \BabelBeforeIni{pt-BR}{%
+  \expandafter\def\csname bbl@preini@brazil\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{brazil}{brazilian}{}%
+    }%
   \PackageWarning{babel}{%
     Name 'brazil' is deprecated.\MessageBreak
     Use 'brazilian' instead.\MessageBreak

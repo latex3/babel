@@ -6,6 +6,10 @@
   \stop
 \fi
 \BabelBeforeIni{la-x-ecclesia}{%
+  \expandafter\def\csname bbl@preini@ecclesiasticlatin\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}%
+      {ecclesiasticlatin}{ecclesiasticallatin}{}%
+    }%
   \PackageWarning{babel}{%
     Name 'ecclesiasticlatin' is deprecated.\MessageBreak
     Use 'ecclesiasticallatin' instead.\MessageBreak

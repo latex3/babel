@@ -9,7 +9,7 @@
 \fi
 \BabelBeforeIni{el-polyton}{%
   \PackageWarning{babel}{%
-    Name 'polutonikogreek' is discouraged.\MessageBreak
+    Name 'polutonikogreek' is deprecated.\MessageBreak
     Use 'polytonicgreek' instead.\MessageBreak
     Reported}%
   \BabelDefinitionFile{0}{greek}{%
@@ -21,7 +21,7 @@
     \def\languagename{greek}%
     \AtEndOfPackage{\languageattribute{greek}{polutoniko}}%
     \AddBabelHook[polutoniko]{babel-greek}{languagename}{%
-        \def\languagename{greek}}%
+      \def\languagename{greek}}%
     \def\BabelIniTag{el-polyton}}%
 }
 

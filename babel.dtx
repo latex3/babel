@@ -38,7 +38,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/10/17 v25.13.102165
+  [2025/10/22 v25.14
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -526,7 +526,8 @@ _\babelfont{rm}{DejaVu Serif}_
   |\author| and other elements printed by |\maketitle| after
   |\begin{document}|, mainly because of shorthands, it is advisable to
   keep them in the preamble. Currently there is no real need to use
-  shorthands in those macros.
+  shorthands in those macros (and if you need them, you can use
+  |\babelshorthand|).
 \end{note}
 
 \begin{note}
@@ -537,8 +538,6 @@ _\babelfont{rm}{DejaVu Serif}_
 \end{verbatim}
 This is not currently done by \babel{} and you must set it by hand.
 \end{note}
-
-
 
 \begin{warning}
   In the preamble, \textit{no} language has been selected, except
@@ -615,9 +614,16 @@ directly a language style}
 
 \subsection{Monolingual documents: the ‘modern’ way}
 
+\begin{warning}
+  \New{25.14} Languages not supported with the \texttt{ldf} mechanism
+  are new loaded without \texttt{provide=*}. This manual has not been
+  fully updated yet.
+\end{warning}
+
 When, for whatever reason, the ‘classical’ way with the |ldf| is not
 suitable for the needs of a document or a document system, you have to
-resort to a different mechanism, which is activated with the package
+resort to a different mechanism, which is activated automatically if
+the language is not supported by the ‘traditional’ way or with the package
 option |provide=*| (in monolingual documents).
 
 \begin{example}
@@ -663,7 +669,7 @@ And with a global option:
 For a text in Chinese, you can write in the preamble:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\usepackage[_chinese, provide=*_]{babel}
+\usepackage[_chinese_]{babel}
 _\babelfont{rm}{FandolSong}_
 \end{verbatim}
 The skip between characters is 0 pt plus .1 pt, which can be modified
@@ -820,7 +826,7 @@ Vietnamese: \prefacename, \alsoname, \today.
 \begin{note}
   Documents with several input encodings are not frequent, but
   sometimes are useful. You can set different encodings for different
-  languages as the following example shows:
+  languages as the following example shows (\pdftex):
 \begin{verbatim}
 \addto\extrasfrench{\inputencoding{latin1}}
 \addto\extrasrussian{\inputencoding{koi8-r}}
@@ -833,11 +839,12 @@ If lazy loading is not enough for your purposes, you can still tell
 which languages should be loaded as either class or package options.
 You can combine the ‘classical’ and the ‘modern’ ways with three
 options to set which method you want, which cover the most typical
-cases:
+cases [to be revised; a new ‘value’ \texttt{!} forces the \texttt{ldf}
+mode]:
 \begin{itemize}
 \item |provide=*| is the option explained above for monolingual
   documents. If there are more languages, it applies only to the main
-  language, while the rest will be loaded in the ‘classical’ way.
+  language, while the rest will be loaded in the ‘classical’ way..
 \item |provide+=*| loads the main language in the ‘classical’ way,
   and the rest in the ‘modern’ one.
 \item |provide*=*| is the same for all languages, i.e., main and
@@ -853,24 +860,22 @@ need their shorthands. The font is Norasi, which covers the three
 languages:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\usepackage[dutch,ngerman,thai,_provide=*_]{babel}
+\usepackage[dutch,ngerman,_thai_]{babel}
 \babelfont{rm}{Norasi}
 \end{verbatim}
 This will load |dutch| and |ngerman| in the classical |ldf| mode, but
 |thai| in the modern |ini| mode. Other options are:
 \begin{verbatim}
-  \usepackage[dutch,ngerman,thai]{babel}
+  \usepackage[dutch,ngerman,thai,_provide=!_]{babel}
 \end{verbatim}
-which will use the classical mode for in languages (as decribed in the
-previous section, but note |thai.ldf| is not supported in Unicode
-engines), and:
+which will use the classical mode for in languages (as described in the
+previous section; \texttt{provide=!} forces the \texttt{ldf} file, but
+note |thai.ldf| is not supported in Unicode engines), and:
 \begin{verbatim}
   \usepackage[dutch,german,thai,_provide*=*_]{babel}
 \end{verbatim}
 which will use the modern mode in all languages (note the correct name
-here is |german|. (The option
-|\usepackage||[dutch,ngerman,thai,provide+=*]||{babel}| doesn’t make
-much sense in this case.)
+here is |german|). 
 \end{example}
 
 \subsection{Languages supported by \babel{} in the ‘classical’ mode}
@@ -1771,9 +1776,7 @@ Mono} \fi}
 
 \usepackage[swedish, bidi=default]{babel}
 
-\babelprovide[import]{hebrew}
-
-_\babelfont{rm}{FreeSerif}_
+_\babelfont{rm}{NewComputerModern10}_
 
 \begin{document}
 
@@ -3290,7 +3293,7 @@ alternative to |justification=unhyphenated|.
   Polytonic Greek but with some sections in Italian. Then, the
   first attempt should be:
 \begin{verbatim}
-\usepackage[italian, greek.polutoniko]{babel}
+\usepackage[italian, greek.polytonic]{babel}
 \end{verbatim}
   But if, say, accents in Greek are not shown correctly, you can try
 \begin{verbatim}
@@ -3911,7 +3914,7 @@ check them, as they may change:\footnote{Thanks to Enrico Gregorio.}
 \item[Estonian] |" ~|
 \item[French] (all varieties) |: ; ? !|
 \item[Galician] |" . ' ~ < >|
-\item[Greek] (ancient, polutoniko, only 8-bit \TeX) |~|, (optional, see
+\item[Greek] (ancient, polytonic, only 8-bit \TeX) |~|, (optional, see
 the manual for Greek) |;|
 \item[Hungarian] |`|
 \item[Kurmanji] |^|
@@ -4012,8 +4015,9 @@ to avoid inconsistencies in, for example, page numbering; note as
 well dates do not rely on |\arabic|.)
 
 For example:
+\setengine{luatex/xetex}
 \begin{verbatim}
-\usepackage[telugu, provide=*]{babel}
+\usepackage[telugu]{babel}
   % Or also, if you want, with:
   % provide={ maparabic }
 \babelfont{rm}{Gautami}
@@ -4189,7 +4193,6 @@ Without a value, a default is used — currenty the only default value is
 for the Arabic (\texttt{ar}) locales, which is set to a hyphen (because
 the zero and the dot are very similar in this script). See the news
 page for further details.
-
 
 \subsection{Dates}
 
@@ -4620,7 +4623,6 @@ currently defined:
 the natural spacing with the colon is made slightly smaller (default is 1). 
 \end{example}
 
-
 \Describe{\ShowBabelTransforms}{\marg{string}}
 
 \New{25.7} Applies the current transforms to the string and shows in
@@ -4895,14 +4897,18 @@ intrinsic direction of scripts and weak directionality.)
 
 In \xetex, |bidi-r| and |bidi-l| resort to the package \textsf{bidi}
 (by Vafa Khalighi). For RL documents use the former, and for LR ones
-use the latter. 
+use the latter.
 
 \begin{warning}
   The package \textsf{bidi} patches heavily lots of macros and packages
   even if the RL script is not the main one, which can lead to some
   surprising results, so for short and simple texts (letters and
   punctuation) the |default| method is more often than not much
-  preferable.
+  preferable. 
+
+  As of October 2025 this package is unmaintained, so it’s advisable to
+  move to \luatex, whose bidi algorithm is an integral part of \babel,
+  and therefore don’t rely on external packages.
 \end{warning}
 
 There are samples on GitHub, under \texttt{/required/babel/samples}.
@@ -4926,7 +4932,7 @@ See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
 \begin{verbatim}
 \documentclass[arabic]{article}
 
-\usepackage[_bidi=basic_, provide=*]{babel}
+\usepackage[_bidi=basic_]{babel}
 
 \babelfont{rm}{FreeSerif}
 
@@ -5095,7 +5101,7 @@ the same for \textsf{pgf/tikz}. Somewhat experimental. \New{3.32}.
 \item[extras] is used for miscellaneous readjustments which do not fit into
   the previous groups. Currently redefines in \luatex{} |\underline| and
   |\LaTeX2e| \New{3.19}.
-  
+
 \item[pars, nopars] When \texttt{layout} is used with any options
 in bidi documents, there are a few changes in |\@hangfrom| and also
 (only \xetex, as it’s unnecesary in \luatex) in |\raggedright|
@@ -6190,8 +6196,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.13.102165>>
-%<<date=2025/10/17>>
+%<<version=25.14>>
+%<<date=2025/10/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7849,6 +7855,7 @@ wouldn’t exist.
   \@nameuse{#2}%
   \edef\bbl@tempa{#1}%
   \bbl@sreplace\bbl@tempa{name}{}%
+  \bbl@sreplace\bbl@tempa{NAME}{}%
   \bbl@warning{%
     \@backslashchar#1 not set for '\languagename'. Please,\\%
     define it after the language has been loaded\\%
@@ -11380,7 +11387,7 @@ wouldn’t exist.
   \else
     \bbl@ifblank{#2}%
       {\bbl@exp{%
-         \toks@{\\\bbl@nocaption{\bbl@tempa}{\languagename\bbl@tempa name}}}}%
+         \toks@{\\\bbl@nocaption{\bbl@tempa name}{\languagename\bbl@tempa name}}}}%
       {\bbl@trim\toks@{#2}}%
     \bbl@exp{%
       \\\bbl@add\\\bbl@savestrings{%
@@ -13299,7 +13306,6 @@ wouldn’t exist.
 % directly (with |@import|).
 %
 %    \begin{macrocode}
-%%%%%%
 \def\BabelBeforeIni#1#2{%
   \def\bbl@tempa{\@m}% <- Default if no \BDefFile
   \let\bbl@tempb\@empty
@@ -13398,9 +13404,13 @@ wouldn’t exist.
 % is used as flag: 0 if ‘ini’, 1 if ‘ldf’.
 
 %    \begin{macrocode}
+\def\AfterBabelLanguage#1{%
+  \bbl@ifsamestring\CurrentOption{#1}{\global\bbl@add\bbl@afterlang}{}}
+\NewHook{babel/presets}
+\UseHook{babel/presets}
+%
 \let\bbl@tempb\@empty
 \def\bbl@tempc#1/#2//#3//#4/#5\@@{% 
-  % \message{^^J*******#1/#2// #3 //#4/#5}%
   \count@\z@
   \ifnum#2=\@m % if no \BabelDefinitionFile
     \ifnum#1=\z@ % not main. -- % if provide+=!, provide*=!
@@ -13435,7 +13445,7 @@ wouldn’t exist.
   \ifcase\count@
     \bbl@exp{\\\bbl@add\\\bbl@tempb{%
       \\\@nameuse{bbl@preini@#3}%
-      \\\bbl@ldfinit   %% todo: prevent a second load
+      \\\bbl@ldfinit
       \def\\\CurrentOption{#3}%
       \\\babelprovide[@import=#4,\ifnum#1=\z@\else\bbl@opt@provide,main\fi]{#3}%
       \\\bbl@afterldf}}%
@@ -13452,16 +13462,12 @@ wouldn’t exist.
       \endgroup
       \bbl@load@language{#5}}%
   \fi}
-\NewHook{babel/presets}
-\UseHook{babel/presets}
-\bbl@foreach\bbl@toload{\bbl@tempc#1\@@}
 %
-\def\AfterBabelLanguage#1{%
-  \bbl@ifsamestring\CurrentOption{#1}{\global\bbl@add\bbl@afterlang}{}}
+\bbl@foreach\bbl@toload{\bbl@tempc#1\@@}
 \bbl@tempb
 \DeclareOption*{}
 \ProcessOptions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
 \bbl@exp{%
   \\\AtBeginDocument{\\\bbl@usehooks@lang{/}{begindocument}{{}}}}%
 \def\AfterBabelLanguage{\bbl@error{late-after-babel}{}{}{}}
@@ -13555,8 +13561,7 @@ wouldn’t exist.
    {Your command will be ignored, type <return> to proceed}
 \bbl@errmessage{invalid-ini-name}
      {'#1' not valid with the 'ini' mechanism.\MessageBreak
-      I think you want '#2' instead.\MessageBreak
-      I’ll stop immediately}%
+      I think you want '#2' instead}%
      {See the babel manual for the available\MessageBreak
       locales with 'provide'}
 \bbl@errmessage{shorthand-is-off}
@@ -14992,7 +14997,7 @@ wouldn’t exist.
     return line:gsub("(.)",
       function (chr) return unicode.utf8.char(string.byte(chr)) end)
   end
-  
+
   function Babel.priority_in_callback(name,description)
     for i,v in ipairs(luatexbase.callback_descriptions(name)) do
       if v == description then return i end

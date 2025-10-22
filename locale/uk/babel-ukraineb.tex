@@ -8,6 +8,9 @@
   \stop
 \fi
 \BabelBeforeIni{uk}{%
+  \expandafter\def\csname bbl@preini@ukraineb\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{ukraineb}{ukrainian}{}%
+    }%
   \BabelDefinitionFile{0}{ukraineb}{%
      \PackageWarning{babel}{%
        Name 'ukraineb' is deprecated.\MessageBreak

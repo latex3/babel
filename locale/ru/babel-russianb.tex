@@ -8,6 +8,9 @@
   \stop
 \fi
 \BabelBeforeIni{ru}{%
+  \expandafter\def\csname bbl@preini@russianb\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{russianb}{russian}{}%
+    }%
   \PackageWarning{babel}{%
     Name 'russianb' is deprecated.\MessageBreak
     Use 'russian' instead.\MessageBreak

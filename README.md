@@ -1,6 +1,6 @@
-## Babel 25.13.102165
+## Babel 25.14
 
-**Development unstable version**
+2025-10-22
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,10 +59,11 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 25.14 (dev)
+#### 25.14 (2025-10-22)
 
-This release comes with a major change. Now provide=* is not necessary
-anymore, so that you can say, for example, \usepackage[marathi]{babel}.
+This release comes with a major change. Now provide=* is not
+necessary anymore, so that you can say, for example,
+\usepackage[chinese,marathi]{babel}. There are also some fixes.
 
 #### 25.13 (2025-10-01)
 
@@ -70,12 +71,6 @@ anymore, so that you can say, for example, \usepackage[marathi]{babel}.
 * Changed the string for `\proofname` in the Turkish `ini` locale file.
 * Fixed in the manual the example for a very basic PDF tagging, which
   wasn’t complete. 
-
-#### 25.12 (2025-08-03)
-
-* New option in provide: mapdot. A default is provide for the Arabic
-  locales, mapping the dot in counters to a hyphen.
-* Fix misaligned first line with kashida inside a \vbox (tsx747027).
 
 ### Previous changes
 

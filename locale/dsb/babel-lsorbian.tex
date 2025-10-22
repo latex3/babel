@@ -8,6 +8,9 @@
   \stop
 \fi
 \BabelBeforeIni{dsb}{%
+  \expandafter\def\csname bbl@preini@lsorbian\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{lsorbian}{lowersorbian}{}%
+    }%
   \PackageWarning{babel}{%
     Name 'lsorbian' is deprecated.\MessageBreak
     Use 'lowersorbian' instead.\MessageBreak

@@ -8,6 +8,9 @@
   \stop
 \fi
 \BabelBeforeIni{se}{%
+  \expandafter\def\csname bbl@preini@samin\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{samin}{northernsami}{}%
+    }%
   \PackageWarning{babel}{%
     Name 'samin' is deprecated.\MessageBreak
     Use 'northernsami' instead.\MessageBreak

@@ -6,6 +6,9 @@
   \stop
 \fi
 \BabelBeforeIni{la-x-classic}{%
+  \expandafter\def\csname bbl@preini@classiclatin\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{classiclatin}{classicallatin}{}%
+    }%
   \PackageWarning{babel}{%
     Name 'classiclatin' is deprecated.\MessageBreak
     Use 'classicallatin' instead.\MessageBreak
