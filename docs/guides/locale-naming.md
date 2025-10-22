@@ -6,13 +6,13 @@ The `babel` multilingual framework for LaTeX employs specific
 conventions for naming and referencing locale files (both the
 traditional `ldf` mechanism and the modern `ini` one), prioritizing
 **compatibility with established standards**
-([IANA/BCP 47
-registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry),
-[Unicode
-CLDR](https://www.unicode.org/cldr/charts/47/summary/en.html#f3d4397b739b287))
+([Unicode
+CLDR](https://www.unicode.org/cldr/charts/47/summary/en.html#f3d4397b739b287), [IANA/BCP 47
+registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry))
 across the web and international data repositories. `Babel` adheres to
-those standards for locale classification, regardless of
-possible debates about their linguistic suitability.
+those standards for locale classification, which are based (according to
+ISO 639) not only on linguistic similarity, but also on the existence
+of a common literature or of a common ethnolinguistic identity.
 
 For the naming of the locales at the user level, the following
 conventions are used.
