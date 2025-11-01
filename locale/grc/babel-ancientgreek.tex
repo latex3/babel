@@ -9,7 +9,7 @@
 \fi
 \BabelBeforeIni{grc}{%
   \BabelDefinitionFile{0}{greek}{%
-    \PackageWarning{babel}{%
+    \PackageInfo{babel}{%
       Redirecting to non-standard 'ldf' name.\MessageBreak
       Requested: ancientgreek\MessageBreak
       Provided: greek.ancient\MessageBreak
@@ -18,19 +18,18 @@
     \AtEndOfPackage{\languageattribute{greek}{ancient}}%
     \AddBabelHook[ancientgreek]{babel-greek}{languagename}{%
       \def\languagename{greek}}%
-    \def\BabelIniTag{grc}}%
+    \def\BabelIniTag{grc}%
+    \AtBeginDocument{%
+      \def\bbl@tempa{TU}%
+      \ifx\f@encoding\bbl@tempa
+        \babelprovide[import=grc,calendar=.digits]{greek}%
+        \babelprovide[import=grc,calendar=.digits]{ancientgreek}%
+        \selectlanguage{\mainlocalename}%
+      \fi}}%
 }
 
 \ifcase\bbl@engine\else
 
-  % Date with Greek (Ionian) numerals
-
-  \expandafter\addto\csname date\languagename\endcsname{%
-     \babel@save\BabelDatey
-     \def\BabelDatey#1{\greeknumeral{#1}}%
-     \babel@save\BabelDated
-     \def\BabelDated#1{\greeknumeral{#1}}}
-     
   % Numerals (Ionian)
 
   \def\BabelGreekNumeralMarkerEnd#1{#1ʹ}

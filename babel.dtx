@@ -38,7 +38,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/10/22 v25.14
+  [2025/11/01 v25.14.103668
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -679,6 +679,12 @@ with an option (explained below) in |provide|. For example:
 \usepackage[chinese, provide=_{ intraspace=0 .2 0 }_]{babel}
 \end{verbatim}
 \end{example}
+
+\begin{warning}
+  Because of the way \LaTeX{} passes options, with \texttt{provide}
+  there must be \textit{no} space in the middle of |={|, as the
+  previous example shows.
+\end{warning}
 
 \subsection{Mostly monolingual documents: lazy loading}
 \label{mostlymono}
@@ -1906,8 +1912,10 @@ And if you need, say, Arabic and Devanagari:
   mechanically, |Language=Default|. \textit{Do not follow it}, because
   font features for the language will not be applied, which can be
   relevant for many languages, like Urdu and Turkish. Set the
-  |Language| explicitly only if there is a reason to do it. If you
-  really want to conceal this message, use instead:
+  |Language| explicitly only if there is a reason to do it (for
+  example, if \textsf{fontspec}/\textsf{luaotfload} doesn’t fall back
+  correctly a font feature to the default language). If you really want
+  to conceal this message, use instead:
 \begin{verbatim}
 \PassOptionsToPackage{silent}{fontspec}
 \end{verbatim}
@@ -6196,8 +6204,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.14>>
-%<<date=2025/10/22>>
+%<<version=25.14.103668>>
+%<<date=2025/11/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13640,11 +13648,19 @@ wouldn’t exist.
 \bbl@errmessage{bidi-only-lua}
    {The bidi method 'basic' is available only in\\%
     luatex. I'll continue with 'bidi=default', so\\%
-    expect wrong results. With xetex, try bidi=bidi}%
+    expect wrong results.\\%
+    Suggested actions:\\%
+    * If possible, switch to luatex, as xetex is not\\%
+      recommend anymore.\\
+    * If you can’t, try 'bidi=bidi' with xetex.\\%
+    * With pdftex, only 'bidi=default' is available.}%
    {See the manual for further details.}
 \bbl@errmessage{multiple-bidi}
-   {Multiple bidi settings inside a group}%
-   {I'll insert a new group, but expect wrong results.}
+   {Multiple bidi settings inside a group\\%
+    I'll insert a new group, but expect wrong results.\\%
+    Suggested action:\\%
+    * Add a new group where appropriate.}
+   {See the manual for further details.}
 \bbl@errmessage{unknown-package-option}
    {Unknown option '\CurrentOption'.\\%
     Suggested actions:\\%
@@ -17554,18 +17570,23 @@ end
 -- This table stores capture maps, numbered consecutively
 Babel.capture_maps = {}
 
+function Babel.esc_hex_to_char(h)
+  if tex.getcatcode(tonumber(h, 16)) ~= 11 and
+     tex.getcatcode(tonumber(h, 16)) ~= 12 then
+    return string.format([[\Uchar"%X ]], tonumber(h,16))
+  else
+    return unicode.utf8.char(tonumber(h, 16))
+  end
+end
+
 -- The following functions belong to the next macro
 function Babel.capture_func(key, cap)
   local ret = "[[" .. cap:gsub('{([0-9])}', "]]..m[%1]..[[") .. "]]"
   local cnt
   local u = unicode.utf8
+  ret = u.gsub(ret, '{(%x%x%x%x+)}', '\x01%1\x04')
   ret, cnt = ret:gsub('{([0-9])|([^|]+)|(.-)}', Babel.capture_func_map)
-  if cnt == 0 then
-    ret = u.gsub(ret, '{(%x%x%x%x+)}', 
-          function (n)
-            return u.char(tonumber(n, 16))
-          end)
-  end
+  ret = u.gsub(ret, '\x01(%x%x%x%x+)\x04', Babel.esc_hex_to_char)
   ret = ret:gsub("%[%[%]%]%.%.", '')
   ret = ret:gsub("%.%.%[%[%]%]", '')
   return key .. [[=function(m) return ]] .. ret .. [[ end]]
@@ -17578,11 +17599,11 @@ end
 -- Handle the {n|abc|ABC} syntax in captures
 function Babel.capture_func_map(capno, from, to)
   local u = unicode.utf8
-  from = u.gsub(from, '{(%x%x%x%x+)}', 
+  from = u.gsub(from, '\x01(%x%x%x%x+)\x04',
        function (n)
          return u.char(tonumber(n, 16))
        end)
-  to = u.gsub(to, '{(%x%x%x%x+)}', 
+  to = u.gsub(to, '\x01(%x%x%x%x+)\x04', 
        function (n)
          return u.char(tonumber(n, 16))
        end)

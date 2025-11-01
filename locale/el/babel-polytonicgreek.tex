@@ -18,8 +18,16 @@
     \AtEndOfPackage{\languageattribute{greek}{polytonic}}%
     \AddBabelHook[polytonicgreek]{babel-greek}{languagename}{%
       \def\languagename{greek}}%
-    \def\BabelIniTag{el-polyton}}%
+    \def\BabelIniTag{el-polyton}%
+    \AtBeginDocument{%
+      \def\bbl@tempa{TU}%
+      \ifx\f@encoding\bbl@tempa
+        \babelprovide[import=el-polyton]{greek}%
+        \babelprovide[import=el-polyton]{ancientgreek}%
+        \selectlanguage{\mainlocalename}%
+      \fi}}%
 }
+
         
 \ifcase\bbl@engine\else
 
