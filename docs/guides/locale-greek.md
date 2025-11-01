@@ -30,7 +30,7 @@ time. A minimal preamble with Monotonic Greek and `pdftex` is:
 
 With `pdftex` it is advisable, as in the example, to load explicitly the font
 encoding (the `greek` style does it if necessary, but in a non-standard
-way). With `xetex` and `luatex`, `fontspec` must not be loaded.
+way). With `xetex` and `luatex`, `fontenc` must not be loaded.
 
 ## As `ini`
 
