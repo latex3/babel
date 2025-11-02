@@ -1,7 +1,7 @@
 # List of counters
 
 Many `ini` locale files define additional counters, most of them based
-on the CSS ones. Here is the list by locale tag, extracted from the
+on the [CSS](https://www.w3.org/TR/predefined-counter-styles/) ones. Here is the list by locale tag, extracted from the
 `ini` files for reference (as of October 2023). See the [`babel`
 manual](http://mirrors.ctan.org/macros/latex/required/babel/base/babel.pdf)
 for further info about how to use them. Those starting with `date` are
@@ -94,7 +94,7 @@ The way the keraia is defined is tentative, and very likely it will change. Do *
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
-## Arabic (Saudi Arabia) ar-SA
+## Arabic (Saudi Arabia) (ar-SA)
 
 * `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
 * `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش

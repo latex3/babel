@@ -42,7 +42,17 @@ like Southeast Asian ones and Arabic, the default renderer is Harfbuzz.
 
 #### TeXLive
 
-Here are some basic fonts included in TeXLive. This section is not meant as a font reference, but as a quick guide for a language to work with a more or less standard font. I've found no fonts for Telugu or Kannada.
+Here are some basic fonts included in TeXLive. This section is not
+meant as a font reference, but as a quick guide for a language to work
+with a more or less standard font. I've found no fonts for Telugu or
+Kannada.
+
+If you know the codepoint of a character in the script you need, you
+can find fonts containing it with
+[`albatross`](https://ctan.org/pkg/albatross?lang=en) (requires Java)
+or with something like `fc-list :charset=1033C family` in the commands
+line (in this case, a Gothic character, the script required by the
+`gothic` language).
 
 | Font(s) | Languages / Scripts | Notes |
 | --- | --- | --- |
@@ -77,10 +87,7 @@ Lister](https://r12a.github.io/scripts/fontlist/index.html).
 | Segoe UI Historic | Ancient scripts | A Windows font with 25 scripts: Imperial Aramaic, Brahmi, Carian, Cypriot, Egyptian hieroglyphs, Glagolitic, Gothic, Old Italic, Kharoshthi, Lycian, Lydian, Meroitic Cursive, Ogham, Orkhon, Inscriptional Pahlavi, Phoenician, Inscriptional Parthian, Runic, Old South Arabian, Shavian, Syriac, Ugaritic, Old Persian, Sumero- Akkadian Cuneiform.
 | Lohit | Indic scripts | A set of Linux fonts covering Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam, Marathi, Odia, Punjabi, Tamil, and Telugu.
 
-You may also want to have a look at some articles on tex.textackexchange
-on
-
-[Arabic](https://tex.stackexchange.com/questions/314202/overview-of-arabic-fonts-available-for-latex-xetex).
+You may also want to have a look at some articles on tex.textackexchange on [Arabic](https://tex.stackexchange.com/questions/314202/overview-of-arabic-fonts-available-for-latex-xetex).
 
 -------------------------
 
@@ -98,6 +105,7 @@ The second method is:
 ```tex
 \usepackage[thai, provide=*]{babel}
 ```
+(With ≥25-14, you can omit `provide=*`.)
 This will load data from an `ini` file. This is usually the correct
 method for languages written in some of the 40-something **non-European
 scripts**, currently supported by `babel`, like
@@ -136,4 +144,4 @@ With XeTeX:
 ```tex
 \usepackage[arabic, bidi=bidi-r, provide=*]{babel}
 ```
-|
+(With ≥25-14, you can omit `provide=*`.)
