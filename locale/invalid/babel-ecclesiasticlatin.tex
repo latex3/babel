@@ -1,3 +1,5 @@
+% This file is part of babel. For further details see:
+% https://www.ctan.org/pkg/babel
 \ifx\BabelBeforeIni\undefined
   \PackageError{babel}%
     {This file is a component of babel and cannot\MessageBreak
@@ -10,11 +12,11 @@
     \csname bbl@error\endcsname{invalid-ini-name}%
       {ecclesiasticlatin}{ecclesiasticallatin}{}%
     }%
-  \PackageWarning{babel}{%
-    Name 'ecclesiasticlatin' is deprecated.\MessageBreak
-    Use 'ecclesiasticallatin' instead.\MessageBreak
-    Reported}%
-  \BabelDefinitionFile{0}{ecclesiasticallatin}{}%
+  \BabelDefinitionFile{0}{ecclesiasticallatin}{%
+    \PackageWarning{babel}{%
+      Name 'ecclesiasticlatin' is deprecated.\MessageBreak
+      Use 'ecclesiasticallatin' instead.\MessageBreak
+      Reported}}%
 }
 
 

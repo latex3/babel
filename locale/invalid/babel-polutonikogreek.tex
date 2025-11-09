@@ -8,16 +8,14 @@
   \stop
 \fi
 \BabelBeforeIni{el-polyton}{%
-  \PackageWarning{babel}{%
-    Name 'polutonikogreek' is deprecated.\MessageBreak
-    Use 'polytonicgreek' instead.\MessageBreak
-    Reported}%
+  \expandafter\def\csname bbl@preini@polutonikogreek\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{polutonikogreek}{polytonicgreek}{}%
+    }%
   \BabelDefinitionFile{0}{greek}{%
     \PackageWarning{babel}{%
-      Redirecting to non-standard 'ldf' name.\MessageBreak
-      Requested: polutonikogreek\MessageBreak
-      Provided: greek.polutoniko\MessageBreak
-      Reported on}%
+      Name 'polutonikogreek' is deprecated.\MessageBreak
+      Use 'polytonicgreek' instead.\MessageBreak
+      Reported}%
     \def\languagename{greek}%
     \AtEndOfPackage{\languageattribute{greek}{polutoniko}}%
     \AddBabelHook[polutoniko]{babel-greek}{languagename}{%

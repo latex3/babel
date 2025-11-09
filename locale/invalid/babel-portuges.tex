@@ -11,10 +11,10 @@
   \expandafter\def\csname bbl@preini@portuges\endcsname{%
     \csname bbl@error\endcsname{invalid-ini-name}{portuges}{portuguese}{}%
     }%
-  \PackageWarning{babel}{%
-    Name 'portuges' is deprecated.\MessageBreak
-    Use 'portuguese' instead.\MessageBreak
-    Reported}%
-  \BabelDefinitionFile{0}{portuguese}{}}%
+  \BabelDefinitionFile{0}{portuguese}{%
+    \PackageWarning{babel}{%
+      Name 'portuges' is deprecated.\MessageBreak
+      Use 'portuguese' instead.\MessageBreak
+      Reported}}%
 }
 \endinput

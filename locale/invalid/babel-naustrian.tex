@@ -8,6 +8,9 @@
   \stop
 \fi
 \BabelBeforeIni{de-AT}{%
+  \expandafter\def\csname bbl@preini@naustrian\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{naustrian}{austrian}{}%
+    }%
   \BabelDefinitionFile{0}{naustrian}{}%
 }
 \endinput

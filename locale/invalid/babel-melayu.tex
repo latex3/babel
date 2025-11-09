@@ -11,11 +11,11 @@
   \expandafter\def\csname bbl@preini@melayu\endcsname{%
     \csname bbl@error\endcsname{invalid-ini-name}{melayu}{malay}{}%
     }%
-  \PackageWarning{babel}{%
-    Name 'melayu' is discouraged.\MessageBreak
-    Prefer 'malay' instead.\MessageBreak
-    Reported}%
-  \BabelDefinitionFile{0}{malay}{}%
+  \BabelDefinitionFile{0}{malay}{%
+    \PackageInfo{babel}{%
+      Name 'melayu' is discouraged.\MessageBreak
+      Prefer 'malay' instead.\MessageBreak
+      Reported}}%
 }
 \endinput
 

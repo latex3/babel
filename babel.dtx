@@ -38,7 +38,7 @@
   lang       = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2025/11/01 v25.14.103672
+  [2025/11/09 v25.15
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -1685,18 +1685,26 @@ multilingual documents. As described below, with \luatex{} the font can
 be switched automatically based on the script without explicit markup.
 
 There is no need to load \textsf{fontspec} explicitly – \babel{} does
-it for you with the first |\babelfont|. (See also the package
-\textsf{combofont} for a complementary approach.)
+it for you with the first |\babelfont|.
+
+\begin{note}
+See also the \textsf{luaotfload} fallback mechanism for a complementary
+approach, which can be preferable when a font lacks a character or
+glyph required by a language.
+\end{note}
 
 \Describe\babelfont{\oarg{language-list}\marg{font-family}%
   \oarg{font-options}\marg{font-name}}
+\DescribeOther\babelfont{\oarg{language-list}\marg{font-family}%
+  \marg{font-name}\oarg{font-options}}
 
 The main purpose of |\babelfont| is to define at once the fonts
 required by the different languages, with their corresponding language
 systems (script and language). So, if you load, say, 4 languages,
 |\babelfont{rm}{FreeSerif}| defines 4 fonts (with their variants, of
 course), which are switched with the language by \babel. It is a tool
-to make things easier and transparent to the user.
+to make things easier and transparent to the user. \New{25.15} The
+\oarg{font-options} can go before or after the \marg{font-name}.
 
 Here \textit{font-family} is |rm|, |sf| or |tt| (or newly defined
 ones, as explained below), and \textit{font-name} is the same as in
@@ -6204,8 +6212,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.14.103672>>
-%<<date=2025/11/01>>
+%<<version=25.15>>
+%<<date=2025/11/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13264,7 +13272,10 @@ wouldn’t exist.
         \ifx\bbl@opt@main\@nnil
           \global\let\bbl@opt@main\languagename
         \fi
-        \bbl@info{Passing \languagename\space to babel}%
+        \bbl@info{Passing \languagename\space to babel.\\%
+                  This will be the main language except if\\%
+                  explictly overriden with 'main='.\\%
+                  Reported}%
       \fi
     \endgroup
   \fi
@@ -13272,7 +13283,7 @@ wouldn’t exist.
 \ifx\bbl@opt@config\@nnil
   \@ifpackagewith{babel}{noconfigs}{}%
     {\InputIfFileExists{bblopts.cfg}%
-      {\bbl@warning{Configuration files are deprecated, as\\%
+      {\bbl@info{Configuration files are deprecated, as\\%
                     they can break document portability.\\%
                     Reported}%
        \typeout{*************************************^^J%
@@ -13281,7 +13292,7 @@ wouldn’t exist.
       {}}%
 \else
   \InputIfFileExists{\bbl@opt@config.cfg}%
-    {\bbl@warning{Configuration files are deprecated, as\\%
+    {\bbl@info{Configuration files are deprecated, as\\%
                   they can break document portability.\\%
                   Reported}%
      \typeout{*************************************^^J%
@@ -13568,10 +13579,11 @@ wouldn’t exist.
     is not complete}%
    {Your command will be ignored, type <return> to proceed}
 \bbl@errmessage{invalid-ini-name}
-     {'#1' not valid with the 'ini' mechanism.\MessageBreak
-      I think you want '#2' instead}%
-     {See the babel manual for the available\MessageBreak
-      locales with 'provide'}
+     {'#1' not valid with the 'ini' mechanism.\\%
+      I think you want '#2' instead. You may continue,\\%
+      but you should fix the name. See the babel manual\\%
+      for the available locales with 'provide'}%
+     {See the manual for further details.}
 \bbl@errmessage{shorthand-is-off}
    {I can't declare a shorthand turned off (\string#2)}
    {Sorry, but you can't use shorthands which have been\\%
@@ -14132,7 +14144,11 @@ wouldn’t exist.
 \AddBabelHook{babel-fontspec}{beforestart}{\bbl@ckeckstdfonts}
 \DisableBabelHook{babel-fontspec}
 \@onlypreamble\babelfont
-\newcommand\babelfont[2][]{%  1=langs/scripts 2=fam
+\ifx\NewDocumentCommand\@undefined\else % Not plain
+  \NewDocumentCommand\babelfont{O{}mO{}mO{}}{%
+    \bbl@bblfont@o[#1]{#2}[#3,#5]{#4}}
+\fi
+\newcommand\bbl@bblfont@o[2][]{%  1=langs/scripts 2=fam
   \ifx\fontspec\@undefined
     \usepackage{fontspec}%
   \fi

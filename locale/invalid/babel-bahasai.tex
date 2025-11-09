@@ -11,10 +11,10 @@
   \expandafter\def\csname bbl@preini@bahasai\endcsname{%
     \csname bbl@error\endcsname{invalid-ini-name}{bahasai}{indonesian}{}%
     }%
-  \PackageWarning{babel}{%
-    Name 'bahasai' is deprecated.\MessageBreak
-    Use 'indonesian' instead.\MessageBreak
-    Reported}%
-  \BabelDefinitionFile{0}{indonesian}{}%
+  \BabelDefinitionFile{0}{indonesian}{%
+    \PackageWarning{babel}{%
+      Name 'bahasai' is deprecated.\MessageBreak
+      Use 'indonesian' instead.\MessageBreak
+      Reported}}%
 }
 \endinput

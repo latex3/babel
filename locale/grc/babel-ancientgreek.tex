@@ -31,9 +31,15 @@
 \ifcase\bbl@engine\else
 
   % Numerals (Ionian)
+  
+  \@namedef{bbl@cntr@ionian@\CurrentOption}#1%
+    {\expandafter\greeknumeral\expandafter{\the\numexpr#1}}
 
   \def\BabelGreekNumeralMarkerEnd#1{#1ʹ}
   \def\BabelGreekNumeralMarker#1{#1}
+  \def\BabelGreekNumeralVI{ϛ} % ϝ, στ
+  \def\BabelGreekNumeralXC{ϟ} % ϙ
+  \def\BabelGreekNumeralCM{ϡ} % ͳ
 
   \def\greek@num@aux#1#2#3#4#5#6#7#8#9\@@{%
     \ifcase\@car#9\@nil\or
@@ -47,34 +53,40 @@
        \greek@num@format#1#2#3#4#5#6#7#8\else
        \greek@invalid
     \fi}
-      
+
   \def\BabelGreekNumeralMyriads#1#2#3#4{%
     \ifnum#1#2=\z@
-      \ifcase#3\or ͵ρ\or ͵σ\or ͵τ\or ͵υ\or ͵φ\or ͵χ\or ͵ψ\or ͵ω\or ͵ϡ\fi
-      \ifcase#4\or ͵ι\or ͵κ\or ͵λ\or ͵μ\or ͵ν\or ͵ξ\or ͵ο\or ͵π\or ͵ϟ\fi
+      \ifcase#3\or ͵ρ\or ͵σ\or ͵τ\or ͵υ\or ͵φ\or
+          ͵χ\or ͵ψ\or ͵ω\or ͵\BabelGreekNumeralCM\fi
+      \ifcase#4\or ͵ι\or ͵κ\or ͵λ\or ͵μ\or ͵ν\or
+          ͵ξ\or ͵ο\or ͵π\or ͵\BabelGreekNumeralXC\fi
     \else
       \greek@invalid
     \fi}
-    
+
   \def\greek@num@format#1#2#3#4#5#6#7#8{%
     \BabelGreekNumeralMarker{%
       \BabelGreekNumeralMyriads#1#2#3#4%
-      \ifcase#5\or ͵α\or ͵β\or ͵γ\or ͵δ\or ͵ε\or ͵ϛ\or ͵ζ\or ͵η\or ͵θ\fi
+      \ifcase#5\or ͵α\or ͵β\or ͵γ\or ͵δ\or ͵ε\or
+          ͵\BabelGreekNumeralVI\or ͵ζ\or ͵η\or ͵θ\fi
       \ifnum#6#7#8=\z@\else
         \BabelGreekNumeralMarkerEnd{%
-          \ifcase#6\or ρ\or σ\or τ\or υ\or φ\or χ\or ψ\or ω\or ϡ\fi
-          \ifcase#7\or ι\or κ\or λ\or μ\or ν\or ξ\or ο\or π\or ϟ\fi
-          \ifcase#8\or α\or β\or γ\or δ\or ε\or ϛ\or ζ\or η\or θ\fi}%
+          \ifcase#6\or ρ\or σ\or τ\or υ\or
+              φ\or χ\or ψ\or ω\or \BabelGreekNumeralCM\fi
+          \ifcase#7\or ι\or κ\or λ\or μ\or ν\or
+              ξ\or ο\or π\or \BabelGreekNumeralXC\fi
+          \ifcase#8\or α\or β\or γ\or δ\or ε\or
+              \BabelGreekNumeralVI\or ζ\or η\or θ\fi}%
       \fi}}
 
   \def\greek@invalid{%
     \bbl@error{Greek numeral too large (>999999)}%
       {Currently this is the limit.}}
-      
+
   \expandafter\addto\csname extras\languagename\endcsname{%
     \babel@save\greeknumeral
-    \def\greeknumeral#1{\expandafter\greek@num@aux\number#1 876543210\@@}}    
-    
+    \def\greeknumeral#1{\expandafter\greek@num@aux\number#1 876543210\@@}}
+
 \fi
 
 \endinput

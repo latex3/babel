@@ -1,6 +1,6 @@
-## Babel 25.14.103672
+## Babel 25.15
 
-(dev)
+2025-11-09
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.14 are described in:
+Changes in version 25.15 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.14.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.15.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,25 +59,25 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 25.15 (dev)
+#### 25.15 (2025-11-09)
 
-* Fixes:
-  - Wrong diacritics with Ancient and Polytonic Greek in Unicode
-    engines.
-  - Improved the {HHHH} notation in transforms.
+* Greek:
+  - Fix: wrong diacritics in Unicode engines and the ldf mechanism.
+  - In Ancient Greek, now use 'lower.ancient' in dates by default.
+  - Calendar variants: 'letters' for Polytonic, 'digits' for Ancient.
+  - New counter: 'attic'.
+  - \greeknumeral is more customizable and can be accessed with the
+    new counter 'ionian'.
+* Font options can go at the end of \babelfont (like \set...font). 
+* Fix some issues in the {HHHH} notation in transforms.
+* Internal changes related the new language loader, including some
+  messages.
 
 #### 25.14 (2025-10-22)
 
 This release comes with a major change. Now provide=* is not
 necessary anymore, so that you can say, for example,
 \usepackage[chinese,marathi]{babel}. There are also some fixes.
-
-#### 25.13 (2025-10-01)
-
-* A few vowels were missing in a rule for the IAST Devanagari transliteration.
-* Changed the string for `\proofname` in the Turkish `ini` locale file.
-* Fixed in the manual the example for a very basic PDF tagging, which
-  wasn’t complete. 
 
 ### Previous changes
 

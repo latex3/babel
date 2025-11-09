@@ -11,10 +11,10 @@
   \expandafter\def\csname bbl@preini@lsorbian\endcsname{%
     \csname bbl@error\endcsname{invalid-ini-name}{lsorbian}{lowersorbian}{}%
     }%
-  \PackageWarning{babel}{%
-    Name 'lsorbian' is deprecated.\MessageBreak
-    Use 'lowersorbian' instead.\MessageBreak
-    Reported}%
-  \BabelDefinitionFile{0}{lsorbian}{}%
+  \BabelDefinitionFile{0}{lsorbian}{%
+    \PackageWarning{babel}{%
+      Name 'lsorbian' is deprecated.\MessageBreak
+      Use 'lowersorbian' instead.\MessageBreak
+      Reported}}%
 }
 \endinput

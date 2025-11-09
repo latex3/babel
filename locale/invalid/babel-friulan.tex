@@ -11,10 +11,10 @@
   \expandafter\def\csname bbl@preini@friulan\endcsname{%
     \csname bbl@error\endcsname{invalid-ini-name}{friulan}{friulian}{}%
     }%
-  \PackageWarning{babel}{%
-    Name 'friulan' is discouraged.\MessageBreak
-    Prefer 'friulian' instead.\MessageBreak
-    Reported}%
-  \BabelDefinitionFile{0}{friulan}{}%
+  \BabelDefinitionFile{0}{friulan}{%
+    \PackageInfo{babel}{%
+      Name 'friulan' is discouraged.\MessageBreak
+      Prefer 'friulian' instead.\MessageBreak
+      Reported}}%
 }
 \endinput

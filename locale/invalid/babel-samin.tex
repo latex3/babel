@@ -11,10 +11,10 @@
   \expandafter\def\csname bbl@preini@samin\endcsname{%
     \csname bbl@error\endcsname{invalid-ini-name}{samin}{northernsami}{}%
     }%
-  \PackageWarning{babel}{%
-    Name 'samin' is deprecated.\MessageBreak
-    Use 'northernsami' instead.\MessageBreak
-    Reported}%
-  \BabelDefinitionFile{0}{samin}{}%
+  \BabelDefinitionFile{0}{samin}{%
+    \PackageWarning{babel}{%
+      Name 'samin' is deprecated.\MessageBreak
+      Use 'northernsami' instead.\MessageBreak
+      Reported}}%
 }
 \endinput

@@ -9,10 +9,8 @@
 \fi
 \BabelBeforeIni{sr}{%
   \expandafter\def\csname bbl@preini@serbianc\endcsname{%
-    \PackageWarning{babel}{%  Tiene que ser error
-     The locale 'serbianc' is provided for compatibility\MessageBreak
-     with 'ldf' files. Use 'serbian' instead.\MessageBreak
-     Reported}}%
-   \BabelDefinitionFile{0}{serbianc}{}%
+    \csname bbl@error\endcsname{invalid-ini-name}{serbianc}{serbian}{}%
+    }%
+  \BabelDefinitionFile{0}{serbianc}{}%
 }
 \endinput

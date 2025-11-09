@@ -7,7 +7,10 @@
     {Just use babel as documented.}%
   \stop
 \fi
-\BabelBeforeIni{de}{%
-  \BabelDefinitionFile{0}{ngerman}{}%
+\BabelBeforeIni{de-CH}{%
+  \expandafter\def\csname bbl@preini@nswissgerman\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{nswissgerman}{swisshighgerman}{}%
+    }%
+  \BabelDefinitionFile{0}{nswissgerman}{}%
 }
 \endinput
