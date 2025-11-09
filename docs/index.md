@@ -90,7 +90,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
-| [25.15](news/whats-new-in-babel-25.15.html) | 2025-11-22 | Greek improved. Some fixes. |
+| [25.15](news/whats-new-in-babel-25.15.html) | 2025-11-09 | Greek improved. Some fixes. |
 | [25.14](news/whats-new-in-babel-25.14.html) | 2025-10-22 | New language loader. |
 | [25.13](news/whats-new-in-babel-25.13.html) | 2025-10-01 | Minor fixes. |
 | [25.12](news/whats-new-in-babel-25.12.html) | 2025-08-03 | Option `mapdot` |

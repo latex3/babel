@@ -24,7 +24,7 @@ mechanism:
  (with stigma), but Arabic ones
   are also available with the `digits` variant. Of course, gregorian
   dates with Ancient Greek (to 1453, according to the IANA) is somewhat
-  anachronistic.  [under study].
+  anachronistic.
 * In addition, `ionian`, available in all locales, uses the `ionian`
   counter (see next section).
   
