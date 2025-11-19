@@ -1,6 +1,6 @@
-## Babel 25.15
+## Babel 25.15.105483
 
-2025-11-09
+(dev)
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -58,6 +58,10 @@ Bugs related to specific languages are best reported to their
 respective authors.
 
 ### Summary of latest changes
+
+#### 25.16 (dev)
+
+* Julian calendar.
 
 #### 25.15 (2025-11-09)
 

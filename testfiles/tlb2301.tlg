@@ -6,6 +6,5 @@ Package: babel
     Options: french,english
 Package: epsfig
 File: test.ps Graphic file (type eps)
-<test.ps>
-[1
+<test.ps> [1
 ]

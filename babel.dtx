@@ -32,13 +32,13 @@
 %
 % \iffalse
 %<*filedriver>
-\DocumentMetadata{ 
+% \DocumentMetadata{
   % tagging=on,
   % testphase  = {sec,toc,text},
-  lang       = en-001,
-}
+  % lang       = en-001,
+%}
 \ProvidesFile{babel.dtx}%
-  [2025/11/09 v25.15
+  [2025/11/19 v25.15.105483
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4162,8 +4162,8 @@ The styles are:
 \item[Georgian] |letters|
 
 \item[Greek] |lower.modern|, |upper.modern|, |lower.ancient|,
-|upper.ancient| (all with keraia), |lower.modern.nokeraia|,
-|upper.modern.nokeraia| (without keraia)
+|upper.ancient| (all with keraia), |lower.modern.nonumeralsign|,
+|upper.modern.nonumeralsign| (without keraia)
 
 \item[Hebrew] |letters| (\New{3.93} if the language is loaded
 explicitly, also |letters.plain|, |letters.gershayim|, |letters.final|)
@@ -4223,7 +4223,7 @@ with the following command.
 By default the calendar is the Gregorian, but an |ini| file may define
 strings for other calendars: |am| (|ethiopic|), |ar| and
 |ar-|* (|islamic|), |cop| (|coptic|), |fa| (|islamic|, |persian|), |he|
-(|hebrew|), |hi| (|indian|), |th| (|buddhist|).
+(|hebrew|), |hi| (|indian|), |th| (|buddhist|), |el| (|julian|).
 In the latter case, the three arguments are the year, the month, and
 the day for those in the corresponding calendar. They are \textit{not}
 the Gregorian date to be converted (which means, say, 13 is a valid
@@ -4280,6 +4280,7 @@ which must be macros. Allowed calendars are:
   |hebrew|\\
   |islamic-civil|\\
   |islamic-umalqura|\\
+  |julian|\\
   |persian|
 \end{multicols}
 The optional argument converts the given date, in the form
@@ -4536,9 +4537,13 @@ transforms = _rm:sf:_transform.name
 Tranforms are executed in the same order they are declared. \New{25.9}
 They can be also added at the beginning with the key |prepend|, which
 is particularly useful with predefined transforms. For example:
+\begingroup
+\catcode`@=13
+\def@#1@{{\fontspec[Scale=.87,Script=Hebrew]{Noto Sans Hebrew}#1}}
 \begin{verbatim}
-\babelprehyphenation[prepend]{hebrew}{-}{ string = ־ } % hyphen to maqaf
+\babelprehyphenation[prepend]{hebrew}{-}{ string = @־@ } % hyphen to maqaf
 \end{verbatim}
+\endgroup
 
 Although the main purpose of post-hyphenation transforms was
 non-standard hyphenation, they may actually be used for other
@@ -6213,8 +6218,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.15>>
-%<<date=2025/11/09>>
+%<<version=25.15.105483>>
+%<<date=2025/11/19>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -9765,7 +9770,7 @@ wouldn’t exist.
 % of |\SetString| when it is “active”
 %
 % First save the “switcher”. Create it if undefined. Strings are
-% defined only if undefined (i.e., like |\providescommmand|). With
+% defined only if undefined (i.e., like |\providescommand|). With
 % the event |stringprocess| you can preprocess the string by
 % manipulating the value of |\BabelString|. If there are several
 % hooks assigned to this event, preprocessing is done in the same
@@ -14197,17 +14202,16 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \def\bbl@nostdfont#1{%
-  \bbl@ifunset{bbl@WFF@\f@family}%
-    {\bbl@csarg\gdef{WFF@\f@family}{}%  Flag, to avoid dupl warns
-     \bbl@infowarn{The current font is not a babel standard family:\\%
+  \bbl@once{nostdfam-\f@family}%
+    {\bbl@infowarn{The current font is not a babel standard family:\\%
        #1%
        \fontname\font\\%
-       There is nothing intrinsically wrong with this warning, and\\%
-       you can ignore it altogether if you do not need these\\%
-       families. But if they are used in the document, you should be\\%
-       aware 'babel' will not set Script and Language for them, so\\%
+       There is nothing intrinsically wrong, and you can\\%,
+       ignore this message altogether if you do not need\\%
+       this font. If they are used in the document, be aware\\%
+       'babel' will not set Script and Language for it, so\\%
        you may consider defining a new family with \string\babelfont.\\%
-       See the manual for further details about \string\babelfont.\\%
+       See the manual for further details about \string\babelfont.
        Reported}}
    {}}%
 \gdef\bbl@switchfont{%
@@ -16610,7 +16614,9 @@ end
   \ifx\bbl@KVP@onchar\@nnil\else
     \bbl@luahyphenate
     \bbl@exp{%
-      \\\AddToHook{env/document/before}{{\\\select@language{#1}{}}}}%
+      \\\AddToHook{env/document/before}{%
+        {%\let\\\bbl@ifrestoring\\\@firstoftwo
+         \\\select@language{#1}{}}}}%
     \directlua{
       if Babel.locale_mapped == nil then
         Babel.locale_mapped = true
@@ -24781,7 +24787,7 @@ Babel.cjk_breaks = {
   (\bbl@fpmod{#1}{4} == 0) &&
     (!((\bbl@fpmod{#1}{100} == 0) && (\bbl@fpmod{#1}{400} != 0)))}
 \def\bbl@cs@jd#1#2#3{% year, month, day
-  \fp_eval:n{ 1721424.5   + (365 * (#1 - 1)) +
+  \fpeval{ 1721424.5   + (365 * (#1 - 1)) +
     floor((#1 - 1) / 4)   + (-floor((#1 - 1) / 100)) +
     floor((#1 - 1) / 400) + floor((((367 * #2) - 362) / 12) +
     ((#2 <= 2) ? 0 : (\bbl@cs@gregleap{#1} ? -1 : -2)) + #3) }}
@@ -24792,7 +24798,6 @@ Babel.cjk_breaks = {
 %
 %    \begin{macrocode}
 %<*ca-islamic>
-\ExplSyntaxOn
 <@Compute Julian day@>
 % == islamic (default)
 % Not yet implemented
@@ -24813,12 +24818,12 @@ Babel.cjk_breaks = {
 \@namedef{bbl@ca@islamic-civil--}{\bbl@ca@islamicvl@x{-2}}
 \def\bbl@ca@islamicvl@x#1#2-#3-#4\@@#5#6#7{%
   \edef\bbl@tempa{%
-    \fp_eval:n{ floor(\bbl@cs@jd{#2}{#3}{#4})+0.5 #1}}%
+    \fpeval{ floor(\bbl@cs@jd{#2}{#3}{#4})+0.5 #1}}%
   \edef#5{%
-    \fp_eval:n{ floor(((30*(\bbl@tempa-1948439.5)) + 10646)/10631) }}%
-  \edef#6{\fp_eval:n{
+    \fpeval{ floor(((30*(\bbl@tempa-1948439.5)) + 10646)/10631) }}%
+  \edef#6{\fpeval{
     min(12,ceil((\bbl@tempa-(29+\bbl@cs@isltojd{#5}{1}{1}))/29.5)+1) }}%
-  \edef#7{\fp_eval:n{ \bbl@tempa - \bbl@cs@isltojd{#5}{#6}{1} + 1} }}
+  \edef#7{\fpeval{ \bbl@tempa - \bbl@cs@isltojd{#5}{#6}{1} + 1} }}
 %    \end{macrocode}
 %
 % The Umm al-Qura calendar, used mainly in Saudi Arabia, is based
@@ -24868,7 +24873,7 @@ Babel.cjk_breaks = {
     \bbl@afterfi\expandafter\@gobble
   \fi\fi
     {\bbl@error{year-out-range}{2014-2038}{}{}}%
-  \edef\bbl@tempd{\fp_eval:n{ % (Julian) day
+  \edef\bbl@tempd{\fpeval{ % (Julian) day
     \bbl@cs@jd{#2}{#3}{#4} + 0.5 - 2400000 #1}}%
   \count@\@ne
   \bbl@foreach\bbl@cs@umalqura@data{%
@@ -24877,12 +24882,11 @@ Babel.cjk_breaks = {
       \edef\bbl@tempe{\the\count@}%
       \edef\bbl@tempb{##1}%
     \fi}%
-  \edef\bbl@templ{\fp_eval:n{ \bbl@tempe + 16260 + 949 }}% month~lunar
-  \edef\bbl@tempa{\fp_eval:n{ floor((\bbl@templ - 1 ) / 12) }}% annus
-  \edef#5{\fp_eval:n{ \bbl@tempa + 1  }}%
-  \edef#6{\fp_eval:n{ \bbl@templ - (12 * \bbl@tempa) }}%
-  \edef#7{\fp_eval:n{ \bbl@tempd - \bbl@tempb + 1 }}}
-\ExplSyntaxOff
+  \edef\bbl@templ{\fpeval{ \bbl@tempe + 16260 + 949 }}% month~lunar
+  \edef\bbl@tempa{\fpeval{ floor((\bbl@templ - 1 ) / 12) }}% annus
+  \edef#5{\fpeval{ \bbl@tempa + 1  }}%
+  \edef#6{\fpeval{ \bbl@templ - (12 * \bbl@tempa) }}%
+  \edef#7{\fpeval{ \bbl@tempd - \bbl@tempb + 1 }}}
 \bbl@add\bbl@precalendar{%
   \bbl@replace\bbl@ld@calendar{-civil}{}%
   \bbl@replace\bbl@ld@calendar{-umalqura}{}%
@@ -25169,7 +25173,6 @@ Babel.cjk_breaks = {
 %
 %    \begin{macrocode}
 %<*ca-persian>
-\ExplSyntaxOn
 <@Compute Julian day@>
 \def\bbl@cs@firstjal@xx{2012,2016,2020,2024,2028,2029,% March 20
   2032,2033,2036,2037,2040,2041,2044,2045,2048,2049}
@@ -25181,21 +25184,20 @@ Babel.cjk_breaks = {
     {\bbl@error{year-out-range}{2013-2050}{}{}}%
   \bbl@xin@{\bbl@tempa}{\bbl@cs@firstjal@xx}%
   \ifin@\def\bbl@tempe{20}\else\def\bbl@tempe{21}\fi
-  \edef\bbl@tempc{\fp_eval:n{\bbl@cs@jd{\bbl@tempa}{#2}{#3}+.5}}% current
-  \edef\bbl@tempb{\fp_eval:n{\bbl@cs@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}% begin
+  \edef\bbl@tempc{\fpeval{\bbl@cs@jd{\bbl@tempa}{#2}{#3}+.5}}% current
+  \edef\bbl@tempb{\fpeval{\bbl@cs@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}% begin
   \ifnum\bbl@tempc<\bbl@tempb
-    \edef\bbl@tempa{\fp_eval:n{\bbl@tempa-1}}% go back 1 year and redo
+    \edef\bbl@tempa{\fpeval{\bbl@tempa-1}}% go back 1 year and redo
     \bbl@xin@{\bbl@tempa}{\bbl@cs@firstjal@xx}%
     \ifin@\def\bbl@tempe{20}\else\def\bbl@tempe{21}\fi
-    \edef\bbl@tempb{\fp_eval:n{\bbl@cs@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}%
+    \edef\bbl@tempb{\fpeval{\bbl@cs@jd{\bbl@tempa}{03}{\bbl@tempe}+.5}}%
   \fi
-  \edef#4{\fp_eval:n{\bbl@tempa-621}}% set Jalali year
-  \edef#6{\fp_eval:n{\bbl@tempc-\bbl@tempb+1}}% days from 1 farvardin
-  \edef#5{\fp_eval:n{% set Jalali month
+  \edef#4{\fpeval{\bbl@tempa-621}}% set Jalali year
+  \edef#6{\fpeval{\bbl@tempc-\bbl@tempb+1}}% days from 1 farvardin
+  \edef#5{\fpeval{% set Jalali month
     (#6 <= 186) ? ceil(#6 / 31) : ceil((#6 - 6) / 30)}}
-  \edef#6{\fp_eval:n{% set Jalali day
+  \edef#6{\fpeval{% set Jalali day
     (#6 - ((#5 <= 7) ? ((#5 - 1) * 31) : (((#5 - 1) * 30) + 6)))}}}
-\ExplSyntaxOff
 %</ca-persian>
 %    \end{macrocode}
 %
@@ -25207,33 +25209,46 @@ Babel.cjk_breaks = {
 %
 %    \begin{macrocode}
 %<*ca-coptic>
-\ExplSyntaxOn
 <@Compute Julian day@>
 \def\bbl@ca@coptic#1-#2-#3\@@#4#5#6{%
-  \edef\bbl@tempd{\fp_eval:n{floor(\bbl@cs@jd{#1}{#2}{#3}) + 0.5}}%
-  \edef\bbl@tempc{\fp_eval:n{\bbl@tempd - 1825029.5}}%
-  \edef#4{\fp_eval:n{%
+  \edef\bbl@tempd{\fpeval{floor(\bbl@cs@jd{#1}{#2}{#3}) + 0.5}}%
+  \edef\bbl@tempc{\fpeval{\bbl@tempd - 1825029.5}}%
+  \edef#4{\fpeval{%
     floor((\bbl@tempc - floor((\bbl@tempc+366) / 1461)) / 365) + 1}}%
-  \edef\bbl@tempc{\fp_eval:n{%
+  \edef\bbl@tempc{\fpeval{%
      \bbl@tempd - (#4-1) * 365 - floor(#4/4) - 1825029.5}}%
-  \edef#5{\fp_eval:n{floor(\bbl@tempc / 30) + 1}}%
-  \edef#6{\fp_eval:n{\bbl@tempc - (#5 - 1) * 30 + 1}}}
-\ExplSyntaxOff
+  \edef#5{\fpeval{floor(\bbl@tempc / 30) + 1}}%
+  \edef#6{\fpeval{\bbl@tempc - (#5 - 1) * 30 + 1}}}
 %</ca-coptic>
 %<*ca-ethiopic>
-\ExplSyntaxOn
 <@Compute Julian day@>
 \def\bbl@ca@ethiopic#1-#2-#3\@@#4#5#6{%
-  \edef\bbl@tempd{\fp_eval:n{floor(\bbl@cs@jd{#1}{#2}{#3}) + 0.5}}%
-  \edef\bbl@tempc{\fp_eval:n{\bbl@tempd - 1724220.5}}%
-  \edef#4{\fp_eval:n{%
+  \edef\bbl@tempd{\fpeval{floor(\bbl@cs@jd{#1}{#2}{#3}) + 0.5}}%
+  \edef\bbl@tempc{\fpeval{\bbl@tempd - 1724220.5}}%
+  \edef#4{\fpeval{%
     floor((\bbl@tempc - floor((\bbl@tempc+366) / 1461)) / 365) + 1}}%
-  \edef\bbl@tempc{\fp_eval:n{%
+  \edef\bbl@tempc{\fpeval{%
      \bbl@tempd - (#4-1) * 365 - floor(#4/4) - 1724220.5}}%
-  \edef#5{\fp_eval:n{floor(\bbl@tempc / 30) + 1}}%
-  \edef#6{\fp_eval:n{\bbl@tempc - (#5 - 1) * 30 + 1}}}
-\ExplSyntaxOff
+  \edef#5{\fpeval{floor(\bbl@tempc / 30) + 1}}%
+  \edef#6{\fpeval{\bbl@tempc - (#5 - 1) * 30 + 1}}}
 %</ca-ethiopic>
+%    \end{macrocode}
+%
+% \subsection{Julian}
+%
+%    \begin{macrocode}
+%<*ca-julian>
+<@Compute Julian day@>
+\def\bbl@ca@julian#1-#2-#3\@@#4#5#6{%
+  \edef\bbl@tempj{\fpeval{floor(\bbl@cs@jd{#1}{#2}{#3}) + .5}}%
+  \edef\bbl@tempa{\fpeval{\bbl@tempj + 32082.5}}%
+  \edef\bbl@tempb{\fpeval{floor((4 * \bbl@tempa + 3) / 1461)}}%
+  \edef\bbl@tempc{\fpeval{\bbl@tempa - floor(1461*\bbl@tempb/4)}}%
+  \edef\bbl@tempd{\fpeval{floor((5 * \bbl@tempc + 2) / 153)}}%
+  \edef#6{\fpeval{\bbl@tempc - floor((153*\bbl@tempd+2) / 5) + 1}}%
+  \edef#5{\fpeval{\bbl@tempd + 3 - 12 * floor(\bbl@tempd / 10)}}%
+  \edef#4{\fpeval{\bbl@tempb - 4800 + floor(\bbl@tempd / 10)}}}
+%</ca-julian>
 %    \end{macrocode}
 %
 % \subsection{Buddhist}
@@ -25260,7 +25275,7 @@ Babel.cjk_breaks = {
 \ExplSyntaxOn
 <@Compute Julian day@>
 \def\bbl@ca@chinese#1-#2-#3\@@#4#5#6{%
-  \edef\bbl@tempd{\fp_eval:n{%
+  \edef\bbl@tempd{\fpeval{%
     \bbl@cs@jd{#1}{#2}{#3} - 2457072.5 }}%
   \count@\z@
   \@tempcnta=2015
