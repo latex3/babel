@@ -104,3 +104,7 @@ The package `ucharclasses` can be replaced in most cases with the
 `babel` option `onchar`. The latter, unlike the former, works with RTL
 scripts.
 
+## See also
+
+* [Migrating to babel](https://github.com/latex3/babel/discussions/368)
+

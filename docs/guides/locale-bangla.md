@@ -73,3 +73,5 @@ In Unicode, danda and double danda are shared by several scripts, and
 * [Change numbering style to Bengali in nested ordered list](https://tex.stackexchange.com/a/563725/5735)
 * [What is the best way to write Bangla in latex?](https://tex.stackexchange.com/questions/620543/what-is-the-best-way-to-write-bangla-in-latex/620546#620546)
 * [Typesetting Bangla script with LuaLATEX](https://www.latex-project.org/publications/UFi-TUB-tb127fischer-bangla.pdf)
+* [Is it possible to write Bengali with pdfLaTex compiler in the
+  Overleaf platform?](https://tex.stackexchange.com/a/649281/5735)
