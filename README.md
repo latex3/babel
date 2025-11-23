@@ -1,6 +1,6 @@
-## Babel 25.15.105483
+## Babel 25.16
 
-(dev)
+2025-11-23
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.15 are described in:
+Changes in version 25.16 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.15.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.16.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,9 +59,11 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 25.16 (dev)
+#### 25.16 (2025-11-23)
 
 * Julian calendar.
+* New Greek counters without keraia (thanks to [Nikos
+  Platis](https://github.com/nplatis)).
 
 #### 25.15 (2025-11-09)
 
@@ -76,13 +78,7 @@ respective authors.
 * Fix some issues in the {HHHH} notation in transforms.
 * Internal changes related the new language loader, including some
   messages.
-
-#### 25.14 (2025-10-22)
-
-This release comes with a major change. Now provide=* is not
-necessary anymore, so that you can say, for example,
-\usepackage[chinese,marathi]{babel}. There are also some fixes.
-
+  
 ### Previous changes
 
 See https://latex3.github.io/babel/#whats-new

@@ -38,7 +38,7 @@
   % lang       = en-001,
 %}
 \ProvidesFile{babel.dtx}%
-  [2025/11/19 v25.15.105483
+  [2025/11/23 v25.16
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4163,7 +4163,7 @@ The styles are:
 
 \item[Greek] |lower.modern|, |upper.modern|, |lower.ancient|,
 |upper.ancient| (all with keraia), |lower.modern.nonumeralsign|,
-|upper.modern.nonumeralsign| (without keraia)
+|upper.modern.nonumeralsign| (without keraia).
 
 \item[Hebrew] |letters| (\New{3.93} if the language is loaded
 explicitly, also |letters.plain|, |letters.gershayim|, |letters.final|)
@@ -4223,7 +4223,7 @@ with the following command.
 By default the calendar is the Gregorian, but an |ini| file may define
 strings for other calendars: |am| (|ethiopic|), |ar| and
 |ar-|* (|islamic|), |cop| (|coptic|), |fa| (|islamic|, |persian|), |he|
-(|hebrew|), |hi| (|indian|), |th| (|buddhist|), |el| (|julian|).
+(|hebrew|), |hi| (|indian|), |th| (|buddhist|), and (\New{25.16}) |el| (|julian|).
 In the latter case, the three arguments are the year, the month, and
 the day for those in the corresponding calendar. They are \textit{not}
 the Gregorian date to be converted (which means, say, 13 is a valid
@@ -6218,8 +6218,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.15.105483>>
-%<<date=2025/11/19>>
+%<<version=25.16>>
+%<<date=2025/11/23>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -16615,7 +16615,7 @@ end
     \bbl@luahyphenate
     \bbl@exp{%
       \\\AddToHook{env/document/before}{%
-        {%\let\\\bbl@ifrestoring\\\@firstoftwo
+        {\let\\\bbl@ifrestoring\\\@firstoftwo
          \\\select@language{#1}{}}}}%
     \directlua{
       if Babel.locale_mapped == nil then
@@ -25235,6 +25235,8 @@ Babel.cjk_breaks = {
 %    \end{macrocode}
 %
 % \subsection{Julian}
+%
+% Based on [ReinDersh].
 %
 %    \begin{macrocode}
 %<*ca-julian>
