@@ -10,7 +10,7 @@ registry](https://www.iana.org/assignments/language-subtag-registry/language-sub
 across the web and international data repositories. `Babel` adheres to
 those standards for locale classification, which are based (according
 to ISO 639) not only on linguistic similarity, but also on the
-existence of a common literature (which sometimes also means an
+existence of a common literature (which sometimes also means a
 specific typographical tradition) or of a common ethnolinguistic
 identity.
 
@@ -24,7 +24,7 @@ corresponding file names.
 **Base language names** are written in lowercase English, with no
   spaces. Diacritics and non-letter characters (ampersands, hyphens,
   apostrophes) are removed to simplify parsing and avoid encoding issues:
-  - `northernkurdish` (not “Northern Kurdish”)
+  - `northernsami` (not “Northern Sami”)
   - `kinaraya` (from “Kinaray-a”)
   - `lu` (from “Lü”)
   - `bosniaherzegovina` (from “Bosnia & Herzegovina”)
