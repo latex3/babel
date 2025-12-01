@@ -1,0 +1,19 @@
+% This file is part of babel. For further details see:
+% https://www.ctan.org/pkg/babel
+\ifx\BabelBeforeIni\undefined
+  \PackageError{babel}%
+    {This file is a component of babel and cannot\MessageBreak
+     be loaded directly. I'll stop immediately}%
+    {Just use babel as documented.}%
+  \stop
+\fi
+\BabelBeforeIni{de}{%
+  \BabelDefinitionFile{0}{german}{%
+    \PackageWarning{babel}{%
+      The name 'german' with the 'ldf' mechanism is\MessageBreak
+      currently assigned to the old 1901 variant of German.\MessageBreak
+      For modern post-1996 German, use the name 'ngerman'.\MessageBreak
+      Reported}%
+    \def\BabelIniTag{de-1901}}%
+}
+\endinput
