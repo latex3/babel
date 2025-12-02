@@ -33,12 +33,11 @@
 % \iffalse
 %<*filedriver>
 % \DocumentMetadata{
-  % tagging=on,
-  % testphase  = {sec,toc,text},
-  % lang       = en-001,
-%}
+%   tagging = on,
+%   lang    = en-001,
+% }
 \ProvidesFile{babel.dtx}%
-  [2025/11/23 v25.16
+  [2025/12/02 v25.16.106738
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -201,7 +200,7 @@
 \let\check@percent\relax
 % Changes to doc.sty (add <<...>> syntax)
 \def\Module#1{%
-  \mod@math@codes$\langle${\color{thered}$\mathsf{#1}$}〉}
+  \mod@math@codes$\langle${\color{thered}$\mathsf{#1}$}$\rangle$}
 \begingroup 
   \catcode`\<\active
   \catcode`\>\active
@@ -2940,7 +2939,11 @@ print ‘cge’. (It doesn't work with \pdftex.)
   {english}
 \end{verbatim}
   Here |[d]| is the day number, |[MMMM]| the month name and |[y]| the
-  year. It will print something like ‘5 (October) 2024’.
+  year. It will print something like ‘5 (October) 2024’. Remember
+  \texttt{[d]}, \texttt{[m]} and \texttt{[y]} admit the syntax
+  \texttt{[}\m{period}\texttt{\string|}\m{counter}\texttt{]}, where
+  \m{counter} is a counter name as defined in the counters section. See
+  \New{3.44} and the Greek \texttt{ini} files for examples.
 \end{example}
 
 \begin{example}
@@ -4026,9 +4029,18 @@ a shorthand) are not a source of trouble anymore.
 \xetex{}). With the first, a string of ‘Latin’ digits are converted to
 the native digits of that language; the second takes a counter name as
 argument. With the option |maparabic| in |\babelprovide|, |\arabic| is
-redefined to produce the native digits (this is done \textit{globally},
-to avoid inconsistencies in, for example, page numbering; note as
-well dates do not rely on |\arabic|.)
+redefined to produce the native digits.
+
+\begin{note}
+  \texttt{maparabic} redefines |\arabic| \textit{globally}, to avoid
+  inconsistencies in, for example, page numbering; note as well dates
+  do not rely on |\arabic|. You can customize counters separately with
+  the standard \LaTeX{} procedures. For example, to label sections with
+  the digit numerals of the \textit{current} locale:
+\begin{verbatim}
+\renewcommand\thesection{\localecounter{digits}{section}}
+\end{verbatim}
+\end{note}
 
 For example:
 \setengine{luatex/xetex}
@@ -6218,8 +6230,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.16>>
-%<<date=2025/11/23>>
+%<<version=25.16.106738>>
+%<<date=2025/12/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6662,6 +6674,11 @@ wouldn’t exist.
        Babel = Babel or {}
        Babel.debug = false }%
    \fi}
+% Temporary:
+\newif\ifbbl@debuggerman
+\@ifpackagewith{babel}{debug-german}
+  {\bbl@debuggermantrue}
+  {\bbl@debuggermanfalse}
 %    \end{macrocode}
 %
 % Macros to deal with errors, warnings, etc. Errors are stored in a
@@ -6822,6 +6839,7 @@ wouldn’t exist.
 \DeclareOption{activeacute}{}
 \DeclareOption{activegrave}{}
 \DeclareOption{debug}{}
+\DeclareOption{debug-german}{} % Temporary
 \DeclareOption{noconfigs}{}
 \DeclareOption{showlanguages}{}
 \DeclareOption{silent}{}
@@ -11866,7 +11884,10 @@ wouldn’t exist.
 % special case, for a fixed form (see |babel-he.ini|, for example).
 %
 %    \begin{macrocode}
-\newcommand\localenumeral[2]{\bbl@cs{cntr@#1@\languagename}{#2}}
+\newcommand\localenumeral[2]{%
+  \bbl@ifunset{bbl@cntr@#1@\languagename}%
+    {#2}%
+    {\bbl@cs{cntr@#1@\languagename}{#2}}}
 \def\bbl@localecntr#1#2{\localenumeral{#2}{#1}}
 \newcommand\localecounter[2]{%
   \expandafter\bbl@localecntr

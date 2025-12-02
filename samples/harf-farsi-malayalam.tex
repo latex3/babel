@@ -1,12 +1,9 @@
 \documentclass{article}
 
-\usepackage[bidi=basic]{babel}
+\usepackage[bidi=basic, malayalam, persian]{babel}
 
-\babelprovide[main, import]{persian}
-\babelprovide[import]{malayalam}
-
-\babelfont{rm}[Renderer=Harfbuzz]{Amiri}
-\babelfont[malayalam]{rm}[Renderer=Harfbuzz]{FreeSerif}
+\babelfont{rm}{Amiri}
+\babelfont[malayalam]{rm}{FreeSerif}
 
 \begin{document}
 
@@ -35,6 +32,6 @@
 
 \medskip
 
-Typeset with luahblatex. Requires luaotfload 3.11.
+Typeset with lualatex and babel \csname bbl@version\endcsname
 
 \end{document}
