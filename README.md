@@ -1,4 +1,4 @@
-## Babel 25.16.106738
+## Babel 25.16.106869
 
 (dev)
 
@@ -62,7 +62,9 @@ respective authors.
 #### 25.17 (dev)
 * Kurdish (tag 'ku') reorganized.
 * Gregorian calendar for Sanskrit.
-* Fix a bug in \localenumeral.
+* Fixes:
+  - \localenumeral some times raised and error.
+  - Wrong vertical space with \[\] after a LaTeX update.
 
 #### 25.16 (2025-11-23)
 

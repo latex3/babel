@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2025/12/02 v25.16.106738
+  [2025/12/03 v25.16.106869
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6230,8 +6230,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.16.106738>>
-%<<date=2025/12/02>>
+%<<version=25.16.106869>>
+%<<date=2025/12/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6675,10 +6675,10 @@ wouldn’t exist.
        Babel.debug = false }%
    \fi}
 % Temporary:
-\newif\ifbbl@debuggerman
+\newif\ifBabelDebugGerman
 \@ifpackagewith{babel}{debug-german}
-  {\bbl@debuggermantrue}
-  {\bbl@debuggermanfalse}
+  {\BabelDebugGermantrue}
+  {\BabelDebugGermanfalse}
 %    \end{macrocode}
 %
 % Macros to deal with errors, warnings, etc. Errors are stored in a
@@ -7346,11 +7346,15 @@ wouldn’t exist.
 % environment, declare |\endselectlaguage|, just for safety.
 %
 %    \begin{macrocode}
-\expandafter\def\csname selectlanguage \endcsname#1{%
+\let\bbl@select@opts\@empty
+\expandafter\def\csname selectlanguage \endcsname{%
+  \@ifnextchar[\bbl@select@s{\bbl@select@s[]}}
+\def\bbl@select@s[#1]#2{%
+  \def\bbl@select@opts{#1}%
   \ifnum\bbl@hymapsel=\@cclv\let\bbl@hymapsel\tw@\fi
   \bbl@push@language
   \aftergroup\bbl@pop@language
-  \bbl@set@language{#1}}
+  \bbl@set@language{#2}}
 \let\endselectlanguage\relax
 %    \end{macrocode}
 %
@@ -7384,13 +7388,22 @@ wouldn’t exist.
   % The old buggy way. Preserved for compatibility, but simplified
   \edef\languagename{\expandafter\string#1\@empty}%
   \select@language{\languagename}%
+  \bbl@xin@{,main,}{,\bbl@select@opts,}%
+  \ifin@
+    \let\bbl@main@language\localename
+    \let\mainlocalename\localename
+  \fi
+  \let\bbl@select@opts\@empty
   % write to auxs
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
     \if@filesw
-      \ifx\babel@aux\@gobbletwo\else % Set if single in the first, redundant
-        \bbl@savelastskip
-        \protected@write\@auxout{}{\string\babel@aux{\bbl@auxname}{}}%
-        \bbl@restorelastskip
+      \bbl@xin@{,noaux,}{,\bbl@select@opts,}%
+      \ifin@\else
+        \ifx\babel@aux\@gobbletwo\else % Set if single in the first, redundant
+          \bbl@savelastskip
+          \protected@write\@auxout{}{\string\babel@aux{\bbl@auxname}{}}%
+          \bbl@restorelastskip
+        \fi
       \fi
       \bbl@usehooks{write}{}%
     \fi
@@ -13395,6 +13408,7 @@ wouldn’t exist.
 \edef\bbl@tempc{%
  \bbl@tempf,@@,\bbl@language@opts
  \ifx\bbl@opt@main\@nnil\else,\bbl@opt@main\fi}
+\let\BabelLocalesTentative\bbl@tempc
 %
 \bbl@foreach\bbl@tempc{%
   \in@{@@}{#1}%  <- Ugly
@@ -16487,7 +16501,8 @@ end
 %<</More package options>>
 %
 \ifnum\bbl@bidimode>\z@ % Any bidi=
-  \matheqdirmode\@ne % A luatex primitive
+  \matheqdirmode\@ne        % A luatex primitive
+  \mathemptydisplaymode\@ne % Another
   \let\bbl@eqnodir\relax
   \def\bbl@eqdel{()}
   \def\bbl@eqnum{%
@@ -16551,6 +16566,8 @@ end
         \fi}
       % Hack for wrong vertical spacing with \[ \]. YA luatex bug?:
       \expandafter\bbl@sreplace\csname] \endcsname{$$}{\eqno\kern.001pt$$}%
+      \expandafter\bbl@sreplace\csname] \endcsname
+        {\dollardollar@end}{\eqno\kern.001pt\dollardollar@end}%
     \else % amstex
       \bbl@exp{% Hack to hide maybe undefined conditionals:
         \chardef\bbl@eqnpos=0%
