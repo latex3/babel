@@ -8,9 +8,13 @@
   \stop
 \fi
 \BabelBeforeIni{gsw}{%
-  \PackageWarning{babel}{%
-    Name 'swissgerman' is assigned to the language\MessageBreak
-    with tag 'gsw', not to Swiss High German ('de-CH')\MessageBreak
-    Reported} 
+  \BabelDefinitionFile{0}{swissgerman}{%
+    \PackageWarning{babel}{%
+      Name 'swissgerman' is currently assigned to Swiss High\MessageBreak
+      German (traditional), with tag 'de-CH-1901', not to\MessageBreak
+      Swiss German (tag 'gsw'). For the latter, load the\MessageBreak
+       'ini' version with 'provide' (see the manual).\MessageBreak
+      Reported}%
+    \def\BabelIniTag{de-CH-1901}}
 }
 \endinput
