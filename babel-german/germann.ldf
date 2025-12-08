@@ -1,0 +1,126 @@
+%%
+%% This is file `german.ldf',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% german.dtx  (with options: `code')
+%% This is a generated file.
+%% 
+%% Copyright 2025 Testing and any individual authors
+%% listed elsewhere in this file.  All rights reserved.
+%% 
+%% This file is intended to be used with the Babel system.
+%% ------------------------------------------------------
+%% 
+%% It may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2003/12/01 or later.
+%% 
+%% This work has the LPPL maintenance status "maintained".
+%% 
+%% The Current Maintainer of this work is Testing.
+%% 
+%% The list of derived (unpacked) files belonging to the distribution
+%% and covered by LPPL is defined by the unpacking scripts (with
+%% extension .ins) which are part of the distribution.
+\ProvidesLanguage{german}
+        [2025-12-02 0.0 Test for german]
+%% File `german.dtx'
+\LdfInit{german}\captionsgerman
+\ifx\l@german\@undefined
+  \@nopatterns{German}
+  \adddialect\l@german0\fi
+\StartBabelCommands*{german}{captions}
+  [unicode, charset=utf8, fontenc=TU EU1 EU2]
+  \SetString{\prefacename}{N-Vorwort}
+  \SetString{\refname}{N-Literatur}
+  \SetString{\abstractname}{N-Zusammenfassung}
+  \SetString{\bibname}{N-Literaturverzeichnis}
+  \SetString{\chaptername}{N-Kapitel}
+  \SetString{\appendixname}{N-Anhang}
+  \SetString{\contentsname}{N-Inhaltsverzeichnis}
+  \SetString{\listfigurename}{N-Abbildungsverzeichnis}
+  \SetString{\listtablename}{N-Tabellenverzeichnis}
+  \SetString{\indexname}{N-Index}
+  \SetString{\figurename}{N-Abbildung}
+  \SetString{\tablename}{N-Tabelle}
+  \SetString{\partname}{N-Teil}
+  \SetString{\enclname}{N-Anlage(n)}
+  \SetString{\ccname}{N-Verteiler}
+  \SetString{\headtoname}{N-An}
+  \SetString{\pagename}{N-Seite}
+  \SetString{\seename}{N-siehe}
+  \SetString{\alsoname}{N-siehe auch}
+  \SetString{\proofname}{N-Beweis}
+  \SetString{\glossaryname}{N-Glossar}
+
+\StartBabelCommands*{german}{date}
+  [unicode, charset=utf8, fontenc=TU EU1 EU2]
+  \SetStringLoop{month#1name}{%
+    Januar,Februar,M\"arz,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember}
+\StartBabelCommands*{german}{captions}
+  \SetString{\prefacename}{N-Vorwort}
+  \SetString{\refname}{N-Literatur}
+  \SetString{\abstractname}{N-Zusammenfassung}
+  \SetString{\bibname}{N-Literaturverzeichnis}
+  \SetString{\chaptername}{N-Kapitel}
+  \SetString{\appendixname}{N-Anhang}
+  \SetString{\contentsname}{N-Inhaltsverzeichnis}
+  \SetString{\listfigurename}{N-Abbildungsverzeichnis}
+  \SetString{\listtablename}{N-Tabellenverzeichnis}
+  \SetString{\indexname}{N-Index}
+  \SetString{\figurename}{N-Abbildung}
+  \SetString{\tablename}{N-Tabelle}
+  \SetString{\partname}{N-Teil}
+  \SetString{\enclname}{N-Anlage(n)}
+  \SetString{\ccname}{N-Verteiler}
+  \SetString{\headtoname}{N-An}
+  \SetString{\pagename}{N-Seite}
+  \SetString{\seename}{N-siehe}
+  \SetString{\alsoname}{N-siehe auch}
+  \SetString{\proofname}{N-Beweis}
+  \SetString{\glossaryname}{N-Glossar}
+
+\StartBabelCommands*{german}{date}
+  \SetStringLoop{month#1name}{%
+    Januar,Februar,M\"arz,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember}
+  \SetString\today{%
+    {\number\day}. \@nameuse{month\romannumeral\month name} {\number\year}}
+\EndBabelCommands
+\initiate@active@char{"}
+\declare@shorthand{german}{"-}{\bbl@hy@soft}
+\declare@shorthand{german}{"=}{\babel@texpdf{\bbl@hy@hard}{-}{-}{\textminus}}
+\declare@shorthand{german}{"|}{\babel@texpdf{\discretionary{-}{}{\kern.03em}}{}{}{}}
+\addto\extrasgerman{%
+  \bbl@frenchspacing
+  \languageshorthands{german}%
+  \bbl@activate{"}}
+\addto\noextrasgerman{%
+  \bbl@nonfrenchspacing
+  \bbl@deactivate{"}}
+\ldf@finish{german}
+%%
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+%%
+\endinput
+%%
+%% End of file `german.ldf'.

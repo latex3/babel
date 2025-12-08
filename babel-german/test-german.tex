@@ -1,0 +1,21 @@
+\documentclass{article}
+
+% ngerman -- no changes
+% germant <- contents must be of current german
+% german <- contents must be of current ngerman
+
+\usepackage[
+  debug-german,
+  % ngerman,  % Loads ngerman.ldf
+  german,   % loads the germann.ldf in this dir (96)
+  % german-traditional % loads the germantrad.ldf in this dir
+  % german, ngerman  % Loads germant in this dir and then ngerman
+  % ngerman, german  % Loads ngerman and then germant in this dir
+  ]
+{babel}
+
+\begin{document}
+
+\localename-\refname
+
+\end{document}

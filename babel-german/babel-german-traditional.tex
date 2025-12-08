@@ -1,0 +1,17 @@
+% This file is part of babel. For further details see:
+% https://www.ctan.org/pkg/babel
+\ifx\BabelBeforeIni\undefined
+  \PackageError{babel}%
+    {This file is a component of babel and cannot\MessageBreak
+     be loaded directly. I'll stop immediately}%
+    {Just use babel as documented.}%
+  \stop
+\fi
+\BabelBeforeIni{de-1901}{%
+  % Temporal redirect, for testing
+  \AddBabelHook[german-traditional]{babel-german}{languagename}{%
+    \def\languagename{germantrad}\let\localename\languagename}%
+  \def\CurrentOption{germantrad}%
+  \BabelDefinitionFile{0}{germantrad}{}%
+}
+\endinput
