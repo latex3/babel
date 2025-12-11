@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2025/12/03 v25.16.106869
+  [2025/12/11 v25.17
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -999,7 +999,7 @@ the language with tag \texttt{gsw}}
 \tag{irish}{}
 \tag{italian}{}
 \tag{japanese}{}
-\tag{kurmanji}{}
+\tagmin{kurmanji}{}
 \tag{latin}{}
 \subtagalt{classicallatin}{}
 \subtagalt{medievallatin}{}
@@ -1319,14 +1319,14 @@ Egypt, with tag \texttt{ar-EG}.}
 \tag{geez}{}{gez}
 \tag{georgian}{\hascapu}{ka}
 \tag{german}{\hascapu\hascapl}{de}
-\note{Note the \texttt{ldf} names differ. See note above.} 
+\note{Note the \texttt{ldf} names differ. See note above and also \New{25.17}.} 
 \subtag{german-traditional}{\hascapu\hascapl}{de-1901}
 \subtagalt{austrian}{\hascapu\hascapl}{de-AT}
 \subtag{german-austria}{\hascapu\hascapl}{de-AT}
 \subtag{german-at}{\hascapu\hascapl}{de-AT}
 \subtag{german-austria-traditional}{\hascapu\hascapl}{de-AT-1901}
 \subtagalt{swisshighgerman}{\hascapu\hascapl}{de-CH}\note{\texttt{swissgerman},
-with tag \texttt{gsw} is a different language.}
+with tag \texttt{gsw} is a different language. But see \New{25.17}.}
 \subtag{german-switzerland}{\hascapu\hascapl}{de-CH}
 \subtag{german-ch}{\hascapu\hascapl}{de-CH}
 \subtag{german-switzerland-traditional}{\hascapu\hascapl}{de-CH-1901}
@@ -1384,6 +1384,12 @@ with tag \texttt{gsw} is a different language.}
 \subtag{korean-hani}{\hascapu}{ko-Hani}
 \tag{koyraborosenni}{}{ses}
 \tag{koyrachiini}{}{khq}
+\tag{kurdish}{\hascapu\hascapl}{ku}
+\subtag{kurdish-arab}{\hascapu}{ku-Arab}
+\subtag{kurdish-arabic}{\hascapu}{ku-Arab}
+\subtag{northernkurdish}{\hascapu\hascapl}{ku}
+\subtag{northernkurdish-arab}{\hascapu}{ku-Arab}
+\subtag{northernkurdish-arabic}{\hascapu}{ku-Arab}
 \tag{kwasio}{}{nmg}
 \tag{kyrgyz}{}{ky}
 \tagmin{ladino}{}{lad}
@@ -1456,10 +1462,6 @@ with tag \texttt{gsw} is a different language.}
 \tag{nigerianpidgin}{}{pcm}
 \tag{nko}{}{nqo}
 \tag{northernfrisian}{}{frr}
-\tag{northernkurdish}{\hascapu\hascapl}{kmr}
-\subtag{kurmanji}{\hascapu\hascapl}{kmr}
-\subtag{northernkurdish-arab}{\hascapu}{kmr-Arab}
-\subtag{northernkurdish-arabic}{\hascapu}{kmr-Arab}
 \tag{northernluri}{}{lrc}
 \tag{northernsami}{\hascapu\hascapl}{se}
 \subtag{samin}{\hascapu\hascapl}{se}
@@ -1543,6 +1545,7 @@ with tag \texttt{gsw} is a different language.}
 \tag{saraiki}{}{skr}
 \tag{sardinian}{}{sc}
 \tag{scottishgaelic}{\hascapu\hascapl}{gd}
+\subtag{scottish}{\hascapu\hascapl}{gd}
 \tag{sena}{}{seh}
 \tag{serbian}{\hascapu\hascapl}{sr}
 \note{Note the \texttt{ldf} names differ. See note above.}
@@ -1599,7 +1602,8 @@ with tag \texttt{gsw} is a different language.}
 \tag{swedish}{\hascapu\hascapl}{sv}
 \tag{swissgerman}{}{gsw}
 \note{Different from \texttt{swisshighgerman} (de-CH), which is German as spoken
-in Switzerland.}
+in Switzerland. Currently still assigned to the \texttt{de-CH-1901};
+see \New{25.17}.}
 \tag{syriac}{}{syr}
 \tag{tachelhit}{}{shi}
 \subtag{tachelhit-latin}{}{shi-Latn}
@@ -2931,7 +2935,7 @@ print ‘cge’. (It doesn't work with \pdftex.)
 
 \begin{example}
   Currently the date format can be changed only with imported data, but
-  with its high level interface it’s quite straightforward:
+  with its high level interface it’s rather straightforward:
 \begin{verbatim}
 \babelprovide[
     import,
@@ -2940,7 +2944,7 @@ print ‘cge’. (It doesn't work with \pdftex.)
 \end{verbatim}
   Here |[d]| is the day number, |[MMMM]| the month name and |[y]| the
   year. It will print something like ‘5 (October) 2024’. Remember
-  \texttt{[d]}, \texttt{[m]} and \texttt{[y]} admit the syntax
+  \texttt{[d]} and \texttt{[y]} admit the syntax
   \texttt{[}\m{period}\texttt{\string|}\m{counter}\texttt{]}, where
   \m{counter} is a counter name as defined in the counters section. See
   \New{3.44} and the Greek \texttt{ini} files for examples.
@@ -4243,7 +4247,7 @@ month number with |calendar=hebrew| and |calendar=coptic|). However,
 with the option |convert| it’s converted (using internally the
 following command).
 
-Even with a certain calendar there may be variants. In Kurmanji the
+Even with a certain calendar there may be variants. In Kurdish the
 default variant prints something like \textit{30. Çileya Pêşîn 2019},
 but with |variant=izafa| it prints \textit{31’ê Çileya Pêşînê 2019}.
 
@@ -6230,8 +6234,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.16.106869>>
-%<<date=2025/12/03>>
+%<<version=25.17>>
+%<<date=2025/12/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They

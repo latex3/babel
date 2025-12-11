@@ -1,6 +1,6 @@
-## Babel 25.16.106869
+## Babel 25.17
 
-(dev)
+2025-12-11
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.16 are described in:
+Changes in version 25.17 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.16.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.17.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,32 +59,18 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 25.17 (dev)
-* Kurdish (tag 'ku') reorganized.
-* Gregorian calendar for Sanskrit.
+#### 25.17 (2025-12-11)
+* Changes mainly related to ini locale files: Kurdish (tag 'ku'),
+  Sanskrit (Gregorian calendar), German, Swiss German.
 * Fixes:
   - \localenumeral some times raised and error.
-  - Wrong vertical space with \[\] after a LaTeX update.
+  - Broken vertical space with \[\] after a LaTeX update.
 
 #### 25.16 (2025-11-23)
 
 * Julian calendar.
 * New Greek counters without keraia (thanks to [Nikos
   Platis](https://github.com/nplatis)).
-
-#### 25.15 (2025-11-09)
-
-* Greek:
-  - Fix: wrong diacritics in Unicode engines and the ldf mechanism.
-  - In Ancient Greek, now use 'lower.ancient' in dates by default.
-  - Calendar variants: 'letters' for Polytonic, 'digits' for Ancient.
-  - New counter: 'attic'.
-  - \greeknumeral is more customizable and can be accessed with the
-    new counter 'ionian'.
-* Font options can go at the end of \babelfont (like \set...font). 
-* Fix some issues in the {HHHH} notation in transforms.
-* Internal changes related the new language loader, including some
-  messages.
   
 ### Previous changes
 
