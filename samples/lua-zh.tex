@@ -1,18 +1,16 @@
-\documentclass{article}
+\documentclass{book}
 
-\usepackage{babel}
+\usepackage[chinese, provide={transforms=spacing.basic}]{babel}
 
-\babelprovide[main,import,
-              script=CJK,language=Chinese Traditional]
-             {chinese}
-
-% Arphic font, bundled with TeXLive:
-\babelfont{rm}{AR PL SungtiL GB}
+% Noto font, to be downloaded separately
+\babelfont{rm}{Noto Serif CJK SC}
 
 \setlength{\parskip}{2mm}
 \setlength{\parindent}{0pt}
 
 \begin{document}
+
+\chapter{建築風格}
 
 \section{现代建筑教育}
 
@@ -25,5 +23,7 @@
 \medskip
 
 From Wikipedia.
+
+Typeset with lualatex, babel 25.17.
 
 \end{document}

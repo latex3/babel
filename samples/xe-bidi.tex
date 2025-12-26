@@ -1,5 +1,8 @@
 \documentclass{article}
 
+% xelatex is not recommended because of its limitations in the
+% handling of bidi text. Use lualatex instead.
+
 \usepackage[english, bidi=bidi-l]{babel}
 
 \babelprovide[import, maparabic]{arabic}
@@ -14,7 +17,7 @@ One two \foreignlanguage{arabic}{ثلاثة أربعة} five six.
 
 \selectlanguage{arabic}
 
-\section{العَرَبِيَّة‎}
+\section{العَرَبِيَّة}
 
 واحد اثنان \foreignlanguage{english}{three four} خمسة ستة
 

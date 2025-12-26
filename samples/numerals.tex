@@ -7,17 +7,18 @@
 
 \usepackage[bidi=basic, layout=lists]{babel}
 
+% Mapping \alph in a language dependent way:
 \babelprovide[alph=lower]{russian}
 \babelprovide[alph=informal]{japanese}
 \babelprovide[alph=lower.modern]{greek}
 \babelprovide[alph=abjad]{persian}
 \babelprovide[alph=alphabetic]{thai}
-\babelprovide[alph=syllabe]{korean}
+\babelprovide[alph=syllable]{korean}
 \babelprovide[alph=letters]{hebrew}
 
 \babelfont{rm}{FreeSerif}
-\babelfont[japanese]{rm}[Renderer=Harfbuzz]{IPAexMincho}
-\babelfont[korean]{rm}[Renderer=Harfbuzz]{Baekmuk Gulim}
+\babelfont[japanese]{rm}{IPAexMincho}
+\babelfont[korean]{rm}{Baekmuk Gulim}
 
 \renewcommand{\theenumi}{\alph{enumi}}
 \renewcommand{\labelenumi}{(\theenumi)}
@@ -56,5 +57,9 @@
 \end{multicols}
 
 \hrule
+
+\medskip
+
+Typeset with lualatex, babel 25.17.
 
 \end{document}
