@@ -10,7 +10,7 @@ Kashmiri language using the Arabic script.
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `kashmiri` as the main language
-(assuming `luatex`, which is the recommended engine, and `babel` ≥24.14,
+(assuming `luatex`, which is the recommended engine, and `babel` ≥25.2,
 although it may work with previous versions).
 
 ```tex
@@ -18,7 +18,7 @@ although it may work with previous versions).
 
 \usepackage[provide=*,bidi=basic]{babel}
 
-\babelfont{rm}{FreeSerif}
+\babelfont{rm}{AwamiNastaliq}
 
 \begin{document}
 
@@ -36,6 +36,6 @@ Digits $=$ \localenumeral{digits}{0123456789}
 ## Contribute
 
 If you are a native speaker or have expertise in this language, you can
-contribute, make suggestion or request an enhancement by submitting a
+contribute, make suggestions or request enhancements by submitting a
 pull request, opening an issue, or contacting the Babel maintainer with
 the link above.
