@@ -7,6 +7,9 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 Khmer language using the Khmer script.
 
+See also [How to write Khmer language in
+Latex](https://stackoverflow.com/a/79855740/8303149).
+
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `khmer` as the main language

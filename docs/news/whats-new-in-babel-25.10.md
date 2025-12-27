@@ -1,6 +1,6 @@
 # What's new in babel 25.10
 
-2026-06-10
+2025-06-10
 
 ## Fixes
 
