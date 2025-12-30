@@ -1,6 +1,6 @@
-## Babel 25.17
+## Babel 25.18
 
-2025-12-11
+2025-12-30
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 25.17 are described in:
+Changes in version 25.18 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-25.17.html
+https://latex3.github.io/babel/news/whats-new-in-babel-25.18.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,19 +59,19 @@ respective authors.
 
 ### Summary of latest changes
 
+#### 25.18 (2025-12-30)
+
+* Changes in ini locale files: Belarusian, Breton.
+* 2 new locale files, for Alemannic and Alsatian.
+
 #### 25.17 (2025-12-11)
+
 * Changes mainly related to ini locale files: Kurdish (tag 'ku'),
   Sanskrit (Gregorian calendar), German, Swiss German.
 * Fixes:
   - \localenumeral some times raised and error.
   - Broken vertical space with \[\] after a LaTeX update.
 
-#### 25.16 (2025-11-23)
-
-* Julian calendar.
-* New Greek counters without keraia (thanks to [Nikos
-  Platis](https://github.com/nplatis)).
-  
 ### Previous changes
 
 See https://latex3.github.io/babel/#whats-new
