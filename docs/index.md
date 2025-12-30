@@ -90,6 +90,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
+| [25.18](news/whats-new-in-babel-25.18.html) | 2025-12-30 | Changes in Belarusian, Breton. New: Alemannic, Alsatian. |
 | [25.17](news/whats-new-in-babel-25.17.html) | 2025-12-11 | Changes in Kurdish, Sanskrit, German |
 | [25.16](news/whats-new-in-babel-25.16.html) | 2025-11-23 | Julian calendar. |
 | [25.15](news/whats-new-in-babel-25.15.html) | 2025-11-09 | Greek improved. Some fixes. |
