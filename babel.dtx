@@ -16384,25 +16384,9 @@ end
 %
 \chardef\bbl@thetextdir\z@
 \chardef\bbl@thepardir\z@
-\def\bbl@getluadir#1{%
-  \directlua{
-    if tex.#1dir == 'TLT' then
-      tex.sprint('0')
-    elseif tex.#1dir == 'TRT' then
-      tex.sprint('1')
-    else
-      tex.sprint('0')
-    end}}
-\def\bbl@setluadir#1#2#3{% 1=text/par.. 2=\textdir.. 3=0 lr/1 rl
-  \ifcase#3\relax
-    \ifcase\bbl@getluadir{#1}\relax\else
-      #2 TLT\relax
-    \fi
-  \else
-    \ifcase\bbl@getluadir{#1}\relax
-      #2 TRT\relax
-    \fi
-  \fi}
+\def\bbl@setluadir#1#2#3{% 1=\textdirection.. 2=0 lr/1 rl
+  \ifnum #1=#2\else #1=#2\relax\fi
+  }
 %    \end{macrocode}
 %
 % |\bbl@attr@dir| stores the directions with a mask: |..00PPTT|, with
@@ -16411,15 +16395,15 @@ end
 %    \begin{macrocode}
 \def\bbl@thedir{0}
 \def\bbl@textdir#1{%
-  \bbl@setluadir{text}\textdir{#1}%
+  \bbl@setluadir\textdirection{#1}%
   \chardef\bbl@thetextdir#1\relax
   \edef\bbl@thedir{\the\numexpr\bbl@thepardir*4+#1}%
   \setattribute\bbl@attr@dir{\numexpr\bbl@thepardir*4+#1}}
 \def\bbl@pardir#1{%  Used twice
-  \bbl@setluadir{par}\pardir{#1}%
+  \bbl@setluadir\pardirection{#1}%
   \chardef\bbl@thepardir#1\relax}
-\def\bbl@bodydir{\bbl@setluadir{body}\bodydir}%   Used once
-\def\bbl@pagedir{\bbl@setluadir{page}\pagedir}%   Unused
+\def\bbl@bodydir{\bbl@setluadir\bodydirection}%   Used once
+\def\bbl@pagedir{\bbl@setluadir\pagedirection}%   Unused
 \def\bbl@dirparastext{\pardir\the\textdir\relax}% Used once
 %    \end{macrocode}
 %
