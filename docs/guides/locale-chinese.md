@@ -34,11 +34,20 @@ Here is a short example:
 
 ![](../media/chinese-sample.png)
 
-## Line breaking
+## Line breaking and spacing
 
-Rules are harcoded in XeTeX, but in LuaTeX a line breaking mechanism
-has been devised, based on (but not strictly following) the Unicode
-algorithm.
+In LuaTeX a line breaking mechanism has been devised, based on (but not
+strictly following) the Unicode algorithm. Spacing is controlled with
+the transform `spacing.basic`. See [What’s new in babel
+25.6](https://latex3.github.io/babel/news/whats-new-in-babel-25.6.html)
+for details.
+
+Rules are harcoded in XeLaTeX, although those based on the ‘interchar’
+mechanism have to be [activated
+explicitly](https://latex3.github.io/babel/news/whats-new-in-babel-24.4.html)
+with `interchar=linebreak.basic` when importing with `\babelprovide` or
+the option `provide`. (Note they are active by default with XeTeX, but
+not with XeLaTeX.)
 
 Justification in both engines is controlled by a couple of options in
 `\babelprovide`.
@@ -54,16 +63,10 @@ breaking class, with, for example:
 \babelcharproperty{`“}{linebreak}{op}
 \babelcharproperty{`”}{linebreak}{cl}
 ```
-   
+
 For the meaning of these codes, see the [Unicode Standard Annex #14:
 Line Breaking
 Properties](https://www.unicode.org/reports/tr14/).
-
-## Spacing
-
-With the transform `spacing.basic`. See [What’s new in babel
-25.6](https://latex3.github.io/babel/news/whats-new-in-babel-25.6.html)
-for details.
 
 ## Counters
 
@@ -74,7 +77,7 @@ Chinese numerals, passed as option to `\babelprovide`:
   with `xetex`, too.
 * `mapdigits` does it at the engine level. This is
   usually the preferred method.
-  
+
 To perform this conversión, use the following settings:
 ```tex
 \usepackage[chinese, provide=*]{babel}
@@ -83,10 +86,23 @@ To perform this conversión, use the following settings:
 
 In addition, the following counters are predefined:
 
-* `cjk-earthly-branch` ▸ 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem ` ▸ 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `fullwidth.lower.alpha` ▸ ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` ▸ Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
+
+A further counter is `date.sexagenary`, loaded only when importing with `\babelprovide` or
+the option `provide`.
+
+### Calendar
+
+Dates with the tradicional calendar can be printed. By default the year
+is numeric, but there is a variant with the sexagenary cycle. See
+[What's new in babel
+3.94](https://latex3.github.io/babel/news/whats-new-in-babel-3.94.html).
 
 ## Useful links
 
@@ -95,6 +111,3 @@ In addition, the following counters are predefined:
 * [Mixing Chinese Characters with
   English](https://tex.stackexchange.com/questions/499910/mixing-chinese-characters-with-english-main-language-in-2019-what-is-the-st#499992)
 * [CJK languages in one document](https://tex.stackexchange.com/a/604412/5735)
-
-
-

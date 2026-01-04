@@ -66,13 +66,13 @@ The way the keraia is defined is tentative, and very likely it will change. Do *
 
 ## Arabic (Egypt) (ar-EG)
 
-* `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
-* `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
+* `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
+* `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
 ## Arabic (Iraq) (ar-IQ)
 
-* `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
-* `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
+* `abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
+* `maghrebi.abjad` = ا ب ج د ه‍ و ز ح ط ي ك ل م ن ص ع ف ض ق ر س ت ث خ ذ ظ غ ش
 
 ## Arabic (Jordan) (ar-JO)
 
@@ -214,13 +214,13 @@ The way the keraia is defined is tentative, and very likely it will change. Do *
 Also available in all `zh` locales is `date.sexagenary`, defined in
 `babel-chinese.tex` and used in the Chinese calendar.
 
-* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
-* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
-* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
-* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
-* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
-* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
-* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
+* `cjk-earthly-branch` = 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥
+* `cjk-heavenly-stem` = 甲 乙 丙 丁 戊 己 庚 辛 壬 癸
+* `circled.ideograph` = ㊀ ㊁ ㊂ ㊃ ㊄ ㊅ ㊆ ㊇ ㊈ ㊉
+* `parenthesized.ideograph` = ㈠ ㈡ ㈢ ㈣ ㈤ ㈥ ㈦ ㈧ ㈨ ㈩
+* `fullwidth.lower.alpha` = ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+* `fullwidth.upper.alpha` = Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+* `date.day` = 初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十
 
 ## Church Slavonic (cu-Cyrs)
 

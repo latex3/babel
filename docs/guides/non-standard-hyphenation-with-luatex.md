@@ -169,6 +169,10 @@ letter followed optionally by a discretionary, but only Á is actually
 transformed (in these cases, you may want to go back with the key
 `step`).
 
+*Note.* Only the set provided by Lua 5.0, is supported, which excludes
+`%f`. Also, `%a` is restricted to chars below U+FFFF (you can still
+use directly chars above U+FFFF, even with char-sets).
+
 **Captures** with `()` are allowed, too. Ordinary captures are allowed
 _inside_ the empty captures (they must resolve to exactly one
 character). In the pattern, **the syntax `{n}`** is a backreference
