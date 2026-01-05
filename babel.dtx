@@ -16354,8 +16354,9 @@ end
   }}
 %    \end{macrocode}
 %
-% The basic setup. The output is modified at a very low level to set
-% the |\bodydir| to the |\pagedir|. Sadly, we have to deal with boxes
+% The basic setup. The output routine callbacks are used to set
+% the |\bodydir| to the |\pagedir|, this way it works with packages
+% using special output routines (e.g. multicol). Sadly, we have to deal with boxes
 % in math with basic, so the |\bbl@mathboxdir| hack is activated every
 % math with the package option bidi=. The hack for the PUA is no longer
 % necessary with |basic| (24.8), but it’s kept in |basic-r|.
@@ -16379,7 +16380,27 @@ end
     \fi}
   \newattribute\bbl@attr@dir 
   \directlua{ Babel.attr_dir = luatexbase.registernumber'bbl@attr@dir' }
-  \bbl@exp{\output{\bodydir\pagedir\the\output}}
+  \directlua{
+    local currbodydir
+    local putnext = token.unchecked_put_next
+    local runtoks = tex.runtoks
+    local zero, one = token.create("z@"), token.create("@ne")
+    local bodydir, pagedir = token.create("bodydir"), token.create("pagedir")
+    local bodydirection = token.create("bodydirection")
+    luatexbase.add_to_callback("pre_output_filter", function() 
+      currbodydir = tex.bodydir
+      runtoks(function()
+        putnext({bodydir,pagedir})
+      end)
+      return true end, "Babel.pre_output")
+    luatexbase.add_to_callback("buildpage_filter", function(info) 
+      if info \string~= "after_output" then return true end
+      runtoks(function()
+        local num = currbodydir == "TLT" and zero or one
+        putnext({bodydirection,num})
+      end)
+      return true end, "Babel.post_output")
+  }
 \fi
 %
 \chardef\bbl@thetextdir\z@
@@ -16901,24 +16922,6 @@ end
            {\hbox\bgroup\bgroup}{\hbox\bgroup\bgroup\localerestoredirs}}%
         {}}%
   \fi
-%    \end{macrocode}
-%
-% Very likely the |\output| routine must be patched in a quite general
-% way to make sure the |\bodydir| is set to |\pagedir|. Note outside
-% |\output| they can be different (and often are). For the moment, two
-% \textit{ad hoc} changes.
-%
-%    \begin{macrocode}
-  \AtBeginDocument{%
-    \@ifpackageloaded{multicol}%
-      {\toks@\expandafter{\multi@column@out}%
-       \edef\multi@column@out{\bodydir\pagedir\the\toks@}}%
-      {}%
-    \@ifpackageloaded{paracol}%
-      {\edef\pcol@output{%
-        \bodydir\pagedir\unexpanded\expandafter{\pcol@output}}}%
-      {}}%
-\fi
 %    \end{macrocode}
 %
 % Finish here if there in no |layout|.
