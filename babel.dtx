@@ -13088,6 +13088,11 @@ wouldn’t exist.
 % interface (including |language| and |script| in |\babelprovide|.
 % First the (mostly) common macros. 
 %
+% Things can get tricky when |\parshape| and |\hangindent| are involved. 
+% Fortunately, latest releases of \luatex{} simplify a lot the solution 
+% with |\shapemode|.
+
+%
 %    \begin{macrocode}
 \bbl@trace{Macros to switch the text direction}
 \def\bbl@alscripts{%
@@ -13132,7 +13137,12 @@ wouldn’t exist.
     \bbl@bodydir{#1}%
     \bbl@pardir{#1}% <- Must precede \bbl@textdir
   \fi
-  \bbl@textdir{#1}}
+  \bbl@textdir{#1}%
+  \ifnum\pagedirection=\pardirection
+    \shapemode\z@
+  \else
+    \shapemode=-3\relax
+  \fi}
 \ifnum\bbl@bidimode>\z@
   \AddBabelHook{babel-bidi}{afterextras}{\bbl@switchdir}
   \DisableBabelHook{babel-bidi}
@@ -16517,13 +16527,8 @@ end
 % time; remember that inline math is included in the list of text nodes
 % marked with 'math' (11) nodes too).
 %
-% |\@hangfrom| is useful in many contexts and it is redefined always
-% with the |layout| option.
-%
-% There are, however, a number of issues when the text direction is not
-% the same as the box direction (as set by |\bodydir|), and when
-% |\parbox| and |\hangindent| are involved. Fortunately, latest
-% releases of \luatex{} simplify a lot the solution with |\shapemode|.
+% There are, however, a number of issues when the text direction 
+% is not the same as the box direction (as set by \bodydir).
 %
 % With the issue \#15 I realized commands are best patched, instead of
 % redefined. With a few lines, a modification could be applied to
@@ -16963,13 +16968,7 @@ end
   {}
   {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
 \IfBabelLayout{pars}
-  {\def\@hangfrom#1{%
-    \setbox\@tempboxa\hbox{{#1}}%
-    \hangindent\wd\@tempboxa
-    \ifnum\bbl@getluadir{page}=\bbl@getluadir{par}\else
-      \shapemode\@ne
-    \fi
-    \noindent\box\@tempboxa}}
+  {}
   {}
 \fi
 %
@@ -16988,14 +16987,7 @@ end
    {}
 %
 \IfBabelLayout{lists}
-  {\let\bbl@OL@list\list
-   \bbl@sreplace\list{\parshape}{\bbl@listparshape}%
-   \let\bbl@NL@list\list
-   \def\bbl@listparshape#1#2#3{%
-     \parshape #1 #2 #3 %
-     \ifnum\bbl@getluadir{page}=\bbl@getluadir{par}\else
-       \shapemode\tw@
-     \fi}}
+  {}
   {}
 %
 \IfBabelLayout{graphics}
