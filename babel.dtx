@@ -17043,18 +17043,6 @@ end
         \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
         \bbl@sreplace\tikzpicture{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
       \fi
-      \ifx\tcolorbox\@undefined\else
-        \def\tcb@drawing@env@begin{%
-          \csname tcb@before@\tcb@split@state\endcsname
-          \bbl@pictsetdir\tw@
-          \begin{\kvtcb@graphenv}%
-          \tcb@bbdraw
-          \tcb@apply@graph@patches}%
-        \def\tcb@drawing@env@end{%
-          \end{\kvtcb@graphenv}%
-          \bbl@pictresetdir
-          \csname tcb@after@\tcb@split@state\endcsname}%
-      \fi
     }}
   {}
 %    \end{macrocode}
