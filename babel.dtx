@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/01/17 v25.18.111351
+  [2026/01/17 v25.18.111369
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6243,7 +6243,7 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.18.111351>>
+%<<version=25.18.111369>>
 %<<date=2026/01/17>>
 %    \end{macrocode}
 %
@@ -7585,7 +7585,12 @@ wouldn’t exist.
 % horizontal mode.
 %
 %    \begin{macrocode}
-\long\def\otherlanguage#1{%
+\edef\otherlanguage{%
+  \noexpand\protect
+  \expandafter\noexpand\csname otherlanguage \endcsname}
+\expandafter\def\csname otherlanguage \endcsname{%
+  \@ifstar{\@nameuse{otherlanguage*}}\bbl@otherlanguage}
+\def\bbl@otherlanguage#1{%
   \def\bbl@selectorname{other}%
   \ifnum\bbl@hymapsel=\@cclv\let\bbl@hymapsel\thr@@\fi
   \csname selectlanguage \endcsname{#1}%
@@ -8291,7 +8296,8 @@ wouldn’t exist.
   \bbl@afterlang
   \let\bbl@afterlang\relax
   \let\BabelModifiers\relax
-  \let\bbl@screset\relax}%
+  \let\bbl@screset\relax
+  \bbl@id@assign}%
 \def\ldf@finish#1{%
   \loadlocalcfg{#1}%
   \bbl@afterldf
@@ -8323,6 +8329,9 @@ wouldn’t exist.
   \let\localename\bbl@main@language
   \let\mainlocalename\bbl@main@language
   \bbl@id@assign
+  \ifcase\bbl@engine\or
+    \setattribute\bbl@attr@locale\localeid
+  \fi
   \bbl@patterns{\languagename}}
 %    \end{macrocode}
 %
@@ -16430,7 +16439,7 @@ end
             d.dir = '+TRT'
             for item in node.traverse(head) do
               if item.id == 11 or item.id == node.id'glyph' then
-                node.insert_before(head, item, d)
+                head = node.insert_before(head, item, d)
                 break
               end
             end
