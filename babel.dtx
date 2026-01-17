@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/01/17 v25.18.111348
+  [2026/01/17 v25.18.111351
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6243,7 +6243,7 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.18.111348>>
+%<<version=25.18.111351>>
 %<<date=2026/01/17>>
 %    \end{macrocode}
 %
@@ -16428,7 +16428,12 @@ end
           if Babel.hlist_has_bidi(head) then
             local d = node.new(node.id'dir')
             d.dir = '+TRT'
-            node.insert_before(head, node.has_glyph(head), d)
+            for item in node.traverse(head) do
+              if item.id == 11 or item.id == node.id'glyph' then
+                node.insert_before(head, item, d)
+                break
+              end
+            end
             local inmath = false
             for item in node.traverse(head) do
               if item.id == 11 then
