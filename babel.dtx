@@ -1,7 +1,7 @@
 % \iffalse
 % This document requires lualatex
 %%
-%% Copyright (C) 2012-2025 Javier Bezos and Johannes L. Braams.
+%% Copyright (C) 2012-2026 Javier Bezos and Johannes L. Braams.
 %% Copyright (C) 1989-2012 Johannes L. Braams and
 %%           any individual authors listed elsewhere in this file.
 %% All rights reserved.
@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2025/12/30 v25.18
+  [2026/01/17 v25.18.111348
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -4952,9 +4952,10 @@ use the latter.
   punctuation) the |default| method is more often than not much
   preferable. 
 
-  As of October 2025 this package is unmaintained, so it’s advisable to
-  move to \luatex, whose bidi algorithm is an integral part of \babel,
-  and therefore don’t rely on external packages.
+  As of January 2026 the actual maintenance status of this package is
+  unclear, so it’s advisable to move to \luatex, whose bidi algorithm
+  is an integral part of \babel, and therefore doesn’t rely on external
+  packages.
 \end{warning}
 
 There are samples on GitHub, under \texttt{/required/babel/samples}.
@@ -6242,8 +6243,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.18>>
-%<<date=2025/12/30>>
+%<<version=25.18.111348>>
+%<<date=2026/01/17>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13088,11 +13089,6 @@ wouldn’t exist.
 % interface (including |language| and |script| in |\babelprovide|.
 % First the (mostly) common macros. 
 %
-% Things can get tricky when |\parshape| and |\hangindent| are involved. 
-% Fortunately, latest releases of \luatex{} simplify a lot the solution 
-% with |\shapemode|.
-
-%
 %    \begin{macrocode}
 \bbl@trace{Macros to switch the text direction}
 \def\bbl@alscripts{%
@@ -13137,12 +13133,7 @@ wouldn’t exist.
     \bbl@bodydir{#1}%
     \bbl@pardir{#1}% <- Must precede \bbl@textdir
   \fi
-  \bbl@textdir{#1}%
-  \ifnum\pagedirection=\pardirection
-    \shapemode\z@
-  \else
-    \shapemode=-3\relax
-  \fi}
+  \bbl@textdir{#1}}
 \ifnum\bbl@bidimode>\z@
   \AddBabelHook{babel-bidi}{afterextras}{\bbl@switchdir}
   \DisableBabelHook{babel-bidi}
@@ -13196,7 +13187,6 @@ wouldn’t exist.
     \fi}
   \def\bbl@pardir#1{\chardef\bbl@thepardir#1\relax}
   \let\bbl@bodydir\@gobble
-  \let\bbl@pagedir\@gobble
   \def\bbl@dirparastext{\chardef\bbl@thepardir\bbl@thetextdir}
 %    \end{macrocode}
 %
@@ -13404,11 +13394,12 @@ wouldn’t exist.
 %
 % For efficiency, first preprocess the class options to remove those
 % with |=|, which are becoming increasingly frequent (no language
-% should contain this character).
+% should contain this character). Here we use the more robust macro to
+% traverse a clist from the \LaTeX3 layer.
 %
 %    \begin{macrocode}
 \def\bbl@tempf{,}
-\bbl@foreach\@raw@classoptionslist{%
+\@nameuse{clist_map_inline:Nn}\@raw@classoptionslist{%
   \in@{=}{#1}%
   \ifin@\else
     \edef\bbl@tempf{\bbl@tempf\zap@space#1 \@empty,}%
@@ -15692,9 +15683,8 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
     line.width = size
   end
 
-  % Exclude last line. todo. But-- it discards one-word lines, too!
-  % ? Look for glue = 12:15
-  if (line.glue_sign == 1 and line.glue_order == 0) then
+  % Exclude last line.
+  if (line.next ~= nil and line.glue_order == 0) then
     elongs = {}     % Stores elongated candidates of each line
     k_list = {}     % And all letters with kashida
     pos_inline = 0  % Not yet used
@@ -16203,10 +16193,8 @@ end
       if not u.find(patt, '()', nil, true) then
         patt = '()' .. patt .. '()'
       end
-      if #1 == 1 then
-        patt = string.gsub(patt, '%(%)%^', '^()')
-        patt = string.gsub(patt, '%$%(%)', '()$')
-      end
+      patt = string.gsub(patt, '%(%)%^', '^()')
+      patt = string.gsub(patt, '%$%(%)', '()$')
       patt = u.gsub(patt, '{(.)}',
              function (n)
                return '%' .. (tonumber(n) and (tonumber(n)+1) or n)
@@ -16364,9 +16352,8 @@ end
   }}
 %    \end{macrocode}
 %
-% The basic setup. The output routine callbacks are used to set
-% the |\bodydir| to the |\pagedir|, this way it works with packages
-% using special output routines (e.g. multicol). Sadly, we have to deal with boxes
+% The basic setup. The output is modified at a very low level to set
+% the |\bodydir| to the |\pagedir|. Sadly, we have to deal with boxes
 % in math with basic, so the |\bbl@mathboxdir| hack is activated every
 % math with the package option bidi=. The hack for the PUA is no longer
 % necessary with |basic| (24.8), but it’s kept in |basic-r|.
@@ -16390,38 +16377,22 @@ end
     \fi}
   \newattribute\bbl@attr@dir 
   \directlua{ Babel.attr_dir = luatexbase.registernumber'bbl@attr@dir' }
-  \directlua{
-    local currbodydir
-    local putnext = token.unchecked_put_next
-    local runtoks = tex.runtoks
-    local zero, one = token.create("z@"), token.create("@ne")
-    local bodydir, pagedir = token.create("bodydir"), token.create("pagedir")
-    local bodydirection = token.create("bodydirection")
-    luatexbase.add_to_callback("pre_output_filter", function() 
-      currbodydir = tex.bodydir
-      runtoks(function()
-        putnext({bodydir,pagedir})
-      end)
-      return true end, "Babel.pre_output")
-    luatexbase.add_to_callback("buildpage_filter", function(info) 
-      if info \string~= "after_output" then return true end
-      runtoks(function()
-        local num = currbodydir == "TLT" and zero or one
-        putnext({bodydirection,num})
-      end)
-      return true end, "Babel.post_output")
-  }
+  \bbl@exp{\output{\bodydir\pagedir\the\output}}
 \fi
 %
 \chardef\bbl@thetextdir\z@
 \chardef\bbl@thepardir\z@
-\def\bbl@setluadir#1#2{% 1=\textdirection.. 2=0 lr/1 rl
-  \ifnum #1=#2\else #1=#2\relax\fi
-  }
+\def\bbl@setluadir#1#2{% 1=\text/pardirection  2=0l/1r/2al:
+  \ifcase#2\relax
+    \ifcase#1\else#1=\z@\fi
+  \else
+    \ifcase#1#1=\@ne\fi
+  \fi}
 %    \end{macrocode}
 %
 % |\bbl@attr@dir| stores the directions with a mask: |..00PPTT|, with
-% masks 0xC (|PP| is the par dir) and 0x3 (|TT| is the text dir).
+% masks 0xC (|PP| is the par dir) and 0x3 (|TT| is the text dir). These
+% macro names are shared by the 3 engines, with different definitions. 
 %
 %    \begin{macrocode}
 \def\bbl@thedir{0}
@@ -16434,8 +16405,7 @@ end
   \bbl@setluadir\pardirection{#1}%
   \chardef\bbl@thepardir#1\relax}
 \def\bbl@bodydir{\bbl@setluadir\bodydirection}%   Used once
-\def\bbl@pagedir{\bbl@setluadir\pagedirection}%   Unused
-\def\bbl@dirparastext{\pardir\the\textdir\relax}% Used once
+\def\bbl@dirparastext{\pardirection=\textdirection\relax}% Used once
 %    \end{macrocode}
 %
 % RTL text inside math needs special attention. It affects not only to
@@ -16511,8 +16481,13 @@ end
 % time; remember that inline math is included in the list of text nodes
 % marked with 'math' (11) nodes too).
 %
-% There are, however, a number of issues when the text direction 
-% is not the same as the box direction (as set by \bodydir).
+% |\@hangfrom| is useful in many contexts and it is redefined always
+% with the |layout| option.
+%
+% There are, however, a number of issues when the text direction is not
+% the same as the box direction (as set by |\bodydir|), and when
+% |\parbox| and |\hangindent| are involved. Fortunately, latest
+% releases of \luatex{} simplify a lot the solution with |\shapemode|.
 %
 % With the issue \#15 I realized commands are best patched, instead of
 % redefined. With a few lines, a modification could be applied to
@@ -16855,14 +16830,14 @@ end
 %    \begin{macrocode}
 \def\localerestoredirs{%
   \ifcase\bbl@thetextdir
-    \ifnum\textdirection=\z@\else\textdir TLT\fi
+    \ifnum\textdirection=\z@\else\textdirection=\z@\fi
   \else
-    \ifnum\textdirection=\@ne\else\textdir TRT\fi
+    \ifnum\textdirection=\@ne\else\textdirection=\@ne\fi
   \fi
   \ifcase\bbl@thepardir
-    \ifnum\pardirection=\z@\else\pardir TLT\bodydir TLT\fi
+    \ifnum\pardirection=\z@\else\pardirection=\z@\bodydirection=\z@\fi
   \else
-    \ifnum\pardirection=\@ne\else\pardir TRT\bodydir TRT\fi
+    \ifnum\pardirection=\@ne\else\pardirection=\@ne\bodydirection=\@ne\fi
   \fi}
 %
 \IfBabelLayout{tabular}%
@@ -16872,8 +16847,8 @@ end
     {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
 %
 \ifnum\bbl@bidimode>\@ne % Any lua bidi= except default=1
-  % Redefine: vrules mess up dirs.
-  \def\@arstrut{\relax\copy\@arstrutbox}%
+  % Redefine: vrules mess up dirs (why?).
+  \AtBeginDocument{\def\@arstrut{\relax\copy\@arstrutbox}}%
   \ifcase\bbl@tabular@mode\or % 1 = Mixed - default
     \let\bbl@parabefore\relax
     \AddToHook{para/before}{\bbl@parabefore}
@@ -16911,6 +16886,24 @@ end
            {\hbox\bgroup\bgroup}{\hbox\bgroup\bgroup\localerestoredirs}}%
         {}}%
   \fi
+%    \end{macrocode}
+%
+% Very likely the |\output| routine must be patched in a quite general
+% way to make sure the |\bodydir| is set to |\pagedir|. Note outside
+% |\output| they can be different (and often are). For the moment, two
+% \textit{ad hoc} changes.
+%
+%    \begin{macrocode}
+  \AtBeginDocument{%
+    \@ifpackageloaded{multicol}%
+      {\toks@\expandafter{\multi@column@out}%
+       \edef\multi@column@out{\bodydir\pagedir\the\toks@}}%
+      {}%
+    \@ifpackageloaded{paracol}%
+      {\edef\pcol@output{%
+        \bodydir\pagedir\unexpanded\expandafter{\pcol@output}}}%
+      {}}%
+\fi
 %    \end{macrocode}
 %
 % Finish here if there in no |layout|.
@@ -16952,7 +16945,13 @@ end
   {}
   {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
 \IfBabelLayout{pars}
-  {}
+  {\def\@hangfrom#1{%
+    \setbox\@tempboxa\hbox{{#1}}%
+    \hangindent\wd\@tempboxa
+    \ifnum\pagedirection=\pardirection\else
+      \shapemode\@ne
+    \fi
+    \noindent\box\@tempboxa}}
   {}
 \fi
 %
@@ -16971,7 +16970,14 @@ end
    {}
 %
 \IfBabelLayout{lists}
-  {}
+  {\let\bbl@OL@list\list
+   \bbl@sreplace\list{\parshape}{\bbl@listparshape}%
+   \let\bbl@NL@list\list
+   \def\bbl@listparshape#1#2#3{%
+     \parshape #1 #2 #3 %
+     \ifnum\pagedirection=\pardirection\else
+       \shapemode\tw@
+     \fi}}
   {}
 %
 \IfBabelLayout{graphics}
@@ -17042,6 +17048,18 @@ end
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
         \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
         \bbl@sreplace\tikzpicture{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
+      \fi
+      \ifx\tcolorbox\@undefined\else
+        \def\tcb@drawing@env@begin{%
+          \csname tcb@before@\tcb@split@state\endcsname
+          \bbl@pictsetdir\tw@
+          \begin{\kvtcb@graphenv}%
+          \tcb@bbdraw
+          \tcb@apply@graph@patches}%
+        \def\tcb@drawing@env@end{%
+          \end{\kvtcb@graphenv}%
+          \bbl@pictresetdir
+          \csname tcb@after@\tcb@split@state\endcsname}%
       \fi
     }}
   {}

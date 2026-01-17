@@ -1,6 +1,6 @@
-## Babel 25.18
+## Babel 25.18.111348
 
-2025-12-30
+(dev)
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,18 +59,14 @@ respective authors.
 
 ### Summary of latest changes
 
+#### 26.1 (dev)
+* Fixes
+
 #### 25.18 (2025-12-30)
 
 * Changes in ini locale files: Belarusian, Breton.
 * 2 new locale files, for Alemannic and Alsatian.
 
-#### 25.17 (2025-12-11)
-
-* Changes mainly related to ini locale files: Kurdish (tag 'ku'),
-  Sanskrit (Gregorian calendar), German, Swiss German.
-* Fixes:
-  - \localenumeral some times raised and error.
-  - Broken vertical space with \[\] after a LaTeX update.
 
 ### Previous changes
 
