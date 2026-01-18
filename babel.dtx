@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/01/17 v25.18.111369
+  [2026/01/18 v26.1
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -708,7 +708,7 @@ bibliography). In this regard, it is worth remembering that
 can be used just in case.
 
 \New{3.84} With \pdftex, when a language is loaded on the fly
-(internally it's loaded with |\babelprovide|) selectors now set the
+(internally it’s loaded with |\babelprovide|) selectors now set the
 font encoding based on the list provided when loading |fontenc|. Not
 all scripts have an associated encoding, so this feature works only
 with Latin, Cyrillic, Greek, Arabic, Hebrew, Cherokee, Armenian, and
@@ -2061,7 +2061,7 @@ can write:
 In addition, captions can be switched with |captions| (or both, of
 course, with |date,| |captions|). Until 3.43 you had to write something
 like |{\selectlanguage{..} ..}|, which was not always the most
-convenient way.
+convenient way. See also the variant |\otherlanguage*| below.
 
 \begin{note}
   |\bibitem| is out of sync with |\selectlanguage| in the \file{aux}
@@ -2086,7 +2086,9 @@ current mode (vertical or horizontal) also remains unchanged.
 {\oarg{option-list}\marg{language}\Eenv{otherlanguage*}}
 
 Same as |\foreignlanguage| but as environment. Spaces are \textit{not}
-ignored.
+ignored. \New{26.1} It can be used as a command, too, like
+|{\otherlanguage*{tamil}...}|, but avoid using several of them
+inside a group.
 
 It was originally devised for intermixing left-to-right
 typesetting with right-to-left typesetting in engines not supporting a
@@ -2495,14 +2497,14 @@ can take the following values:
 \item[first] sets it at the first switching commands in the
   current or parent scope (typically, when the |aux| file is first read
   and at |\begin{document}|, but also the first |\selectlanguage| in
-  the preamble), and it's the default if a single language option has
+  the preamble), and it’s the default if a single language option has
   been stated. If a language option is repeated (e.g., |malay, malay|),
   it counts as several ones, even if there is only a language.
 \item[select] sets it only at |\selectlanguage|;
 \item[other] also sets it at |otherlanguage|;
 \item[other*] also sets it at |otherlanguage*| as well as in heads and
   feet (if the option |headfoot| is used) and in auxiliary files (i.e.,
-  at |\select@language|), and it's the default if several language
+  at |\select@language|), and it’s the default if several language
   options have been stated. The option |first| can be regarded as an
   optimized version of \texttt{other*} for monolingual
   documents.\footnote{Providing |foreign| is pointless, because the
@@ -3119,7 +3121,7 @@ set |\frenchspacing| only in |bengali|:
 command to switch the language. Its default value is |toc,lof,lot|, but
 you may redefine it with |\renewcommand| to add further types in case
 you need or there is a package enabling additional files, e.g., for
-theorems, algorithms, notation (it's up to you to make sure no toc type
+theorems, algorithms, notation (it’s up to you to make sure no toc type
 is duplicated).
 
 \subsection{Code based on the selector}
@@ -3321,7 +3323,7 @@ alternative to |justification=unhyphenated|.
 \Describe{main}{} This valueless option makes the language the main one
 (thus overriding that set when \babel\ is loaded).
 \begin{example}
-  Let's assume your document (\luatex{} or \xetex{}) is mainly in
+  Let’s assume your document (\luatex{} or \xetex{}) is mainly in
   Polytonic Greek but with some sections in Italian. Then, the
   first attempt should be:
 \begin{verbatim}
@@ -3494,7 +3496,7 @@ wins), but language exceptions take precedence over global ones.
 
 It can be used only in the preamble, and exceptions are set when the
 language is first selected, thus taking into account changes of
-|\lccodes|'s done in |\extras<language>| as well as the language-specific
+|\lccodes|’s done in |\extras<language>| as well as the language-specific
 encoding (not set in the preamble by default). For example:
 \begin{verbatim}
 \babelhyphenation{Wal-hal-la Dar-bhan-ga}
@@ -3853,7 +3855,7 @@ shorthands. Language-dependent user shorthands take precedence over
 “normal” user shorthands.
 
 \begin{example}
-  Let's assume you want a unified set of shorthands for discretionaries
+  Let’s assume you want a unified set of shorthands for discretionaries
   (languages do not define shorthands consistently, and |"-|, |\-|,
   |"=| have different meanings).  You can start with, say:
 \begin{verbatim}
@@ -5081,15 +5083,14 @@ options are required by all engines.
 
 \item[sectioning] makes sure the sectioning macros are typeset in the
   main language, but with the title text in the current language (see
-  below |\BabelPatchSection| for further details). 
+  below |\BabelPatchSection| for further details).
 
-\item[counters] required in all engines (except \luatex{} with
-  |bidi=basic|) to reorder section numbers and the like (e.g.,
-  \m{subsection}.\m{section}); required in \xetex{} and \pdftex{} for
-  counters in general, as well as in \luatex{} with |bidi=default|;
-  required in \luatex{} for numeric footnote marks $>$9 with
-  |bidi=basic-r| (but \textit{not} with |bidi=basic|); note, however,
-  it can depend on the counter format.
+\item[counters] required in all engines to reorder section numbers and
+  the like (e.g., \m{subsection}.\m{section}); required in \xetex{} and
+  \pdftex{} for counters in general, as well as in \luatex{} with
+  |bidi=default|; required in \luatex{} for numeric footnote marks $>$9
+  with |bidi=basic-r| (but \textit{not} with |bidi=basic|); note,
+  however, it can depend on the counter format.
 
   With |counters|, |\arabic| is not only considered L text always (with
   |\babelsublr|, see below), but also an “isolated” block which does
@@ -5176,7 +5177,7 @@ or
 
 Digits in \pdftex{} must be marked up explicitly (unlike \luatex{} with
 |bidi=basic| or |bidi=basic-r| and, usually, \xetex{}). This command is
-provided to set \marg{lr-text} in L mode if necessary. It's intended
+provided to set \marg{lr-text} in L mode if necessary. It’s intended
 for what Unicode calls weak characters, because words are best set with
 the corresponding language. For this reason, there is no |rl|
 counterpart.
@@ -5455,7 +5456,7 @@ also some distributions generate the file with some tool).
 requested by the language (except the “0th” language, typically
 \textsf{english}, which is preloaded always). You may want to have a
 local |language.dat| for a particular project (for example, a book on
-Chemistry). The loader for lua(e)tex is slightly different as it's not
+Chemistry). The loader for lua(e)tex is slightly different as it’s not
 based on \babel{}, but on \texttt{etex.src}; however, \babel{} reloads
 the data so that it works as expected.
 
@@ -5921,7 +5922,7 @@ used to properly switch French spacing on and off.
 
 \New{3.9a} Babel 3.9 provides a way of defining strings in several
 encodings, intended mainly for \luatex{} and \xetex, although the old
-way of defining/switching strings still works and it's used by default.
+way of defining/switching strings still works and it’s used by default.
 
 It consists in a series of blocks started with
 |\StartBabelCommands|. The last block is closed with
@@ -6057,7 +6058,7 @@ The starred version just forces |strings| to take a value -- if not set
 as package option (which is now deprecated), then the default for the
 engine is used. This is not done by default to prevent backward
 incompatibilities, but if you are creating a new language this version
-is better. It's up to the maintainers of the current languages to
+is better. It’s up to the maintainers of the current languages to
 decide if using it is appropriate.
 
 \Describe{\EndBabelCommands}{}
@@ -6094,7 +6095,7 @@ and controlled with the package option |hyphenmap|.
 There are three helper macros to be used inside |\SetHyphenMap|:
 \begin{itemize}
 \item |\BabelLower|\marg{uccode}\marg{lccode} is
-  similar to |\lccode| but it's ignored if the char has been set and
+  similar to |\lccode| but it’s ignored if the char has been set and
   saves the original lccode to restore it when switching the language
   (except with |hyphenmap=first|).
 \item |\BabelLowerMM|\marg{uccode-from}\marg{uccode-to}%
@@ -6176,7 +6177,7 @@ wouldn’t exist.
  \bibitem{treebus} K.F. Treebus.
     \emph{Tekstwijzer, een gids voor het grafisch verwerken van
     tekst},
-    SDU Uitgeverij ('s-Gravenhage, 1988).
+    SDU Uitgeverij (’s-Gravenhage, 1988).
 \end{thebibliography}
 \end{document}
 %</filedriver>
@@ -6243,8 +6244,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=25.18.111369>>
-%<<date=2026/01/17>>
+%<<version=26.1>>
+%<<date=2026/01/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6427,7 +6428,7 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % A \textit{for} loop. Each item (trimmed) is |#1|.  It cannot be
-% nested (it's doable, but we don't need it).
+% nested (it’s doable, but we don't need it).
 %
 %    \begin{macrocode}
 \def\bbl@vforeach#1#2{%
@@ -6558,7 +6559,7 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % Another hackish tool, to apply case changes inside a protected
-% macros. It's based on the internal |\let|'s made by |\MakeUppercase|
+% macros. It’s based on the internal |\let|’s made by |\MakeUppercase|
 % and |\MakeLowercase| between things like |\oe| and |\OE|.
 %
 %    \begin{macrocode}
@@ -6577,8 +6578,8 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % The following adds some code to |\extras...| both before and after,
-% while avoiding doing it twice. It's somewhat convoluted, to deal with
-% |#|'s. Used to deal with alph, Alph and frenchspacing when there are
+% while avoiding doing it twice. It’s somewhat convoluted, to deal with
+% |#|’s. Used to deal with alph, Alph and frenchspacing when there are
 % already changes (with |\babel@save|). 
 %
 %    \begin{macrocode}
@@ -7107,7 +7108,7 @@ wouldn’t exist.
 % Otherwise raises an error.
 %
 % The argument of |\bbl@fixname| has to be a macro name, as it may get
-% “fixed” if casing (lc/uc) is wrong. It's an attempt to fix a
+% “fixed” if casing (lc/uc) is wrong. It’s an attempt to fix a
 % long-standing bug when |\foreignlanguage| and the like appear in a
 % |\MakeXXXcase|. However, a lowercase form is not imposed to improve
 % backward compatibility (perhaps you defined a language named
@@ -7142,7 +7143,7 @@ wouldn’t exist.
 % We first need a couple of macros for a simple BCP 47 look up. It also
 % makes sure, with |\bbl@bcpcase|, casing is the correct one, so that
 % sr-latn-ba becomes fr-Latn-BA. Note |#4| may contain some
-% |\@empty|'s, but they are eventually removed.
+% |\@empty|’s, but they are eventually removed.
 % 
 % |\bbl@bcplookup| either returns the found |ini| tag or it is
 % |\relax|.
@@ -7250,7 +7251,7 @@ wouldn’t exist.
 %
 % \emph{But} when the language change happens \emph{inside} a group
 % the end of the group doesn't write anything to the auxiliary
-% files. Therefore we need \TeX's |aftergroup| mechanism to help
+% files. Therefore we need \TeX’s |aftergroup| mechanism to help
 % us. The command |\aftergroup| stores the token immediately
 % following it to be executed when the current group is closed. So
 % we define a temporary control sequence |\bbl@pop@language| to be
@@ -7407,18 +7408,18 @@ wouldn’t exist.
     \let\mainlocalename\localename
   \fi
   \let\bbl@select@opts\@empty
-  % write to auxs
+  % write to aux files
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
     \if@filesw
-      \bbl@xin@{,noaux,}{,\bbl@select@opts,}%
+      \bbl@xin@{,nofiles,}{,\bbl@select@opts,}%
       \ifin@\else
         \ifx\babel@aux\@gobbletwo\else % Set if single in the first, redundant
           \bbl@savelastskip
           \protected@write\@auxout{}{\string\babel@aux{\bbl@auxname}{}}%
           \bbl@restorelastskip
         \fi
+        \bbl@usehooks{write}{}%
       \fi
-      \bbl@usehooks{write}{}%
     \fi
   \fi}
 %
@@ -7744,7 +7745,7 @@ wouldn’t exist.
 % use them instead of the default.
 %
 % It also sets hyphenation exceptions, but only once, because they
-% are global (here language |\lccode|'s has been set, too).
+% are global (here language |\lccode|’s has been set, too).
 % |\bbl@hyphenation@| is set to relax until the very first
 % |\babelhyphenation|, so do nothing with this value. If the
 % exceptions for a language (by its number, not its name, so that
@@ -7789,7 +7790,7 @@ wouldn’t exist.
 % \emph{just} the hyphenation rules. It does
 % \emph{not} change |\languagename| and when the hyphenation rules
 % specified were not loaded it has no effect. Note however,
-% |\lccode|'s and font encodings are not set at all, so in most
+% |\lccode|’s and font encodings are not set at all, so in most
 % cases you should use |otherlanguage*|.
 %
 %    \begin{macrocode}
@@ -8296,8 +8297,7 @@ wouldn’t exist.
   \bbl@afterlang
   \let\bbl@afterlang\relax
   \let\BabelModifiers\relax
-  \let\bbl@screset\relax
-  \bbl@id@assign}%
+  \let\bbl@screset\relax}%
 \def\ldf@finish#1{%
   \loadlocalcfg{#1}%
   \bbl@afterldf
@@ -8330,7 +8330,9 @@ wouldn’t exist.
   \let\mainlocalename\bbl@main@language
   \bbl@id@assign
   \ifcase\bbl@engine\or
-    \setattribute\bbl@attr@locale\localeid
+    \ifx\setattribute\@undefined\else
+      \setattribute\bbl@attr@locale\localeid
+    \fi
   \fi
   \bbl@patterns{\languagename}}
 %    \end{macrocode}
@@ -8407,7 +8409,7 @@ wouldn’t exist.
 % undefined, we put the definition inside a conditional.
 %
 % Items are added to the lists without checking its existence or the
-% original catcode. It does not hurt, but should be fixed. It's already
+% original catcode. It does not hurt, but should be fixed. It’s already
 % done with |\nfss@catcodes|, added in 3.10.
 %
 %    \begin{macrocode}
@@ -8807,7 +8809,7 @@ wouldn’t exist.
 % The auxiliary macro |\babel@texpdf| improves the interoperativity with
 % \textsf{hyperref} and takes 4 arguments: (1) The \TeX{} code in text
 % mode, (2) the string for \textsf{hyperref}, (3) the \TeX{} code in
-% math mode, and (4), which is currently ignored, but it's meant for a
+% math mode, and (4), which is currently ignored, but it’s meant for a
 % string in math mode, like a minus sign instead of an hyphen
 % (currently \textsf{hyperref} doesn't discriminate the mode). This
 % macro may be used in |ldf| files.
@@ -8880,7 +8882,7 @@ wouldn’t exist.
 % \macro{\useshorthands}
 %
 % This is the user level macro. It initializes and activates the
-% character for use as a shorthand character (i.e., it's active in the
+% character for use as a shorthand character (i.e., it’s active in the
 % preamble). Languages can deactivate shorthands, so a starred version
 % is also provided which activates them always after the language has
 % been switched.
@@ -9277,7 +9279,7 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % \macro{\bbl@clear@ttribs}
-% This macro removes all the attribute code from \LaTeX's memory at
+% This macro removes all the attribute code from \LaTeX’s memory at
 % |\begin{document}| time (if any is present).
 %
 %    \begin{macrocode}
@@ -9313,7 +9315,7 @@ wouldn’t exist.
 \def\babel@beginsave{\babel@savecnt\z@}
 %    \end{macrocode}
 %
-% Before it's forgotten, allocate the counter and initialize all.
+% Before it’s forgotten, allocate the counter and initialize all.
 %
 %    \begin{macrocode}
 \newcount\babel@savecnt
@@ -9583,7 +9585,7 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % Finally, we define the hyphen “types”. Their names will not change,
-% so you may use them in |ldf|'s. After a space, the |\mbox| in
+% so you may use them in |ldf|’s. After a space, the |\mbox| in
 % |\bbl@hy@nobreak| is redundant.
 %
 %    \begin{macrocode}
@@ -10388,7 +10390,7 @@ wouldn’t exist.
 \fi
 %    \end{macrocode}
 %
-% The following code fools \TeX's \texttt{make\_accent} procedure about
+% The following code fools \TeX’s \texttt{make\_accent} procedure about
 % the current x-height of the font to force another placement of the
 % umlaut character. First we have to save the current x-height of the
 % font, because we'll change this font dimension and this is always
@@ -17488,7 +17490,7 @@ function Babel.hyphenate_replace(head, mode)
             last_match = utf8.offset(w, sc+1+step)
             goto next
 
-          elseif crep and crep.kashida then -- Experimental
+          elseif crep and crep.kashida then
             node.set_attribute(item,
                Babel.attr_kashida, 
                crep.kashida)
