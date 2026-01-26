@@ -34,9 +34,10 @@ Text {\otherlanguage*[date]{yoruba}\today} text
 
 \end{document}
 ```
-Avoid using several of them inside a group.
 
 ![](../media/otherlanguage-star.png)
+
+Avoid using several of them inside a group.
 
 ## Transforms
 

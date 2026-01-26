@@ -236,6 +236,7 @@ characters ‘|’ and ‘=’, in case you need their literal meaning.
   { pre=-, penalty=1000, data=4 },
 }
 ```
+
 * In Greek, a diaeresis disappears if the vowel group is broken (see
   Németh, _TUGboat_ 87):
 ```tex
@@ -257,6 +258,7 @@ In cases like this, you may want to use maps as described above.
   {}, {}, {}
 }
 ```
+
 * To duplicate explicit hyphens:
 ```tex
 \babelposthyphenation{polish}{ {a}={a} }{
