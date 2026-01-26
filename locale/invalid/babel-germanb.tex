@@ -8,6 +8,13 @@
   \stop
 \fi
 \BabelBeforeIni{de-1901}{%
-  \BabelDefinitionFile{0}{german-traditional}{}%
+  \expandafter\def\csname bbl@preini@germanb\endcsname{%
+    \csname bbl@error\endcsname{invalid-ini-name}{germanb}{german}{}%
+    }%
+  \BabelDefinitionFile{0}{germanb}{%
+    \PackageWarning{babel}{%
+      Name 'germanb' is deprecated.\MessageBreak
+      Use 'german' instead.\MessageBreak
+      Reported}}%
 }
 \endinput

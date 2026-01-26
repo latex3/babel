@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/01/18 v26.1
+  [2026/01/26 v26.2
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -978,11 +978,12 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \tag{georgian}{}
 \note{Calls \textsf{geotex}.}
 \tag{german}{}
-\note{This block refers to the old ortography. For the modern one, use
-the names in the block \textsf{ngerman}. \textsf{swissgerman} refers to
-the language with tag \texttt{gsw}}
+\note{See the manual for the \textsf{german} babel style.}
+% This block refers to the old ortography. For the modern one, use
+% the names in the block \textsf{ngerman}. \textsf{swissgerman} refers to
+% the language with tag \texttt{gsw}}
 \subtagalt{austrian}{}
-% \subtagalt{swissgerman}{} %%%%%%%%
+% \subtagalt{swissgerman}{}
 % \note{Swiss High German}
 \tag{greek}{}
 \subtagalt{polytonicgreek}{}
@@ -1014,7 +1015,8 @@ the language with tag \texttt{gsw}}
 \tag{malay}{}
 \tag[mongolian-babel]{mongolian}{}
 \tag[babel-german]{ngerman}{}
-\note{This block refers to the new ortography.}
+% \note{This block refers to the new ortography.}
+\note{See the manual for the \textsf{german} babel style.}
 \subtagalt{naustrian}{}
 \subtagalt{nswissgerman}{}
 \note{Swiss High German}
@@ -4478,8 +4480,8 @@ kana variants.}
 \trans{Latin}{letters.uv}{Replaces \textit{v}, \textit{U} with
 \textit{u}, \textit{V}.}
 
-\trans{Russian}{transliteration.gost779b}{The GOST 7.79-2000 System B for
-the romanization of Russian. \New{25.10}}
+\trans{Russian}{transliteration.gost779b}{\hspace*{1.5em}The GOST
+7.79-2000 System B for the romanization of Russian. \New{25.10}}
 
 \trans{Serbian}{transliteration.gajica}{(Note |serbian| with |ini|
 files refers to the Cyrillic script, which is here the target.) The
@@ -6244,8 +6246,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.1>>
-%<<date=2026/01/18>>
+%<<version=26.2>>
+%<<date=2026/01/26>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -17064,18 +17066,6 @@ end
         \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
         \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
         \bbl@sreplace\tikzpicture{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
-      \fi
-      \ifx\tcolorbox\@undefined\else
-        \def\tcb@drawing@env@begin{%
-          \csname tcb@before@\tcb@split@state\endcsname
-          \bbl@pictsetdir\tw@
-          \begin{\kvtcb@graphenv}%
-          \tcb@bbdraw
-          \tcb@apply@graph@patches}%
-        \def\tcb@drawing@env@end{%
-          \end{\kvtcb@graphenv}%
-          \bbl@pictresetdir
-          \csname tcb@after@\tcb@split@state\endcsname}%
       \fi
     }}
   {}
