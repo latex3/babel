@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/01/26 v26.2
+  [2026/02/07 v26.2.113474
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6246,8 +6246,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.2>>
-%<<date=2026/01/26>>
+%<<version=26.2.113474>>
+%<<date=2026/02/07>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6765,7 +6765,7 @@ wouldn’t exist.
       \def\bbl@elt##1##2##3##4{}%
     \fi}%
   \bbl@languages
-\fi%
+\fi
 %    \end{macrocode}
 % \subsection{\texttt{base}}
 %
@@ -12088,7 +12088,7 @@ wouldn’t exist.
 \newcommand\LocaleForEach{\bbl@foreach\bbl@ini@loaded}
 \def\ShowLocaleProperties#1{%
   \typeout{}%
-  \typeout{*** Properties for language '#1' ***}
+  \typeout{*** Properties for language '#1' ***}%
   \def\bbl@elt##1##2##3{\typeout{##1/##2 = \unexpanded{##3}}}%
   \@nameuse{bbl@inidata@#1}%
   \typeout{*******}}
@@ -14276,7 +14276,7 @@ wouldn’t exist.
        'babel' will not set Script and Language for it, so\\%
        you may consider defining a new family with \string\babelfont.\\%
        See the manual for further details about \string\babelfont.
-       Reported}}
+       Reported}}%
    {}}%
 \gdef\bbl@switchfont{%
   \bbl@ifunset{bbl@lsys@\languagename}{\bbl@provide@lsys{\languagename}}{}%
@@ -15617,6 +15617,7 @@ wouldn’t exist.
     \let\bbl@parsejalt\relax     % To avoid infinite loop
     \edef\bbl@tempb{\fontid\font}%
     \bblar@nofswarn
+    \tracinglostchars\z@
     \bblar@fetchjalt\bblar@elongated{}{from}{}%
     \bblar@fetchjalt\bblar@chars{^^^^064a}{from}{a}% Alef maksura
     \bblar@fetchjalt\bblar@chars{^^^^0649}{from}{y}% Yeh
@@ -15697,7 +15698,7 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
   end
 
   % Exclude last line.
-  if (line.next ~= nil and line.glue_order == 0) then
+  if ((line.next ~= nil or line.glue_sign == 1) and line.glue_order == 0) then
     elongs = {}     % Stores elongated candidates of each line
     k_list = {}     % And all letters with kashida
     pos_inline = 0  % Not yet used
@@ -24044,6 +24045,7 @@ function Babel.bidi(head, ispar, hdir)
        or (item.id == 7 and item.subtype == 2) then
 
       if locale_d == 0x80 then goto nextnode end
+      locale_d = locale_d or ((save_outer=='l') and 0 or 1)
 
       local d_font = nil
       local item_r
