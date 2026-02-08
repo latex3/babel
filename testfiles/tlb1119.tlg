@@ -6,6 +6,8 @@ Main Class: article
 Package: babel
     Options: english,germanb
 Package: shortvrb
+Package babel Info: 'german' activates 'german' shorthands.
+(babel)             Reported on input line ....
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line ....
 LaTeX Font Info:    External font `cmex10' loaded for size

@@ -28,8 +28,6 @@ Package: babel
 ...\OT1/cmr/m/n/10 ^^?
 ..\kern -5.00002 (for accent)
 ..\OT1/cmr/m/n/10 a
-..\penalty 10000
-..\glue 0.0
 ..\OT1/cmr/m/n/10 f
 ..\OT1/cmr/m/n/10 e
 ..\OT1/cmr/m/n/10 r
@@ -66,13 +64,13 @@ Package: babel
 ...\OT1/cmr/m/n/10 ^^?
 ..\kern -5.2778 (for accent)
 ..\OT1/cmr/m/n/10 u
-..\penalty 10000
-..\glue 0.0
 ..\OT1/cmr/m/n/10 s
 ..\OT1/cmr/m/n/10 s
 ..\OT1/cmr/m/n/10 e
 ..\OT1/cmr/m/n/10 l
 ..\OT1/cmr/m/n/10 ,
+..\glue 3.33333 plus 1.66666 minus 1.11111
+..\OT1/cmr/m/n/10 9
 ..etc.
 .\OT1/cmr/m/n/10 ]
 ! OK.
