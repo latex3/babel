@@ -16373,7 +16373,6 @@ end
 % necessary with |basic| (24.8), but it’s kept in |basic-r|.
 %
 %    \begin{macrocode}
-\breakafterdirmode=1
 \ifnum\bbl@bidimode>\@ne % Any bidi= except default (=1)
   \let\bbl@beforeforeign\leavevmode
   \AtEndOfPackage{\EnableBabelHook{babel-bidi}}
@@ -16527,6 +16526,8 @@ end
 \ifnum\bbl@bidimode>\z@ % Any bidi=
   \matheqdirmode\@ne        % A luatex primitive
   \mathemptydisplaymode\@ne % Another
+  \breakafterdirmode\@ne % Another
+  \fixupboxesmode\@ne % Another
   \let\bbl@eqnodir\relax
   \def\bbl@eqdel{()}
   \def\bbl@eqnum{%
