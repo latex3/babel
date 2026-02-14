@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/02/07 v26.2.113474
+  [2026/02/14 v26.3
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -2968,9 +2968,14 @@ print ‘cge’. (It doesn't work with \pdftex.)
 \begin{verbatim}
 \babelprovide[typography/prehyphenchar = 0]{english}
 \end{verbatim}
-This setting \textit{may} work with |xetex|, but getting rid of the
+(This setting \textit{may} work with |xetex|, but getting rid of the
 hyphen char in this engine is not trivial, because you must rely on the
-font, and not all fonts behave the same.
+font, and not all fonts behave the same.)
+
+If, on the other hand, the language does not write by default the
+hyphens when breaking lines and you want them, you can set
+|typography/prehyphenchar = `-| (they are Kannada, Malayalam, Odia,
+Sanskrit, Tamil, Telugu).
 \end{example}
 
 \begin{example}
@@ -6246,8 +6251,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.2.113474>>
-%<<date=2026/02/07>>
+%<<version=26.3>>
+%<<date=2026/02/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -15617,7 +15622,7 @@ wouldn’t exist.
     \let\bbl@parsejalt\relax     % To avoid infinite loop
     \edef\bbl@tempb{\fontid\font}%
     \bblar@nofswarn
-    \tracinglostchars\z@
+    \@nameuse{tracinglostchars}\z@
     \bblar@fetchjalt\bblar@elongated{}{from}{}%
     \bblar@fetchjalt\bblar@chars{^^^^064a}{from}{a}% Alef maksura
     \bblar@fetchjalt\bblar@chars{^^^^0649}{from}{y}% Yeh
