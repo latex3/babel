@@ -9,11 +9,9 @@
 \fi
 \BabelBeforeIni{de}{%
   \BabelDefinitionFile{0}{german}{%
-    \PackageWarning{babel}{%
-      The name 'german' with the 'ldf' mechanism is\MessageBreak
-      currently assigned to the old 1901 variant of German.\MessageBreak
-      For modern post-1996 German, use the name 'ngerman'.\MessageBreak
-      Reported}%
-    \def\BabelIniTag{de-1901}}%
+    \csname clist\string_if\string_in\string:NnT\endcsname
+      \BabelLocalesTentative{ngerman}% Still tentative
+      {\def\BabelIniTag{de-1901}}}%
 }
 \endinput
+

@@ -11,10 +11,13 @@
   \BabelDefinitionFile{0}{swissgerman}{%
     \PackageWarning{babel}{%
       Name 'swissgerman' is currently assigned to Swiss High\MessageBreak
-      German (traditional), with tag 'de-CH-1901', not to\MessageBreak
-      Swiss German (tag 'gsw'). For the latter, load either\MessageBreak
-      'ini' version with 'provide' or 'alemannic' (see\MessageBreak
+      German, with tag 'de-CH', not to Swiss German\MessageBreak
+      (tag 'gsw'). For the latter, load either the 'ini'\MessageBreak
+      version with 'provide', or else 'alemannic' (see\MessageBreak
       the manual). Reported}%
-    \def\BabelIniTag{de-CH-1901}}
+    \def\BabelIniTag{de-CH}%
+    \csname clist\string_if\string_in\string:NnT\endcsname
+      \BabelLocalesTentative{nswissgerman}% Still tentative
+      {\def\BabelIniTag{de-CH-1901}}}%
 }
 \endinput
