@@ -10,14 +10,21 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 German language using the Latin script.
 
-Bear in mind the ‘traditional’ styles for German based on ‘ldf’ files
+You may find the [autotype](https://ctan.org/pkg/autotype?lang=en)
+package of interest.
+
+There is important info in [What’s new in babel
+26.4](https://latex3.github.io/babel/news/whats-new-in-babel-26.4.html).
+The following table refers to previous versions.
+
+<del>Bear in mind the ‘traditional’ styles for German based on ‘ldf’ files
 don’t currently conform the `babel` [naming
 conventions](locale-naming.md). Oddly, the name `german` refers to the
 pre-1996 orthography, while the current one is selected with `ngerman`
 (`n` comes from ‘new’, which was certainly the case about 30 years
 ago). Also, the Unicode CLDR calls `swisshighgerman` the locale with
 tag `de-CH`, because [`swissgerman`](locale-swissgerman.md) is another
-language (with tag `gsw`). To summarize:
+language (with tag `gsw`). </del>
 
 | Unicode CLDR | ldf | ini |
 | --- | --- |
@@ -27,8 +34,8 @@ language (with tag `gsw`). To summarize:
 | Austrian  (Traditional German orthography) | `austrian` | `austrian-traditional` |
 | Swiss High German | `nswissgerman` | `swisshighgerman` |
 
-You may find the [autotype](https://ctan.org/pkg/autotype?lang=en)
-package of interest.
+
+
 
 ## Support with the traditional way (`ldf`)
 
