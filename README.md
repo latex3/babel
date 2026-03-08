@@ -1,6 +1,6 @@
-## Babel 26.3.115875
+## Babel 26.4
 
-(dev)
+2026-03-08
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 26.3 are described in:
+Changes in version 26.4 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-26.3.html
+https://latex3.github.io/babel/news/whats-new-in-babel-26.4.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,18 +59,15 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 26.4 (dev)
+#### 26.4 2026-03-08
 
-* Fix lists in mixed RTL/LTR texts inside vboxes (thanks to Udi Fogiel).
+* Fixed lists in mixed RTL/LTR texts inside vboxes (#395, thanks to Udi Fogiel).
+* Changes for german 3.0.
 
 #### 26.3 2026-02-14
 
 * Fixes related to Arabic justification.
 * Other minor changes related to Kyrgyz, German and Breton.
-
-#### 26.2 2026-01-26
-
-* Synchronization with the new styles for German.
 
 ### Previous changes
 

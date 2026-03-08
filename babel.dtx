@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/03/03 v26.3.115875
+  [2026/03/08 v26.4
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -822,7 +822,7 @@ Vietnamese: \prefacename, \alsoname, \today.
   described below:
 \begin{verbatim}
 \documentclass[_italian_]{book}
-\usepackage[ngerman,_main=italian_]{babel}
+\usepackage[german,_main=italian_]{babel}
 \end{verbatim}
 \end{note}
 
@@ -868,13 +868,13 @@ need their shorthands. The font is Norasi, which covers the three
 languages:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\usepackage[dutch,ngerman,_thai_]{babel}
+\usepackage[dutch,german,_thai_]{babel}
 \babelfont{rm}{Norasi}
 \end{verbatim}
-This will load |dutch| and |ngerman| in the classical |ldf| mode, but
+This will load |dutch| and |german| in the classical |ldf| mode, but
 |thai| in the modern |ini| mode. Other options are:
 \begin{verbatim}
-  \usepackage[dutch,ngerman,thai,_provide=!_]{babel}
+  \usepackage[dutch,german,thai,_provide=!_]{babel}
 \end{verbatim}
 which will use the classical mode for in languages (as described in the
 previous section; \texttt{provide=!} forces the \texttt{ldf} file, but
@@ -894,8 +894,8 @@ the options which you can load \babel\ with for each language. Note this
 list is open and the current options may be different. It does not
 include |ini| files (see below).
 
-Except in a few cases (e.g., |ngerman|, |serbianc|, |acadian|) names are
-those of the Unicode CLDR (or based on them).
+Except in a few cases (e.g., |serbianc|, |acadian|) names are
+those of the Unicode CLDR (or based on them). 
 
 Most of them work out of the box, but some may require extra fonts,
 encoding files, a preprocessor or even a complete framework (like
@@ -3898,9 +3898,9 @@ any name not corresponding to a language group does the same as
 enforced in future releases of \babel{} to catch possible errors.}
 Note that for this to work the language should have been specified as
 an option when loading the \babel\ package.  For example, you can use
-in \textsf{english} the shorthands defined by \textsf{ngerman} with
+in \textsf{english} the shorthands defined by \textsf{german} with
 \begin{verbatim}
-\addto\extrasenglish{\languageshorthands{ngerman}}
+\addto\extrasenglish{\languageshorthands{german}}
 \end{verbatim}
 (You may also need to activate them as user shorthands in the preamble
 with, for example, |\useshorthands| or |\useshorthands*|.)
@@ -6251,8 +6251,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.3.115875>>
-%<<date=2026/03/03>>
+%<<version=26.4>>
+%<<date=2026/03/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -16995,12 +16995,9 @@ end
    {}
 %    \end{macrocode}
 %
-% We need to patch lists in documents with both LTR and RTL paragraphs
-% because the |\bodydir|, |\pagedir| and |\pardir| are not taken into
-% account when mirroring the |\parshape| “margins” (actually not the
-% margins in the same sense as in the ordinary paragraphs), which in
-% addition aren’t fully mirrored by |\shapemode|. There was a partial
-% solution, but a better one has been devised by Udi Fogiel (in 26.4).
+% We need to patch lists in documents with both LTR and RTL paragraphs.
+% See issue \#395 in GitHub. There was a partial solution, but a better
+% one has been devised by Udi Fogiel (in 26.4).
 % 
 %    \begin{macrocode}
 \IfBabelLayout{lists}
