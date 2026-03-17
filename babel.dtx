@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/03/16 v26.4.117173
+  [2026/03/17 v26.4.117267
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6251,8 +6251,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.4.117173>>
-%<<date=2026/03/16>>
+%<<version=26.4.117267>>
+%<<date=2026/03/17>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -16564,6 +16564,8 @@ end
   \AtBeginDocument{%
     \ifx\bbl@noamsmath\relax\else
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
+      \bbl@replace\equation{\hb@xt@\linewidth}%
+        {\hbox bdir\mathdirection to\linewidth}%
       \AddToHook{env/equation/begin}{%
         \ifnum\bbl@thetextdir>\z@
           \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%

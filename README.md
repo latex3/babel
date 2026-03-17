@@ -1,4 +1,4 @@
-## Babel 26.4.117173
+## Babel 26.4.117267
 
 (dev)
 
@@ -59,7 +59,7 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 26.5
+#### 26.5 (dev)
 
 * Fix #397.
 
