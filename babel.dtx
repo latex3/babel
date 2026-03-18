@@ -17041,10 +17041,18 @@ end
      luatexbase.add_to_callback("hpack_filter", Babel.picture_dir,
        "Babel.picture_dir")
    }%
+   \AddToHook{package/graphics/after}{%
+     \bbl@exp{%
+       \\\bbl@sreplace\\\rotatebox{\hbox{{\string#2}}}
+         {\hbox bdir\z@{\hbox bdir\bbl@thetextdir{{\string#2}}}}}}
+   \AddToHook{package/graphicx/after}{%
+     \bbl@exp{%
+       \\\bbl@sreplace\\\Grot@box@std{\hbox{{\string#2}}}
+         {\hbox bdir\z@{\hbox bdir\bbl@thetextdir{{\string#2}}}}%
+       \\\bbl@sreplace\\\Grot@box@kv{\hbox{\string#3}}
+         {{\hbox bdir\z@}{\hbox bdir\bbl@thetextdir{{\string#3}}}}%
+       \\\bbl@sreplace\\\Grot@box{\hbox}{\hbox bdir\z@}}}
    \AtBeginDocument{%
-     \def\LS@rot{%
-       \setbox\@outputbox\vbox{%
-         \hbox dir TLT{\rotatebox{90}{\box\@outputbox}}}}%
      \long\def\put(#1,#2)#3{%
        \@killglue 
        % Try:
