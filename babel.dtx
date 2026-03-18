@@ -17064,8 +17064,7 @@ end
    \AtBeginDocument
      {\AddToHook{cmd/diagbox@pict/before}{\let\bbl@pictsetdir\@gobble}%
       \ifdefined\pgfpicture
-        \bbl@add\pgfinterruptpicture{\bodydirection\bbl@thetextdir
-          \pardirection\bbl@thetextdir\textdirection\bbl@thetextdir\relax}%
+        \bbl@add\pgfinterruptpicture{\localerestoredirs}%
         \bbl@sreplace\pgfsys@typesetpicturebox{\hbox}{\hbox bdir\z@}
         \bbl@sreplace\pgf@picture{\pgfpic \hbox}{\pgfpic \hbox bdir\z@}%
       \fi
