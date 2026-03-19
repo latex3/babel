@@ -16566,6 +16566,8 @@ end
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
       \bbl@replace\equation{\hb@xt@\linewidth}%
         {\hbox bdir\mathdirection to\linewidth}%
+      \bbl@carg\bbl@sreplace{[ }{\hb@xt@\linewidth}%
+        {\hbox bdir\mathdirection to\linewidth}%
       \AddToHook{env/equation/begin}{%
         \ifnum\bbl@thetextdir>\z@
           \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
