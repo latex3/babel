@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/03/17 v26.4.117267
+  [2026/03/21 v26.4.117668
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6251,8 +6251,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.4.117267>>
-%<<date=2026/03/17>>
+%<<version=26.4.117668>>
+%<<date=2026/03/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -16564,10 +16564,12 @@ end
   \AtBeginDocument{%
     \ifx\bbl@noamsmath\relax\else
     \ifx\maketag@@@\@undefined % Normal equation, eqnarray
-      \bbl@replace\equation{\hb@xt@\linewidth}%
-        {\hbox bdir\mathdirection to\linewidth}%
-      \bbl@carg\bbl@sreplace{[ }{\hb@xt@\linewidth}%
-        {\hbox bdir\mathdirection to\linewidth}%
+      \ifnum\bbl@eqnpos=\tw@
+        \bbl@replace\equation{\hb@xt@\linewidth}%
+          {\hbox bdir\mathdirection to\linewidth}%
+        \bbl@carg\bbl@sreplace{[ }{\hb@xt@\linewidth}%
+          {\hbox bdir\mathdirection to\linewidth}%
+      \fi
       \AddToHook{env/equation/begin}{%
         \ifnum\bbl@thetextdir>\z@
           \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
@@ -16599,6 +16601,10 @@ end
           \fi
         \fi}
     \else % amstex
+      \ifnum\bbl@eqnpos=\tw@
+        \bbl@exp{% Hack to hide maybe undefined conditionals:
+          \\\bbl@sreplace\\\multline@\crcr{\<if@fleqn>\tabskip\z@skip\<fi>\crcr}}%
+      \fi
       \bbl@exp{% Hack to hide maybe undefined conditionals:
         \chardef\bbl@eqnpos=0%
           \<iftagsleft@>1\<else>\<if@fleqn>2\<fi>\<fi>\relax}%
