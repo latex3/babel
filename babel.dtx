@@ -16965,13 +16965,14 @@ end
           \everyvbox{\the\everyvbox}}%
       \<fi>}}%
 \IfBabelLayout{nopars}
-  {}
+  {\chardef\bbl@trace@vboxdir\z@}
   {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
 \IfBabelLayout{pars}
-  {\def\@hangfrom#1{%
+  {\chardef\bbl@trace@vboxdir\@ne
+   \def\@hangfrom#1{%
     \setbox\@tempboxa\hbox{{#1}}%
     \hangindent\wd\@tempboxa
-    \ifnum\pagedirection=\pardirection\else
+    \ifnum\bbl@vbox@bodydir=\pardirection\else
       \shapemode\@ne
     \fi
     \noindent\box\@tempboxa}}
@@ -16999,12 +17000,7 @@ end
 % 
 %    \begin{macrocode}
 \IfBabelLayout{lists}
-  {\AtBeginDocument{\chardef\bbl@vbox@bodydir\pagedirection}%
-   \def\bbl@vbox@lists{\chardef\bbl@vbox@bodydir\bodydirection}%
-   \let\bbl@bidi@vbox\everyvbox
-   \@nameuse{newtoks}\everyvbox   % \outer in Plain
-   \everyvbox\expandafter{\the\bbl@bidi@vbox}%
-   \bbl@bidi@vbox{\bbl@vbox@lists\the\everyvbox}%
+  {\chardef\bbl@trace@vboxdir\@ne
    \let\bbl@OL@list\list
    \bbl@sreplace\list{\parshape}{\bbl@listparshape}%
    \let\bbl@NL@list\list
@@ -17014,6 +17010,15 @@ end
        \shapemode\tw@
      \fi}}
   {}
+%
+\ifcase\bbl@trace@vboxdir\else
+  \AtBeginDocument{\chardef\bbl@vbox@bodydir\pagedirection}%
+  \def\bbl@vbox@lists{\chardef\bbl@vbox@bodydir\bodydirection}%
+  \let\bbl@bidi@vbox\everyvbox
+  \@nameuse{newtoks}\everyvbox   % \outer in Plain
+  \everyvbox\expandafter{\the\bbl@bidi@vbox}%
+  \bbl@bidi@vbox{\bbl@vbox@lists\the\everyvbox}%
+\fi
 %
 \IfBabelLayout{graphics}
   {\let\bbl@pictresetdir\relax
