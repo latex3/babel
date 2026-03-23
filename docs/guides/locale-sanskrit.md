@@ -19,16 +19,18 @@ although it may work with previous versions).
 
 \usepackage[provide=*]{babel}
 
-\babelfont{rm}{Shobhika}
-
+\babelfont{rm}{Sanskrit 2020} % free font from https://sourceforge.net/projects/advaita-sharada-font/files/Devanagari/
 \begin{document}
-
-Digits $=$ \localenumeral{digits}{0123456789}
-
+    
+    Digits $=$ \localenumeral{digits}{0123456789}
+    
+    धर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सव:   ||
+    
 \end{document}
 ```
+<img width="394" height="139" alt="image" src="https://github.com/user-attachments/assets/ba8c261f-6328-447d-aac2-0f51497060aa" />
 
-![](../media/locale-sanskrit.png)
+Compilation to PDF performed with XeLaTeX.
 
 ## Contribute
 
