@@ -90,7 +90,8 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
-| [26.4](news/whats-new-in-babel-26.4.html) | (dev) | More on babel-german |
+| [26.5](news/whats-new-in-babel-26.5.html) | 2026-03-24 | Mainly fixes for math + bidi |
+| [26.4](news/whats-new-in-babel-26.4.html) | 2026-03-08 | More on babel-german |
 | [26.3](news/whats-new-in-babel-26.3.html) | 2026-02-14 | Minor changes and fixes |
 | [26.2](news/whats-new-in-babel-26.2.html) | 2026-01-26 | Synchronize with babel-german|
 | [26.1](news/whats-new-in-babel-26.1.html) | 2026-01-18 | Improved kashida. \otherlanguage*. |

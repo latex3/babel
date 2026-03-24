@@ -8,7 +8,9 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 Sanskrit language using the Devanagari script.
 
-For `pdflatex`, have also a look at the [`skt` package](https://ctan.org/pkg/sanskrit).
+For `pdflatex`, have also a look at the
+[skt](https://ctan.org/pkg/sanskrit) and
+[devanagari](https://ctan.org/pkg/devanagari) packages.
 
 ## Support with `ini` locale file
 

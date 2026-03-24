@@ -1,6 +1,6 @@
 # What's new in babel 26.5
 
-(dev)
+2026-03-24
 
 There is a series of fixes for the standard math environments and
 `amsmath`, related mainly to `multlines` and the `fleqn` option, by [Udi

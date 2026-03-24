@@ -12,9 +12,9 @@ still be necessary.
 
 Version 3 of the `german` style has been rewritten and now `german`
 refers to current German instead of the 1901 variant. This required
-some readjustments in the `babel` core. The `ngerman` is preserved for
-compatitibility, but its use is discouraged (note also it doesn’t work
-with the `ini` mechanism).
+some readjustments in the `babel` core. The `ngerman` name is preserved
+for compatitibility, but its use is discouraged (note also it doesn’t
+work with the `ini` mechanism).
 
 In existing documents, you can restore the old behavior for `german` by
 requesting before `ngerman`:
