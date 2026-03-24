@@ -8,6 +8,8 @@
 This page offers basic guidance on typesetting a LaTeX document in the
 Sanskrit language using the Devanagari script.
 
+For `pdflatex`, have also a look at the [`skt` package](https://ctan.org/pkg/sanskrit).
+
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `sanskrit` as the main language
@@ -69,7 +71,7 @@ among others.
 ## Transliterations and other transforms
 
 (_lualatex_) `Babel` provides transforms for the Harvard-Kyoto and IAST
-tranliterations, named `transliteration.hk` and `transliteration.iast`.
+transliterations, named `transliteration.hk` and `transliteration.iast`.
 Here is an example with the latter:
 ```tex
 \documentclass[sanskrit]{article}
