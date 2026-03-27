@@ -17079,16 +17079,10 @@ end
      \MakeRobust\put}%
    \AtBeginDocument
      {\AddToHook{cmd/diagbox@pict/before}{\let\bbl@pictsetdir\@gobble}%
-      \ifx\pgfpicture\@undefined\else
-        \AddToHook{env/pgfpicture/begin}{\bbl@pictsetdir\@ne}%
-        \bbl@add\pgfinterruptpicture{\bbl@pictresetdir}%
-        \bbl@add\pgfsys@beginpicture{\bbl@pictsetdir\z@}%
-      \fi
-      \ifx\tikzpicture\@undefined\else
-        \AddToHook{env/tikzpicture/begin}{\bbl@pictsetdir\tw@}%
-        \bbl@add\tikz@atbegin@node{\bbl@pictresetdir}%
-        \bbl@sreplace\tikz{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
-        \bbl@sreplace\tikzpicture{\begingroup}{\begingroup\bbl@pictsetdir\tw@}%
+      \ifdefined\pgfpicture
+        \bbl@add\pgfinterruptpicture{\localerestoredirs}%
+        \bbl@sreplace\pgfsys@typesetpicturebox{\hbox}{\hbox bdir\z@}
+        \bbl@sreplace\pgf@picture{\pgfpic \hbox}{\pgfpic \hbox bdir\z@}%
       \fi
     }}
   {}
