@@ -17146,9 +17146,7 @@ end
 \IfBabelLayout{extras}%
   {\bbl@ncarg\let\bbl@OL@underline{underline }%
    \bbl@carg\bbl@sreplace{underline }%
-     {$\@@underline}{\bgroup\bbl@nextfake$\@@underline}%
-   \bbl@carg\bbl@sreplace{underline }%
-     {\m@th$}{\m@th$\egroup}%
+     {\hbox}{\hbox bdir\ifcase\bbl@thetextdir\z@\else\@ne\fi}%
    \let\bbl@OL@LaTeXe\LaTeXe
    \DeclareRobustCommand{\LaTeXe}{\mbox{\m@th
      \if b\expandafter\@car\f@series\@nil\boldmath\fi
