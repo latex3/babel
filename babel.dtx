@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/03/24 v26.5
+  [2026/04/13 v26.5.119971
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -2089,7 +2089,7 @@ current mode (vertical or horizontal) also remains unchanged.
 
 Same as |\foreignlanguage| but as environment. Spaces are \textit{not}
 ignored. \New{26.1} It can be used as a command, too, like
-|{\otherlanguage*{tamil}...}|, but avoid using several of them
+|{\otherlanguage*{tamil}{...}|, but avoid using several of them
 inside a group.
 
 It was originally devised for intermixing left-to-right
@@ -6251,8 +6251,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.5>>
-%<<date=2026/03/24>>
+%<<version=26.5.119971>>
+%<<date=2026/04/13>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -16987,13 +16987,24 @@ end
 %
 \IfBabelLayout{tabular}
   {\let\bbl@OL@@tabular\@tabular
-   \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+   \bbl@exp{\\\in@{\\\UseMathForPositioningText}{\[@tabular]}}%
+   \ifin@
+     \bbl@replace\@tabular{\UseMathForPositioningText$}%
+       {\bbl@nextfake{\UseMathForPositioningText$}}%
+   \else
+     \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+   \fi
    \let\bbl@NL@@tabular\@tabular
    \AtBeginDocument{%
      \ifx\bbl@NL@@tabular\@tabular\else
-       \bbl@exp{\\\in@{\\\bbl@nextfake}{\[@tabular]}}%
+       \bbl@exp{\\\in@{\\\UseMathForPositioningText}{\[@tabular]}}%
        \ifin@\else
-         \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+         \ifin@
+           \bbl@replace\@tabular{\UseMathForPositioningText$}%
+             {\bbl@nextfake{\UseMathForPositioningText$}}%
+         \else
+           \bbl@replace\@tabular{$}{\bbl@nextfake$}%
+         \fi
        \fi
        \let\bbl@NL@@tabular\@tabular
      \fi}}
@@ -17145,8 +17156,8 @@ end
 %    \begin{macrocode}
 \IfBabelLayout{extras}%
   {\bbl@ncarg\let\bbl@OL@underline{underline }%
-   \bbl@carg\bbl@sreplace{underline }%
-     {\hbox}{\def\bbl@insidemath{0}\hbox bdir\ifcase\bbl@thetextdir\z@\else\@ne\fi}%
+   \bbl@carg\bbl@sreplace{underline }{\hbox}%
+     {\def\bbl@insidemath{0}\hbox bdir\ifcase\bbl@thetextdir\z@\else\@ne\fi}%
    \let\bbl@OL@LaTeXe\LaTeXe
    \DeclareRobustCommand{\LaTeXe}{\mbox{\m@th
      \if b\expandafter\@car\f@series\@nil\boldmath\fi
