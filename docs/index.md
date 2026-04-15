@@ -90,6 +90,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
+| [26.6](news/whats-new-in-babel-26.6.html) | 2026-04-15 | Fixes for bidi |
 | [26.5](news/whats-new-in-babel-26.5.html) | 2026-03-24 | Mainly fixes for math + bidi |
 | [26.4](news/whats-new-in-babel-26.4.html) | 2026-03-08 | More on babel-german |
 | [26.3](news/whats-new-in-babel-26.3.html) | 2026-02-14 | Minor changes and fixes |
