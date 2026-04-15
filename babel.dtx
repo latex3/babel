@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/04/13 v26.5.119971
+  [2026/04/15 v26.6
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6251,8 +6251,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.5.119971>>
-%<<date=2026/04/13>>
+%<<version=26.6>>
+%<<date=2026/04/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -16950,6 +16950,7 @@ end
 % default, so we need to redefine |\@hangfrom|.
 %
 %    \begin{macrocode}
+\chardef\bbl@trace@vboxdir\z@
 \ifnum\bbl@bidimode>\z@ % Any bidi=
   \def\bbl@nextfake#1{%  non-local changes, use always inside a group!
     \bbl@exp{%
@@ -16970,8 +16971,7 @@ end
           \everyhbox{\the\everyhbox}%
           \everyvbox{\the\everyvbox}}%
       \<fi>}}%
-\IfBabelLayout{nopars}
-  {\chardef\bbl@trace@vboxdir\z@}
+\IfBabelLayout{nopars}{}
   {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
 \IfBabelLayout{pars}
   {\chardef\bbl@trace@vboxdir\@ne
