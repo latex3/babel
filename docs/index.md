@@ -90,19 +90,20 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
-| [26.6](news/whats-new-in-babel-26.6.html) | 2026-04-15 | Fixes for bidi |
-| [26.5](news/whats-new-in-babel-26.5.html) | 2026-03-24 | Mainly fixes for math + bidi |
-| [26.4](news/whats-new-in-babel-26.4.html) | 2026-03-08 | More on babel-german |
-| [26.3](news/whats-new-in-babel-26.3.html) | 2026-02-14 | Minor changes and fixes |
-| [26.2](news/whats-new-in-babel-26.2.html) | 2026-01-26 | Synchronize with babel-german|
+| [26.7](news/whats-new-in-babel-26.7.html) | 2026-05-03 | LICR to Cyrillic Unicode mapping. |
+| [26.6](news/whats-new-in-babel-26.6.html) | 2026-04-15 | Fixes for bidi. |
+| [26.5](news/whats-new-in-babel-26.5.html) | 2026-03-24 | Mainly fixes for math + bidi. |
+| [26.4](news/whats-new-in-babel-26.4.html) | 2026-03-08 | More on babel-german. |
+| [26.3](news/whats-new-in-babel-26.3.html) | 2026-02-14 | Minor changes and fixes. |
+| [26.2](news/whats-new-in-babel-26.2.html) | 2026-01-26 | Synchronize with babel-german.|
 | [26.1](news/whats-new-in-babel-26.1.html) | 2026-01-18 | Improved kashida. \otherlanguage*. |
 | [25.18](news/whats-new-in-babel-25.18.html) | 2025-12-30 | Changes in Belarusian, Breton. New: Alemannic, Alsatian. |
-| [25.17](news/whats-new-in-babel-25.17.html) | 2025-12-11 | Changes in Kurdish, Sanskrit, German |
+| [25.17](news/whats-new-in-babel-25.17.html) | 2025-12-11 | Changes in Kurdish, Sanskrit, German. |
 | [25.16](news/whats-new-in-babel-25.16.html) | 2025-11-23 | Julian calendar. |
 | [25.15](news/whats-new-in-babel-25.15.html) | 2025-11-09 | Greek improved. Some fixes. |
 | [25.14](news/whats-new-in-babel-25.14.html) | 2025-10-22 | New language loader. |
 | [25.13](news/whats-new-in-babel-25.13.html) | 2025-10-01 | Minor fixes. |
-| [25.12](news/whats-new-in-babel-25.12.html) | 2025-08-03 | Option `mapdot` |
+| [25.12](news/whats-new-in-babel-25.12.html) | 2025-08-03 | Option `mapdot`. |
 | [25.11](news/whats-new-in-babel-25.11.html) | 2025-07-13 | Minor changes and fixes. |
 | [25.10](news/whats-new-in-babel-25.10.html) | 2025-06-10 | Transform `transliteration.gost779b` (Russian). |
 | [25.9](news/whats-new-in-babel-25.9.html) | 2025-05-14 | Option `prepend` in transforms. `\BabelFootnote`always available. |
@@ -117,22 +118,22 @@ case, it's advisable to install TeXLive.)
 | [24.15](news/whats-new-in-babel-24.15.html) | 2024-12-21 | Fixes. New locale for Interslavic. |
 | [24.14](news/whats-new-in-babel-24.14.html) | 2024-11-30 | Harfbuzz is the default renderer in most scripts. |
 | [24.13](news/whats-new-in-babel-24.13.html) | 2024-11-08 | Transform variables for French. Pashto calendars. |
-| [24.12](news/whats-new-in-babel-24.12.html) | 2024-10-20 | Manual revised. `\PassOptionsToLocale` |
+| [24.12](news/whats-new-in-babel-24.12.html) | 2024-10-20 | Manual revised. `\PassOptionsToLocale`. |
 | [24.11](news/whats-new-in-babel-24.11.html) | 2024-10-05 | Manual revised. Transform variables. |
-| [24.10](news/whats-new-in-babel-24.10.html) | 2024-09-18 | `\localename`, `\mainlocalename`, `\babelhyphenmins` |
+| [24.10](news/whats-new-in-babel-24.10.html) | 2024-09-18 | `\localename`, `\mainlocalename`, `\babelhyphenmins`. |
 | [24.9](news/whats-new-in-babel-24.9.html) | 2024-08-29 | Transforms: `digits.native`, CJK spacing (tentative). |
 | [24.8](news/whats-new-in-babel-24.8.html) | 2024-08-18 | `\BabelWrapText` and hook `foreign`. |
 | [24.7](news/whats-new-in-babel-24.7.html) | 2024-06-26 | Improved a few locales: Filipino, Geez, etc. |
 | [24.6](news/whats-new-in-babel-24.6.html) | 2024-06-02 | Improved transforms: `kern`, `norule`, `after`. |
 | [24.5](news/whats-new-in-babel-24.5.html) | 2024-05-18 | Minor changes and fixes. |
-| [24.4](news/whats-new-in-babel-24.4.html) | 2024-04-20 | `interchar=linebreak.basic` for CJK (`xetex`) |
+| [24.4](news/whats-new-in-babel-24.4.html) | 2024-04-20 | `interchar=linebreak.basic` for CJK (`xetex`). |
 | [24.3](news/whats-new-in-babel-24.3.html) | 2024-03-29 | Also minor changes and fixes (including spaces in French). |
 | [24.2](news/whats-new-in-babel-24.2.html) | 2024-02-07 | Minor changes and fixes. |
 | [24.1](news/whats-new-in-babel-24.1.html) | 2024-01-07 | **New version numbering**. `interchar` in `\babelprovide`. Spaces in French. |
 | [3.99](news/whats-new-in-babel-3.99.html) | 2023-12-10 | About 25 new locale files. |
-| [3.98](news/whats-new-in-babel-3.98.html) | 2023-12-06 | `casing` in `ini` files. Improved `persian`/`farsi` |
-| [3.97](news/whats-new-in-babel-3.97.html) | 2023-11-11 | `\babelcharclass`, `\babelinterchar` (`xetex`) |
-| [3.96](news/whats-new-in-babel-3.96.html) | 2023-10-25 | Improved Odia. Improved `onchar` |
+| [3.98](news/whats-new-in-babel-3.98.html) | 2023-12-06 | `casing` in `ini` files. Improved `persian`/`farsi`. |
+| [3.97](news/whats-new-in-babel-3.97.html) | 2023-11-11 | `\babelcharclass`, `\babelinterchar` (`xetex`). |
+| [3.96](news/whats-new-in-babel-3.96.html) | 2023-10-25 | Improved Odia. Improved `onchar`. |
 | [3.95](news/whats-new-in-babel-3.95.html) | 2023-09-29 | 16 new locale files (and a few fixes). |
 | [3.94](news/whats-new-in-babel-3.94.html) | 2023-09-12 | Chinese dates. New transform for kashida. New locale files. |
 | [3.93](news/whats-new-in-babel-3.93.html) | 2023-08-29 | Hebrew numerals. Chinese calendar. 6 new locale files. |
@@ -147,7 +148,7 @@ case, it's advisable to install TeXLive.)
 | [3.84](news/whats-new-in-babel-3.84.html) | 2022-12-26 | Auto-selection of encodings in `pdftex`. |
 | [3.83](news/whats-new-in-babel-3.83.html) | 2022-11-31 | Improved Punjabi. `lscape`. |
 | [3.82](news/whats-new-in-babel-3.82.html) | 2022-10-23 | Tibetan with XeTeX. Improved `\babelprovide` (with transforms).|
-| [3.81](news/whats-new-in-babel-3.81.html) | 2022-10-04 | Tentative Tibetan justification. Option `letters` for `onchar`|
+| [3.81](news/whats-new-in-babel-3.81.html) | 2022-10-04 | Tentative Tibetan justification. Option `letters` for `onchar`.|
 | [3.80](news/whats-new-in-babel-3.80.html) | 2022-09-17 | Captions for Hausa. Ethiopic calendar. |
 | [3.79](news/whats-new-in-babel-3.79.html) | 2022-08-29 | Mainly a maintenance release. |
 | [3.78](news/whats-new-in-babel-3.78.html) | 2022-07-20 | Some locales updated to the CLDR 41. |
