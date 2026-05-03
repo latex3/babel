@@ -1,6 +1,6 @@
-## Babel 26.6
+## Babel 26.7
 
-2026-04-15
+2026-05-03
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The latest stable version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 26.6 are described in:
+Changes in version 26.7 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-26.6.html
+https://latex3.github.io/babel/news/whats-new-in-babel-26.7.html
 
 Apart from the manual, you can find information and examples in:
 
@@ -59,15 +59,16 @@ respective authors.
 
 ### Summary of latest changes
 
+#### 27.7 2026-05-03
+
+* A new file 'cyrl2uni.def' maps the Cyrillic LICR to the corresponding
+  Unicode characters with the TU encoding. It can be used without
+  babel.
+  
 #### 26.6 2026-04-15
 
 * More fixes related to bidi text: `\rotatebox`, `\underline` and
   lists (by Udi Fogiel), as well as `tabular` with `\DocumentMetadata`.
-
-#### 26.5 2026-03-24
-
-* Several fixes related to bidi + amsmath (by Udi Fogiel).
-* Fixed incorrect kashida placement with sukūn in lam–alif (by Alq).
 
 ### Previous changes
 

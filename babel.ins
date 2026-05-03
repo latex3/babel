@@ -26,7 +26,7 @@
 %% and covered by LPPL is defined by the unpacking scripts (with
 %% extension .ins) which are part of the distribution.
 %%
-\def\filedate{2026/04/15}
+\def\filedate{2026/05/03}
 \def\batchfile{babel.ins}
 \input docstrip.tex
 
@@ -153,6 +153,9 @@
 \generate{\file{plain.def}{\from{babel.dtx}{plain}}
           \file{bplain.tex}{\from{babel.dtx}{bplain}}
           \file{blplain.tex}{\from{babel.dtx}{blplain}}
+         }
+
+\generate{\file{cyrl2uni.def}{\from{licr2uni.dtx}{cyrl}}
          }
          
 % MakeIndex style files

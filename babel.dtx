@@ -37,7 +37,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/04/15 v26.6
+  [2026/05/03 v26.7
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -193,7 +193,7 @@
   \kern1pt}
 \def\trouble#1{\addcontentsline{tsh}{trouble}{#1}}
 \def\toclevel@trouble{0}
-\def\listoftroubles{\section*{Troubleshoooting}\@starttoc{tsh}}
+\def\listoftroubles{\section*{Troubleshooting}\@starttoc{tsh}}
 \let\l@trouble\l@figure
 \def\@tocrmarg{3.5em plus 1000em}
 \let\saved@check@percent\check@percent
@@ -2547,6 +2547,17 @@ the main language can be overridden with something like that before
 \begin{verbatim}
 \PassOptionsToPackage{main=english}{babel}
 \end{verbatim}
+
+\Describe{licr=}{\texttt{extended} $\string|$ \texttt{unextended}}
+
+\New{26.7} Some languages may require extending the built-in
+declarations in \LaTeX\ for the TU encoding, because a package may rely
+solely on them (like |\cyrzh| instead of |ж|). This is now done with
+the Cyrillic locales (further scripts may be added in the future). You
+can deactivate these extra declarations (in case you have devised your
+own, for example) with |licr=unextended|. They are ignored with lazy
+loading, so if you need them you have to declare explicitly the
+language in the preamble.
 
 \subsection{The \texttt{base} option}
 
@@ -6251,8 +6262,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.6>>
-%<<date=2026/04/15>>
+%<<version=26.7>>
+%<<date=2026/05/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6873,6 +6884,8 @@ wouldn’t exist.
 \DeclareOption{provide=!}{\chardef\bbl@ldfflag\@ne}    % main = 1
 \DeclareOption{provide+=!}{\chardef\bbl@ldfflag\tw@}   % second = 2
 \DeclareOption{provide*=!}{\chardef\bbl@ldfflag\thr@@} % second + main
+\DeclareOption{licr=extended}{}
+\DeclareOption{licr=unextended}{}
 % Don't use. Experimental.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
@@ -10515,6 +10528,7 @@ wouldn’t exist.
 \newcommand\babelprovide[2][]{%
   \let\bbl@savelangname\languagename
   \edef\bbl@savelocaleid{\the\localeid}%
+  \global\let\bbl@afterload\@empty
   % Set name and locale id
   \edef\languagename{#2}%
   \bbl@id@assign
@@ -10820,6 +10834,10 @@ wouldn’t exist.
   \ifx\bbl@KVP@main\@nnil  % Restore only if not 'main'
     \let\languagename\bbl@savelangname
     \chardef\localeid\bbl@savelocaleid\relax
+  \fi
+  % == ==
+  \ifx\ldf@finish\@onlypreamble\else
+    \bbl@afterload
   \fi
   % == hyphenrules (apply if current) ==
   \ifx\bbl@KVP@hyphenrules\@nnil\else
@@ -11141,6 +11159,13 @@ wouldn’t exist.
     \global\let\bbl@inidata\@empty
     \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
     \bbl@toglobal\bbl@ini@loaded
+    \@ifpackagewith{babel}{licr=unextended}{}%
+      {\ifcase\bbl@engine\else % Find a better place
+         \bbl@xin@{,\bbl@cl{sbcp},}{,Cyrl,}%
+         \ifin@
+           \bbl@once{licr-cryl}{\g@addto@macro\bbl@afterload{\input{cyrl2uni.def}}}%
+         \fi
+       \fi}%
   \fi
   \closein\bbl@readstream}
 \def\bbl@read@ini@aux{%
@@ -13536,13 +13561,16 @@ wouldn’t exist.
   \DeclareOption{#3}{}%
   \ifcase\count@
     \bbl@exp{\\\bbl@add\\\bbl@tempb{%
+      \global\let\\\bbl@afterload\\\@empty
       \\\@nameuse{bbl@preini@#3}%
       \\\bbl@ldfinit
       \def\\\CurrentOption{#3}%
       \\\babelprovide[@import=#4,\ifnum#1=\z@\else\bbl@opt@provide,main\fi]{#3}%
-      \\\bbl@afterldf}}%
+      \\\bbl@afterldf
+      \\\bbl@afterload}}%
   \else
     \bbl@add\bbl@tempb{%
+      \global\let\bbl@afterload\@empty
       \def\CurrentOption{#3}%
       \let\localename\CurrentOption
       \let\languagename\localename
@@ -13552,7 +13580,8 @@ wouldn’t exist.
         \bbl@id@assign
         \bbl@read@ini{\BabelIniTag}0%
       \endgroup
-      \bbl@load@language{#5}}%
+      \bbl@load@language{#5}%
+      \bbl@afterload}%
   \fi}
 %
 \bbl@foreach\bbl@toload{\bbl@tempc#1\@@}
