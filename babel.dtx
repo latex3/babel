@@ -28,8 +28,6 @@
 %%
 % \fi
 %
-% \CheckSum{5011}
-%
 % \iffalse
 %<*filedriver>
 % \DocumentMetadata{
@@ -37,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/05/03 v26.7
+  [2026/05/15 v26.7.123173
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6262,8 +6260,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.7>>
-%<<date=2026/05/03>>
+%<<version=26.7.123173>>
+%<<date=2026/05/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8036,9 +8034,11 @@ wouldn’t exist.
     \ifx##1\@empty\else
       \in@{##1}{#2}%
       \ifin@\else
-        \bbl@ifunset{bbl@ensure@\languagename}%
+        \let\bbl@tempc\languagename
+        \bbl@replace\bbl@tempc{-}{@@}%
+        \bbl@ifunset{bbl@ensure@\bbl@tempc}%r
           {\bbl@exp{%
-            \\\DeclareRobustCommand\<bbl@ensure@\languagename>[1]{%
+            \\\DeclareRobustCommand\<bbl@ensure@\bbl@tempc>[1]{%
               \\\foreignlanguage{\languagename}%
               {\ifx\relax#3\else
                 \\\fontencoding{#3}\\\selectfont
@@ -8047,7 +8047,7 @@ wouldn’t exist.
           {}%
         \toks@\expandafter{##1}%
         \edef##1{%
-           \bbl@csarg\noexpand{ensure@\languagename}%
+           \bbl@csarg\noexpand{ensure@\bbl@tempc}%
            {\the\toks@}}%
       \fi
       \expandafter\bbl@tempb
@@ -8055,7 +8055,9 @@ wouldn’t exist.
   \expandafter\bbl@tempb\bbl@captionslist\today\@empty
   \def\bbl@tempa##1{% elt for include list
     \ifx##1\@empty\else
-      \bbl@csarg\in@{ensure@\languagename\expandafter}\expandafter{##1}%
+      \let\bbl@tempc\languagename
+      \bbl@replace\bbl@tempc{-}{@@}%
+      \bbl@csarg\in@{ensure@\bbl@tempc\expandafter}\expandafter{##1}%
       \ifin@\else
         \bbl@tempb##1\@empty
       \fi
@@ -10637,15 +10639,17 @@ wouldn’t exist.
       {\bbl@exp{\\\babelensure[exclude=\\\today]{#2}}}%
       {\bbl@exp{\\\babelensure[exclude=\\\today,
                 include=\[bbl@extracaps@#2]}]{#2}}%
-    \bbl@ifunset{bbl@ensure@\languagename}%
+    \let\bbl@tempc\languagename
+    \bbl@replace\bbl@tempc{-}{@@}%
+    \bbl@ifunset{bbl@ensure@\bbl@tempc}%
       {\bbl@exp{%
-        \\\DeclareRobustCommand\<bbl@ensure@\languagename>[1]{%
+        \\\DeclareRobustCommand\<bbl@ensure@\bbl@tempc>[1]{%
           \\\foreignlanguage{\languagename}%
           {####1}}}}%
       {}%
     \bbl@exp{%
-       \\\bbl@toglobal\<bbl@ensure@\languagename>%
-       \\\bbl@toglobal\<bbl@ensure@\languagename\space>}%
+       \\\bbl@toglobal\<bbl@ensure@\bbl@tempc>%
+       \\\bbl@toglobal\<bbl@ensure@\bbl@tempc\space>}%
   \fi
 %    \end{macrocode}
 %
@@ -11680,7 +11684,9 @@ wouldn’t exist.
   \@ifnextchar[{\bbl@printdate@i{#1}}{\bbl@printdate@i{#1}[]}}
 \def\bbl@printdate@i#1[#2]#3#4#5{%
   \bbl@usedategrouptrue
-  \@nameuse{bbl@ensure@#1}{\localedate[#2]{#3}{#4}{#5}}}
+  \def\bbl@tempc{#1}%
+  \bbl@replace\bbl@tempc{-}{@@}%
+  \@nameuse{bbl@ensure@\bbl@tempc}{\localedate[#2]{#3}{#4}{#5}}}
 %
 % e.g.: 1=months, 2=wide, 3=1, 4=dummy, 5=value, 6=calendar
 \def\bbl@inidate#1.#2.#3.#4\relax#5#6{% 
@@ -24198,6 +24204,16 @@ function Babel.bidi(head, ispar, hdir)
 
     elseif item.id == node.id'math' then
       inmath = (item.subtype == 0)
+      if (locale_d & 0x3) == tex.mathdirection then
+        temp = node.new("dir")
+        if inmath then
+          temp.dir = '+TLT'
+          head = node.insert_after(head, item, temp)     
+        else
+          temp.dir = '-TLT'
+          head = node.insert_after(head, item, temp)
+        end
+      end
 
     elseif item.id == 8 and item.subtype == 19 then
       has_hyperlink = true
