@@ -90,6 +90,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
+| [26.8](news/whats-new-in-babel-26.8.html) | (dev) | Improved Kazakh. Fixes |
 | [26.7](news/whats-new-in-babel-26.7.html) | 2026-05-03 | LICR to Cyrillic Unicode mapping. |
 | [26.6](news/whats-new-in-babel-26.6.html) | 2026-04-15 | Fixes for bidi. |
 | [26.5](news/whats-new-in-babel-26.5.html) | 2026-03-24 | Mainly fixes for math + bidi. |
