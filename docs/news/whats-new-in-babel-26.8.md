@@ -1,6 +1,6 @@
 # What's new in babel 26.8
 
-(dev)
+2026-05-20
 
 ## Improved Kazakh
 
