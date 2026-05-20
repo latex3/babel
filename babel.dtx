@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/05/15 v26.7.123173
+  [2026/05/20 v26.8
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6260,8 +6260,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.7.123173>>
-%<<date=2026/05/15>>
+%<<version=26.8>>
+%<<date=2026/05/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8036,7 +8036,7 @@ wouldn’t exist.
       \ifin@\else
         \let\bbl@tempc\languagename
         \bbl@replace\bbl@tempc{-}{@@}%
-        \bbl@ifunset{bbl@ensure@\bbl@tempc}%r
+        \bbl@ifunset{bbl@ensure@\bbl@tempc}%
           {\bbl@exp{%
             \\\DeclareRobustCommand\<bbl@ensure@\bbl@tempc>[1]{%
               \\\foreignlanguage{\languagename}%
@@ -16505,11 +16505,21 @@ end
       if Babel.unset_atdir then
         luatexbase.add_to_callback("pre_linebreak_filter", Babel.unset_atdir,
           "Babel.unset_atdir")
-        luatexbase.add_to_callback("hpack_filter", Babel.unset_atdir,
-          "Babel.unset_atdir")
-      end
-  }}%
-\fi
+         luatexbase.add_to_callback("hpack_filter", Babel.unset_atdir,
+           "Babel.unset_atdir")
+       end
+    luatexbase.add_to_callback("post_mlist_to_hlist_filter", function(head)
+        local dir = tex.mathdirection
+        local n = node.new("dir")
+        n.direction = dir
+        head = node.insert_before(head,head,n)
+        n = node.new("dir",1)
+        n.direction = dir
+        head = node.insert_after(head,node.tail(head),n)
+        return head
+    end,"Babel.ensure_math_dir")
+   }}%
+ \fi
 %    \end{macrocode}
 %
 % Experimental. Tentative name.
@@ -24122,8 +24132,10 @@ function Babel.bidi(head, ispar, hdir)
     -- three cases: glyph, dir, otherwise
     if glyph_not_symbol_font(item)
        or (item.id == 7 and item.subtype == 2) then
-
-      if locale_d == 0x80 then goto nextnode end
+      
+      if inmath then goto nextnode end
+ 
+       if locale_d == 0x80 then goto nextnode end
       locale_d = locale_d or ((save_outer=='l') and 0 or 1)
 
       local d_font = nil
@@ -24193,26 +24205,26 @@ function Babel.bidi(head, ispar, hdir)
         glue_i = nil
       end
 
-    elseif item.id == DIR then
-      d = nil
-      new_d = true
-
-    elseif item.id == node.id'glue' and item.subtype == 13 then
-      glue_d = d
-      glue_i = item
-      d = nil
-
-    elseif item.id == node.id'math' then
-      inmath = (item.subtype == 0)
-      if (locale_d & 0x3) == tex.mathdirection then
-        temp = node.new("dir")
-        if inmath then
-          temp.dir = '+TLT'
-          head = node.insert_after(head, item, temp)     
-        else
-          temp.dir = '-TLT'
-          head = node.insert_after(head, item, temp)
-        end
+     elseif item.id == DIR then
+       if inmath then goto nextnode end
+       d = nil
+       new_d = true
+ 
+     elseif item.id == node.id'glue' and item.subtype == 13 then
+       if inmath then goto nextnode end
+       glue_d = d
+       glue_i = item
+       d = nil
+ 
+     elseif item.id == node.id'math' then
+      if item.subtype == 0 then  -- mathon
+        inmath = true
+        d = 'on'
+        table.insert(nodes, {item, 'on', outer_first})
+        outer_first = nil
+        goto nextnode
+      else  -- mathoff
+        inmath = false
       end
 
     elseif item.id == 8 and item.subtype == 19 then
