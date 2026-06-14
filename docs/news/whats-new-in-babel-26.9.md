@@ -1,4 +1,4 @@
-# What's new in babel 26.8
+# What's new in babel 26.9
 
 2026-06-14
 
