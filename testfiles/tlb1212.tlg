@@ -13,7 +13,6 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 > \box...=
 \hbox(32.29997+27.29997)x80.94456
 .\hbox(32.29997+27.29997)x77.61124
-..\mathon
 ..\vbox(32.29997+27.29997)x77.61124
 ...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
@@ -727,14 +726,12 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-..\mathoff
 .\glue 3.33333 plus 1.66666 minus 1.11111
 ! OK.
 l. ...\showbox0
 > \box...=
 \hbox(32.29997+27.29997)x80.94456
 .\hbox(32.29997+27.29997)x77.61124
-..\mathon
 ..\vbox(32.29997+27.29997)x77.61124
 ...\hbox(2.79999+0.0)x77.61124
 ....\glue(\tabskip) 0.0
@@ -1448,8 +1445,8 @@ l. ...\showbox0
 .....\rule(*+*)x0.4
 .....\glue -0.2
 ....\glue(\tabskip) 0.0
-..\mathoff
 .\glue 3.33333 plus 1.66666 minus 1.11111
 ! OK.
 l. ...\showbox0
-(tlb1212.aux)
+[1
+] (tlb1212.aux)

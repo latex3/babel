@@ -27,6 +27,7 @@ w & x & y & z \\ \hhline{|b:==:b:==:b|}
 \end{tabular}
 }
 \showbox0
+\box0
 %
 \selectlanguage{english}
 %
@@ -40,4 +41,5 @@ w & x & y & z \\ \hhline{|b:==:b:==:b|}
 \end{tabular}
 }
 \showbox0
+\box0
 \end{document}

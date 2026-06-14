@@ -5,12 +5,6 @@ Format: LaTeX2e<1998/12/01>
 Main Class: article
 Package: babel
     Options: german
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line ....
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line ....
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line ....
 > \box...=
 \vbox(131.53343+0.0)x345.0
 .\glue 0.0 plus 1.0fil
@@ -64,7 +58,6 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ..\glue(\leftskip) 0.0 plus 1.0fil
 ..\hbox(0.0+0.0)x0.0
 ..\hbox(9.79996+4.20004)x46.59688
-...\mathon
 ...\vbox(9.79996+4.20004)x46.59688
 ....\hbox(9.79996+4.20004)x46.59688
 .....\glue(\tabskip) 0.0
@@ -84,7 +77,6 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ......\glue 0.0 plus 1.0fil
 ......\glue 6.0
 .....\glue(\tabskip) 0.0
-...\mathoff
 ..\penalty 10000
 ..\glue(\parfillskip) 0.0
 ..\glue(\rightskip) 0.0 plus 1.0fil
@@ -141,4 +133,5 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ..\glue(\rightskip) 0.0
 ! OK.
 l. ...}\showbox0
-(tlb2944.aux)
+[1
+] (tlb2944.aux)

@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/05/20 v26.8
+  [2026/06/14 v26.9
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6260,8 +6260,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.8>>
-%<<date=2026/05/20>>
+%<<version=26.9>>
+%<<date=2026/06/14>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7163,8 +7163,8 @@ wouldn’t exist.
 % sr-latn-ba becomes fr-Latn-BA. Note |#4| may contain some
 % |\@empty|’s, but they are eventually removed.
 % 
-% |\bbl@bcplookup| either returns the found |ini| tag or it is
-% |\relax|.
+% |\bbl@bcplookup| returns |\bbl@bcp| with either the found |ini| tag
+% or |\relax|. To be refactored with the new |\text_bcp_parse:n|.
 %
 %    \begin{macrocode}
 \def\bbl@bcpcase#1#2#3#4\@@#5{%
@@ -11127,13 +11127,16 @@ wouldn’t exist.
     \catcode`\;=12 \catcode`\|=12 \catcode`\%=14 \catcode`\-=12
     \ifnum#2=\m@ne % Just for the info
       \edef\languagename{tag \bbl@metalang}%
-    \fi  
-    \bbl@info{\ifnum#2=\m@ne Fetching locale name for tag \bbl@metalang
-              \else Importing
+    \fi
+    \ifnum#2=\m@ne
+      \bbl@info{Metadata: '\bbl@metalang' requested, '#1' provided.\\%
+                Fetching the locale name from babel-#1.ini\@gobble}%
+    \else
+      \bbl@info{Importing
                 \ifcase#2font and identification \or basic \fi
-                data for \languagename
-              \fi\\%
-              from babel-#1.ini. Reported}%
+                data for '\languagename'\\%
+                from babel-#1.ini. Reported}%
+    \fi
     \ifnum#2<\@ne
       \global\let\bbl@inidata\@empty
       \let\bbl@inistore\bbl@inistore@min  % Remember it's local
@@ -13359,7 +13362,30 @@ wouldn’t exist.
 %    \begin{macrocode}
 \ifx\GetDocumentProperties\@undefined\else
   \let\bbl@beforeforeign\leavevmode
-  \edef\bbl@metalang{\GetDocumentProperties{document/lang}}%
+  \edef\bbl@tempa{\GetDocumentProperties{document/other-languages}}%
+  \let\bbl@collect@other\@empty
+  \bbl@foreach\bbl@tempa{%
+    \edef\bbl@metalang{#1}%
+    \ifx\bbl@metalang\@empty\else
+      \begingroup
+        \expandafter
+        \bbl@bcplookup\bbl@metalang-\@empty-\@empty-\@empty\@@
+        \ifx\bbl@bcp\relax
+          \ifx\bbl@opt@main\@nnil
+            \bbl@error{no-locale-for-meta}{\bbl@metalang}{}{}%
+          \fi
+        \else
+          \bbl@read@ini{\bbl@bcp}\m@ne
+          \xdef\bbl@collect@other{\bbl@collect@other,\languagename}%
+          \GenericInfo{}{(babel) \@spaces\@spaces\@spaces 
+             Passing '\languagename' to babel\@gobble}%
+        \fi
+      \endgroup
+    \fi}
+  \ifx\bbl@collect@other\@empty\else
+    \xdef\bbl@language@opts{\bbl@collect@other,\bbl@language@opts}%
+  \fi
+  \edef\bbl@metalang{\GetDocumentProperties{document/language}}%
   \ifx\bbl@metalang\@empty\else
     \begingroup
       \expandafter
@@ -13374,10 +13400,8 @@ wouldn’t exist.
         \ifx\bbl@opt@main\@nnil
           \global\let\bbl@opt@main\languagename
         \fi
-        \bbl@info{Passing \languagename\space to babel.\\%
-                  This will be the main language except if\\%
-                  explictly overriden with 'main='.\\%
-                  Reported}%
+        \GenericInfo{}{(babel) \@spaces\@spaces\@spaces 
+             Passing '\languagename' to babel\@gobble}%
       \fi
     \endgroup
   \fi
@@ -13598,6 +13622,8 @@ wouldn’t exist.
 \bbl@exp{%
   \\\AtBeginDocument{\\\bbl@usehooks@lang{/}{begindocument}{{}}}}%
 \def\AfterBabelLanguage{\bbl@error{late-after-babel}{}{}{}}
+\AddToHook{begindocument/end}{%
+  \bbl@info{Main language set to '\mainlocalename'\@gobble}}
 %</package>
 %    \end{macrocode}
 %
@@ -14755,9 +14781,11 @@ wouldn’t exist.
 %  
 %    \begin{macrocode}
 \ifx\bbl@opt@layout\@nnil\else % if layout=.. 
-\IfBabelLayout{nopars}
-  {}
-  {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
+  \ifx\bbl@opt@layout\@undefined\else % Plain
+    \IfBabelLayout{nopars}
+      {}
+     {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
+  \fi
 \def\bbl@startskip{\ifcase\bbl@thepardir\leftskip\else\rightskip\fi}
 \def\bbl@endskip{\ifcase\bbl@thepardir\rightskip\else\leftskip\fi}
 \ifnum\bbl@bidimode>\z@

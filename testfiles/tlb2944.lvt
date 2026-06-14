@@ -50,5 +50,6 @@ It should run fine now with 3.6 upwards
 
 sdfsdfsdf
 }\showbox0
+\box0
 
 \end{document}

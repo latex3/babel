@@ -1,6 +1,6 @@
-## Babel 26.8
+## Babel 26.9
 
-2026-05-20
+2026-06-14
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -19,13 +19,13 @@ including complex and RTL ones. Its high-level interface with
 in LuaLaTeX and XeLaTeX, enabling the use of advanced typographic
 features.
 
-The latest stable version is available on <https://ctan.org/pkg/babel>.
+The **latest stable** version is available on <https://ctan.org/pkg/babel>.
 
-Changes in version 26.8 are described in:
+**Changes** in version 26.9 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-26.8.html
+https://latex3.github.io/babel/news/whats-new-in-babel-26.9.html
 
-Apart from the manual, you can find information and examples in:
+Apart from the manual, you can find **information and examples** in:
 
 https://latex3.github.io/babel/
 
@@ -59,18 +59,19 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 27.8 2026-05-20
+#### 26.9 2026-06-14
+
+* Added support for `other-languages` in `\DocumentMetadata`.
+* Some improvements in the Breton ini file, based on the new ldf
+  style   by Jacques André.
+* Fix: With (Plain) xetex an error was raised (#430).
+
+#### 26.8 2026-05-20
 
 * Improved Kazakh (thanks to Berik I. Tuleuov).  
 * Fixes:
   - Math should be completely skipped in bidi processing (#423)
   - \indexname has toc-unsafe value for some languages (#426)
-
-#### 27.7 2026-05-03
-
-* A new file 'cyrl2uni.def' maps the Cyrillic LICR to the corresponding
-  Unicode characters with the TU encoding. It can be used without
-  babel.
 
 ### Previous changes
 
