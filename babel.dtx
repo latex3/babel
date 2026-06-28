@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/06/14 v26.9
+  [2026/06/28 v26.9.127548
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6260,8 +6260,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.9>>
-%<<date=2026/06/14>>
+%<<version=26.9.127548>>
+%<<date=2026/06/28>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7159,54 +7159,77 @@ wouldn’t exist.
 % fly, either based on its name, or if activated, its BCP 47 code.
 %
 % We first need a couple of macros for a simple BCP 47 look up. It also
-% makes sure, with |\bbl@bcpcase|, casing is the correct one, so that
-% sr-latn-ba becomes fr-Latn-BA. Note |#4| may contain some
-% |\@empty|’s, but they are eventually removed.
+% makes sure, casing is the usual one, so that sr-latn-ba becomes
+% fr-Latn-BA.
 % 
 % |\bbl@bcplookup| returns |\bbl@bcp| with either the found |ini| tag
-% or |\relax|. To be refactored with the new |\text_bcp_parse:n|.
-%
+% or |\relax|. Temporary version, to be refactored with the new
+% |\text_bcp_parse:n|, which is not currently fully expandable with
+% invalid BCP 47 tags.
+% 
 %    \begin{macrocode}
-\def\bbl@bcpcase#1#2#3#4\@@#5{%
-  \ifx\@empty#3%
-    \uppercase{\def#5{#1#2}}%
-  \else
-    \uppercase{\def#5{#1}}%
-    \lowercase{\edef#5{#5#2#3#4}}%
-  \fi}
-\def\bbl@bcplookup#1-#2-#3-#4\@@{%
+\def\bbl@cntchars#1{\bbl@cntchars@i#1876543210\@@}
+\def\bbl@cntchars@i#1#2#3#4#5#6#7#8#9\@@{\@car#9\@nil}%
+\def\bbl@bcplookup#1{%    This section is temporal
+  \let\bbl@templ\@empty % language
+  \let\bbl@temps\@empty % script
+  \let\bbl@tempr\@empty % regions
+  \let\bbl@tempv\@empty % variant
+  \edef\bbl@tempa{#1}%
+  \bbl@replace\bbl@tempa{-}{,}%
+  \bbl@replace\bbl@tempa{_}{,}%
+  \bbl@foreach\bbl@tempa{%
+    \ifx\bbl@templ\@empty
+      \lowercase{\def\bbl@templ{##1}}%
+    \else\ifnum\bbl@cntchars{##1}=4
+      \bbl@xin@{\@car##1\@nil}{0123456789}%
+      \ifin@
+        \def\bbl@tempv{##1}% eg, 1901
+      \else
+        \uppercase{\edef\bbl@tempb{\@car##1\@nil}}%
+        \lowercase{\edef\bbl@temps{\bbl@tempb\@gobble##1}}%
+      \fi
+    \else\ifnum\bbl@cntchars{##1}<4
+      \uppercase{\def\bbl@tempr{##1}}% 
+    \else\ifnum\bbl@cntchars{##1}>4  
+      \lowercase{\def\bbl@tempv{##1}}%
+    \fi\fi\fi\fi}%
+  \bbl@exp{\\\bbl@bcplookup@i{\bbl@templ}{\bbl@temps}{\bbl@tempr}{\bbl@tempv}}}
+\def\bbl@bcplookup@try#1{%
+ \ifx\bbl@bcp\relax
+   \IfFileExists{babel-#1\bbl@tempe.ini}{\edef\bbl@bcp{#1\bbl@tempe}}{}%
+\fi} 
+\def\bbl@bcplookup@i#1#2#3#4{%
   \let\bbl@bcp\relax
-  \lowercase{\def\bbl@tempa{#1}}%
-  \ifx\@empty#2%
-    \IfFileExists{babel-\bbl@tempa.ini}{\let\bbl@bcp\bbl@tempa}{}%
-  \else\ifx\@empty#3%
-    \bbl@bcpcase#2\@empty\@empty\@@\bbl@tempb
-    \IfFileExists{babel-\bbl@tempa-\bbl@tempb.ini}%
-      {\edef\bbl@bcp{\bbl@tempa-\bbl@tempb}}%
-      {}%
-    \ifx\bbl@bcp\relax
-      \IfFileExists{babel-\bbl@tempa.ini}{\let\bbl@bcp\bbl@tempa}{}%
-    \fi
+  \def\bbl@tempe{#4}%
+  \ifx\bbl@tempe\@empty\else
+    \edef\bbl@tempe{-#4}%
+  \fi
+  \edef\bbl@tempa{#2#3\bbl@tempe}% en
+  \ifx\bbl@tempa\@empty
+    \bbl@bcplookup@try{#1}%
   \else
-    \bbl@bcpcase#2\@empty\@empty\@@\bbl@tempb
-    \bbl@bcpcase#3\@empty\@empty\@@\bbl@tempc
-    \IfFileExists{babel-\bbl@tempa-\bbl@tempb-\bbl@tempc.ini}%
-      {\edef\bbl@bcp{\bbl@tempa-\bbl@tempb-\bbl@tempc}}%
-      {}%
-    \ifx\bbl@bcp\relax
-      \IfFileExists{babel-\bbl@tempa-\bbl@tempc.ini}%
-        {\edef\bbl@bcp{\bbl@tempa-\bbl@tempc}}%
-        {}%
+    \edef\bbl@tempa{#3\bbl@tempe}% en-Latn
+    \ifx\bbl@tempa\@empty
+      \bbl@bcplookup@try{#1-#2}%
+      \bbl@bcplookup@try{#1}%
+    \else
+      \edef\bbl@tempa{#2\bbl@tempe}% en-US, en-001    
+      \ifx\bbl@tempa\@empty
+        \bbl@bcplookup@try{#1-#3}%
+        \bbl@bcplookup@try{#1}%
+      \else % en-Latn-US       
+        \bbl@bcplookup@try{#1-#2-#3}%
+        \bbl@bcplookup@try{#1-#2}%
+        \bbl@bcplookup@try{#1-#3}%
+        \bbl@bcplookup@try{#1}%
+      \fi
     \fi
-    \ifx\bbl@bcp\relax
-      \IfFileExists{babel-\bbl@tempa-\bbl@tempc.ini}%
-        {\edef\bbl@bcp{\bbl@tempa-\bbl@tempc}}%
-        {}%
-    \fi
-    \ifx\bbl@bcp\relax
-      \IfFileExists{babel-\bbl@tempa.ini}{\let\bbl@bcp\bbl@tempa}{}%
-    \fi
-  \fi\fi}
+  \fi
+  \ifx\bbl@bcp\relax
+    \ifx\bbl@tempe\@empty\else\bbl@bcplookup@i{#1}{#2}{#3}{}\fi%
+  \fi}
+%
 \let\bbl@initoload\relax
 %    \end{macrocode}
 %
@@ -12163,7 +12186,7 @@ wouldn’t exist.
   \ifbbl@bcpallowed
     \expandafter\ifx\csname date\languagename\endcsname\relax
       \expandafter
-      \bbl@bcplookup\languagename-\@empty-\@empty-\@empty\@@
+      \bbl@bcplookup{\languagename}%-\@empty-\@empty-\@empty\@@
       \ifx\bbl@bcp\relax\else  % Returned by \bbl@bcplookup
         \edef\languagename{\bbl@bcp@prefix\bbl@bcp}%
         \let\localename\languagename
@@ -13369,7 +13392,7 @@ wouldn’t exist.
     \ifx\bbl@metalang\@empty\else
       \begingroup
         \expandafter
-        \bbl@bcplookup\bbl@metalang-\@empty-\@empty-\@empty\@@
+        \bbl@bcplookup{\bbl@metalang}%-\@empty-\@empty-\@empty\@@
         \ifx\bbl@bcp\relax
           \ifx\bbl@opt@main\@nnil
             \bbl@error{no-locale-for-meta}{\bbl@metalang}{}{}%
@@ -13389,7 +13412,7 @@ wouldn’t exist.
   \ifx\bbl@metalang\@empty\else
     \begingroup
       \expandafter
-      \bbl@bcplookup\bbl@metalang-\@empty-\@empty-\@empty\@@
+      \bbl@bcplookup{\bbl@metalang}%-\@empty-\@empty-\@empty\@@
       \ifx\bbl@bcp\relax
         \ifx\bbl@opt@main\@nnil
           \bbl@error{no-locale-for-meta}{\bbl@metalang}{}{}%
