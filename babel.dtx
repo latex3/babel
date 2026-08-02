@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/06/28 v26.9.127548
+  [2026/08/02 v26.9.131069
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6260,8 +6260,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.9.127548>>
-%<<date=2026/06/28>>
+%<<version=26.9.131069>>
+%<<date=2026/08/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -16966,21 +16966,19 @@ end
   \fi}
 %
 \IfBabelLayout{tabular}%
-  {\chardef\bbl@tabular@mode\tw@}% All RTL
-  {\IfBabelLayout{notabular}%
-    {\chardef\bbl@tabular@mode\z@}%
-    {\chardef\bbl@tabular@mode\@ne}}% Mixed, with LTR cols
+  {\chardef\bbl@tabular@mode\z@}% All RTL
+  {\IfBabelLayout{lrtabular}%
+    {\chardef\bbl@tabular@mode\@ne}%
+    {\chardef\bbl@tabular@mode\z@}}% Mixed, with LTR cols
 %
 \ifnum\bbl@bidimode>\@ne % Any lua bidi= except default=1
   % Redefine: vrules mess up dirs (why?).
   \AtBeginDocument{\def\@arstrut{\relax\copy\@arstrutbox}}%
-  \ifcase\bbl@tabular@mode\or % 1 = Mixed - default
+  \ifcase\bbl@tabular@mode\else % 1 = Mixed 
     \let\bbl@parabefore\relax
     \AddToHook{para/before}{\bbl@parabefore}
     \AtBeginDocument{%
-      \bbl@replace\@tabular{$}{$%
-        \def\bbl@insidemath{0}%
-        \def\bbl@parabefore{\localerestoredirs}}%
+      \bbl@replace\@tabular{\hbox\bgroup}{\hbox bdir\z@\bgroup}%
       \ifnum\bbl@tabular@mode=\@ne
         \bbl@ifunset{@tabclassz}{}{%
           \bbl@exp{% Hide conditionals
@@ -16999,17 +16997,6 @@ end
                   {\\\do@row@strut\<fi>}{\\\do@row@strut\<fi>\egroup}}}%
              {}}%
     \fi}%
-  \or % 2 = All RTL - tabular 
-    \let\bbl@parabefore\relax
-    \AddToHook{para/before}{\bbl@parabefore}%
-    \AtBeginDocument{%
-      \@ifpackageloaded{colortbl}%
-        {\bbl@replace\@tabular{$}{$%
-           \def\bbl@insidemath{0}%
-           \def\bbl@parabefore{\localerestoredirs}}%
-         \bbl@sreplace\@classz
-           {\hbox\bgroup\bgroup}{\hbox\bgroup\bgroup\localerestoredirs}}%
-        {}}%
   \fi
 %    \end{macrocode}
 %
@@ -17080,31 +17067,6 @@ end
     \noindent\box\@tempboxa}}
   {}
 \fi
-%
-\IfBabelLayout{tabular}
-  {\let\bbl@OL@@tabular\@tabular
-   \bbl@exp{\\\in@{\\\UseMathForPositioningText}{\[@tabular]}}%
-   \ifin@
-     \bbl@replace\@tabular{\UseMathForPositioningText$}%
-       {\bbl@nextfake{\UseMathForPositioningText$}}%
-   \else
-     \bbl@replace\@tabular{$}{\bbl@nextfake$}%
-   \fi
-   \let\bbl@NL@@tabular\@tabular
-   \AtBeginDocument{%
-     \ifx\bbl@NL@@tabular\@tabular\else
-       \bbl@exp{\\\in@{\\\UseMathForPositioningText}{\[@tabular]}}%
-       \ifin@\else
-         \ifin@
-           \bbl@replace\@tabular{\UseMathForPositioningText$}%
-             {\bbl@nextfake{\UseMathForPositioningText$}}%
-         \else
-           \bbl@replace\@tabular{$}{\bbl@nextfake$}%
-         \fi
-       \fi
-       \let\bbl@NL@@tabular\@tabular
-     \fi}}
-   {}
 %    \end{macrocode}
 %
 % We need to patch lists in documents with both LTR and RTL paragraphs.
