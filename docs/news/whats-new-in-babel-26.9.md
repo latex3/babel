@@ -29,7 +29,7 @@ to
 \usepackage[main=hindi, moldavian, french, arabic-algeria, english, hindi]{babel}
 ```
 Note the order with `other-languages`, which precede languages declared
-explicitly in `\usepackage`.
+explicitly in `\usepackage`. 
 
 The basic tag lookup explained in the `babel` manual is applied here,
 so that `fr-Latn-FR` is valid and mapped to `fr`, which is in turn
@@ -37,7 +37,8 @@ mapped to `french`, while `en-Latn-US` is mapped to `en-US`, which is
 mapped to `american`. This eases the localization of automatically
 generated documents.
 
-Remember you can also use lazy loading for secondary languages.
+Remember you can also resort to lazy loading for secondary languages,
+not requiring an explicit declaration.
 
 ## Improved Breton
 
