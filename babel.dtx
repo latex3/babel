@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/08/02 v26.9.131069
+  [2026/08/03 v26.9.131172
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6260,8 +6260,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.9.131069>>
-%<<date=2026/08/02>>
+%<<version=26.9.131172>>
+%<<date=2026/08/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -17189,9 +17189,7 @@ end
        Babel.discard_sublr , "Babel.discard_sublr") }%
   }{}
 \IfBabelLayout{counters}%
-  {\let\bbl@OL@@textsuperscript\@textsuperscript
-   \bbl@sreplace\@textsuperscript{\m@th}{\m@th\mathdir\pagedir}%
-   \let\bbl@latinarabic=\@arabic
+  {\let\bbl@latinarabic=\@arabic
    \let\bbl@OL@@arabic\@arabic
    \def\@arabic#1{\babelsublr{\bbl@latinarabic#1}}%
    \@ifpackagewith{babel}{bidi=default}%
