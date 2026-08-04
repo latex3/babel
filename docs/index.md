@@ -90,6 +90,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
+| [26.10](news/whats-new-in-babel-26.10.html) | (dev) | (dev) |
 | [26.9](news/whats-new-in-babel-26.9.html) | 2026-06-14 | Support for `other-languages` metadata. |
 | [26.8](news/whats-new-in-babel-26.8.html) | 2026-05-20 | Improved Kazakh. Fixes. |
 | [26.7](news/whats-new-in-babel-26.7.html) | 2026-05-03 | LICR to Cyrillic Unicode mapping. |
