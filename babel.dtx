@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/08/03 v26.9.131172
+  [2026/08/05 v26.9.131368
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6260,8 +6260,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.9.131172>>
-%<<date=2026/08/03>>
+%<<version=26.9.131368>>
+%<<date=2026/08/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -17024,48 +17024,24 @@ end
 \ifx\bbl@opt@layout\@nnil\endinput\fi
 %    \end{macrocode}
 %
-% \textsc{Omega} provided a companion to |\mathdir| (|\nextfakemath|)
-% for those cases where we did not want it to be applied, so that the
-% writing direction of the main text was left unchanged.
-% |\bbl@nextfake| is an attempt to emulate it, because \luatex{} has
-% removed it without an alternative. Used in tabular, |\underline| and
-% |\LaTeX|. Also, |\hangindent| does not honour direction changes by
+% |\hangindent| does not honour direction changes by
 % default, so we need to redefine |\@hangfrom|.
 %
 %    \begin{macrocode}
 \chardef\bbl@trace@vboxdir\z@
 \ifnum\bbl@bidimode>\z@ % Any bidi=
-  \def\bbl@nextfake#1{%  non-local changes, use always inside a group!
-    \bbl@exp{%
-      \mathdir\the\bodydir
-      #1%              Once entered in math, set boxes to restore values
-      \def\\\bbl@insidemath{0}%
-      \<ifmmode>%
-        \everyvbox{%
-          \the\everyvbox
-          \bodydir\the\bodydir
-          \mathdir\the\mathdir
-          \everyhbox{\the\everyhbox}%
-          \everyvbox{\the\everyvbox}}%
-        \everyhbox{%
-          \the\everyhbox
-          \bodydir\the\bodydir
-          \mathdir\the\mathdir
-          \everyhbox{\the\everyhbox}%
-          \everyvbox{\the\everyvbox}}%
-      \<fi>}}%
-\IfBabelLayout{nopars}{}
-  {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
-\IfBabelLayout{pars}
-  {\chardef\bbl@trace@vboxdir\@ne
-   \def\@hangfrom#1{%
-    \setbox\@tempboxa\hbox{{#1}}%
-    \hangindent\wd\@tempboxa
-    \ifnum\bbl@vbox@bodydir=\pardirection\else
-      \shapemode\@ne
-    \fi
-    \noindent\box\@tempboxa}}
-  {}
+  \IfBabelLayout{nopars}{}
+    {\edef\bbl@opt@layout{\bbl@opt@layout.pars.}}%
+  \IfBabelLayout{pars}
+    {\chardef\bbl@trace@vboxdir\@ne
+     \def\@hangfrom#1{%
+      \setbox\@tempboxa\hbox{{#1}}%
+      \hangindent\wd\@tempboxa
+      \ifnum\bbl@vbox@bodydir=\pardirection\else
+        \shapemode\@ne
+      \fi
+      \noindent\box\@tempboxa}}
+    {}
 \fi
 %    \end{macrocode}
 %
@@ -17217,8 +17193,7 @@ end
    \let\bbl@OL@LaTeXe\LaTeXe
    \DeclareRobustCommand{\LaTeXe}{\mbox{\m@th
      \if b\expandafter\@car\f@series\@nil\boldmath\fi
-     \babelsublr{%
-       \LaTeX\kern.15em2\bbl@nextfake$_{\textstyle\varepsilon}$}}}}
+     \babelsublr{\LaTeX\kern.15em2$_{\textstyle\varepsilon}$}}}}
   {}
 %</luatex>
 %    \end{macrocode}

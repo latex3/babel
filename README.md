@@ -1,4 +1,4 @@
-## Babel 26.9.131172
+## Babel 26.9.131368
 
 (dev)
 
@@ -58,6 +58,8 @@ Bugs related to specific languages are best reported to their
 respective authors.
 
 ### Summary of latest changes
+
+#### 26.20 (dev)
 
 #### 26.9 2026-06-14
 
