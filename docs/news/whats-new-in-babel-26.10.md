@@ -65,8 +65,6 @@ token.set_macro("thesavedmonth", h.month)
 token.set_macro("thesavedday", h.day)
 }
 
-\ShowLocaleProperties{hindi}
-
 \begin{document}
 
 % With lua-calendrical 
