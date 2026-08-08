@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/08/05 v26.9.131368
+  [2026/08/08 v26.10
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6260,8 +6260,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.9.131368>>
-%<<date=2026/08/05>>
+%<<version=26.10>>
+%<<date=2026/08/08>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7165,12 +7165,15 @@ wouldn’t exist.
 % |\bbl@bcplookup| returns |\bbl@bcp| with either the found |ini| tag
 % or |\relax|. Temporary version, to be refactored with the new
 % |\text_bcp_parse:n|, which is not currently fully expandable with
-% invalid BCP 47 tags.
+% invalid BCP 47 tags. The argument may be is some cases either a
+% language name or a tag (e.g., |\foreignlanguage|. This was a huge
+% mistake, because of the potential ambiguities (for example, the name
+% \texttt{vai-latin} is also a syntactically valid tag).
 % 
 %    \begin{macrocode}
 \def\bbl@cntchars#1{\bbl@cntchars@i#1876543210\@@}
 \def\bbl@cntchars@i#1#2#3#4#5#6#7#8#9\@@{\@car#9\@nil}%
-\def\bbl@bcplookup#1{%    This section is temporal
+\def\bbl@bcplookup#1{%
   \let\bbl@templ\@empty % language
   \let\bbl@temps\@empty % script
   \let\bbl@tempr\@empty % regions
@@ -11691,8 +11694,13 @@ wouldn’t exist.
     \bbl@replace\bbl@ld@calendar{gregorian}{}%
     \ifx\bbl@ld@calendar\@empty\else
       \ifx\bbl@ld@convert\relax\else
+        \ifx\bbl@ld@convert\@empty
+          \let\bbl@ld@convert\bbl@ld@calendar
+        \else
+          \edef\bbl@ld@convert{\expandafter\@gobble\bbl@ld@convert}%
+        \fi
         \babelcalendar[\bbl@they-\bbl@them-\bbl@thed]%
-          {\bbl@ld@calendar}\bbl@they\bbl@them\bbl@thed
+          {\bbl@ld@convert}\bbl@they\bbl@them\bbl@thed
       \fi
     \fi
     \@nameuse{bbl@precalendar}% Remove, e.g., +, -civil (-ca-islamic)
@@ -11754,7 +11762,27 @@ wouldn’t exist.
 %    \begin{macrocode}
 \let\bbl@calendar\@empty
 \newcommand\babelcalendar[2][\the\year-\the\month-\the\day]{%
-  \@nameuse{bbl@ca@#2}#1\@@}
+  \bbl@xin@{$calendrica:}{$#2}%
+  \ifin@
+    \directlua{Babel.calendrica = Babel.calendrica or require("calendrica")}%
+    \edef\bbl@tempa{$#2}%
+    \bbl@replace\bbl@tempa{$calendrica:}{}%
+    \bbl@replace\bbl@tempa{-}{_}%
+    \bbl@afterelse
+    \bbl@exp{\\\bbl@calendrica#1\\\@@{\bbl@tempa}}%
+  \else
+    \bbl@afterfi
+    \@nameuse{bbl@ca@#2}#1\@@
+  \fi}
+\def\bbl@calendrica#1-#2-#3\@@#4#5#6#7{%
+  \directlua{
+    local d = Babel.calendrica.new_date(
+      {year=\number#1, month=\number#2, day=\number#3},
+      Babel.calendrica.cal_gregorian)
+    local r = Babel.calendrica.as_date(d, Babel.calendrica.cal_#4)
+    token.set_macro('\bbl@stripslash#5', r.year)  
+    token.set_macro('\bbl@stripslash#6', r.month)   
+    token.set_macro('\bbl@stripslash#7', r.day) }}
 \newcommand\BabelDateSpace{\nobreakspace}
 \newcommand\BabelDateDot{.\@}
 \newcommand\BabelDated[1]{{\number#1}}

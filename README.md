@@ -1,6 +1,6 @@
-## Babel 26.9.131368
+## Babel 26.10
 
-(dev)
+2026-08-08
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The **latest stable** version is available on <https://ctan.org/pkg/babel>.
 
-**Changes** in version 26.9 are described in:
+**Changes** in version 26.10 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-26.9.html
+https://latex3.github.io/babel/news/whats-new-in-babel-26.10.html
 
 Apart from the manual, you can find **information and examples** in:
 
@@ -59,7 +59,15 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 26.20 (dev)
+#### 26.10 2026-08-08
+
+* Breaking change (bidi texts): Now the option layout=tabular has been made the
+  default.
+* New locale: persian-latin, thanks to @RamtinMoslemi.
+* Fix: Variant was ignored with BCP 47 tags (the current code is
+  somewhat tentative).
+* Support for the new lua-calendrica package.
+
 
 #### 26.9 2026-06-14
 
@@ -67,13 +75,6 @@ respective authors.
 * Some improvements in the Breton ini file, based on the new ldf
   style by Jacques André.
 * Fix: With (Plain) xetex an error was raised (#430).
-
-#### 26.8 2026-05-20
-
-* Improved Kazakh (thanks to Berik I. Tuleuov).  
-* Fixes:
-  - Math should be completely skipped in bidi processing (#423)
-  - \indexname has toc-unsafe value for some languages (#426)
 
 ### Previous changes
 
