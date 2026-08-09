@@ -64,10 +64,10 @@ which prints ‘30 Ⲉⲡⲓⲡ 1742’:
 
 \begin{document}
 
-% With lua-calendrica
+% With lua-calendrica (only lualatex)
 \localedate[calendar=coptic, convert=calendrica:coptic]\year\month\day
 
-% With the babel built-in converter
+% With the babel built-in converter (lualatex and xelatex)
 \localedate[calendar=coptic, convert]\year\month\day
 
 \end{document}
@@ -83,6 +83,7 @@ With `\babelcalendar`, use the same pattern in the calendar name; e.g.:
 ```tex
 \babelcalendar[2004-11-15]{calendrica:chinese}\myyear\mymonth\myday
 ```
+Support for `\today` and `(\babel)provide` will be added shortly.
 
 Strings for more calendars will be added in the future. Feel free to
 contribute new ones (and to ask for help). Here is a minimal setup for
