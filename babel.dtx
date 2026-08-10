@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/08/08 v26.10
+  [2026/08/10 v26.10.131875
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -6260,8 +6260,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.10>>
-%<<date=2026/08/08>>
+%<<version=26.10.131875>>
+%<<date=2026/08/10>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11456,7 +11456,7 @@ wouldn’t exist.
 % Additive numerals require an additional definition. When |.1| is
 % found, two macros are defined -- the basic one, without |.1| called
 % by |\localenumeral|, and another one preserving the trailing |.1| for
-% the ‘units’. 
+% the ‘units’. The asterisk is a ‘terminator’.
 %
 %    \begin{macrocode}
 \def\bbl@inikv@counters#1#2{%
@@ -11479,6 +11479,14 @@ wouldn’t exist.
     \toks@{}% Required by \bbl@buildifcase, which returns \bbl@tempa
     \expandafter\bbl@buildifcase\bbl@tempb* \\ % Space after \\
     \bbl@csarg{\global\expandafter\let}{cntr@#1@\languagename}\bbl@tempa
+  \fi
+  \in@{.D$}{#1$}%
+  \ifin@\else\in@{.C$}{#1$}\fi
+  \ifin@
+    \bbl@replace\bbl@tempc{.D}{}%
+    \bbl@replace\bbl@tempc{.C}{}%
+    \bbl@exp{\gdef\<bbl@cntr@\bbl@tempc @\languagename>####1{%
+      \\\expandafter\\\bbl@zhnumeral\\\expandafter{\\\number####1}{\bbl@tempc}}}%
   \fi}
 %    \end{macrocode}
 %
@@ -12030,7 +12038,7 @@ wouldn’t exist.
     \bbl@alphnumeral@ii{#9}00000#1#2\or
     \bbl@alphnumeral@ii{#9}0000#1#2#3\or
     \bbl@alphnumeral@ii{#9}000#1#2#3#4\else
-    \bbl@alphnum@invalid{>9999}%
+    \bbl@error{counter-too-large}{>9999}{}{}%
   \fi}
 \def\bbl@alphnumeral@ii#1#2#3#4#5#6#7#8{%
   \bbl@ifunset{bbl@cntr@#1.F.\number#5#6#7#8@\languagename}%
@@ -12043,8 +12051,36 @@ wouldn’t exist.
          {\bbl@cs{cntr@#1.S.321@\languagename}}%
      \fi}%
     {\bbl@cs{cntr@#1.F.\number#5#6#7#8@\languagename}}}
-\def\bbl@alphnum@invalid#1{%
-  \bbl@error{alphabetic-too-large}{#1}{}{}}
+%    \end{macrocode}
+%
+% Some Chinese counters follow special rules.
+%
+%    \begin{macrocode}
+\def\bbl@zhnumeral#1#2{%
+  \ifnum#1<10 \bbl@zhnum000#1{#2}%
+  \else\ifnum#1<100 \bbl@zhnum00#1{#2}%
+  \else\ifnum#1<1000 \bbl@zhnum0#1{#2}%
+  \else\ifnum#1<10000 \bbl@zhnum#1{#2}%
+  \else\bbl@error{counter-too-large}{#1}{}{}%
+  \fi\fi\fi\fi}
+\def\bbl@zhnum#1#2#3#4#5{%
+  \ifnum\numexpr#1#2#3#4\relax=\z@
+    \localenumeral{#5.C}\@ne
+  \else
+    \ifnum#1>\z@\localenumeral{#5.D}{#1}\localenumeral{#5.C}5\fi % Thousands
+    \ifnum#2>\z@\localenumeral{#5.D}{#2}\localenumeral{#5.C}4% Hundreds   
+    \else\ifnum#1>\z@\ifnum#3#4>\z@\localenumeral{#5.C}\@ne\fi
+    \fi\fi
+    \ifnum#3>\z@ % Tens
+      \ifnum#1#2=\z@\ifnum#3=\@ne\else\localenumeral{#5.D}{#3}\fi % No 一 for 10-19:
+      \else\localenumeral{#5.D}{#3}%
+      \fi
+      \localenumeral{#5.C}\thr@@
+    \else
+      \ifnum#2>\z@\ifnum#4>\z@\localenumeral{#5.C}\@ne\fi\fi
+    \fi
+    \ifnum#4>\z@\localenumeral{#5.D}{#4}\fi % Units
+  \fi}
 %    \end{macrocode}
 %
 % \subsection{Casing}
@@ -13814,11 +13850,11 @@ wouldn’t exist.
     decimal digits}%
    {Use another name.}
 \bbl@errmessage{limit-two-digits}
-   {Currently two-digit years are restricted to the\\
+   {Currently two-digit years are restricted to the\\5
     range 0-9999}%
    {There is little you can do. Sorry.}
-\bbl@errmessage{alphabetic-too-large}
- {Alphabetic numeral too large (#1)}%
+\bbl@errmessage{counter-too-large}
+ {Counter too large (#1)}%
  {Currently this is the limit.}
 \bbl@errmessage{no-ini-info}
    {I've found no info for the current locale.\\%
@@ -16487,9 +16523,10 @@ end
 %
 % The basic setup. The output is modified at a very low level to set
 % the |\bodydir| to the |\pagedir|. Sadly, we have to deal with boxes
-% in math with basic, so the |\bbl@mathboxdir| hack is activated every
-% math with the package option bidi=. The hack for the PUA is no longer
-% necessary with |basic| (24.8), but it’s kept in |basic-r|.
+% in math with basic, so the |\bbl@insidemath| hack is activated (set
+% to 1) every math with the package option bidi=. The hack for the PUA
+% is no longer necessary with |basic| (24.8), but it’s kept in
+% |basic-r|.
 %
 %    \begin{macrocode}
 \ifnum\bbl@bidimode>\@ne % Any bidi= except default (=1)
@@ -16696,7 +16733,6 @@ end
       \fi
       \AddToHook{env/equation/begin}{%
         \ifnum\bbl@thetextdir>\z@
-          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
           \let\@eqnnum\bbl@eqnum
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
@@ -16712,7 +16748,6 @@ end
       \fi
       \AddToHook{env/eqnarray/begin}{%
         \ifnum\bbl@thetextdir>\z@
-          \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
           \bbl@add\normalfont{\bbl@eqnodir}%
@@ -16751,14 +16786,12 @@ end
           \hbox to 0.01pt{\hbox to\displaywidth{\hss{#1}}\hss}}%
       \fi
       \def\bbl@ams@preset#1{%
-        \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
         \ifnum\bbl@thetextdir>\z@
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
           \bbl@sreplace\maketag@@@{\hbox}{\bbl@ams@tagbox#1}%
         \fi}%
       \def\bbl@ams@equation{%
-        \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
         \ifnum\bbl@thetextdir>\z@
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \chardef\bbl@thetextdir\z@
@@ -16786,7 +16819,6 @@ end
         \\\AddToHook{env/alignat*/end}{\<iftag@>\<else>\\\tag*{}\<fi>}}%
       \AddToHook{env/flalign/begin}{\bbl@ams@preset\hbox}%
       \AddToHook{env/split/before}{%
-        \def\bbl@mathboxdir{\def\bbl@insidemath{1}}%
         \ifnum\bbl@thetextdir>\z@
           \bbl@ifsamestring\@currenvir{equation}%
             {\ifx\bbl@ams@lap\hbox % leqno
