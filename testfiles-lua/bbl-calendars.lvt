@@ -19,6 +19,7 @@
 \babelprovide[import]{arabic-eg}
 \babelprovide[import, calendar=coptic]{coptic}
 \babelprovide[calendar=gregorian]{thai}
+\babelprovide[import, calendar=indian]{hindi}
 % \babelprovide[calendar=gregorian]{persian}
 % \babelprovide[calendar=.genitive]{serbian}
 
@@ -33,6 +34,8 @@
 \year=2022
 \month=8
 \day=15
+
+\vspace*{-2.5cm}
 
 \typeout{== thai ==}
 
@@ -134,6 +137,17 @@
 \typeout{== hebrew ==}
 
 \TestBox{\today}
+
+%---
+
+\selectlanguage{hindi}
+
+\typeout{== hindi ==}
+
+\TestBox{\today}
+
+\TestBox{\localedate[calendar=indian, convert=calendrica:hindu-solar]{\year}{\month}{\day}}
+
 
 \OMIT
 \end{document}

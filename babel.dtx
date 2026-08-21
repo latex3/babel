@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/08/10 v26.10.131875
+  [2026/08/21 v26.11
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -3756,7 +3756,20 @@ is the default value, no penalty is inserted.
 \subsection{Shorthands – 1. Commands}
 
 A \textit{shorthand} is a sequence of one or two characters that
-expands to arbitrary \TeX{} code.
+expands to arbitrary \TeX{} code. Any language can have associated a set
+of shorthands, which is usually named as the language which are
+intended for, and defined in the corresponding language definition
+file. Note, however, the name can be different.
+
+In what follows, \m{shorthands-name} is the name of a set of
+shorthands. The name used is printed to the \texttt{log} file with
+something like:
+\begin{verbatim}
+Package babel Info: 'uppersorbian' activates 'usorbian' shorthands.
+(babel)             Reported on input line 8.
+\end{verbatim}
+This is particularly true for “dialects”, because a single set
+of shorthands is re-used.
 
 Shorthands can be used for different kinds of things; for example:
 (1) in some languages shorthands such as |"a| are defined to be able
@@ -3773,9 +3786,10 @@ Unicode characters). As to the point 2, now \textsf{pdfTeX} provides
 |\knbccode|, and \luatex{} can manipulate the glyph list. Tools for
 point 3 can still be very useful in general.
 
-There are four levels of shorthands: \textit{user}, \textit{language},
-\textit{system}, and \textit{language user} (by order of precedence).
-In most cases, you will use only shorthands provided by languages.
+There are four levels of shorthands; by order of precedence:
+\textit{user}, \textit{language} (which is what the description above
+refers to), \textit{system}, and \textit{language user}. In most cases,
+you will use only shorthands provided by languages.
 
 \begin{note} Keep in mind the following:
 \begin{enumerate}
@@ -3854,7 +3868,7 @@ are always activated.
 If the package option |shorthands| is used, you must include any
 character to be activated with |\useshorthands|.
 
-\Describe\defineshorthand{\texttt{[}\langlist\texttt{]}%
+\Describe\defineshorthand{\texttt{[}\m{shorthands-name}\texttt{,}\m{shorthands-name}\texttt{...]}%
      \marg{shorthand}\marg{code}}
 
 It takes two arguments: the first is a one- or two-character shorthand
@@ -3862,7 +3876,7 @@ sequence, and the second is the code the shorthand should expand to.
 
 \New{3.9a} An optional argument allows to (re)define language and
 system shorthands (some languages do not activate shorthands, so you
-may want to add |\languageshorthands|\marg{language} to the corresponding
+may want to add |\languageshorthands|\marg{shorthands-name} to the corresponding
 |\extras<language>|, as explained below). By default, user shorthands
 are (re)defined.
 
@@ -3897,17 +3911,20 @@ shorthands. Language-dependent user shorthands take precedence over
   is that expected in each context.
 \end{example}
 
-\Describe{\languageshorthands}{\marg{language}}
+\Describe{\languageshorthands}{\marg{shorthands-name}}
 
 Used to switch the shorthands on the
-language level. It takes one argument, the name of a language or
+language level. It takes one argument, the name of a language (more
+precisely, the name assigned to \m{shorthands-name} by the language) or
 |none| (the latter does what its name suggests).\footnote{Actually,
 any name not corresponding to a language group does the same as
 \texttt{none}. However, follow this convention because it might be
 enforced in future releases of \babel{} to catch possible errors.}
+
 Note that for this to work the language should have been specified as
-an option when loading the \babel\ package.  For example, you can use
-in \textsf{english} the shorthands defined by \textsf{german} with
+an option when loading the \babel\ package. For example, by also
+loading \texttt{german} you can use in \textsf{english} the shorthands
+defined by the former with
 \begin{verbatim}
 \addto\extrasenglish{\languageshorthands{german}}
 \end{verbatim}
@@ -4193,7 +4210,7 @@ The styles are:
 
 \item[Chinese] |cjk-earthly-branch|, |cjk-heavenly-stem|,
 |circled.ideograph|, |parenthesized.ideograph|,
-|fullwidth.lower.alpha|, |fullwidth.upper.alpha|
+|fullwidth.lower.alpha|, |fullwidth.upper.alpha|, |formal|, |informal|.
 
 \item[Church Slavic (Glagolitic)] |letters|
 
@@ -4259,7 +4276,7 @@ page for further details.
 date corresponding to the Gregorian calendar and other lunisolar systems
 with the following command.
 
-\Describe{\localedate}{\oarg{calendar=.., variant=.., convert}%
+\Describe{\localedate}{\oarg{calendar=.., variant=.., convert[=..]}%
   {\marg{year}\marg{month}\marg{day}}}
 
 By default the calendar is the Gregorian, but an |ini| file may define
@@ -4271,11 +4288,16 @@ the day for those in the corresponding calendar. They are \textit{not}
 the Gregorian date to be converted (which means, say, 13 is a valid
 month number with |calendar=hebrew| and |calendar=coptic|). However,
 with the option |convert| it’s converted (using internally the
-following command).
+following command)
 
 Even with a certain calendar there may be variants. In Kurdish the
 default variant prints something like \textit{30. Çileya Pêşîn 2019},
 but with |variant=izafa| it prints \textit{31’ê Çileya Pêşînê 2019}.
+
+The option |convert| can take a value for an external
+converter, with the format \m{provider}\texttt{:}\m{calendar};
+currently there is just a provider named \textit{calendrica}, and only
+for \luatex{} (see \New{26.10} for details).
 
 The default calendar for a language can be set in |\babelprovide|, with
 the key |calendar| (an empty value is the same as |gregorian|). In this
@@ -4320,6 +4342,7 @@ which must be macros. Allowed calendars are:
   |coptic|\\
   |ethiopic|\\
   |hebrew|\\
+  |indian| \New{26.11}\\
   |islamic-civil|\\
   |islamic-umalqura|\\
   |julian|\\
@@ -6260,8 +6283,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.10.131875>>
-%<<date=2026/08/10>>
+%<<version=26.11>>
+%<<date=2026/08/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -8229,7 +8252,7 @@ wouldn’t exist.
   hyphenation=2,initiateactive=3,afterreset=0,foreign=0,foreign*=0,%
   beforestart=0,languagename=2,begindocument=1}
 \ifx\NewHook\@undefined\else % Test for Plain (?)
-  \def\bbl@tempa#1=#2\@@{\NewHook{babel/#1}}
+  \def\bbl@tempa#1=#2\@@{\NewHook{babel/#1}\NewHook{babel/*/#1}}
   \bbl@foreach\bbl@evargs{\bbl@tempa#1\@@}
 \fi
 %    \end{macrocode}
@@ -11190,8 +11213,11 @@ wouldn’t exist.
     \bbl@ini@exports{#2}%
     \global\bbl@csarg\let{inidata@\languagename}\bbl@inidata
     \global\let\bbl@inidata\@empty
-    \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
-    \bbl@toglobal\bbl@ini@loaded
+    \bbl@xin@{,\languagename,}{,\bbl@ini@loaded,}%
+    \ifin@\else
+      \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
+      \bbl@toglobal\bbl@ini@loaded
+    \fi
     \@ifpackagewith{babel}{licr=unextended}{}%
       {\ifcase\bbl@engine\else % Find a better place
          \bbl@xin@{,\bbl@cl{sbcp},}{,Cyrl,}%
@@ -16688,12 +16714,17 @@ end
 \DeclareOption{leqno}{\chardef\bbl@eqnpos\@ne}
 \DeclareOption{fleqn}{\chardef\bbl@eqnpos\tw@}
 %<</More package options>>
+%    \end{macrocode}
 %
+% Fixes in \luatex\ are sometimes done with flags. We first activate
+% all all them.
+%
+%    \begin{macrocode}
 \ifnum\bbl@bidimode>\z@ % Any bidi=
-  \matheqdirmode\@ne          % Several luatex primitives.
-  \mathemptydisplaymode\@ne   % For fixes.
-  \breakafterdirmode\@ne      % 
-  \fixupboxesmode\@ne         %
+  \matheqdirmode\@ne
+  \mathemptydisplaymode\@ne
+  \breakafterdirmode\@ne
+  \fixupboxesmode\@ne
   \let\bbl@eqnodir\relax
   \def\bbl@eqdel{()}
   \def\bbl@eqnum{%
@@ -24980,7 +25011,7 @@ Babel.cjk_breaks = {
 % little library |calendar.js|, by John Walker, in the public domain.
 %    \begin{macrocode}
 %<<*Compute Julian day>>
-\def\bbl@fpmod#1#2{(#1-#2*floor(#1/#2))}
+\def\bbl@fpmod#1#2{(#1-#2*floor((#1)/(#2)))}
 \def\bbl@cs@gregleap#1{%
   (\bbl@fpmod{#1}{4} == 0) &&
     (!((\bbl@fpmod{#1}{100} == 0) && (\bbl@fpmod{#1}{400} != 0)))}
@@ -25449,6 +25480,35 @@ Babel.cjk_breaks = {
   \edef#5{\fpeval{\bbl@tempd + 3 - 12 * floor(\bbl@tempd / 10)}}%
   \edef#4{\fpeval{\bbl@tempb - 4800 + floor(\bbl@tempd / 10)}}}
 %</ca-julian>
+%    \end{macrocode}
+%
+% The Indian National Calendar, Saka era.
+% 
+%    \begin{macrocode}
+%<*ca-indian>
+<@Compute Julian day@>
+\def\bbl@sakachaitra#1{%
+  \bbl@cs@jd{#1}{3}{%
+    \fpeval{ ((\bbl@fpmod{#1}{4}==0 && \bbl@fpmod{#1}{100}!=0)
+    ||\bbl@fpmod{#1}{400}==0) ? 21 : 22 }}}
+\def\bbl@ca@indian#1-#2-#3\@@#4#5#6{%
+  \edef\bbl@tempa{\fpeval{\bbl@cs@jd{#1}{#2}{#3}}}%
+  \edef\bbl@tempb{\fpeval{\bbl@sakachaitra{#1}}}%
+  \edef\bbl@tempc{\fpeval{\bbl@tempa < \bbl@tempb ? #1-1 : #1}}%
+  \edef\bbl@tempd{\fpeval{\bbl@tempa-\bbl@sakachaitra{\bbl@tempc}}}%
+  \edef\bbl@tempe{\fpeval{ ((\bbl@fpmod{\bbl@tempc}{4}==0 &&
+    \bbl@fpmod{\bbl@tempc}{100}!=0) || \bbl@fpmod{\bbl@tempc}{400}==0)?31:30}}%
+  \edef#4{\fpeval{\bbl@tempc-78}}%
+  \edef#5{\fpeval{\bbl@tempd<\bbl@tempe ? 1 :
+    (\bbl@tempd-\bbl@tempe < 155 ?
+      2+trunc((\bbl@tempd-\bbl@tempe)/31,0) :
+      7+trunc((\bbl@tempd-\bbl@tempe-155)/30,0))}}%
+  \edef#6{\fpeval{\bbl@tempd<\bbl@tempe ? \bbl@tempd+1 :
+    (\bbl@tempd-\bbl@tempe < 155 ?
+      \bbl@fpmod{\bbl@tempd-\bbl@tempe}{31}+1 :
+      \bbl@fpmod{\bbl@tempd-\bbl@tempe-155}{30}+1)}}}
+%</ca-indian>
+%
 %    \end{macrocode}
 %
 % \subsection{Buddhist}
