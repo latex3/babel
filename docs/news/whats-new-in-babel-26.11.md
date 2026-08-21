@@ -4,7 +4,7 @@
 
 ## Chinese counters
 
-Two new counters has been added to Chinese, which are locale-dependent
+Two new counters have been added to Chinese, which are locale-dependent
 (simplified and traditional). They are named `informal` and `formal`,
 and correspond to the [CSS counters
 ](https://www.w3.org/TR/css-counter-styles-3/#limited-chinese) named
@@ -69,8 +69,6 @@ Here is an example, which sets it as the default calendar. It prints
 
 \end{document}
 ```
-
-This feature will be extended to other locales in a future release.
 
 ## Fixes
 
