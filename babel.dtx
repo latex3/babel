@@ -35,7 +35,7 @@
 %   lang    = en-001,
 % }
 \ProvidesFile{babel.dtx}%
-  [2026/08/21 v26.11
+  [2026/08/24 v26.11.133272
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \GetFileInfo{babel.dtx}
@@ -131,7 +131,7 @@
 \def\@begintheorem#1#2{%
   \list{}{}%
   \global\advance\@listdepth\m@ne
-  \item[{\sffamily\bfseries\color{messages}\hspace*{1.4em}%\hspace*{2.8em}%
+  \item[{\sffamily\bfseries\color{messages}\hspace*{1.4em}%
         \MakeUppercase{#1}}]}%
 \makeatother
 \newtheorem{warning}{Warning}
@@ -3766,10 +3766,10 @@ shorthands. The name used is printed to the \texttt{log} file with
 something like:
 \begin{verbatim}
 Package babel Info: 'uppersorbian' activates 'usorbian' shorthands.
-(babel)             Reported on input line 8.
 \end{verbatim}
 This is particularly true for “dialects”, because a single set
-of shorthands is re-used.
+of shorthands is re-used – an example is \texttt{austrian},
+which activates the \texttt{german} shorthands.
 
 Shorthands can be used for different kinds of things; for example:
 (1) in some languages shorthands such as |"a| are defined to be able
@@ -6283,8 +6283,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.11>>
-%<<date=2026/08/21>>
+%<<version=26.11.133272>>
+%<<date=2026/08/24>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6727,11 +6727,6 @@ wouldn’t exist.
        Babel = Babel or {}
        Babel.debug = false }%
    \fi}
-% Temporary:
-\newif\ifBabelDebugGerman
-\@ifpackagewith{babel}{debug-german}
-  {\BabelDebugGermantrue}
-  {\BabelDebugGermanfalse}
 %    \end{macrocode}
 %
 % Macros to deal with errors, warnings, etc. Errors are stored in a
@@ -7988,13 +7983,12 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \edef\bbl@nulllanguage{\string\language=0}
-\def\bbl@nocaption{\protect\bbl@nocaption@i}
+\def\bbl@nocaption#1#2{\NoCaseChange{\protect\bbl@nocaption@i{#1}{#2}}}
 \def\bbl@nocaption@i#1#2{% 1: text to be printed 2: caption macro \langXname
   \global\@namedef{#2}{\textbf{?#1?}}%
   \@nameuse{#2}%
   \edef\bbl@tempa{#1}%
   \bbl@sreplace\bbl@tempa{name}{}%
-  \bbl@sreplace\bbl@tempa{NAME}{}%
   \bbl@warning{%
     \@backslashchar#1 not set for '\languagename'. Please,\\%
     define it after the language has been loaded\\%
@@ -8160,12 +8154,12 @@ wouldn’t exist.
 \fi
 \ifx\bbl@languages\@undefined
   \ifx\directlua\@undefined
-    \openin1 = language.def
-    \ifeof1
-      \closein1
+    \openin0 = language.def
+    \ifeof0
+      \closein0
       \message{I couldn't find the file language.def}
     \else
-      \closein1
+      \closein0
       \begingroup
         \def\addlanguage#1#2#3#4#5{%
           \expandafter\ifx\csname lang@#1\endcsname\relax\else
@@ -8438,10 +8432,6 @@ wouldn’t exist.
     \renewcommand\foreignlanguage[2]{#2}%
     \global\let\babel@aux\@gobbletwo  % Also as flag
   \fi}
-%
-\ifcase\bbl@engine\or
-  \AtBeginDocument{\pagedir\bodydir}
-\fi
 %    \end{macrocode}
 %
 % A bit of optimization. Select in heads/feet the language only if
@@ -9231,6 +9221,15 @@ wouldn’t exist.
 % whether the language is known, and then process each attribute in the
 % list.
 %
+% To make sure each attribute is selected only once, we store the
+% already selected attributes in |\bbl@known@attribs|. When that
+% control sequence is not yet defined this attribute is certainly
+% not selected before.
+%
+% When we end up here the attribute is not selected before. So, we
+% add it to the list of selected attributes and execute the
+% associated \TeX\ code.
+%
 %    \begin{macrocode}
 \bbl@trace{Language attributes}
 \newcommand\languageattribute[2]{%
@@ -9238,14 +9237,6 @@ wouldn’t exist.
   \bbl@fixname\bbl@tempc
   \bbl@iflanguage\bbl@tempc{%
     \bbl@vforeach{#2}{%
-%    \end{macrocode}
-%
-% To make sure each attribute is selected only once, we store the
-% already selected attributes in |\bbl@known@attribs|. When that
-% control sequence is not yet defined this attribute is certainly
-% not selected before.
-%
-%    \begin{macrocode}
       \ifx\bbl@known@attribs\@undefined
         \in@false
       \else
@@ -9256,30 +9247,16 @@ wouldn’t exist.
           You have more than once selected the attribute '##1'\\%
           for language #1. Reported}%
       \else
-%    \end{macrocode}
-%
-% When we end up here the attribute is not selected before. So, we
-% add it to the list of selected attributes and execute the
-% associated \TeX-code.
-%
-%    \begin{macrocode}
         \bbl@info{Activated '##1' attribute for\\%
           '\bbl@tempc'. Reported}%
         \bbl@exp{%
           \\\bbl@add@list\\\bbl@known@attribs{\bbl@tempc-##1}}%
         \edef\bbl@tempa{\bbl@tempc-##1}%
-        \expandafter\bbl@ifknown@ttrib\expandafter{\bbl@tempa}\bbl@attributes%
-        {\csname\bbl@tempc @attr@##1\endcsname}%
-        {\@attrerr{\bbl@tempc}{##1}}%
+        \expandafter\bbl@ifknown@ttrib\expandafter{\bbl@tempa}\bbl@attributes
+          {\csname\bbl@tempc @attr@##1\endcsname}%
+          {\bbl@error{unknown-attribute}{\bbl@tempc}{##1}{}}%
      \fi}}}
 \@onlypreamble\languageattribute
-%    \end{macrocode}
-%
-% The error text to be issued when an unknown attribute is selected.
-%
-%    \begin{macrocode}
-\newcommand*{\@attrerr}[2]{%
-  \bbl@error{unknown-attribute}{#1}{#2}{}}
 %    \end{macrocode}
 %
 % \macro{\bbl@declare@ttribute}
@@ -14588,12 +14565,12 @@ wouldn’t exist.
      #4%
      \xdef#1{\f@family}%     e.g., \bbl@rmdflt@lang{FreeSerif(0)}
   \endgroup
-  \bbl@xin@{\string>\string s\string s\string u\string b\string*}%
+  \bbl@xin@{\detokenize{>ssub*}}%
     {\expandafter\meaning\csname TU/#1/bx/sc\endcsname}%
   \ifin@
     \global\bbl@ccarg\let{TU/#1/bx/sc}{TU/#1/b/sc}%
   \fi
-  \bbl@xin@{\string>\string s\string s\string u\string b\string*}%
+  \bbl@xin@{\detokenize{>ssub*}}%
     {\expandafter\meaning\csname TU/#1/bx/scit\endcsname}%
   \ifin@
     \global\bbl@ccarg\let{TU/#1/bx/scit}{TU/#1/b/scit}%
@@ -15270,11 +15247,12 @@ wouldn’t exist.
 \catcode`\:=12
 \directlua{
   Babel.locale_props = Babel.locale_props or {}
+  
   function Babel.lua_error(e, a)
     tex.print([[\noexpand\csname bbl@error\endcsname{]] .. 
       e .. '}{' .. (a or '') .. '}{}{}')
   end
-
+  
   function Babel.bytes(line)
     return line:gsub("(.)",
       function (chr) return unicode.utf8.char(string.byte(chr)) end)
@@ -15395,7 +15373,7 @@ wouldn’t exist.
   end
   function Babel.set_chranges_b (script, chrng) 
     if chrng == '' then return end
-    texio.write('Replacing ' .. script .. ' script ranges')
+    texio.write('Package babel Info: Replacing ' .. script .. ' script ranges')
     Babel.script_blocks[script] = {}
     for s, e in string.gmatch(chrng..' ', '(.-)%.%.(.-)%s') do
       table.insert(
@@ -16504,6 +16482,14 @@ end
 %
 % \subsection{Bidi}
 %
+% Make sure the |\pagedir| is always the same as the |\bodydir| when the
+% document starts. At this point the main language has been selected,
+% and therefore its |\bodydir| has been set.
+%
+%    \begin{macrocode}
+\AtBeginDocument{\pagedir\bodydir}
+%    \end{macrocode}
+%
 % As a first step, add a handler for bidi and digits (and potentially
 % other processes) just before \textsf{luaoftload} is applied, which is
 % loaded by default by \LaTeX. Just in case, consider the possibility
@@ -16791,13 +16777,8 @@ end
           \fi
         \fi}
     \else % amstex
-      \ifnum\bbl@eqnpos=\tw@
-        \bbl@exp{% Hack to hide maybe undefined conditionals:
-          \\\bbl@sreplace\\\multline@\crcr{\<if@fleqn>\tabskip\z@skip\<fi>\crcr}}%
-      \fi
       \bbl@exp{% Hack to hide maybe undefined conditionals:
-        \chardef\bbl@eqnpos=0%
-          \<iftagsleft@>1\<else>\<if@fleqn>2\<fi>\<fi>\relax}%
+        \chardef\bbl@eqnpos=0\<iftagsleft@>1\<else>\<if@fleqn>2\<fi>\<fi>\relax}%
       \ifnum\bbl@eqnpos=\@ne
         \let\bbl@ams@lap\hbox
       \else
@@ -16816,7 +16797,7 @@ end
         \def\bbl@ams@flip#1{%
           \hbox to 0.01pt{\hbox to\displaywidth{\hss{#1}}\hss}}%
       \fi
-      \def\bbl@ams@preset#1{%
+     \def\bbl@ams@preset#1{%
         \ifnum\bbl@thetextdir>\z@
           \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
           \bbl@sreplace\textdef@{\hbox}{\bbl@ams@tagbox\hbox}%
@@ -16824,7 +16805,7 @@ end
         \fi}%
       \def\bbl@ams@equation{%
         \ifnum\bbl@thetextdir>\z@
-          \edef\bbl@eqnodir{\noexpand\bbl@textdir{\the\bbl@thetextdir}}%
+          \bbl@ams@preset\hbox
           \chardef\bbl@thetextdir\z@
           \bbl@add\normalfont{\bbl@eqnodir}%
           \ifcase\bbl@eqnpos
@@ -24964,21 +24945,7 @@ Babel.cjk_breaks = {
 \def\bbl@inidata@nil{%
   \bbl@elt{identification}{tag.ini}{und}%
   \bbl@elt{identification}{load.level}{0}%
-  \bbl@elt{identification}{charset}{utf8}%
-  \bbl@elt{identification}{version}{1.0}%
-  \bbl@elt{identification}{date}{2022-05-16}%
-  \bbl@elt{identification}{name.local}{nil}%
-  \bbl@elt{identification}{name.english}{nil}%
-  \bbl@elt{identification}{name.babel}{nil}%
-  \bbl@elt{identification}{tag.bcp47}{und}%
-  \bbl@elt{identification}{language.tag.bcp47}{und}%
-  \bbl@elt{identification}{tag.opentype}{dflt}%
-  \bbl@elt{identification}{script.name}{Latin}%
-  \bbl@elt{identification}{script.tag.bcp47}{Latn}%
-  \bbl@elt{identification}{script.tag.opentype}{DFLT}%
-  \bbl@elt{identification}{level}{1}%
-  \bbl@elt{identification}{encodings}{}%
-  \bbl@elt{identification}{derivate}{no}}
+  \bbl@elt{identification}{name.english}{nil}}
 \@namedef{bbl@tbcp@nil}{und}
 \@namedef{bbl@lbcp@nil}{und}
 \@namedef{bbl@casing@nil}{und}
