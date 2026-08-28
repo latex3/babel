@@ -30,14 +30,16 @@
 %
 % \iffalse
 %<*filedriver>
-% \DocumentMetadata{
-%   tagging = on,
-%   lang    = en-001,
-% }
+\DocumentMetadata{
+  tagging = on,
+  language = en-001,
+}
 \ProvidesFile{babel.dtx}%
-  [2026/08/24 v26.11.133272
+  [2026/08/28 v26.11.133670
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
 \setmainfont[
@@ -53,6 +55,10 @@
      BoldItalicFont = NotoSans-BoldItalic.ttf]
   {NotoSans-Regular.ttf}
 \setmonofont[Scale=.86, FakeStretch=.97]{DejaVu Sans Mono}
+\def\tto{\texttt{→}}
+\def\tlangle{\texttt{⟨}}
+\def\trangle{\texttt{⟩}}
+\DeclareRobustCommand\meta[1]{\tlangle\mbox{\rmfamily\itshape#1}\trangle}
 \raggedright
 \setlength{\parindent}{.8em}
 \frenchspacing
@@ -68,7 +74,6 @@
 \newcommand*\pdftex{\textsf{pdftex}}
 \newcommand*\luatex{\textsf{luatex}}
 \newcommand\largetex{T\kern -.1517em\lower .45ex\hbox {E}\kern -.09emX}
-\newcommand*\nb[1]{}
 \newcommand*\m[1]{\mbox{{\fontspec{FreeSerif}〈}\normalfont\itshape#1\/}{\fontspec{FreeSerif}〉}}
 \newcommand*\langlist{%
   \meta{language}\texttt{,}\meta{language}\texttt{,}...}
@@ -82,14 +87,12 @@
 \newcommand*\file[1]{\texttt{#1}}
 \newcommand*\cls[1]{\texttt{#1}}
 \newcommand*\pkg[1]{\texttt{#1}}
-\setlength{\leftmargini}{1.5em}
-\usepackage{framed}
 \usepackage{multicol}
 \usepackage{color,colortbl}
 \usepackage[linkcolor=blue,urlcolor=blue,colorlinks=true]{hyperref}
 \hypersetup{%
-  pdfsubject={LaTeX Multilingual documents and localization for pdfTeX,
-    LuaTeX and XeTeX.},
+  pdfsubject={Multilingual documents and localization for pdfLaTeX /
+     LuaLaTeX / XeLaTeX.},
   pdfauthor={Javier Bezos, Johannes Braams},
   pdftitle={Babel},
   pdfkeywords={TeX, LaTeX, pdfTeX, LuaTeX, XeTeX, internationalization,
@@ -128,18 +131,15 @@
 \def\@seccntformat#1{%
   \llap{\makebox[1.7cm][l]{\csname the#1\endcsname.}}%
   \hspace{-.7cm}}
-\def\@begintheorem#1#2{%
-  \list{}{}%
-  \global\advance\@listdepth\m@ne
-  \item[{\sffamily\bfseries\color{messages}\hspace*{1.4em}%
-        \MakeUppercase{#1}}]}%
+\newcommand\displayed[1]{%
+  \setlength{\leftmargini}{1.5em}%
+  \list{}{}\item[]%
+  \hskip-\leftmargin{\sffamily\bfseries\color{messages}\MakeUppercase{#1\ }}}
 \makeatother
-\newtheorem{warning}{Warning}
-\newtheorem{note}{Note}
-\newtheorem{example}{Example}
-\newtheorem{troubleshooting}{Troubleshooting}
-\let\bblxv\verbatim
-\let\bblexv\endverbatim
+\newenvironment{warning}{\displayed{Warning}}{\endlist}
+\newenvironment{note}{\displayed{Note}}{\endlist}
+\newenvironment{example}{\displayed{Example}}{\endlist}
+\newenvironment{troubleshooting}{\displayed{Troubleshooting}}{\endlist}
 \newcommand\setengine{\def\engine}
 \let\engine\relax
 \begingroup
@@ -149,38 +149,35 @@
   \AtBeginDocument{%
     \gdef|{\verb|\def<##1>{{\fontspec{FreeSerif}〈}{\rmfamily\itshape##1}{\fontspec{FreeSerif}〉}}}}
 \endgroup
-\def\verbatim{%
-  \fboxsep=.8em
-  \begin{snugshade*}%
-    \ifx\engine\relax\else
-      \vskip-.75\baselineskip
-      \leavevmode\llap{%
-        \fboxsep=2pt\fbox{\scriptsize\textsc{\engine}}\hskip2.8em}%
-      \vskip-1.6\baselineskip
-      \vskip0pt
-      \global\let\engine\relax
-    \fi
-    \bblxv\vskip0pt }
-\def\endverbatim{%
-  \bblexv\vskip-7.5ex \end{snugshade*}}
-\catcode`\_=\active
-\def_{\bgroup\let_\egroup\leavevmode\color{thered}}
+\AddToHook{env/verbatim/before}{%
+  \begin{tcolorbox}[breakable, 
+    sharp corners, colframe=black!50,
+    boxrule=.4pt, bottomrule at break = 0pt, toprule at break = 0pt, 
+    left=1.5mm, right=1.5mm, top=1.5mm, bottom=1.5mm,
+    colback=shadecolor]%
+  \small
+}
+\AddToHook{env/verbatim/after}{%
+  \end{tcolorbox}%
+}
+\catcode`×=\active
+\def×{\bgroup\let×\egroup\leavevmode\color{thered}}
 \def\MacroFont{\fontencoding \encodingdefault \fontfamily\ttdefault
   \fontseries\mddefault \fontshape\updefault \small \catcode`\_=\active}
-\definecolor{shadecolor}{rgb}{0.96,0.96,0.93}
+\definecolor{shadecolor}{rgb}{0.97,0.97,0.94}
 %
 \makeatletter   
 \def\Describe#1#2{%
-  \@startsection{subsubsection}{100}{\z@}%
-    {2.5ex\@plus .7ex \@minus .2ex}%
-    {1.5ex \@plus .2ex}%
-    {\hspace{-2cm}\color{thegreyed}\normalsize\ttfamily}*%
-    {\underline{\strut{\color{thered}\string#1}\color{black}#2}}}
-\def\DescribeOther{\addvspace{-1.5ex}\Describe}
+  \vskip 1.7ex\@plus .7ex \@minus .2ex
+  \noindent\hspace*{-1.7cm}%
+  {\color{thegreyed}\normalsize\ttfamily
+   \underline{\strut{\color{thered}\string#1}\color{black}#2}}%
+  \par\nobreak\vskip 1.1ex \@plus .2ex }
+\def\DescribeOther{\nobreak\vskip-1.1\baselineskip\Describe}
 \AtBeginDocument{\def\DescribeMacro#1{{\ttfamily\color{thered}\string#1}}}
 \def\macro#1{%
   \if@noskipsec\leavevmode\vskip-1.2\baselineskip\vskip0pt\fi
-  \@startsection{paragraph}{101}{\z@}%
+  \@startsection{paragraph}{4}{\z@}%
     {3.25ex \@plus1ex \@minus.2ex}%
     {-1em}%
     {\sffamily\bfseries\color{thered}}*{\hspace*{-1em}\string#1}}
@@ -198,7 +195,7 @@
 \let\check@percent\relax
 % Changes to doc.sty (add <<...>> syntax)
 \def\Module#1{%
-  \mod@math@codes$\langle${\color{thered}$\mathsf{#1}$}$\rangle$}
+  \mod@math@codes\tlangle{\color{thered}\textsf{#1}}\trangle}
 \begingroup 
   \catcode`\<\active
   \catcode`\>\active
@@ -213,48 +210,17 @@
     \fi\fi\fi
     \bbl@next}
   \gdef\var@module#1#2#3>>{%
-     $\langle$\pm@module#2#3>$\rangle$%
+     \tlangle\!\pm@module#2#3>\!\textup{\trangle}
      \ifx*#2\ $\equiv$\fi}
 \endgroup
-\def\toc@usehook#1#2#3{%
-  \UseHookWithArguments{contentsline/#1}{4}%
-    {\toclevel@section}%
-    {#2}{#3}{\@contentsline@destination}}
-\renewcommand*\l@section[2]{%
-  \ifnum\c@tocdepth>\z@
-    \addpenalty\@secpenalty
-    \addvspace{1.0em\@plus\p@}%
-    \setlength\@tempdima{2em}%
-    \begingroup
-      \parindent\z@ \rightskip\@pnumwidth
-      \parfillskip-\@pnumwidth
-      \leavevmode\bfseries 
-      \advance\leftskip\@tempdima
-      \hskip-\leftskip
-      \toc@usehook{text/before}{#1}{#2}%
-      \csname contentsline@text@1@format\endcsname{#1}
-      \toc@usehook{text/after}{#1}{#2}%
-      \nobreak\hfil\nobreak \hb@xt@\@pnumwidth
-        {\hss
-         \toc@usehook{page/before}{#1}{#2}%
-         #2%
-         \toc@usehook{page/after}{#1}{#2}%
-         \kern-\p@\kern\p@}%
-      \par
-    \endgroup
-  \fi}
-\renewcommand*\l@subsection{\@dottedtocline{2}{2em}{3em}}
-\renewcommand*\l@subsubsection{\@dottedtocline{3}{5em}{4em}}
-\renewcommand*\l@paragraph{\@dottedtocline{4}{9em}{4.5em}}
 \renewcommand\partname{Part}
 \def\@pnumwidth{3em}
 \makeatother
 \begin{document}
-\title{Babel, a multilingual package for use with \LaTeX's standard
-   document classes.}
+\title{Babel, the multilingual framework to localize
+   LaTeX, LuaLaTeX, and XeLaTeX}
 \author{Johannes Braams\\
         Javier Bezos}
-
 \date{Typeset \today}
 \begin{titlepage}
 \begin{minipage}[t][0pt]{30cm}
@@ -379,6 +345,8 @@ language?] See section \ref{contribute} for contributing a language.
 
 \section{The basic user interface}\label{U-I}
 
+→⟨⟩\string|   \textsf{→⟨⟩\string|}  abv\texttt{→⟨⟩\string|}fse
+
 There are two ways to load a language with babel, namely, the old good
 ‘classical’ one, based on mostly self-contained declarations in a file
 with |ldf| extension, and the ‘modern’ one, based on a brand new
@@ -431,10 +399,11 @@ document encoding is UTF-8). Other scripts require loading
 for further info. For example, the following setting will pass
 \texttt{british} as the main language to \babel:
 \begin{verbatim}
-\DocumentMetadata{_lang=en-GB_}
+\DocumentMetadata{×lang=en-GB×}
 \documentclass{article}
 \usepackage{babel}
 \end{verbatim}
+
 The basic tag lookup explained below is applied here, so that
 \texttt{fr-Latn-FR} is valid and mapped to \texttt{fr}, which is in
 turn mapped to \texttt{french}. This eases the localization of
@@ -458,7 +427,7 @@ automatically generated documents.
 
 \usepackage[T1]{fontenc}
 
-_\usepackage[french]{babel}_
+×\usepackage[french]{babel}×
 
 \begin{document}
 
@@ -469,7 +438,7 @@ Plus ça change, plus c'est la même chose!
 
 Now consider something like:
 \begin{verbatim}
-_\documentclass[french]{article}_
+×\documentclass[french]{article}×
 \usepackage{babel}
 \usepackage{varioref}
 \end{verbatim}
@@ -485,11 +454,11 @@ loaded (in this example with the help of |\babelfont|, described below).
 
 \setengine{luatex/xetex}
 \begin{verbatim}
-_\documentclass[russian]{article}_
+×\documentclass[russian]{article}×
 
 \usepackage{babel}
 
-_\babelfont{rm}{DejaVu Serif}_
+×\babelfont{rm}{DejaVu Serif}×
 
 \begin{document}
 
@@ -534,7 +503,7 @@ _\babelfont{rm}{DejaVu Serif}_
   With \textsf{hyperref} you may want to set the PDF document language
   with something like:
 \begin{verbatim}
-\usepackage[_pdflang=es-MX_]{hyperref}
+\usepackage[×pdflang=es-MX×]{hyperref}
 \end{verbatim}
 This is not currently done by \babel{} and you must set it by hand.
 \end{note}
@@ -612,6 +581,9 @@ directly a language style}
   some cases by |\Make<Xxxxx>case|.
 \end{note}
 
+%%
+% \end{document}
+
 \subsection{Monolingual documents: the ‘modern’ way}
 
 \begin{warning}
@@ -636,9 +608,9 @@ option |provide=*| (in monolingual documents).
 \begin{verbatim}
 \documentclass{book}
 
-\usepackage[_georgian, provide=*_]{babel}
+\usepackage[×georgian, provide=*×]{babel}
 
-_\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}_
+×\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}×
 
 \begin{document}
 
@@ -652,8 +624,8 @@ _\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}_
 \end{verbatim}
 And with a global option:
 \begin{verbatim}
-\documentclass[_georgian_]{book}
-\usepackage[_provide=*_]{babel}
+\documentclass[×georgian×]{book}
+\usepackage[×provide=*×]{babel}
 \babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}
 \end{verbatim}
 \end{example}
@@ -669,14 +641,14 @@ And with a global option:
 For a text in Chinese, you can write in the preamble:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\usepackage[_chinese_]{babel}
-_\babelfont{rm}{FandolSong}_
+\usepackage[×chinese×]{babel}
+×\babelfont{rm}{FandolSong}×
 \end{verbatim}
 The skip between characters is 0 pt plus .1 pt, which can be modified
 with an option (explained below) in |provide|. For example:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\usepackage[chinese, provide=_{ intraspace=0 .2 0 }_]{babel}
+\usepackage[chinese, provide=×{ intraspace=0 .2 0 }×]{babel}
 \end{verbatim}
 \end{example}
 
@@ -720,12 +692,12 @@ Georgian, provided a suitable font is found.
 \documentclass[english]{article}
 \usepackage{babel}
 
-_\babelfont[russian]{rm}{FreeSerif}_
+×\babelfont[russian]{rm}{FreeSerif}×
 
 \begin{document}
 
-English. _\foreignlanguage{russian}{Русский}_.
-_\foreignlanguage{spanish}{Español}_.
+English. ×\foreignlanguage{russian}{Русский}×.
+×\foreignlanguage{spanish}{Español}×.
 
 \end{document}
 \end{verbatim}
@@ -775,16 +747,16 @@ A full bilingual document with \pdftex{} follows. The main language is
 
 \usepackage[T1]{fontenc}
 
-_\usepackage[english,french]{babel}_
+×\usepackage[english,french]{babel}×
 
 \begin{document}
 
 Plus ça change, plus c'est la même chose!
 
-_\selectlanguage{english}_
+×\selectlanguage{english}×
 
 And an English paragraph, with a short text in
-_\foreignlanguage{french}{français}_.
+×\foreignlanguage{french}{français}×.
 
 \end{document}
 \end{verbatim}
@@ -799,7 +771,7 @@ _\foreignlanguage{french}{français}_.
 \begin{verbatim}
 \documentclass{article}
 
-_\usepackage[vietnamese,danish]{babel}_
+×\usepackage[vietnamese,danish]{babel}×
 
 \begin{document}
 
@@ -819,8 +791,8 @@ Vietnamese: \prefacename, \alsoname, \today.
   explicitly the main language with the package option |main|,
   described below:
 \begin{verbatim}
-\documentclass[_italian_]{book}
-\usepackage[german,_main=italian_]{babel}
+\documentclass[×italian×]{book}
+\usepackage[german,×main=italian×]{babel}
 \end{verbatim}
 \end{note}
 
@@ -866,19 +838,19 @@ need their shorthands. The font is Norasi, which covers the three
 languages:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\usepackage[dutch,german,_thai_]{babel}
+\usepackage[dutch,german,×thai×]{babel}
 \babelfont{rm}{Norasi}
 \end{verbatim}
 This will load |dutch| and |german| in the classical |ldf| mode, but
 |thai| in the modern |ini| mode. Other options are:
 \begin{verbatim}
-  \usepackage[dutch,german,thai,_provide=!_]{babel}
+  \usepackage[dutch,german,thai,×provide=!×]{babel}
 \end{verbatim}
 which will use the classical mode for in languages (as described in the
 previous section; \texttt{provide=!} forces the \texttt{ldf} file, but
 note |thai.ldf| is not supported in Unicode engines), and:
 \begin{verbatim}
-  \usepackage[dutch,german,thai,_provide*=*_]{babel}
+  \usepackage[dutch,german,thai,×provide*=*×]{babel}
 \end{verbatim}
 which will use the modern mode in all languages (note the correct name
 here is |german|). 
@@ -904,7 +876,7 @@ encoding files, a preprocessor or even a complete framework (like
 \bigskip\hrule\nobreak
 
 \makeatletter
-\newcommand\tag[3][?]{\par
+\newcommand\ltag[3][?]{\par
   \hspace{-2em}\textcolor{thered}{\texttt{#2}}#3\enspace
   \ifx\relax#1\relax\else
     \ifx?#1%
@@ -937,24 +909,24 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 
 \begin{multicols}{2}
 \leftskip2em\parindent0pt
-\tag[babel-dutch]{afrikaans}{}
-\tag{albanian}{}
-\tag{amharic}{}
+\ltag[babel-dutch]{afrikaans}{}
+\ltag{albanian}{}
+\ltag{amharic}{}
 \note{Calls \textsf{ethiop}}
-\tag[arabi]{arabic}{}
+\ltag[arabi]{arabic}{}
 \note{Calls \textsf{arabi}.}
-\tag{azerbaijani}{}
-\tag{basque}{}
-\tag{belarusian}{}
-\tag{bosnian}{}
-\tag{breton}{}
-\tag{bulgarian}{}
-\tag{catalan}{}
-\tag{croatian}{}
-\tag{czech}{}
-\tag{danish}{}
-\tag{dutch}{}
-\tag{english}{}
+\ltag{azerbaijani}{}
+\ltag{basque}{}
+\ltag{belarusian}{}
+\ltag{bosnian}{}
+\ltag{breton}{}
+\ltag{bulgarian}{}
+\ltag{catalan}{}
+\ltag{croatian}{}
+\ltag{czech}{}
+\ltag{danish}{}
+\ltag{dutch}{}
+\ltag{english}{}
 \subtagalt{american}{}
 \subtag{USenglish}{}{}
 \subtagalt{australian}{}
@@ -962,20 +934,20 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \subtag{UKenglish}{}
 \subtagalt{canadian}{}
 \subtag{newzealand}{}
-\tag{esperanto}{}
-\tag{estonian}{}
+\ltag{esperanto}{}
+\ltag{estonian}{}
 \tagmin{ethiop}{}
 \note{See \textsf{amharic}.}
-\tag[arabi]{farsi}{}
+\ltag[arabi]{farsi}{}
 \note{Calls \textsf{arabi}.}
-\tag{finnish}{}
-\tag{french}{}
+\ltag{finnish}{}
+\ltag{french}{}
 \subtagalt{acadian}{}
-\tag[babel-friulan]{friulian}{}
-\tag{galician}{}
-\tag{georgian}{}
+\ltag[babel-friulan]{friulian}{}
+\ltag{galician}{}
+\ltag{georgian}{}
 \note{Calls \textsf{geotex}.}
-\tag{german}{}
+\ltag{german}{}
 \note{See the manual for the \textsf{german} babel style.}
 % This block refers to the old ortography. For the modern one, use
 % the names in the block \textsf{ngerman}. \textsf{swissgerman} refers to
@@ -983,76 +955,76 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \subtagalt{austrian}{}
 % \subtagalt{swissgerman}{}
 % \note{Swiss High German}
-\tag{greek}{}
+\ltag{greek}{}
 \subtagalt{polytonicgreek}{}
 \note{Calls \textsf{greek.polytonic}}
 \subtagalt{ancientgreek}{}
 \note{Calls \textsf{greek.ancient}}
 \subtagmin{ibycus}{}
 \subtagmin{bgreek}{}
-\tag{hebrew}{}
-\tag[devanagari]{hindi}{}
+\ltag{hebrew}{}
+\ltag[devanagari]{hindi}{}
 \note{Calls \textsf{velthuis}.}
-\tag{hungarian}{}
+\ltag{hungarian}{}
 \subtag{magyar}{}
-\tag{icelandic}{}
-\tag{indonesian}{}
-\tag{interlingua}{}
-\tag{irish}{}
-\tag{italian}{}
-\tag{japanese}{}
+\ltag{icelandic}{}
+\ltag{indonesian}{}
+\ltag{interlingua}{}
+\ltag{irish}{}
+\ltag{italian}{}
+\ltag{japanese}{}
 \tagmin{kurmanji}{}
-\tag{latin}{}
+\ltag{latin}{}
 \subtagalt{classicallatin}{}
 \subtagalt{medievallatin}{}
 \subtagalt{ecclesiasticallatin}{}
-\tag{latvian}{}
-\tag{lithuanian}{}
-\tag[babel-sorbian]{lowersorbian}{}
-\tag{macedonian}{}
-\tag{malay}{}
-\tag[mongolian-babel]{mongolian}{}
-\tag[babel-german]{ngerman}{}
+\ltag{latvian}{}
+\ltag{lithuanian}{}
+\ltag[babel-sorbian]{lowersorbian}{}
+\ltag{macedonian}{}
+\ltag{malay}{}
+\ltag[mongolian-babel]{mongolian}{}
+\ltag[babel-german]{ngerman}{}
 % \note{This block refers to the new ortography.}
 \note{See the manual for the \textsf{german} babel style.}
 \subtagalt{naustrian}{}
 \subtagalt{nswissgerman}{}
 \note{Swiss High German}
-\tag[babel-samin]{northernsami}{}
-\tag[babel-norsk]{norwegian}{}
+\ltag[babel-samin]{northernsami}{}
+\ltag[babel-norsk]{norwegian}{}
 \subtag{norsk}{}
-\tag[babel-norsk]{nynorsk}{}
-\tag{occitan}{}
-\tag{piedmontese}{}
+\ltag[babel-norsk]{nynorsk}{}
+\ltag{occitan}{}
+\ltag{piedmontese}{}
 \tagmin{pinyin}{}
-\tag{polish}{}
-\tag[babel-portuges]{portuguese}{}
+\ltag{polish}{}
+\ltag[babel-portuges]{portuguese}{}
 \subtagalt{brazilian}{}
-\tag{romanian}{}
-\tag{romansh}{}
-\tag{russian}{}
-\tag[babel-scottish]{scottishgaelic}{}
+\ltag{romanian}{}
+\ltag{romansh}{}
+\ltag{russian}{}
+\ltag[babel-scottish]{scottishgaelic}{}
 \subtag{scottish}{}
-\tag{serbianc}{}
+\ltag{serbianc}{}
 \note{Cyrillic script}
 \subtagalt{serbian}{}
 \note{Latin script}
-\tag{slovak}{}
-% \tag[]{slovene}{}
-\tag{slovenian}{}  %%%%%% <- and ini
-\tag{spanglish}{}
-\tag{spanish}{}
-\tag{swedish}{}
-\tag{swissgerman}{}
+\ltag{slovak}{}
+% \ltag[]{slovene}{}
+\ltag{slovenian}{}  %%%%%% <- and ini
+\ltag{spanglish}{}
+\ltag{spanish}{}
+\ltag{swedish}{}
+\ltag{swissgerman}{}
 \note{Swiss German, with tag \textsf{gsw}}
-\tag{thai}{}
+\ltag{thai}{}
 \subtagmin{thaicjk}{}
-\tag{turkish}{}
-\tag[turkmen]{turkmen}{}
-\tag{ukrainian}{}
-\tag[sorbian]{uppersorbian}{}
-\tag{vietnamese}{}
-\tag{welsh}{}
+\ltag{turkish}{}
+\ltag[turkmen]{turkmen}{}
+\ltag{ukrainian}{}
+\ltag[sorbian]{uppersorbian}{}
+\ltag{vietnamese}{}
+\ltag{welsh}{}
 \end{multicols}
 \endgroup
 \hrule
@@ -1099,7 +1071,7 @@ they are ‘bare minimum locales’. They are set in
 \bigskip\hrule\nobreak
 
 \makeatletter
-\def\tag#1#2#3{\par
+\def\ltag#1#2#3{\par
   \hspace{-2em}\textcolor{thered}{\texttt{#1}}#2\enspace
   \mbox{\footnotesize(#3)}\enspace
   \href{https://latex3.github.io/babel/guides/locale-#1.html}{\scriptsize ※}}
@@ -1136,22 +1108,22 @@ The reference mark ({\scriptsize ※}) is a link to the \babel{} site.
 
 \begin{multicols}{2}
 \leftskip2em\parindent0pt
-\tag{abkhazian}{}{ab}
-\tag{afar}{}{aa}
-\tag{afrikaans}{\hascapu\hascapl}{af}
-\tag{aghem}{}{agq}
-\tag{akan}{}{ak}
+\ltag{abkhazian}{}{ab}
+\ltag{afar}{}{aa}
+\ltag{afrikaans}{\hascapu\hascapl}{af}
+\ltag{aghem}{}{agq}
+\ltag{akan}{}{ak}
 \tagmin{akkadian}{}{akk}
-\tag{albanian}{\hascapu\hascapl}{sq}
+\ltag{albanian}{\hascapu\hascapl}{sq}
 \tagmin{algerianarabic}{}{arq}
 \note{Darija or Lahja Djazairia, with tag \texttt{arq}, different
 from Standard Arabic as spoken in Alger, with tag \texttt{ar-DZ}.}
-\tag{amharic}{\hascapu\hascapl}{am}
+\ltag{amharic}{\hascapu\hascapl}{am}
 \tagmin{ancientegyptian}{}{egy}
-\tag{ancientgreek}{\hascapu\hascapl}{grc}\note{It’s a different
+\ltag{ancientgreek}{\hascapu\hascapl}{grc}\note{It’s a different
 language from \texttt{greek}.}
 \tagmin{ancienthebrew}{}{hbo}
-\tag{arabic}{\hascapu}{ar}
+\ltag{arabic}{\hascapu}{ar}
 \subtag{arabic-algeria}{\hascapu}{ar-DZ}
 \subtag{arabic-dz}{\hascapu}{ar-DZ}
 \subtag{arabic-egypt}{\hascapu}{ar-EG}
@@ -1177,61 +1149,61 @@ language from \texttt{greek}.}
 \subtagmin{aramaic-nbat}{}{arc-nbat}
 \subtagmin{aramaic-palmyrene}{}{arc-palm}
 \subtagmin{aramaic-palm}{}{arc-palm}
-\tag{armenian}{\hascapu\hascapl}{hy}
-\tag{assamese}{\hascapu}{as}
-\tag{asturian}{\hascapu\hascapl}{ast}
-\tag{asu}{}{asa}
-\tag{atsam}{}{cch}
+\ltag{armenian}{\hascapu\hascapl}{hy}
+\ltag{assamese}{\hascapu}{as}
+\ltag{asturian}{\hascapu\hascapl}{ast}
+\ltag{asu}{}{asa}
+\ltag{atsam}{}{cch}
 \tagmin{avestan}{}{ae}
-\tag{awadhi}{}{awa}
+\ltag{awadhi}{}{awa}
 \tagmin{aymara}{}{ay}
-\tag{azerbaijani}{\hascapu\hascapl}{az}
+\ltag{azerbaijani}{\hascapu\hascapl}{az}
 \subtag{azerbaijani-cyrillic}{}{az-Cyrl}
 \subtag{azerbaijani-cyrl}{}{az-Cyrl}
 \subtag{azerbaijani-latin}{}{az-Latn}
 \subtag{azerbaijani-latn}{}{az-Latn}
-\tag{bafia}{}{ksf}
+\ltag{bafia}{}{ksf}
 \tagmin{balinese}{}{ban}
-\tag{baluchi}{}{bal}
-\tag{bambara}{}{bm}
-\tag{bangla}{\hascapu}{bn}
+\ltag{baluchi}{}{bal}
+\ltag{bambara}{}{bm}
+\ltag{bangla}{\hascapu}{bn}
 \subtag{bengali}{\hascapu}{bn}
-\tag{basaa}{}{bas}
+\ltag{basaa}{}{bas}
 \tagmin{bashkir}{}{ba}
-\tag{basque}{\hascapu\hascapl}{eu}
+\ltag{basque}{\hascapu\hascapl}{eu}
 \tagmin{bataktoba}{}{bbc}
 \tagmin{bavarian}{}{bar}
-\tag{belarusian}{\hascapu\hascapl}{be}
+\ltag{belarusian}{\hascapu\hascapl}{be}
 \subtag{belarusian-taraskievica}{\hascapu\hascapl}{be-tarask}
-\tag{bemba}{}{bem}
-\tag{bena}{}{bez}
-\tag{betawi}{}{bew}
-\tag{bhojpuri}{}{bho}
-\tag{blin}{}{byn}
-\tag{bodo}{}{brx}
-\tag{bosnian}{\hascapu\hascapl}{bs}
+\ltag{bemba}{}{bem}
+\ltag{bena}{}{bez}
+\ltag{betawi}{}{bew}
+\ltag{bhojpuri}{}{bho}
+\ltag{blin}{}{byn}
+\ltag{bodo}{}{brx}
+\ltag{bosnian}{\hascapu\hascapl}{bs}
 \subtag{bosnian-cyrillic}{}{bs-Cyrl}
 \subtag{bosnian-cyrl}{}{bs-Cyrl}
 \subtag{bosnian-latin}{\hascapu\hascapl}{bs-Latn}
 \subtag{bosnian-latn}{\hascapu\hascapl}{bs-Latn}
-\tag{breton}{\hascapu\hascapl}{br}
-\tag{bulgarian}{\hascapu\hascapl}{bg}
-\tag{buriat}{\hascapu\hascapl}{bua}
-\tag{burmese}{}{my}
-\tag{cantonese}{}{yue}
+\ltag{breton}{\hascapu\hascapl}{br}
+\ltag{bulgarian}{\hascapu\hascapl}{bg}
+\ltag{buriat}{\hascapu\hascapl}{bua}
+\ltag{burmese}{}{my}
+\ltag{cantonese}{}{yue}
 \tagmin{carian}{}{xcr}
-\tag{catalan}{\hascapu\hascapl}{ca}
-\tag{cebuano}{}{ceb}
-\tag{centralatlastamazight}{}{tzm}
-\tag{centralkurdish}{\hascapu}{ckb}
+\ltag{catalan}{\hascapu\hascapl}{ca}
+\ltag{cebuano}{}{ceb}
+\ltag{centralatlastamazight}{}{tzm}
+\ltag{centralkurdish}{\hascapu}{ckb}
 \subtag{sorani}{\hascapu}{ckb}
 \subtag{centralkurdish-latin}{\hascapu}{ckb-Latn}
 \subtag{centralkurdish-latn}{\hascapu}{ckb-Latn}
-\tag{chakma}{}{ccp}
-\tag{chechen}{}{ce}
-\tag{cherokee}{}{chr}
-\tag{chiga}{}{cgg}
-\tag{chinese}{\hascapu}{zh}
+\ltag{chakma}{}{ccp}
+\ltag{chechen}{}{ce}
+\ltag{cherokee}{}{chr}
+\ltag{chiga}{}{cgg}
+\ltag{chinese}{\hascapu}{zh}
 \subtag{chinese-simplified}{\hascapu}{zh-Hans}
 \subtag{chinese-hans}{\hascapu}{zh-Hans}
 \subtag{chinese-traditional}{\hascapu}{zh-Hant}
@@ -1246,33 +1218,33 @@ language from \texttt{greek}.}
 \subtag{chinese-traditional-hongkongsarchina}{}{zh-Hant-HK}
 \subtag{chinese-hant-mo}{}{zh-Hant-MO}
 \subtag{chinese-traditional-macausarchina}{}{zh-Hant-MO}
-\tag{churchslavic}{\hascapu}{cu}
+\ltag{churchslavic}{\hascapu}{cu}
 \subtag{churchslavic-cyrs}{\hascapu}{cu-Cyrs}
 \subtag{churchslavic-glag}{}{cu-Glag}
 \subtag{churchslavic-glagolitic}{}{cu-Glag}
 \subtag{churchslavic-oldcyrillic}{\hascapu}{cu-Cyrs}
-% \tag{churchslavonic}{\hascapu}{cu}
-\tag{chuvash}{}{cv}
+% \ltag{churchslavonic}{\hascapu}{cu}
+\ltag{chuvash}{}{cv}
 \tagmin{classicalmandaic}{}{myz}
-% \tag{classiclatin}{\hascapu\hascapl}{la-x-classic}
-\tag{colognian}{}{ksh}
-\tag{coptic}{}{cop}
-\tag{cornish}{}{kw}
-\tag{corsican}{}{co}
-\tag{croatian}{\hascapu\hascapl}{hr}
-\tag{czech}{\hascapu\hascapl}{cs}
-\tag{danish}{\hascapu\hascapl}{da}
+% \ltag{classiclatin}{\hascapu\hascapl}{la-x-classic}
+\ltag{colognian}{}{ksh}
+\ltag{coptic}{}{cop}
+\ltag{cornish}{}{kw}
+\ltag{corsican}{}{co}
+\ltag{croatian}{\hascapu\hascapl}{hr}
+\ltag{czech}{\hascapu\hascapl}{cs}
+\ltag{danish}{\hascapu\hascapl}{da}
 \tagmin{divehi}{}{dv}
-\tag{dogri}{}{doi}
-\tag{duala}{}{dua}
-\tag{dutch}{\hascapu\hascapl}{nl}
-\tag{dzongkha}{}{dz}
-% \tag{ecclesiasticlatin}{\hascapu\hascapl}{la-x-ecclesia}
+\ltag{dogri}{}{doi}
+\ltag{duala}{}{dua}
+\ltag{dutch}{\hascapu\hascapl}{nl}
+\ltag{dzongkha}{}{dz}
+% \ltag{ecclesiasticlatin}{\hascapu\hascapl}{la-x-ecclesia}
 \tagmin{egyptianarabic}{}{arz}\note{Masri or Colloquial Egyptian, with tag
 \texttt{arz}, different from Standard Arabic as spoken in
 Egypt, with tag \texttt{ar-EG}.}
-\tag{embu}{}{ebu}
-\tag{english}{\hascapu\hascapl}{en}
+\ltag{embu}{}{ebu}
+\ltag{english}{\hascapu\hascapl}{en}
 \subtagalt{american}{\hascapu\hascapl}{en-US}
 \subtag{americanenglish}{\hascapu\hascapl}{en-US}
 \subtag{usenglish}{\hascapu\hascapl}{en-US}
@@ -1294,16 +1266,16 @@ Egypt, with tag \texttt{ar-EG}.}
 \subtag{english-unitedstates}{\hascapu\hascapl}{en-US}
 \subtag{english-nz}{\hascapu\hascapl}{en-NZ}
 \subtag{english-us}{\hascapu\hascapl}{en-US}
-\tag{erzya}{}{myv}
-\tag{esperanto}{\hascapu\hascapl}{eo}
-\tag{estonian}{\hascapu\hascapl}{et}
+\ltag{erzya}{}{myv}
+\ltag{esperanto}{\hascapu\hascapl}{eo}
+\ltag{estonian}{\hascapu\hascapl}{et}
 \tagmin{etruscan}{}{ett}
-\tag{ewe}{}{ee}
-\tag{ewondo}{}{ewo}
-\tag{faroese}{}{fo}
-\tag{filipino}{}{fil}
-\tag{finnish}{\hascapu\hascapl}{fi}
-\tag{french}{\hascapu\hascapl}{fr}
+\ltag{ewe}{}{ee}
+\ltag{ewondo}{}{ewo}
+\ltag{faroese}{}{fo}
+\ltag{filipino}{}{fil}
+\ltag{finnish}{\hascapu\hascapl}{fi}
+\ltag{french}{\hascapu\hascapl}{fr}
 \subtagalt{acadian}{\hascapu\hascapl}{fr-x-acadian}
 \subtag{canadianfrench}{\hascapu\hascapl}{fr-CA}
 \subtag{swissfrench}{\hascapu\hascapl}{fr-CH}
@@ -1315,14 +1287,14 @@ Egypt, with tag \texttt{ar-EG}.}
 \subtag{french-lu}{\hascapu\hascapl}{fr-LU}
 \subtag{french-switzerland}{\hascapu\hascapl}{fr-CH}
 \subtag{french-ch}{\hascapu\hascapl}{fr-CH}
-\tag{friulian}{\hascapu\hascapl}{fur}
-\tag{fulah}{}{ff}
-\tag{ga}{}{gaa}
-\tag{galician}{\hascapu\hascapl}{gl}
-\tag{ganda}{}{lg}
-\tag{geez}{}{gez}
-\tag{georgian}{\hascapu}{ka}
-\tag{german}{\hascapu\hascapl}{de}
+\ltag{friulian}{\hascapu\hascapl}{fur}
+\ltag{fulah}{}{ff}
+\ltag{ga}{}{gaa}
+\ltag{galician}{\hascapu\hascapl}{gl}
+\ltag{ganda}{}{lg}
+\ltag{geez}{}{gez}
+\ltag{georgian}{\hascapu}{ka}
+\ltag{german}{\hascapu\hascapl}{de}
 \note{Note the \texttt{ldf} names differ. See note above and also \New{25.17}.} 
 \subtag{german-traditional}{\hascapu\hascapl}{de-1901}
 \subtagalt{austrian}{\hascapu\hascapl}{de-AT}
@@ -1335,171 +1307,171 @@ with tag \texttt{gsw} is a different language. But see \New{25.17}.}
 \subtag{german-ch}{\hascapu\hascapl}{de-CH}
 \subtag{german-switzerland-traditional}{\hascapu\hascapl}{de-CH-1901}
 \tagmin{gothic}{}{got}
-\tag{greek}{\hascapu\hascapl}{el}
+\ltag{greek}{\hascapu\hascapl}{el}
 \subtag{monotonicgreek}{\hascapu\hascapl}{el}
 \subtagalt{polytonicgreek}{\hascapu\hascapl}{el-polyton}
-\tag{guarani}{}{gn}
-\tag{gujarati}{\hascapu}{gu}
-\tag{gusii}{}{guz}
-\tag{haryanvi}{}{bgc}
-\tag{hausa}{\hascapu\hascapl}{ha}
+\ltag{guarani}{}{gn}
+\ltag{gujarati}{\hascapu}{gu}
+\ltag{gusii}{}{guz}
+\ltag{haryanvi}{}{bgc}
+\ltag{hausa}{\hascapu\hascapl}{ha}
 \subtag{hausa-ghana}{}{ha-GH}
 \subtag{hausa-gh}{}{ha-GH}
 \subtag{hausa-niger}{}{ha-NE}
 \subtag{hausa-ne}{}{ha-NE}
-\tag{hawaiian}{}{haw}
-\tag{hebrew}{\hascapu\hascapl}{he}
-\tag{hindi}{\hascapu}{hi}
-\tag{hmongnjua}{}{hnj}
-\tag{hungarian}{\hascapu\hascapl}{hu}
+\ltag{hawaiian}{}{haw}
+\ltag{hebrew}{\hascapu\hascapl}{he}
+\ltag{hindi}{\hascapu}{hi}
+\ltag{hmongnjua}{}{hnj}
+\ltag{hungarian}{\hascapu\hascapl}{hu}
 \subtag{magyar}{\hascapu\hascapl}{hu}
-\tag{icelandic}{\hascapu\hascapl}{is}
-\tag{igbo}{}{ig}
-\tag{inarisami}{}{smn}
-\tag{indonesian}{\hascapu\hascapl}{id}
+\ltag{icelandic}{\hascapu\hascapl}{is}
+\ltag{igbo}{}{ig}
+\ltag{inarisami}{}{smn}
+\ltag{indonesian}{\hascapu\hascapl}{id}
 \tagmin{ingush}{}{inh}
-\tag{interlingua}{\hascapu\hascapl}{ia}
-\tag{interslavic}{\hascapu\hascapl}{isv}
-\tag{inuktitut}{}{iu}
-\tag{irish}{\hascapu\hascapl}{ga}
-\tag{italian}{\hascapu\hascapl}{it}
-\tag{japanese}{\hascapu}{ja}
-\tag{javanese}{}{jv}
-\tag{jju}{}{kaj}
-\tag{jolafonyi}{}{dyo}
-\tag{kabuverdianu}{}{kea}
-\tag{kabyle}{}{kab}
-\tag{kaingang}{}{kgp}
-\tag{kako}{}{kkj}
-\tag{kalaallisut}{}{kl}
-\tag{kalenjin}{}{kln}
-\tag{kamba}{}{kam}
-\tag{kangri}{}{xnr}
-\tag{kannada}{\hascapu}{kn}
-\tag{kashmiri}{}{ks}
-\tag{kazakh}{}{kk}
-\tag{khmer}{\hascapu}{km}
-\tag{kikuyu}{}{ki}
-\tag{kinyarwanda}{}{rw}
+\ltag{interlingua}{\hascapu\hascapl}{ia}
+\ltag{interslavic}{\hascapu\hascapl}{isv}
+\ltag{inuktitut}{}{iu}
+\ltag{irish}{\hascapu\hascapl}{ga}
+\ltag{italian}{\hascapu\hascapl}{it}
+\ltag{japanese}{\hascapu}{ja}
+\ltag{javanese}{}{jv}
+\ltag{jju}{}{kaj}
+\ltag{jolafonyi}{}{dyo}
+\ltag{kabuverdianu}{}{kea}
+\ltag{kabyle}{}{kab}
+\ltag{kaingang}{}{kgp}
+\ltag{kako}{}{kkj}
+\ltag{kalaallisut}{}{kl}
+\ltag{kalenjin}{}{kln}
+\ltag{kamba}{}{kam}
+\ltag{kangri}{}{xnr}
+\ltag{kannada}{\hascapu}{kn}
+\ltag{kashmiri}{}{ks}
+\ltag{kazakh}{}{kk}
+\ltag{khmer}{\hascapu}{km}
+\ltag{kikuyu}{}{ki}
+\ltag{kinyarwanda}{}{rw}
 \tagmin{komi}{}{kv}
-\tag{konkani}{}{kok}
-\tag{korean}{\hascapu}{ko}
+\ltag{konkani}{}{kok}
+\ltag{korean}{\hascapu}{ko}
 \subtag{korean-han}{\hascapu}{ko-Hani}
 \subtag{korean-hani}{\hascapu}{ko-Hani}
-\tag{koyraborosenni}{}{ses}
-\tag{koyrachiini}{}{khq}
-\tag{kurdish}{\hascapu\hascapl}{ku}
+\ltag{koyraborosenni}{}{ses}
+\ltag{koyrachiini}{}{khq}
+\ltag{kurdish}{\hascapu\hascapl}{ku}
 \subtag{kurdish-arab}{\hascapu}{ku-Arab}
 \subtag{kurdish-arabic}{\hascapu}{ku-Arab}
 \subtag{northernkurdish}{\hascapu\hascapl}{ku}
 \subtag{northernkurdish-arab}{\hascapu}{ku-Arab}
 \subtag{northernkurdish-arabic}{\hascapu}{ku-Arab}
-\tag{kwasio}{}{nmg}
-\tag{kyrgyz}{}{ky}
+\ltag{kwasio}{}{nmg}
+\ltag{kyrgyz}{}{ky}
 \tagmin{ladino}{}{lad}
-\tag{lakota}{}{lkt}
-\tag{langi}{}{lag}
-\tag{lao}{\hascapu}{lo}
-\tag{latin}{\hascapu\hascapl}{la}
+\ltag{lakota}{}{lkt}
+\ltag{langi}{}{lag}
+\ltag{lao}{\hascapu}{lo}
+\ltag{latin}{\hascapu\hascapl}{la}
 \subtagalt{ecclesiasticallatin}{\hascapu\hascapl}{la-x-ecclesia}
 \subtagalt{classicallatin}{\hascapu\hascapl}{la-x-classic}
 \subtagalt{medievallatin}{\hascapu\hascapl}{la-x-medieval}
-\tag{latvian}{\hascapu\hascapl}{lv}
+\ltag{latvian}{\hascapu\hascapl}{lv}
 \tagmin{lepcha}{}{lep}
-\tag{ligurian}{}{lij}
+\ltag{ligurian}{}{lij}
 \tagmin{limbu}{}{lif}
 \subtagmin{limbu-limb}{}{lif-limb}
 \subtagmin{limbu-limbu}{}{lif-limb}
 \tagmin{lineara}{}{lab}
-\tag{lingala}{}{ln}
-\tag{lithuanian}{\hascapu\hascapl\hascapl\hascapl}{lt}
+\ltag{lingala}{}{ln}
+\ltag{lithuanian}{\hascapu\hascapl\hascapl\hascapl}{lt}
 \tagmin{lombard}{}{lmo}
-\tag{lowersorbian}{\hascapu\hascapl}{dsb}
-\tag{lowgerman}{}{nds}
-% \tag{lsorbian}{\hascapu\hascapl}{dsb}
+\ltag{lowersorbian}{\hascapu\hascapl}{dsb}
+\ltag{lowgerman}{}{nds}
+% \ltag{lsorbian}{\hascapu\hascapl}{dsb}
 \tagmin{lu}{}{khb}
 \tagmin{lycian}{}{xlc}
 \tagmin{lydian}{}{xld}
-\tag{lubakatanga}{}{lu}
-\tag{luo}{}{luo}
-\tag{luxembourgish}{\hascapu\hascapl}{lb}
-\tag{luyia}{}{luy}
-\tag{macedonian}{\hascapu\hascapl}{mk}
-\tag{machame}{}{jmc}
-\tag{maithili}{}{mai}
+\ltag{lubakatanga}{}{lu}
+\ltag{luo}{}{luo}
+\ltag{luxembourgish}{\hascapu\hascapl}{lb}
+\ltag{luyia}{}{luy}
+\ltag{macedonian}{\hascapu\hascapl}{mk}
+\ltag{machame}{}{jmc}
+\ltag{maithili}{}{mai}
 \tagmin{makasar}{}{mak}
 \subtagmin{makasar-bugi}{}{mak-Bugi}
 \subtagmin{makasar-buginese}{}{mak-Bugi}
-\tag{makhuwa}{}{vmw}
-\tag{makhuwameetto}{}{mgh}
-\tag{makonde}{}{kde}
-\tag{malagasy}{}{mg}
-\tag{malay}{\hascapu\hascapl}{ms}
+\ltag{makhuwa}{}{vmw}
+\ltag{makhuwameetto}{}{mgh}
+\ltag{makonde}{}{kde}
+\ltag{malagasy}{}{mg}
+\ltag{malay}{\hascapu\hascapl}{ms}
 \subtag{malay-brunei}{}{ms-BN}
 \subtag{malay-bn}{}{ms-BN}
 \subtag{malay-singapore}{}{ms-SG}
 \subtag{malay-sg}{}{ms-SG}
-\tag{malayalam}{\hascapu}{ml}
-\tag{maltese}{}{mt}
-\tag{manipuri}{}{mni}
-\tag{manx}{}{gv}
-\tag{maori}{}{mi}
-\tag{marathi}{\hascapu}{mr}
-\tag{masai}{}{mas}
-\tag{mazanderani}{}{mzn}
-\tag{meru}{}{mer}
-\tag{meta}{}{mgo}
-\tag{mongolian}{}{mn}
-\tag{monotonicgreek}{\hascapu\hascapl}{el}
-\tag{morisyen}{}{mfe}
-\tag{mundang}{}{mua}
-\tag{muscogee}{}{mus}
-\tag{nama}{}{naq}
-% \tag{naustrian}{\hascapu\hascapl}{de-AT}
+\ltag{malayalam}{\hascapu}{ml}
+\ltag{maltese}{}{mt}
+\ltag{manipuri}{}{mni}
+\ltag{manx}{}{gv}
+\ltag{maori}{}{mi}
+\ltag{marathi}{\hascapu}{mr}
+\ltag{masai}{}{mas}
+\ltag{mazanderani}{}{mzn}
+\ltag{meru}{}{mer}
+\ltag{meta}{}{mgo}
+\ltag{mongolian}{}{mn}
+\ltag{monotonicgreek}{\hascapu\hascapl}{el}
+\ltag{morisyen}{}{mfe}
+\ltag{mundang}{}{mua}
+\ltag{muscogee}{}{mus}
+\ltag{nama}{}{naq}
+% \ltag{naustrian}{\hascapu\hascapl}{de-AT}
 \tagmin{navajo}{}{nv}
-\tag{nepali}{}{ne}
+\ltag{nepali}{}{ne}
 \tagmin{newari}{}{new}
-% \tag{ngerman}{\hascapu\hascapl}{de}
-\tag{ngiemboon}{}{nnh}
-\tag{ngomba}{}{jgo}
-\tag{nheengatu}{}{yrl}
-\tag{nigerianpidgin}{}{pcm}
-\tag{nko}{}{nqo}
-\tag{northernfrisian}{}{frr}
-\tag{northernluri}{}{lrc}
-\tag{northernsami}{\hascapu\hascapl}{se}
+% \ltag{ngerman}{\hascapu\hascapl}{de}
+\ltag{ngiemboon}{}{nnh}
+\ltag{ngomba}{}{jgo}
+\ltag{nheengatu}{}{yrl}
+\ltag{nigerianpidgin}{}{pcm}
+\ltag{nko}{}{nqo}
+\ltag{northernfrisian}{}{frr}
+\ltag{northernluri}{}{lrc}
+\ltag{northernsami}{\hascapu\hascapl}{se}
 \subtag{samin}{\hascapu\hascapl}{se}
-\tag{northernsotho}{}{nso}
-\tag{northndebele}{}{nd}
-\tag{norwegian}{\hascapu\hascapl}{no}
+\ltag{northernsotho}{}{nso}
+\ltag{northndebele}{}{nd}
+\ltag{norwegian}{\hascapu\hascapl}{no}
 \subtag{norsk}{\hascapu\hascapl}{no}
 \note{In the CLDR, \texttt{norwegianbokmal} (nb) just inherites from
 \texttt{norwegian}, so use the latter.}
-% \tag{norwegianbokmal}{\hascapu\hascapl}{nb}
-\tag{nuer}{}{nus}
-\tag{nyanja}{}{ny}
-\tag{nyankole}{}{nyn}
-\tag{nynorsk}{\hascapu\hascapl}{nn}
+% \ltag{norwegianbokmal}{\hascapu\hascapl}{nb}
+\ltag{nuer}{}{nus}
+\ltag{nyanja}{}{ny}
+\ltag{nyankole}{}{nyn}
+\ltag{nynorsk}{\hascapu\hascapl}{nn}
 \subtag{norwegiannynorsk}{\hascapu\hascapl}{nn}
-\tag{occitan}{\hascapu\hascapl}{oc}
-\tag{odia}{\hascapu}{or}
+\ltag{occitan}{\hascapu\hascapl}{oc}
+\ltag{odia}{\hascapu}{or}
 \note{Preferred to \texttt{oriya}.}
 \tagmin{oldirish}{}{sga}
 \tagmin{oldnorse}{}{non}
 \tagmin{oldpersian}{}{peo}
 \tagmin{olduighur}{}{oui}
-% \tag{oriya}{\hascapu}{or}
-\tag{oromo}{}{om}
-\tag{osage}{}{osa}
-\tag{ossetic}{}{os}
-\tag{papiamento}{}{pap}
-\tag{pashto}{}{ps}
-\tag{persian}{\hascapu}{fa}
+% \ltag{oriya}{\hascapu}{or}
+\ltag{oromo}{}{om}
+\ltag{osage}{}{osa}
+\ltag{ossetic}{}{os}
+\ltag{papiamento}{}{pap}
+\ltag{pashto}{}{ps}
+\ltag{persian}{\hascapu}{fa}
 \subtag{farsi}{\hascapu}{fa}
 \tagmin{phoenician}{}{phn}
-\tag{piedmontese}{\hascapu\hascapl}{pms}
-\tag{polish}{\hascapu\hascapl}{pl}
-\tag{portuguese}{\hascapu\hascapl}{pt}
+\ltag{piedmontese}{\hascapu\hascapl}{pms}
+\ltag{polish}{\hascapu\hascapl}{pl}
+\ltag{portuguese}{\hascapu\hascapl}{pt}
 \subtagalt{brazilian}{\hascapu\hascapl}{pt-BR}
 \subtag{brazilianportuguese}{\hascapu\hascapl}{pt-BR}
 \subtag{portuguese-brazil}{\hascapu\hascapl}{pt-BR}
@@ -1507,31 +1479,31 @@ with tag \texttt{gsw} is a different language. But see \New{25.17}.}
 \subtag{europeanportuguese}{\hascapu\hascapl}{pt-PT}
 \subtag{portuguese-portugal}{\hascapu\hascapl}{pt-PT}
 \subtag{portuguese-pt}{\hascapu\hascapl}{pt-PT}
-\tag{prussian}{}{prg}
-\tag{punjabi}{\hascapu}{pa}
+\ltag{prussian}{}{prg}
+\ltag{punjabi}{\hascapu}{pa}
 \subtag{punjabi-arabic}{}{pa-Arab}
 \subtag{punjabi-arab}{}{pa-Arab}
 \subtag{punjabi-gurmukhi}{\hascapu}{pa-Guru}
 \subtag{punjabi-guru}{\hascapu}{pa-Guru}
-\tag{quechua}{}{qu}
-\tag{rajasthani}{}{raj}
-\tag{romanian}{\hascapu\hascapl}{ro}
+\ltag{quechua}{}{qu}
+\ltag{rajasthani}{}{raj}
+\ltag{romanian}{\hascapu\hascapl}{ro}
 \subtagalt{moldavian}{\hascapu\hascapl}{ro-MD}
 \subtag{romanian-moldova}{\hascapu\hascapl}{ro-MD}
 \subtag{romanian-md}{\hascapu\hascapl}{ro-MD}
-\tag{romansh}{\hascapu\hascapl}{rm}
-\tag{rombo}{}{rof}
-\tag{rundi}{}{rn}
-\tag{russian}{\hascapu\hascapl}{ru}
-\tag{rwa}{}{rwk}
+\ltag{romansh}{\hascapu\hascapl}{rm}
+\ltag{rombo}{}{rof}
+\ltag{rundi}{}{rn}
+\ltag{russian}{\hascapu\hascapl}{ru}
+\ltag{rwa}{}{rwk}
 \tagmin{sabaean}{}{xsa}
-\tag{saho}{}{ssy}
-\tag{sakha}{}{sah}
+\ltag{saho}{}{ssy}
+\ltag{sakha}{}{sah}
 \tagmin{samaritan}{}{smp}
-\tag{samburu}{}{saq}
-\tag{sango}{}{sg}
-\tag{sangu}{}{sbp}
-\tag{sanskrit}{}{sa}
+\ltag{samburu}{}{saq}
+\ltag{sango}{}{sg}
+\ltag{sangu}{}{sbp}
+\ltag{sanskrit}{}{sa}
 \subtag{sanskrit-bangla}{}{sa-Beng}
 \subtag{sanskrit-beng}{}{sa-Beng}
 % \subtag{sanskrit-bengali}{}{sa-Beng}
@@ -1545,13 +1517,13 @@ with tag \texttt{gsw} is a different language. But see \New{25.17}.}
 \subtag{sanskrit-mlym}{}{sa-Mlym}
 \subtag{sanskrit-telugu}{}{sa-Telu}
 \subtag{sanskrit-telu}{}{sa-Telu}
-\tag{santali}{}{sat}
-\tag{saraiki}{}{skr}
-\tag{sardinian}{}{sc}
-\tag{scottishgaelic}{\hascapu\hascapl}{gd}
+\ltag{santali}{}{sat}
+\ltag{saraiki}{}{skr}
+\ltag{sardinian}{}{sc}
+\ltag{scottishgaelic}{\hascapu\hascapl}{gd}
 \subtag{scottish}{\hascapu\hascapl}{gd}
-\tag{sena}{}{seh}
-\tag{serbian}{\hascapu\hascapl}{sr}
+\ltag{sena}{}{seh}
+\ltag{serbian}{\hascapu\hascapl}{sr}
 \note{Note the \texttt{ldf} names differ. See note above.}
 \subtag{serbian-cyrillic}{\hascapu\hascapl}{sr-Cyrl}
 \subtag{serbian-cyrl}{\hascapu\hascapl}{sr-Cyrl}
@@ -1571,107 +1543,107 @@ with tag \texttt{gsw} is a different language. But see \New{25.17}.}
 \subtag{serbian-latn-me}{\hascapu\hascapl}{sr-Latn-ME}
 \subtag{serbian-ijekavsk}{\hascapu\hascapl}{sr-ijekavsk}
 \subtag{serbian-latn-ijekavsk}{\hascapu\hascapl}{sr-Latn-ijekavsk}
-% \tag{serbianc}{\hascapu\hascapl}{sr}
-\tag{shambala}{}{ksb}
-\tag{shona}{}{sn}
-\tag{sichuanyi}{}{ii}
-\tag{sicilian}{}{scn}
-\tag{silesian}{}{szl}
-\tag{sindhi}{}{sd}
+% \ltag{serbianc}{\hascapu\hascapl}{sr}
+\ltag{shambala}{}{ksb}
+\ltag{shona}{}{sn}
+\ltag{sichuanyi}{}{ii}
+\ltag{sicilian}{}{scn}
+\ltag{silesian}{}{szl}
+\ltag{sindhi}{}{sd}
 \subtag{sindhi-devanagari}{}{sd-deva}
 \subtag{sindhi-deva}{}{sd-deva}
 \subtag{sindhi-khojki}{}{sd-khoj}
 \subtag{sindhi-khoj}{}{sd-khoj}
 \subtag{sindhi-khudawadi}{}{sd-sind}
 \subtag{sindhi-sind}{}{sd-sind}
-\tag{sinhala}{\hascapu}{si}
+\ltag{sinhala}{\hascapu}{si}
 \tagmin{sinteromani}{}{rmo}
-\tag{slovak}{\hascapu\hascapl}{sk}
-\tag{slovenian}{\hascapu\hascapl}{sl}
+\ltag{slovak}{\hascapu\hascapl}{sk}
+\ltag{slovenian}{\hascapu\hascapl}{sl}
 \subtag{slovene}{\hascapu\hascapl}{sl}
-\tag{soga}{}{xog}
-\tag{somali}{}{so}
+\ltag{soga}{}{xog}
+\ltag{somali}{}{so}
 \tagmin{southernaltai}{}{alt}
-\tag{southernsotho}{}{st}
-\tag{southndebele}{}{nr}
-\tag{spanish}{\hascapu\hascapl}{es}
+\ltag{southernsotho}{}{st}
+\ltag{southndebele}{}{nr}
+\ltag{spanish}{\hascapu\hascapl}{es}
 \subtagalt{mexican}{\hascapu\hascapl}{es-MX}
 \subtag{mexicanspanish}{\hascapu\hascapl}{es-MX}
 \subtag{spanish-mexico}{\hascapu\hascapl}{es-MX}
 \subtag{spanish-mx}{\hascapu\hascapl}{es-MX}
-\tag{standardmoroccantamazight}{}{zgh}
-\tag{sundanese}{}{su}
-\tag{swahili}{}{sw}
-\tag{swati}{}{ss}
-\tag{swedish}{\hascapu\hascapl}{sv}
-\tag{swissgerman}{}{gsw}
+\ltag{standardmoroccantamazight}{}{zgh}
+\ltag{sundanese}{}{su}
+\ltag{swahili}{}{sw}
+\ltag{swati}{}{ss}
+\ltag{swedish}{\hascapu\hascapl}{sv}
+\ltag{swissgerman}{}{gsw}
 \note{Different from \texttt{swisshighgerman} (de-CH), which is German as spoken
 in Switzerland. Currently still assigned to the \texttt{de-CH-1901};
 see \New{25.17}.}
 \subtag{alemannic}{}{gsw}
 \subtagalt{alsatian}{}{gsw-FR}
-\tag{syriac}{}{syr}
-\tag{tachelhit}{}{shi}
+\ltag{syriac}{}{syr}
+\ltag{tachelhit}{}{shi}
 \subtag{tachelhit-latin}{}{shi-Latn}
 \subtag{tachelhit-latn}{}{shi-Latn}
 \subtag{tachelhit-tifinagh}{}{shi-Tfng}
 \subtag{tachelhit-tfng}{}{shi-Tfng}
 \tagmin{tainua}{}{tdd}
-\tag{taita}{}{dav}
-\tag{tajik}{}{tg}
-\tag{tamil}{\hascapu}{ta}
+\ltag{taita}{}{dav}
+\ltag{tajik}{}{tg}
+\ltag{tamil}{\hascapu}{ta}
 \tagmin{tangut}{}{txg}
-\tag{taroko}{}{trv}
-\tag{tasawaq}{}{twq}
-\tag{tatar}{}{tt}
-\tag{telugu}{\hascapu}{te}
-\tag{teso}{}{teo}
-\tag{thai}{\hascapu\hascapl}{th}
-\tag{tibetan}{\hascapu}{bo}
-\tag{tigre}{}{tig}
-\tag{tigrinya}{}{ti}
-\tag{tokpisin}{}{tpi}
-\tag{tongan}{}{to}
-\tag{tsonga}{}{ts}
-\tag{tswana}{}{tn}
-\tag{turkish}{\hascapu\hascapl}{tr}
-\tag{turkmen}{\hascapu\hascapl}{tk}
-\tag{tyap}{}{kcg}
+\ltag{taroko}{}{trv}
+\ltag{tasawaq}{}{twq}
+\ltag{tatar}{}{tt}
+\ltag{telugu}{\hascapu}{te}
+\ltag{teso}{}{teo}
+\ltag{thai}{\hascapu\hascapl}{th}
+\ltag{tibetan}{\hascapu}{bo}
+\ltag{tigre}{}{tig}
+\ltag{tigrinya}{}{ti}
+\ltag{tokpisin}{}{tpi}
+\ltag{tongan}{}{to}
+\ltag{tsonga}{}{ts}
+\ltag{tswana}{}{tn}
+\ltag{turkish}{\hascapu\hascapl}{tr}
+\ltag{turkmen}{\hascapu\hascapl}{tk}
+\ltag{tyap}{}{kcg}
 \tagmin{ugaritic}{}{uga}
-\tag{ukrainian}{\hascapu\hascapl}{uk}
-\tag{uppersorbian}{\hascapu\hascapl}{hsb}
-\tag{urdu}{\hascapu}{ur}
-\tag{uyghur}{\hascapu}{ug}
-\tag{uzbek}{}{uz}
+\ltag{ukrainian}{\hascapu\hascapl}{uk}
+\ltag{uppersorbian}{\hascapu\hascapl}{hsb}
+\ltag{urdu}{\hascapu}{ur}
+\ltag{uyghur}{\hascapu}{ug}
+\ltag{uzbek}{}{uz}
 \subtag{uzbek-arabic}{}{uz-Arab}
 \subtag{uzbek-arab}{}{uz-Arab}
 \subtag{uzbek-cyrillic}{}{uz-Cyrl}
 \subtag{uzbek-cyrl}{}{uz-Cyrl}
 \subtag{uzbek-latin}{}{uz-Latn}
 \subtag{uzbek-latn}{}{uz-Latn}
-\tag{vai}{}{vai}
+\ltag{vai}{}{vai}
 \subtag{vai-latin}{}{vai-Latn}
 \subtag{vai-latn}{}{vai-Latn}
 \subtag{vai-vai}{}{vai-Vaii}
 \subtag{vai-vaii}{}{vai-Vaii}
-\tag{venda}{}{ve}
-\tag{venetian}{}{vec}
-\tag{vietnamese}{\hascapu\hascapl}{vi}
-\tag{volapuk}{}{vo}
-\tag{vunjo}{}{vun}
-\tag{walser}{}{wae}
+\ltag{venda}{}{ve}
+\ltag{venetian}{}{vec}
+\ltag{vietnamese}{\hascapu\hascapl}{vi}
+\ltag{volapuk}{}{vo}
+\ltag{vunjo}{}{vun}
+\ltag{walser}{}{wae}
 \tagmin{waray}{}{war}
-\tag{welsh}{\hascapu\hascapl}{cy}
-\tag{westernfrisian}{}{fy}
-\tag{wolaytta}{}{wal}
-\tag{wolof}{}{wo}
-\tag{xhosa}{}{xh}
-\tag{yangben}{}{yav}
-\tag{yiddish}{}{yi}
-\tag{yoruba}{}{yo}
-\tag{zarma}{}{dje}
-\tag{zhuang}{}{za}
-\tag{zulu}{}{zu}
+\ltag{welsh}{\hascapu\hascapl}{cy}
+\ltag{westernfrisian}{}{fy}
+\ltag{wolaytta}{}{wal}
+\ltag{wolof}{}{wo}
+\ltag{xhosa}{}{xh}
+\ltag{yangben}{}{yav}
+\ltag{yiddish}{}{yi}
+\ltag{yoruba}{}{yo}
+\ltag{zarma}{}{dje}
+\ltag{zhuang}{}{za}
+\ltag{zulu}{}{zu}
 \end{multicols}
 \endgroup
 \hrule
@@ -1799,7 +1771,7 @@ Mono} \fi}
 
 \usepackage[swedish, bidi=default]{babel}
 
-_\babelfont{rm}{NewComputerModern10}_
+×\babelfont{rm}{NewComputerModern10}×
 
 \begin{document}
 
@@ -1824,11 +1796,11 @@ all secondary languages in the Cyrillic and Greek scripts can be set
 at once with the following single line:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\babelfont[_*cyrillic, *greek_]{rm}{NewComputerModern10}
+\babelfont[×*cyrillic, *greek×]{rm}{NewComputerModern10}
 \end{verbatim}
 And if you need, say, Arabic and Devanagari:
 \begin{verbatim}
-  \babelfont[_*arabic, *devanagari_]{rm}{FreeSerif}
+  \babelfont[×*arabic, *devanagari×]{rm}{FreeSerif}
 \end{verbatim}
 \Babel{} does the rest for you, including setting the font script
 \textit{and} language.
@@ -1839,10 +1811,10 @@ And if you need, say, Arabic and Devanagari:
   different fonts. In this example, we set Simplified and Tradicional
   Chinese:
 \begin{verbatim}
-\babelfont[chinese-_simplified_]{rm}{Noto Serif CJK _SC_}
-\babelfont[chinese-_simplified_]{sf}{Noto Sans CJK _SC_}
-\babelfont[chinese-_traditional_]{rm}{Noto Serif CJK _TC_}
-\babelfont[chinese-_traditional_]{sf}{Noto Sans CJK _TC_}
+\babelfont[chinese-×simplified×]{rm}{Noto Serif CJK ×SC×}
+\babelfont[chinese-×simplified×]{sf}{Noto Sans CJK ×SC×}
+\babelfont[chinese-×traditional×]{rm}{Noto Serif CJK ×TC×}
+\babelfont[chinese-×traditional×]{sf}{Noto Sans CJK ×TC×}
 \end{verbatim}
 \end{example}
 
@@ -1850,7 +1822,7 @@ And if you need, say, Arabic and Devanagari:
   Here is how to declare a new family:
 \setengine{luatex/xetex}
 \begin{verbatim}
-\babelfont{_kai_}{FandolKai}
+\babelfont{×kai×}{FandolKai}
 \end{verbatim}
   Now, |\kaifamily| and |\kaidefault|, as well as |\textkai| are at
   your disposal.
@@ -2111,13 +2083,13 @@ of locales and fonts is lazy, which greatly simplifies the preamble.
 \begin{verbatim}
 \documentclass{article}
 
-_\usepackage[english]{babel}_
+×\usepackage[english]{babel}×
 
-_\babelfont[*devanagari]{rm}{FreeSans}_
+×\babelfont[*devanagari]{rm}{FreeSans}×
 
 \newenvironment{excerpt}[1]
-  {\begin{quote}_\begin{otherlanguage*}{#1}_}
-  {_\end{otherlanguage*}_\end{quote}}
+  {\begin{quote}×\begin{otherlanguage*}{#1}×}
+  {×\end{otherlanguage*}×\end{quote}}
 
 \begin{document}
 
@@ -2345,31 +2317,33 @@ raising an error.
 
 The available fields are:
 \begin{description}
+\EditInstance{item}{description}{%
+  label-format=\normalfont\ttfamily\color{thered}#1}
 \itemsep=-\parskip
-\item[|name.english|] as provided by the Unicode CLDR.
-\item[|tag.ini|] is the tag of the |ini| file (the way this
+\item[name.english] as provided by the Unicode CLDR.
+\item[tag.ini] is the tag of the |ini| file (the way this
   file is identified in its name).
-\item[|tag.bcp47|] is the full BCP 47 tag. This
+\item[tag.bcp47] is the full BCP 47 tag. This
   is the value to be used for the ‘real' provided tag (\babel{} may
   fill other fields if they are considered necessary).
-\item[|language.tag.bcp47|] is the BCP 47 language tag.
-\item[|tag.opentype|] is the tag used by OpenType (usually, but not
+\item[language.tag.bcp47] is the BCP 47 language tag.
+\item[tag.opentype] is the tag used by OpenType (usually, but not
   always, the same as BCP 47). It can be useful when customizing fonts
   with \textsf{luaotfload}.
-\item[|script.name|], as provided by the Unicode CLDR.
-\item[|script.tag.bcp47|] is the BCP 47 tag of the script
+\item[script.name], as provided by the Unicode CLDR.
+\item[script.tag.bcp47] is the BCP 47 tag of the script
   used by this locale. This is a required field for the fonts to be
   correctly set up, and therefore it should always be defined.
-\item[|script.tag.opentype|] is the tag used by OpenType (usually,
+\item[script.tag.opentype] is the tag used by OpenType (usually,
   but not always, the same as BCP 47). It can be useful when
   customizing fonts with \textsf{luaotfload}.
-\item[|region.tag.bcp47|] is the BCP 47 tag of the region or territory.
+\item[region.tag.bcp47] is the BCP 47 tag of the region or territory.
   Defined only if the locale loaded actually contains it (e.g., |es-MX|
   does, but |es| doesn’t), which is how locales behave in the CLDR.
   \New{3.75}
-\item[|variant.tag.bcp47|] is the BCP 47 tag of the variant (in the BCP 47
+\item[variant.tag.bcp47] is the BCP 47 tag of the variant (in the BCP 47
   sense, like |1901| for German). \New{3.75}
-\item[|extension.|\m{s}|.tag.bcp47|] is the BCP 47 value of the
+\item[extension.\m{s}.tag.bcp47] is the BCP 47 value of the
   extension whose singleton is \m{s} (currently the recognized
   singletons are |x|, |t| and |u|). The internal syntax can be somewhat
   complex, and this feature is still somewhat tentative. An example is
@@ -2482,16 +2456,16 @@ share it), name, hyphenation file and exceptions file.
 written to the log file.\footnote{You can use alternatively the
 package \textsf{silence}.}
 
-\Describe{hyphenmap=}{\texttt{off} $\string|$ \texttt{first}
-$\string|$ \texttt{select} $\string|$ \texttt{other} $\string|$
+\Describe{hyphenmap=}{\texttt{off} \string| \texttt{first}
+\string| \texttt{select} \string| \texttt{other} \string|
 \texttt{other*}}
 
 \New{3.9g} Sets the behavior of case mapping for hyphenation,
 provided the language defines it.\footnote{Turned off in plain.} It
 can take the following values:
 \begin{description}
-\renewcommand\makelabel[1]{%
-  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
+\EditInstance{item}{description}{%
+  label-format=\normalfont\ttfamily\color{thered}#1}
 \itemsep=-\parskip
 \item[off] deactivates this feature and no case mapping is applied;
 \item[first] sets it at the first switching commands in the
@@ -2514,8 +2488,8 @@ can take the following values:
   really useful, but who knows.}
 \end{description}
 
-\Describe{bidi=}{\texttt{default} $\string|$ \texttt{basic}
-  $\string|$ \texttt{basic-r} $\string|$ \texttt{bidi-l} $\string|$
+\Describe{bidi=}{\texttt{default} \string| \texttt{basic}
+  \string| \texttt{basic-r} \string| \texttt{bidi-l} \string|
   \texttt{bidi-r}}
 
 \New{3.14} Selects the bidi algorithm to be used in \luatex{} and
@@ -2526,7 +2500,7 @@ can take the following values:
 \New{3.16} Selects which layout elements are adapted in bidi
 documents. See sec.~\ref{bidi}.
 
-\Describe{provide=}{\texttt{*} $\string|$ \meta{option-list}}
+\Describe{provide=}{\texttt{*} \string| \meta{option-list}}
 \New{3.49} An alternative to |\babelprovide| for languages passed as
 options. See section~\ref{inifiles}, which describes also the variants
 |provide+=| and |provide*=|.
@@ -2537,7 +2511,7 @@ language is not given as such as package or global option, it is added
 to the list of requested languages. For example:
 \begin{verbatim}
 \documentclass{article}
-\usepackage[_main=english_,dutch]{babel}
+\usepackage[×main=english×,dutch]{babel}
 \end{verbatim}
 Some classes load \babel{} with a hardcoded language option. Sometimes,
 the main language can be overridden with something like that before
@@ -2546,7 +2520,7 @@ the main language can be overridden with something like that before
 \PassOptionsToPackage{main=english}{babel}
 \end{verbatim}
 
-\Describe{licr=}{\texttt{extended} $\string|$ \texttt{unextended}}
+\Describe{licr=}{\texttt{extended} \string| \texttt{unextended}}
 
 \New{26.7} Some languages may require extending the built-in
 declarations in \LaTeX\ for the TU encoding, because a package may rely
@@ -2674,10 +2648,10 @@ It must be activated explicitly, because it is primarily meant for
 special tasks. Mapping from BCP 47 codes to locale names is not
 hardcoded in \babel. Instead the data is taken from the \texttt{ini}
 files, which means currently about 350 tags are already recognized.
-\Babel{} performs a simple lookup in the following way: |fr-Latn-FR| $\to$
-|fr-Latn| $\to$ |fr-FR| $\to$ |fr|. Languages with the same resolved
+\Babel{} performs a simple lookup in the following way: |fr-Latn-FR| \tto\
+|fr-Latn| \tto\ |fr-FR| \tto\ |fr|. Languages with the same resolved
 name are considered the same. Case is normalized before, so that
-|fr-latn-fr| $\to$ |fr-Latn-FR|. If a tag and a name overlap, the tag
+|fr-latn-fr| \tto\ |fr-Latn-FR|. If a tag and a name overlap, the tag
 takes precedence.
 
 Here is a minimal example:
@@ -2686,15 +2660,15 @@ Here is a minimal example:
 
 \usepackage[danish]{babel}
 
-_\babeladjust{_
-_  autoload.bcp47 = on_
-_}_
+×\babeladjust{×
+×  autoload.bcp47 = on×
+×}×
 
 \begin{document}
 
 Chapter in Danish: \chaptername.
 
-_\selectlanguage{de-AT}_
+×\selectlanguage{de-AT}×
 
 \localedate{2020}{1}{30}
 
@@ -2789,7 +2763,7 @@ the text direction, which is done by \babel{} when necessary. With
 \item With data |import|’ed from |ini| files, you can modify the values
   of specific keys when loaded, like:
 \begin{verbatim}
-\babelprovide[import, _captions/listtable = Lista de tablas_]{spanish}
+\babelprovide[import, ×captions/listtable = Lista de tablas×]{spanish}
 \end{verbatim}
   (In this particular case, instead of the |captions| group you may need
   to modify the |captions.licr| one.)
@@ -2846,7 +2820,7 @@ is by means of |\babelprovide|, described below in depth. So,
 something like:
 \begin{verbatim}
 \usepackage[danish]{babel}
-\babelprovide[_hyphenrules=nohyphenation_]{danish}
+\babelprovide[×hyphenrules=nohyphenation×]{danish}
 \end{verbatim}
 first loads |danish.ldf|, and then prevents hyphenation for this
 locale. The rest of the language definitions are not touched. Without
@@ -2864,7 +2838,7 @@ be added or removed):\footnote{No predefined “axis” for modifiers
 is provided because languages and their scripts have quite different
 needs.}
 \begin{verbatim}
-\usepackage[latin_.lowercasemonth_, spanish_.notilde.lcroman_, danish]{babel}
+\usepackage[latin×.lowercasemonth×, spanish×.notilde.lcroman×, danish]{babel}
 \end{verbatim}
 
 Attributes (described below) are considered modifiers, i.e., you can
@@ -2877,7 +2851,7 @@ useful to activate some feature when the language is declared as a
 class option:
 \begin{verbatim}
 \documentclass[spanish]{report}
-\usepackage[_modifiers.spanish = notilde.lcroman_]{babel}
+\usepackage[×modifiers.spanish = notilde.lcroman×]{babel}
 \end{verbatim}
 
 \subsection{Language attributes}
@@ -3027,8 +3001,8 @@ ones.
 Current events are the following; in some of them you can use one to
 three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
 \begin{description}
-\renewcommand\makelabel[1]{%
-  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
+\EditInstance{item}{description}{%
+  label-format=\normalfont\ttfamily\color{thered}#1}
 \itemsep=-\parskip
 \item[adddialect] (language name, dialect name) Used by
   \file{luababel.def} to load the patterns if not preloaded.
@@ -3096,8 +3070,8 @@ Four events are used in \file{hyphen.cfg}, which are handled in a
 quite different way for efficiency reasons -- unlike the precedent
 ones, they only have a single hook and replace a default definition.
 \begin{description}
-\renewcommand\makelabel[1]{%
-  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
+\EditInstance{item}{description}{%
+  label-format=\normalfont\ttfamily\color{thered}#1}
 \itemsep=-\parskip
 \item[everylanguage] (language) Executed before every language patterns
   are loaded.
@@ -3299,7 +3273,7 @@ such a case, you can set its value.
   For example, the locale |ar-DZ| is named |arabic-algeria|. You may
   prefer the shorter name |arabic| if there are no conflicts:
 \begin{verbatim}
-\babelprovide[_import=ar-DZ_]{arabic}
+\babelprovide[×import=ar-DZ×]{arabic}
 \end{verbatim}
 \end{example}
 
@@ -3314,7 +3288,7 @@ current locale.
 space-separated list of hyphenation rules, \babel{} assigns to the
 language the first valid hyphenation rules in the list. For example:
 \begin{verbatim}
-\babelprovide[_hyphenrules=chavacano spanish italian_]{chavacano}
+\babelprovide[×hyphenrules=chavacano spanish italian×]{chavacano}
 \end{verbatim}
 If none of the listed hyphenrules exist, the default behavior applies.
 Note in this example we set |chavacano| as first option, which can seem
@@ -3389,16 +3363,16 @@ languages. The first ones are predefined by \LaTeX{} (see
   \item[Greek] |iota| converts the \textit{ypogegrammeni} (subscript muted
     iota) to capital iota when uppercasing.
   \item[Latin] |nouv| in |classicallatin| and |medievallatin| reverts
-    the default rules, which maps u $\leftrightarrow$ V; |uv| in
+    the default rules, which maps u \tto\ V; |uv| in
     |ecclesiasticallatin| and the basic |latin| locale applies the map
-    u $\leftrightarrow$ V (by default it’s u $\leftrightarrow$ U and v
-    $\leftrightarrow$ V).
+    u \tto\ V (by default it’s u \tto\ U and v
+    \tto\ V).
 \end{description}
 
 \begin{example} For the latter:
 \begin{verbatim}
 \usepackage[greek]{babel}
-\babelprovide[_casing=iota_]{greek} 
+\babelprovide[×casing=iota×]{greek} 
 \end{verbatim}
 \end{example}
 
@@ -3412,8 +3386,8 @@ the script, no matter which language is active. Although somewhat
 inconsistent, this makes setting a language up easier in most typical
 cases.
 
-\Describe{onchar=}{\texttt{ids} $\string|$ \texttt{fonts}
-  $\string|$ \texttt{letters}}
+\Describe{onchar=}{\texttt{ids} \string| \texttt{fonts}
+  \string| \texttt{letters}}
 
 \New{3.38} This option is much like an ‘event’ called when a character
 belonging to the script of this locale is found (as its name implies,
@@ -3463,10 +3437,10 @@ There are currently 3 ‘actions’, which can be used at the same time
 \end{note}
 
 \Describe{transforms=}{\meta{transform-list}}
-See section~\ref{transforms}.
+(\luatex) See section~\ref{transforms}.
 
 \Describe{interchar=}{\meta{interchar-list}}
-See section~\ref{interchar}.
+(\xetex) See section~\ref{interchar}.
 
 \begin{note}
   (1) If you need shorthands, you can define them with |\useshorthands|
@@ -3482,8 +3456,8 @@ how to do it:
 \babelprovide{spanish}      % import=es by default
 \babelprovide[
     import=es,
-    _identification/tag.bcp47 = es-x-medieval_,
-    _identification/extension.x.tag.bcp47 = medieval_]
+    ×identification/tag.bcp47 = es-x-medieval×,
+    ×identification/extension.x.tag.bcp47 = medieval×]
   {medievalspanish}
 \end{verbatim}
 \end{example}
@@ -3608,14 +3582,14 @@ incompatible). The optional argument is available only in \luatex.
 You are typesetting a book with wide lines and want to limit the
 number of hyphens in all languages:
 \begin{verbatim}
-  \babelhyphenmins{3}{4}
+\babelhyphenmins{3}{4}
 \end{verbatim}
 But there is also some 3-column text and you want to be more flexible:
 \begin{verbatim}
-  \begin{multicols}{3}
-  \babelhyphenmins*{2}{3}
-  ...
-  \end{multicols}
+\begin{multicols}{3}
+\babelhyphenmins*{2}{3}
+...
+\end{multicols}
 \end{verbatim}
 \end{example}
 
@@ -3708,8 +3682,8 @@ like, say, |'| done by some languages (e.g., \textsf{italian},
 
 \subsection{Hyphenation and line breaking – 2. ‘Provide’ options}
 
-\Describe{justification=}{\texttt{unhyphenated} $\string|$
-\texttt{kashida} $\string|$ \texttt{elongated} $\string|$
+\Describe{justification=}{\texttt{unhyphenated} \string|
+\texttt{kashida} \string| \texttt{elongated} \string|
 \texttt{padding}}
 \New{3.59} There are currently 4 options. Note they are language
 dependent, so that they will not be applied to other languages.
@@ -3936,7 +3910,7 @@ with, for example, |\useshorthands| or |\useshorthands*|.)
   than |\shorthandoff|, for example if you want to define a macro
   to ease typing phonetic characters with \textsf{tipa}:
 \begin{verbatim}
-\newcommand{\myipa}[1]{{_\languageshorthands{none}_\tipaencoding#1}}
+\newcommand{\myipa}[1]{{×\languageshorthands{none}×\tipaencoding#1}}
 \end{verbatim}
 \end{example}
 
@@ -3954,7 +3928,7 @@ macros, or even your own user shorthands provided they do not overlap.)
   |\begin{document}|, you may use this macro when defining the |\title|
   in the preamble:
 \begin{verbatim}
-\title{Documento científico_\babelshorthand{"-}_técnico}
+\title{Documento científico×\babelshorthand{"-}×técnico}
 \end{verbatim}
 \end{example}
 
@@ -4031,11 +4005,11 @@ For some languages \babel\ supports these options to set |'| and |`|,
 respectively, as a shorthand in case it is not done by default.
 
 \Describe{shorthands=}{\meta{char}\meta{char}...
-$\string|$ \texttt{off}}
+\string| \texttt{off}}
 The only language shorthands activated
 are those given, like, e.g.:
 \begin{verbatim}
-\usepackage[esperanto,french,_shorthands=:;!?_]{babel}
+\usepackage[esperanto,french,×shorthands=:;!?×]{babel}
 \end{verbatim}
 If \verb|'| is included, \texttt{activeacute} is set; if \verb|`| is
 included, \texttt{activegrave} is set.  Active characters (like
@@ -4050,7 +4024,7 @@ As some languages use this mechanism for tools not available
 otherwise, a macro \verb|\babelshorthand| is defined, which allows
 using them; see above.
 
-\Describe{safe=}{\texttt{none} $\string|$ \texttt{ref} $\string|$
+\Describe{safe=}{\texttt{none} \string| \texttt{ref} \string|
 \texttt{bib}} Some \LaTeX{} macros are redefined so that using
 shorthands is safe. With \texttt{safe=bib} only |\nocite|, |\bibcite|
 and |\bibitem| are redefined. With |safe=ref| only |\newlabel|, |\ref|
@@ -4063,7 +4037,7 @@ related to these redefinitions. As of \New{3.34}, in $\varepsilon$-\TeX{}
 based engines (i.e., almost every engine except the oldest ones)
 shorthands can be used in these macros (formerly you could not).
 
-\Describe{math=}{\texttt{active} $\string|$ \texttt{normal}}
+\Describe{math=}{\texttt{active} \string| \texttt{normal}}
 Shorthands are mainly intended for text, not for math. By setting this
 option with the value |normal| they are deactivated in math mode
 (default is |active|) and things like |${a'}$| (a closing brace after
@@ -4093,8 +4067,8 @@ For example:
   % provide={ maparabic }
 \babelfont{rm}{Gautami}
 \begin{document}
-_\telugudigits{1234}_
-_\telugucounter{section}_
+×\telugudigits{1234}×
+×\telugucounter{section}×
 \end{document}
 \end{verbatim}
 
@@ -4185,7 +4159,7 @@ language, see the list below):
 \item In |\babelprovide|, as an argument to the keys |alph| and |Alph|,
 which redefine what |\alph| and |\Alph| print. For example:
 \begin{verbatim}
-\babelprovide[_alph=alphabetic_]{thai}
+\babelprovide[×alph=alphabetic×]{thai}
 \end{verbatim}
 \end{itemize}
 
@@ -4377,7 +4351,7 @@ previously loaded as a class or package option, as the following example
 illustrates:
 \begin{verbatim}
   \usepackage[hungarian]{babel}
-  \babelprovide[_transforms = digraphs.hyphen_]{hungarian}
+  \babelprovide[×transforms = digraphs.hyphen×]{hungarian}
 \end{verbatim}
 \New{3.67} Transforms predefined in the |ini| locale files can be made
 attribute-dependent, too. When an attribute between parenthesis is
@@ -4596,7 +4570,7 @@ always reset with a font selector.
 In |\babelprovide|, transform labels can be tagged before their name,
 with a list separated with colons, like:
 \begin{verbatim}
-transforms = _rm:sf:_transform.name
+transforms = ×rm:sf:×transform.name
 \end{verbatim}
 
 Tranforms are executed in the same order they are declared. \New{25.9}
@@ -4638,7 +4612,7 @@ This feature is activated with the first |\babelposthyphenation| or
 \babelprovide[hyphenrules=+]{russian-latin}   % Create locale
 \babelprehyphenation{russian-latin}{([sz])h}  % Create rule
 {
-  string = _{1|sz|šž}_,
+  string = ×{1|sz|šž}×,
   remove
 }
 \end{verbatim}
@@ -4964,8 +4938,8 @@ differ in the way `weak' numeric characters are ordered (e.g., Arabic
 
 There are some package options controlling bidi writing.
 
-\Describe{bidi=}{\texttt{default} $\string|$ \texttt{basic}
-  $\string|$ \texttt{basic-r} $\string|$ \texttt{bidi-l} $\string|$
+\Describe{bidi=}{\texttt{default} \string| \texttt{basic}
+  \string| \texttt{basic-r} \string| \texttt{bidi-l} \string|
   \texttt{bidi-r}}
 
 \New{3.14} Selects the bidi algorithm to be used.
@@ -5020,7 +4994,7 @@ See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
 \begin{verbatim}
 \documentclass[arabic]{article}
 
-\usepackage[_bidi=basic_]{babel}
+\usepackage[×bidi=basic×]{babel}
 
 \babelfont{rm}{FreeSerif}
 
@@ -5055,9 +5029,9 @@ See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
 \begin{verbatim}
 \documentclass{book}
 
-\usepackage[english, _bidi=basic_]{babel}
+\usepackage[english, ×bidi=basic×]{babel}
 
-\babelprovide[_onchar=ids fonts_]{arabic}
+\babelprovide[×onchar=ids fonts×]{arabic}
 
 \babelfont{rm}{Crimson}
 \babelfont[*arabic]{rm}{FreeSerif}
@@ -5094,16 +5068,16 @@ Arabic as @1فصحى العصر@0 \textit{fuṣḥā l-ʻaṣr} (MSA) and
   may be added.
 \end{note}
 
-\Describe{layout=}{\texttt{sectioning} $\string|$
-                   \texttt{counters}  $\string|$
-                   \texttt{lists}  $\string|$
-                   \texttt{contents}  $\string|$
-                   \texttt{footnotes}  $\string|$
-                   \texttt{captions}  $\string|$}
-\DescribeOther{ }{\phantom{layout=}\texttt{columns} $\string|$
-                  \texttt{graphics} $\string|$
-                  \texttt{extras} $\string|$
-                  \texttt{pars} $\string|$
+\Describe{layout=}{\texttt{sectioning} \string|
+                   \texttt{counters}  \string|
+                   \texttt{lists}  \string|
+                   \texttt{contents}  \string|
+                   \texttt{footnotes}  \string|
+                   \texttt{captions}  \string|}
+\DescribeOther{ }{\phantom{layout=}\texttt{columns} \string|
+                  \texttt{graphics} \string|
+                  \texttt{extras} \string|
+                  \texttt{pars} \string|
                   \texttt{nopars}}
 
 \New{3.16} \textit{To be expanded}. Selects which layout elements are
@@ -5116,8 +5090,8 @@ syntax). This list will be expanded in future releases. Note not all
 options are required by all engines.
 
 \begin{description}
-\renewcommand\makelabel[1]{%
-  \hspace\labelsep\normalfont\ttfamily\color{thered}#1}
+\EditInstance{item}{description}{%
+  label-format=\normalfont\ttfamily\color{thered}#1}
 \itemsep=-\parskip
 
 \item[sectioning] makes sure the sectioning macros are typeset in the
@@ -5147,11 +5121,12 @@ options are required by all engines.
 bidirectional (with both R and L paragraphs) documents in \luatex{}.
 
 \begin{warning}
-  As of April 2019 there is a bug with |\parshape| in \luatex{} (a
-  \TeX{} primitive) which makes lists to be horizontally misplaced if
-  they are inside a |\vbox| (like |minipage|) and the current direction
-  is different from the main one. A workaround is to restore the main
-  language before the box and then set the local one inside.
+  |\parshape| in \luatex{} (a \TeX{} primitive) may produce some
+  unexpected results with lists horizontally misplaced if they are
+  inside a |\vbox| (like |minipage|) and the current direction is
+  different from the main one. a workaround in case you encounter this
+  problem is to restore the main language before the box and then set
+  the local one inside.
 \end{warning}
 
 \item[contents] required in \xetex{} and \pdftex{}; in \luatex{}
@@ -6019,8 +5994,7 @@ LICR).
 The \m{category} is either |captions|, |date| or |extras|. You must
 stick to these three categories, even if no error is raised when using
 other names.\footnote{In future releases further categories may be
-added.\nb{like `monetary', `time', `address', `name', `case' or
-`numeric'}} It may be empty, too, but in such a case using
+added.} It may be empty, too, but in such a case using
 |\SetString| is an error.
 
 \begin{verbatim}
@@ -6255,10 +6229,10 @@ wouldn’t exist.
 % “pseudo-guards” to set “variables” used at installation time.
 % They are used with \texttt{<@name@>} at the appropriate places in the
 % source code and defined with either
-% $\langle\langle$\textit{name}=\textit{value}$\rangle\rangle$, or with
+% \tlangle\tlangle\textit{name}=\textit{value}\trangle\trangle, or with
 % a series of lines between
-% $\langle\langle$|*|\textit{name}$\rangle\rangle$ and
-% $\langle\langle$|/|\textit{name}$\rangle\rangle$. The latter is
+% \tlangle\tlangle|*|\textit{name}\trangle\trangle\ and
+% \tlangle\tlangle|/|\textit{name}\trangle\trangle. The latter is
 % cumulative (e.g., with \textit{More package options}). That brings a
 % little bit of literate programming. The guards \texttt{<-name>} and
 % \texttt{<+name>} have been redefined, too. See |babel.ins| for further
@@ -6283,8 +6257,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.11.133272>>
-%<<date=2026/08/24>>
+%<<version=26.11.133670>>
+%<<date=2026/08/28>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7531,9 +7505,7 @@ wouldn’t exist.
 % Now activate the language-specific definitions. This is done by
 % constructing the names of three macros by concatenating three
 % words with the argument of |\selectlanguage|, and calling these
-% macros. \nb{What if \cs{hyphenation} was used in |extras|? Patch
-% temporarily |\set@hyphenmins| and hyphenation. It can be done in
-% hooks if necessary.}
+% macros.
 %
 % The switching of the values of |\lefthyphenmin| and
 % |\righthyphenmin| is somewhat different. First we save their
@@ -15247,12 +15219,12 @@ wouldn’t exist.
 \catcode`\:=12
 \directlua{
   Babel.locale_props = Babel.locale_props or {}
-  
+
   function Babel.lua_error(e, a)
     tex.print([[\noexpand\csname bbl@error\endcsname{]] .. 
       e .. '}{' .. (a or '') .. '}{}{}')
   end
-  
+
   function Babel.bytes(line)
     return line:gsub("(.)",
       function (chr) return unicode.utf8.char(string.byte(chr)) end)
@@ -24190,9 +24162,9 @@ function Babel.bidi(head, ispar, hdir)
     -- three cases: glyph, dir, otherwise
     if glyph_not_symbol_font(item)
        or (item.id == 7 and item.subtype == 2) then
-      
+
       if inmath then goto nextnode end
- 
+
        if locale_d == 0x80 then goto nextnode end
       locale_d = locale_d or ((save_outer=='l') and 0 or 1)
 
@@ -24267,13 +24239,13 @@ function Babel.bidi(head, ispar, hdir)
        if inmath then goto nextnode end
        d = nil
        new_d = true
- 
+
      elseif item.id == node.id'glue' and item.subtype == 13 then
        if inmath then goto nextnode end
        glue_d = d
        glue_i = item
        d = nil
- 
+
      elseif item.id == node.id'math' then
       if item.subtype == 0 then  -- mathon
         inmath = true
