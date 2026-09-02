@@ -35,10 +35,11 @@
   language = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2026/08/28 v26.11.133670
+  [2026/09/02 v26.11.134175
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{tcolorbox}
+\usepackage{babel}
 \tcbuselibrary{breakable}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
@@ -89,12 +90,12 @@
 \newcommand*\pkg[1]{\texttt{#1}}
 \usepackage{multicol}
 \usepackage{color,colortbl}
-\usepackage[linkcolor=blue,urlcolor=blue,colorlinks=true]{hyperref}
+\usepackage[linkcolor=blue,urlcolor=blue,colorlinks=true,pdfdisplaydoctitle]{hyperref}
 \hypersetup{%
   pdfsubject={Multilingual documents and localization for pdfLaTeX /
-     LuaLaTeX / XeLaTeX.},
+     LuaLaTeX / XeLaTeX},
   pdfauthor={Javier Bezos, Johannes Braams},
-  pdftitle={Babel},
+  pdftitle={Babel, the multilingual framework to localize LaTeX, LuaLaTeX, and XeLaTeX},
   pdfkeywords={TeX, LaTeX, pdfTeX, LuaTeX, XeTeX, internationalization,
     localization}}
 \ExplSyntaxOn
@@ -344,8 +345,6 @@ language?] See section \ref{contribute} for contributing a language.
 \end{note}
 
 \section{The basic user interface}\label{U-I}
-
-→⟨⟩\string|   \textsf{→⟨⟩\string|}  abv\texttt{→⟨⟩\string|}fse
 
 There are two ways to load a language with babel, namely, the old good
 ‘classical’ one, based on mostly self-contained declarations in a file
@@ -6257,8 +6256,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.11.133670>>
-%<<date=2026/08/28>>
+%<<version=26.11.134175>>
+%<<date=2026/09/02>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
