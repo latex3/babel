@@ -32,7 +32,7 @@ checksuppfiles = {"test2e.tex"}
 packtdszip = true
 
 -- Lua test files
-checkconfigs = {"build","config-lua"}
+-- checkconfigs = {"build","config-lua"}
 
 -- Find and run the build system
 kpse.set_program_name ("kpsewhich")

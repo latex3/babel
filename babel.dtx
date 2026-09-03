@@ -35,7 +35,7 @@
   language = en-001,
 }
 \ProvidesFile{babel.dtx}%
-  [2026/09/02 v26.11.134175
+  [2026/09/03 v26.11.134271
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{tcolorbox}
@@ -6256,8 +6256,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.11.134175>>
-%<<date=2026/09/02>>
+%<<version=26.11.134271>>
+%<<date=2026/09/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10782,16 +10782,21 @@ wouldn’t exist.
   \def\bbl@tempe##1 ##2\@@{% Get first calendar
     \def\bbl@tempa{##1}}%
     \bbl@exp{\\\bbl@tempe\bbl@KVP@calendar\space\\\@@}%
-  \def\bbl@tempe##1.##2.##3\@@{%
-    \def\bbl@tempc{##1}%
-    \def\bbl@tempb{##2}}%
-  \expandafter\bbl@tempe\bbl@tempa..\@@
+  \def\bbl@tempe##1.##2.##3.##4\@@{%
+      \def\bbl@tempf{##3}% First
+      \let\bbl@tempc\@empty \let\bbl@tempb\@empty
+      \bbl@cal@getconvert\bbl@tempc{##1}%
+      \bbl@cal@getconvert\bbl@tempb{##2}}%
+  \expandafter\bbl@tempe\bbl@tempa...\@@
   \bbl@csarg\edef{calpr@\languagename}{%
     \ifx\bbl@tempc\@empty\else
       calendar=\bbl@tempc
     \fi
     \ifx\bbl@tempb\@empty\else
       ,variant=\bbl@tempb
+    \fi
+    \ifx\bbl@tempf\@empty\else
+      ,convert=\bbl@tempf
     \fi}%
   % == engine specific extensions ==
   % Defined in XXXbabel.def
@@ -11655,6 +11660,9 @@ wouldn’t exist.
 % and therefore always converted with other calendars.
 %
 %    \begin{macrocode}
+\def\bbl@cal@getconvert#1#2{% Used in provide
+  \in@{:}{#2}%
+  \ifin@\def\bbl@tempf{#2}\else\def#1{#2}\fi}
 \let\bbl@calendar\@empty
 \DeclareRobustCommand\localedate[1][]{\bbl@localedate{#1}}
 \def\bbl@localedate#1#2#3#4{%
@@ -11666,20 +11674,19 @@ wouldn’t exist.
       \bbl@ifunset{bbl@calpr@\languagename}{}{\bbl@cl{calpr}},%
       #1}%
     \bbl@exp{\lowercase{\edef\\\bbl@tempe{\bbl@tempe}}}%
-    \bbl@replace\bbl@tempe{ }{}%
-    \bbl@replace\bbl@tempe{convert}{convert=}%
     \let\bbl@ld@calendar\@empty
     \let\bbl@ld@variant\@empty
     \let\bbl@ld@convert\relax
-    \def\bbl@tempb##1=##2\@@{\@namedef{bbl@ld@##1}{##2}}%
-    \bbl@foreach\bbl@tempe{\bbl@tempb##1\@@}%
+    \let\bbl@ld@@convert\relax
+    \expandafter\bbl@forkv\expandafter{\bbl@tempe}{\bbl@csarg\edef{ld@##1}{##2}}%
     \bbl@replace\bbl@ld@calendar{gregorian}{}%
+    \ifx\bbl@ld@convert\relax
+      \let\bbl@ld@convert\bbl@ld@@convert
+    \fi
     \ifx\bbl@ld@calendar\@empty\else
       \ifx\bbl@ld@convert\relax\else
         \ifx\bbl@ld@convert\@empty
           \let\bbl@ld@convert\bbl@ld@calendar
-        \else
-          \edef\bbl@ld@convert{\expandafter\@gobble\bbl@ld@convert}%
         \fi
         \babelcalendar[\bbl@they-\bbl@them-\bbl@thed]%
           {\bbl@ld@convert}\bbl@they\bbl@them\bbl@thed
@@ -11727,7 +11734,7 @@ wouldn’t exist.
              \gdef\<\languagename date >{\\\bbl@printdate{\languagename}}}%
            \def\\\bbl@savetoday{%
              \\\SetString\\\today{%
-               \<\languagename date>[convert]%
+               \<\languagename date>[@convert]%
                   {\\\the\year}{\\\the\month}{\\\the\day}}}}%
        \fi}%
       {}}}
