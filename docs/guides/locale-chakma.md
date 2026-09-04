@@ -16,7 +16,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[chakma]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \babelfont{rm}{Noto Sans Chakma}
 

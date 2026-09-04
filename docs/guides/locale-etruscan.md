@@ -18,7 +18,7 @@ Segoe UI Historic is a Windows font.
 ```tex
 \documentclass[etruscan]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \babelfont{rm}{Segoe UI Historic}
 

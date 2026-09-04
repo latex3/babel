@@ -16,7 +16,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[oldpersian]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \babelfont{rm}{FreeSans}
 

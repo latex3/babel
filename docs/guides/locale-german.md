@@ -51,7 +51,7 @@ Here is a minimal sample file with `german` as the main language
 ```tex
 \documentclass[german]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \begin{document}
 

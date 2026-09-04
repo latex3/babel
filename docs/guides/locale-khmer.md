@@ -19,7 +19,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[khmer]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \babelfont{rm}{Noto Sans Khmer}
 

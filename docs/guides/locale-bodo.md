@@ -10,13 +10,13 @@ Bodo language using the Devanagari script.
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `bodo` as the main language
-(assuming `luatex`, which is the recommended engine, and `babel` ≥24.14,
+(assuming `luatex`, which is the recommended engine, and `babel` ≥25.14,
 although it may work with previous versions).
 
 ```tex
 \documentclass[bodo]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \babelfont{rm}{Shobhika}
 

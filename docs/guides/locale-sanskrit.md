@@ -15,7 +15,7 @@ For `pdflatex`, have also a look at the
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `sanskrit` as the main language
-(assuming `luatex`, which is the recommended engine, and `babel` ≥24.14,
+(assuming `luatex`, which is the recommended engine, and `babel` ≥25.14,
 although it may work with previous versions). 
 
 With TeXLive versions prior to 2026 you may need to add `provide=*` as

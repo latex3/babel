@@ -18,7 +18,7 @@ Gadugi is a Windows font.
 ```tex
 \documentclass[osage]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \babelfont{rm}{Gadugi}
 

@@ -16,7 +16,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[venetian]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \begin{document}
 

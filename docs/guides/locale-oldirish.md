@@ -16,7 +16,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[oldirish]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \babelfont{rm}{Clara}
 

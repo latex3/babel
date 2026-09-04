@@ -13,13 +13,13 @@ You may also want to see [luatexko](https://ctan.org/pkg/luatexko).
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `korean` as the main language
-(assuming `luatex`, which is the recommended engine, and `babel` ≥24.14,
+(assuming `luatex`, which is the recommended engine, and `babel` ≥25.14,
 although it may work with previous versions).
 
 ```tex
 \documentclass[korean]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \babelfont{rm}{Un Batang}
 

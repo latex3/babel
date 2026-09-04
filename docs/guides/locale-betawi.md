@@ -16,7 +16,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[betawi]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \begin{document}
 

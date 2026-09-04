@@ -17,7 +17,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[kannada]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \babelfont{rm}{Noto Serif Kannada}
 

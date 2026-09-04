@@ -15,13 +15,13 @@ based on a `ldf` file.See [babel-finnish](https://ctan.org/pkg/babel-finnish) fo
 ## Support with `ini` locale file
 
 Here is a minimal sample file with `finnish` as the main language
-(assuming `luatex`, which is the recommended engine, and `babel` ≥24.14,
+(assuming `luatex`, which is the recommended engine, and `babel` ≥25.14,
 although it may work with previous versions).
 
 ```tex
 \documentclass[finnish]{article}
 
-\usepackage[provide=*]{babel}
+\usepackage{babel}
 
 \begin{document}
 
