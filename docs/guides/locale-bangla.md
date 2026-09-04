@@ -12,7 +12,7 @@ is recommended. Here is a minimal example:
 ```tex
 \documentclass{article}
 
-\usepackage[bangla, provide=*]{babel}
+\usepackage[bangla]{babel}
 \babelfont{rm}{FreeSerif}
 
 \begin{document}
@@ -43,7 +43,7 @@ Bangla numerals, passed as option to `\babelprovide`:
 
 To perform this conversión, use the following preamble:
 ```tex
-\usepackage[bangla, provide=*]{babel}
+\usepackage[bangla]{babel}
 \babelprovide[mapdigits]{bangla}  % or alternatively maparabic
 \babelfont{rm}{FreeSerif}
 ```

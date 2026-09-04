@@ -15,7 +15,7 @@ recommended engine (although it also works in `xelatex`).
 ```tex
 \documentclass{article}
 
-\usepackage[hindi, provide=*]{babel}
+\usepackage[hindi]{babel}
 \babelfont{rm}{Mukta}
 
 \begin{document}
@@ -50,7 +50,7 @@ Hindi numerals, passed as option to `\babelprovide`:
   
 To perform this conversión, use the following preamble:
 ```tex
-\usepackage[hindi, provide=*]{babel}
+\usepackage[hindi]{babel}
 \babelprovide[mapdigits]{hindi}  % or alternatively maparabic
 \babelfont{rm}{FreeSerif}
 ```

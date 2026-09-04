@@ -19,7 +19,7 @@ Here is a short example:
 ```tex
 \documentclass{book}
 
-\usepackage[chinese, provide=*]{babel}
+\usepackage[chinese]{babel}
 
 \babelfont{rm}{FandolSong}
 
@@ -80,7 +80,7 @@ Chinese numerals, passed as option to `\babelprovide`:
 
 To perform this conversión, use the following settings:
 ```tex
-\usepackage[chinese, provide=*]{babel}
+\usepackage[chinese]{babel}
 \babelprovide[mapdigits]{chinese}  % or alternatively maparabic
 ```
 

@@ -18,7 +18,7 @@ Segoe UI Historic is a Windows font.
 ```tex
 \documentclass[lydian]{article}
 
-\usepackage[provide=*,bidi=basic]{babel}
+\usepackage[bidi=basic]{babel}
 
 \babelfont{rm}{Segoe UI Historic}
 

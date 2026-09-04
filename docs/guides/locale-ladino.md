@@ -16,7 +16,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[ladino]{article}
 
-\usepackage[provide=*,bidi=basic]{babel}
+\usepackage[bidi=basic]{babel}
 
 \babelfont{rm}{NewComputerModern10}
 

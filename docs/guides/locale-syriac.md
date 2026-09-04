@@ -22,7 +22,7 @@ There is an example in the repository:
 ```tex
 \documentclass[syriac]{article}
 
-\usepackage[provide=*,bidi=basic]{babel}
+\usepackage[bidi=basic]{babel}
 
 \babelfont{rm}{Segoe UI Historic}
 

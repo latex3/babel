@@ -16,7 +16,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[avestan]{article}
 
-\usepackage[provide=*,bidi=basic]{babel}
+\usepackage[bidi=basic]{babel}
 
 \babelfont{rm}{Noto Sans Avestan}
 

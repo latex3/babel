@@ -16,7 +16,7 @@ although it may work with previous versions).
 ```tex
 \documentclass[yiddish]{article}
 
-\usepackage[provide=*,bidi=basic]{babel}
+\usepackage[bidi=basic]{babel}
 
 \babelfont{rm}{NewComputerModern10}
 

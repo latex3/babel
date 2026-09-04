@@ -20,7 +20,7 @@ the source code):
 ```tex
 \documentclass{article}
 
-\usepackage[arabic, provide=*, bidi=basic, layout=counters tabular]{babel}
+\usepackage[arabic, bidi=basic, layout=counters tabular]{babel}
 \babelfont{rm}{FreeSerif}
 
 \begin{document}
