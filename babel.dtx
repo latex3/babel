@@ -11683,11 +11683,13 @@ wouldn’t exist.
     \ifx\bbl@ld@convert\relax
       \let\bbl@ld@convert\bbl@ld@@convert
     \fi
-    \ifx\bbl@ld@calendar\@empty\else
+    \ifx\bbl@ld@convert\@empty
+      \ifx\bbl@ld@calendar\@empty
+        \let\bbl@ld@convert\relax
+      \else
+        \let\bbl@ld@convert\bbl@ld@calendar
+      \fi
       \ifx\bbl@ld@convert\relax\else
-        \ifx\bbl@ld@convert\@empty
-          \let\bbl@ld@convert\bbl@ld@calendar
-        \fi
         \babelcalendar[\bbl@they-\bbl@them-\bbl@thed]%
           {\bbl@ld@convert}\bbl@they\bbl@them\bbl@thed
       \fi
