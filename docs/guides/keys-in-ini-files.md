@@ -6,15 +6,15 @@ Many keys are related to the CLDR (Common Language Data Repository).
 Others are just the TeX primitives with the same name.
 
 Keys may be further qualified in a particular language with a suffix
-starting with a uppercase letter. It can be just a letter (eg,
-`babel.name.A`, `babel.name.B`) or a name. *Multi-letter* qualifiers
-starting with an uppercase letter are forward compatible in the sense
-they won’t conflict with new “global” keys (which start always with a
-lowercase case). There is an exception, however: the section `counters`
-has been devised to have arbitrary keys, so you can add lowercased keys
-if you want. Note the fact a qualifier starts with a uppercase letter
-doesn’t mean it must be preserved in the user interface (date and
-casing variants are examples).
+starting with a uppercase letter. It can be just a letter or a name.
+*Multi-letter* qualifiers starting with an uppercase letter are forward
+compatible in the sense they won’t conflict with new “global” keys
+(which start always with a lowercase case). There is an exception,
+however: the section `counters` has been devised to have arbitrary
+keys, so you can add lowercased keys if you want. Note the fact a
+qualifier starts with a uppercase letter doesn’t mean it must be
+preserved in the user interface (date and casing variants are
+examples).
 
 Values may contain `;` and `#`. `ini` files only considers comments
 lines starting with `;`, at the beginning. So, `ini` parser must be
@@ -28,8 +28,8 @@ Most of them are self explanatory.
 
 **version** of the `ini` file
 
-**tag.bcp47** May includes if appropriate language, script and region.
-  Usually only the language.   
+**tag.bcp47** May includes if appropriate language, script, region, and
+  variant. Usually only the language, as recommended by the CLDR.   
 
 **language.tag.bcp47** The language part.
 
@@ -40,11 +40,15 @@ Most of them are self explanatory.
  It can be useful when exporting data to tools expecting a full BCP 47
  tag.
 
-**tag.opentype**  If different from the BCP 47 tag.
+**tag.opentype**  Which can be different from the BCP 47 tag.
 
-**script.name**, like, for example, Cyrillic.
+**script.name**, like, for example, `Cyrillic`.
 
-**script.tag.opentype** If different from the BCP 47 tag.
+**script.tag.opentype** Which can be different from the BCP 47 tag.
+
+**name.babel** A space-separated list with the names recognized by
+`babel`. The first one sould be the preferred one. For example, with
+Odia it takes the value `odia oriya`.
 
 **level** `ini` files are based on a set of keys. The level is much a
   ‘version’ of the list of available keys. Currently is 1, and it will
@@ -118,10 +122,10 @@ calendar, such as in English for days of the week:
 
 **hyphenate.other.script** (Tentative syntax.) Same, based on the
   script.
-  
+
 **linebreaking** The line breaking mode, with a letter: h(yphenated, by
   default), c(jk), s(outheast Asian), u(nhyphenated).
-  
+
 ### `labels`
 
 Under development:

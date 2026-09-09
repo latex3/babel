@@ -90,7 +90,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
-| [26.12](news/whats-new-in-babel-26.12.html) | (dev) | Pinyin. `\today`. |
+| [26.12](news/whats-new-in-babel-26.12.html) | 2026-09-09 | Pinyin. `\today`. |
 | [26.11](news/whats-new-in-babel-26.11.html) | 2026-08-21 | New Chinese counters. Indian calendar. |
 | [26.10](news/whats-new-in-babel-26.10.html) | 2026-08-08 | Changes for `tabular` + bidi. |
 | [26.9](news/whats-new-in-babel-26.9.html) | 2026-06-14 | Support for `other-languages` metadata. |
