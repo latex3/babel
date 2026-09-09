@@ -30,17 +30,14 @@
 %
 % \iffalse
 %<*filedriver>
-\DocumentMetadata{
-  tagging = on,
-  language = en-001,
-}
+\ifx\babelcode\relax\else
+  \DocumentMetadata{ tagging = on, language = en-GB }
+\fi
 \ProvidesFile{babel.dtx}%
-  [2026/09/03 v26.11.134271
+  [2026/09/09 v26.12
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
-\usepackage{tcolorbox}
 \usepackage{babel}
-\tcbuselibrary{breakable}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
 \setmainfont[
@@ -89,8 +86,10 @@
 \newcommand*\cls[1]{\texttt{#1}}
 \newcommand*\pkg[1]{\texttt{#1}}
 \usepackage{multicol}
-\usepackage{color,colortbl}
 \usepackage[linkcolor=blue,urlcolor=blue,colorlinks=true,pdfdisplaydoctitle]{hyperref}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\usepackage{colortbl}
 \hypersetup{%
   pdfsubject={Multilingual documents and localization for pdfLaTeX /
      LuaLaTeX / XeLaTeX},
@@ -580,15 +579,14 @@ directly a language style}
   some cases by |\Make<Xxxxx>case|.
 \end{note}
 
-%%
-% \end{document}
-
 \subsection{Monolingual documents: the ‘modern’ way}
 
 \begin{warning}
   \New{25.14} Languages not supported with the \texttt{ldf} mechanism
   are new loaded without \texttt{provide=*}. This manual has not been
-  fully updated yet.
+  fully updated yet. There is also a new value: \texttt{provide=!},
+  which forces the \textsf{ldf} file (for example, for local styles in
+  a publishing house or if a new style is being developed).
 \end{warning}
 
 When, for whatever reason, the ‘classical’ way with the |ldf| is not
@@ -1217,6 +1215,7 @@ language from \texttt{greek}.}
 \subtag{chinese-traditional-hongkongsarchina}{}{zh-Hant-HK}
 \subtag{chinese-hant-mo}{}{zh-Hant-MO}
 \subtag{chinese-traditional-macausarchina}{}{zh-Hant-MO}
+\subtag{chinese-pinyin}{}{zh-Latn-pinyin}
 \ltag{churchslavic}{\hascapu}{cu}
 \subtag{churchslavic-cyrs}{\hascapu}{cu-Cyrs}
 \subtag{churchslavic-glag}{}{cu-Glag}
@@ -4261,7 +4260,7 @@ the day for those in the corresponding calendar. They are \textit{not}
 the Gregorian date to be converted (which means, say, 13 is a valid
 month number with |calendar=hebrew| and |calendar=coptic|). However,
 with the option |convert| it’s converted (using internally the
-following command)
+command described next).
 
 Even with a certain calendar there may be variants. In Kurdish the
 default variant prints something like \textit{30. Çileya Pêşîn 2019},
@@ -4276,7 +4275,9 @@ The default calendar for a language can be set in |\babelprovide|, with
 the key |calendar| (an empty value is the same as |gregorian|). In this
 case, |\today| always converts the date. Variants are preceded by a
 dot, so that |calendar = .genitive| in |serbian| |\today| selects the
-date in this variant (more explicitly is |gregorian.genitive|).
+date in this variant (more explicitly is |gregorian.genitive|). As a
+last element, separated with a dot if there is a calendar or a variant,
+you can request a conversion with \textsc{calendrica}.
 
 \begin{example}
   By default, |thai| prints the date with |\today| in the Buddhist
@@ -4294,7 +4295,18 @@ so no conversion is necessary.)
   |islamic-umalqura|), so to set |islamic-civil| as the
   default one:
 \begin{verbatim}
-  \babelprovide[import, calendar=islamic-civil]{arabic}
+  \babelprovide[import, ×calendar=islamic-civil×]{arabic}
+\end{verbatim}
+\end{example}
+
+\begin{example}
+  The traditional \texttt{hindu-solar} calendar with \texttt{indian} strings,
+  set for \texttt{kannada} as a package option:
+\begin{verbatim}
+  \usepackage[
+    kannada,
+    provide={ ×calendar=indian.calendrica:hindu-solar× }]
+  {babel}
 \end{verbatim}
 \end{example}
 
@@ -4376,27 +4388,31 @@ some fine-tuning. More to follow in future releases.)
   \parbox[t]{6.6cm}{\strut#3}\par}
 \bigskip\hrule\nobreak\vspace{.5mm}\parindent0pt
 
-\trans{}{digits.native}{\New{24.9} An alternative to |mapdigits|,
+\trans{}{digits.native}{An alternative to |mapdigits|,
 available in the same locales. This transform is applied before the
 first prehyphenation, while |mapdigits| is applied after the last
 posthyphenation. Another difference is |mapdigits| cannot be disabled
 in the middle of a paragraph. (This transform is \textit{not} declared
 explicitly in |ini| files. Instead, it’s defined by |babel| if the key
-\texttt{numbers/digits.native} exists.)}
+\texttt{numbers/digits.native} exists.) \New{24.9}}
 
 \trans{Arabic}{transliteration.dad}{Applies the transliteration system
 devised by Yannis Haralambous for \textsf{dad} (simple and
 \TeX-friendly). Not yet complete, but sufficient for most texts.}
 
-\trans{Arabic, Persian}{kashida.base}{\New{3.94}. Much like the
+\trans{Arabic, Persian}{kashida.base}{Much like the
 following, but with diacritics stacked in the actual base character and
 not the kashida extension. With evenly inserted tatweels results are
-better.}
+better. \New{3.94}}
 
 \trans{Arabic, Persian}{kashida.plain}{A very simple and basic
 transform for ‘plain’ Arabic fonts, which attempts to distribute the
 tatweel as evenly as possible (starting at the end of the line). See
 the news for version 3.59.}
+
+\trans{Chinese}{tone.numeric}{With \texttt{chinese-pinyin}, numeric
+tone marks are converted to diacritics. For example, \texttt{he2ping2}
+outputs \textit{hépíng}. Valid marks are assumed. \New{26.12}}
 
 \trans{Chinese, Japanese}{input.nospaces}{With it, and just for
 convenience, spaces (and new lines) in the input are ignored.}
@@ -5121,9 +5137,9 @@ bidirectional (with both R and L paragraphs) documents in \luatex{}.
 
 \begin{warning}
   |\parshape| in \luatex{} (a \TeX{} primitive) may produce some
-  unexpected results with lists horizontally misplaced if they are
+  unexpected results, with lists horizontally misplaced if they are
   inside a |\vbox| (like |minipage|) and the current direction is
-  different from the main one. a workaround in case you encounter this
+  different from the main one. A workaround in case you encounter this
   problem is to restore the main language before the box and then set
   the local one inside.
 \end{warning}
@@ -6256,8 +6272,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.11.134271>>
-%<<date=2026/09/03>>
+%<<version=26.12>>
+%<<date=2026/09/09>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11689,10 +11705,10 @@ wouldn’t exist.
       \else
         \let\bbl@ld@convert\bbl@ld@calendar
       \fi
-      \ifx\bbl@ld@convert\relax\else
-        \babelcalendar[\bbl@they-\bbl@them-\bbl@thed]%
-          {\bbl@ld@convert}\bbl@they\bbl@them\bbl@thed
-      \fi
+    \fi
+    \ifx\bbl@ld@convert\relax\else
+      \babelcalendar[\bbl@they-\bbl@them-\bbl@thed]%
+        {\bbl@ld@convert}\bbl@they\bbl@them\bbl@thed
     \fi
     \@nameuse{bbl@precalendar}% Remove, e.g., +, -civil (-ca-islamic)
     \edef\bbl@calendar{% Used in \month..., too
@@ -12233,7 +12249,7 @@ wouldn’t exist.
   \ifbbl@bcpallowed
     \expandafter\ifx\csname date\languagename\endcsname\relax
       \expandafter
-      \bbl@bcplookup{\languagename}%-\@empty-\@empty-\@empty\@@
+      \bbl@bcplookup{\languagename}%
       \ifx\bbl@bcp\relax\else  % Returned by \bbl@bcplookup
         \edef\languagename{\bbl@bcp@prefix\bbl@bcp}%
         \let\localename\languagename
@@ -13439,7 +13455,7 @@ wouldn’t exist.
     \ifx\bbl@metalang\@empty\else
       \begingroup
         \expandafter
-        \bbl@bcplookup{\bbl@metalang}%-\@empty-\@empty-\@empty\@@
+        \bbl@bcplookup{\bbl@metalang}%
         \ifx\bbl@bcp\relax
           \ifx\bbl@opt@main\@nnil
             \bbl@error{no-locale-for-meta}{\bbl@metalang}{}{}%
@@ -13459,7 +13475,7 @@ wouldn’t exist.
   \ifx\bbl@metalang\@empty\else
     \begingroup
       \expandafter
-      \bbl@bcplookup{\bbl@metalang}%-\@empty-\@empty-\@empty\@@
+      \bbl@bcplookup{\bbl@metalang}%
       \ifx\bbl@bcp\relax
         \ifx\bbl@opt@main\@nnil
           \bbl@error{no-locale-for-meta}{\bbl@metalang}{}{}%
@@ -24925,7 +24941,21 @@ Babel.cjk_breaks = {
 \def\bbl@inidata@nil{%
   \bbl@elt{identification}{tag.ini}{und}%
   \bbl@elt{identification}{load.level}{0}%
-  \bbl@elt{identification}{name.english}{nil}}
+  \bbl@elt{identification}{charset}{utf8}%
+  \bbl@elt{identification}{version}{1.0}%
+  \bbl@elt{identification}{date}{2022-05-16}%
+  \bbl@elt{identification}{name.local}{nil}%
+  \bbl@elt{identification}{name.english}{nil}%
+  \bbl@elt{identification}{name.babel}{nil}%
+  \bbl@elt{identification}{tag.bcp47}{und}%
+  \bbl@elt{identification}{language.tag.bcp47}{und}%
+  \bbl@elt{identification}{tag.opentype}{dflt}%
+  \bbl@elt{identification}{script.name}{Latin}%
+  \bbl@elt{identification}{script.tag.bcp47}{Latn}%
+  \bbl@elt{identification}{script.tag.opentype}{DFLT}%
+  \bbl@elt{identification}{level}{1}%
+  \bbl@elt{identification}{encodings}{}%
+  \bbl@elt{identification}{derivate}{no}}
 \@namedef{bbl@tbcp@nil}{und}
 \@namedef{bbl@lbcp@nil}{und}
 \@namedef{bbl@casing@nil}{und}

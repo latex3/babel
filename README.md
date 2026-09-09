@@ -1,6 +1,6 @@
-## Babel 26.11.134271
+## Babel 26.12
 
-(dev)
+2026-09-09
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The **latest stable** version is available on <https://ctan.org/pkg/babel>.
 
-**Changes** in version 26.11 are described in:
+**Changes** in version 26.12 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-26.11.html
+https://latex3.github.io/babel/news/whats-new-in-babel-26.12.html
 
 Apart from the manual, you can find **information and examples** in:
 
@@ -59,23 +59,16 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 26.12 (dev)
+#### 26.12 (2026-09-09)
 
-* amsmath + bidi: fix \text in \[...\].
+* New locale: chinese-pinyin (with transform `tone.numeric` for luatex).
+* `calendrica` can be used to set the default `\today` format.
+* Fix: wrong direction with `\text` in `\[`...`\]`.
 
-#### 26.11 2026-08-21
+#### 26.11 (2026-08-21)
 
 * Chinese: new counters `formal` and `informal`.
 * New calendar `indian` for 15 Indic locales (Hindi, Marathi, Malayalam, Gujarati, Kannada, Tamil...).
-
-#### 26.10 2026-08-08
-
-* Breaking change (bidi texts): Now the option layout=tabular has been made the
-  default.
-* New locale: persian-latin, thanks to @RamtinMoslemi.
-* Fix: Variant was ignored with BCP 47 tags (the current code is
-  somewhat tentative).
-* Support for the new lua-calendrica package.
 
 ### Previous changes
 
