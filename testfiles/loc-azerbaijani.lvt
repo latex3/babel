@@ -1,0 +1,154 @@
+%$PDFLaTeX  -*- coding: utf-8 ; mode: latex; TeX-engine: default; -*-
+\input{test2e}\input{test2eb}
+\documentclass{article}
+\START
+\FORMAT{}
+\CLASS{article}
+\PACKAGE[azerbaijani-latin,azerbaijani-latn,azerbaijani,azerbaijani-cyrillic,azerbaijani-cyrl]{babel}
+\OMIT
+
+\usepackage[azerbaijani-latin,azerbaijani-latn,azerbaijani,azerbaijani-cyrillic,azerbaijani-cyrl]{babel}
+
+\begin{document}
+\TIMO
+
+% Clean architecture: 'azerbaijani' (locale/az/babel-azerbaijani.tex) is
+% the only real Latin Azerbaijani implementation, loading canonical
+% locale/az/babel-az.ini -- there is no babel-az-Latn.ini and no
+% babel-az-Latn.tex. 'azerbaijani-latin'/'azerbaijani-latn' are
+% historical option-name spellings preserved centrally, as thin
+% compatibility proxies under babel's own existing locale/invalid/
+% convention (the same one used for e.g. 'germanb'/'serbianc'), not as
+% independent locale data living alongside the real az implementation.
+% If a future contributor reintroduces divergent Latin data under any
+% of these option names, the corresponding block below would print
+% DIFFERENT caption text and this test's golden log would need
+% conflicting values for what this comment asserts must be identical
+% -- making such a regression visible in review/diff, not silent.
+%
+% \Show (test2eb.tex) uses \meaning, which never triggers babel's lazy
+% \bbl@ensure@... loading, so it cannot tell a real caption from a
+% \bbl@nocaption fallback (see the loc-azerbaijani test history);
+% \typeout fully expands its argument instead, forcing the loading.
+% ref/bib are used because their LICR form needs only standard LaTeX
+% accent primitives (\., no \textschwa), so they typeset cleanly under
+% pdfTeX without pulling in the separate, already-known LICR schwa
+% problem (not fixed by this test).
+\selectlanguage{azerbaijani-latin}
+\typeout{refname(azerbaijani-latin)=[\refname]}
+\typeout{bibname(azerbaijani-latin)=[\bibname]}
+
+\selectlanguage{azerbaijani-latn}
+\typeout{refname(azerbaijani-latn)=[\refname]}
+\typeout{bibname(azerbaijani-latn)=[\bibname]}
+
+\selectlanguage{azerbaijani}
+\typeout{refname(azerbaijani)=[\refname]}
+\typeout{bibname(azerbaijani)=[\bibname]}
+
+% Explicit BCP-47 az-Latn is intentionally NOT tested here: there is no
+% babel-az-Latn.ini/.tex anywhere (no independent Latin locale data),
+% and babel's runtime \bbl@bcplookup cascade (which falls back from
+% az-Latn to az when no az-Latn ini exists) only activates under
+% \babeladjust{autoload.bcp47=on} -- a document-level opt-in. Testing
+% the literal 'az-Latn' tag here would also be unreliable in any
+% environment that happens to have an older/different babel installed
+% system-wide with its own stale babel-az-Latn.ini (kpathsea would
+% find that instead, independent of anything in this repository) --
+% this was confirmed during development. That fallback mechanism was
+% instead verified directly against an isolated, controlled TEXMFHOME
+% (see the PR notes): a BCP-47 tag guaranteed to exist nowhere on the
+% test machine correctly resolved to real az.ini data via
+% \selectlanguage plus autoload.bcp47=on.
+
+% Symmetry with the Latin side: locale/az/babel-azerbaijani-cyrillic.tex
+% is the canonical az-Cyrl loader; azerbaijani-cyrl is the historical
+% short spelling, preserved as a locale/invalid/ compatibility proxy
+% exactly like azerbaijani-latin/azerbaijani-latn are for az (moved
+% there because it was found to be only ever an alternate spelling of
+% azerbaijani-cyrillic, never an independent implementation -- git
+% history shows it once used \input delegation to that very file).
+% Both must resolve to the SAME az-Cyrl script data, and neither must
+% affect the Latin checks above/below (language=az, script=Latn there;
+% language=az, script=Cyrl here -- same BCP-47 language, different
+% script, exactly as intended by the az/az-Cyrl split).
+\ExplSyntaxOn
+\selectlanguage{azerbaijani-cyrillic}
+\edef\azcyrscript{\BCPdata{script}}
+\ExplSyntaxOff
+\Show\azcyrscript
+
+\ExplSyntaxOn
+\selectlanguage{azerbaijani-cyrl}
+\edef\azcyrlscript{\BCPdata{script}}
+\ExplSyntaxOff
+\Show\azcyrlscript
+
+% Back to Latin for the remaining checks below.
+\selectlanguage{azerbaijani}
+
+% Hyphenation minimums: explicit 2/2, matching the legacy
+% babel-azerbaijani (Namig Guliyev) implementation. Shared by all
+% aliases since they all load the same ini.
+\ShowThe\lefthyphenmin
+\ShowThe\righthyphenmin
+
+% The active locale must resolve to the 'az' BCP47 language tag
+% regardless of which alias was used to load it.
+\ExplSyntaxOn
+\edef\azlanguagetag{\BCPdata{language}}
+\ExplSyntaxOff
+\Show\azlanguagetag
+
+% Dotted/dotless-I casing (Unicode SpecialCasing tr/az rules): the
+% four Azerbaijani-specific mappings that differ from default ASCII
+% casing (i<->I would map to I/i by default; az/tr instead need
+% i<->İ and ı<->I). Provided entirely by the LaTeX kernel's expandable
+% text-case engine (l3kernel's __text_change_case_{lower,upper}_az:nnnnn,
+% aliased to the Turkish rules) once the 'az' language tag is known;
+% no babel-side casing code is required or possible, and it does not
+% depend on which of the aliases above was used to select the
+% language. \text_{upper,lower}case:nn is used directly (rather than
+% \MakeUppercase/\MakeLowercase) because the latter are \protected and
+% therefore resist \edef-based capture for this log-based comparison.
+\ExplSyntaxOn
+\edef\azUCi{\text_uppercase:nn{az}{i}}
+\edef\azLCIdot{\text_lowercase:nn{az}{İ}}
+\edef\azUCidotless{\text_uppercase:nn{az}{ı}}
+% A trailing space is added after the bare "I" here (rather than
+% testing "I" alone) because l3kernel's shared tr/az lowercasing
+% routine performs a lookahead to decide I -> i (before a combining
+% dot above) vs I -> ı (otherwise), and that lookahead is not
+% end-of-input-safe: \text_lowercase:nn{az}{I} with nothing following
+% the I at all raises "Improper alphabetic constant" (this reproduces
+% identically for \text_lowercase:nn{tr}{I}, so it is a pre-existing
+% l3kernel defect shared by Turkish, not specific to Azerbaijani, and
+% out of scope for babel to fix here). Any trailing token sidesteps
+% it, and \azLCI is compared against "ı " below, not "ı".
+\edef\azLCI{\text_lowercase:nn{az}{I~}}
+\ExplSyntaxOff
+\Show\azUCi
+\Show\azLCIdot
+\Show\azUCidotless
+\Show\azLCI
+
+% pdfTeX Ə/ə compatibility infrastructure (duplicated identically in
+% locale/az/babel-azerbaijani.tex and in the two locale/invalid/
+% compatibility proxies, not in this ini): \Azerbaijanischwa/
+% \azerbaijanischwa must be defined once any Latin Azerbaijani alias
+% has loaded (this is what earlier failed with "Undefined control
+% sequence" for \textschwa/\textSchwa, and later with an infinite loop
+% from a naive fix -- see the PR history). This document loads no Cyrillic
+% encoding, so babel must also raise its own clear, actionable
+% \PackageError (visible above, right after \begin{document}) instead
+% of silently breaking -- that error is expected, deterministic
+% output of this test, not a failure. Actual T2A/T2B/T2C/X2 glyph
+% rendering is not exercised here: it depends on Cyrillic encoding
+% files not reliably present in a generic l3build/TeX Live
+% environment, and is instead verified by manual/runtime testing (see
+% the PR notes).
+\typeout{azerbaijanischwa-defined=[\ifx\azerbaijanischwa\undefined no\else yes\fi]}
+\typeout{Azerbaijanischwa-defined=[\ifx\Azerbaijanischwa\undefined no\else yes\fi]}
+
+\OMIT
+\end{document}

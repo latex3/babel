@@ -1,0 +1,23 @@
+This is a generated file for the LaTeX2e validation system.
+Don't change this file in any respect.
+Format: 
+Main Class: article
+Package: babel
+    Options: azerbaijani-latin,azerbaijani-latn,azerbaijani,azerbaijani-cyrillic,azerbaijani-cyrl
+refname(azerbaijani-latin)=[\bbl@ensure@azerbaijani@@latin {\.Istinadlar}]
+bibname(azerbaijani-latin)=[\bbl@ensure@azerbaijani@@latin {Biblioqrafiya}]
+refname(azerbaijani-latn)=[\bbl@ensure@azerbaijani@@latn {\.Istinadlar}]
+bibname(azerbaijani-latn)=[\bbl@ensure@azerbaijani@@latn {Biblioqrafiya}]
+refname(azerbaijani)=[\bbl@ensure@azerbaijani {\.Istinadlar}]
+bibname(azerbaijani)=[\bbl@ensure@azerbaijani {Biblioqrafiya}]
+\azcyrscript = macro:->Cyrl
+\azcyrlscript = macro:->Cyrl
+\lefthyphenmin = 2
+\righthyphenmin = 2
+\azlanguagetag = macro:->az
+\azUCi = macro:->^^c4^^b0
+\azLCIdot = macro:->i
+\azUCidotless = macro:->I
+\azLCI = macro:->^^c4^^b1 
+azerbaijanischwa-defined=[yes]
+Azerbaijanischwa-defined=[yes]
