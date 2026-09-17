@@ -78,6 +78,27 @@ assign them with:
 \babelcharproperty{`॥}{locale}{hindi}
 ```
 
+## Calendar
+
+The Indian National Calendar, named `indian`, is supported (`luatex` and
+`xetex`). Here is an example setting `indian` as the default
+calendar for `\today`.
+```tex
+\documentclass{article}
+
+% Set a fixed day for this example
+\year=2026 \month=8 \day=15
+
+\usepackage[hindi, provide={calendar=indian}]{babel}
+\babelfont{rm}{Mukta}
+
+\begin{document}
+
+\today
+
+\end{document}
+```
+
 ## Transliterations
 
 _Only luatex_. There are transforms for the Harvard-Kyoto

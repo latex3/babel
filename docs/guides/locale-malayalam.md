@@ -36,6 +36,27 @@ Digits $=$ \localenumeral{digits}{0123456789}
 
 ![](../media/locale-malayalam.png)
 
+## Calendar
+
+The Indian National Calendar, named `indian`, is supported (`luatex` and
+`xetex`). Here is an example setting `indian` as the default
+calendar for `\today`.
+```tex
+\documentclass{article}
+
+% Set a fixed day for this example
+\year=2026 \month=8 \day=15
+
+\usepackage[malayalam, provide={calendar=indian}]{babel}
+\babelfont{rm}{FreeSerif}
+
+\begin{document}
+
+\today
+
+\end{document}
+```
+
 ## Contribute
 
 If you are a native speaker or have expertise in this language, you can

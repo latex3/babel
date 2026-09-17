@@ -16,8 +16,8 @@ qualifier starts with a uppercase letter doesn’t mean it must be
 preserved in the user interface (date and casing variants are
 examples).
 
-Values may contain `;` and `#`. `ini` files only considers comments
-lines starting with `;`, at the beginning. So, `ini` parser must be
+Values may contain `;` and `#`. `ini` files only consider comments
+lines starting with `;`, at the beginning. So, `ini` parsers must be
 configured accordingly.
 
 ### `identification`
@@ -69,7 +69,21 @@ The default section defines the Unicode strings.
 The `.licr` subsections are used in 8-bit engines, in pure ASCII using
 the LICR.
 
-The final `name` is added by `babel`. 
+The trailing `name` is added by `babel` (i.e., `chapter` for
+`\chaptername`).
+
+For non-standard caption formats, see
+[What's new in babel
+3.48](https://latex3.github.io/babel/news/whats-new-in-babel-3.48.html).
+An example with this extended syntax is `babel-hu.ini`, with (among
+others):
+```ini
+figure.template = [figure].[ ][[figure]]
+figure = \'abra
+```
+Here `[figure]` is the caption number, `[ ]` is a non-breaking space, and
+`[[figure]]` is the name as defined with `figure = \'abra`.
+
 
 ### `date`
 
@@ -114,7 +128,9 @@ calendar, such as in English for days of the week:
 
 **postexhyphenchar** Not yet used (`luatex`)
 
-**hyphenationmin**  Not yet used (`luatex`), but it will be soon.
+**hyphenationmin**  Not yet used (`luatex`), and it’s doubtful that it
+  will be used. See
+  [](https://latex3.github.io/babel/news/whats-new-in-babel-24.10.html).
 
 **hyphenate.other.locale** (Tentative syntax.) A few hyphenation
   patterns require setting some chars to `other`. This one is based on
@@ -138,6 +154,9 @@ See the CLDR. For example [Exemplar
 Characters](https://cldr.unicode.org/translation/core-data/exemplars#exemplar-characters),
 can help to recognize a language. This list and the punctuation list
 are currently not used by `babel`.
+
+For casing rules, see [What's new in babel
+3.98](https://latex3.github.io/babel/news/whats-new-in-babel-3.98.html).
 
 ### `numbers`
 
