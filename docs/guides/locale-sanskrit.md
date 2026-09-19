@@ -99,6 +99,18 @@ to get the actual Devanagari characters (order is relevant!):
 (Since `|` has a special meaning in transforms, it’s entered by its
 Unicode value.)
 
+## Hyphenation
+
+By default, `babel` follows the traditional practice of omitting line-end
+hyphens (a convention rooted in Western typography). However, hyphens are
+occasionally added to improve readability. You can enable this behavior
+with something like:
+```tex
+\babelprovide[
+  typography/prehyphenchar = `-
+]{sanskrit}
+```
+
 ## Contribute
 
 If you are a native speaker or have expertise in this language, you can

@@ -2,6 +2,13 @@
 
 (*Under development.*)
 
+`ini` files are organized in directories with the language tag. There
+are a couple of additional directories: `shared`, for files shared by
+several languages (e.g., transliterations for the Devanagari script),
+and `invalid`, for `babel-*.tex` files with discouraged or deprecated
+names (see the naming rules in [Locale
+naming](https://latex3.github.io/babel/guides/locale-naming.html)).
+
 Many keys are related to the CLDR (Common Language Data Repository).
 Others are just the TeX primitives with the same name.
 
