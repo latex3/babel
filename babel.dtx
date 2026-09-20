@@ -34,10 +34,10 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/09/09 v26.12
+  [2026/09/20 v26.12.135948
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
-\usepackage{babel}
+\usepackage[arabic,british,bidi=basic]{babel}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
 \setmainfont[
@@ -223,46 +223,36 @@
         Javier Bezos}
 \date{Typeset \today}
 \begin{titlepage}
-\begin{minipage}[t][0pt]{30cm}
-\vspace{-3cm}\hspace{-6cm}
-\sffamily
-\begin{tabular}{p{8cm}p{15cm}}
-\cellcolor[rgb]{.86,.73,.67}
-&\cellcolor[rgb]{.95,.95,.95}
-\vspace{3.6cm}%
-\color[rgb]{.55,.4,.35}
-\leftskip5mm
-\sffamily\fontsize{72}{72}\selectfont Babel
-\vspace{1.8cm}
-\\
-\cellcolor[rgb]{.95,.95,.95}
-\vspace{2cm}\hspace{1.5cm}
-\begin{minipage}{5cm}
-\Huge
-\ifx\babelcode\undefined
-User guide
-\else
-Code
-\fi
-
-\Large
-\vspace{1.2cm}
-Version \csname @gobble\expandafter\endcsname\fileversion\newline
-\filedate
-
-\LARGE
-\vspace{1.2cm}
-Javier Bezos\\[-.5ex]
-{\large Current maintainer}
-
-\vspace{.3cm}
-Johannes L. Braams\\[-.5ex]
-{\large Original author}
-\end{minipage}
-&\cellcolor[rgb]{.92, .86, .73}
-\vspace{2cm}
-\leftskip5mm
-\begin{minipage}{10cm}
+\begin{picture}(0,0)
+  \sffamily
+  \put(-5.7cm, -4.5cm){\color[rgb]{.86,.73,.67}\rule{8cm}{8cm}}
+  \put( 2.3cm, -4.5cm){\color[rgb]{.95,.95,.95}\rule{15cm}{8cm}}
+  \put(-5.5cm,-27.5cm){\color[rgb]{.95,.95,.95}\rule{8cm}{23cm}}
+  \put( 2.3cm,-27.5cm){\color[rgb]{.92, .86, .73}\rule{15cm}{23cm}}
+  \put( 3cm, -2.6cm){\color[rgb]{.55,.4,.35}\fontsize{72}{72}\selectfont Babel}
+  \put(-4.1cm, -10.8cm){\begin{minipage}{5cm}
+    \Huge
+    \ifx\babelcode\undefined
+    User guide
+    \else
+    Code
+    \fi
+    
+    \Large
+    \vspace{1.2cm}
+    Version \csname @gobble\expandafter\endcsname\fileversion\newline
+    \filedate
+    
+    \LARGE
+    \vspace{1.2cm}
+    Javier Bezos\\[-.5ex]
+    {\large Current maintainer}
+    
+    \vspace{.3cm}
+    Johannes L. Braams\\[-.5ex]
+    {\large Original author}
+    \end{minipage}}
+  \put( 3cm, -12.8cm){\begin{minipage}{10cm}
 \fontsize{35}{45}\selectfont
 \setlength\parskip{3mm}\raggedright
 Localization and internationalization\\[1cm]
@@ -271,10 +261,8 @@ Unicode\\
 Lua\largetex\\
 pdf\largetex\\
 Xe\largetex
- \vspace{20cm}
-\end{minipage}
-\end{tabular}
-\end{minipage}
+\end{minipage}}
+\end{picture}
 \end{titlepage}
 
 \tableofcontents
@@ -5398,6 +5386,9 @@ even those with the same name don’t behave in the same way. Also,
 languages are organized quite differently (\babel{} treats all locales
 on an equal footing).}
 
+\trans{luabidi}{Don’t load this package. Use instead the \babel{}
+built-in tools for bidi text.}
+
 \trans{tikz/pgf}{There are some issues with shorthands, which are
 usually solved with \texttt{\string\usetikzlibrary\{babel\}}.}
 
@@ -6272,8 +6263,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.12>>
-%<<date=2026/09/09>>
+%<<version=26.12.135948>>
+%<<date=2026/09/20>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6603,6 +6594,30 @@ wouldn’t exist.
   \else
     \expandafter\@firstofone
   \fi}
+%    \end{macrocode}
+%
+% Ordered key/value lists (aka associative arrays). The setter either
+% replaces the current value if the key exists, or adds the new
+% key/value at the end. The getter returns either the value if the key
+% exists or |\relax|. The code is based on arguments delimited by the
+% keys. In the getter, note the value is supposed not to start with
+% |\@empty|. 
+%
+%    \begin{macrocode}
+\def\bbl@array@set#1#2#3{%
+  \def\bbl@array@aux##1\bbl@elt#2\@@##2##3\bbl@array@aux##4{%
+    \ifx\bbl@noelt##2%
+      \def#1{##1\bbl@elt#2\@@{##4}}%
+    \else
+      \def\bbl@array@aux####1\bbl@elt#2\@@####2####3\bbl@array@aux####4{%
+        \def#1{####1\bbl@elt#2\@@{####4}####3}}%
+      \expandafter\bbl@array@aux#1\bbl@array@aux{#3}%
+    \fi}%
+  \expandafter\bbl@array@aux#1\bbl@elt#2\@@\bbl@noelt\bbl@array@aux{#3}}
+\def\bbl@array@get#1#2#3{%
+  \def\bbl@array@aux##1\bbl@elt#2\@@##2##3\bbl@array@aux{%
+    \ifx\@empty##2\let#3\relax\else\def#3{##2}\fi}% 
+  \expandafter\bbl@array@aux#1\bbl@elt#2\@@\@empty\bbl@array@aux}
 %    \end{macrocode}
 %
 % The following adds some code to |\extras...| both before and after,
@@ -11140,7 +11155,7 @@ wouldn’t exist.
     \bbl@error{no-ini-file}{#1}{}{}%
   \else
     % == Store ini data in \bbl@inidata ==
-    \catcode`\ =10 \catcode`\"=12
+    \catcode`\ =10 \catcode`\"=12 \catcode`\#=12
     \catcode`\[=12 \catcode`\]=12 \catcode`\==12 \catcode`\&=12
     \catcode`\;=12 \catcode`\|=12 \catcode`\%=14 \catcode`\-=12
     \ifnum#2=\m@ne % Just for the info
@@ -24547,6 +24562,107 @@ function Babel.unset_atdir(head)
   end
   return head
 end
+%    \end{macrocode}
+%
+% The following code has been contributed by Udi Fogiel. It fixes
+% misplaced glues when combined with penalties at line breaks.
+%
+%    \begin{macrocode}
+local GLUE    = node.id'glue'
+local PENALTY = node.id'penalty'
+local HLIST   = node.id'hlist'
+local LINE    = table.swapped(node.subtypes("hlist")).line
+
+local characters = Babel.characters
+local ranges     = Babel.ranges
+
+-- L1's whitespace set: WS + isolate formats + (per the UBA reference) the
+-- explicit embedding/override formats + BN.
+-- Babel does not use embedding/override/isolates, but well, I copy pasted it...
+local l1_whitespace = {
+  ws  = true, bn  = true,
+  lre = true, rle = true, lro = true, rlo = true, pdf = true,
+  lri = true, rli = true, fsi = true, pdi = true,
+}
+
+local function bidi_class(c)
+  local cd = characters[c]
+  local d  = cd and cd.d
+  if not d then
+    for _, et in ipairs(ranges) do
+      if c < et[1] then
+        break
+      elseif c <= et[2] then
+        d = et[3]
+        break
+      end
+    end
+  end
+  return d or 'l'
+end
+
+-- Nodes we step over as part of a trailing-whitespace run: glue,
+-- penalties, and a whitespace glyph.
+local function skippable(n)
+  local id = n.id
+  if id == GLUE or id == PENALTY then
+    return true
+  elseif id == GLYPH then
+    return l1_whitespace[bidi_class(n.char)] == true
+  end
+  return false
+end
+
+local function is_enddir(n)
+  return n.id == DIR and n.subtype == 1
+end
+
+-- Rule L1, clause 4, for one line: pull its trailing whitespace out past the
+-- closing dir run so it renders in the box (base) direction.
+local function reset_line(head)
+  local last = node.slide(head)           -- tail, fixes prev links
+  -- 1. skip the tail that follows the closing dir run (rightskip/parfillskip/...)
+  local q = last
+  while q and skippable(q) do q = q.prev end
+  if not (q and is_enddir(q)) then return head end
+  local d_last = q
+  -- 2. step back over the whole closing dir run
+  while q and q.id == DIR do q = q.prev end
+  -- 3. what precedes the dirs must be the trailing whitespace run
+  if not (q and skippable(q)) then return head end
+  local w_last = q
+  while q and skippable(q) do q = q.prev end
+  local before_w = q
+  if not before_w then return head end     -- whole line is whitespace; leave it
+  local w_first = before_w.next
+  local d_first = w_last.next
+  local after_d = d_last.next
+  -- detach W = [w_first .. w_last]
+  before_w.next = d_first
+  if d_first then d_first.prev = before_w end
+  -- reinsert W after the dir run (outside every dir => box/base direction)
+  d_last.next  = w_first
+  w_first.prev = d_last
+  w_last.next  = after_d
+  if after_d then after_d.prev = w_last end
+  return head
+end
+
+function Babel.reset_lines(head)
+  for line, subtype in node.traverse_id(HLIST, head) do
+    if subtype == LINE then
+      line.list = reset_line(line.list)
+    end
+  end
+  return head
+end
+
+luatexbase.add_to_callback('post_linebreak_filter',
+  function(head, gc)
+    if Babel.bidi_enabled then head = Babel.reset_lines(head) end
+    return head
+  end,
+  'Babel.reset_lines')
 %</basic>
 %    \end{macrocode}
 %
