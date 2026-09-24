@@ -1,4 +1,4 @@
-## Babel 26.12.135948
+## Babel 26.12.136372
 
 (dev)
 
@@ -61,8 +61,10 @@ respective authors.
 
 #### 26.13 (dev)
 
-* Improved Azerbaijani (thanks to Anar Abdullayev, @abdanar).
-* Fixed misplaces glues at end of lines with mixed directions.
+* Improved Azerbaijani (thanks to Anar Abdullayev).
+* Improved Malagasy (thanks to Ralahady Bruno Bakys).
+* Fixed misplaced glues at end of lines with mixed directions (thanks to Udi-Fogiel).
+* Fixed mapdot= (the value was ignored).
 
 #### 26.12 (2026-09-09)
 
