@@ -1,4 +1,4 @@
-## Babel 26.12.136372
+## Babel 26.12.136469
 
 (dev)
 
@@ -61,10 +61,15 @@ respective authors.
 
 #### 26.13 (dev)
 
-* Improved Azerbaijani (thanks to Anar Abdullayev).
-* Improved Malagasy (thanks to Ralahady Bruno Bakys).
-* Fixed misplaced glues at end of lines with mixed directions (thanks to Udi-Fogiel).
-* Fixed mapdot= (the value was ignored).
+* Improved locales:
+  - Azerbaijani (thanks to Anar Abdullayev).
+  - Malagasy (thanks to Ralahady Bruno Bakys).
+* Fixes:
+  - Make sure glues are not misplaced at end of lines with
+    mixed directions (thanks to Udi-Fogiel).
+  - Value in mapdot= was ignored.
+  - Isolate paragraph-like section titles from the rest of
+    the line in the bidi algorithm.
 
 #### 26.12 (2026-09-09)
 

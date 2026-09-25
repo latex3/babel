@@ -5,17 +5,12 @@
 % ===================
 
 \usepackage[arabic,
-            provide={ % mapdot, 
-            %  justification = kashida,
-            transforms = kashida.base digits.native},
-            bidi=unibidi, 
+            provide={
+              justification = kashida,
+              transforms = kashida.base digits.native},
+            bidi=basic,   
             % headfoot=arabic,  % an alternative is layout=sectioning
-            % layout= counters
-            ]{babel}
-            
-% \usepackage{unibidi-lua}
-        
-    %    \textdir TRT \pardir TRT \bodydir TRT
+            layout= counters]{babel}
 
 % == Alternative without kashida ==
 

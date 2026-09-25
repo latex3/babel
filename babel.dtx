@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/09/24 v26.12.136372
+  [2026/09/25 v26.12.136469
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage[arabic,british,bidi=basic]{babel}
@@ -6274,8 +6274,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.12.136372>>
-%<<date=2026/09/24>>
+%<<version=26.12.136469>>
+%<<date=2026/09/25>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -12732,14 +12732,14 @@ wouldn’t exist.
     \\\bbl@cs{sspre@#1}%
     \\\bbl@cs{ss@#1}%
       [\\\foreignlanguage{\languagename}{\unexpanded{#2}}]%
-      {\\\foreignlanguage{\languagename}{\unexpanded{#3}}}%
+      {\\\foreignlanguage{\languagename}{\unexpanded{#3}}\babelsublr{}}%
     \\\select@language@x{\languagename}}}
 \def\bbl@presec@s#1#2{%
   \bbl@exp{%
     \\\select@language@x{\bbl@main@language}%
     \\\bbl@cs{sspre@#1}%
     \\\bbl@cs{ss@#1}*%
-      {\\\foreignlanguage{\languagename}{\unexpanded{#2}}}%
+      {\\\foreignlanguage{\languagename}{\unexpanded{#2}}\babelsublr{}}%
     \\\select@language@x{\languagename}}}
 %
 \IfBabelLayout{sectioning}%
