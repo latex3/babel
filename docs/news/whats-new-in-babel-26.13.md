@@ -4,7 +4,7 @@
 
 ## Locales
 
-Two locales have been improved: Azerbaijani (thanks to [Anar Abdullayev](https://www.linkedin.com/in/abdanar/))
+Two locales have been improved: Azerbaijani (thanks to [Anar Abdullayev](https://github.com/abdanar))
 and Malagasy (thanks to [Ralahady Bruno Bakys](https://github.com/RalahadyBruno)).
 
 The main style for Azerbaijani is now based on the `ini` mechanism and replaces
