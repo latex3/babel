@@ -1,6 +1,6 @@
-## Babel 26.12.136469
+## Babel 26.13
 
-(dev)
+2026-09-27
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The **latest stable** version is available on <https://ctan.org/pkg/babel>.
 
-**Changes** in version 26.12 are described in:
+**Changes** in version 26.13 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-26.12.html
+https://latex3.github.io/babel/news/whats-new-in-babel-26.13.html
 
 Apart from the manual, you can find **information and examples** in:
 
@@ -59,28 +59,22 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 26.13 (dev)
+#### 26.13 (2026-09-27)
 
-* Improved locales:
-  - Azerbaijani (thanks to Anar Abdullayev).
-  - Malagasy (thanks to Ralahady Bruno Bakys).
+* Minor improvements in `chinese-pinyin'.
+* Captions in `malagasy' (thanks to Ralahady Bruno Bakys).
 * Fixes:
-  - Make sure glues are not misplaced at end of lines with
-    mixed directions (thanks to Udi-Fogiel).
+  - Make sure glues are not misplaced at end of lines
+    with mixed directions (thanks to Udi-Fogiel).
   - Value in mapdot= was ignored.
-  - Isolate paragraph-like section titles from the rest of
-    the line in the bidi algorithm.
+  - Isolate paragraph-like section titles from the
+    rest of the line in the bidi algorithm.
 
 #### 26.12 (2026-09-09)
 
 * New locale: chinese-pinyin (with transform `tone.numeric` for luatex).
 * `calendrica` can be used to set the default `\today` format.
 * Fix: wrong direction with `\text` in `\[`...`\]`.
-
-#### 26.11 (2026-08-21)
-
-* Chinese: new counters `formal` and `informal`.
-* New calendar `indian` for 15 Indic locales (Hindi, Marathi, Malayalam, Gujarati, Kannada, Tamil...).
 
 ### Previous changes
 

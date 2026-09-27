@@ -34,10 +34,10 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/09/25 v26.12.136469
+  [2026/09/27 v26.13
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
-\usepackage[arabic,british,bidi=basic]{babel}
+\usepackage{babel}
 \GetFileInfo{babel.dtx}
 \usepackage{fontspec}
 \setmainfont[
@@ -53,7 +53,7 @@
      BoldItalicFont = NotoSans-BoldItalic.ttf]
   {NotoSans-Regular.ttf}
 \setmonofont[Scale=.86, FakeStretch=.97]{DejaVu Sans Mono}
-\def\tto{\texttt{→}}
+\def\tto{\texttt{‣}}
 \def\tlangle{\texttt{⟨}}
 \def\trangle{\texttt{⟩}}
 \DeclareRobustCommand\meta[1]{\tlangle\mbox{\rmfamily\itshape#1}\trangle}
@@ -237,17 +237,17 @@
     \else
     Code
     \fi
-    
+
     \Large
     \vspace{1.2cm}
     Version \csname @gobble\expandafter\endcsname\fileversion\newline
     \filedate
-    
+
     \LARGE
     \vspace{1.2cm}
     Javier Bezos\\[-.5ex]
     {\large Current maintainer}
-    
+
     \vspace{.3cm}
     Johannes L. Braams\\[-.5ex]
     {\large Original author}
@@ -302,9 +302,10 @@ recent features can still be unstable. Remember version 24.1 follows
 development of \babel{} in
 \href{https://github.com/latex3/babel}{GitHub} and make suggestions,
 including requirements for some language or script. Feel free to fork
-it and make pull requests. If you are the author of a package, send
-me a few test files which I'll add to mine, so that possible issues can
-be caught in the development phase.
+it and make pull requests. If you are the author of a package, send me
+a few test files which I'll add to mine, so that possible issues can be
+caught in the development phase. Hyphenation rules are maintained
+separately \href{https://github.com/hyphenation/tex-hyphen}{here}.
 
 \item[\sffamily\color{messages}It doesn't work for me!] You can ask for
 help in some forums like \textsf{tex.stackexchange}, but if you have
@@ -312,12 +313,10 @@ found a bug, I strongly beg you to report it in
 \href{https://github.com/latex3/babel/issues}{GitHub}, which is much
 better than just complaining on an e-mail list or a web forum. Remember
 \textit{warnings are not errors} by themselves, they just warn about
-possible problems or incompatibilities. Hyphenation rules are
-maintained separately
-\href{https://github.com/hyphenation/tex-hyphen}{here}.
+possible problems or incompatibilities. 
 
 \item[\sffamily\color{messages}How can I contribute a new
-language?] See section \ref{contribute} for contributing a language.
+language?] See section \ref{contribute} for contributing a language. 
 
 \item[\sffamily\color{messages}Where is the code?]
   Run |lualatex --jobname=babel-code \let\babelcode\relax\input{babel.dtx}|.
@@ -385,10 +384,11 @@ document encoding is UTF-8). Other scripts require loading
 for further info. For example, the following setting will pass
 \texttt{british} as the main language to \babel:
 \begin{verbatim}
-\DocumentMetadata{×lang=en-GB×}
+\DocumentMetadata{×language=en-GB×}
 \documentclass{article}
 \usepackage{babel}
 \end{verbatim}
+\New{26.9} The option \texttt{other-languages} is also recognized.
 
 The basic tag lookup explained below is applied here, so that
 \texttt{fr-Latn-FR} is valid and mapped to \texttt{fr}, which is in
@@ -497,9 +497,10 @@ This is not currently done by \babel{} and you must set it by hand.
 \begin{warning}
   In the preamble, \textit{no} language has been selected, except
   hyphenation patterns and the name assigned to |\localename| (and
-  |\languagename|) (in particular, shorthands, captions and date are not
-  activated). If you need to define boxes and the like in the preamble,
-  you might want to use some of the language selectors described below.
+  |\languagename|). In particular, shorthands, captions and date are
+  \textit{not} activated. If you need to define boxes and the like in
+  the preamble, you might want to use some of the language selectors
+  described below.
 \end{warning}
 
 \begin{troubleshooting}
@@ -514,16 +515,19 @@ even better, make sure the encoding in your editor is set to UTF-8.
 Another typical error when using \babel{} is the following:
 \trouble{Unknown language 'LANG'}
 \begin{verbatim}
-! Package babel Error: Unknown language 'LANG'. Either you have
-(babel)                misspelled its name, it has not been installed,
-(babel)                or you requested it in a previous run. Fix its name,
-(babel)                install it or just rerun the file, respectively. In
-(babel)                some cases, you may need to remove the aux file
+! Package babel Error: Unknown option 'LANG'.
+(babel)                Suggested actions:
+(babel)                * Make sure you haven’t misspelled it
+(babel)                * Check in the babel manual that it's supported
+(babel)                * If supported and it's a language, you may
+(babel)                  need in some distributions a separate
+(babel)                  installation
+(babel)                * If installed, check there isn’t an old
+(babel)                  version of the required files in your system
+(babel)                * If it's an unsupported language, create it with
+(babel)                  \babelprovide (see the manual).
 \end{verbatim}
-  The most frequent reason is, by far, the latest (for example, you
-  included |spanish|, but you realized this language is not used after
-  all, and therefore you removed it from the option list). In most
-  cases, the error vanishes when the document is typeset again, but in
+  Sometimes, the error vanishes when the document is typeset again, but in
   more severe ones you will need to remove the |aux| file.
 \end{troubleshooting}
 
@@ -585,17 +589,17 @@ option |provide=*| (in monolingual documents).
 
 \begin{example}
   Although Georgian has its own \texttt{ldf} file, here is how to
-  declare this language in Unicode engines. Here, as in a previous
-  example, we resort to |\babelfont| to set the font for this language
-  (with the |Harfbuzz| renderer, just to show how to set it, because
-  here the |Node| renderer should be fine).
-\setengine{luatex/xetex}
+  declare this language in Unicode engines with this mechanism. Here,
+  as in a previous example, we resort to |\babelfont| to set the font
+  for this language (with the |Harfbuzz| renderer, just to show how to
+  force it, because here the |Node| renderer should be fine).
+  \setengine{luatex/xetex}
 \begin{verbatim}
 \documentclass{book}
 
 \usepackage[×georgian, provide=*×]{babel}
 
-×\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}×
+×\babelfont{rm}{DejaVu Sans}[Renderer=Harfbuzz]×
 
 \begin{document}
 
@@ -611,15 +615,15 @@ And with a global option:
 \begin{verbatim}
 \documentclass[×georgian×]{book}
 \usepackage[×provide=*×]{babel}
-\babelfont{rm}[Renderer=Harfbuzz]{DejaVu Sans}
+\babelfont{rm}{DejaVu Sans}[Renderer=Harfbuzz]
 \end{verbatim}
 \end{example}
 
 \begin{note}
-  This option actually loads the language with |\babelprovide| and the
-  |import| option, described below. Instead of an asterisk, you may
-  provide a list of options for |\babelprovide| enclosed in braces
-  (|import| is included by default).
+  The option \texttt{provide} actually loads the language with
+  |\babelprovide| and the |import| option, described below. Instead of
+  an asterisk, you may provide a list of options for |\babelprovide|
+  enclosed in braces (|import| is included by default).
 \end{note}
 
 \begin{example}
@@ -629,7 +633,7 @@ For a text in Chinese, you can write in the preamble:
 \usepackage[×chinese×]{babel}
 ×\babelfont{rm}{FandolSong}×
 \end{verbatim}
-The skip between characters is 0 pt plus .1 pt, which can be modified
+The default skip between characters is 0 em plus .1 em, which can be modified
 with an option (explained below) in |provide|. For example:
 \setengine{luatex/xetex}
 \begin{verbatim}
@@ -653,7 +657,7 @@ rules and, perhaps, the font. In such a case, there is no need to
 clutter the preamble (particularly the class and package options)
 because \babel{} does not require declaring these secondary languages
 explicitly — the basic settings are loaded on the fly when the language
-is first selected.
+is first selected in the document.
 
 This is particularly useful in documents with many languages, and also
 when there are short texts of this kind coming from an external source
@@ -787,13 +791,17 @@ Vietnamese: \prefacename, \alsoname, \today.
 \end{note}
 
 \begin{note}
-  Documents with several input encodings are not frequent, but
+  (\pdftex) Documents with several input encodings are not frequent, but
   sometimes are useful. You can set different encodings for different
-  languages as the following example shows (\pdftex):
+  languages as the following example shows:
 \begin{verbatim}
-\addto\extrasfrench{\inputencoding{latin1}}
-\addto\extrasrussian{\inputencoding{koi8-r}}
+\AddBabelHook{encodings}{afterextras}{\inputencoding{latin1}}
+\AddBabelHook[russian]{encodings}{afterextras}{\inputencoding{koi8-r}}
 \end{verbatim}
+See the description of |\AddBabelHook| below. The first line activates
+the \texttt{latin1} input encoding in every language. The second one,
+which overrides the previous one, activates \texttt{koi8-r} in
+Russian.
 \end{note}
 
 \subsection{Multilingual documents: the ‘modern’ way}
@@ -803,7 +811,7 @@ which languages should be loaded as either class or package options.
 You can combine the ‘classical’ and the ‘modern’ ways with three
 options to set which method you want, which cover the most typical
 cases [to be revised; a new ‘value’ \texttt{!} forces the \texttt{ldf}
-mode]:
+mode for the main language]:
 \begin{itemize}
 \item |provide=*| is the option explained above for monolingual
   documents. If there are more languages, it applies only to the main
@@ -837,8 +845,7 @@ note |thai.ldf| is not supported in Unicode engines), and:
 \begin{verbatim}
   \usepackage[dutch,german,thai,×provide*=*×]{babel}
 \end{verbatim}
-which will use the modern mode in all languages (note the correct name
-here is |german|). 
+which will use the modern mode in all languages.
 \end{example}
 
 \subsection{Languages supported by \babel{} in the ‘classical’ mode}
@@ -849,8 +856,10 @@ the options which you can load \babel\ with for each language. Note this
 list is open and the current options may be different. It does not
 include |ini| files (see below).
 
-Except in a few cases (e.g., |serbianc|, |acadian|) names are
-those of the Unicode CLDR (or based on them). 
+Except in a few cases (e.g., |serbianc|, |acadian|) names are those of
+the Unicode CLDR (or based on them; see
+\textit{\href{https://latex3.github.io/babel/guides/locale-naming.html}{Locale
+naming}}).
 
 Most of them work out of the box, but some may require extra fonts,
 encoding files, a preprocessor or even a complete framework (like
@@ -969,11 +978,11 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \ltag{macedonian}{}
 \ltag{malay}{}
 \ltag[mongolian-babel]{mongolian}{}
-\ltag[babel-german]{ngerman}{}
+\tagmin{ngerman}{}
 % \note{This block refers to the new ortography.}
 \note{See the manual for the \textsf{german} babel style.}
-\subtagalt{naustrian}{}
-\subtagalt{nswissgerman}{}
+\subtagmin{naustrian}{}
+\subtagmin{nswissgerman}{}
 \note{Swiss High German}
 \ltag[babel-samin]{northernsami}{}
 \ltag[babel-norsk]{norwegian}{}
@@ -1000,8 +1009,8 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \ltag{spanglish}{}
 \ltag{spanish}{}
 \ltag{swedish}{}
-\ltag{swissgerman}{}
-\note{Swiss German, with tag \textsf{gsw}}
+%\ltag{swissgerman}{}
+%\note{Swiss German, with tag \textsf{gsw}}
 \ltag{thai}{}
 \subtagmin{thaicjk}{}
 \ltag{turkish}{}
@@ -1016,7 +1025,7 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \bigskip
 
 \begin{example}
-  An example of a language requiring a preprocessor and a separate
+  (\pdftex) An example of a language requiring a preprocessor and a separate
   package is \texttt{hindi}. If you have got the
   \textsf{velthuis/devnag} package, create a file with
   extension |.dn|:
@@ -1034,7 +1043,8 @@ The reference mark ({\scriptsize ※}) is a link to CTAN.
 \subsection{Languages supported by \babel{} in the ‘modern’ mode}
 
 Here is the list of the names currently supported with |ini| locale
-files, with |\babelprovide| (or |provide=|). With these languages,
+files, with |\babelprovide| (or |provide=|), or loaded by default when
+there is no \texttt{ldf} file. With these languages,
 |\babelfont| loads (if not done before) the language and script names
 (even if the language is defined as a package option with an
 \textsf{ldf} file). These are also the names recognized by
@@ -1045,12 +1055,25 @@ Following the current common practice (for example, the Unicode CLDR),
 all locales are organized in a flat structure. This eases their
 identification and customization.
 
-Many locale are quite usable, provided captions and dates are not
+Many locales are quite usable, provided captions and dates are not
 required (which is a very frequent case, particularly in ancient
 languages). So, they are included in the default \babel{} distribution.
 This can serve to encourage contributions, too. A warning will remember
 they are ‘bare minimum locales’. They are set in
 \textcolor[gray]{.4}{gray} in the following list.
+
+\begin{note}
+  Wikipedia defines a \textit{locale} as follows: “In computing, a
+  locale is a set of parameters that defines the user’s language,
+  region and any special variant preferences that the user wants to see
+  in their user interface. Usually a locale identifier consists of at
+  least a language code and a country/region code.” \Babel{} is moving
+  gradually from the old and fuzzy concept of \textit{language} to the
+  more modern of \textit{locale}. Note each locale is by itself a
+  separate “language”, which explains why there are so many files. This
+  is on purpose, so that possible variants can be created and/or
+  redefined easily.
+\end{note}
 
 \begingroup
 \bigskip\hrule\nobreak
@@ -1680,8 +1703,9 @@ ones, as explained below), and \textit{font-name} is the same as in
 If no language is given, then it is considered the default font for the
 family. On the other hand, if there is one or more languages in the
 optional argument, the font will be assigned to all of them, overriding
-the default one. Alternatively, you may set a font for a script -- just
-precede its name (lowercase) with a star (e.g., |*devanagari|).
+the default one. Alternatively, you may set a font for all languages
+using a script -- just precede the script name (lowercase) with a star
+(e.g., |*devanagari|).
 
 With the optional argument, the font is \textit{not} yet loaded, but
 just predeclared. In other words, font loading is lazy, which means you
@@ -1708,19 +1732,22 @@ way:
   which are essential typographical features in these scripts, are
   directly available: Armenian, Coptic, Cyrillic, Georgian, Glagolitic,
   Gothic, Greek, Latin, Old Church Slavonic Cyrillic.
-\item Harfbuzz in the rest of scripts, particularly complex scripts with
-  heavy contextual analysis (like Arabic and Devanagari).
+\item Harfbuzz in the rest of scripts, particularly complex scripts
+  with heavy contextual analysis (like Arabic and Devanagari). Note you
+  can still modify fonts with ‘constructors’, as explained in
+  \textit{\href{https://github.com/latex3/babel/discussions/346}{Modifying
+  fonts with Harfbuzz}}.
 \end{itemize}
 You can still select a different renderer with the \textsf{fontspec}
 key |Renderer|. Note also the same font can be loaded with different
 renderers. See
-\href{https://github.com/latex3/luaotfload/wiki/Comparing-the-modes}{Comparing
-the modes} for further info.
+\textit{\href{https://github.com/latex3/luaotfload/wiki/Comparing-the-modes}{Comparing
+the modes}} for further info.
 
 \begin{note}
   There is a list of fonts in
-  \href{https://latex3.github.io/babel/guides/which-method-for-which-language.html}{Which
-  method for which language}. If you know the codepoint of a character
+  \textit{\href{https://latex3.github.io/babel/guides/which-method-for-which-language.html}{Which
+  method for which language}}. If you know the codepoint of a character
   in the script you need, you can find fonts containing it with
   \textsf{albatross} (requires Java) or with something like
   \texttt{fc-list :charset=1033C family} in the commands line (in this
@@ -1876,7 +1903,7 @@ And if you need, say, Arabic and Devanagari:
   \trouble{Package fontspec Info: Language '<lang>' not explicitly
   supported within font '<font>' with script '<script>'.}
   \textit{Package fontspec Info: Language '<lang>' not explicitly
-  supported within font '<font>' with script '<script>'.}.
+  supported within font '<font>' with script '<script>'.}
 
   \textbf{This is \textit{not} and error.} This info is shown by
   \textsf{fontspec}, not by \babel. If everything is okay in your
@@ -1886,7 +1913,7 @@ And if you need, say, Arabic and Devanagari:
   In some forums you can find the advice to set, more or less
   mechanically, |Language=Default|. \textit{Do not follow it}, because
   font features for the language will not be applied, which can be
-  relevant for many languages, like Urdu and Turkish. Set the
+  relevant for many languages, like Urdu, Marathi and Turkish. Set the
   |Language| explicitly only if there is a reason to do it (for
   example, if \textsf{fontspec}/\textsf{luaotfload} doesn’t fall back
   correctly a font feature to the default language). If you really want
@@ -1930,9 +1957,9 @@ auxiliary, and described in the next section.
 The main language is selected automatically when the |document|
 environment begins.
 
-\Describe{\selectlanguage}{\marg{language}}
+\Describe{\selectlanguage}{\oarg{option-list}\marg{language}}
 \DescribeOther{\begin\menv{selectlanguage}}%
-   {\marg{language}\Eenv{selectlanguage}}
+   {\oarg{option-list}\marg{language}\Eenv{selectlanguage}}
 
 When a user wants to switch from one language to another he can do so
 using the macro |\selectlanguage|. It is meant for blocks of texts, and
@@ -1944,7 +1971,10 @@ works in horizontal mode.
 
 This command can be used as environment, too, in case there are
 relatively short texts and you do not want to reset the language with a
-hardcode value.
+hardcoded value.
+
+The optional argument currently supports only \texttt{nofiles}. See the
+warning below.
 
 \begin{note}
   Bear in mind |\selectlanguage| can be automatically executed, in some
@@ -1989,9 +2019,16 @@ hardcode value.
     nothing is written, but more often than not this command is applied
     to more or less shorts texts with no sectioning or similar
     commands, and therefore no language synchronization is necessary.
-    In a table cell, a |\leavevmode| just before the selector may be
-    enough.
    \end{itemize}
+   In a table cell, a |\leavevmode| just before the selector may be
+   enough.
+
+   \New{26.1} You can also bypass file writing on a case-by-case basis
+   using the \texttt{nofiles} optional argument, as follows:
+\begin{verbatim}
+\selectlanguage[nofiles]{<language>}
+\end{verbatim}
+Think of it as a kind of temporary |\nofiles|, just for this command.
 \end{itemize}
 \end{warning}
 
@@ -2006,9 +2043,10 @@ does not send information about the language to auxiliary files (i.e.,
 the surrounding language is still in force), and (3) it works even if
 the language has not been set as package option (but in such a case it
 only sets the hyphenation patterns and a warning is shown). With the
-|bidi| option, it also enters in horizontal mode (this is not done
-always for backwards compatibility), and since it is meant for phrases
-only the text direction (and not the paragraph one) is set.
+|bidi| option and with |\DocumentMetadata| it also enters in horizontal
+mode (this is not done always for backwards compatibility), and since
+it is meant for phrases only the text direction (and not the paragraph
+one) is set.
 
 \New{3.44} As already said, captions and dates are not switched.
 However, with the optional argument you can switch them, too. So, you
@@ -2048,15 +2086,15 @@ ignored. \New{26.1} It can be used as a command, too, like
 |{\otherlanguage*{tamil}{...}|, but avoid using several of them
 inside a group.
 
-It was originally devised for intermixing left-to-right
-typesetting with right-to-left typesetting in engines not supporting a
-change in the writing direction inside a line. However, by default it
-never complied with the documented behavior and it is just a version as
+It was originally devised for intermixing left-to-right typesetting
+with right-to-left typesetting in engines not supporting a change in
+the writing direction inside a line. However, by default it never
+complied with the documented behavior and it is just a version as
 environment of |\foreignlanguage|, except when the package option
-|bidi| is set -- in this case, |\foreignlanguage| emits a
-|\leavevmode|, while |otherlanguage*| does not. Like |\foreignlanguage|
-it is a \textit{text} command, and therefore it doesn’t change the
-paragraph direction.
+|bidi| is set or with |\DocumentMetadata| -- in these cases,
+|\foreignlanguage| emits a |\leavevmode|, while |otherlanguage*| does
+not. Like |\foreignlanguage| it is a \textit{text} command, and
+therefore it doesn’t change the paragraph direction.
 
 \begin{example}
 Here is a document putting in practice some of the techniques described,
@@ -2130,8 +2168,8 @@ In e-Plain and pdf-Plain, load languages styles with |\input| and then use
 \begin{warning}
   Not all languages provide a |sty| file and some of them are not
   compatible with those formats. Please, refer to
-  \href{https://latex3.github.io/babel/guides/using-babel-with-plain.html}%
-   {Using babel with Plain} for further details.
+  \textit{\href{https://latex3.github.io/babel/guides/using-babel-with-plain.html}%
+   {Using babel with Plain}} for further details.
 \end{warning}
 
 \section{More on language loading and selection}
@@ -2271,8 +2309,8 @@ be the same as the option name as set in |\usepackage|!).
 locale. This is now the recommended way to retrieve the current
 language. In addtion, |\mainlocalename| contains the main language.
 
-|\languagename| is still used internally, but it is now discouraged at
-the user level.
+|\languagename| is now discouraged at the user level (although still
+used internally in the \babel{} code).
 
 \begin{warning}
   Due to a bug, which led to some internal inconsistencies in
@@ -2316,7 +2354,7 @@ The available fields are:
 \item[tag.opentype] is the tag used by OpenType (usually, but not
   always, the same as BCP 47). It can be useful when customizing fonts
   with \textsf{luaotfload}.
-\item[script.name], as provided by the Unicode CLDR.
+\item[script.name] as provided by the Unicode CLDR.
 \item[script.tag.bcp47] is the BCP 47 tag of the script
   used by this locale. This is a required field for the fonts to be
   correctly set up, and therefore it should always be defined.
@@ -2439,15 +2477,15 @@ loaded when the format was created: number (remember dialects can
 share it), name, hyphenation file and exceptions file.
 
 \Describe{silent}{} \New{3.9l} No warnings and no \textit{infos} are
-written to the log file.\footnote{You can use alternatively the
-package \textsf{silence}.}
+written to the log file. (You can use alternatively the
+package \textsf{silence}.)
 
 \Describe{hyphenmap=}{\texttt{off} \string| \texttt{first}
 \string| \texttt{select} \string| \texttt{other} \string|
 \texttt{other*}}
 
 \New{3.9g} Sets the behavior of case mapping for hyphenation,
-provided the language defines it.\footnote{Turned off in plain.} It
+provided the language defines it (turned off in plain). It
 can take the following values:
 \begin{description}
 \EditInstance{item}{description}{%
@@ -2491,16 +2529,17 @@ documents. See sec.~\ref{bidi}.
 options. See section~\ref{inifiles}, which describes also the variants
 |provide+=| and |provide*=|.
 
-\Describe{main=}{\meta{language}} Forces the main language, but this
-option should not be used except if there a need to do it. If the
+\Describe{main=}{\meta{language}} Forces the main language. This
+option should \textit{not} be used except if there a need to do it. If the
 language is not given as such as package or global option, it is added
 to the list of requested languages. For example:
 \begin{verbatim}
 \documentclass{article}
 \usepackage[×main=english×,dutch]{babel}
 \end{verbatim}
-Some classes load \babel{} with a hardcoded language option. Sometimes,
-the main language can be overridden with something like that before
+A situation where this key can be useful is with some classes loading
+\babel{} with a hardcoded language option. Sometimes, the main language
+can be overridden with something like that before
 |\documentclass|:
 \begin{verbatim}
 \PassOptionsToPackage{main=english}{babel}
@@ -2513,9 +2552,9 @@ declarations in \LaTeX\ for the TU encoding, because a package may rely
 solely on them (like |\cyrzh| instead of |ж|). This is now done with
 the Cyrillic locales (further scripts may be added in the future). You
 can deactivate these extra declarations (in case you have devised your
-own, for example) with |licr=unextended|. They are ignored with lazy
-loading, so if you need them you have to declare explicitly the
-language in the preamble.
+own, for example) with |licr=unextended| (the default is
+\texttt{extended}). They are ignored with lazy loading, so if you need
+them you have to declare explicitly the language in the preamble.
 
 \subsection{The \texttt{base} option}
 
@@ -2531,6 +2570,8 @@ selects the hyphenation patterns for the last language passed as option
 
 \subsection{\texttt{provide} and \cs{babelprovide} – \texttt{ini} files}
 \label{inifiles}
+
+\textit{[To be revised.]}
 
 An alternative approach to define a language (or, more precisely, a
 \textit{locale}) is by means of an \texttt{ini} file. Currently
@@ -2604,19 +2645,6 @@ lack of suitability of some features.
 \end{description}
 \end{note}
 
-\begin{note}
-  Wikipedia defines a \textit{locale} as follows: “In computing, a
-  locale is a set of parameters that defines the user’s language,
-  region and any special variant preferences that the user wants to see
-  in their user interface. Usually a locale identifier consists of at
-  least a language code and a country/region code.” \Babel{} is moving
-  gradually from the old and fuzzy concept of \textit{language} to the
-  more modern of \textit{locale}. Note each locale is by itself a
-  separate “language”, which explains why there are so many files. This
-  is on purpose, so that possible variants can be created and/or
-  redefined easily.
-\end{note}
-
 \subsection{Selection based on BCP 47 tags}
 \label{bcp47}
 
@@ -2671,12 +2699,15 @@ options make sense depending on the particular needs of each document
 
 The behavior is adjusted with |\babeladjust| with the following parameters:
 \begin{description}
-\item \texttt{autoload.bcp47} with values |on| and |off|.
-\item \texttt{autoload.bcp47.options}, which are passed to
+\EditInstance{item}{description}{%
+  label-format=\normalfont\ttfamily\color{thered}#1}
+\itemsep=-\parskip
+\item[autoload.bcp47] with values |on| and |off|.
+\item[autoload.bcp47.options], which are passed to
   |\babelprovide|; \New{24.14} |import| by default (features defined in
   the corresponding |babel-...tex| file might not be available), but
   you can set it to another value (even empty).
-\item \texttt{autoload.bcp47.prefix}. Although the public name used in
+\item[autoload.bcp47.prefix]. Although the public name used in
   selectors is the tag, the internal name will be different and
   generated by prepending a prefix, which by default is
   \texttt{bcp47-}. You may change it with this key.
@@ -2955,7 +2986,10 @@ You can define new counters freely, and assign them to |\alph|:
     alph = acute                % Assign it to \alph
   ]{english}
 \end{verbatim}
-You can choose the name, and instead of |acute| it can be another one.
+You can choose the name, and instead of |acute| it can be another
+one. Unlike \texttt{digits.native}, the elements are separated with
+spaces.
+
 \end{example}
 
 \subsection{Hooks}
@@ -2966,14 +3000,16 @@ used.
 
 \New{3.64} This is not the only way to inject code at those points. The
 events listed below can be used as a hook name in |\AddToHook| in the
-form |babel/<language-name>/<event-name>| (with |*| it’s applied to
-all languages), but there is a limitation, because the parameters
+form |babel/<language-name>/<event-name>| (with |*| as |<language-name>|
+it’s applied to all languages), but there is a limitation, because the parameters
 passed with the \babel{} mechanism are not allowed. The |\AddToHook|
 mechanism does \textit{not} replace the current one in \babel. Its
 main advantage is you can reconfigure \babel\ even before loading it.
 See the example below.
 
 \Describe{\AddBabelHook}{\oarg{language}\marg{name}\marg{event}\marg{code}}
+\DescribeOther{\EnableBabelHook}{\marg{name}}
+\DescribeOther{\DisableBabelHook}{\marg{name}}
 
 The same name can be applied to several events. Hooks with a certain
 \marg{name} may be enabled and disabled for all defined events with
@@ -3042,7 +3078,7 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
 \AddBabelHook{one}{foreign}{\BabelWrapText{\textit{##1}}
 \AddBabelHook{two}{foreign}{\BabelWrapText{\parse{##1}}
 \end{verbatim}
-the text becomes |\textit{\parse{<text>}}|. 
+the text becomes |\textit{\parse{<text>}}|.  Order is relevant.
 \begin{example}
   PDF tagging is still a work in progress, but language tags are already
   possible in short texts with |\foreignlanguage|. See the
@@ -3166,10 +3202,13 @@ with the previous hook.
 
 \section{Creating a language}
 
+\textit{[To be revised, as this command is also used with existing \texttt{ini}
+locale files.]}
+
 \New{3.10} And what if there is no style for your language or none fits
 your needs? You may then define quickly a language with the help of the
 following macro in the preamble (which may be used to modify an
-existing language, too, as explained in the previous subsection).
+existing language, too, as explained in previous section).
 
 \Describe{\babelprovide}{\oarg{options}\marg{language-name}}
 
@@ -3233,8 +3272,8 @@ Blah \foreignlanguage{ipa}{ɔːlˈðəʊ} Blah.
   \babelprovide[import=en-US]{en-US}
 \end{verbatim}
   Note, however, mixing ways to identify locales can lead to problems.
-  For example, is \verb|yi| the name of the language spoken by the Yi
-  people or is it the code for Yiddish?
+  For example, is \verb|ga| the name of the language spoken by the Gã
+  people or is it the code for Irish?
 \end{example}
 
 The main language is not changed (\texttt{danish} in this example).
@@ -3244,7 +3283,7 @@ necessary.
 If the language has been loaded as an argument in |\documentclass| or
 |\usepackage|, then |\babelprovide| redefines the requested data.
 
-\Describe{import=}{\meta{locale-tag}} The |<language-tag>| is optional.
+\Describe{import=}{\meta{locale-tag}} The |<locale-tag>| is optional.
 It imports the full data from the |ini| file corresponding to the locale
 being loaded, as set in |babel-<locale>.tex| (where |<locale>| is the
 last argument in |\babelprovide|), including captions and date (and
@@ -3362,6 +3401,32 @@ languages. The first ones are predefined by \LaTeX{} (see
 \end{verbatim}
 \end{example}
 
+\Describe{transforms=}{\meta{transform-list}}
+(\luatex) See section~\ref{transforms}.
+
+\Describe{interchar=}{\meta{interchar-list}}
+(\xetex) See section~\ref{interchar}.
+
+\begin{note}
+  (1) If you need shorthands, you can define them with |\useshorthands|
+  and |\defineshorthand| as described above. (2) Captions and |\today|
+  are “ensured” with |\babelensure| (this is the default in
+  |ini|-based languages).
+\end{note}
+
+\begin{example} When creating a locale from another locale, you may want
+to reset some properties, like the BCP 47 tags. Here is an example of
+how to do it:
+\begin{verbatim}
+\babelprovide{spanish}      % import=es by default
+\babelprovide[
+    import=es,
+    ×identification/tag.bcp47 = es-x-medieval×,
+    ×identification/extension.x.tag.bcp47 = medieval×]
+  {medievalspanish}
+\end{verbatim}
+\end{example}
+
 \smallskip
 \makebox[\linewidth][c]{*\qquad*\qquad*}
 \smallskip
@@ -3421,32 +3486,6 @@ There are currently 3 ‘actions’, which can be used at the same time
   surrounding letters, among others, but even so manual switching can
   still be necessary.
 \end{note}
-
-\Describe{transforms=}{\meta{transform-list}}
-(\luatex) See section~\ref{transforms}.
-
-\Describe{interchar=}{\meta{interchar-list}}
-(\xetex) See section~\ref{interchar}.
-
-\begin{note}
-  (1) If you need shorthands, you can define them with |\useshorthands|
-  and |\defineshorthand| as described above. (2) Captions and |\today|
-  are “ensured” with |\babelensure| (this is the default in
-  |ini|-based languages).
-\end{note}
-
-\begin{example} When creating a locale from another locale, you may want
-to reset some properties, like the BCP 47 tags. Here is an example of
-how to do it:
-\begin{verbatim}
-\babelprovide{spanish}      % import=es by default
-\babelprovide[
-    import=es,
-    ×identification/tag.bcp47 = es-x-medieval×,
-    ×identification/extension.x.tag.bcp47 = medieval×]
-  {medievalspanish}
-\end{verbatim}
-\end{example}
 
 \section{Locale features}
 
@@ -3697,6 +3736,9 @@ It’s still somewhat experimental. Again, there is an explanation in the
 \href{https://latex3.github.io/babel/news/whats-new-in-babel-3.81.html}%
   {\babel\ site}.
 
+Hebrew justification based on interletter spacing is handled with a
+transform and doesn’t require a specific justification method.
+
 \Describe{linebreaking=}{}
 \New{3.59} Just a synonymous for \texttt{justification}. Depending on
 the language, this name can make more sense.
@@ -3755,7 +3797,7 @@ you will use only shorthands provided by languages.
 \begin{enumerate}
 \item Activated chars used for two-char shorthands cannot be followed
   by a closing brace |}| and the spaces following are gobbled.  With
-  one-char shorthands (e.g.,~|:|), they are preserved.
+  one-char shorthands (e.g.,~|:| in |french|), they are preserved.
 \item If on a certain level (system, language, user, language user)
   there is a one-char shorthand, two-char ones starting with that char
   and on the same level are ignored.
@@ -4002,8 +4044,8 @@ included, \texttt{activegrave} is set.  Active characters (like
 \verb|~|) should be preceded by \verb|\string| (otherwise they will be
 expanded by \LaTeX{} before they are passed to the package and
 therefore they will not be recognized); however, |t| is provided for
-the common case of |~| (as well as |c| for not so common case of the
-comma).
+the common case of |~|, and |c| for the not so common case of the
+comma.
 
 With |shorthands=off| no language shorthands are defined.
 As some languages use this mechanism for tools not available
@@ -4149,7 +4191,8 @@ which redefine what |\alph| and |\Alph| print. For example:
 \end{verbatim}
 \end{itemize}
 
-The styles are:
+The styles are (see also
+\textit{\href{https://latex3.github.io/babel/guides/list-of-counters.html}{List of counters}}):
 \begin{description}
 \itemsep=-\parskip
 \item[Ancient Greek] |lower.ancient|, |upper.ancient|
@@ -4324,7 +4367,9 @@ which must be macros. Allowed calendars are:
 The optional argument converts the given date, in the form
 ‘\m{year}-\m{month}-\m{day}’, although for practical reasons most
 calendars accept only a restricted range of years. Please, refer to the
-page on the news for 3.76 in the \babel{} site for further details.
+page on the
+\href{https://latex3.github.io/babel/news/whats-new-in-babel-3.76.html}{news
+for 3.76} in the \babel{} site for further details.
 
 \subsection{Transforms}
 \label{transforms}
@@ -4508,7 +4553,7 @@ standard system devised by Ljudevit Gaj.}
           \marg{lua-pattern}\marg{replacement}}
 
 \New{3.37-3.39} \textit{With \luatex{}} it is possible to define
-non-standard hyphenation rules, like |f-f| $\to$ |ff-f|, repeated
+non-standard hyphenation rules, like |f-f| $\tto$ |ff-f|, repeated
 hyphens, ranked ruled (or more precisely, ‘penalized’ hyphenation
 points), and so on. A few rules are currently provided (see above), but
 they can be defined as shown in the following example, where |{1}| is
@@ -4563,7 +4608,7 @@ of space-separated font tags:
 \end{verbatim}
 Tags can adopt two forms: a family, such as |rm| or |tt|, or the set
 family/series/shape. If a font matches one of these conditions, the
-transform is enabled. The second tag in |rm rm/n/it| is redundant.
+transform is enabled. The second tag in |rm rm/n/it| is therefore redundant.
 There are no wildcards; so, for italics you may want to write something
 like |sf/m/it sf/b/it|.
 
@@ -4627,7 +4672,7 @@ This feature is activated with the first |\babelposthyphenation| or
 \begin{verbatim}
 \babelprehyphenation{english}{|a|}
   {}, {},                       % Keep first space and a
-  { insert, penalty = 10000 },  % Insert penalty
+  { ×insert, penalty = 10000× },  % Insert penalty
   {}                            % Keep last space
 }
 \end{verbatim}
@@ -4827,54 +4872,80 @@ The locales currently available cover the following scripts:
 \begin{multicols}{4}
 \parindent-.5em
 \leftskip.5em
-Arabic\\   
-Armenian\\  
+Arabic\\
+Armenian\\
+Avestan\\
 Bangla\\
-Bengali\\   
-Cherokee\\  
+Batak\\
+Bengali\\
+Buginese\\
+Carian\\
+Chakma\\
+Cherokee\\
 Coptic\\
-Cyrillic\\  
+Cyrillic\\
 Devanagari\\
-Egyptian hieroglyphs\\ 
-Ethiopic\\  
-Georgian\\  
+Egyptian hieroglyphs\\
+Ethiopic\\
+Georgian\\
 Glagolitic\\
 Gothic\\
 Greek\\
-Gujarati\\  
-Gurmukhi\\  
-Han\\ 
+Gujarati\\
+Gurmukhi\\
+Han\\
 Hebrew\\
+Imperial Aramaic\\
 Japanese\\
-Kannada\\ 
+Kannada\\
 Khmer\\
 Khojki\\
 Khudawadi\\
 Korean\\
 Lao\\
 Latin\\
+Lepcha\\
+Limbu\\
+Linear A\\
+Lycian\\
+Lydian\\
 Malayalam\\
-Myanmar\\   
+Mandaean\\
+Myanmar\\
+Nabataean\\
+New Tai Lue\\
 Nyiakeng Puachue Hmong\\
 N’Ko\\
-Ol Chiki\\  
-Old Church Slavonic Cyrillic\\ 
+Ogham\\
+Ol Chiki\\
+Old Church Slavonic Cyrillic          
+Old Italic\\
+Old Persian\\
+Old South Arabian\\
+Old Uyghur\\
 Oriya\\
+Osage\\
+Palmyrene\\
 Phoenician\\
 Runic\\
+Samaritan\\
 Simplified\\
-Sinhala\\   
-Sumero-Akkadian Cuneiform\\
+Sinhala\\
+Sumero-Akkadian Cuneiform\\            
+Syriac\\
+Tai Le\\
 Tamil\\
+Tangut\\
 Telugu\\
 Thaana\\
 Thai\\
-Tibetan\\   
-Tifinagh\\  
+Tibetan\\
+Tifinagh\\
 Traditional\\
-Unified Canadian Aboriginal Syllabics\\
-Vai\\ 
-Yi
+Ugaritic\\
+Unified Canadian Aboriginal Syllabics\\ 
+Vai\\
+Yi                         
 \end{multicols}
 
 \Describe{\ensureascii}{\marg{text}}
@@ -4905,34 +4976,43 @@ to ensure most of the ASCII letters and symbols are the right ones.
 \subsection{Bidirectional and right-to-left text}
 \label{bidi}
 
-No macros to select the writing direction are provided, either --
+No macros to select the writing direction are provided, either –
 writing direction is intrinsic to each script and therefore it is best
 set by the language (which can be a dummy one). Furthermore, there
 are in fact two right-to-left modes, depending on the language, which
-differ in the way `weak' numeric characters are ordered (e.g., Arabic
+differ in the way ‘weak’ numeric characters are ordered (e.g., Arabic
 \%123 \textit{vs} Hebrew 123\%).
 
 \begin{note}
-  Explicit formatting characters should be avoided, too, and in fact
-  they are not recognized by the \babel{} algorithm. According to
-  Unicode (UAX\#9): “Where available, markup should be used instead of
-  the explicit formatting characters”. Work is currently in progress to
-  make \babel{} compatible with the \textsf{unibidi-lua} package, which
-  supports them, though the rule would still apply.
+  According to Unicode
+  (\href{https://www.unicode.org/reports/tr9/#Markup_And_Formatting}{UAX\#9}):
+  “Where available, markup should be used instead of the explicit
+  formatting characters” (i.e., the invisible \texttt{RLI},
+  \texttt{LRI}, etc., characters). So, they are ignored by the \babel{}
+  algorithm by default (the UAX\#9 does not require supporting them).
+  However, the implicit marks \textsc{left-to-right mark} (U+200E),
+  \textsc{right-to-left mark} (U+200F) and \textsc{arabic letter mark}
+  (U+061C) are recognized.
+
+  Work is currently underway to make \babel{} compatible with the
+  \textsf{unibidi-lua} package (see \New{26.13}), which supports all of
+  formatting characters, though the rule above will still apply (even
+  if these characters are visible with the |^||^||^||^| notation).
 \end{note}
 
 \begin{warning}
   The current code for \textbf{text} in \luatex{} should be considered
   essentially stable, but, of course, it is not bug-free and there can
   be improvements in the future, because setting bidi text has many
-  subtleties (see for example <https://www.w3.org/TR/html-bidi/>). A
-  basic stable version for other engines must wait. This applies to
-  text; there is a basic support for \textbf{graphical} elements,
-  including the |picture| environment (with \textsf{pict2e}) and
-  \textsf{pfg/tikz}. Also, indexes and the like are under study, as
-  well as math (there are progresses in the latter, including
-  \textsf{amsmath} and \textsf{mathtools} too, but for example
-  |gathered| may fail).
+  subtleties (see for example
+  \textit{\href{https://www.w3.org/TR/html-bidi/}{Additional
+  Requirements for Bidi in HTML \& CSS}}). A basic stable version for
+  other engines must wait. This applies to text; there is a basic
+  support for \textbf{graphical} elements, including the |picture|
+  environment (with \textsf{pict2e}) and \textsf{pfg/tikz}. Also,
+  indexes and the like are under study, as well as math (there are
+  progresses in the latter, including \textsf{amsmath} and
+  \textsf{mathtools} too, but for example |gathered| may fail).
 
   An effort is being made to avoid incompatibilities in the future
   (this one of the reasons currently bidi must be explicitly requested
@@ -4963,10 +5043,11 @@ will be fine in most cases, but numbers, for example, will be rendered
 in the wrong order.
 
 In \luatex, the preferred method is |basic|, which supports both L and
-R text. |basic-r| was a first attempt to create a bidi algorithm and
-provides a simple and fast method for R text in some typical cases.
-(They are named \texttt{basic} mainly because they consider only the
-intrinsic direction of scripts and weak directionality.)
+R text. The |basic-r| model was a first attempt to create a bidi
+algorithm and provides a simple and fast method for R text in some
+typical cases. (They are named \texttt{basic} mainly because they
+consider only the intrinsic direction of scripts and weak
+directionality.)
 
 In \xetex, |bidi-r| and |bidi-l| resort to the package \textsf{bidi}
 (by Vafa Khalighi). For RL documents use the former, and for LR ones
@@ -5023,12 +5104,11 @@ See particularly |lua-bidibasic.tex| and |lua-secenum.tex|.
 \end{example}
 
 \begin{example}
-  With |bidi=basic| \textit{both} L and R text can be
-  mixed without explicit markup (the latter will be necessary only in
-  some special cases where the Unicode algorithm fails). It is used much
-  like |bidi=basic-r|, but with R text inside L text you may want to map
-  the font so that the correct features are in force. This is accomplished
-  with an option in |\babelprovide|, as illustrated:
+  With |bidi=basic| \textit{both} L and R text can be mixed without
+  explicit markup (the latter will be necessary only in some special
+  cases where the Unicode algorithm fails), but you may want to map the
+  font so that the correct features are in force, too. This is
+  accomplished with an option in |\babelprovide|, as illustrated:
     \begingroup
   % If you are looking at the code to see how it has been written, you
   % will be disappointed :-). The following example is built ad hoc to
@@ -5108,7 +5188,9 @@ options are required by all engines.
 
 \item[sectioning] makes sure the sectioning macros are typeset in the
   main language, but with the title text in the current language (see
-  below |\BabelPatchSection| for further details).
+  below |\BabelPatchSection| for further details). \New{26.13} It also
+  isolates the text in the paragraph-like sectioning titles from the
+  rest of the line when applying the \texttt{bidi=basic} algorithm.
 
 \item[counters] required in all engines to reorder section numbers and
   the like (e.g., \m{subsection}.\m{section}); required in \xetex{} and
@@ -5160,12 +5242,7 @@ bidirectional (with both R and L paragraphs) documents in \luatex{}.
   required in \xetex{} and \pdftex{} in some styles (support for the
   latter two engines is still experimental) \New{3.18}.
 
-\item[tabular] required in \luatex{} for R |tabular|, so that the first
-  column is the right one (it has been tested only with simple tables,
-  so expect some readjustments in the future); ignored in \pdftex{} or
-  \xetex{} (which will not support a similar option in the short term).
-  It patches an internal command, so it might be ignored by some
-  packages and classes (or even raise an error). \New{3.18}.
+\item[lrtabular, tabular] See the \href{https://latex3.github.io/babel/news/whats-new-in-babel-26.10.html}{news page for 26.10}.
 
 \item[graphics] modifies the |picture| environment so that the whole
 figure is L but the text is R\@. It \textit{does not} work with the
@@ -5185,17 +5262,17 @@ when other options are specified \New{25.9}.
 \end{description}
 
 \begin{example}
-  Typically, in an Arabic document you would need:
+  Typically, in an Arabic document you would need (\luatex):
 \setengine{luatex}
 \begin{verbatim}
 \usepackage[bidi=basic,
-            layout=counters tabular]{babel}
+            layout=counters]{babel}
 \end{verbatim}
-or
+or (\xetex):
 \setengine{xetex}
 \begin{verbatim}
 \usepackage[bidi=bidi,
-            layout=counters tabular]{babel}
+            layout=counters]{babel}
 \end{verbatim}
 \end{example}
 
@@ -6016,7 +6093,7 @@ added.} It may be empty, too, but in such a case using
 
 \begin{verbatim}
 \StartBabelCommands{language}{captions}
-  [unicode, fontenc=TU EU1 EU2, charset=utf8]
+  [unicode, fontenc=TU, charset=utf8]
 \SetString{\chaptername}{utf8-string}
 
 \StartBabelCommands{language}{captions}
@@ -6274,8 +6351,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.12.136469>>
-%<<date=2026/09/25>>
+%<<version=26.13>>
+%<<date=2026/09/27>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13936,7 +14013,7 @@ wouldn’t exist.
     * If installed, check there isn’t an old\\%
     \space\space version of the required files in your system\\%
     * If it's an unsupported language, create it with\\%
-    \string\babelprovide (see the manual)}
+    \space\space \string\babelprovide\space (see the manual)}
    {Valid options are, among others: shorthands=, KeepShorthandsActive,\\%
     activeacute, activegrave, noconfigs, safe=, main=, math=\\%
     headfoot=, strings=, config=, hyphenmap=, or a language name.}

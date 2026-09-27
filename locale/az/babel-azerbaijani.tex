@@ -1,6 +1,5 @@
 % This file is part of babel. For further details see:
 % https://www.ctan.org/pkg/babel
-% With contributions by Anar Abdullayev, @abdabar
 \ifx\BabelBeforeIni\undefined
   \PackageError{babel}%
     {This file is a component of babel and cannot\MessageBreak
@@ -9,55 +8,6 @@
   \stop
 \fi
 \BabelBeforeIni{az}{%
-  \ifx\Azerbaijanischwa\undefined
-    % Azerbaijani Latin schwa (Ə U+018F, ə U+0259). T1 has no glyph for
-    % this Latin letter; the default definition uses the raw codepoint
-    % via \char (not the literal character) so it is safe even where
-    % \DeclareUnicodeCharacter later maps that same codepoint back to
-    % this very macro -- using the literal character there would make
-    % that mapping self-referential and loop forever. \char with a
-    % Unicode codepoint is resolved directly by LuaTeX/XeTeX's native
-    % Unicode font access, so this remains correct on those engines.
-    % Under pdfTeX/T1 the visual glyph is instead borrowed, via the
-    % standard \UseTextSymbol mechanism, from whichever Cyrillic
-    % encoding (T2A/T2B/T2C/X2 -- all four place it at the same slot:
-    % 154 upper, 186 lower) the user has also loaded; the macro's own
-    % Latin identity is unaffected by that borrowing. This follows the
-    % historical babel-azerbaijani package (Namig J. Guliyev).
-    \DeclareTextCommandDefault{\Azerbaijanischwa}{\char"18F\relax}%
-    \DeclareTextCommandDefault{\azerbaijanischwa}{\char"259\relax}%
-    % \DeclareUnicodeCharacter is pdfTeX-kernel-only (it is undefined
-    % under LuaTeX/XeTeX, which read UTF-8 natively and need no such
-    % registration); guard it so loading this file never errors there.
-    \ifx\DeclareUnicodeCharacter\undefined\else
-      \DeclareUnicodeCharacter{018F}{\Azerbaijanischwa}%
-      \DeclareUnicodeCharacter{0259}{\azerbaijanischwa}%
-    \fi
-    % The T1/Cyrillic-borrow setup below is pdfTeX-only: LuaTeX and
-    % XeTeX read UTF-8 natively and already render Ə/ə correctly (glyph
-    % coverage permitting) via the \char-based default above, without
-    % needing T1 or any Cyrillic encoding at all.
-    \ifx\directlua\undefined\ifx\XeTeXrevision\undefined
-      \AtBeginDocument{%
-        \let\bbl@az@cyrenc\@empty
-        \@ifundefined{T@T2C}{}{\def\bbl@az@cyrenc{T2C}}%
-        \@ifundefined{T@T2B}{}{\def\bbl@az@cyrenc{T2B}}%
-        \@ifundefined{T@T2A}{}{\def\bbl@az@cyrenc{T2A}}%
-        \@ifundefined{T@X2}{}{\def\bbl@az@cyrenc{X2}}%
-        \ifx\bbl@az@cyrenc\@empty
-          \PackageError{babel}%
-            {No Cyrillic encoding (T2A, T2B, T2C or X2) is loaded.\MessageBreak
-             Azerbaijani Latin schwa (Ə/ə) cannot be represented\MessageBreak
-             under pdfTeX using T1 alone. Load one together with T1,\MessageBreak
-             e.g. \string\usepackage[T1,T2A]{fontenc}}%
-            {See the Azerbaijani section of the babel manual.}%
-        \else
-          \DeclareTextCommand{\Azerbaijanischwa}{T1}{%
-            \UseTextSymbol{\bbl@az@cyrenc}{\char154}}%
-          \DeclareTextCommand{\azerbaijanischwa}{T1}{%
-            \UseTextSymbol{\bbl@az@cyrenc}{\char186}}%
-        \fi}%
-    \fi\fi
-  \fi
+  \BabelDefinitionFile{0}{azerbaijani}{}%
 }
 \endinput
