@@ -1,15 +1,14 @@
 # What's new in babel 26.13
 
-**Draft**
+2026-09-27
+
+The manual has been revised to document the latest changes (some of them
+were still not included).
 
 ## Locales
 
-Two locales have been improved: Azerbaijani (thanks to [Anar Abdullayev](https://github.com/abdanar))
-and Malagasy (thanks to [Ralahady Bruno Bakys](https://github.com/RalahadyBruno)).
-
-The main style for Azerbaijani is now based on the `ini` mechanism and replaces
-the `ldf` file. Remember you can still use the latter as the main
-language with `provide=!`.
+Two locales have been improved: `chinese-pinyin` (a few missing values)
+and `malagasy` (thanks to [Ralahady Bruno Bakys](https://github.com/RalahadyBruno)).
 
 ## Fixes
 
@@ -22,5 +21,6 @@ language with `provide=!`.
 ## Preliminary integration with `unibidi-lua`
 
 This is work in progress, so it should not ne used in production, but
-you can make tests. Use the option `bidi=unibidi`.
+you can make tests. Use the option `bidi=unibidi`. The option
+`layout=counters` seems to work.
 
