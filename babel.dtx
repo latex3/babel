@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/09/27 v26.13
+  [2026/10/01 v26.13.137049
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -2390,8 +2390,8 @@ The available fields are:
   preferred command, so that the existence of a field can be checked
   before. This also means building a string with the language and the
   region with something like
-  |\localeinfo*{language.tab.bcp47}|\allowbreak |-|\allowbreak
-  |\localeinfo*{region.tab.bcp47}| is not usually a good idea (because
+  |\localeinfo*{language.tag.bcp47}|\allowbreak |-|\allowbreak
+  |\localeinfo*{region.tag.bcp47}| is not usually a good idea (because
   of the hyphen).
 \end{note}
 
@@ -4992,7 +4992,9 @@ differ in the way ‘weak’ numeric characters are ordered (e.g., Arabic
   algorithm by default (the UAX\#9 does not require supporting them).
   However, the implicit marks \textsc{left-to-right mark} (U+200E),
   \textsc{right-to-left mark} (U+200F) and \textsc{arabic letter mark}
-  (U+061C) are recognized.
+  (U+061C) are recognized. See
+  \textit{\href{https://github.com/latex3/babel/discussions/441}{When Unicode
+  bidi is not enough}}.
 
   Work is currently underway to make \babel{} compatible with the
   \textsf{unibidi-lua} package (see \New{26.13}), which supports all of
@@ -6351,8 +6353,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.13>>
-%<<date=2026/09/27>>
+%<<version=26.13.137049>>
+%<<date=2026/10/01>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6994,6 +6996,8 @@ wouldn’t exist.
 \DeclareOption{provide*=!}{\chardef\bbl@ldfflag\thr@@} % second + main
 \DeclareOption{licr=extended}{}
 \DeclareOption{licr=unextended}{}
+\let\bbl@ifmetadata\@gobble
+\DeclareOption{babeltagging=on}{\input{tagbabel.def}}
 % Don't use. Experimental.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
@@ -7833,8 +7837,10 @@ wouldn’t exist.
     \let\BabelText\@firstofone
     \bbl@beforeforeign
     \foreign@language{#2}%
+    \bbl@ifmetadata{\UseTaggingSocket{babel/foreign/begin}}%
     \bbl@usehooks{foreign}{}%
     \BabelText{#3}% Now in horizontal mode!
+    \bbl@ifmetadata{\UseTaggingSocket{babel/foreign/end}}%
   \endgroup}
 \def\bbl@foreign@s#1#2{%
   \begingroup
@@ -13821,6 +13827,31 @@ wouldn’t exist.
   \bbl@info{Main language set to '\mainlocalename'\@gobble}}
 %</package>
 %    \end{macrocode}
+%
+% \section{Tagging}
+%
+% Preliminary and experimental. Only |\foreignlanguage|, for the moment.
+% 
+%    \begin{macrocode}
+%<*tagging>
+\let\bbl@ifmetadata\IfDocumentMetadataT
+\ExplSyntaxOn
+\NewTaggingSocket{babel/foreign/begin}{0}
+\NewTaggingSocket{babel/foreign/end}{0}
+\NewTaggingSocketPlug{babel/foreign/begin}{default}{
+  \tag_mc_end_push: 
+  \tagstructbegin{tag=Span, lang=\BCPdata{tag}}
+  \tagmcbegin {} }
+\NewTaggingSocketPlug{babel/foreign/end}{default}{
+  \tagmcend
+  \tagstructend
+  \tag_mc_begin_pop:n {}}  
+\AssignTaggingSocketPlug{babel/foreign/begin}{default}
+\AssignTaggingSocketPlug{babel/foreign/end}{default}
+\ExplSyntaxOff
+%</tagging>
+%    \end{macrocode}
+%
 %
 % \section{The kernel of Babel}
 %
@@ -26376,6 +26407,7 @@ Babel.cjk_breaks = {
 \ifx\bbl@trace\@undefined\def\bbl@trace#1{}\fi
 \expandafter\newif\csname ifbbl@single\endcsname
 \chardef\bbl@bidimode\z@
+\let\bbl@ifmetadata\@gobble
 %<</Emulate LaTeX>>
 %    \end{macrocode}
 %
