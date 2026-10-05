@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/01 v26.13.137049
+  [2026/10/05 v26.13.137466
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -5257,7 +5257,7 @@ the same for \textsf{pgf/tikz}. Somewhat experimental. \New{3.32}.
 
 \item[pars, nopars] When \texttt{layout} is used with any options
 in bidi documents, there are a few changes in |\@hangfrom| and also
-(only \xetex, as it’s unnecesary in \luatex) in |\raggedright|
+(only \xetex, as it’s unnecessary in \luatex) in |\raggedright|
 and |\raggedleft|. Using |pars| applies these adjustments even without
 other options; conversely, |nopars| prevents these adjustments even
 when other options are specified \New{25.9}.
@@ -6353,8 +6353,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.13.137049>>
-%<<date=2026/10/01>>
+%<<version=26.13.137466>>
+%<<date=2026/10/05>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6997,7 +6997,10 @@ wouldn’t exist.
 \DeclareOption{licr=extended}{}
 \DeclareOption{licr=unextended}{}
 \let\bbl@ifmetadata\@gobble
-\DeclareOption{babeltagging=on}{\input{tagbabel.def}}
+\DeclareOption{babel-metadata=on}{%
+  \IfDocumentMetadataT{\AtEndOfPackage{\input{tagbabel.def}}}}
+\DeclareOption{babel-metadata=tagging}{%
+  \IfDocumentMetadataT{\AtEndOfPackage{\input{tagbabel.def}}}}
 % Don't use. Experimental.
 \newif\ifbbl@single
 \DeclareOption{selectors=off}{\bbl@singletrue}
@@ -11249,7 +11252,7 @@ wouldn’t exist.
     \bbl@error{no-ini-file}{#1}{}{}%
   \else
     % == Store ini data in \bbl@inidata ==
-    \catcode`\ =10 \catcode`\"=12 \catcode`\#=12
+    \catcode`\ =10 \catcode`\"=12
     \catcode`\[=12 \catcode`\]=12 \catcode`\==12 \catcode`\&=12
     \catcode`\;=12 \catcode`\|=12 \catcode`\%=14 \catcode`\-=12
     \ifnum#2=\m@ne % Just for the info
@@ -12809,20 +12812,23 @@ wouldn’t exist.
     \@namedef{#1}{%
       \@ifstar{\bbl@presec@s{#1}}%
               {\@dblarg{\bbl@presec@x{#1}}}}}}
+
 \def\bbl@presec@x#1[#2]#3{%
   \bbl@exp{%
     \\\select@language@x{\bbl@main@language}%
     \\\bbl@cs{sspre@#1}%
     \\\bbl@cs{ss@#1}%
       [\\\foreignlanguage{\languagename}{\unexpanded{#2}}]%
-      {\\\foreignlanguage{\languagename}{\unexpanded{#3}}\babelsublr{}}%
+      {\\\foreignlanguage{\languagename}{\unexpanded{#3}}%
+       \ifcase\bbl@bidimode\else\\\babelsublr{}\fi}%
     \\\select@language@x{\languagename}}}
 \def\bbl@presec@s#1#2{%
   \bbl@exp{%
     \\\select@language@x{\bbl@main@language}%
     \\\bbl@cs{sspre@#1}%
     \\\bbl@cs{ss@#1}*%
-      {\\\foreignlanguage{\languagename}{\unexpanded{#2}}\babelsublr{}}%
+      {\\\foreignlanguage{\languagename}{\unexpanded{#2}}%
+       \ifcase\bbl@bidimode\else\\\babelsublr{}\fi}%
     \\\select@language@x{\languagename}}}
 %
 \IfBabelLayout{sectioning}%
@@ -13830,10 +13836,27 @@ wouldn’t exist.
 %
 % \section{Tagging}
 %
-% Preliminary and experimental. Only |\foreignlanguage|, for the moment.
+% Preliminary and experimental. Only |\foreignlanguage|, for the
+% moment. Requires the package option \texttt{babel-metadata=tagging}.
+% Also changes for |\DocumentMetadata|. Option
+% \texttt{babel-metadata=on} makes these changes without activating the
+% changes for tagging.
 % 
 %    \begin{macrocode}
 %<*tagging>
+\ifx\bbl@chfmt\@undefined\else
+  \EditInstance{heading}{chapter}{%
+    prefix = ,
+    number-format = \unskip\bbl@chfmt
+   }
+\fi
+\ifx\bbl@partformat\@undefined\else
+  \EditInstance{heading}{part}{%
+    prefix = ,
+    number-format = \unskip\bbl@partformat
+   }
+\fi
+\@ifpackagewith{babel}{babel-metadata=tagging}{}{\endinput}
 \let\bbl@ifmetadata\IfDocumentMetadataT
 \ExplSyntaxOn
 \NewTaggingSocket{babel/foreign/begin}{0}
@@ -24708,7 +24731,8 @@ local ranges     = Babel.ranges
 
 -- L1's whitespace set: WS + isolate formats + (per the UBA reference) the
 -- explicit embedding/override formats + BN.
--- Babel does not use embedding/override/isolates, but well, I copy pasted it...
+-- Babel does not use embedding/override/isolates. In fact, their use
+-- is discouraged by the UAX#9. To be removed.
 local l1_whitespace = {
   ws  = true, bn  = true,
   lre = true, rle = true, lro = true, rlo = true, pdf = true,
