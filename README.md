@@ -1,4 +1,4 @@
-## Babel 26.13.137466
+## Babel 26.13.138071
 
 (dev)
 
@@ -21,9 +21,9 @@ features.
 
 The **latest stable** version is available on <https://ctan.org/pkg/babel>.
 
-**Changes** in version 26.13 are described in:
+**Changes** in version 26.14 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-26.13.html
+https://latex3.github.io/babel/news/whats-new-in-babel-26.14.html
 
 Apart from the manual, you can find **information and examples** in:
 

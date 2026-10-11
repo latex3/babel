@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/05 v26.13.137466
+  [2026/10/11 v26.13.138071
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -223,7 +223,7 @@
         Javier Bezos}
 \date{Typeset \today}
 \begin{titlepage}
-\begin{picture}(0,0)
+\begin{picture}[artifact](0,0)
   \sffamily
   \put(-5.7cm,-4.5cm){\color[rgb]{.86,.73,.67}\rule{8cm}{8cm}}
   \put( 2.3cm,-4.5cm){\color[rgb]{.95,.95,.95}\rule{15cm}{8cm}}
@@ -4856,7 +4856,7 @@ so-called Unicode fonts (in \luatex\ and \xetex) do not improve the
 situation either. So, a font suited for Vietnamese is not necessarily
 suited for, say, the romanization of Indic languages, and the fact it
 contains glyphs for Modern Greek does not mean it includes them for
-Classic Greek.
+Ancient Greek.
 
 \begin{note}
   Some languages sharing the same script define macros to switch it
@@ -4978,8 +4978,8 @@ to ensure most of the ASCII letters and symbols are the right ones.
 
 No macros to select the writing direction are provided, either –
 writing direction is intrinsic to each script and therefore it is best
-set by the language (which can be a dummy one). Furthermore, there
-are in fact two right-to-left modes, depending on the language, which
+set by the language (which can be a dummy one). Furthermore, there are
+in fact two right-to-left modes, depending on the language, which
 differ in the way ‘weak’ numeric characters are ordered (e.g., Arabic
 \%123 \textit{vs} Hebrew 123\%).
 
@@ -6353,8 +6353,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.13.137466>>
-%<<date=2026/10/05>>
+%<<version=26.13.138071>>
+%<<date=2026/10/11>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6690,10 +6690,10 @@ wouldn’t exist.
 % replaces the current value if the key exists, or adds the new
 % key/value at the end. The getter returns either the value if the key
 % exists or |\relax|. The code is based on arguments delimited by the
-% keys. In the getter, note the value is supposed not to start with
-% |\@empty|. 
+% keys. 
 %
 %    \begin{macrocode}
+\def\bbl@array@end{\@empty}
 \def\bbl@array@set#1#2#3{%
   \def\bbl@array@aux##1\bbl@elt#2\@@##2##3\bbl@array@aux##4{%
     \ifx\bbl@noelt##2%
@@ -6706,8 +6706,8 @@ wouldn’t exist.
   \expandafter\bbl@array@aux#1\bbl@elt#2\@@\bbl@noelt\bbl@array@aux{#3}}
 \def\bbl@array@get#1#2#3{%
   \def\bbl@array@aux##1\bbl@elt#2\@@##2##3\bbl@array@aux{%
-    \ifx\@empty##2\let#3\relax\else\def#3{##2}\fi}% 
-  \expandafter\bbl@array@aux#1\bbl@elt#2\@@\@empty\bbl@array@aux}
+    \ifx\bbl@array@end##2\@empty\let#3\relax\else\def#3{##2}\fi}% 
+  \expandafter\bbl@array@aux#1\bbl@elt#2\@@\bbl@array@end\bbl@array@aux}
 %    \end{macrocode}
 %
 % The following adds some code to |\extras...| both before and after,
@@ -7525,7 +7525,7 @@ wouldn’t exist.
 \expandafter\def\csname selectlanguage \endcsname{%
   \@ifnextchar[\bbl@select@s{\bbl@select@s[]}}
 \def\bbl@select@s[#1]#2{%
-  \def\bbl@select@opts{#1}%
+  \bbl@forkv{#1}{\bbl@array@set\bbl@select@opts{##1}{##2}}%
   \ifnum\bbl@hymapsel=\@cclv\let\bbl@hymapsel\tw@\fi
   \bbl@push@language
   \aftergroup\bbl@pop@language
@@ -7563,17 +7563,16 @@ wouldn’t exist.
   % The old buggy way. Preserved for compatibility, but simplified
   \edef\languagename{\expandafter\string#1\@empty}%
   \select@language{\languagename}%
-  \bbl@xin@{,main,}{,\bbl@select@opts,}%
-  \ifin@
+  \bbl@array@get\bbl@select@opts{main}\bbl@tempa
+  \ifx\bbl@tempa\relax\else
     \let\bbl@main@language\localename
     \let\mainlocalename\localename
   \fi
-  \let\bbl@select@opts\@empty
   % write to aux files
   \expandafter\ifx\csname date\languagename\endcsname\relax\else
     \if@filesw
-      \bbl@xin@{,nofiles,}{,\bbl@select@opts,}%
-      \ifin@\else
+      \bbl@array@get\bbl@select@opts{nofiles}\bbl@tempa
+      \ifx\bbl@tempa\relax
         \ifx\babel@aux\@gobbletwo\else % Set if single in the first, redundant
           \bbl@savelastskip
           \protected@write\@auxout{}{\string\babel@aux{\bbl@auxname}{}}%
@@ -7582,7 +7581,8 @@ wouldn’t exist.
         \bbl@usehooks{write}{}%
       \fi
     \fi
-  \fi}
+  \fi
+  \let\bbl@select@opts\@empty}
 %
 \let\bbl@restorelastskip\relax
 \let\bbl@savelastskip\relax
@@ -7661,12 +7661,12 @@ wouldn’t exist.
       \csname captions#1\endcsname\relax
       \csname date#1\endcsname\relax
     \else
-      \bbl@xin@{,captions,}{,\bbl@select@opts,}%
-      \ifin@
+      \bbl@array@get\bbl@select@opts{captions}\bbl@tempa
+      \ifx\bbl@tempa\relax\else
         \csname captions#1\endcsname\relax
       \fi
-      \bbl@xin@{,date,}{,\bbl@select@opts,}%
-      \ifin@  % if \foreign... within \<language>date
+      \bbl@array@get\bbl@select@opts{date}\bbl@tempa
+      \ifx\bbl@tempa\relax\else % if \foreign... within \<language>date
         \csname date#1\endcsname\relax
       \fi
     \fi
@@ -7776,7 +7776,7 @@ wouldn’t exist.
 \def\bbl@otherlanguage@s[#1]#2{%
   \def\bbl@selectorname{other*}%
   \ifnum\bbl@hymapsel=\@cclv\chardef\bbl@hymapsel4\relax\fi
-  \def\bbl@select@opts{#1}%
+  \bbl@forkv{#1}{\bbl@array@set\bbl@select@opts{##1}{##2}}%
   \foreign@language{#2}}
 %    \end{macrocode}
 %
@@ -7836,7 +7836,7 @@ wouldn’t exist.
 \providecommand\bbl@foreign@x[3][]{%
   \begingroup
     \def\bbl@selectorname{foreign}%
-    \def\bbl@select@opts{#1}%
+    \bbl@forkv{#1}{\bbl@array@set\bbl@select@opts{##1}{##2}}%
     \let\BabelText\@firstofone
     \bbl@beforeforeign
     \foreign@language{#2}%
@@ -7874,7 +7874,7 @@ wouldn’t exist.
   % set name
   \edef\languagename{#1}%
   \ifbbl@usedategroup
-    \bbl@add\bbl@select@opts{,date,}%
+    \bbl@array@set\bbl@select@opts{date}{\@empty}%
     \bbl@usedategroupfalse
   \fi
   \bbl@fixname\languagename
@@ -13863,7 +13863,13 @@ wouldn’t exist.
 \NewTaggingSocket{babel/foreign/end}{0}
 \NewTaggingSocketPlug{babel/foreign/begin}{default}{
   \tag_mc_end_push: 
-  \tagstructbegin{tag=Span, lang=\BCPdata{tag}}
+  % \bbl@array@get\bbl@select@opts{raw}\bbl@tempa
+  % \ifx\bbl@tempa\relax\let\bbl@tempa\@empty\fi
+  \bbl@array@get\bbl@select@opts{actualtext}\bbl@tempb
+  \ifx\bbl@tempb\relax\let\bbl@tempb\@empty\fi
+  \tagstructbegin{tag=Span, lang=\BCPdata{tag},
+     % raw=\bbl@tempa,
+     actualtext=\bbl@tempb}
   \tagmcbegin {} }
 \NewTaggingSocketPlug{babel/foreign/end}{default}{
   \tagmcend
