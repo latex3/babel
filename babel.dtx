@@ -11886,7 +11886,6 @@ wouldn’t exist.
     \directlua{Babel.calendrica = Babel.calendrica or require("calendrica")}%
     \edef\bbl@tempa{$#2}%
     \bbl@replace\bbl@tempa{$calendrica:}{}%
-    \bbl@replace\bbl@tempa{-}{_}%
     \bbl@afterelse
     \bbl@exp{\\\bbl@calendrica#1\\\@@{\bbl@tempa}}%
   \else
@@ -11895,13 +11894,12 @@ wouldn’t exist.
   \fi}
 \def\bbl@calendrica#1-#2-#3\@@#4#5#6#7{%
   \directlua{
-    local d = Babel.calendrica.new_date(
+    local r = Babel.calendrica.date(
       {year=\number#1, month=\number#2, day=\number#3},
-      Babel.calendrica.cal_gregorian)
-    local r = Babel.calendrica.as_date(d, Babel.calendrica.cal_#4)
-    token.set_macro('\bbl@stripslash#5', r.year)  
-    token.set_macro('\bbl@stripslash#6', r.month)   
-    token.set_macro('\bbl@stripslash#7', r.day) }}
+      'gregorian'):to('#4')
+    token.set_macro('\bbl@stripslash#5', tostring(r.year))
+    token.set_macro('\bbl@stripslash#6', tostring(r.month))
+    token.set_macro('\bbl@stripslash#7', tostring(r.day)) }}
 \newcommand\BabelDateSpace{\nobreakspace}
 \newcommand\BabelDateDot{.\@}
 \newcommand\BabelDated[1]{{\number#1}}
