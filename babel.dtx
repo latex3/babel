@@ -15696,7 +15696,9 @@ wouldn’t exist.
       local sea_ranges = Babel.sea_ranges
       local last_char = nil
       local quad = 655360      &% 10 pt = 655360 = 10 * 65536
-      for item in node.traverse(head) do
+      local item, next_item = head
+      while item do
+        next_item = item.next
         local i = item.id
         if i == node.id'glyph' then
           last_char = item
@@ -15720,9 +15722,12 @@ wouldn’t exist.
                               intraspace.m * quad)
               node.insert_before(head, item, n)
               node.remove(head, item)
+              node.free(item)
+              break
             end
           end
         end
+        item = next_item
       end
     end
   }&
@@ -15807,6 +15812,9 @@ wouldn’t exist.
   \directlua{
     luatexbase.add_to_callback('hyphenate',
     function (head, tail)
+      if Babel.protect_tail then
+        Babel.protect_tail(head, tail)
+      end
       if Babel.linebreaking.before then
         for k, func in ipairs(Babel.linebreaking.before)  do
           func(head)
@@ -15980,11 +15988,17 @@ Babel.arabic.kashida_limit = -1
 
 function Babel.arabic.justify(head)
   if not Babel.arabic.justify_enabled then return head end
-  for line in node.traverse_id(node.id'hlist', head) do
-    Babel.arabic.justify_hlist(head, line)
+  local HLIST = node.id'hlist'
+  local line, next_line = head
+  while line do
+    next_line = line.next
+    if line.id == HLIST then
+      % The line may be replaced (and freed), even the first one (eg,
+      % in \vbox), so the head is returned.
+      head = Babel.arabic.justify_hlist(head, line)
+    end
+    line = next_line
   end
-  % In case the very first item is a line (eg, in \vbox):
-  while head.prev do head = head.prev end
   return head
 end
 
@@ -15995,7 +16009,7 @@ function Babel.arabic.justify_hbox(head, gc, size, pack)
       if n.stretch_order > 0 then has_inf = true end
     end
     if not has_inf then
-      Babel.arabic.justify_hlist(head, nil, gc, size, pack)
+      head = Babel.arabic.justify_hlist(head, nil, gc, size, pack)
     end
   end
   return head
@@ -16101,6 +16115,7 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
         width_new = node.dimensions(line.head)
         if width > goal or width == width_new then
           node.remove(line.head, new) % Better compute before
+          node.free(new)
           break
         end
         if Babel.fix_diacr then
@@ -16120,15 +16135,19 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
     % but it does the job in a quite predictable way.
     if Babel.arabic.kashida_limit > -1 then
       cnt = 0
-      for n in node.traverse_id(GLYPH, line.head) do
-        if n.char == 0x0640 then
+      local n, next_n = line.head
+      while n do
+        next_n = n.next
+        if n.id == GLYPH and n.char == 0x0640 then
           cnt = cnt + 1
           if cnt > Babel.arabic.kashida_limit then
-            node.remove(line.head, n)
+            line.head = node.remove(line.head, n)
+            node.free(n)
           end
-        else
+        elseif n.id == GLYPH then
           cnt = 0
         end
+        n = next_n
       end
     end
 
@@ -16140,10 +16159,14 @@ function Babel.arabic.justify_hlist(head, line, gc, size, pack)
     if subst_done and not gc then
       d = node.hpack(line.head, full, 'exactly')
       d.shift = shift
-      node.insert_before(head, line, d)
-      node.remove(head, line)
+      head = node.insert_before(head, line, d)
+      head = node.remove(head, line)
+      line.head = nil  % Now in d
+      node.free(line)
     end
   end % if process line
+  % The list of a box (line is a table) may start with a removed tatweel
+  return (line.id and head) or line.head
 end
 }
 \endgroup
@@ -17623,6 +17646,38 @@ Babel.fetch_subtext[1] = function(head)
   return word_string, word_nodes, item, lang
 end
 
+-- LuaTeX keeps its own pointer to the last node of the list passed to
+-- the hyphenate callback and uses it afterwards (line_break and
+-- filtered_hpack), so a transform freeing that node makes TeX use
+-- freed memory. Before transforming, the last node is replaced with a
+-- copy, and the original is kept out of the list, alive and with no
+-- links, and freed at the next call (new_ligkern walks from such a
+-- node to the actual end of the list).
+
+do
+  local stale_tail
+
+  function Babel.protect_tail(head, tail)
+    if stale_tail then
+      node.free(stale_tail)
+      stale_tail = nil
+    end
+    if not tail or tail == head then return end
+    local prev = tail.prev
+    if not prev or prev.next ~= tail then
+      prev = head
+      while prev.next ~= tail do prev = prev.next end
+    end
+    local copy = node.copy(tail)
+    prev.next = copy
+    copy.prev = prev
+    copy.next = nil
+    tail.prev = nil
+    tail.next = nil
+    stale_tail = tail
+  end
+end
+
 function Babel.pre_hyphenate_replace(head)
   Babel.hyphenate_replace(head, 0)
 end
@@ -17639,6 +17694,17 @@ function Babel.hyphenate_replace(head, mode)
   local tovalue = Babel.tovalue
 
   local word_head = head
+
+  -- Removed nodes are freed at the end of each match, because 'data'
+  -- may still refer to them. Keyed by the direct node, so none is
+  -- freed twice.
+  local removed = {}
+  local function remove_node(n)
+    if n then
+      node.remove(head, n)
+      removed[node.direct.todirect(n)] = true
+    end
+  end
 
   if Babel.show_transforms then
     texio.write_nl('\n==== Showing ' .. (mode == 0 and 'pre' or 'post') .. 'hyphenation ====')
@@ -17774,7 +17840,7 @@ function Babel.hyphenate_replace(head, mode)
           end
 
           if crep and not crep.after and dummy_node then
-            node.remove(head, dummy_node)
+            remove_node(dummy_node)
             dummy_node = nil
           end
 
@@ -17791,7 +17857,7 @@ function Babel.hyphenate_replace(head, mode)
             goto next
 
           elseif crep == nil or crep.remove then
-            node.remove(head, item)
+            remove_node(item)
             table.remove(w_nodes, sc)
             w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
             sc = sc - 1  -- Nothing has been inserted.
@@ -17808,7 +17874,7 @@ function Babel.hyphenate_replace(head, mode)
           elseif crep and crep.string then
             local str = crep.string(matches)
             if str == '' then  -- Gather with nil
-              node.remove(head, item)
+              remove_node(item)
               table.remove(w_nodes, sc)
               w = u.sub(w, 1, sc-1) .. u.sub(w, sc+1)
               sc = sc - 1  -- Nothing has been inserted.
@@ -17836,7 +17902,7 @@ function Babel.hyphenate_replace(head, mode)
                   Babel.debug_hyph(w, w_nodes, sc, first, last, last_match)
                 end
               end  -- for
-              node.remove(head, item)
+              remove_node(item)
             end  -- if ''
             last_match = utf8.offset(w, sc+1+step)
             goto next
@@ -17924,7 +17990,7 @@ function Babel.hyphenate_replace(head, mode)
             last = last + 1
           else
             w_nodes[sc] = d
-            node.remove(head, item)
+            remove_node(item)
             w = u.sub(w, 1, sc-1) .. placeholder .. u.sub(w, sc+1)
           end
 
@@ -17941,9 +18007,14 @@ function Babel.hyphenate_replace(head, mode)
         end
 
       if dummy_node then
-        node.remove(head, dummy_node)
+        remove_node(dummy_node)
         dummy_node = nil
       end
+
+      for n in pairs(removed) do
+        node.direct.free(n)
+      end
+      removed = {}
 
       end  -- for match
 
@@ -18066,6 +18137,7 @@ function Babel.string_prehyphenation(str, locale)
       res = res .. unicode.utf8.char(n.char)
     end
   end 
+  node.flush_list(head)
   tex.print(res)
 end
 %</transforms>
@@ -24685,9 +24757,11 @@ function Babel.bidi(head, ispar, hdir)
         if linking > 0 then
           if item.prev.id == DIR and
               (item.prev.dir == '-TRT' or item.prev.dir == '-TLT') then
+            local old = item.prev
             d = node.new(DIR)
-            d.dir = item.prev.dir
-            node.remove(head, item.prev)
+            d.dir = old.dir
+            head = node.remove(head, old)
+            node.free(old)
             node.insert_after(head, item, d)
           end
         end
@@ -24696,17 +24770,20 @@ function Babel.bidi(head, ispar, hdir)
     end
   end
 
-  for item in node.traverse_id(10, head) do
-    local p = item
-    local flag = false
-    while p.prev and p.prev.id == 14 do
-      flag = true
-      p = p.prev
+  local item, next_item = head
+  while item do
+    next_item = item.next
+    if item.id == 10 then
+      local p = item
+      while p.prev and p.prev.id == 14 do
+        p = p.prev
+      end
+      if p ~= item then
+        head = node.remove(head, item)
+        head = node.insert_before(head, p, item)
+      end
     end
-    if flag then
-      node.insert_before(head, p, node.copy(item))
-      node.remove(head,item)
-    end
+    item = next_item
   end
 
   return head
