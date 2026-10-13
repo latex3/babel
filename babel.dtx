@@ -13474,16 +13474,10 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % A tool for weak L (mainly digits). We also disable warnings with
-% \textsf{hyperref}. There is a variant for \texttt{bidi=unibidi}, but
-% using formatting characters is discouraged by Unicode UAX9, so it
-% must be revised.
+% \textsf{hyperref}.
 %
 %    \begin{macrocode}
-\ifnum\bbl@bidimode>300
-  \DeclareRobustCommand\babelsublr[1]{\leavevmode{^^^^200f#1}}
-\else
-  \DeclareRobustCommand\babelsublr[1]{\leavevmode{\bbl@textdir\z@#1}}
-\fi
+\DeclareRobustCommand\babelsublr[1]{\leavevmode{\bbl@textdir\z@#1}}
 \AtBeginDocument{%
   \ifx\pdfstringdefDisableCommands\@undefined\else
     \ifx\pdfstringdefDisableCommands\relax\else
