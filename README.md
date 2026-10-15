@@ -1,6 +1,6 @@
-## Babel 26.13.138071
+## Babel 26.14
 
-(dev)
+2026-10-15
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,9 +59,12 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 26.14 (dev)
+#### 26.14 (2026-10-15)
 
-* (Start tagging)
+* Start PDF tagging and readjustments for `\DocumentMetadata`.
+* Lua code optimized by Udi Fogiel.
+* Fixes related to font selection, `layout=sectioning` and 
+  a few more.
 
 #### 26.13 (2026-09-27)
 
@@ -73,12 +76,6 @@ respective authors.
   - Value in mapdot= was ignored.
   - Isolate paragraph-like section titles from the
     rest of the line in the bidi algorithm.
-
-#### 26.12 (2026-09-09)
-
-* New locale: chinese-pinyin (with transform `tone.numeric` for luatex).
-* `calendrica` can be used to set the default `\today` format.
-* Fix: wrong direction with `\text` in `\[`...`\]`.
 
 ### Previous changes
 

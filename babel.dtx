@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/11 v26.13.138071
+  [2026/10/15 v26.14
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -6353,8 +6353,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.13.138071>>
-%<<date=2026/10/11>>
+%<<version=26.14>>
+%<<date=2026/10/15>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11894,12 +11894,23 @@ wouldn’t exist.
   \fi}
 \def\bbl@calendrica#1-#2-#3\@@#4#5#6#7{%
   \directlua{
-    local r = Babel.calendrica.date(
-      {year=\number#1, month=\number#2, day=\number#3},
-      'gregorian'):to('#4')
-    token.set_macro('\bbl@stripslash#5', tostring(r.year))
-    token.set_macro('\bbl@stripslash#6', tostring(r.month))
-    token.set_macro('\bbl@stripslash#7', tostring(r.day)) }}
+    local cldc = require(calendrica).cal_gregorian
+    if cldc then
+      local d = Babel.calendrica.new_date(
+        {year=\number#1, month=\number#2, day=\number#3},
+        Babel.calendrica.cal_gregorian)
+      local r = Babel.calendrica.as_date(d, Babel.calendrica.cal_#4)
+      token.set_macro('\bbl@stripslash#5', r.year)  
+      token.set_macro('\bbl@stripslash#6', r.month)   
+      token.set_macro('\bbl@stripslash#7', r.day) 
+    else
+      local r = Babel.calendrica.date(
+        {year=\number#1, month=\number#2, day=\number#3},
+        'gregorian'):to('#4')
+      token.set_macro('\bbl@stripslash#5', tostring(r.year))
+      token.set_macro('\bbl@stripslash#6', tostring(r.month))
+      token.set_macro('\bbl@stripslash#7', tostring(r.day)) 
+    end}}
 \newcommand\BabelDateSpace{\nobreakspace}
 \newcommand\BabelDateDot{.\@}
 \newcommand\BabelDated[1]{{\number#1}}
@@ -12810,7 +12821,6 @@ wouldn’t exist.
     \@namedef{#1}{%
       \@ifstar{\bbl@presec@s{#1}}%
               {\@dblarg{\bbl@presec@x{#1}}}}}}
-
 \def\bbl@presec@x#1[#2]#3{%
   \bbl@exp{%
     \\\select@language@x{\bbl@main@language}%
@@ -13472,10 +13482,13 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % A tool for weak L (mainly digits). We also disable warnings with
-% \textsf{hyperref}.
+% \textsf{hyperref}. There is a variant for \texttt{bidi=unibidi}, but
+% using formatting characters is discouraged by Unicode UAX9, so it
+% must be revised.
 %
 %    \begin{macrocode}
-\DeclareRobustCommand\babelsublr[1]{\leavevmode{\bbl@textdir\z@#1}}
+\providecommand\bbl@sublr[1]{\bbl@textdir\z@#1}
+\DeclareRobustCommand\babelsublr[1]{\leavevmode{\bbl@sublr{#1}}}
 \AtBeginDocument{%
   \ifx\pdfstringdefDisableCommands\@undefined\else
     \ifx\pdfstringdefDisableCommands\relax\else
@@ -14700,6 +14713,18 @@ wouldn’t exist.
 % wrong font (see issue \#92).
 %
 %    \begin{macrocode}
+\def\bbl@fontspec@lsys{%
+  \ifx\newfontscript\@undefined\else\bbl@exp{%
+    \<keys_if_exist:nnF>{fontspec-opentype}{Script/\bbl@cl{sname}}%
+      {\\\newfontscript{\bbl@cl{sname}}{\bbl@cl{sotf}}}%
+    \<keys_if_exist:nnF>{fontspec-opentype}{Language/\bbl@cl{lname}}%
+        {\\\newfontlanguage{\bbl@cl{lname}}{\bbl@cl{lotf}}}}%
+  \fi}
+\ifx\AddToHook\@undefined
+  \let\bbl@fontspec@lsys\relax
+\else
+  \AddToHook{selectfont}{\bbl@fontspec@lsys}
+\fi
 \def\bbl@fontspec@set#1#2#3#4{% eg \bbl@rmdflt@lang fnt-opt fnt-nme \xxfamily
   \let\bbl@tempe\bbl@mapselect
   \edef\bbl@tempb{\bbl@stripslash#4/}% Catcodes hack (better pass it).
@@ -14708,12 +14733,9 @@ wouldn’t exist.
   \let\bbl@temp@fam#4%       e.g., '\rmfamily', to be restored below
   \let#4\@empty      %       Make sure \renewfontfamily is valid
   \bbl@set@renderer
+  \bbl@fontspec@lsys
   \bbl@exp{%
     \let\\\bbl@temp@pfam\<\bbl@stripslash#4\space>% e.g., '\rmfamily '
-    \<keys_if_exist:nnF>{fontspec-opentype}{Script/\bbl@cl{sname}}%
-      {\\\newfontscript{\bbl@cl{sname}}{\bbl@cl{sotf}}}%
-    \<keys_if_exist:nnF>{fontspec-opentype}{Language/\bbl@cl{lname}}%
-      {\\\newfontlanguage{\bbl@cl{lname}}{\bbl@cl{lotf}}}%
     \\\renewfontfamily\\#4%
       [\bbl@cl{lsys},% xetex removes unknown features :-(
        \ifcase\bbl@engine\or RawFeature={family=\bbl@tempb},\fi
@@ -16833,6 +16855,9 @@ end
     end,"Babel.ensure_math_dir")
    }}%
  \fi
+\ifnum\bbl@bidimode>300
+  \def\bbl@sublr#1{^^^^2066#1^^^^2069}
+\fi
 %    \end{macrocode}
 %
 % Experimental. Tentative name.
