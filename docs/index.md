@@ -90,7 +90,7 @@ case, it's advisable to install TeXLive.)
 
 | Version | Release date | Most relevant changes
 | --- | --- | --- |
-| [26.14](news/whats-new-in-babel-26.14.html) | (dev) | Start PDF tagging |
+| [26.14](news/whats-new-in-babel-26.14.html) | 2026-10-15 | Start PDF tagging |
 | [26.13](news/whats-new-in-babel-26.13.html) | 2026-09-27 | Improved `malagasy`. |
 | [26.12](news/whats-new-in-babel-26.12.html) | 2026-09-09 | Pinyin. `\today`. |
 | [26.11](news/whats-new-in-babel-26.11.html) | 2026-08-21 | New Chinese counters. Indian calendar. |
