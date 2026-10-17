@@ -26,7 +26,7 @@
 %% and covered by LPPL is defined by the unpacking scripts (with
 %% extension .ins) which are part of the distribution.
 %%
-\def\filedate{2026/10/15}
+\def\filedate{2026/10/17}
 \def\batchfile{babel.ins}
 \input docstrip.tex
 
@@ -131,8 +131,6 @@
 \savingfalse
 
 \generate{\file{babel.sty}{\from{babel.dtx}{package}}
-          \file{babel.def}{\from{babel.dtx}{core}}
-          \file{switch.def}{\from{babel.dtx}{kernel}}
           \file{hyphen.cfg}{\from{babel.dtx}{patterns}}
           \file{nil.ldf}{\from{babel.dtx}{nil}}
           \file{errbabel.def}{\from{babel.dtx}{errors}}
@@ -152,9 +150,11 @@
           }
 
 % Support for plain users
-\generate{\file{plain.def}{\from{babel.dtx}{plain}}
-          \file{bplain.tex}{\from{babel.dtx}{bplain}}
-          \file{blplain.tex}{\from{babel.dtx}{blplain}}
+\generate{\file{babel.def}{\from{babel-plain.dtx}{core}}
+          \file{plain.def}{\from{babel-plain.dtx}{plain}}
+          \file{switch.def}{\from{babel-plain.dtx}{kernel}}
+          \file{bplain.tex}{\from{babel-plain.dtx}{bplain}}
+          \file{blplain.tex}{\from{babel-plain.dtx}{blplain}}
          }
 
 \generate{\file{cyrl2uni.def}{\from{licr2uni.dtx}{cyrl}}

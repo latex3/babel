@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/15 v26.14
+  [2026/10/17 v26.14.138672
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -211,7 +211,7 @@
     \bbl@next}
   \gdef\var@module#1#2#3>>{%
      \tlangle\!\pm@module#2#3>\!\textup{\trangle}
-     \ifx*#2\ $\equiv$\fi}
+     \ifx*#2\ \tto\fi}
 \endgroup
 \renewcommand\partname{Part}
 \def\@pnumwidth{3em}
@@ -6311,9 +6311,9 @@ wouldn’t exist.
 % \itemsep=-\parskip
 % \item[babel.sty] is the \LaTeX{} package, which set options and
 %   load language styles.
-% \item[babel.def] is loaded by Plain.
-% \item[switch.def] defines macros to set and switch languages (it loads
-%   part |babel.def|).
+% \item[babel.def] is loaded by Plain and, in part, by the \texttt{base}
+% option
+% \item[switch.def] is not used. Kept for compatibility.
 % \item[plain.def] is not used, and just loads babel.def, for
 %   compatibility.
 % \item[hyphen.cfg] is the file to be used when generating the
@@ -6353,8 +6353,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.14>>
-%<<date=2026/10/15>>
+%<<version=26.14.138672>>
+%<<date=2026/10/17>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7178,39 +7178,10 @@ wouldn’t exist.
       \expandafter\@secondoftwo
     \fi}
 \fi
-%</package>
 %    \end{macrocode}
 %
-% \subsection{Plain: \texttt{babel.def} (start)}
-%
-% Because of the way \pkg{docstrip} works, we need to insert some code
-% for Plain here. However, the tools provided by the \babel{}
-% installer for literate programming makes this section a short
-% interlude, because the actual code is below, tagged as
-% \textit{Emulate LaTeX}.
-%
-% First, exit immediately if previouly loaded.
 %
 %    \begin{macrocode}
-%<*core>
-\ifx\ldf@quit\@undefined\else
-\endinput\fi % Same line!
-<@Make sure ProvidesFile is defined@>
-\ProvidesFile{babel.def}[<@date@> v<@version@> Babel common definitions]
-\ifx\AtBeginDocument\@undefined
-  <@Emulate LaTeX@>
-\fi
-<@Basic macros@>
-%</core>
-%    \end{macrocode}
-%
-% That is all for the moment. Now follows some common stuff, for both
-% Plain and \LaTeX{}. After it, we will resume the \LaTeX-only stuff.
-%
-% \section{\texttt{babel.sty} and \texttt{babel.def} (common)}
-%
-%    \begin{macrocode}
-%<*package|core>
 \def\bbl@version{<@version@>}
 \def\bbl@date{<@date@>}
 <@Define core switching macros@>
@@ -10636,12 +10607,9 @@ wouldn’t exist.
   \let\babelpatterns\babelprehyphenation
   \let\babelcharproperty\babelprehyphenation
 \fi
-%</package|core>
 %    \end{macrocode}
 %
 % \subsection{Creating and modifying languages}
-%
-% Continue with \LaTeX{} only.
 %
 % |\babelprovide| is a general purpose tool for creating and modifying
 % languages. It creates the language infrastructure, and loads, if
@@ -10649,7 +10617,6 @@ wouldn’t exist.
 % loaded |ldf| files.
 %
 %    \begin{macrocode}
-%<*package>
 \bbl@trace{Creating languages and reading ini files}
 \let\bbl@extend@ini\@gobble
 \newcommand\babelprovide[2][]{%
@@ -12191,8 +12158,8 @@ wouldn’t exist.
     \ifnum#2>\z@\localenumeral{#5.D}{#2}\localenumeral{#5.C}4% Hundreds   
     \else\ifnum#1>\z@\ifnum#3#4>\z@\localenumeral{#5.C}\@ne\fi
     \fi\fi
-    \ifnum#3>\z@ % Tens
-      \ifnum#1#2=\z@\ifnum#3=\@ne\else\localenumeral{#5.D}{#3}\fi % No 一 for 10-19:
+    \ifnum#3>\z@ % Tens. Omit for 10-19.
+      \ifnum#1#2=\z@\ifnum#3=\@ne\else\localenumeral{#5.D}{#3}\fi
       \else\localenumeral{#5.D}{#3}%
       \fi
       \localenumeral{#5.C}\thr@@
@@ -13886,37 +13853,6 @@ wouldn’t exist.
 %</tagging>
 %    \end{macrocode}
 %
-%
-% \section{The kernel of Babel}
-%
-% The kernel of the \babel\ system is currently stored in
-% \file{babel.def}. The file \file{babel.def} contains most of the
-% code. The file \file{hyphen.cfg} is a file that can be loaded into
-% the format, which is necessary when you want to be able to switch
-% hyphenation patterns.
-%
-% Because plain \TeX\ users might want to use some of the features of
-% the \babel{} system too, care has to be taken that plain \TeX\ can
-% process the files. For this reason the current format will have to
-% be checked in a number of places. Some of the code below is common
-% to plain \TeX\ and \LaTeX, some of it is for the \LaTeX\ case only.
-%
-% Plain formats based on etex (etex, xetex, luatex) don't load
-% |hyphen.cfg| but |etex.src|, which follows a different naming
-% convention, so we need to define the \babel{} names. It presumes
-% |language.def| exists and it is the same file used when formats were
-% created.
-%
-% A proxy file for switch.def
-%
-%    \begin{macrocode}
-%<*kernel>
-\let\bbl@onlyswitch\@empty
-\input babel.def
-\let\bbl@onlyswitch\@undefined
-%</kernel>
-%    \end{macrocode}
-%
 % \section{Error messages}
 %
 % They are loaded when |\bll@error| is first called. To save space, the
@@ -14328,10 +14264,10 @@ wouldn’t exist.
 \def\bbl@get@enc#1:#2:#3\@@@{\def\bbl@hyph@enc{#2}}
 %    \end{macrocode}
 %
-% Now, hooks are defined. For efficiency reasons, they are dealt
-% here in a special way. Besides \luatex, format-specific
-% configuration files are taken into account. |loadkernel| currently
-% loads nothing, but define some basic macros instead.
+% Now, hooks are defined. For efficiency reasons, they are dealt here
+% in a special way. Besides \luatex, format-specific configuration
+% files are taken into account. |\bbl@hook@loadkernel| currently loads
+% nothing, but define some basic macros instead.
 %
 %    \begin{macrocode}
 \def\bbl@hook@everylanguage#1{}
@@ -14398,7 +14334,7 @@ wouldn’t exist.
   \fi
   \closein1
 \endgroup
-\bbl@hook@loadkernel{switch.def}
+\bbl@hook@loadkernel{switch.def} % Dummy argument
 %    \end{macrocode}
 %
 % \macro{\readconfigfile}
@@ -14487,8 +14423,7 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % Also remove some macros from memory and raise an error if |\toks@| is
-% not empty. Finally load \file{switch.def}, but the latter is not
-% required and the line inputting it may be commented out.
+% not empty.
 %
 %    \begin{macrocode}
 \let\bbl@line\@undefined
@@ -25942,606 +25877,6 @@ Babel.cjk_breaks = {
 %</ca-chinese>
 %    \end{macrocode}
 %
-% \section{Support for Plain \TeX\ (\texttt{plain.def})}
-%
-% \subsection{Not renaming \file{hyphen.tex}}
-%
-% As Don Knuth has declared that the filename \file{hyphen.tex} may
-% only be used to designate \emph{his} version of the american
-% English hyphenation patterns, a new solution has to be found in
-% order to be able to load hyphenation patterns for other languages
-% in a plain-based \TeX-format.
-% When asked he responded:
-% \begin{quote}
-%   That file name is “sacred”, and if anybody changes it they will
-%   cause severe upward/downward compatibility headaches.
-%
-%   People can have a file localhyphen.tex or whatever they like,
-%   but they mustn't diddle with hyphen.tex (or plain.tex except to
-%   preload additional fonts).
-% \end{quote}
-%
-% The files \file{bplain.tex} and \file{blplain.tex} can be used as
-% replacement wrappers around \file{plain.tex} and
-% \file{lplain.tex} to achieve the desired effect, based on the
-% \pkg{babel} package. If you load each of them with ini\TeX, you
-% will get a file called either \file{bplain.fmt} or
-% \file{blplain.fmt}, which you can use as replacements for
-% \file{plain.fmt} and \file{lplain.fmt}.
-%
-% As these files are going to be read as the first thing ini\TeX\
-% sees, we need to set some category codes just to be able to
-% change the definition of |\input|.
-%
-%    \begin{macrocode}
-%<*bplain|blplain>
-\catcode`\{=1 % left brace is begin-group character
-\catcode`\}=2 % right brace is end-group character
-\catcode`\#=6 % hash mark is macro parameter character
-%    \end{macrocode}
-%
-% If a file called \file{hyphen.cfg} can be found, we make sure that
-% \emph{it} will be read instead of the file \file{hyphen.tex}. We
-% do this by first saving the original meaning of |\input| (and I
-% use a one letter control sequence for that so as not to waste
-% multi-letter control sequence on this in the format).
-%
-%    \begin{macrocode}
-\openin 0 hyphen.cfg
-\ifeof0
-\else
-  \let\a\input
-%    \end{macrocode}
-%
-% Then |\input| is defined to forget about its argument and load
-% \file{hyphen.cfg} instead. Once that's done the original meaning
-% of |\input| can be restored and the definition of |\a| can be
-% forgotten.
-%
-%    \begin{macrocode}
-  \def\input #1 {%
-    \let\input\a
-    \a hyphen.cfg
-    \let\a\undefined
-  }
-\fi
-%</bplain|blplain>
-%    \end{macrocode}
-%
-% Now that we have made sure that \file{hyphen.cfg} will be loaded
-% at the right moment it is time to load \file{plain.tex}.
-%
-%    \begin{macrocode}
-%<bplain>\a plain.tex
-%<blplain>\a lplain.tex
-%    \end{macrocode}
-%
-% Finally we change the contents of |\fmtname| to indicate that
-% this is \emph{not} the plain format, but a format based on plain
-% with the \pkg{babel} package preloaded.
-%
-%    \begin{macrocode}
-%<bplain>\def\fmtname{babel-plain}
-%<blplain>\def\fmtname{babel-lplain}
-%    \end{macrocode}
-%
-% When you are using a different format, based on plain.tex you can
-% make a copy of blplain.tex, rename it and replace \file{plain.tex}
-% with the name of your format file.
-%
-% \subsection{Emulating some \LaTeX{} features}
-%
-% The file |babel.def| expects some definitions made in the \LaTeXe{}
-% style file. So, in Plain{} we must provide at least
-% some predefined values as well some tools to set them (even if not
-% all options are available). There are no package options, and
-% therefore and alternative mechanism is provided. For the moment,
-% only |\babeloptionstrings| and |\babeloptionmath| are provided,
-% which can be defined before loading \babel. |\BabelModifiers| can be
-% set too (but not sure it works).
-%
-%    \begin{macrocode}
-%<<*Emulate LaTeX>>
-\def\@empty{}
-\def\loadlocalcfg#1{%
-  \openin0#1.cfg
-  \ifeof0
-    \closein0
-  \else
-    \closein0
-    {\immediate\write16{*************************************}%
-     \immediate\write16{* Local config file #1.cfg used}%
-     \immediate\write16{*}%
-     }
-    \input #1.cfg\relax
-  \fi
-  \@endofldf}
-%    \end{macrocode}
-%
-% \subsection{General tools}
-%
-% A number of \LaTeX\ macro's that are needed later on.
-%
-%    \begin{macrocode}
-\long\def\@firstofone#1{#1}
-\long\def\@firstoftwo#1#2{#1}
-\long\def\@secondoftwo#1#2{#2}
-\def\@nnil{\@nil}
-\def\@gobbletwo#1#2{}
-\def\@ifstar#1{\@ifnextchar *{\@firstoftwo{#1}}}
-\def\@star@or@long#1{%
-  \@ifstar
-  {\let\l@ngrel@x\relax#1}%
-  {\let\l@ngrel@x\long#1}}
-\let\l@ngrel@x\relax
-\def\@car#1#2\@nil{#1}
-\def\@cdr#1#2\@nil{#2}
-\let\@typeset@protect\relax
-\let\protected@edef\edef
-\long\def\@gobble#1{}
-\edef\@backslashchar{\expandafter\@gobble\string\\}
-\def\strip@prefix#1>{}
-\def\g@addto@macro#1#2{{%
-    \toks@\expandafter{#1#2}%
-    \xdef#1{\the\toks@}}}
-\def\@namedef#1{\expandafter\def\csname #1\endcsname}
-\def\@nameuse#1{\csname #1\endcsname}
-\def\@ifundefined#1{%
-  \expandafter\ifx\csname#1\endcsname\relax
-    \expandafter\@firstoftwo
-  \else
-    \expandafter\@secondoftwo
-  \fi}
-\def\@expandtwoargs#1#2#3{%
-  \edef\reserved@a{\noexpand#1{#2}{#3}}\reserved@a}
-\def\zap@space#1 #2{%
-  #1%
-  \ifx#2\@empty\else\expandafter\zap@space\fi
-  #2}
-\let\bbl@trace\@gobble
-\def\bbl@error#1{% Implicit #2#3#4
-  \begingroup
-    \catcode`\\=0   \catcode`\==12 \catcode`\`=12
-    \catcode`\^^M=5 \catcode`\%=14
-    \input errbabel.def
-  \endgroup
-  \bbl@error{#1}}
-\def\bbl@warning#1{%
-  \begingroup
-    \newlinechar=`\^^J
-    \def\\{^^J(babel) }%
-    \message{\\#1}%
-  \endgroup}
-\let\bbl@infowarn\bbl@warning
-\def\bbl@info#1{%
-  \begingroup
-    \newlinechar=`\^^J
-    \def\\{^^J}%
-    \wlog{#1}%
-  \endgroup}
-%    \end{macrocode}
-%
-%    \LaTeXe\ has the command |\@onlypreamble| which adds commands to
-%    a list of commands that are no longer needed after
-%    |\begin{document}|.
-%
-%    \begin{macrocode}
-\ifx\@preamblecmds\@undefined
-  \def\@preamblecmds{}
-\fi
-\def\@onlypreamble#1{%
-  \expandafter\gdef\expandafter\@preamblecmds\expandafter{%
-    \@preamblecmds\do#1}}
-\@onlypreamble\@onlypreamble
-%    \end{macrocode}
-%
-% Mimic \LaTeX's |\AtBeginDocument|; for this to work the user needs to
-% add |\begindocument| to his file.
-%
-%    \begin{macrocode}
-\def\begindocument{%
-  \@begindocumenthook
-  \global\let\@begindocumenthook\@undefined
-  \def\do##1{\global\let##1\@undefined}%
-  \@preamblecmds
-  \global\let\do\noexpand}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\ifx\@begindocumenthook\@undefined
-  \def\@begindocumenthook{}
-\fi
-\@onlypreamble\@begindocumenthook
-\def\AtBeginDocument{\g@addto@macro\@begindocumenthook}
-%    \end{macrocode}
-%
-% We also have to mimic \LaTeX's |\AtEndOfPackage|. Our replacement
-% macro is much simpler; it stores its argument in |\@endofldf|.
-%
-%    \begin{macrocode}
-\def\AtEndOfPackage#1{\g@addto@macro\@endofldf{#1}}
-\@onlypreamble\AtEndOfPackage
-\def\@endofldf{}
-\@onlypreamble\@endofldf
-\let\bbl@afterlang\@empty
-\chardef\bbl@opt@hyphenmap\z@
-%    \end{macrocode}
-%
-% \LaTeX\ needs to be able to switch off writing to its auxiliary
-% files; plain doesn't have them by default. There is a trick to hide
-% some conditional commands from the outer |\ifx|. The same trick is
-% applied below.
-%
-%    \begin{macrocode}
-\catcode`\&=\z@
-\ifx&if@filesw\@undefined
-  \expandafter\let\csname if@filesw\expandafter\endcsname
-    \csname iffalse\endcsname
-\fi
-\catcode`\&=4
-%    \end{macrocode}
-%
-% Mimic \LaTeX's commands to define control sequences.
-%
-%    \begin{macrocode}
-\def\newcommand{\@star@or@long\new@command}
-\def\new@command#1{%
-  \@testopt{\@newcommand#1}0}
-\def\@newcommand#1[#2]{%
-  \@ifnextchar [{\@xargdef#1[#2]}%
-                {\@argdef#1[#2]}}
-\long\def\@argdef#1[#2]#3{%
-  \@yargdef#1\@ne{#2}{#3}}
-\long\def\@xargdef#1[#2][#3]#4{%
-  \expandafter\def\expandafter#1\expandafter{%
-    \expandafter\@protected@testopt\expandafter #1%
-    \csname\string#1\expandafter\endcsname{#3}}%
-  \expandafter\@yargdef \csname\string#1\endcsname
-  \tw@{#2}{#4}}
-\long\def\@yargdef#1#2#3{%
-  \@tempcnta#3\relax
-  \advance \@tempcnta \@ne
-  \let\@hash@\relax
-  \edef\reserved@a{\ifx#2\tw@ [\@hash@1]\fi}%
-  \@tempcntb #2%
-  \@whilenum\@tempcntb <\@tempcnta
-  \do{%
-    \edef\reserved@a{\reserved@a\@hash@\the\@tempcntb}%
-    \advance\@tempcntb \@ne}%
-  \let\@hash@##%
-  \l@ngrel@x\expandafter\def\expandafter#1\reserved@a}
-\def\providecommand{\@star@or@long\provide@command}
-\def\provide@command#1{%
-  \begingroup
-    \escapechar\m@ne\xdef\@gtempa{{\string#1}}%
-  \endgroup
-  \expandafter\@ifundefined\@gtempa
-    {\def\reserved@a{\new@command#1}}%
-    {\let\reserved@a\relax
-     \def\reserved@a{\new@command\reserved@a}}%
-   \reserved@a}%
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\def\DeclareRobustCommand{\@star@or@long\declare@robustcommand}
-\def\declare@robustcommand#1{%
-   \edef\reserved@a{\string#1}%
-   \def\reserved@b{#1}%
-   \edef\reserved@b{\expandafter\strip@prefix\meaning\reserved@b}%
-   \edef#1{%
-      \ifx\reserved@a\reserved@b
-         \noexpand\x@protect
-         \noexpand#1%
-      \fi
-      \noexpand\protect
-      \expandafter\noexpand\csname
-         \expandafter\@gobble\string#1 \endcsname
-   }%
-   \expandafter\new@command\csname
-      \expandafter\@gobble\string#1 \endcsname
-}
-\def\x@protect#1{%
-   \ifx\protect\@typeset@protect\else
-      \@x@protect#1%
-   \fi
-}
-\catcode`\&=\z@  % Trick to hide conditionals
-  \def\@x@protect#1&fi#2#3{&fi\protect#1}
-%    \end{macrocode}
-%
-% The following little macro |\in@| is taken from \file{latex.ltx}; it
-% checks whether its first argument is part of its second argument. It
-% uses the boolean |\in@|; allocating a new boolean inside
-% conditionally executed code is not possible, hence the construct with
-% the temporary definition of |\bbl@tempa|.
-%
-%    \begin{macrocode}
-  \def\bbl@tempa{\csname newif\endcsname&ifin@}
-\catcode`\&=4
-\ifx\in@\@undefined
-  \def\in@#1#2{%
-    \def\in@@##1#1##2##3\in@@{%
-      \ifx\in@##2\in@false\else\in@true\fi}%
-    \in@@#2#1\in@\in@@}
-\else
-  \let\bbl@tempa\@empty
-\fi
-\bbl@tempa
-%    \end{macrocode}
-%
-% \LaTeX\ has a macro to check whether a certain package was loaded
-% with specific options. The command has two extra arguments which are
-% code to be executed in either the true or false case. This is used to
-% detect whether the document needs one of the accents to be activated
-% (\Lopt{activegrave} and \Lopt{activeacute}). For plain \TeX\ we
-% assume that the user wants them to be active by default. Therefore
-% the only thing we do is execute the third argument (the code for the
-% true case).
-%
-%    \begin{macrocode}
-\def\@ifpackagewith#1#2#3#4{#3}
-%    \end{macrocode}
-%
-% The \LaTeX\ macro |\@ifl@aded| checks whether a file was loaded. This
-% functionality is not needed for plain \TeX\ but we need the macro to
-% be defined as a no-op.
-%
-%    \begin{macrocode}
-\def\@ifl@aded#1#2#3#4{}
-%    \end{macrocode}
-%
-% For the following code we need to make sure that the commands
-% |\newcommand| and |\providecommand| exist with some sensible
-% definition. They are not fully equivalent to their \LaTeXe\ versions;
-% just enough to make things work in plain~\TeX environments.
-%
-%    \begin{macrocode}
-\ifx\@tempcnta\@undefined
-  \csname newcount\endcsname\@tempcnta\relax
-\fi
-\ifx\@tempcntb\@undefined
-  \csname newcount\endcsname\@tempcntb\relax
-\fi
-%    \end{macrocode}
-%
-% To prevent wasting two counters in \LaTeX\ (because counters with the
-% same name are allocated later by it) we reset the counter that holds
-% the next free counter (|\count10|).
-%
-%    \begin{macrocode}
-\ifx\bye\@undefined
-  \advance\count10 by -2\relax
-\fi
-\ifx\@ifnextchar\@undefined
-  \def\@ifnextchar#1#2#3{%
-    \let\reserved@d=#1%
-    \def\reserved@a{#2}\def\reserved@b{#3}%
-    \futurelet\@let@token\@ifnch}
-  \def\@ifnch{%
-    \ifx\@let@token\@sptoken
-      \let\reserved@c\@xifnch
-    \else
-      \ifx\@let@token\reserved@d
-        \let\reserved@c\reserved@a
-      \else
-        \let\reserved@c\reserved@b
-      \fi
-    \fi
-    \reserved@c}
-  \def\:{\let\@sptoken= } \:  % this makes \@sptoken a space token
-  \def\:{\@xifnch} \expandafter\def\: {\futurelet\@let@token\@ifnch}
-\fi
-\def\@testopt#1#2{%
-  \@ifnextchar[{#1}{#1[#2]}}
-\def\@protected@testopt#1{%
-  \ifx\protect\@typeset@protect
-    \expandafter\@testopt
-  \else
-    \@x@protect#1%
-  \fi}
-\long\def\@whilenum#1\do #2{\ifnum #1\relax #2\relax\@iwhilenum{#1\relax
-     #2\relax}\fi}
-\long\def\@iwhilenum#1{\ifnum #1\expandafter\@iwhilenum
-         \else\expandafter\@gobble\fi{#1}}
-%    \end{macrocode}
-%
-% \subsection{Encoding related macros}
-%
-% Code from \file{ltoutenc.dtx}, adapted for use in the plain \TeX\
-% environment.
-%
-%    \begin{macrocode}
-\def\DeclareTextCommand{%
-   \@dec@text@cmd\providecommand
-}
-\def\ProvideTextCommand{%
-   \@dec@text@cmd\providecommand
-}
-\def\DeclareTextSymbol#1#2#3{%
-   \@dec@text@cmd\chardef#1{#2}#3\relax
-}
-\def\@dec@text@cmd#1#2#3{%
-   \expandafter\def\expandafter#2%
-      \expandafter{%
-         \csname#3-cmd\expandafter\endcsname
-         \expandafter#2%
-         \csname#3\string#2\endcsname
-      }%
-%   \let\@ifdefinable\@rc@ifdefinable
-   \expandafter#1\csname#3\string#2\endcsname
-}
-\def\@current@cmd#1{%
-  \ifx\protect\@typeset@protect\else
-      \noexpand#1\expandafter\@gobble
-  \fi
-}
-\def\@changed@cmd#1#2{%
-   \ifx\protect\@typeset@protect
-      \expandafter\ifx\csname\cf@encoding\string#1\endcsname\relax
-         \expandafter\ifx\csname ?\string#1\endcsname\relax
-            \expandafter\def\csname ?\string#1\endcsname{%
-               \@changed@x@err{#1}%
-            }%
-         \fi
-         \global\expandafter\let
-           \csname\cf@encoding \string#1\expandafter\endcsname
-           \csname ?\string#1\endcsname
-      \fi
-      \csname\cf@encoding\string#1%
-        \expandafter\endcsname
-   \else
-      \noexpand#1%
-   \fi
-}
-\def\@changed@x@err#1{%
-    \errhelp{Your command will be ignored, type <return> to proceed}%
-    \errmessage{Command \protect#1 undefined in encoding \cf@encoding}}
-\def\DeclareTextCommandDefault#1{%
-   \DeclareTextCommand#1?%
-}
-\def\ProvideTextCommandDefault#1{%
-   \ProvideTextCommand#1?%
-}
-\expandafter\let\csname OT1-cmd\endcsname\@current@cmd
-\expandafter\let\csname?-cmd\endcsname\@changed@cmd
-\def\DeclareTextAccent#1#2#3{%
-  \DeclareTextCommand#1{#2}[1]{\accent#3 ##1}
-}
-\def\DeclareTextCompositeCommand#1#2#3#4{%
-   \expandafter\let\expandafter\reserved@a\csname#2\string#1\endcsname
-   \edef\reserved@b{\string##1}%
-   \edef\reserved@c{%
-     \expandafter\@strip@args\meaning\reserved@a:-\@strip@args}%
-   \ifx\reserved@b\reserved@c
-      \expandafter\expandafter\expandafter\ifx
-         \expandafter\@car\reserved@a\relax\relax\@nil
-         \@text@composite
-      \else
-         \edef\reserved@b##1{%
-            \def\expandafter\noexpand
-               \csname#2\string#1\endcsname####1{%
-               \noexpand\@text@composite
-                  \expandafter\noexpand\csname#2\string#1\endcsname
-                  ####1\noexpand\@empty\noexpand\@text@composite
-                  {##1}%
-            }%
-         }%
-         \expandafter\reserved@b\expandafter{\reserved@a{##1}}%
-      \fi
-      \expandafter\def\csname\expandafter\string\csname
-         #2\endcsname\string#1-\string#3\endcsname{#4}
-   \else
-     \errhelp{Your command will be ignored, type <return> to proceed}%
-     \errmessage{\string\DeclareTextCompositeCommand\space used on
-         inappropriate command \protect#1}
-   \fi
-}
-\def\@text@composite#1#2#3\@text@composite{%
-   \expandafter\@text@composite@x
-      \csname\string#1-\string#2\endcsname
-}
-\def\@text@composite@x#1#2{%
-   \ifx#1\relax
-      #2%
-   \else
-      #1%
-   \fi
-}
-%
-\def\@strip@args#1:#2-#3\@strip@args{#2}
-\def\DeclareTextComposite#1#2#3#4{%
-   \def\reserved@a{\DeclareTextCompositeCommand#1{#2}{#3}}%
-   \bgroup
-      \lccode`\@=#4%
-      \lowercase{%
-   \egroup
-      \reserved@a @%
-   }%
-}
-%
-\def\UseTextSymbol#1#2{#2}
-\def\UseTextAccent#1#2#3{}
-\def\@use@text@encoding#1{}
-\def\DeclareTextSymbolDefault#1#2{%
-   \DeclareTextCommandDefault#1{\UseTextSymbol{#2}#1}%
-}
-\def\DeclareTextAccentDefault#1#2{%
-   \DeclareTextCommandDefault#1{\UseTextAccent{#2}#1}%
-}
-\def\cf@encoding{OT1}
-%    \end{macrocode}
-%
-% Currently we only use the \LaTeXe\ method for accents for those that
-% are known to be made active in \emph{some} language definition file.
-%
-%    \begin{macrocode}
-\DeclareTextAccent{\"}{OT1}{127}
-\DeclareTextAccent{\'}{OT1}{19}
-\DeclareTextAccent{\^}{OT1}{94}
-\DeclareTextAccent{\`}{OT1}{18}
-\DeclareTextAccent{\~}{OT1}{126}
-%    \end{macrocode}
-%
-% The following control sequences are used in \file{babel.def} but are
-% not defined for \textsc{plain} \TeX.
-%
-%    \begin{macrocode}
-\DeclareTextSymbol{\textquotedblleft}{OT1}{92}
-\DeclareTextSymbol{\textquotedblright}{OT1}{`\"}
-\DeclareTextSymbol{\textquoteleft}{OT1}{`\`}
-\DeclareTextSymbol{\textquoteright}{OT1}{`\'}
-\DeclareTextSymbol{\i}{OT1}{16}
-\DeclareTextSymbol{\ss}{OT1}{25}
-%    \end{macrocode}
-%
-% For a couple of languages we need the \LaTeX-control sequence
-% |\scriptsize| to be available. Because plain \TeX\ doesn't have such
-% a sophisticated font mechanism as \LaTeX\ has, we just |\let| it to
-% |\sevenrm|.
-%
-%    \begin{macrocode}
-\ifx\scriptsize\@undefined
-  \let\scriptsize\sevenrm
-\fi
-%    \end{macrocode}
-%
-% And a few more “dummy” definitions.
-%
-%    \begin{macrocode}
-\def\languagename{english}%
-\let\bbl@opt@shorthands\@nnil
-\def\bbl@ifshorthand#1#2#3{#2}%
-\let\bbl@language@opts\@empty
-\let\bbl@provide@locale\relax
-\ifx\babeloptionstrings\@undefined
-  \let\bbl@opt@strings\@nnil
-\else
-  \let\bbl@opt@strings\babeloptionstrings
-\fi
-\def\BabelStringsDefault{generic}
-\def\bbl@tempa{normal}
-\ifx\babeloptionmath\bbl@tempa
-  \def\bbl@mathnormal{\noexpand\textormath}
-\fi
-\def\AfterBabelLanguage#1#2{}
-\ifx\BabelModifiers\@undefined\let\BabelModifiers\relax\fi
-\let\bbl@afterlang\relax
-\def\bbl@opt@safe{BR}
-\ifx\@uclclist\@undefined\let\@uclclist\@empty\fi
-\ifx\bbl@trace\@undefined\def\bbl@trace#1{}\fi
-\expandafter\newif\csname ifbbl@single\endcsname
-\chardef\bbl@bidimode\z@
-\let\bbl@ifmetadata\@gobble
-%<</Emulate LaTeX>>
-%    \end{macrocode}
-%
-% A proxy file:
-%
-%    \begin{macrocode}
-%<*plain>
-\input babel.def
-%</plain>
-%    \end{macrocode}
 % \Finale
 %
 \endinput
