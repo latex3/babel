@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/17 v26.14.138672
+  [2026/10/18 v26.14.138750
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -2228,7 +2228,6 @@ text
   |\begin{finnish}|).
 \end{note}
 
-% Also Plain
 \Describe{\babelensure}{|[include=|\m{commands}|,exclude=|\m{commands}%
   |,fontenc=|\m{encoding}|]|\marg{language}}
 
@@ -2264,6 +2263,8 @@ some languages. Note also you should include only macros defined by
 the language, not global macros (e.g., |\TeX| of |\dag|).
 
 With |ini| files (see below), captions are ensured by default.
+
+Should work with Plain, but you may need to reselect the language.
 
 \Describe\AfterBabelLanguage{\marg{option-name}\marg{code}}
 
@@ -2756,6 +2757,8 @@ This works not only with existing caption names, because it also serves to
 define new ones by setting the \textit{caption-name} to the name of
 your choice (|name| will be postpended). Captions so defined or
 redefined behave with the ‘new way’ described in the following note.
+Should work with Plain, but remember you may need to reselect the
+language.
 
 Note the string should not contain a language selector or changes in
 the text direction, which is done by \babel{} when necessary. With
@@ -3674,6 +3677,8 @@ another value by redefining |\babelnullhyphen|; (3) a break after the
 hyphen is forbidden if preceded by a glue ${>}0$~pt (at the beginning
 of a word, provided it is not immediately preceded by, say, a
 parenthesis).
+
+It works with Plain.
 
 \Describe{\begin\menv{hyphenrules}}{\marg{language}\Eenv{hyphenrules}}
 
@@ -6353,8 +6358,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.14.138672>>
-%<<date=2026/10/17>>
+%<<version=26.14.138750>>
+%<<date=2026/10/18>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6473,33 +6478,13 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % \macro{\bbl@ifunset}
-% To check if a macro is defined, we create a new macro, which does the
-% same as |\@ifundefined|. However, in an $\varepsilon$-tex engine, it is
-% based on |\ifcsname|, which is more efficient, and does not waste
-% memory. Defined inside a group, to avoid \cs{ifcsname} being
-% implicitly set to |\relax| by the |\csname| test.
+% It does the same as |\@ifundefined|. Formerly defined for
+% $\varepsilon$-tex engines based on |\ifcsname|, which is more
+% efficient, and does not waste memory. Now |\@ifundefined| is based on
+% |\ifcsname|, too.
 %
 %    \begin{macrocode}
-\begingroup
-  \gdef\bbl@ifunset#1{%
-    \expandafter\ifx\csname#1\endcsname\relax
-      \expandafter\@firstoftwo
-    \else
-      \expandafter\@secondoftwo
-    \fi}
-  \bbl@ifunset{ifcsname}%
-    {}%
-    {\gdef\bbl@ifunset#1{%
-       \ifcsname#1\endcsname
-         \expandafter\ifx\csname#1\endcsname\relax
-           \bbl@afterelse\expandafter\@firstoftwo
-         \else
-           \bbl@afterfi\expandafter\@secondoftwo
-         \fi
-       \else
-         \expandafter\@firstoftwo
-       \fi}}
-\endgroup
+\let\bbl@ifunset\@ifundefined
 %    \end{macrocode}
 %
 % \macro{\bbl@ifblank}

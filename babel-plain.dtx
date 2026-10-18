@@ -31,7 +31,7 @@
 % \iffalse
 %<*filedriver>
 \ProvidesFile{babel-plain.dtx}%
-  [2026/10/17 v26.14.138672
+  [2026/10/18 v26.14.138750
    The multilingual framework for Plain TeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -270,7 +270,8 @@
   package option \texttt{base} (and also \texttt{plain.def}) with
   |\bbl@onlyswitch| $=$ |\@empty|. See sec.~\ref{endswitch}.
   
-  It needs to be cleaned up to remove unnecessary code in Plain.
+  It needs to be cleaned up to remove unnecessary code in Plain. Note
+  also the engine specific files are still loaded.
 \end{note}
 
 \DocInput{babel-plain.dtx}
@@ -288,8 +289,8 @@
 % Just a block. To be revised. 
 %
 %    \begin{macrocode}
-%<<version=26.14.138672>>
-%<<date=2026/10/17>>
+%<<version=26.14.138750>>
+%<<date=2026/10/18>>
 %    \end{macrocode}
 %
 % Some files identify themselves with a \LaTeX{} macro. The following
@@ -301,11 +302,11 @@
 % Just for compatibility, for not to touch |hyphen.cfg|.
 %
 %    \begin{macrocode}
-%<<*Define core switching macros>>
+%<<*Define Plain core switching macros>>
 \ifx\language\@undefined
   \csname newcount\endcsname\language
 \fi
-%<</Define core switching macros>>
+%<</Define Plain core switching macros>>
 %    \end{macrocode}
 %
 % \macro{\last@language}
@@ -319,10 +320,10 @@
 % compatibility.
 %
 %    \begin{macrocode}
-%<<*Define core switching macros>>
+%<<*Define Plain core switching macros>>
 \countdef\last@language=19
 \def\addlanguage{\csname newlanguage\endcsname}
-%<</Define core switching macros>>
+%<</Define Plain core switching macros>>
 %    \end{macrocode}
 %
 % First, exit immediately if previouly loaded.
@@ -579,15 +580,14 @@
 \bbl@tempa
 %    \end{macrocode}
 %
-% Used in some \textsf{ldf} files:
+% Used in some \textsf{ldf} files. Assume true.
 %
 %    \begin{macrocode}
 \def\@ifpackagewith#1#2#3#4{#3}
 %    \end{macrocode}
 %
-% The \LaTeX\ macro |\@ifl@aded| checks whether a file was loaded. This
-% functionality is not needed for plain \TeX\ but we need the macro to
-% be defined as a no-op.
+% The \LaTeX\ macro |\@ifl@aded| checks whether a file was loaded.
+% No-op in Plain.
 %
 %    \begin{macrocode}
 \def\@ifl@aded#1#2#3#4{}
@@ -812,7 +812,6 @@
 %
 %    \begin{macrocode}
 \def\languagename{english}%
-\let\bbl@opt@shorthands\@nnil
 \def\bbl@ifshorthand#1#2#3{#2}%
 \let\bbl@language@opts\@empty
 \let\bbl@provide@locale\relax
@@ -829,12 +828,8 @@
 \def\AfterBabelLanguage#1#2{}
 \ifx\BabelModifiers\@undefined\let\BabelModifiers\relax\fi
 \let\bbl@afterlang\relax
-\def\bbl@opt@safe{BR}
 \ifx\@uclclist\@undefined\let\@uclclist\@empty\fi
-\ifx\bbl@trace\@undefined\def\bbl@trace#1{}\fi
-\expandafter\newif\csname ifbbl@single\endcsname
 \chardef\bbl@bidimode\z@
-\let\bbl@ifmetadata\@gobble
 \fi
 %    \end{macrocode}
 %
@@ -1107,24 +1102,6 @@
   \fi}
 %    \end{macrocode}
 %
-% Another hackish tool, to apply case changes inside a protected
-% macros.
-%
-%    \begin{macrocode}
-\def\bbl@cased{%
-  \ifx\oe\OE
-    \expandafter\in@\expandafter
-      {\expandafter\OE\expandafter}\expandafter{\oe}%
-    \ifin@
-      \bbl@afterelse\expandafter\MakeUppercase
-    \else
-      \bbl@afterfi\expandafter\MakeLowercase
-    \fi
-  \else
-    \expandafter\@firstofone
-  \fi}
-%    \end{macrocode}
-%
 % Ordered key/value lists (aka associative arrays). 
 %
 %    \begin{macrocode}
@@ -1145,22 +1122,6 @@
   \expandafter\bbl@array@aux#1\bbl@elt#2\@@\bbl@array@end\bbl@array@aux}
 %    \end{macrocode}
 %
-% The following adds some code to |\extras...| both before and after,
-% while avoiding doing it twice.
-%
-%    \begin{macrocode}
-\def\bbl@extras@wrap#1#2#3{% 1:in-test, 2:before, 3:after
-  \toks@\expandafter\expandafter\expandafter{%
-    \csname extras\languagename\endcsname}%
-  \bbl@exp{\\\in@{#1}{\the\toks@}}%
-  \ifin@\else
-    \@temptokena{#2}%
-    \edef\bbl@tempc{\the\@temptokena\the\toks@}%
-    \toks@\expandafter{\bbl@tempc#3}%
-    \expandafter\edef\csname extras\languagename\endcsname{\the\toks@}%
-  \fi}
-%    \end{macrocode}
-%
 % That is all for the moment. Now follows some common stuff, for both
 % Plain and \LaTeX{}. After it, we will resume the \LaTeX-only stuff.
 %
@@ -1171,7 +1132,7 @@
 %    \begin{macrocode}
 \def\bbl@version{<@version@>}
 \def\bbl@date{<@date@>}
-<@Define core switching macros@>
+<@Define Plain core switching macros@>
 %    \end{macrocode}
 %
 % \macro{\adddialect}
@@ -1638,10 +1599,8 @@
     \let\BabelText\@firstofone
     \bbl@beforeforeign
     \foreign@language{#2}%
-    \bbl@ifmetadata{\UseTaggingSocket{babel/foreign/begin}}%
     \bbl@usehooks{foreign}{}%
     \BabelText{#3}% Now in horizontal mode!
-    \bbl@ifmetadata{\UseTaggingSocket{babel/foreign/end}}%
   \endgroup}
 \def\bbl@foreign@s#1#2{%
   \begingroup
@@ -2062,14 +2021,6 @@
 \fi
 %    \end{macrocode}
 %
-% Since the following command is meant for a hook (although a \LaTeX{}
-% one), it’s placed here.
-%
-%    \begin{macrocode}
-\providecommand\PassOptionsToLocale[2]{%
-  \bbl@csarg\bbl@add@list{passto@#2}{#1}}
-%    \end{macrocode}
-%
 % \subsection{Setting up language files}
 %
 % \macro{\LdfInit}
@@ -2180,26 +2131,7 @@
 % beginning of the document.
 %
 %    \begin{macrocode}
-\def\bbl@beforestart{%
-  \def\@nolanerr##1{%
-    \bbl@carg\chardef{l@##1}\z@
-    \bbl@warning{Undefined language '##1' in aux.\\Reported}}%
-  \bbl@usehooks{beforestart}{}%
-  \global\let\bbl@beforestart\relax}
-\AtBeginDocument{%
-  {\@nameuse{bbl@beforestart}}%  Group!
-  \if@filesw
-    \providecommand\babel@aux[2]{}%
-    \immediate\write\@mainaux{\unexpanded{%
-      \providecommand\babel@aux[2]{\global\let\babel@toc\@gobbletwo}}}%
-    \immediate\write\@mainaux{\string\@nameuse{bbl@beforestart}}%
-  \fi
-  \expandafter\selectlanguage\expandafter{\bbl@main@language}%
-  \ifbbl@single  % must go after the line above.
-    \renewcommand\selectlanguage[1]{}%
-    \renewcommand\foreignlanguage[2]{#2}%
-    \global\let\babel@aux\@gobbletwo  % Also as flag
-  \fi}
+\AtBeginDocument{\expandafter\selectlanguage\expandafter{\bbl@main@language}}
 %    \end{macrocode}
 %
 % A bit of optimization. Select in heads/feet the language only if
@@ -2665,24 +2597,6 @@
 \def\bbl@putsh@i#1#2\@nnil{%
   \csname\language@group @sh@\string#1@%
     \ifx\@empty#2\else\string#2@\fi\endcsname}
-%
-\ifx\bbl@opt@shorthands\@nnil\else
-  \let\bbl@s@initiate@active@char\initiate@active@char
-  \def\initiate@active@char#1{%
-    \bbl@ifshorthand{#1}{\bbl@s@initiate@active@char{#1}}{}}
-  \let\bbl@s@switch@sh\bbl@switch@sh
-  \def\bbl@switch@sh#1#2{%
-    \ifx#2\@nnil\else
-      \bbl@afterfi
-      \bbl@ifshorthand{#2}{\bbl@s@switch@sh#1{#2}}{\bbl@switch@sh#1}%
-    \fi}
-  \let\bbl@s@activate\bbl@activate
-  \def\bbl@activate#1{%
-    \bbl@ifshorthand{#1}{\bbl@s@activate{#1}}{}}
-  \let\bbl@s@deactivate\bbl@deactivate
-  \def\bbl@deactivate#1{%
-    \bbl@ifshorthand{#1}{\bbl@s@deactivate{#1}}{}}
-\fi
 %    \end{macrocode}
 %
 % You may want to test if a character is a shorthand. Note it does not
@@ -2958,39 +2872,6 @@
 \let\bbl@nonfrenchspacing\nonfrenchspacing
 %    \end{macrocode}
 %
-% A more refined way to switch the catcodes is done with |ini| files.
-%
-%    \begin{macrocode}
-\let\bbl@elt\relax
-\edef\bbl@fs@chars{%
-  \bbl@elt{\string.}\@m{3000}\bbl@elt{\string?}\@m{3000}%
-  \bbl@elt{\string!}\@m{3000}\bbl@elt{\string:}\@m{2000}%
-  \bbl@elt{\string;}\@m{1500}\bbl@elt{\string,}\@m{1250}}
-\def\bbl@pre@fs{%
-  \def\bbl@elt##1##2##3{\sfcode`##1=\the\sfcode`##1\relax}%
-  \edef\bbl@save@sfcodes{\bbl@fs@chars}}%
-\def\bbl@post@fs{%
-  \bbl@save@sfcodes
-  \edef\bbl@tempa{\bbl@cl{frspc}}%
-  \edef\bbl@tempa{\expandafter\@car\bbl@tempa\@nil}%
-  \if u\bbl@tempa          % do nothing
-  \else\if n\bbl@tempa     % non french
-    \def\bbl@elt##1##2##3{%
-      \ifnum\sfcode`##1=##2\relax
-        \babel@savevariable{\sfcode`##1}%
-        \sfcode`##1=##3\relax
-      \fi}%
-    \bbl@fs@chars
-  \else\if y\bbl@tempa     % french
-    \def\bbl@elt##1##2##3{%
-      \ifnum\sfcode`##1=##3\relax
-        \babel@savevariable{\sfcode`##1}%
-        \sfcode`##1=##2\relax
-      \fi}%
-    \bbl@fs@chars
-  \fi\fi\fi}
-%    \end{macrocode}
-%
 % \subsection{Hyphens}
 %
 % \macro{\babelhyphenation}
@@ -3024,30 +2905,6 @@
               {\csname bbl@hyphenation@\bbl@tempa\endcsname\space}%
             #2}}}%
     \fi}}
-%    \end{macrocode}
-%
-% \macro{\babelhyphenmins}
-%
-% Only \LaTeX{} (basically because it’s defined with a \LaTeX{} tool).
-%
-%    \begin{macrocode}
-\ifx\NewDocumentCommand\@undefined\else
-  \NewDocumentCommand\babelhyphenmins{sommo}{%
-    \IfNoValueTF{#2}%
-      {\protected@edef\bbl@hyphenmins@{\set@hyphenmins{#3}{#4}}%
-       \IfValueT{#5}{%
-         \protected@edef\bbl@hyphenatmin@{\hyphenationmin=#5\relax}}%
-       \IfBooleanT{#1}{%
-         \lefthyphenmin=#3\relax
-         \righthyphenmin=#4\relax
-         \IfValueT{#5}{\hyphenationmin=#5\relax}}}%
-      {\edef\bbl@tempb{\zap@space#2 \@empty}%
-       \bbl@for\bbl@tempa\bbl@tempb{%
-         \@namedef{bbl@hyphenmins@\bbl@tempa}{\set@hyphenmins{#3}{#4}}%
-         \IfValueT{#5}{%
-           \@namedef{bbl@hyphenatmin@\bbl@tempa}{\hyphenationmin=#5\relax}}}%
-       \IfBooleanT{#1}{\bbl@error{hyphenmins-args}{}{}{}}}}
-\fi
 %    \end{macrocode}
 %
 % \macro{\bbl@allowhyphens}
@@ -3157,7 +3014,7 @@
       \expandafter\bbl@tempa
     \fi}%
   \bbl@tempa
-  <@Macros local to BabelCommands@>
+  <@Macros local to Plain BabelCommands@>
   \def\bbl@provstring##1##2{%
     \providecommand##1{##2}%
     \bbl@toglobal##1}%
@@ -3312,7 +3169,7 @@
 % |\StartBabelCommands|.
 %
 %    \begin{macrocode}
-%<<*Macros local to BabelCommands>>
+%<<*Macros local to Plain BabelCommands>>
 \def\SetStringLoop##1##2{%
     \def\bbl@templ####1{\expandafter\noexpand\csname##1\endcsname}%
     \count@\z@
@@ -3322,7 +3179,7 @@
       \bbl@exp{%
         \\\SetString\bbl@templ{\romannumeral\count@}{\the\toks@}%
         \count@=\the\count@\relax}}}%
-%<</Macros local to BabelCommands>>
+%<</Macros local to Plain BabelCommands>>
 %    \end{macrocode}
 %
 % \paragraph{Delaying code} Now the definition of |\AfterBabelCommands|
@@ -3336,36 +3193,41 @@
 %
 % \paragraph{Case mapping}
 %
-% The command |\SetCase| is deprecated. Currently it consists in a
-% definition with a hack just for backward compatibility in the macro
-% mapping.
+% The command |\SetCase| is deprecated (at least in \LaTeX). This is
+% the original definition.
 %
 %    \begin{macrocode}
-%<<*Macros local to BabelCommands>>
+\def\bbl@patchuclc{%
+  \global\let\bbl@patchuclc\relax
+  \g@addto@macro\@uclclist{\reserved@b{\reserved@b\bbl@uclc}}%
+  \gdef\bbl@uclc##1{%
+    \let\bbl@encoded\bbl@encoded@uclc
+    \bbl@ifunset{\languagename @bbl@uclc}% and resumes it
+      {##1}%
+      {\let\bbl@tempa##1\relax % Used by LANG@bbl@uclc
+       \csname\languagename @bbl@uclc\endcsname}%
+    {\bbl@tolower\@empty}{\bbl@toupper\@empty}}%
+  \gdef\bbl@tolower{\csname\languagename @bbl@lc\endcsname}%
+  \gdef\bbl@toupper{\csname\languagename @bbl@uc\endcsname}}
+%<<*Macros local to Plain BabelCommands>>
   \newcommand\SetCase[3][]{%
-    \def\bbl@tempa####1####2{%
-      \ifx####1\@empty\else
-        \bbl@carg\bbl@add{extras\CurrentOption}{%
-          \bbl@carg\babel@save{c__text_uppercase_\string####1_tl}%
-          \bbl@carg\def{c__text_uppercase_\string####1_tl}{####2}%
-          \bbl@carg\babel@save{c__text_lowercase_\string####2_tl}%
-          \bbl@carg\def{c__text_lowercase_\string####2_tl}{####1}}%
-        \expandafter\bbl@tempa
-      \fi}%
-    \bbl@tempa##1\@empty\@empty
-    \bbl@carg\bbl@toglobal{extras\CurrentOption}}%
-%<</Macros local to BabelCommands>>
+    \bbl@patchuclc
+    \bbl@forlang\bbl@tempa{%
+      \bbl@carg\bbl@encstring{\bbl@tempa @bbl@uclc}{\bbl@tempa##1}%
+      \bbl@carg\bbl@encstring{\bbl@tempa @bbl@uc}{##2}%
+      \bbl@carg\bbl@encstring{\bbl@tempa @bbl@lc}{##3}}}%
+%<</Macros local to Plain BabelCommands>>
 %    \end{macrocode}
 %
 % Macros to deal with case mapping for hyphenation. 
 %
 %    \begin{macrocode}
-%<<*Macros local to BabelCommands>>
+%<<*Macros local to Plain BabelCommands>>
   \newcommand\SetHyphenMap[1]{%
     \bbl@forlang\bbl@tempa{%
       \expandafter\bbl@stringdef
         \csname\bbl@tempa @bbl@hyphenmap\endcsname{##1}}}%
-%<</Macros local to BabelCommands>>
+%<</Macros local to Plain BabelCommands>>
 %    \end{macrocode}
 %
 % There are 3 helper macros which do most of the work for you.
@@ -3961,7 +3823,7 @@
 % \section{Compatibility}
 %
 % A couple of proxy files, for compatibility (\texttt{plain.def} and
-% \texttt{swicth.def}).
+% \texttt{switch.def}).
 %
 %    \begin{macrocode}
 %<*plain>

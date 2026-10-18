@@ -26,7 +26,7 @@
 %% and covered by LPPL is defined by the unpacking scripts (with
 %% extension .ins) which are part of the distribution.
 %%
-\def\filedate{2026/10/17}
+\def\filedate{2026/10/18}
 \def\batchfile{babel.ins}
 \input docstrip.tex
 
@@ -127,7 +127,8 @@
 \savingtrue
 \generate{\usepreamble\empty
           \usepostamble\empty
-          \file{dummy.log}{\from{babel.dtx}{dummy}}}
+          \file{dummy.log}{\from{babel.dtx}{dummy}}
+          \file{dummy-plain.log}{\from{babel-plain.dtx}{dummy}}}
 \savingfalse
 
 \generate{\file{babel.sty}{\from{babel.dtx}{package}}
@@ -147,10 +148,8 @@
           \file{luababel.def}{\from{babel.dtx}{luatex}}
           \file{txtbabel.def}{\from{babel.dtx}{texxet}}
           \file{tagbabel.def}{\from{babel.dtx}{tagging}}
-          }
-
-% Support for plain users
-\generate{\file{babel.def}{\from{babel-plain.dtx}{core}}
+           % Support for plain users
+          \file{babel.def}{\from{babel-plain.dtx}{core}}
           \file{plain.def}{\from{babel-plain.dtx}{plain}}
           \file{switch.def}{\from{babel-plain.dtx}{kernel}}
           \file{bplain.tex}{\from{babel-plain.dtx}{bplain}}
