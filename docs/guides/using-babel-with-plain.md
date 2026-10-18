@@ -71,6 +71,9 @@ Plain’s DIY philosophy. For example:
 \AddBabelHook[danish]{font}{beforeextras}{\it}
 ```
 
+Also working: `\babelensure`, `\babeltags`, `\babelhyphen`,
+`\setlocalecaption`.  
+
 ## Developer’s level
 
 There must be a `sty` proxy file. See the existing ones.
