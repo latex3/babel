@@ -89,17 +89,19 @@ definitions just to avoid errors or simplified versions.
 ## Languages
 
 Here is a document which runs with no error messages in pdfTeX and
-ePlain, but with an error in `latin` in TeX. Note there is only a set
-of hyphenation patterns (English):
+ePlain, but with an error in some of them in TeX (note with the latter
+there is only a set of hyphenation patterns, for English). Commented
+out languages are not supported any more because of recent changes in
+the `ldf` files:
 ```tex
 \input afrikaans.sty
 \input albanian.sty
 \input american.sty
-\input austrian.sty
+% \input austrian.sty
 \input bahasa.sty
 \input bahasam.sty
 \input basque.sty
-\input breton.sty
+% \input breton.sty
 \input british.sty
 \input catalan.sty
 \input croatian.sty
@@ -108,15 +110,15 @@ of hyphenation patterns (English):
 \input esperanto.sty
 \input estonian.sty
 \input finnish.sty
-\input germanb.sty
+% \input germanb.sty
 \input icelandic.sty
 \input interlingua.sty
 \input irish.sty
 \input latin.sty
 \input lsorbian.sty
-\input naustrian.sty
+% \input naustrian.sty
 \input norsk.sty
-\input polish.sty
+% \input polish.sty
 \input portuges.sty
 \input romanian.sty
 \input samin.sty
@@ -131,5 +133,6 @@ of hyphenation patterns (English):
 \begindocument
 
 \bye
+
 ```
 
