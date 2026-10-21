@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/18 v26.14.138750
+  [2026/10/21 v26.14.139071
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -2562,11 +2562,13 @@ them you have to declare explicitly the language in the preamble.
 With this package option \babel{} just loads some basic macros (mainly
 the selectors), defines |\AfterBabelLanguage| and exits. It also
 selects the hyphenation patterns for the last language passed as option
-(by its name in |language.dat|).
+(by its name in |language.dat|). It doesn’t load any \texttt{ldf} or
+\texttt{ini} files (and, in fact, many supporting macros for these
+files remain undefined).
 
 \begin{warning}
-  Currently this option is not compatible with languages loaded on the
-  fly.
+  This option is not compatible with languages loaded on the fly or
+  with |\DocumentMetadata|.
 \end{warning}
 
 \subsection{\texttt{provide} and \cs{babelprovide} – \texttt{ini} files}
@@ -6358,8 +6360,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.14.138750>>
-%<<date=2026/10/18>>
+%<<version=26.14.139071>>
+%<<date=2026/10/21>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6678,7 +6680,7 @@ wouldn’t exist.
 % keys. 
 %
 %    \begin{macrocode}
-\def\bbl@array@end{\@empty}
+\def\bbl@@empty{\@empty}
 \def\bbl@array@set#1#2#3{%
   \def\bbl@array@aux##1\bbl@elt#2\@@##2##3\bbl@array@aux##4{%
     \ifx\bbl@noelt##2%
@@ -6691,8 +6693,8 @@ wouldn’t exist.
   \expandafter\bbl@array@aux#1\bbl@elt#2\@@\bbl@noelt\bbl@array@aux{#3}}
 \def\bbl@array@get#1#2#3{%
   \def\bbl@array@aux##1\bbl@elt#2\@@##2##3\bbl@array@aux{%
-    \ifx\bbl@array@end##2\@empty\let#3\relax\else\def#3{##2}\fi}% 
-  \expandafter\bbl@array@aux#1\bbl@elt#2\@@\bbl@array@end\bbl@array@aux}
+    \ifx\bbl@@empty##2\@empty\let#3\relax\else\def#3{##2}\fi}% 
+  \expandafter\bbl@array@aux#1\bbl@elt#2\@@\bbl@@empty\bbl@array@aux}
 %    \end{macrocode}
 %
 % The following adds some code to |\extras...| both before and after,
@@ -12816,29 +12818,29 @@ wouldn’t exist.
     {\bbl@footnote@o{#1}{#2}{#3}}%
     {\bbl@footnote@x{#1}{#2}{#3}}}
 \long\def\bbl@footnote@x#1#2#3#4{%
-  \bgroup
+  \begingroup
     \select@language@x{\bbl@main@language}%
     \bbl@fn@footnote{#2#1{\ignorespaces#4}#3}%
-  \egroup}
+  \endgroup}
 \long\def\bbl@footnote@o#1#2#3[#4]#5{%
-  \bgroup
+  \begingroup
     \select@language@x{\bbl@main@language}%
     \bbl@fn@footnote[#4]{#2#1{\ignorespaces#5}#3}%
-  \egroup}
+  \endgroup}
 \def\bbl@footnotetext#1#2#3{%
   \@ifnextchar[%
     {\bbl@footnotetext@o{#1}{#2}{#3}}%
     {\bbl@footnotetext@x{#1}{#2}{#3}}}
 \long\def\bbl@footnotetext@x#1#2#3#4{%
-  \bgroup
+  \begingroup
     \select@language@x{\bbl@main@language}%
     \bbl@fn@footnotetext{#2#1{\ignorespaces#4}#3}%
-  \egroup}
+  \endgroup}
 \long\def\bbl@footnotetext@o#1#2#3[#4]#5{%
-  \bgroup
+  \begingroup
     \select@language@x{\bbl@main@language}%
     \bbl@fn@footnotetext[#4]{#2#1{\ignorespaces#5}#3}%
-  \egroup}
+  \endgroup}
 \def\BabelFootnote#1#2#3#4{%
   \ifx\bbl@fn@footnote\@undefined
     \let\bbl@fn@footnote\footnote
@@ -12854,7 +12856,14 @@ wouldn’t exist.
      \@namedef{\bbl@stripslash#1text}%
        {\bbl@exp{\\\bbl@footnotetext{\\\foreignlanguage{#2}}}{#3}{#4}}}}
 \IfBabelLayout{footnotes}%
-  {\let\bbl@OL@footnote\footnote
+  {\ifcase\bbl@engine\or
+     \AddToHook{begindocument/end}{%
+       \ExplSyntaxOn
+       \bbl@sreplace\@footnotetext{\color@begingroup}%
+         {\color@begingroup\ifnum\bbl@insidemath>\z@\localerestoredirs\fi}%
+       \ExplSyntaxOff}%
+   \fi
+   \let\bbl@OL@footnote\footnote
    \BabelFootnote\footnote\languagename{}{}%
    \BabelFootnote\localfootnote\languagename{}{}%
    \BabelFootnote\mainfootnote{}{}{}}
@@ -13978,8 +13987,8 @@ wouldn’t exist.
     expect wrong results.\\%
     Suggested actions:\\%
     * If possible, switch to luatex, as xetex is not\\%
-      recommend anymore.\\
-    * If you can’t, try 'bidi=bidi' with xetex.\\%
+      recommend anymore.\\%
+    * If you can't, try 'bidi=bidi' with xetex.\\%
     * With pdftex, only 'bidi=default' is available.}%
    {See the manual for further details.}
 \bbl@errmessage{multiple-bidi}
@@ -13991,12 +14000,12 @@ wouldn’t exist.
 \bbl@errmessage{unknown-package-option}
    {Unknown option '\CurrentOption'.\\%
     Suggested actions:\\%
-    * Make sure you haven’t misspelled it\\%
+    * Make sure you haven't misspelled it\\%
     * Check in the babel manual that it's supported\\%
     * If supported and it's a language, you may\\%
     \space\space  need in some distributions a separate\\%
     \space\space  installation\\%
-    * If installed, check there isn’t an old\\%
+    * If installed, check there isn't an old\\%
     \space\space version of the required files in your system\\%
     * If it's an unsupported language, create it with\\%
     \space\space \string\babelprovide\space (see the manual)}
@@ -14006,8 +14015,8 @@ wouldn’t exist.
 \bbl@errmessage{config-not-found}
    {Local config file '\bbl@opt@config.cfg' not found.\\%
     Suggested actions:\\%
-    * Make sure you haven’t misspelled it in config=\\%
-    * Check it exists and it’s in the correct path}%
+    * Make sure you haven't misspelled it in config=\\%
+    * Check it exists and it's in the correct path}%
    {Perhaps you misspelled it.}
 \bbl@errmessage{late-after-babel}
    {Too late for \string\AfterBabelLanguage}%
@@ -14034,7 +14043,7 @@ wouldn’t exist.
    {See the manual for further info}
 \bbl@errmessage{bad-transform-option}
    {Bad option '#1' in a transform.\\%
-    I’ll ignore it but expect more errors}%
+    I'll ignore it but expect more errors}%
    {See the manual for further info.}
 \bbl@errmessage{font-conflict-transforms}
    {Transforms cannot be re-assigned to different\\%
@@ -14043,11 +14052,11 @@ wouldn’t exist.
    {See the manual for further details.}
 \bbl@errmessage{transform-not-available}
    {'#1' for '\languagename' cannot be enabled.\\%
-    Maybe there is a typo or it’s a font-dependent transform}%
+    Maybe there is a typo or it's a font-dependent transform}%
    {See the manual for further details.}
 \bbl@errmessage{transform-not-available-b}
    {'#1' for '\languagename' cannot be disabled.\\%
-    Maybe there is a typo or it’s a font-dependent transform}%
+    Maybe there is a typo or it's a font-dependent transform}%
    {See the manual for further details.}
 \bbl@errmessage{year-out-range}
    {Year out of range.\\%

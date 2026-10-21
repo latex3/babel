@@ -31,7 +31,7 @@
 % \iffalse
 %<*filedriver>
 \ProvidesFile{babel-plain.dtx}%
-  [2026/10/18 v26.14.138750
+  [2026/10/21 v26.14.139071
    The multilingual framework for Plain TeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -289,8 +289,8 @@
 % Just a block. To be revised. 
 %
 %    \begin{macrocode}
-%<<version=26.14.138750>>
-%<<date=2026/10/18>>
+%<<version=26.14.139071>>
+%<<date=2026/10/21>>
 %    \end{macrocode}
 %
 % Some files identify themselves with a \LaTeX{} macro. The following
@@ -1181,76 +1181,6 @@
   \@ifundefined{l@#1}{\@nolanerr{#1}\@gobble}\@firstofone}
 %    \end{macrocode}
 %
-% After a name has been ‘fixed’, the selectors will try to load the
-% language. If even the fixed name is not defined, will load it on the
-% fly, either based on its name, or if activated, its BCP 47 code.
-%
-%    \begin{macrocode}
-\def\bbl@cntchars#1{\bbl@cntchars@i#1876543210\@@}
-\def\bbl@cntchars@i#1#2#3#4#5#6#7#8#9\@@{\@car#9\@nil}%
-\def\bbl@bcplookup#1{%
-  \let\bbl@templ\@empty % language
-  \let\bbl@temps\@empty % script
-  \let\bbl@tempr\@empty % regions
-  \let\bbl@tempv\@empty % variant
-  \edef\bbl@tempa{#1}%
-  \bbl@replace\bbl@tempa{-}{,}%
-  \bbl@replace\bbl@tempa{_}{,}%
-  \bbl@foreach\bbl@tempa{%
-    \ifx\bbl@templ\@empty
-      \lowercase{\def\bbl@templ{##1}}%
-    \else\ifnum\bbl@cntchars{##1}=4
-      \bbl@xin@{\@car##1\@nil}{0123456789}%
-      \ifin@
-        \def\bbl@tempv{##1}% eg, 1901
-      \else
-        \uppercase{\edef\bbl@tempb{\@car##1\@nil}}%
-        \lowercase{\edef\bbl@temps{\bbl@tempb\@gobble##1}}%
-      \fi
-    \else\ifnum\bbl@cntchars{##1}<4
-      \uppercase{\def\bbl@tempr{##1}}% 
-    \else\ifnum\bbl@cntchars{##1}>4  
-      \lowercase{\def\bbl@tempv{##1}}%
-    \fi\fi\fi\fi}%
-  \bbl@exp{\\\bbl@bcplookup@i{\bbl@templ}{\bbl@temps}{\bbl@tempr}{\bbl@tempv}}}
-\def\bbl@bcplookup@try#1{%
- \ifx\bbl@bcp\relax
-   \IfFileExists{babel-#1\bbl@tempe.ini}{\edef\bbl@bcp{#1\bbl@tempe}}{}%
-\fi} 
-\def\bbl@bcplookup@i#1#2#3#4{%
-  \let\bbl@bcp\relax
-  \def\bbl@tempe{#4}%
-  \ifx\bbl@tempe\@empty\else
-    \edef\bbl@tempe{-#4}%
-  \fi
-  \edef\bbl@tempa{#2#3\bbl@tempe}% en
-  \ifx\bbl@tempa\@empty
-    \bbl@bcplookup@try{#1}%
-  \else
-    \edef\bbl@tempa{#3\bbl@tempe}% en-Latn
-    \ifx\bbl@tempa\@empty
-      \bbl@bcplookup@try{#1-#2}%
-      \bbl@bcplookup@try{#1}%
-    \else
-      \edef\bbl@tempa{#2\bbl@tempe}% en-US, en-001    
-      \ifx\bbl@tempa\@empty
-        \bbl@bcplookup@try{#1-#3}%
-        \bbl@bcplookup@try{#1}%
-      \else % en-Latn-US       
-        \bbl@bcplookup@try{#1-#2-#3}%
-        \bbl@bcplookup@try{#1-#2}%
-        \bbl@bcplookup@try{#1-#3}%
-        \bbl@bcplookup@try{#1}%
-      \fi
-    \fi
-  \fi
-  \ifx\bbl@bcp\relax
-    \ifx\bbl@tempe\@empty\else\bbl@bcplookup@i{#1}{#2}{#3}{}\fi%
-  \fi}
-%
-\let\bbl@initoload\relax
-%    \end{macrocode}
-%
 % \macro{\iflanguage}
 % Users might want to test (in a private package for instance)
 % which language is currently active.
@@ -2132,18 +2062,6 @@
 %
 %    \begin{macrocode}
 \AtBeginDocument{\expandafter\selectlanguage\expandafter{\bbl@main@language}}
-%    \end{macrocode}
-%
-% A bit of optimization. Select in heads/feet the language only if
-% necessary.
-%
-%    \begin{macrocode}
-\def\select@language@x#1{%
-  \ifcase\bbl@select@type
-    \bbl@ifsamestring\languagename{#1}{}{\select@language{#1}}%
-  \else
-    \select@language{#1}%
-  \fi}
 %    \end{macrocode}
 %
 % \subsection{Shorthands}

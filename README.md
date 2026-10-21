@@ -1,4 +1,4 @@
-## Babel 26.14.138750
+## Babel 26.14.139071
 
 (dev)
 
@@ -61,6 +61,7 @@ respective authors.
 
 #### 25.15 (dev)
 * A mainly internal change: LaTeX and Plain are now separate files.
+* Fixes for `layout=footnotes`.
 
 #### 26.14 (2026-10-15)
 
