@@ -7,7 +7,7 @@
 Development for PDF tagging continues, and this release introduces two new
 features.
 
-* Option `phoneme` in \foreignlanguage`, which provides a pronunciation hint for
+* Option `phoneme` in `\foreignlanguage`, which provides a pronunciation hint for
   screen readers. For example:
 ```tex
 \DocumentMetadata{language=en, tagging=on, uncompress}
