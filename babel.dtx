@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/22 v26.14.139146
+  [2026/10/22 v26.14.139174
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -6360,7 +6360,7 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.14.139146>>
+%<<version=26.14.139174>>
 %<<date=2026/10/22>>
 %    \end{macrocode}
 %
@@ -13814,8 +13814,18 @@ wouldn’t exist.
    }
 \fi
 \@ifpackagewith{babel}{babel-metadata=tagging}{}{\endinput}
+% Still only foreign and document. Select is pending:
 \let\bbl@ifmetadata\IfDocumentMetadataT
 \ExplSyntaxOn
+\tagpdfsetup{
+  role/new-attribute = {babel-dir-rl}{/O/Layout/WritingMode/RlTb},
+  role/new-attribute = {babel-dir-lr}{/O/Layout/WritingMode/LrTb} }
+% 
+\AddToHook{begindocument/end}{%
+  \ifcase\bbl@thepardir\else
+    \tag_struct_gput:nnn{\tag_get:n{struct_num}}{attribute}{/O/Layout/WritingMode/RlTb}%
+  \fi}
+%
 \NewTaggingSocket{babel/foreign/begin}{0}
 \NewTaggingSocket{babel/foreign/end}{0}
 \NewTaggingSocketPlug{babel/foreign/begin}{default}{
@@ -13824,9 +13834,12 @@ wouldn’t exist.
   \ifx\bbl@tempa\relax\let\bbl@tempa\@empty\fi
   \bbl@array@get\bbl@select@opts{actualtext}\bbl@tempb
   \ifx\bbl@tempb\relax\let\bbl@tempb\@empty\fi
-  \tagstructbegin{tag=Span, lang=\BCPdata{tag},
-     phoneme=\bbl@tempa,
-     actualtext=\bbl@tempb}
+  \bbl@exp{%
+    \\\tagstructbegin{tag=Span, lang=\BCPdata{tag},
+      \ifnum\bbl@bidimode>\z@
+        attribute=babel-dir-\ifcase\bbl@thetextdir lr\else rl\fi,
+      \fi
+      phoneme={\bbl@tempa}, actualtext={\bbl@tempb}}}%
   \tagmcbegin {} }
 \NewTaggingSocketPlug{babel/foreign/end}{default}{
   \tagmcend
@@ -13835,6 +13848,7 @@ wouldn’t exist.
 \AssignTaggingSocketPlug{babel/foreign/begin}{default}
 \AssignTaggingSocketPlug{babel/foreign/end}{default}
 \ExplSyntaxOff
+%
 \AddBabelHook{babel-pdftagging}{afterextras}{%
   \IfBabelSelectorTF{select}%
     {\ifvmode
