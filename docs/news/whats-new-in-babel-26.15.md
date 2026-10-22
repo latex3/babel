@@ -9,8 +9,9 @@ features.
 
 * Option `phoneme` in `\foreignlanguage`, which provides a pronunciation hint for
   screen readers. For example:
+  
 ```tex
-\DocumentMetadata{language=en, tagging=on, uncompress}
+\DocumentMetadata{language=en, tagging=on}
 \documentclass{article}
 
 % babel-metadata=tagging is temporary and will be removed in the future.
