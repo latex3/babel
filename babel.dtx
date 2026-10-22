@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/21 v26.14.139076
+  [2026/10/22 v26.14.139146
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -6360,8 +6360,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.14.139076>>
-%<<date=2026/10/21>>
+%<<version=26.14.139146>>
+%<<date=2026/10/22>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -7847,6 +7847,7 @@ wouldn’t exist.
 % selector being used.
 %
 %    \begin{macrocode}
+\let\bbl@selectorname\@empty
 \def\IfBabelSelectorTF#1{%
   \bbl@xin@{,\bbl@selectorname,}{,\zap@space#1 \@empty,}%
   \ifin@
@@ -13819,12 +13820,12 @@ wouldn’t exist.
 \NewTaggingSocket{babel/foreign/end}{0}
 \NewTaggingSocketPlug{babel/foreign/begin}{default}{
   \tag_mc_end_push: 
-  % \bbl@array@get\bbl@select@opts{raw}\bbl@tempa
-  % \ifx\bbl@tempa\relax\let\bbl@tempa\@empty\fi
+  \bbl@array@get\bbl@select@opts{phoneme}\bbl@tempa
+  \ifx\bbl@tempa\relax\let\bbl@tempa\@empty\fi
   \bbl@array@get\bbl@select@opts{actualtext}\bbl@tempb
   \ifx\bbl@tempb\relax\let\bbl@tempb\@empty\fi
   \tagstructbegin{tag=Span, lang=\BCPdata{tag},
-     % raw=\bbl@tempa,
+     phoneme=\bbl@tempa,
      actualtext=\bbl@tempb}
   \tagmcbegin {} }
 \NewTaggingSocketPlug{babel/foreign/end}{default}{
@@ -13834,6 +13835,19 @@ wouldn’t exist.
 \AssignTaggingSocketPlug{babel/foreign/begin}{default}
 \AssignTaggingSocketPlug{babel/foreign/end}{default}
 \ExplSyntaxOff
+\AddBabelHook{babel-pdftagging}{afterextras}{%
+  \IfBabelSelectorTF{select}%
+    {\ifvmode
+       \bbl@ifsamestring{\BCPdata{tag}}{\BCPdata{main.tag}}%
+         {\tagpdfsetup{text/lang=}}
+         {\tagpdfsetup{text/lang=\BCPdata{tag}}}%
+     \else
+       \bbl@once{select-tag-vmode}{%
+         \bbl@warning{%
+           PDF language tagging with \string\selectlanguage\\%
+           requires vertical mode. Reported}}%
+     \fi}%
+    {}}
 %</tagging>
 %    \end{macrocode}
 %
