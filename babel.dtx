@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/22 v26.14.139174
+  [2026/10/25 v26.14.139446
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -6360,8 +6360,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.14.139174>>
-%<<date=2026/10/22>>
+%<<version=26.14.139446>>
+%<<date=2026/10/25>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -11244,23 +11244,28 @@ wouldn’t exist.
       \bbl@inidata
     \fi
     \bbl@csarg\xdef{lini@\languagename}{#1}%
+    \def\bbl@section{identification}%
+    \bbl@exp{\\\bbl@inistore name.declared=\languagename\\\@@}%
     \bbl@read@ini@aux
     % == 'Export' data ==
     \bbl@ini@exports{#2}%
     \global\bbl@csarg\let{inidata@\languagename}\bbl@inidata
+    \global\bbl@csarg\let{inidatatag@\localeinfo*\languagename}\bbl@inidata
     \global\let\bbl@inidata\@empty
     \bbl@xin@{,\languagename,}{,\bbl@ini@loaded,}%
     \ifin@\else
       \bbl@exp{\\\bbl@add@list\\\bbl@ini@loaded{\languagename}}%
       \bbl@toglobal\bbl@ini@loaded
     \fi
-    \@ifpackagewith{babel}{licr=unextended}{}%
-      {\ifcase\bbl@engine\else % Find a better place
-         \bbl@xin@{,\bbl@cl{sbcp},}{,Cyrl,}%
-         \ifin@
-           \bbl@once{licr-cryl}{\g@addto@macro\bbl@afterload{\input{cyrl2uni.def}}}%
-         \fi
-       \fi}%
+    \ifnum#2>\m@ne
+      \@ifpackagewith{babel}{licr=unextended}{}%
+        {\ifcase\bbl@engine\else % Find a better place
+           \bbl@xin@{,\bbl@cl{sbcp},}{,Cyrl,}%
+           \ifin@
+             \g@addto@macro\bbl@afterload{\bbl@once{licr-cryl}{\input{cyrl2uni.def}}}%
+           \fi          
+         \fi}%
+    \fi
   \fi
   \closein\bbl@readstream}
 \def\bbl@read@ini@aux{%
@@ -13814,18 +13819,40 @@ wouldn’t exist.
    }
 \fi
 \@ifpackagewith{babel}{babel-metadata=tagging}{}{\endinput}
-% Still only foreign and document. Select is pending:
 \let\bbl@ifmetadata\IfDocumentMetadataT
 \ExplSyntaxOn
-\tagpdfsetup{
-  role/new-attribute = {babel-dir-rl}{/O/Layout/WritingMode/RlTb},
-  role/new-attribute = {babel-dir-lr}{/O/Layout/WritingMode/LrTb} }
-% 
-\AddToHook{begindocument/end}{%
-  \ifcase\bbl@thepardir\else
-    \tag_struct_gput:nnn{\tag_get:n{struct_num}}{attribute}{/O/Layout/WritingMode/RlTb}%
-  \fi}
+%    \end{macrocode}
 %
+% \texttt{/WritingMode} attributes for bidi documents. Still only
+% foreign and document. Select is pending.
+%
+%    \begin{macrocode}
+\ifnum\bbl@bidimode>\z@
+  \tagpdfsetup{
+    role/new-attribute = {babel-dir-rl}{/O/Layout/WritingMode/RlTb},
+    role/new-attribute = {babel-dir-lr}{/O/Layout/WritingMode/LrTb} }
+\fi
+%    \end{macrocode}
+%
+% Layout attributes (like \texttt{/WritingMode}) belong to structure
+% elements, and cannot be used in the document’s global catalog
+% dictionary. (Note a redundant PDF resource is created.) The global
+% \texttt{/Lang} is set by |\DocumentMetadata|, so no additional
+% action is required here.
+%
+%    \begin{macrocode}
+\AddToHook{begindocument/end}{%
+  \ifnum\bbl@bidimode>\z@
+    \ifcase\bbl@thepardir\else
+      \tag_struct_gput:nnn{\tag_get:n{struct_num}}{attribute}{/O/Layout/WritingMode/RlTb}%
+    \fi
+  \fi}
+%    \end{macrocode}
+%
+% The code for |\foreignlanguage|. The attribute \texttt{/WritingMode}
+% is set always (both LTR and RTL) in documents with some bidi text.
+%
+%    \begin{macrocode}
 \NewTaggingSocket{babel/foreign/begin}{0}
 \NewTaggingSocket{babel/foreign/end}{0}
 \NewTaggingSocketPlug{babel/foreign/begin}{default}{
@@ -13848,7 +13875,15 @@ wouldn’t exist.
 \AssignTaggingSocketPlug{babel/foreign/begin}{default}
 \AssignTaggingSocketPlug{babel/foreign/end}{default}
 \ExplSyntaxOff
+%    \end{macrocode}
 %
+% The code for |\selectlanguage|. For the moment, it only works in
+% vertical mode. If the current language is the same as the default
+% document language, it’s set to nothing, i.e., the default. Note
+% |\end{selectlanguage}| may get executed in horizontal mode. To be
+% fixed.
+%
+%    \begin{macrocode}
 \AddBabelHook{babel-pdftagging}{afterextras}{%
   \IfBabelSelectorTF{select}%
     {\ifvmode
