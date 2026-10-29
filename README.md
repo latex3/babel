@@ -1,6 +1,6 @@
-## Babel 26.14.139446
+## Babel 26.15
 
-(dev)
+2026-10-29
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -21,9 +21,9 @@ features.
 
 The **latest stable** version is available on <https://ctan.org/pkg/babel>.
 
-**Changes** in version 26.14 are described in:
+**Changes** in version 26.15 are described in:
 
-https://latex3.github.io/babel/news/whats-new-in-babel-26.14.html
+https://latex3.github.io/babel/news/whats-new-in-babel-26.15.html
 
 Apart from the manual, you can find **information and examples** in:
 
@@ -59,10 +59,13 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 25.15 (dev)
+#### 25.15 (2026-10-29)
+
+* More PDF tagging (but still work in progress): `phoneme` option and
+  `\selectlanguage`.
 * A mainly internal change: LaTeX and Plain are now separate files.
-* Fixes for `layout=footnotes`.
-* More PDF tagging (but still work in progress).
+* Fixes for `layout=footnotes`, the Assamese locale, `other-languages`
+  and `calendrica`.
 
 #### 26.14 (2026-10-15)
 
@@ -70,17 +73,6 @@ respective authors.
 * Lua code optimized by Udi Fogiel.
 * Fixes related to font selection, `layout=sectioning` and 
   a few more.
-
-#### 26.13 (2026-09-27)
-
-* Minor improvements in `chinese-pinyin'.
-* Captions in `malagasy' (thanks to Ralahady Bruno Bakys).
-* Fixes:
-  - Make sure glues are not misplaced at end of lines
-    with mixed directions (thanks to Udi-Fogiel).
-  - Value in mapdot= was ignored.
-  - Isolate paragraph-like section titles from the
-    rest of the line in the bidi algorithm.
 
 ### Previous changes
 

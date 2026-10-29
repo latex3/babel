@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/25 v26.14.139446
+  [2026/10/29 v26.15
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -1073,6 +1073,11 @@ they are ‘bare minimum locales’. They are set in
   separate “language”, which explains why there are so many files. This
   is on purpose, so that possible variants can be created and/or
   redefined easily.
+  
+  Locale classification is based (according to ISO 639) not only on
+  linguistic similarity, but also on the existence of a common
+  literature or of a common ethnolinguistic identity. This may also
+  imply a specific typographic tradition.
 \end{note}
 
 \begingroup
@@ -2083,7 +2088,7 @@ current mode (vertical or horizontal) also remains unchanged.
 
 Same as |\foreignlanguage| but as environment. Spaces are \textit{not}
 ignored. \New{26.1} It can be used as a command, too, like
-|{\otherlanguage*{tamil}{...}|, but avoid using several of them
+|{\otherlanguage*{tamil}{...}}|, but avoid using several of them
 inside a group.
 
 It was originally devised for intermixing left-to-right typesetting
@@ -3084,12 +3089,6 @@ three \TeX{} parameters (|#1|, |#2|, |#3|), with the meaning given:
 \AddBabelHook{two}{foreign}{\BabelWrapText{\parse{##1}}
 \end{verbatim}
 the text becomes |\textit{\parse{<text>}}|.  Order is relevant.
-\begin{example}
-  PDF tagging is still a work in progress, but language tags are already
-  possible in short texts with |\foreignlanguage|. See the
-  \href{https://github.com/latex3/babel/discussions/357}{\babel{} site}
-  for a complete explained example.
-\end{example}
 
 \end{description}
 
@@ -4428,7 +4427,7 @@ some fine-tuning. More to follow in future releases.)
   \parbox[t]{6.6cm}{\strut#3}\par}
 \bigskip\hrule\nobreak\vspace{.5mm}\parindent0pt
 
-\trans{}{digits.native}{An alternative to |mapdigits|,
+\trans{(Many)}{digits.native}{An alternative to |mapdigits|,
 available in the same locales. This transform is applied before the
 first prehyphenation, while |mapdigits| is applied after the last
 posthyphenation. Another difference is |mapdigits| cannot be disabled
@@ -5516,7 +5515,7 @@ is far from exhaustive):
 \item[\sffamily iflang] Tests correctly the current language.
 \item[\sffamily microtype] Adjusts the typesetting according to
   some languages (kerning and spacing). Ligatures can be disabled.
-  Search in its manual for |babel| and |DeclareMicrotypeBabelHook|.
+  Search its manual for |babel| and |DeclareMicrotypeBabelHook|.
 \item[\sffamily mkpattern] Generates hyphenation patterns.
 \item[\sffamily siunitx] Typesetting of numbers and physical quantities.
 \item[\sffamily substitutefont] Combines fonts in several encodings.
@@ -5539,6 +5538,16 @@ See the code section for |\foreignlanguage*| (a new starred
 version of |\foreignlanguage|).
 
 For old and deprecated functions, see the \babel{} site.
+
+\medskip
+\textbf{Tagged PDF’s for accessibility with PDF/UA}
+
+Version 26.14 marks the beginning of the adaptation of \babel\ to the
+\LaTeX{} templating mechanism (loaded by |\DocumentMetadata|) and the
+PDF tagging features for accessibility. This is a work in progress and
+currently must be explicitly enabled.
+
+See the news pages \New{26.14} and \New{26.15} for further details. 
 
 \medskip
 \textbf{Options for locales loaded on the fly}
@@ -6360,8 +6369,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.14.139446>>
-%<<date=2026/10/25>>
+%<<version=26.15>>
+%<<date=2026/10/29>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13798,11 +13807,11 @@ wouldn’t exist.
 %
 % \section{Tagging}
 %
-% Preliminary and experimental. Only |\foreignlanguage|, for the
-% moment. Requires the package option \texttt{babel-metadata=tagging}.
-% Also changes for |\DocumentMetadata|. Option
-% \texttt{babel-metadata=on} makes these changes without activating the
-% changes for tagging.
+% Preliminary and experimental. Only |\foreignlanguage| and
+% |\selectlanguage|, for the moment. Requires the package option
+% \texttt{babel-metadata=tagging}. Also changes for
+% |\DocumentMetadata|. Option \texttt{babel-metadata=on} makes these
+% changes without activating the changes for tagging.
 % 
 %    \begin{macrocode}
 %<*tagging>
