@@ -45,7 +45,7 @@ body.
 For many years, most of the code was shared between LaTeX and Plain,
 but recent advances in LaTeX have made joint maintenance increasingly
 complex and cumbersome. Consequently, the code for Plain has been split
-from main babel for LaTeX and became essentially frozen. This does not
+from main babel for LaTeX and becomes essentially frozen. This does not
 mean it is unmaintained, and the door remains open to future
 improvements.
   
@@ -55,9 +55,9 @@ fixed.
 
 ## Fixes
 
-* Adapted to the new `calendrica'  API.
+* Adapted to the new `calendrica`  API.
 * `\footnote` in math with `layout=footnotes` didn’t work correctly.
-* Metadata: error if `ru` was loaded with `other-languages' (#450)
+* Metadata: error if `ru` was loaded with `other-languages` (#450)
 * Wrong name for `hyphenrules` in Assamese.
 
 
