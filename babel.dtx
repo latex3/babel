@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/29 v26.15
+  [2026/10/31 v26.15.140070
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -6369,8 +6369,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.15>>
-%<<date=2026/10/29>>
+%<<version=26.15.140070>>
+%<<date=2026/10/31>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -10624,11 +10624,11 @@ wouldn’t exist.
   \edef\languagename{#2}%
   \bbl@id@assign
   % Initialize keys
-  \bbl@vforeach{captions,date,import,main,script,language,%
-      hyphenrules,linebreaking,justification,mapfont,maparabic,%
-      mapdigits,intraspace,intrapenalty,onchar,transforms,alph,%
-      Alph,labels,labels*,mapdot,calendar,date,casing,interchar,%
-      @import}%
+  \bbl@vforeach{@import,Alph,alph,calendar,captions,casing,%
+      date,hyphenrules,import,interchar,intrapenalty,intraspace,%
+      justification,labels,labels*,language,linebreaking,main,%
+      maparabic,mapdigits,mapdot,mapfont,mathdigits,onchar,script,%
+      transforms}%
     {\bbl@csarg\let{KVP@##1}\@nnil}%
   \global\let\bbl@release@transforms\@empty
   \global\let\bbl@release@casing\@empty
@@ -10866,6 +10866,11 @@ wouldn’t exist.
   \ifx\bbl@KVP@casing\@nnil\else
     \bbl@csarg\xdef{casing@\languagename}%
       {\@nameuse{bbl@casing@\languagename}\bbl@maybextx\bbl@KVP@casing}%
+  \fi
+  % == Math ==
+  \ifx\bbl@KVP@mathdigits\@nnil\else
+    \bbl@exp{\\\AtBeginDocument{%
+      \\\bbl@setmathdigits{\bbl@KVP@mathdigits}{\languagename}}}%
   \fi
   % == Calendars ==
   \ifx\bbl@KVP@calendar\@nnil
@@ -14765,6 +14770,27 @@ wouldn’t exist.
 %
 %    \begin{macrocode}
 \def\bbl@font@fams{rm,sf,tt}
+%    \end{macrocode}
+% 
+% Option \texttt{mathdigits}.
+% 
+%    \begin{macrocode}
+\def\bbl@setmathdigits#1#2{%
+  \begingroup
+    \selectlanguage{#2}%
+    \normalfont
+    \bbl@ifblank{#1}{}{\bbl@ifunset{#1family}{}{\@nameuse{#1family}}}%
+  \bbl@exp{%
+    \endgroup
+    \\\DeclareSymbolFont{babel#2digits}%
+      {\f@encoding}{\f@family}{\f@series}{\f@shape}}%
+  \def\bbl@tempa##1{%
+    \ifx\@empty##1\else
+      \bbl@exp{\Umathcode`\string##1=0\<symbabel#2digits>`\string##1}%
+      \expandafter\bbl@tempa
+    \fi}
+  \expandafter\expandafter\expandafter
+  \bbl@tempa\csname bbl@dgnat@#2\endcsname\@empty}
 %<</Font selection>>
 %    \end{macrocode}
 %

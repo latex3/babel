@@ -31,7 +31,7 @@
 % \iffalse
 %<*filedriver>
 \ProvidesFile{babel-plain.dtx}%
-  [2026/10/29 v26.15
+  [2026/10/31 v26.15.140070
    The multilingual framework for Plain TeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -289,8 +289,8 @@
 % Just a block. To be revised. 
 %
 %    \begin{macrocode}
-%<<version=26.15>>
-%<<date=2026/10/29>>
+%<<version=26.15.140070>>
+%<<date=2026/10/31>>
 %    \end{macrocode}
 %
 % Some files identify themselves with a \LaTeX{} macro. The following
@@ -3634,9 +3634,7 @@
 %
 %    \begin{macrocode}
 \bbl@trace{Input engine specific macros}
-\ifcase\bbl@engine
-  \input txtbabel.def
-\or
+\ifcase\bbl@engine\or
   \input luababel.def
 \or
   \input xebabel.def
