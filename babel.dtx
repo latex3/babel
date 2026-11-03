@@ -5258,8 +5258,7 @@ standard |picture|, and \textit{pict2e} is required. It attempts to do
 the same for \textsf{pgf/tikz}. Somewhat experimental. \New{3.32}.
 
 \item[extras] is used for miscellaneous readjustments which do not fit into
-  the previous groups. Currently redefines in \luatex{} |\underline| and
-  |\LaTeX2e| \New{3.19}.
+  the previous groups. Currently redefines in \luatex{} |\LaTeX2e| \New{3.19}.
 
 \item[pars, nopars] When \texttt{layout} is used with any options
 in bidi documents, there are a few changes in |\@hangfrom| and also
@@ -17486,10 +17485,7 @@ end
 %
 %    \begin{macrocode}
 \IfBabelLayout{extras}%
-  {\bbl@ncarg\let\bbl@OL@underline{underline }%
-   \bbl@carg\bbl@sreplace{underline }{\hbox}%
-     {\def\bbl@insidemath{0}\hbox bdir\ifcase\bbl@thetextdir\z@\else\@ne\fi}%
-   \let\bbl@OL@LaTeXe\LaTeXe
+  {\let\bbl@OL@LaTeXe\LaTeXe
    \DeclareRobustCommand{\LaTeXe}{\mbox{\m@th
      \if b\expandafter\@car\f@series\@nil\boldmath\fi
      \babelsublr{\LaTeX\kern.15em2$_{\textstyle\varepsilon}$}}}}
