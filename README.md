@@ -1,4 +1,4 @@
-## Babel 26.15.140070
+## Babel 26.15.140345
 
 (dev)
 
@@ -62,6 +62,7 @@ respective authors.
 #### 26.16 (dev)
 
 * Option `mathdigits`. 
+* Fixes.
 
 #### 26.15 (2026-10-29)
 

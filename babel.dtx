@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/10/31 v26.15.140070
+  [2026/11/03 v26.15.140345
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -6368,8 +6368,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.15.140070>>
-%<<date=2026/10/31>>
+%<<version=26.15.140345>>
+%<<date=2026/11/03>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -13150,6 +13150,9 @@ wouldn’t exist.
       {\fontencoding{\asciiencoding}\selectfont#1}}%
     \DeclareTextCommandDefault{\TeX}{\ensureascii{\org@TeX}}%
     \DeclareTextCommandDefault{\LaTeX}{\ensureascii{\org@LaTeX}}%
+    \bbl@exp{%
+      \protected\def\\\TeX{\[TeX]}%
+      \protected\def\\\LaTeX{\[LaTeX]}}%
   \fi}
 %    \end{macrocode}
 %
@@ -13821,14 +13824,14 @@ wouldn’t exist.
 %<*tagging>
 \ifx\bbl@chfmt\@undefined\else
   \EditInstance{heading}{chapter}{%
-    prefix = ,
-    number-format = \unskip\bbl@chfmt
+    prefix =,
+    number-format = \unskip\unskip\bbl@chfmt
    }
 \fi
 \ifx\bbl@partformat\@undefined\else
   \EditInstance{heading}{part}{%
-    prefix = ,
-    number-format = \unskip\bbl@partformat
+    prefix =,
+    number-format = \unskip\unskip\bbl@partformat
    }
 \fi
 \@ifpackagewith{babel}{babel-metadata=tagging}{}{\endinput}
