@@ -36,6 +36,30 @@ Digits $=$ \localenumeral{digits}{0123456789}
 
 ![](../media/locale-tamil.png)
 
+## Counters
+
+Although Tamil numerals are best entered directly in its original
+form, you may still need some conversion because LaTeX uses internally
+the Arabic ones. With `luatex` there are two ways to map Arabic to
+Tamil numerals, passed as option to `\babelprovide`:
+* `maparabic` does it at the TeX level, by redefining `\arabic`. Note
+  the form written to the auxiliary files is the converted one (which
+  can be an issue in indexes). It works with `xetex`, too.
+* `mapdigits` does it at the engine level. This is
+  usually the preferred method.
+
+To perform this conversión, use the following preamble:
+```tex
+\usepackage[tamil, provide=mapdigits]{babel} % or alternatively maparabic
+\babelfont{rm}{FreeSerif}
+```
+
+There is an additional counter: `ancient`. With
+`\localenumeral{ancient}{2468}`, ௨௲௪௱௬௰௮ is printed.
+
+See the explanation in the babel manual about `\localecounter` and
+`localenumeral`.
+
 ## Calendar
 
 The Indian National Calendar, named `indian`, is supported (`luatex` and

@@ -37,8 +37,8 @@ are still pending. One of the problems is the `\end` very often comes
 _before_ the paragraph ends, even if conceptually could go _after_.
 
 If you stick to `\selectlanguage` in vertical mode and
-`\foreignlanguage` you should get now a properly tagged PDF in the text
-body.
+`\foreignlanguage` you should get now the `/Lang` properly set in the
+text body in a tagged PDF.
 
 ## Plain reorganized
 

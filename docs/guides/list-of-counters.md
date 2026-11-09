@@ -448,7 +448,6 @@ namely `letters.long`, `letters.gershayim` and `letters.final`.
 Tentative.
 
 * `alphabetic` =  କ ଖ ଗ ଘ ଙ ଚ ଛ ଜ ଝ ଞ ଟ ଠ ଡ ଢ ଣ ତ ଥ ଦ ଧ ନ ପ ଫ ବ ଭ ମ ଯ ର ଲ ଳ ଶ ସ ଷ ହ କ୍ଷ
-* `; alphabetic` = କ ଖ ଗ ଘ ଙ ଚ ଛ ଜ ଝ ଞ ଟ ଠ ଡ ଡ଼ ଢ ଢ଼ ଣ ତ ଥ ଦ ଧ ନ ପ ଫ ବ ଭ ମ ଯ ୟ ର ଲ ଳ ୱ ଶ ଷ ସ ହ
 * `akshar` = ଅ ଆ ଇ ଈ ଉ ଊ ଋ ଏ ଐ ଓ ଔ
 
 ## Persian (fa)

@@ -36,6 +36,40 @@ Digits $=$ \localenumeral{digits}{0123456789}
 
 ![](../media/locale-gujarati.png)
 
+## Counters
+
+Although Gujarati numerals are best entered directly in its original
+form, you may still need some conversion because LaTeX uses internally
+the Arabic ones. With `luatex` there are two ways to map Arabic to
+Gujarati numerals, passed as option to `\babelprovide`:
+* `maparabic` does it at the TeX level, by redefining `\arabic`. Note
+  the form written to the auxiliary files is the converted one (which
+  can be an issue in indexes). It works with `xetex`, too.
+* `mapdigits` does it at the engine level. This is
+  usually the preferred method.
+  
+To perform this conversión, use the following preamble:
+```tex
+\usepackage[gujarati, provide=mapdigits]{babel} % or alternatively maparabic
+\babelfont{rm}{FreeSerif}
+```
+
+See the explanation in the babel manual about `\localecounter` and
+`localenumeral`.
+
+## Punctuation
+
+_Only luatex_. The transform `danda.nobreak` prevents a line break
+before a danda or double danda if there is a space.
+
+In Unicode, danda and double danda are shared by several scripts, and
+`babel` doesn’t assign them by default to any of them. If you are using
+`onchar` to select the font you may want to assign them with:
+```tex
+\babelcharproperty{`।}{locale}{bangla}
+\babelcharproperty{`॥}{locale}{bangla}
+```
+
 ## Contribute
 
 If you are a native speaker or have expertise in this language, you can

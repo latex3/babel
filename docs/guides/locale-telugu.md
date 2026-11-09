@@ -38,6 +38,20 @@ Digits $=$ \localenumeral{digits}{0123456789}
 You may need download the font or replace it with another one in your
 system.
 
+
+## Punctuation
+
+_Only luatex_. The transform `danda.nobreak` prevents a line break
+before a danda or double danda if there is a space.
+
+In Unicode, danda and double danda are shared by several scripts, and
+`babel` doesn’t assign them by default to any of them. If you are using
+`onchar` to select the font you may want to assign them with:
+```tex
+\babelcharproperty{`।}{locale}{bangla}
+\babelcharproperty{`॥}{locale}{bangla}
+```
+
 ## Calendar
 
 The Indian National Calendar, named `indian`, is supported (`luatex` and

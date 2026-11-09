@@ -5,7 +5,7 @@
 ## Option `mathdigits`
 
 Sometimes using native digits inside math mode comes in handy. With
-this option, it is now possible to do so without resorting to
+this option, it’s now possible to do so without resorting to
 additional packages. Something like `\babelprovide[mathdigits]{hindi}`
 means a digit from the script used by Hindi (i.e., Devanagari) will be
 rendered using the font for that language (this behavior is similar to
@@ -13,16 +13,16 @@ that of `onchar`).
 
 These are true math symbols belonging to the ‘ordinary’ category. This
 contrasts with Western digits, which belong to the ‘variable’ category
-(so that `\mathit` prints italic numbers). However, many scripts lack
-true italics, and supporting variable digits would require combining
-fonts and math families, too. (This does not preclude extending the
-feature to other variants in the future, though doing so would require
-`unicode-math`.)
+(so that `\mathit` prints italic numbers). The reason for this behavior
+is many scripts lack true italics, and supporting variable digits would
+require combining fonts and math families, too. (This does not preclude
+extending the feature to other variants in the future, though doing so
+would require `unicode-math`.)
 
 By default, digits are assigned globally to the ‘normal font’ for the
-corresponding language (applied `\AtBeginDocument`). An optional value
+corresponding language (done `\AtBeginDocument`). An optional value
 can be passed to assign a different family; for example,
-`\babelprovide[mathdigits=sf]{uyghur}`. Note no conversion is done: to
+`\babelprovide[mathdigits=sf]{uyghur}`. Note no conversion is done — to
 use native digits you have to write them explicitly, while Western
 digits are kept.
 
@@ -38,8 +38,9 @@ Here is an example:
 \babelprovide[import, mathdigits]{arabic}
 \babelfont[arabic]{rm}{Amiri}
 
-\babelprovide[import, mathdigits=sf]{chinese}
-\babelfont[chinese]{sf}{FandolHei}
+% Remember you can declare new families with \babelfont:
+\babelprovide[import, mathdigits=hei]{chinese}
+\babelfont[chinese]{hei}{FandolHei}
 
 \begin{document}
 
@@ -54,3 +55,21 @@ Here is an example:
 ```
 
 ![](../media/mathdigits.jpg)
+
+Languages providing native digits are `algerianarabic`, `arabic`,
+`assamese`, `bangla`, `bhojpuri`, `bodo`, `burmese`, `cantonese`,
+`centralkurdish`, `chinese`, `dogri`, `dzongkha`, `gujarati`,
+`haryanvi`, `hindi`, `hmongnjua`, `kannada`, `kashmiri`, `khmer`,
+`konkani`, `korean`, `lao`, `maithili`, `malayalam`, `manipuri`,
+`marathi`, `mazanderani`, `nepali`, `northernluri`, `odia`, `pashto`,
+`persian`, `punjabi`, `rajasthani`, `sanskrit`, `santali`, `sindhi`,
+`tamil`, `telugu`, `thai`, `tibetan`, `urdu`, `uyghur`, `vai`.
+
+## Other changes
+
+* Fix
+
+* The old good `\babel@save` didn’t work correctly with protected
+  commands based on `\protect` and the space trick. Now, the original
+  straightforward implementation with `\let` has been replaced with a
+  new one based on `\DeclareCommandCopy`.
