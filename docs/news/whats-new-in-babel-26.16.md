@@ -1,6 +1,6 @@
 # What's new in babel 26.16
 
-**Draft**
+2026-11-10
 
 ## Option `mathdigits`
 
@@ -11,13 +11,14 @@ means a digit from the script used by Hindi (i.e., Devanagari) will be
 rendered using the font for that language (this behavior is similar to
 that of `onchar`).
 
-These are true math symbols belonging to the ‘ordinary’ category. This
-contrasts with Western digits, which belong to the ‘variable’ category
-(so that `\mathit` prints italic numbers). The reason for this behavior
-is many scripts lack true italics, and supporting variable digits would
-require combining fonts and math families, too. (This does not preclude
-extending the feature to other variants in the future, though doing so
-would require `unicode-math`.)
+These are true math symbols belonging to the ‘ordinary’ category (see
+_The TeXbook_, p. 154). This contrasts with Western digits, which belong
+to the ‘variable’ category (so that `\mathit` prints italic numbers).
+The reason for this behavior is twofold: many scripts lack true
+italics, and supporting variable digits would require combining fonts
+and math families, too. (This does not preclude extending the feature
+to other variants in the future, though doing so would require
+`unicode-math`.)
 
 By default, digits are assigned globally to the ‘normal font’ for the
 corresponding language (done `\AtBeginDocument`). An optional value
@@ -65,9 +66,20 @@ Languages providing native digits are `algerianarabic`, `arabic`,
 `persian`, `punjabi`, `rajasthani`, `sanskrit`, `santali`, `sindhi`,
 `tamil`, `telugu`, `thai`, `tibetan`, `urdu`, `uyghur`, `vai`.
 
+## Locales
+
+* The `ini` locale file for **Western Frisian** (`westernfrisian`, tag `fy`)
+has been extended by [Erik Nijenhuis](https://github.com/MacLotsen). A
+couple of [transforms (`diaeresis.hyphen` and
+`uacute.hyphen`)](https://github.com/latex3/babel/pull/453#issuecomment-6746541064)
+have been included, but they are tentative.
+
+There are also improvements in the locale files for **Romanian**, by 
+Mihai Pește, and **Kazakh**, by Berik I. Tuleuov.
+
 ## Other changes
 
-* Fix
+* `\DocumentMetadata` + `babel` + `newtxmath` result in exceeded TeX capacity (#451).
 
 * The old good `\babel@save` didn’t work correctly with protected
   commands based on `\protect` and the space trick. Now, the original
