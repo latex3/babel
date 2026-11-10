@@ -1,6 +1,6 @@
-## Babel 26.15.140939
+## Babel 26.16
 
-(dev)
+2026-11-10
 
 `Babel` is the multilingual framework to localize documents. It fully
 supports pdfLaTeX and the Unicode engines LuaLaTeX and XeLaTeX. A few
@@ -59,10 +59,16 @@ respective authors.
 
 ### Summary of latest changes
 
-#### 26.16 (dev)
+#### 26.16 (2026-11-10)
 
-* Option `mathdigits`. 
-* Fixes.
+* Option `mathdigits`, for digits in math mode in many scripts.
+* Improved locales:
+  - Western Frisian, by Erik Nijenhuis.
+  - Romanian, by Mihai Pește (also Moldavian).
+  - Kazakh, by Berik I. Tuleuov.
+* Fixes:
+  - DocumentMetadata + babel + newtxmath result in exceeded TeX capacity (#451).
+  - Better handling of `\babel@save` with protected commands.
 
 #### 26.15 (2026-10-29)
 
@@ -71,13 +77,6 @@ respective authors.
 * A mainly internal change: LaTeX and Plain are now separate files.
 * Fixes for `layout=footnotes`, the Assamese locale, `other-languages`
   and `calendrica`.
-
-#### 26.14 (2026-10-15)
-
-* Start PDF tagging and readjustments for `\DocumentMetadata`.
-* Lua code optimized by Udi Fogiel.
-* Fixes related to font selection, `layout=sectioning` and 
-  a few more.
 
 ### Previous changes
 
