@@ -34,7 +34,7 @@
   \DocumentMetadata{ tagging = on, language = en-GB }
 \fi
 \ProvidesFile{babel.dtx}%
-  [2026/11/10 v26.16
+  [2026/11/12 v26.16.141244
    The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX] 
 \documentclass{ltxdoc}
 \usepackage{babel}
@@ -6387,8 +6387,8 @@ wouldn’t exist.
 % \section{Tools}
 %
 %    \begin{macrocode}
-%<<version=26.16>>
-%<<date=2026/11/10>>
+%<<version=26.16.141244>>
+%<<date=2026/11/12>>
 %    \end{macrocode}
 %
 % \textbf{Do not use the following macros in \texttt{ldf} files. They
@@ -6704,7 +6704,9 @@ wouldn’t exist.
 % replaces the current value if the key exists, or adds the new
 % key/value at the end. The getter returns either the value if the key
 % exists or |\relax|. The code is based on arguments delimited by the
-% keys. 
+% keys. The internal structure is a list of
+% |\bbl@elt <key>\@@ {<value>}| (with the \texttt{ini} data,
+% |\bbl@elt <section>/<key>\@@ {<value>}|).
 %
 %    \begin{macrocode}
 \def\bbl@@empty{\@empty}
@@ -8843,43 +8845,29 @@ wouldn’t exist.
 %    \end{macrocode}
 %
 % \macro{\active@prefix}
-% Used in the expansion of active
-% characters has a function similar to |\OT1-cmd| in that it
-% |\protect|s the active character whenever |\protect| is \emph{not}
-% |\@typeset@protect|. The |\@gobble| is needed to remove a token such
-% as |\activechar:| (when the double colon was the active character to
-% be dealt with). There are two definitions, depending of |\ifincsname|
-% is available. If there is, the expansion will be more robust.
+%
+% Used in the expansion of active characters has a function similar to
+% |\OT1-cmd| in that it |\protect|s the active character whenever
+% |\protect| is \emph{not} |\@typeset@protect|. The |\@gobble| is
+% needed to remove a token such as |\activechar:| (when the double
+% colon was the active character to be dealt with).
 %
 %    \begin{macrocode}
-\begingroup
-\bbl@ifunset{ifincsname}
-  {\gdef\active@prefix#1{%
-     \ifx\protect\@typeset@protect
-     \else
-       \ifx\protect\@unexpandable@protect
-         \noexpand#1%
-       \else
-         \protect#1%
-       \fi
-       \expandafter\@gobble
-     \fi}}
-  {\gdef\active@prefix#1{%
-     \ifincsname
-       \string#1%
-       \expandafter\@gobble
-     \else
-       \ifx\protect\@typeset@protect
-       \else
-         \ifx\protect\@unexpandable@protect
-           \noexpand#1%
-         \else
-           \protect#1%
-         \fi
-         \expandafter\expandafter\expandafter\@gobble
-       \fi
-     \fi}}
-\endgroup
+\def\active@prefix#1{%
+  \ifincsname
+    \string#1%
+    \expandafter\@gobble
+  \else
+    \ifx\protect\@typeset@protect
+    \else
+      \ifx\protect\@unexpandable@protect
+        \noexpand#1%
+      \else
+        \protect#1%
+      \fi
+      \expandafter\expandafter\expandafter\@gobble
+    \fi
+  \fi}
 %    \end{macrocode}
 %
 % \macro{if@safe@actives}
@@ -10652,7 +10640,7 @@ wouldn’t exist.
   \global\let\bbl@inidata\@empty
   \global\let\bbl@extend@ini\@gobble
   \global\let\bbl@included@inis\@empty
-  \gdef\bbl@key@list{;}%
+  \let\bbl@key@list\@empty
   \bbl@ifunset{bbl@passto@#2}%
     {\def\bbl@tempa{#1}}%
     {\bbl@exp{\def\\\bbl@tempa{\[bbl@passto@#2],\unexpanded{#1}}}}%
@@ -10939,7 +10927,9 @@ wouldn’t exist.
   \fi
   % == frenchspacing ==
   \ifcase\bbl@howloaded\in@true\else\in@false\fi
-  \ifin@\else\bbl@xin@{typography/frenchspacing}{\bbl@key@list}\fi
+  \ifin@\else
+    \bbl@exp{\\\in@{frenchspacing=}{\[bbl@key@list]}}%
+  \fi
   \ifin@
     \bbl@extras@wrap{\\\bbl@pre@fs}%
       {\bbl@pre@fs}%
@@ -11162,22 +11152,18 @@ wouldn’t exist.
   \bbl@trim\toks@{#2}%
   \bbl@ifsamestring{\bbl@tempa}{@include}%
     {\bbl@read@subini{\the\toks@}}%
-    {\bbl@xin@{;\bbl@section/\bbl@tempa;}{\bbl@key@list}%
-     \ifin@\else
-       \bbl@xin@{,identification/include.}%
+    {\bbl@xin@{,identification/include.}%
                 {,\bbl@section/\bbl@tempa}%
-       \ifin@\xdef\bbl@included@inis{\the\toks@}\fi
-       \bbl@exp{%
-         \\\g@addto@macro\\\bbl@inidata{%
-           \\\bbl@elt{\bbl@section}{\bbl@tempa}{\the\toks@}}}%
-     \fi}}
+     \ifin@\xdef\bbl@included@inis{\the\toks@}\fi
+     \bbl@exp{%
+       \\\bbl@array@set\\\bbl@inidata{\bbl@section/\bbl@tempa}{\the\toks@}}}}
 \def\bbl@inistore@min#1=#2\@@{%  minimal (maybe set in \bbl@read@ini)
   \bbl@trim@def\bbl@tempa{#1}%
   \bbl@trim\toks@{#2}%
   \bbl@xin@{.identification.}{.\bbl@section.}%
   \ifin@
-    \bbl@exp{\\\g@addto@macro\\\bbl@inidata{%
-      \\\bbl@elt{identification}{\bbl@tempa}{\the\toks@}}}%
+    \bbl@exp{%
+      \\\bbl@array@set\\\bbl@inidata{\bbl@section/\bbl@tempa}{\the\toks@}}%
   \fi}
 %    \end{macrocode}
 %
@@ -11208,7 +11194,10 @@ wouldn’t exist.
   \loop
     \if T\ifeof#1 F\fi T\relax % Trick, because inside \loop
       \endlinechar\m@ne
-      \read#1 to \bbl@line
+      \bbl@exp{%
+        \catcode`\#=12
+        \read#1 to \\\bbl@line
+        \catcode`\#=\the\catcode`\#}%
       \endlinechar`\^^M
       \ifx\bbl@line\@empty\else
         \expandafter\bbl@iniline\bbl@line\bbl@iniline
@@ -11259,23 +11248,21 @@ wouldn’t exist.
     \def\bbl@section{identification}%
     \bbl@exp{%
       \\\bbl@inistore tag.ini=#1\\\@@
-      \\\bbl@inistore load.level=\ifnum#2<\@ne 0\else #2\fi\\\@@}%
+      \\\bbl@inistore load.level=\ifnum#2<\@ne 0\else #2\fi\\\@@
+      \\\bbl@inistore name.declared=\\\@@}% Dummy. Overriden below.
     \bbl@loop@ini\bbl@readstream
     % == Process stored data ==
     \ifnum#2=\m@ne
       \def\bbl@tempa##1 ##2\@@{##1}% Get first name
-      \def\bbl@elt##1##2##3{%
-        \bbl@ifsamestring{identification/name.babel}{##1/##2}%
-          {\edef\languagename{\bbl@tempa##3 \@@}%
-           \let\localename\languagename
-           \bbl@id@assign
-           \def\bbl@elt####1####2####3{}}%
-          {}}%
-      \bbl@inidata
+      \bbl@array@get\bbl@inidata{identification/name.babel}\languagename
+      \bbl@exp{\edef\\\languagename{\\\bbl@tempa\languagename\space\\\@@}}%
+      \let\localename\languagename
+      \bbl@id@assign
     \fi
     \bbl@csarg\xdef{lini@\languagename}{#1}%
     \def\bbl@section{identification}%
     \bbl@exp{\\\bbl@inistore name.declared=\languagename\\\@@}%
+    \bbl@key@list
     \bbl@read@ini@aux
     % == 'Export' data ==
     \bbl@ini@exports{#2}%
@@ -11302,7 +11289,7 @@ wouldn’t exist.
   \let\bbl@savestrings\@empty
   \let\bbl@savetoday\@empty
   \let\bbl@savedate\@empty
-  \def\bbl@elt##1##2##3{%
+  \def\bbl@elt##1/##2\@@##3{%
     \def\bbl@section{##1}%
     \in@{=date.}{=##1}% Find a better place
     \ifin@
@@ -11336,7 +11323,7 @@ wouldn’t exist.
     \bbl@read@ini@aux
     \bbl@ini@exports\tw@
     % Update inidata@lang by pretending the ini is read. 
-    \def\bbl@elt##1##2##3{%
+    \def\bbl@elt##1/##2\@@##3{%
       \def\bbl@section{##1}%
       \bbl@iniline##2=##3\bbl@iniline}%
     \csname bbl@inidata@#1\endcsname
@@ -11382,15 +11369,15 @@ wouldn’t exist.
 % |\bbl@inistore| above).
 %
 %    \begin{macrocode}
+\let\bbl@key@list\@empty
 \def\bbl@renewinikey#1/#2\@@#3{%
   \global\let\bbl@extend@ini\bbl@extend@ini@aux
   \edef\bbl@tempa{\zap@space #1 \@empty}%   section
   \edef\bbl@tempb{\zap@space #2 \@empty}%   key
   \bbl@trim\toks@{#3}%                      value
-  \bbl@exp{%
-    \edef\\\bbl@key@list{\bbl@key@list \bbl@tempa/\bbl@tempb;}%
-    \\\g@addto@macro\\\bbl@inidata{%
-       \\\bbl@elt{\bbl@tempa}{\bbl@tempb}{\the\toks@}}}}%
+  \bbl@exp{\\\bbl@add\\\bbl@key@list{%
+    \def\\\bbl@section{\bbl@tempa}%
+    \\\bbl@inistore\bbl@tempb=\the\toks@\\\@@}}}%
 %    \end{macrocode}
 %
 % The previous assignments are local, so we need to export them. If
@@ -11456,24 +11443,24 @@ wouldn’t exist.
   \or
     \bbl@iniwarning{.xelatex}%
   \fi%
-  \bbl@exportkey{llevel}{identification.load.level}{}%
-  \bbl@exportkey{elname}{identification.name.english}{}%
-  \bbl@exp{\\\bbl@exportkey{lname}{identification.name.opentype}%
+  \bbl@exportkey{llevel}{identification/load.level}{}%
+  \bbl@exportkey{elname}{identification/name.english}{}%
+  \bbl@exp{\\\bbl@exportkey{lname}{identification/name.opentype}%
     {\csname bbl@elname@\languagename\endcsname}}%
-  \bbl@exportkey{tbcp}{identification.tag.bcp47}{}%
-  \bbl@exportkey{casing}{identification.tag.bcp47}{}%
-  \bbl@exportkey{lbcp}{identification.language.tag.bcp47}{}%
-  \bbl@exportkey{lotf}{identification.tag.opentype}{dflt}%
-  \bbl@exportkey{esname}{identification.script.name}{}%
-  \bbl@exp{\\\bbl@exportkey{sname}{identification.script.name.opentype}%
+  \bbl@exportkey{tbcp}{identification/tag.bcp47}{}%
+  \bbl@exportkey{casing}{identification/tag.bcp47}{}%
+  \bbl@exportkey{lbcp}{identification/language.tag.bcp47}{}%
+  \bbl@exportkey{lotf}{identification/tag.opentype}{dflt}%
+  \bbl@exportkey{esname}{identification/script.name}{}%
+  \bbl@exp{\\\bbl@exportkey{sname}{identification/script.name.opentype}%
     {\csname bbl@esname@\languagename\endcsname}}%
-  \bbl@exportkey{sbcp}{identification.script.tag.bcp47}{}%
-  \bbl@exportkey{sotf}{identification.script.tag.opentype}{DFLT}%
-  \bbl@exportkey{rbcp}{identification.region.tag.bcp47}{}%
-  \bbl@exportkey{vbcp}{identification.variant.tag.bcp47}{}%
-  \bbl@exportkey{extt}{identification.extension.t.tag.bcp47}{}%
-  \bbl@exportkey{extu}{identification.extension.u.tag.bcp47}{}%
-  \bbl@exportkey{extx}{identification.extension.x.tag.bcp47}{}%
+  \bbl@exportkey{sbcp}{identification/script.tag.bcp47}{}%
+  \bbl@exportkey{sotf}{identification/script.tag.opentype}{DFLT}%
+  \bbl@exportkey{rbcp}{identification/region.tag.bcp47}{}%
+  \bbl@exportkey{vbcp}{identification/variant.tag.bcp47}{}%
+  \bbl@exportkey{extt}{identification/extension.t.tag.bcp47}{}%
+  \bbl@exportkey{extu}{identification/extension.u.tag.bcp47}{}%
+  \bbl@exportkey{extx}{identification/extension.x.tag.bcp47}{}%
   % Also maps bcp47 -> languagename
   \bbl@csarg\xdef{bcp@map@\bbl@cl{tbcp}}{\languagename}%
   \ifcase\bbl@engine\or
@@ -11483,21 +11470,21 @@ wouldn’t exist.
   \fi
   % Conditional
   \ifnum#1>\z@      % -1 or 0 = only info, 1 = basic, 2 = (re)new
-    \bbl@exportkey{calpr}{date.calendar.preferred}{}%
-    \bbl@exportkey{lnbrk}{typography.linebreaking}{h}%
-    \bbl@exportkey{hyphr}{typography.hyphenrules}{}%
-    \bbl@exportkey{lfthm}{typography.lefthyphenmin}{2}%
-    \bbl@exportkey{rgthm}{typography.righthyphenmin}{3}%
-    \bbl@exportkey{prehc}{typography.prehyphenchar}{}%
-    \bbl@exportkey{hyotl}{typography.hyphenate.other.locale}{}%
-    \bbl@exportkey{hyots}{typography.hyphenate.other.script}{}%
-    \bbl@exportkey{intsp}{typography.intraspace}{}%
-    \bbl@exportkey{frspc}{typography.frenchspacing}{u}%
-    \bbl@exportkey{chrng}{characters.ranges}{}%
-    \bbl@exportkey{quote}{characters.delimiters.quotes}{}%
-    \bbl@exportkey{dgnat}{numbers.digits.native}{}%
+    \bbl@exportkey{calpr}{date/calendar.preferred}{}%
+    \bbl@exportkey{lnbrk}{typography/linebreaking}{h}%
+    \bbl@exportkey{hyphr}{typography/hyphenrules}{}%
+    \bbl@exportkey{lfthm}{typography/lefthyphenmin}{2}%
+    \bbl@exportkey{rgthm}{typography/righthyphenmin}{3}%
+    \bbl@exportkey{prehc}{typography/prehyphenchar}{}%
+    \bbl@exportkey{hyotl}{typography/hyphenate.other.locale}{}%
+    \bbl@exportkey{hyots}{typography/hyphenate.other.script}{}%
+    \bbl@exportkey{intsp}{typography/intraspace}{}%
+    \bbl@exportkey{frspc}{typography/frenchspacing}{u}%
+    \bbl@exportkey{chrng}{characters/ranges}{}%
+    \bbl@exportkey{quote}{characters/delimiters.quotes}{}%
+    \bbl@exportkey{dgnat}{numbers/digits.native}{}%
     \ifnum#1=\tw@           % only (re)new
-      \bbl@exportkey{rqtex}{identification.require.babel}{}%
+      \bbl@exportkey{rqtex}{identification/require.babel}{}%
       \bbl@toglobal\bbl@savetoday
       \bbl@toglobal\bbl@savedate
       \bbl@savestrings
@@ -11513,7 +11500,7 @@ wouldn’t exist.
 %    \begin{macrocode}
 \def\bbl@inikv#1#2{%     key=value
   \toks@{#2}%            This hides #'s from ini values
-  \bbl@csarg\edef{@kv@\bbl@section.#1}{\the\toks@}}
+  \bbl@csarg\edef{@kv@\bbl@section/#1}{\the\toks@}}
 %    \end{macrocode}
 %
 % By default, the following sections are just read. Actions are taken
@@ -12241,7 +12228,8 @@ wouldn’t exist.
 % \subsection{Getting info}
 %
 % The information in the identification section can be useful, so the
-% following macro just exposes it with a user command.
+% following macro just exposes it with a user command. It’s a bit
+% hackish to make it expandable.
 %
 %    \begin{macrocode}
 \def\bbl@localeinfo#1#2{%
@@ -12291,13 +12279,7 @@ wouldn’t exist.
 \newcommand\getlocaleproperty{%
   \@ifstar\bbl@getproperty@s\bbl@getproperty@x}
 \def\bbl@getproperty@s#1#2#3{%
-  \let#1\relax
-  \def\bbl@elt##1##2##3{%
-    \bbl@ifsamestring{##1/##2}{#3}%
-      {\providecommand#1{##3}%
-       \def\bbl@elt####1####2####3{}}%
-      {}}%
-  \bbl@cs{inidata@#2}}%
+  \bbl@csarg\bbl@array@get{inidata@#2}{#3}{#1}}%
 \def\bbl@getproperty@x#1#2#3{%
   \bbl@getproperty@s{#1}{#2}{#3}%
   \ifx#1\relax
@@ -12315,7 +12297,7 @@ wouldn’t exist.
 \def\ShowLocaleProperties#1{%
   \typeout{}%
   \typeout{*** Properties for language '#1' ***}%
-  \def\bbl@elt##1##2##3{\typeout{##1/##2 = \unexpanded{##3}}}%
+  \def\bbl@elt##1\@@##2{\typeout{##1 = \unexpanded{##2}}}%
   \@nameuse{bbl@inidata@#1}%
   \typeout{*******}}
 %    \end{macrocode}
@@ -16556,7 +16538,7 @@ end
         \bbl@replace\bbl@kv@fonts{ }{,}&%
         \edef\bbl@kv@attribute{bbl@ATR@\bbl@kv@label @#3@\bbl@kv@fonts}&%
         \count@\z@
-        \def\bbl@elt##1##2##3{&%
+        \def\bbl@elt##1/##2\@@##3{&%
           \bbl@ifsamestring{#3,\bbl@kv@label}{##1,##2}&%
             {\bbl@ifsamestring{\bbl@kv@fonts}{##3}&%
                {\count@\@ne}&%
@@ -17236,7 +17218,7 @@ end
   \fi
   % == transforms ==
   \ifx\bbl@KVP@transforms\@nnil\else
-    \def\bbl@elt##1##2##3{%
+    \def\bbl@elt##1/##2\@@##3{%
       \in@{$transforms.}{$##1}%
       \ifin@
         \def\bbl@tempa{##1}%
@@ -25337,23 +25319,23 @@ Babel.cjk_breaks = {
 %
 %    \begin{macrocode}
 \def\bbl@inidata@nil{%
-  \bbl@elt{identification}{tag.ini}{und}%
-  \bbl@elt{identification}{load.level}{0}%
-  \bbl@elt{identification}{charset}{utf8}%
-  \bbl@elt{identification}{version}{1.0}%
-  \bbl@elt{identification}{date}{2022-05-16}%
-  \bbl@elt{identification}{name.local}{nil}%
-  \bbl@elt{identification}{name.english}{nil}%
-  \bbl@elt{identification}{name.babel}{nil}%
-  \bbl@elt{identification}{tag.bcp47}{und}%
-  \bbl@elt{identification}{language.tag.bcp47}{und}%
-  \bbl@elt{identification}{tag.opentype}{dflt}%
-  \bbl@elt{identification}{script.name}{Latin}%
-  \bbl@elt{identification}{script.tag.bcp47}{Latn}%
-  \bbl@elt{identification}{script.tag.opentype}{DFLT}%
-  \bbl@elt{identification}{level}{1}%
-  \bbl@elt{identification}{encodings}{}%
-  \bbl@elt{identification}{derivate}{no}}
+  \bbl@elt identification/tag.ini\@@{und}%
+  \bbl@elt identification/load.level\@@{0}%
+  \bbl@elt identification/charset\@@{utf8}%
+  \bbl@elt identification/version\@@{1.0}%
+  \bbl@elt identification/date\@@{2022-05-16}%
+  \bbl@elt identification/name.local\@@{nil}%
+  \bbl@elt identification/name.english\@@{nil}%
+  \bbl@elt identification/name.babel\@@{nil}%
+  \bbl@elt identification/tag.bcp47\@@{und}%
+  \bbl@elt identification/language.tag.bcp47\@@{und}%
+  \bbl@elt identification/tag.opentype\@@{dflt}%
+  \bbl@elt identification/script.name\@@{Latin}%
+  \bbl@elt identification/script.tag.bcp47\@@{Latn}%
+  \bbl@elt identification/script.tag.opentype\@@{DFLT}%
+  \bbl@elt identification/level\@@{1}%
+  \bbl@elt identification/encodings\@@{}%
+  \bbl@elt identification/derivate\@@{no}}
 \@namedef{bbl@tbcp@nil}{und}
 \@namedef{bbl@lbcp@nil}{und}
 \@namedef{bbl@casing@nil}{und}
