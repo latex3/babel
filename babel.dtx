@@ -11557,6 +11557,7 @@ wouldn’t exist.
   \fi
   \in@{.F.}{#1}%
   \ifin@\else\in@{.S.}{#1}\fi
+  \ifin@\else\in@{.T.}{#1}\fi
   \ifin@
     \bbl@csarg\protected@xdef{cntr@#1@\languagename}{\bbl@tempb*}%
   \else
@@ -12106,7 +12107,9 @@ wouldn’t exist.
 % number of digits in the number to be converted. This explains the
 % reverse set |76543210|. Digits above 10000 are not handled yet. When
 % the key contains the subkey |.F.|, the number after is treated as an
-% special case, for a fixed form (see |babel-he.ini|, for example).
+% special case, for a fixed form (see |babel-ja.ini|, for example).
+% With the subkey |.T.|, the two digits after replace the last two
+% places of any number (see |babel-Hebr.ini|, for example).
 %
 %    \begin{macrocode}
 \newcommand\localenumeral[2]{%
@@ -12131,8 +12134,10 @@ wouldn’t exist.
   \bbl@ifunset{bbl@cntr@#1.F.\number#5#6#7#8@\languagename}%
     {\bbl@cs{cntr@#1.4@\languagename}#5%
      \bbl@cs{cntr@#1.3@\languagename}#6%
-     \bbl@cs{cntr@#1.2@\languagename}#7%
-     \bbl@cs{cntr@#1.1@\languagename}#8%
+     \bbl@ifunset{bbl@cntr@#1.T.#7#8@\languagename}%
+       {\bbl@cs{cntr@#1.2@\languagename}#7%
+        \bbl@cs{cntr@#1.1@\languagename}#8}%
+       {\bbl@cs{cntr@#1.T.#7#8@\languagename}}%
      \ifnum#6#7#8>\z@
        \bbl@ifunset{bbl@cntr@#1.S.321@\languagename}{}%
          {\bbl@cs{cntr@#1.S.321@\languagename}}%
